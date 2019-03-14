@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class Tile
 {
 	public HexCoords Coords { get; protected set; }
+	public bool isShown = false;
 	protected GameObject _tileObject;
 
 
@@ -16,18 +17,9 @@ public abstract class Tile
 
 	public abstract void RenderTile(Transform parent);
 
+	public abstract void TileClicked();
+
 	public abstract void DestroyTile();
-
-
-	public static bool operator ==(Tile a, Tile b)
-	{
-		return a.Equals(b);
-	}
-
-	public static bool operator !=(Tile a, Tile b)
-	{
-		return !a.Equals(b);
-	}
 
 	// override object.Equals
 	public override bool Equals(object obj)
@@ -49,11 +41,19 @@ public abstract class Tile
 
 	public void Hide()
 	{
-		_tileObject.SetActive(false);
+		if(isShown)
+		{
+			_tileObject.SetActive(false);
+			isShown = false;
+		}
 	}
 
 	public void Show()
 	{
-		_tileObject.SetActive(true);
+		if (!isShown)
+		{
+			_tileObject.SetActive(true);
+			isShown = true;
+		}
 	}
 }

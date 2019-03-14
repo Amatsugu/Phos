@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: UnderwaterSand
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 6259396562324350344, guid: f8668a8c58481f74788edfc39db89984,
+  tilePrefab: {fileID: 7196555812497546746, guid: 0beeadb238bfcd3448e90157942b09ef,
     type: 3}

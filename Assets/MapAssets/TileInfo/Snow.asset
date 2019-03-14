@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: Snow
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 6259396562324350344, guid: 594dafbd9a2998745ac642ba5e1cd041,
+  tilePrefab: {fileID: 5264131763701783464, guid: c2f8706ad10ba8b4f8ffbd81f7a84143,
     type: 3}

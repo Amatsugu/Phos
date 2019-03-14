@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: Sand
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 6259396562324350344, guid: 1f65142b1ef99f241aa866424b8a9220,
+  tilePrefab: {fileID: 5170280297184577035, guid: e100493ae062ba748a66b41855f11731,
     type: 3}

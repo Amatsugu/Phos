@@ -16,6 +16,7 @@ public class Map<T> : IEnumerable<T> where T : Tile
 	public float TileEdgeLength { get; }
 	public float LongDiagonal => 2 * TileEdgeLength;
 	public float ShortDiagonal => Mathf.Sqrt(3f) * TileEdgeLength;
+
 	public float InnerRadius => Mathf.Sqrt(3f) / 2f * TileEdgeLength;
 	public float SeaLevel;
 	public Transform Parent { get; }
@@ -34,7 +35,7 @@ public class Map<T> : IEnumerable<T> where T : Tile
 	/// </summary>
 	/// <param name="i">Tile index</param>
 	/// <returns>Tile at Index</returns>
-	/*public T this[int i]
+	public T this[int i]
 	{
 		set
 		{
@@ -44,7 +45,7 @@ public class Map<T> : IEnumerable<T> where T : Tile
 		{
 			return Tiles[i];
 		}
-	}*/
+	}
 
 	/// <summary>
 	/// Get a tile the given HexCoords position
@@ -76,9 +77,29 @@ public class Map<T> : IEnumerable<T> where T : Tile
 				return null;
 			if (y >= Height)
 				return null;
-			return Tiles[x + y * Width + y / 2];
+			var index = x + y * Width + y / 2;
+			if (index < 0 || index > Length)
+				return null;
+			return Tiles[index];
 		}
 
+	}
+
+	internal void UpdateView(Camera cam, Vector3 viewPadding)
+	{
+		var min = cam.ScreenPointToRay(new Vector3(0, SeaLevel, 0));
+		var max = cam.ScreenPointToRay(new Vector3(Screen.width, SeaLevel, Screen.height));
+		var l = min.GetPoint(cam.transform.position.y);
+		var r = max.GetPoint(cam.transform.position.y);
+		var ratio = (float)Screen.width / Screen.height;
+		var h = (r.x - l.x);
+		var view = new Rect(
+			cam.transform.position.x - (h * ratio * .5f) - viewPadding.x,
+			cam.transform.position.z - 3,
+			(h * ratio) + (2 * viewPadding.x),
+			h + (2 * viewPadding.y)
+		);
+		UpdateView(view);
 	}
 
 	public void Render(Transform parent)
@@ -89,13 +110,15 @@ public class Map<T> : IEnumerable<T> where T : Tile
 
 	public void UpdateView(Rect view)
 	{
-		foreach (var tile in Tiles)
+		foreach(var tile in Tiles)
 		{
-			if (view.Contains(new Vector2(tile.Coords.WorldX, tile.Coords.WorldZ)))
+			var pos = new Vector2(tile.Coords.WorldX, tile.Coords.WorldZ);
+			if (view.Contains(pos))
 				tile.Show();
 			else
 				tile.Hide();
 		}
+
 	}
 
 	public T[] GetNeighbors(HexCoords coords)

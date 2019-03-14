@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: Rock
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 6259396562324350344, guid: 5fbb3b89fec5e2147ab52f46b7fa425a,
+  tilePrefab: {fileID: 2860964613229052778, guid: 99729c7d0eeef6f4c83caa661f7ee029,
     type: 3}

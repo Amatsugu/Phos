@@ -29,9 +29,9 @@ public struct HexCoords
 		EdgeLength = edgeLength;
 	}
 
-	public static HexCoords FromOffsetCoords(int x, int y, float innerRadius)
+	public static HexCoords FromOffsetCoords(int x, int y, float edgeLength)
 	{
-		return new HexCoords(x - y / 2, y, innerRadius);
+		return new HexCoords(x - y / 2, y, edgeLength);
 	}
 
 	public int OffsetX => X + Y / 2;

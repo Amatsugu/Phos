@@ -1,28 +1,40 @@
 ﻿using UnityEngine;
+using TMPro;
 using System.Collections;
 
+[RequireComponent(typeof(TMP_Text))]
 public class FPSCounter : MonoBehaviour
 {
-	float deltaTime = 0.0f;
+	public float updateInterval = 0.5F;
+	public Gradient fpsColor = new Gradient();
 
+	private float accum = 0; // FPS accumulated over the interval
+	private int frames = 0; // Frames drawn over the interval
+	private float timeleft; // Left time for current interval
+	private TMP_Text t;
+	void Start()
+	{
+		timeleft = updateInterval;
+		t = GetComponent<TMP_Text>();
+	}
 	void Update()
 	{
-		deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
-	}
-
-	void OnGUI()
-	{
-		int w = Screen.width, h = Screen.height;
-
-		GUIStyle style = new GUIStyle();
-
-		Rect rect = new Rect(0, 0, w, h * 2 / 100);
-		style.alignment = TextAnchor.UpperLeft;
-		style.fontSize = h * 2 / 100;
-		style.normal.textColor = new Color(1, 0, 100f/255);
-		float msec = deltaTime * 1000.0f;
-		float fps = 1.0f / deltaTime;
-		string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
-		GUI.Label(rect, text, style);
+		//if (t == null)
+			//Start();
+		timeleft -= Time.deltaTime;
+		accum += Time.timeScale / Time.deltaTime;
+		++frames;
+		// Interval ended - update GUI text and start new interval
+		if (timeleft <= 0.0)
+		{
+			// display two fractional digits (f2 format)
+			float fps = accum / frames;
+			t.text  = $"{((int)(fps * 100))/100} FPS";
+			t.color = fpsColor.Evaluate((fps - 15) / 60f);
+			//DebugConsole.Log(format, level);
+			timeleft = updateInterval;
+			accum = 0.0F;
+			frames = 0;
+		}
 	}
 }

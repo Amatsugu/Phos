@@ -24,14 +24,23 @@ public class Tile3D : Tile
 
 	public override void RenderTile(Transform parent)
 	{
+		isShown = true;
 		var pos = new Vector3(Coords.WorldX, 0, Coords.WorldZ);
 		_tileObject = Object.Instantiate(info.tilePrefab, pos, Quaternion.identity, parent);
+		_tileObject.AddComponent<WorldTile>().coord = Coords;
 		_tileObject.transform.localScale = new Vector3(1, Height, 1);
 		_tileObject.name = $"{info.name} : {Coords}";
 	}
 
+	
+
 	public void UpdateHeight(float height)
 	{
 		_tileObject.transform.localScale = new Vector3(1, Height = height, 1);
+	}
+
+	public override void TileClicked()
+	{
+
 	}
 }

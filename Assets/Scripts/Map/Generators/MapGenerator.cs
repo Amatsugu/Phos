@@ -47,7 +47,7 @@ public abstract class MapGenerator : ScriptableObject
 	public virtual Map<Tile3D> GenerateMap(Transform parent = null)
 	{
 		Map<Tile3D> map = new Map<Tile3D>((int)Size.y, (int)Size.x, parent, edgeLength);
-		for (int z = 0, i = 0; z < map.Height; z++)
+		for (int z = 0; z < map.Height; z++)
 		{
 			for (int x = 0; x < map.Width; x++)
 			{
