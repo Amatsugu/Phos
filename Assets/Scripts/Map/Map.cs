@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Unity.Entities;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -188,16 +189,12 @@ public class Map<T> where T : Tile
 
 	public void Render(EntityManager entityManager)
 	{
-		//EntityArchetype tileArchetype = entityManager.CreateArchetype(
-		//	typeof(Translation),
-		//	typeof(Rotation),
-		//	typeof(NonUniformScale)
-		//	);
+		
 		//var tileEntity = entityManager.CreateEntity(tileArchetype);
 		//Dictionary<TileInfo, Entity> tileEntities = new Dictionary<TileInfo, Entity>();
 		//var tileTypes = GetTileTyes();
 		//foreach (var tInfo in tileTypes)
-			//tileEntities.Add(tInfo, GameObjectConversionUtility.ConvertGameObjectHierarchy(tInfo.tilePrefab, entityManager.World));
+		//tileEntities.Add(tInfo, GameObjectConversionUtility.ConvertGameObjectHierarchy(tInfo.tilePrefab, entityManager.World));
 		foreach (var chunk in Chunks)
 		{
 			chunk.Render(entityManager);

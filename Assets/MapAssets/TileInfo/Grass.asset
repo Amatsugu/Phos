@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 4771652169232489713, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
     type: 3}
+  mesh: {fileID: 4300000, guid: c23024fe422f8b942a34d20696169ec2, type: 3}
+  material: {fileID: 2100000, guid: 2866af085bdcb3e4083ccd811b041108, type: 2}

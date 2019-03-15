@@ -38,8 +38,8 @@ public class Tile3D : Tile
 	{
 		_entityManager = entityManager;
 		_curEntity = entityManager.Instantiate(info.GetEntity(entityManager));
+		//entityManager.SetName(_curEntity, $"{info.name} : {Coords}");
 		entityManager.SetComponentData(_curEntity, new Translation { Value = Coords.WorldXZ });
-		entityManager.AddComponent(_curEntity, typeof(NonUniformScale));
 		entityManager.SetComponentData(_curEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
 	}
 }
