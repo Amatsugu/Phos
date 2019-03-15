@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tile3D : Tile
 {
 	public float Height { get; protected set; }
-	public Vector3 SurfacePoint { get; }
+	public Vector3 SurfacePoint { get; private set; }
 	public TileInfo info;
 
 
@@ -37,6 +37,7 @@ public class Tile3D : Tile
 	public void UpdateHeight(float height)
 	{
 		_tileObject.transform.localScale = new Vector3(1, Height = height, 1);
+		SurfacePoint = new Vector3(Coords.WorldX, height, Coords.WorldZ);
 	}
 
 	public override void TileClicked()

@@ -50,9 +50,9 @@ public class MapRenderer : MonoBehaviour
 	{
 		if (!selector.activeInHierarchy)
 			selector.SetActive(true);
+		map.HexFlatten(pos, 1, 6, Map<Tile3D>.FlattenMode.Average);
 		selector.transform.position = map[pos].SurfacePoint;
 		Instantiate(headquartersObj, map[pos].SurfacePoint, Quaternion.identity);
-		map.HexFlatten(pos, 1, 6);
 	}
 
 	public float GetHeight(HexCoords coord, int radius = 0)
