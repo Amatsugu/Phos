@@ -2,7 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Entities;
+using Unity.Transforms;
+using Unity.Rendering;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class MapRenderer : MonoBehaviour
 {
@@ -34,6 +39,23 @@ public class MapRenderer : MonoBehaviour
 		min = Vector3.zero;
 		max = new Vector3(map.Width * chunkSize * map.ShortDiagonal, 0, map.Height * chunkSize * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
+	}
+
+	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+	public static void AfterScene()
+	{
+		//var mapRenderer = GameObject.FindObjectOfType<MapRenderer>();
+		//mapRenderer.Init();
+		//var em = World.Active.GetOrCreateManager<EntityManager>();
+
+		//mapRenderer.map.Render(em);
+
+
+
+
+
+
+
 	}
 
 	public void Init()

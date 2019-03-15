@@ -6,4 +6,6 @@ using UnityEngine;
 public class TileInfo : ScriptableObject
 {
 	public GameObject tilePrefab;
+	public Material material;
+	public Mesh mesh;
 }

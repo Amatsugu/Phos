@@ -7,6 +7,7 @@ public abstract class Tile
 {
 	public HexCoords Coords { get; protected set; }
 	public bool isShown = false;
+	public TileInfo info;
 	protected GameObject _tileObject;
 
 

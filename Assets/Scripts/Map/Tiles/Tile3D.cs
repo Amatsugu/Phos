@@ -6,7 +6,6 @@ public class Tile3D : Tile
 {
 	public float Height { get; protected set; }
 	public Vector3 SurfacePoint { get; private set; }
-	public TileInfo info;
 
 
 

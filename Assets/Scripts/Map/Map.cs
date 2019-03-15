@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 
 public class Map<T> where T : Tile
@@ -153,6 +155,11 @@ public class Map<T> where T : Tile
 
 	}
 
+	public TileInfo[] GetTileInfo()
+	{
+		return Chunks.SelectMany(c => c.Tiles.Select(t => t.info)).Distinct().ToArray();
+	}
+
 	internal void UpdateView(Plane[] camPlanes)
 	{
 		var chunksChanged = 0;
@@ -169,6 +176,31 @@ public class Map<T> where T : Tile
 	{
 		foreach (var chunk in Chunks)
 			chunk?.Render(parent);
+	}
+
+	public void Render(EntityManager entityManager)
+	{
+		EntityArchetype tileArchetype = entityManager.CreateArchetype(
+			typeof(Translation),
+			typeof(Rotation),
+			typeof(NonUniformScale)
+			);
+		var tileEntity = entityManager.CreateEntity(tileArchetype);
+		foreach (var chunk in Chunks)
+		{
+			foreach (var tile in chunk.Tiles)
+			{
+				var height = (tile as Tile3D).Height;
+				/*var e = GameObjectConversionUtility.ConvertGameObjectHierarchy(tile.info.tilePrefab, entityManager.World)*/;
+
+				var inst = entityManager.Instantiate(tileEntity);
+				//entityManager.AddSharedComponentData(inst, new MeshRenderer {  });
+				entityManager.SetComponentData(inst, new Translation { Value = tile.Coords.WorldXZ });
+				//entityManager.AddComponent(inst, typeof(NonUniformScale));
+				entityManager.SetComponentData(inst, new NonUniformScale { Value = new Vector3(1, height, 1) });
+				//entityManager.SetComponentData(inst, tile.info.tilePrefab.GetComponent<MeshRenderer>());
+			}
+		}
 	}
 
 	public T[] GetNeighbors(HexCoords coords)
