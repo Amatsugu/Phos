@@ -46,7 +46,7 @@ public struct HexCoords
 		float innerRadius = Mathf.Sqrt(3f) / 2f * edgeLength;
 		float x = position.x / (innerRadius * 2f);
 		float z = -x;
-		float offset = position.z / (innerRadius * 3f);
+		float offset = position.z / (edgeLength * 3f);
 		z -= offset;
 		x -= offset;
 		int iX = Mathf.RoundToInt(x);

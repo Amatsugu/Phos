@@ -96,6 +96,14 @@ public class Map<T> where T : Tile
 				//tile.Show(isShown);
 			return true;
 		}
+
+		internal void Render(EntityManager entityManager)
+		{
+			foreach (var tile in Tiles)
+			{
+				tile.Render(entityManager);
+			}
+		}
 	}
 
 	public Map(int height, int width, Transform parent, float edgeLength = 1)
@@ -155,7 +163,7 @@ public class Map<T> where T : Tile
 
 	}
 
-	public TileInfo[] GetTileInfo()
+	public TileInfo[] GetTileTyes()
 	{
 		return Chunks.SelectMany(c => c.Tiles.Select(t => t.info)).Distinct().ToArray();
 	}
@@ -180,26 +188,19 @@ public class Map<T> where T : Tile
 
 	public void Render(EntityManager entityManager)
 	{
-		EntityArchetype tileArchetype = entityManager.CreateArchetype(
-			typeof(Translation),
-			typeof(Rotation),
-			typeof(NonUniformScale)
-			);
-		var tileEntity = entityManager.CreateEntity(tileArchetype);
+		//EntityArchetype tileArchetype = entityManager.CreateArchetype(
+		//	typeof(Translation),
+		//	typeof(Rotation),
+		//	typeof(NonUniformScale)
+		//	);
+		//var tileEntity = entityManager.CreateEntity(tileArchetype);
+		//Dictionary<TileInfo, Entity> tileEntities = new Dictionary<TileInfo, Entity>();
+		//var tileTypes = GetTileTyes();
+		//foreach (var tInfo in tileTypes)
+			//tileEntities.Add(tInfo, GameObjectConversionUtility.ConvertGameObjectHierarchy(tInfo.tilePrefab, entityManager.World));
 		foreach (var chunk in Chunks)
 		{
-			foreach (var tile in chunk.Tiles)
-			{
-				var height = (tile as Tile3D).Height;
-				/*var e = GameObjectConversionUtility.ConvertGameObjectHierarchy(tile.info.tilePrefab, entityManager.World)*/;
-
-				var inst = entityManager.Instantiate(tileEntity);
-				//entityManager.AddSharedComponentData(inst, new MeshRenderer {  });
-				entityManager.SetComponentData(inst, new Translation { Value = tile.Coords.WorldXZ });
-				//entityManager.AddComponent(inst, typeof(NonUniformScale));
-				entityManager.SetComponentData(inst, new NonUniformScale { Value = new Vector3(1, height, 1) });
-				//entityManager.SetComponentData(inst, tile.info.tilePrefab.GetComponent<MeshRenderer>());
-			}
+			chunk.Render(entityManager);
 		}
 	}
 
@@ -278,15 +279,10 @@ public class Map<T> where T : Tile
 
 	public void CircularFlatten(HexCoords center, float innerRadius, float outerRadius, FlattenMode mode = FlattenMode.Center)
 	{
-		if (typeof(T) != typeof(Tile3D))
-		{
-			Debug.LogWarning("Map is not of Type Tile3D");
-			return;
-		}
 		innerRadius *= LongDiagonal;
 		outerRadius *= LongDiagonal;
-		var innerSelection = CircularSelect(center, innerRadius).Select(t => t as Tile3D);
-		var c = this[center] as Tile3D;
+		var innerSelection = CircularSelect(center, innerRadius);
+		var c = this[center];
 		float height = c.Height;
 		if(mode == FlattenMode.Average)
 			height = innerSelection.Average(t => t.Height);
@@ -298,7 +294,7 @@ public class Map<T> where T : Tile
 
 		if (outerRadius <= innerRadius)
 			return;
-		var outerSelection = CircularSelect(center, outerRadius).Select(t => t as Tile3D).Except(innerSelection);
+		var outerSelection = CircularSelect(center, outerRadius).Except(innerSelection);
 		foreach (var tile in outerSelection)
 		{
 			var d = Mathf.Pow(center.WorldX - tile.Coords.WorldX, 2) + Mathf.Pow(center.WorldZ - tile.Coords.WorldZ, 2);
@@ -310,13 +306,8 @@ public class Map<T> where T : Tile
 
 	public void HexFlatten(HexCoords center, int innerRadius, int outerRadius, FlattenMode mode = FlattenMode.Center)
 	{
-		if (typeof(T) != typeof(Tile3D))
-		{
-			Debug.LogWarning("Map is not of Type Tile3D");
-			return;
-		}
-		var innerSelection = HexSelect(center, innerRadius).Select(t => t as Tile3D);
-		var c = this[center] as Tile3D;
+		var innerSelection = HexSelect(center, innerRadius);
+		var c = this[center];
 		float height = c.Height;
 		if (mode == FlattenMode.Average)
 			height = innerSelection.Average(t => t.Height);
@@ -328,7 +319,7 @@ public class Map<T> where T : Tile
 
 		if (outerRadius <= innerRadius)
 			return;
-		var outerSelection = HexSelect(center, outerRadius).Select(t => t as Tile3D).Except(innerSelection);
+		var outerSelection = HexSelect(center, outerRadius).Except(innerSelection);
 		foreach (var tile in outerSelection)
 		{
 			var d = Mathf.Pow(center.WorldX - tile.Coords.WorldX, 2) + Mathf.Pow(center.WorldZ - tile.Coords.WorldZ, 2);

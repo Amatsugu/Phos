@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.09274532, g: 0.20004472, b: 0.2610861, a: 1}
+  m_IndirectSpecularColor: {r: 0.033292595, g: 0.08321609, b: 0.13176502, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -355,6 +355,7 @@ MonoBehaviour:
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
   selector: {fileID: 6888193548383895851}
   viewPadding: {x: 16, y: 5}
+  useECS: 1
   min: {x: 0, y: 0, z: 0}
   max: {x: 0, y: 0, z: 0}
   headquartersObj: {fileID: 2118137839077479932, guid: 9af4518504256054dbe6bdbcec30be92,
@@ -597,10 +598,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 20
   minHeightFromGround: 8
-  maxHeight: 50
+  maxHeight: 80
   zoomAmmount: 1
   zoomSpeed: 1
-  map: {fileID: 196126402}
+  mapRenderer: {fileID: 196126402}
 --- !u!1 &536096453
 GameObject:
   m_ObjectHideFlags: 0

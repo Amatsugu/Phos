@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
 	public float maxHeight = 20;
 	public float zoomAmmount = 1;
 	public float zoomSpeed = 2;
-	public MapRenderer map;
+	public MapRenderer mapRenderer;
 
 	private float _targetHeight;
 	private float _lastHeight;
@@ -47,16 +47,8 @@ public class CameraController : MonoBehaviour
 		_targetHeight -= scroll;
 		if (_targetHeight > maxHeight)
 			_targetHeight = maxHeight;
-		var minHeight = map.map.SeaLevel + minHeightFromGround;
-		if(Physics.Raycast(pos, Vector3.down, out var hit))
-		{
-			var tile = hit.collider.GetComponent<WorldTile>();
-			if(tile != null)
-			{
-				_lastCoord = tile.coord;
-				minHeight = map.GetHeight(_lastCoord, 2) + minHeightFromGround;
-			}
-		}
+		_lastCoord = HexCoords.FromPosition(pos, mapRenderer.map.TileEdgeLength);
+		var minHeight = mapRenderer.GetHeight(_lastCoord, 2) + minHeightFromGround;
 
 		if(minHeight != _lastHeight)
 		{
@@ -71,8 +63,8 @@ public class CameraController : MonoBehaviour
 		}
 		var desHeight = (_targetHeight < minHeight) ? minHeight : _targetHeight;
 		pos.y = Mathf.Lerp(pos.y, desHeight, _anim += Time.deltaTime * zoomSpeed);
-		pos.x = Mathf.Clamp(pos.x, map.min.x, map.max.x);
-		pos.z = Mathf.Clamp(pos.z, map.min.z, map.max.z);
+		pos.x = Mathf.Clamp(pos.x, mapRenderer.min.x, mapRenderer.max.x);
+		pos.z = Mathf.Clamp(pos.z, mapRenderer.min.z, mapRenderer.max.z);
 		transform.position = pos;
 
 

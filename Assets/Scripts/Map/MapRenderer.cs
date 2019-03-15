@@ -15,7 +15,8 @@ public class MapRenderer : MonoBehaviour
 	public MapGenerator generator;
 	public GameObject oceanPlane;
 	public GameObject selector;
-	public Vector2 viewPadding;
+	public bool useECS = true;
+
 
 	[HideInInspector]
 	public Map<Tile3D> map;
@@ -31,7 +32,8 @@ public class MapRenderer : MonoBehaviour
 
 	private void Start()
 	{
-		Init();
+		if(!useECS)
+			Init();
 		_cam = FindObjectOfType<Camera>();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
@@ -44,24 +46,20 @@ public class MapRenderer : MonoBehaviour
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
 	public static void AfterScene()
 	{
-		//var mapRenderer = GameObject.FindObjectOfType<MapRenderer>();
-		//mapRenderer.Init();
-		//var em = World.Active.GetOrCreateManager<EntityManager>();
+		var mapRenderer = GameObject.FindObjectOfType<MapRenderer>();
+		if (!mapRenderer.useECS)
+			return;
+		mapRenderer.Init();
+		var em = World.Active.GetOrCreateManager<EntityManager>();
 
-		//mapRenderer.map.Render(em);
-
-
-
-
-
-
-
+		mapRenderer.map.Render(em);
 	}
 
 	public void Init()
 	{
 		map = generator.GenerateMap(transform);
-		map.Render(transform);
+		if(!useECS)
+			map.Render(transform);
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
 		pos.y = map.SeaLevel;
@@ -98,8 +96,11 @@ public class MapRenderer : MonoBehaviour
 		var camPos = _cam.transform.position;
 		if (_lastCamPos != camPos)
 		{
-			GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
-			map.UpdateView(_camPlanes);
+			if(!useECS)
+			{
+				GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
+				map.UpdateView(_camPlanes);
+			}
 			_lastCamPos = _cam.transform.position;
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z + 2 * _ocean.localScale.z);
 		}

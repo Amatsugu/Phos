@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 
 public class Tile3D : Tile
 {
-	public float Height { get; protected set; }
-	public Vector3 SurfacePoint { get; private set; }
-
-
 
 	public Tile3D(HexCoords coords, float height, TileInfo tInfo) : base(coords)
 	{
@@ -31,16 +29,17 @@ public class Tile3D : Tile
 		_tileObject.name = $"{info.name} : {Coords}";
 	}
 
-	
-
-	public void UpdateHeight(float height)
-	{
-		_tileObject.transform.localScale = new Vector3(1, Height = height, 1);
-		SurfacePoint = new Vector3(Coords.WorldX, height, Coords.WorldZ);
-	}
-
 	public override void TileClicked()
 	{
 
+	}
+
+	public override void Render(EntityManager entityManager)
+	{
+		_entityManager = entityManager;
+		_curEntity = entityManager.Instantiate(info.GetEntity(entityManager));
+		entityManager.SetComponentData(_curEntity, new Translation { Value = Coords.WorldXZ });
+		entityManager.AddComponent(_curEntity, typeof(NonUniformScale));
+		entityManager.SetComponentData(_curEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
 	}
 }
