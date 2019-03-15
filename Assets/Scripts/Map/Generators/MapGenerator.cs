@@ -42,14 +42,15 @@ public abstract class MapGenerator : ScriptableObject
 		}
 	}
 
-	public abstract void PaintTile(Tile3D tile);
+	public abstract Tile3D PaintTile(Tile3D tile);
 
 	public virtual Map<Tile3D> GenerateMap(Transform parent = null)
 	{
 		Map<Tile3D> map = new Map<Tile3D>((int)Size.y, (int)Size.x, parent, edgeLength);
-		for (int z = 0; z < map.Height; z++)
+		var chunkSize = Map<Tile3D>.Chunk.SIZE;
+		for (int z = 0; z < map.Height * chunkSize; z++)
 		{
-			for (int x = 0; x < map.Width; x++)
+			for (int x = 0; x < map.Width * chunkSize; x++)
 			{
 				var coords = HexCoords.FromOffsetCoords(x, z, edgeLength);
 				map[coords] = Generate(x, z, parent);

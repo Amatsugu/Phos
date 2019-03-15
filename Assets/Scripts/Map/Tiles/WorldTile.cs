@@ -9,9 +9,9 @@ public class WorldTile : MonoBehaviour
 	private Map<Tile3D> _map;
 	private MapRenderer _renderer;
 
-	private void Start()
+	private void Awake()
 	{
-		_renderer = transform.parent.GetComponent<MapRenderer>();
+		_renderer = transform.parent.parent.GetComponent<MapRenderer>();
 		_map = _renderer.map;
 	}
 

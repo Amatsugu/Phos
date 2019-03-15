@@ -17,8 +17,9 @@ public class CameraController : MonoBehaviour
 	private HexCoords _lastCoord;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+		_targetHeight = maxHeight;
     }
 
     // Update is called once per frame
@@ -70,6 +71,8 @@ public class CameraController : MonoBehaviour
 		}
 		var desHeight = (_targetHeight < minHeight) ? minHeight : _targetHeight;
 		pos.y = Mathf.Lerp(pos.y, desHeight, _anim += Time.deltaTime * zoomSpeed);
+		pos.x = Mathf.Clamp(pos.x, map.min.x, map.max.x);
+		pos.z = Mathf.Clamp(pos.z, map.min.z, map.max.z);
 		transform.position = pos;
 
 

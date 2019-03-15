@@ -15,11 +15,11 @@ public abstract class Tile
 		this.Coords = coords;
 	}
 
-	public abstract void RenderTile(Transform parent);
+	public abstract void Render(Transform parent);
 
 	public abstract void TileClicked();
 
-	public abstract void DestroyTile();
+	public abstract void Destroy();
 
 	// override object.Equals
 	public override bool Equals(object obj)
@@ -39,21 +39,11 @@ public abstract class Tile
 		return Coords.GetHashCode();
 	}
 
-	public void Hide()
+	public void Show(bool shown)
 	{
-		if(isShown)
-		{
-			_tileObject.SetActive(false);
-			isShown = false;
-		}
-	}
-
-	public void Show()
-	{
-		if (!isShown)
-		{
-			_tileObject.SetActive(true);
-			isShown = true;
-		}
+		if (shown == isShown)
+			return;
+		isShown = shown;
+		_tileObject.SetActive(isShown);
 	}
 }

@@ -17,15 +17,15 @@ public class Tile3D : Tile
 		SurfacePoint = new Vector3(coords.WorldX, height, coords.WorldZ);
 	}
 
-	public override void DestroyTile()
+	public override void Destroy()
 	{
-		Object.Destroy(_tileObject);
+		_tileObject = null;
 	}
 
-	public override void RenderTile(Transform parent)
+	public override void Render(Transform parent)
 	{
 		isShown = true;
-		var pos = new Vector3(Coords.WorldX, 0, Coords.WorldZ);
+		var pos = Coords.WorldXZ;
 		_tileObject = Object.Instantiate(info.tilePrefab, pos, Quaternion.identity, parent);
 		_tileObject.AddComponent<WorldTile>().coord = Coords;
 		_tileObject.transform.localScale = new Vector3(1, Height, 1);

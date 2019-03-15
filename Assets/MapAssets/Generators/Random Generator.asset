@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
   m_Name: Random Generator
   m_EditorClassIdentifier: 
-  Size: {x: 512, y: 128}
+  Size: {x: 10, y: 10}
   tileMapper: {fileID: 11400000, guid: 53d4e23fb41281647959dab06f3d19b8, type: 2}
   seaLevel: 4
   edgeLength: 1

@@ -52,10 +52,14 @@ public class RandomGenerator : MapGenerator
 		}
 		if (maxElevation < elevation)
 			maxElevation = elevation;
-		return CreateTile(null, x, z, elevation, parent);
+		return PaintTile(CreateTile(null, x, z, elevation, parent));
 	}
 
-	public override void PaintTile(Tile3D tile) => tile.info = tileMapper.GetTile(tile.Height, seaLevel, maxElevation);
+	public override Tile3D PaintTile(Tile3D tile)
+	{
+		tile.info = tileMapper.GetTile(tile.Height, seaLevel, maxElevation);
+		return tile;
+	}
 
 	public override Map<Tile3D> GenerateMap(Transform parent = null)
 	{
@@ -67,8 +71,6 @@ public class RandomGenerator : MapGenerator
 		for (int i = 0; i < noiseLayers.Length; i++)
 			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings);
 		Map<Tile3D> map = base.GenerateMap(parent);
-		foreach (var tile in map)
-			PaintTile(tile);
 		map.SeaLevel = seaLevel;
 		return map;
 	}

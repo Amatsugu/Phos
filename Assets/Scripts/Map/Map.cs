@@ -6,13 +6,12 @@ using System.Linq.Expressions;
 using System.Text;
 using UnityEngine;
 
-public class Map<T> : IEnumerable<T> where T : Tile
+public class Map<T> where T : Tile
 {
 
-	public T[] Tiles { get; }
 	public int Height { get; }
 	public int Width { get; }
-	public int Length => Tiles.Length;
+	public int Length => Chunks.Length;
 	public float TileEdgeLength { get; }
 	public float LongDiagonal => 2 * TileEdgeLength;
 	public float ShortDiagonal => Mathf.Sqrt(3f) * TileEdgeLength;
@@ -20,42 +19,121 @@ public class Map<T> : IEnumerable<T> where T : Tile
 	public float InnerRadius => Mathf.Sqrt(3f) / 2f * TileEdgeLength;
 	public float SeaLevel;
 	public Transform Parent { get; }
+	public Chunk[] Chunks { get; }
+
+
+	public class Chunk
+	{
+		public const int SIZE = 16;
+		public T[] Tiles;
+		public HexCoords chunkCoord;
+		public bool isShown = false;
+
+		private Bounds _bound;
+		private GameObject _chunkObject;
+
+		public Chunk(HexCoords coord)
+		{
+			chunkCoord = coord;
+			Tiles = new T[SIZE * SIZE];
+			var worldCoord = HexCoords.FromOffsetCoords(coord.OffsetX * SIZE, coord.OffsetZ * SIZE, coord.EdgeLength);
+			_bound = new Bounds
+			{
+				min = worldCoord.WorldXZ,
+				max = worldCoord.WorldXZ + new Vector3(SIZE * coord.ShortDiagonal, 0, SIZE * 1.5f)
+			};
+		}
+
+		public T this[HexCoords coord]
+		{
+			get
+			{
+				return Tiles[coord.ToIndex(SIZE)];
+			}
+
+			set => Tiles[coord.ToIndex(SIZE)] = value;
+		}
+
+		public bool InView(Plane[] camPlanes)
+		{
+			var inView = GeometryUtility.TestPlanesAABB(camPlanes, _bound);
+			var color = inView ? Color.red : Color.blue;
+			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.min.z), new Vector3(_bound.min.x, 0, _bound.max.z), color);
+			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.max.z), new Vector3(_bound.max.x, 0, _bound.max.z), color);
+			Debug.DrawLine(new Vector3(_bound.max.x, 0, _bound.max.z), new Vector3(_bound.max.x, 0, _bound.min.z), color);
+			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.min.z), new Vector3(_bound.max.x, 0, _bound.min.z), color);
+			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.min.z), new Vector3(_bound.min.x, SIZE, _bound.min.z), color);
+			return inView;
+		}
+
+		public void Render(Transform parent)
+		{
+			isShown = true;
+			_chunkObject = new GameObject();
+			_chunkObject.transform.position = HexCoords.FromOffsetCoords(chunkCoord.OffsetX * SIZE, chunkCoord.OffsetZ * SIZE, chunkCoord.EdgeLength).WorldXZ;
+			_chunkObject.transform.parent = parent;
+			_chunkObject.name = $"Chunk[{chunkCoord.OffsetX}, {chunkCoord.OffsetZ}]";
+			foreach (var tile in Tiles)
+				tile.Render(_chunkObject.transform);
+		}
+
+		public void Destroy()
+		{
+			UnityEngine.Object.Destroy(_chunkObject);
+			foreach (var tile in Tiles)
+				tile.Destroy();
+		}
+
+		public bool Show(bool shown)
+		{
+			if (shown == isShown)
+				return false;
+			isShown = shown;
+			_chunkObject.SetActive(isShown);
+			//foreach (var tile in Tiles)
+				//tile.Show(isShown);
+			return true;
+		}
+	}
 
 	public Map(int height, int width, Transform parent, float edgeLength = 1)
 	{
-		Height = height;
 		Width = width;
-		Tiles = new T[height * width];
+		Height = height;
+		Chunks = new Chunk[width * height];
 		TileEdgeLength = edgeLength;
 		Parent = parent;
 	}
 
 	/// <summary>
-	/// Get the Tile at a given index
-	/// </summary>
-	/// <param name="i">Tile index</param>
-	/// <returns>Tile at Index</returns>
-	public T this[int i]
-	{
-		set
-		{
-			Tiles[i] = value;
-		}
-		get
-		{
-			return Tiles[i];
-		}
-	}
-
-	/// <summary>
 	/// Get a tile the given HexCoords position
 	/// </summary>
-	/// <param name="tile">Position</param>
+	/// <param name="coord">Position</param>
 	/// <returns>Tile at position</returns>
-	public T this[HexCoords tile]
+	public T this[HexCoords coord]
 	{
-		get => Tiles[tile.ToIndex(Width)];
-		set => Tiles[tile.ToIndex(Width)] = value;
+		get
+		{
+			var chunkX = Mathf.FloorToInt((float)coord.OffsetX / Chunk.SIZE);
+			var chunkZ = Mathf.FloorToInt((float)coord.OffsetZ / Chunk.SIZE);
+			var index = chunkX + chunkZ * Width;
+			if (index < 0 || index > Length)
+				return null;
+			var chunk = Chunks[index];
+			if (chunk == null)
+				return null;
+			return chunk[HexCoords.FromOffsetCoords(coord.OffsetX - (chunkX * Chunk.SIZE), coord.OffsetZ - (chunkZ * Chunk.SIZE), TileEdgeLength)];
+		}
+
+		set
+		{
+			var chunkX = coord.OffsetX / Chunk.SIZE;
+			var chunkZ = coord.OffsetZ / Chunk.SIZE;
+			var chunk = Chunks[chunkX + chunkZ * Width];
+			if (chunk == null)
+				chunk = Chunks[chunkX + chunkZ * Width] = new Chunk(HexCoords.FromOffsetCoords(chunkX, chunkZ, TileEdgeLength));
+			chunk[HexCoords.FromOffsetCoords(coord.OffsetX - chunkX * Chunk.SIZE, coord.OffsetZ - chunkZ * Chunk.SIZE, TileEdgeLength)] = value;
+		}
 	}
 
 
@@ -70,55 +148,27 @@ public class Map<T> : IEnumerable<T> where T : Tile
 	{
 		get
 		{
-			if (-x - y != z)
-				return null;
-			int oX = x + y / 2;
-			if (oX < 0 || oX >= Width)
-				return null;
-			if (y >= Height)
-				return null;
-			var index = x + y * Width + y / 2;
-			if (index < 0 || index > Length)
-				return null;
-			return Tiles[index];
+			return this[new HexCoords(x, y, TileEdgeLength)];
 		}
 
 	}
 
-	internal void UpdateView(Camera cam, Vector3 viewPadding)
+	internal void UpdateView(Plane[] camPlanes)
 	{
-		var min = cam.ScreenPointToRay(new Vector3(0, SeaLevel, 0));
-		var max = cam.ScreenPointToRay(new Vector3(Screen.width, SeaLevel, Screen.height));
-		var l = min.GetPoint(cam.transform.position.y);
-		var r = max.GetPoint(cam.transform.position.y);
-		var ratio = (float)Screen.width / Screen.height;
-		var h = (r.x - l.x);
-		var view = new Rect(
-			cam.transform.position.x - (h * ratio * .5f) - viewPadding.x,
-			cam.transform.position.z - 3,
-			(h * ratio) + (2 * viewPadding.x),
-			h + (2 * viewPadding.y)
-		);
-		UpdateView(view);
+		var chunksChanged = 0;
+		foreach (var chunk in Chunks)
+		{
+			if (chunk == null)
+				continue;
+			if (chunk.Show(chunk.InView(camPlanes)))
+				chunksChanged++;
+		}
 	}
 
 	public void Render(Transform parent)
 	{
-		foreach (var tile in Tiles)
-			tile?.RenderTile(parent);
-	}
-
-	public void UpdateView(Rect view)
-	{
-		foreach(var tile in Tiles)
-		{
-			var pos = new Vector2(tile.Coords.WorldX, tile.Coords.WorldZ);
-			if (view.Contains(pos))
-				tile.Show();
-			else
-				tile.Hide();
-		}
-
+		foreach (var chunk in Chunks)
+			chunk?.Render(parent);
 	}
 
 	public T[] GetNeighbors(HexCoords coords)
@@ -197,8 +247,12 @@ public class Map<T> : IEnumerable<T> where T : Tile
 	public void CircularFlatten(HexCoords center, float innerRadius, float outerRadius, FlattenMode mode = FlattenMode.Center)
 	{
 		if (typeof(T) != typeof(Tile3D))
+		{
+			Debug.LogWarning("Map is not of Type Tile3D");
 			return;
-
+		}
+		innerRadius *= LongDiagonal;
+		outerRadius *= LongDiagonal;
 		var innerSelection = CircularSelect(center, innerRadius).Select(t => t as Tile3D);
 		var c = this[center] as Tile3D;
 		float height = c.Height;
@@ -222,28 +276,48 @@ public class Map<T> : IEnumerable<T> where T : Tile
 		}
 	}
 
+	public void HexFlatten(HexCoords center, int innerRadius, int outerRadius, FlattenMode mode = FlattenMode.Center)
+	{
+		if (typeof(T) != typeof(Tile3D))
+		{
+			Debug.LogWarning("Map is not of Type Tile3D");
+			return;
+		}
+		var innerSelection = HexSelect(center, innerRadius).Select(t => t as Tile3D);
+		var c = this[center] as Tile3D;
+		float height = c.Height;
+		if (mode == FlattenMode.Average)
+			height = innerSelection.Average(t => t.Height);
+
+		foreach (var tile in innerSelection)
+		{
+			tile.UpdateHeight(height);
+		}
+
+		if (outerRadius <= innerRadius)
+			return;
+		var outerSelection = HexSelect(center, outerRadius).Select(t => t as Tile3D).Except(innerSelection);
+		foreach (var tile in outerSelection)
+		{
+			var d = Mathf.Pow(center.WorldX - tile.Coords.WorldX, 2) + Mathf.Pow(center.WorldZ - tile.Coords.WorldZ, 2);
+			d -= innerRadius * innerRadius * LongDiagonal;
+			d = MathUtils.Map(d, 0, (outerRadius * outerRadius * LongDiagonal) - (innerRadius * innerRadius * LongDiagonal), 0, 1);
+			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
+		}
+	}
+
 	public void ReplaceTile(HexCoords tilePos, T newTile)
 	{
-		this[tilePos].DestroyTile();
+		this[tilePos].Destroy();
 		this[tilePos] = newTile;
-		newTile.RenderTile(Parent);
+		newTile.Render(Parent);
 	}
 
 	public T[] GetNeighbors(T tile) => GetNeighbors(tile.Coords);
 
 	public void Destroy()
 	{
-		foreach (var tile in Tiles)
-			tile?.DestroyTile();
-	}
-
-	public IEnumerator<T> GetEnumerator()
-	{
-		return ((IEnumerable<T>)Tiles).GetEnumerator();
-	}
-
-	IEnumerator IEnumerable.GetEnumerator()
-	{
-		return ((IEnumerable<T>)Tiles).GetEnumerator();
+		foreach (var chunk in Chunks)
+			chunk?.Destroy();
 	}
 }
