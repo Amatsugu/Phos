@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.033292595, g: 0.08321609, b: 0.13176502, a: 1}
+  m_IndirectSpecularColor: {r: 0.086380154, g: 0.13686849, b: 0.2005091, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -354,7 +354,6 @@ MonoBehaviour:
   generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
   selector: {fileID: 6888193548383895851}
-  viewPadding: {x: 16, y: 5}
   useECS: 1
   min: {x: 0, y: 0, z: 0}
   max: {x: 0, y: 0, z: 0}
@@ -1071,7 +1070,7 @@ Light:
   serializedVersion: 9
   m_Type: 2
   m_Color: {r: 1, g: 0, b: 0.39215687, a: 1}
-  m_Intensity: 21.63
+  m_Intensity: 47.746483
   m_Range: 2.53
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1473,8 +1472,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6888193548383895851}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.99, y: 0.5, z: 0.99}
+  m_LocalPosition: {x: 0, y: 3.31, z: 0}
+  m_LocalScale: {x: 0.99, y: 1, z: 0.99}
   m_Children:
   - {fileID: 1626554234}
   m_Father: {fileID: 196126401}
@@ -1497,7 +1496,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &6888193548385902571
 MeshRenderer:
   m_ObjectHideFlags: 0

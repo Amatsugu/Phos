@@ -29,7 +29,7 @@ public class RandomGenerator : MapGenerator
 
 	private float maxElevation = float.MinValue;
 
-	public override Tile3D Generate(int x, int z, Transform parent = null)
+	public override Tile3D Generate(int x, int z)
 	{
 		float elevation = 0;
 		float firstLayer = 0;
@@ -52,7 +52,7 @@ public class RandomGenerator : MapGenerator
 		}
 		if (maxElevation < elevation)
 			maxElevation = elevation;
-		return PaintTile(CreateTile(null, x, z, elevation, parent));
+		return PaintTile(CreateTile(null, x, z, elevation));
 	}
 
 	public override Tile3D PaintTile(Tile3D tile)

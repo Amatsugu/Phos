@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Jobs;
 using UnityEngine;
 
 public abstract class MapGenerator : ScriptableObject
@@ -9,23 +11,22 @@ public abstract class MapGenerator : ScriptableObject
 	public float seaLevel = 4;
 	public float edgeLength = 1;
 	public FeatureGenerator[] featureGenerators;
+	public bool useJobs = true;
 	[HideInInspector]
 	public bool Regen;
 
 	public float InnerRadius => Mathf.Sqrt(3f) / 2f * edgeLength;
-	public abstract Tile3D Generate(int x, int y, Transform parent = null);
+	public abstract Tile3D Generate(int x, int y);
 	
-	public Tile3D CreateTile(int x, int z, float height, Transform parent)
+	public Tile3D CreateTile(int x, int z, float height)
 	{
-		return CreateTile(tileMapper.GetTile(0, seaLevel), x, z, height, parent);
+		return CreateTile(tileMapper.GetTile(0, seaLevel), x, z, height);
 	}
 
-	public Tile3D CreateTile(TileInfo tileInfo , int x, int z, float height, Transform parent)
+	public Tile3D CreateTile(TileInfo tileInfo , int x, int z, float height)
 	{
 		var tile = new Tile3D(HexCoords.FromOffsetCoords(x, z, edgeLength), height, tileInfo);
 		return tile;
-		//var g = Instantiate(t, GetPosition(x, y), Quaternion.identity, parent);
-		//return g.GetComponent<Tile>().SetPos(x, y);
 	}
 
 	public void GenerateFeatures(Map<Tile3D> map)
@@ -47,15 +48,43 @@ public abstract class MapGenerator : ScriptableObject
 	public virtual Map<Tile3D> GenerateMap(Transform parent = null)
 	{
 		Map<Tile3D> map = new Map<Tile3D>((int)Size.y, (int)Size.x, parent, edgeLength);
+		if(useJobs)
+		{
+			var job = new GeneratorJob(map, Generate);
+			return map;
+		}
 		var chunkSize = Map<Tile3D>.Chunk.SIZE;
 		for (int z = 0; z < map.Height * chunkSize; z++)
 		{
 			for (int x = 0; x < map.Width * chunkSize; x++)
 			{
 				var coords = HexCoords.FromOffsetCoords(x, z, edgeLength);
-				map[coords] = Generate(x, z, parent);
+				map[coords] = Generate(x, z);
 			}
 		}
 		return map;
+	}
+
+	public class GeneratorJob : IJobParallelFor
+	{
+		private Map<Tile3D> _map;
+		private const int _chunkSize = Map<Tile3D>.Chunk.SIZE;
+		private readonly float _edgeLenth;
+		private readonly Func<int, int, Tile3D> _generate;
+
+		public GeneratorJob(Map<Tile3D> map, Func<int, int, Tile3D> generateFunc)
+		{
+			_map = map;
+			_edgeLenth = map.TileEdgeLength;
+		}
+
+		public void Execute(int z)
+		{
+			for (int x = 0; x < _map.Width * _chunkSize; x++)
+			{
+				var coords = HexCoords.FromOffsetCoords(x, z, _map.TileEdgeLength);
+				_map[coords] = _generate(x, z);
+			}
+		}
 	}
 }

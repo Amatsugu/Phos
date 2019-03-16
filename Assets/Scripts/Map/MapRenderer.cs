@@ -8,6 +8,7 @@ using Unity.Rendering;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Unity.Jobs;
 
 public class MapRenderer : MonoBehaviour
 {
@@ -113,4 +114,7 @@ public class MapRenderer : MonoBehaviour
 		}
 		
 	}
+
 }
+
+

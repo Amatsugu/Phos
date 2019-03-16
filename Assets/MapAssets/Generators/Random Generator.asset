@@ -17,6 +17,7 @@ MonoBehaviour:
   seaLevel: 4
   edgeLength: 1
   featureGenerators: []
+  useJobs: 0
   Regen: 0
   noiseScale: 235.87
   noiseLayers:
