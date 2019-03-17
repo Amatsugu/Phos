@@ -16,7 +16,10 @@ public class Tile3D : Tile
 
 	public override void Destroy()
 	{
-		_tileObject = null;
+		if(_tileEntity == null)
+			_tileObject = null;
+		else
+			_entityManager.DestroyEntity(_tileEntity);
 	}
 
 	public override void Render(Transform parent)
@@ -37,9 +40,9 @@ public class Tile3D : Tile
 	public override void Render(EntityManager entityManager)
 	{
 		_entityManager = entityManager;
-		_curEntity = entityManager.Instantiate(info.GetEntity(entityManager));
+		_tileEntity = entityManager.Instantiate(info.GetEntity(entityManager));
 		//entityManager.SetName(_curEntity, $"{info.name} : {Coords}");
-		entityManager.SetComponentData(_curEntity, new Translation { Value = Coords.WorldXZ });
-		entityManager.SetComponentData(_curEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
+		entityManager.SetComponentData(_tileEntity, new Translation { Value = Coords.WorldXZ });
+		entityManager.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
 	}
 }

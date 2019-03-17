@@ -82,7 +82,8 @@ public class Map<T> where T : Tile
 
 		public void Destroy()
 		{
-			UnityEngine.Object.Destroy(_chunkObject);
+			if(_chunkObject != null)
+				UnityEngine.Object.Destroy(_chunkObject);
 			foreach (var tile in Tiles)
 				tile.Destroy();
 		}

@@ -110,7 +110,11 @@ public class MapRenderer : MonoBehaviour
 			generator.Regen = false;
 			map.Destroy();
 			Destroy(_ocean.gameObject);
-			Init();
+			if (useECS)
+				MapRenderer.AfterScene();
+			else
+				Init();
+
 		}
 		
 	}

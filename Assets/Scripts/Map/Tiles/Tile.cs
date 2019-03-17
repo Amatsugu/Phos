@@ -15,7 +15,7 @@ public abstract class Tile
 	public TileInfo info;
 
 	protected GameObject _tileObject;
-	protected Entity _curEntity;
+	protected Entity _tileEntity;
 	protected EntityManager _entityManager;
 
 
@@ -50,10 +50,10 @@ public abstract class Tile
 
 	public void UpdateHeight(float height)
 	{
-		if (_curEntity == null)
+		if (_tileEntity == null)
 			_tileObject.transform.localScale = new Vector3(1, Height = height, 1);
 		else
-			_entityManager.SetComponentData(_curEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
+			_entityManager.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
 		SurfacePoint = new Vector3(Coords.WorldX, height, Coords.WorldZ);
 	}
 

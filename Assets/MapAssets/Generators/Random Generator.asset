@@ -27,12 +27,12 @@ MonoBehaviour:
       type: 0
       simpleNoiseSettings:
         strength: 2.93
-        layerCount: 5
+        layerCount: 4
         baseRoughness: 6.25
-        roughness: 0.8
+        roughness: 0.6
         persistence: 0.77
-        minValue: 0
-        center: {x: 0, y: 10.4, z: 0}
+        minValue: 0.05
+        center: {x: 0, y: 56.1, z: 0}
       rigidNoiseSettings:
         strength: 1.35
         layerCount: 8
@@ -42,6 +42,27 @@ MonoBehaviour:
         minValue: 0.03
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.34
+  - enabled: 1
+    useFirstLayerAsMask: 1
+    noiseSettings:
+      type: 0
+      simpleNoiseSettings:
+        strength: 1.8
+        layerCount: 3
+        baseRoughness: 3.5
+        roughness: 3.85
+        persistence: 0.88
+        minValue: 0.11
+        center: {x: 4.54, y: 0, z: 0}
+      rigidNoiseSettings:
+        strength: 2.29
+        layerCount: 4
+        baseRoughness: 4.33
+        roughness: 5.49
+        persistence: 1.05
+        minValue: 0
+        center: {x: 0, y: 0, z: 0}
+        weightMultiplier: 0
   - enabled: 1
     useFirstLayerAsMask: 1
     noiseSettings:
@@ -55,13 +76,13 @@ MonoBehaviour:
         minValue: 1.7
         center: {x: 4.54, y: 0, z: 0}
       rigidNoiseSettings:
-        strength: 6.19
+        strength: 7.75
         layerCount: 4
-        baseRoughness: 3.64
-        roughness: 5.49
-        persistence: 1.05
+        baseRoughness: 3.04
+        roughness: 6.1
+        persistence: 1.57
         minValue: 0
         center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 0.4
-  useSeed: 1
-  seed: -921194219
+        weightMultiplier: 0.37
+  useSeed: 0
+  seed: -921619676
