@@ -10,8 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2686e09ec7aef44bad2843e4416f057, type: 3}
-  m_Name: Diffusion
+  m_Name: Diffusion_Diffusion Profile 1
   m_EditorClassIdentifier: 
+  profile:
+    name: Diffusion Profile 1
+    scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    transmissionTint: {r: 1, g: 1, b: 1, a: 1}
+    texturingMode: 0
+    transmissionMode: 1
+    thicknessRemap: {x: 0, y: 5}
+    worldScale: 1
+    ior: 1.4
+    hash: 1077371555
+  m_Version: 1
   profiles:
   - name: Diffusion Profile 1
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -21,6 +32,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1077371555
   - name: Diffusion Profile 2
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -29,6 +41,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1077901151
   - name: Diffusion Profile 3
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -37,6 +50,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1075584064
   - name: Diffusion Profile 4
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -45,6 +59,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1075910019
   - name: Diffusion Profile 5
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -53,6 +68,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1075404149
   - name: Diffusion Profile 6
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -61,6 +77,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1078916317
   - name: Diffusion Profile 7
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -69,6 +86,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1081873839
   - name: Diffusion Profile 8
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -77,6 +95,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1076017491
   - name: Diffusion Profile 9
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -85,6 +104,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1075760734
   - name: Diffusion Profile 10
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -93,6 +113,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1079014655
   - name: Diffusion Profile 11
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -101,6 +122,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1077004947
   - name: Diffusion Profile 12
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -109,6 +131,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1074477063
   - name: Diffusion Profile 13
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -117,6 +140,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1077577726
   - name: Diffusion Profile 14
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -125,6 +149,7 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1081225321
   - name: Diffusion Profile 15
     scatteringDistance: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     transmissionTint: {r: 1, g: 1, b: 1, a: 1}
@@ -133,3 +158,4 @@ MonoBehaviour:
     thicknessRemap: {x: 0, y: 5}
     worldScale: 1
     ior: 1.4
+    hash: 1078308690

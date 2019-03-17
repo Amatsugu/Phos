@@ -8,7 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water Surface
-  m_Shader: {fileID: 4800000, guid: 8a87b613234285d4c896e49c90cea783, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 0b45faf5230adfe4cb41e6effe62417e,
+    type: 3}
   m_ShaderKeywords: _BLENDMODE_ALPHA _BLENDMODE_PRESERVE_SPECULAR_LIGHTING _DISABLE_DECALS
     _ENABLE_FOG_ON_TRANSPARENT _MATERIAL_FEATURE_TRANSMISSION _NORMALMAP_TANGENT_SPACE
     _SURFACE_TYPE_TRANSPARENT
@@ -27,6 +28,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_DD55B832:
+        m_Texture: {fileID: 2800000, guid: cc8d9ee1c4f10854e8cf5cb48473344b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AnisotropyMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -148,7 +153,22 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_189230DD: 12.2
+    - Vector1_109C3B5C: 1.2
+    - Vector1_189230DD: 1.16
+    - Vector1_1D0AAF17: 1
+    - Vector1_7126143: 21
+    - Vector1_9A166AB3: 0.41
+    - Vector1_A8C4976A: 1
+    - Vector1_ACEC88AB: 1.67
+    - Vector1_BBFE5044: 0.06
+    - Vector1_C4602B0E: 0.479
+    - Vector1_C7DA6486: 0.02
+    - Vector1_CBD5F7DA: 1.66
+    - Vector1_CF5CC24A: 0.2
+    - Vector1_E4B277E8: 0.853
+    - Vector1_E67AA53E: 0.529
+    - Vector1_F070807D: 6.551
+    - Vector1_F80BFA85: 10.28
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
@@ -174,6 +194,7 @@ Material:
     - _DetailNormalScale: 1
     - _DetailSmoothnessScale: 1
     - _DiffusionProfile: 0
+    - _DiffusionProfileHash: 0
     - _DisplacementLockObjectScale: 1
     - _DisplacementLockTilingScale: 1
     - _DisplacementMode: 0
@@ -278,9 +299,17 @@ Material:
     - _ZTestModeDistortion: 4
     - _ZWrite: 0
     m_Colors:
+    - Color_427D5784: {r: 0.03203986, g: 0.51665866, b: 0.754717, a: 0}
+    - Color_52DEB660: {r: 0, g: 0.8793845, b: 1, a: 1}
+    - Color_5851ADB7: {r: 0, g: 0.8550153, b: 1, a: 1}
+    - Color_8C4BEE20: {r: 0, g: 0.32573858, b: 0.42452827, a: 1}
+    - Color_A48DD5AA: {r: 0.13995194, g: 0.8018868, b: 0.6837788, a: 1}
+    - Color_DCB81BC3: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 0}
+    - Color_E3EF202: {r: 0.6556604, g: 0.9454478, b: 1, a: 0.5176471}
     - _BaseColor: {r: 0, g: 0.7693863, b: 1, a: 0.81960785}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0, g: 0.7693863, b: 1, a: 0.5019608}
+    - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}

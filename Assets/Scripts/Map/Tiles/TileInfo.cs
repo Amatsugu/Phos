@@ -21,7 +21,6 @@ public class TileInfo : ScriptableObject
 			Debug.Log($"Create Entity {name}");
 			var architype = em.CreateArchetype(
 				typeof(Translation),
-				typeof(Rotation),
 				typeof(PerInstanceCullingTag),
 				typeof(LocalToWorld),
 				typeof(NonUniformScale)
