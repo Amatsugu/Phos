@@ -16,10 +16,10 @@ public class Map<T> where T : Tile
 	public int Width { get; }
 	public int Length => Chunks.Length;
 	public float TileEdgeLength { get; }
-	public float LongDiagonal => 2 * TileEdgeLength;
-	public float ShortDiagonal => Mathf.Sqrt(3f) * TileEdgeLength;
+	public float LongDiagonal { get; }
+	public float ShortDiagonal { get; }
 
-	public float InnerRadius => Mathf.Sqrt(3f) / 2f * TileEdgeLength;
+	public float InnerRadius { get; }
 	public float SeaLevel;
 	public Transform Parent { get; }
 	public Chunk[] Chunks { get; }
@@ -114,6 +114,9 @@ public class Map<T> where T : Tile
 		Height = height;
 		Chunks = new Chunk[width * height];
 		TileEdgeLength = edgeLength;
+		InnerRadius = Mathf.Sqrt(3f) / 2f * TileEdgeLength;
+		ShortDiagonal = Mathf.Sqrt(3f) * TileEdgeLength;
+		LongDiagonal = 2 * TileEdgeLength;
 		Parent = parent;
 	}
 
@@ -190,18 +193,15 @@ public class Map<T> where T : Tile
 
 	public void Render(EntityManager entityManager)
 	{
-		
-		//var tileEntity = entityManager.CreateEntity(tileArchetype);
-		//Dictionary<TileInfo, Entity> tileEntities = new Dictionary<TileInfo, Entity>();
-		//var tileTypes = GetTileTyes();
-		//foreach (var tInfo in tileTypes)
-		//tileEntities.Add(tInfo, GameObjectConversionUtility.ConvertGameObjectHierarchy(tInfo.tilePrefab, entityManager.World));
 		foreach (var chunk in Chunks)
-		{
-			chunk.Render(entityManager);
-		}
+			chunk?.Render(entityManager);
 	}
 
+	/// <summary>
+	/// Get Neihboring tiles
+	/// </summary>
+	/// <param name="coords">Center tile location</param>
+	/// <returns>Neihboring tiles arranged clockwise starting from the left</returns>
 	public T[] GetNeighbors(HexCoords coords)
 	{
 		T[] neighbors = new T[6];
@@ -212,6 +212,28 @@ public class Map<T> where T : Tile
 		neighbors[4] = this[coords.X + 1, coords.Y - 1, coords.Z]; //Bottom Right
 		neighbors[5] = this[coords.X, coords.Y - 1, coords.Z + 1]; //Bottom Left
 		return neighbors;
+	}
+
+	/// <summary>
+	/// Raycasting to the surface of a tile, accurate within the OuterRadius of a tile
+	/// </summary>
+	/// <param name="ray">Ray to cast</param>
+	/// <returns>The tile if found</returns>
+	public Tile GetTileFromRay(Ray ray, float distance = float.MaxValue, float increment = 0.1f)
+	{
+		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red, 5);
+		for (float i = 0; i < distance; i += increment)
+		{
+			var p = ray.GetPoint(i);
+			var t = this[HexCoords.FromPosition(p)];
+			Debug.DrawRay(p, Vector3.up, Color.red, 5);
+			if (Mathf.Abs(t.Height - p.y) > InnerRadius)
+				continue;
+			Debug.DrawLine(t.SurfacePoint, p, Color.magenta, 5);
+			if (Vector3.Distance(t.SurfacePoint, p) <= TileEdgeLength)
+				return t;
+		}
+		return null;
 	}
 
 

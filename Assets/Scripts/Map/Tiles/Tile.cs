@@ -53,7 +53,7 @@ public abstract class Tile
 		if (_tileEntity == null)
 			_tileObject.transform.localScale = new Vector3(1, Height = height, 1);
 		else
-			_entityManager.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
+			_entityManager.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height = height, 1) });
 		SurfacePoint = new Vector3(Coords.WorldX, height, Coords.WorldZ);
 	}
 

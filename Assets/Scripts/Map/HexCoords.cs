@@ -16,21 +16,31 @@ public struct HexCoords
 	}
 
 	public float EdgeLength { get; }
-	public float InnerRadius => Mathf.Sqrt(3f) / 2f * EdgeLength;
-	public float ShortDiagonal => Mathf.Sqrt(3f) * EdgeLength;
+	public float InnerRadius { get; }
+	public float ShortDiagonal { get; }
 
-	public float WorldX => (OffsetX + OffsetZ * .5f - OffsetZ / 2) * (InnerRadius * 2f);
-	public float WorldZ => OffsetZ * (EdgeLength * 1.5f);
+	public float WorldX { get; }
+	public float WorldZ { get; }
 
 
-	public Vector3 WorldXZ => new Vector3(WorldX, 0, WorldZ);
-	public Vector2 WorldXY => new Vector2(WorldX, WorldZ);
+	public Vector3 WorldXZ { get; }
+	public Vector2 WorldXY { get; }
+	public int OffsetX { get; }
+	public int OffsetZ { get; }
 
 	public HexCoords(int x, int y, float edgeLength)
 	{
 		X = x;
 		Y = y;
 		EdgeLength = edgeLength;
+		InnerRadius = Mathf.Sqrt(3f) / 2f * EdgeLength;
+		ShortDiagonal = Mathf.Sqrt(3f) * EdgeLength;
+		OffsetX = x + y / 2;
+		OffsetZ = y;
+		WorldX = (OffsetX + OffsetZ * .5f - OffsetZ / 2) * (InnerRadius * 2f);
+		WorldZ = OffsetZ * (EdgeLength * 1.5f);
+		WorldXZ = new Vector3(WorldX, 0, WorldZ);
+		WorldXY = new Vector2(WorldX, WorldZ);
 	}
 
 	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength)
@@ -38,8 +48,6 @@ public struct HexCoords
 		return new HexCoords(x - Z / 2, Z, edgeLength);
 	}
 
-	public int OffsetX => X + Y / 2;
-	public int OffsetZ => Y;
 
 	public static HexCoords FromPosition(Vector3 position, float edgeLength = 1)
 	{

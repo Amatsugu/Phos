@@ -48,12 +48,16 @@ public abstract class MapGenerator : ScriptableObject
 	public virtual Map<Tile3D> GenerateMap(Transform parent = null)
 	{
 		Map<Tile3D> map = new Map<Tile3D>((int)Size.y, (int)Size.x, parent, edgeLength);
+		var chunkSize = Map<Tile3D>.Chunk.SIZE;
 		if(useJobs)
 		{
+			//TODO : Rewrite Generator for Jobs
 			var job = new GeneratorJob(map, Generate);
+			var mapSize = map.Width * map.Height * chunkSize;
+			var handle = job.Schedule(mapSize, 1);
+			handle.Complete();
 			return map;
 		}
-		var chunkSize = Map<Tile3D>.Chunk.SIZE;
 		for (int z = 0; z < map.Height * chunkSize; z++)
 		{
 			for (int x = 0; x < map.Width * chunkSize; x++)
@@ -65,7 +69,7 @@ public abstract class MapGenerator : ScriptableObject
 		return map;
 	}
 
-	public class GeneratorJob : IJobParallelFor
+	public struct GeneratorJob : IJobParallelFor
 	{
 		private Map<Tile3D> _map;
 		private const int _chunkSize = Map<Tile3D>.Chunk.SIZE;
@@ -76,6 +80,7 @@ public abstract class MapGenerator : ScriptableObject
 		{
 			_map = map;
 			_edgeLenth = map.TileEdgeLength;
+			_generate = generateFunc;
 		}
 
 		public void Execute(int z)

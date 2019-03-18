@@ -33,8 +33,7 @@ public class MapRenderer : MonoBehaviour
 
 	private void Start()
 	{
-		if(!useECS)
-			Init();
+		Init();
 		_cam = FindObjectOfType<Camera>();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
@@ -44,23 +43,14 @@ public class MapRenderer : MonoBehaviour
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 	}
 
-	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-	public static void AfterScene()
-	{
-		var mapRenderer = GameObject.FindObjectOfType<MapRenderer>();
-		if (!mapRenderer.useECS)
-			return;
-		mapRenderer.Init();
-		var em = World.Active.GetOrCreateManager<EntityManager>();
-
-		mapRenderer.map.Render(em);
-	}
-
 	public void Init()
 	{
+		var em = World.Active.GetOrCreateManager<EntityManager>();
 		map = generator.GenerateMap(transform);
-		if(!useECS)
+		if (!useECS)
 			map.Render(transform);
+		else
+			map.Render(em);
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
 		pos.y = map.SeaLevel;
@@ -105,19 +95,30 @@ public class MapRenderer : MonoBehaviour
 			_lastCamPos = _cam.transform.position;
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z + 2 * _ocean.localScale.z);
 		}
+
+		if (Input.GetKeyUp(KeyCode.Mouse0))
+		{
+			var mPos = Input.mousePosition;
+			var t = map.GetTileFromRay(_cam.ScreenPointToRay(mPos));
+			if (t != null)
+			{
+				selector.transform.position = t.SurfacePoint;
+				map.HexFlatten(t.Coords, 1, 6);
+			}
+
+		}
 		if (generator.Regen)
 		{
 			generator.Regen = false;
 			map.Destroy();
 			Destroy(_ocean.gameObject);
-			if (useECS)
-				MapRenderer.AfterScene();
-			else
-				Init();
+			Init();
 
 		}
 		
 	}
+
+	
 
 }
 
