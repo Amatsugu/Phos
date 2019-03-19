@@ -11,5 +11,5 @@ public abstract class FeatureGenerator : ScriptableObject
 			return "<b>" + name + ":</b> ";
 		}
 	}
-	public abstract void Generate(Map<Tile3D> map);
+	public abstract void Generate(Map map);
 }

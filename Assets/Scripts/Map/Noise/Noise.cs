@@ -31,7 +31,7 @@ Some changes by Sebastian Lague for use in a tutorial series.
 */
 
 using System;
-public class Noise
+public struct Noise
 {
     #region Values
     /// Initial permutation table
@@ -82,24 +82,27 @@ public class Noise
         new[] {1, 0, -1}, new[] {-1, 0, -1}, new[] {0, 1, 1},
         new[] {0, -1, 1}, new[] {0, 1, -1}, new[] {0, -1, -1}
     };
-    #endregion
+	#endregion
 
-    public Noise()
+	//public Noise()
+	//{
+		//Randomize(0);
+	//}
+
+	public Noise(int seed)
+	{
+		_random = new int[0];
+		Randomize(seed);
+	}
+
+
+	/// <summary>
+	/// Generates value, typically in range [-1, 1]
+	/// </summary>
+	public float Evaluate(UnityEngine.Vector3 point)
     {
-        Randomize(0);
-    }
-
-    public Noise(int seed)
-    {
-        Randomize(seed);
-    }
-
-
-    /// <summary>
-    /// Generates value, typically in range [-1, 1]
-    /// </summary>
-    public float Evaluate(UnityEngine.Vector3 point)
-    {
+		if (_random.Length == 0)
+			Randomize(0);
         double x = point.x;
         double y = point.y;
         double z = point.z;

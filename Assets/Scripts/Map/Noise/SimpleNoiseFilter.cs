@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleNoiseFilter : INoiseFilter
+public struct SimpleNoiseFilter : INoiseFilter
 {
-	Noise noise = new Noise();
+	Noise noise;
 	NoiseSettings.SimpleNoiseSettings settings;
 
 	public SimpleNoiseFilter(NoiseSettings.SimpleNoiseSettings noiseSettings)
 	{
+		noise = new Noise(0);
 		this.settings = noiseSettings;
 	}
 
@@ -27,5 +28,10 @@ public class SimpleNoiseFilter : INoiseFilter
 		}
 		noiseValue = noiseValue - settings.minValue;
 		return noiseValue * settings.strength;
+	}
+
+	public void SetSeed(int seed)
+	{
+		noise = new Noise(seed);
 	}
 }

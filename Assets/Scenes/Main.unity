@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.08957154, g: 0.1309937, b: 0.18299426, a: 1}
+  m_IndirectSpecularColor: {r: 0.092037864, g: 0.13340566, b: 0.18529917, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -206,13 +206,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170076733}
-  m_LocalRotation: {x: 0.3827099, y: 0.3844552, z: -0.17927441, w: 0.82072407}
+  m_LocalRotation: {x: -0.12320884, y: 0.86693746, z: -0.40425953, w: -0.26422223}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1369379223}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 50.000004, y: 50.2, z: 0}
+  m_LocalEulerAnglesHint: {x: 50.000004, y: 213.9, z: 0}
 --- !u!114 &170076736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,11 +364,9 @@ MonoBehaviour:
   generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
   selector: {fileID: 6888193548383895851}
-  useECS: 1
   min: {x: 0, y: 0, z: 0}
   max: {x: 0, y: 0, z: 0}
-  headquartersObj: {fileID: 2118137839077479932, guid: 9af4518504256054dbe6bdbcec30be92,
-    type: 3}
+  hqTile: {fileID: 11400000, guid: 59910362fbdaa7048a43541f0fea4ac3, type: 2}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -1598,4 +1596,4 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6888193548383895851}
-  m_Mesh: {fileID: 4300000, guid: c23024fe422f8b942a34d20696169ec2, type: 3}
+  m_Mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}

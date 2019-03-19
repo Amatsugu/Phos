@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-public class Map<T> where T : Tile
+public class Map : IDisposable
 {
+	public static Map ActiveMap;
+	public static EntityManager EM;
 
 	public int Height { get; }
 	public int Width { get; }
@@ -24,30 +27,29 @@ public class Map<T> where T : Tile
 	public Transform Parent { get; }
 	public Chunk[] Chunks { get; }
 
-
 	public class Chunk
 	{
 		public const int SIZE = 16;
-		public T[] Tiles;
+		public Tile[] Tiles;
 		public HexCoords chunkCoord;
 		public bool isShown = false;
 
-		private Bounds _bound;
-		private GameObject _chunkObject;
-
+		private Bounds _bounds;
+		private NativeArray<Entity> _chunkTiles;
 		public Chunk(HexCoords coord)
 		{
 			chunkCoord = coord;
-			Tiles = new T[SIZE * SIZE];
+			Tiles = new Tile[SIZE * SIZE];
 			var worldCoord = HexCoords.FromOffsetCoords(coord.OffsetX * SIZE, coord.OffsetZ * SIZE, coord.EdgeLength);
-			_bound = new Bounds
+			_bounds = new Bounds
 			{
 				min = worldCoord.WorldXZ,
-				max = worldCoord.WorldXZ + new Vector3(SIZE * coord.ShortDiagonal, 0, SIZE * 1.5f)
+				max = worldCoord.WorldXZ + new Vector3(SIZE * coord.ShortDiagonal, 100, SIZE * 1.5f)
 			};
+			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent);
 		}
 
-		public T this[HexCoords coord]
+		public Tile this[HexCoords coord]
 		{
 			get
 			{
@@ -59,52 +61,58 @@ public class Map<T> where T : Tile
 
 		public bool InView(Plane[] camPlanes)
 		{
-			var inView = GeometryUtility.TestPlanesAABB(camPlanes, _bound);
+			var inView = GeometryUtility.TestPlanesAABB(camPlanes, _bounds);
 			var color = inView ? Color.red : Color.blue;
-			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.min.z), new Vector3(_bound.min.x, 0, _bound.max.z), color);
-			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.max.z), new Vector3(_bound.max.x, 0, _bound.max.z), color);
-			Debug.DrawLine(new Vector3(_bound.max.x, 0, _bound.max.z), new Vector3(_bound.max.x, 0, _bound.min.z), color);
-			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.min.z), new Vector3(_bound.max.x, 0, _bound.min.z), color);
-			Debug.DrawLine(new Vector3(_bound.min.x, 0, _bound.min.z), new Vector3(_bound.min.x, SIZE, _bound.min.z), color);
+			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, 0, _bounds.max.z), color);
+			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.max.z), color);
+			Debug.DrawLine(new Vector3(_bounds.max.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, SIZE, _bounds.min.z), color);
 			return inView;
-		}
-
-		public void Render(Transform parent)
-		{
-			isShown = true;
-			_chunkObject = new GameObject();
-			_chunkObject.transform.position = HexCoords.FromOffsetCoords(chunkCoord.OffsetX * SIZE, chunkCoord.OffsetZ * SIZE, chunkCoord.EdgeLength).WorldXZ;
-			_chunkObject.transform.parent = parent;
-			_chunkObject.name = $"Chunk[{chunkCoord.OffsetX}, {chunkCoord.OffsetZ}]";
-			foreach (var tile in Tiles)
-				tile.Render(_chunkObject.transform);
 		}
 
 		public void Destroy()
 		{
-			if(_chunkObject != null)
-				UnityEngine.Object.Destroy(_chunkObject);
-			foreach (var tile in Tiles)
-				tile.Destroy();
+			foreach (var tile in _chunkTiles)
+			{
+				EM.DestroyEntity(tile);
+			}
+			if (_chunkTiles.IsCreated)
+				_chunkTiles.Dispose();
+			_chunkTiles = default;
 		}
 
 		public bool Show(bool shown)
 		{
 			if (shown == isShown)
 				return false;
+
+			if (shown)
+				EM.RemoveComponent(_chunkTiles, typeof(Disabled));
+			else
+				EM.AddComponent(_chunkTiles, typeof(Disabled));
 			isShown = shown;
-			_chunkObject.SetActive(isShown);
-			//foreach (var tile in Tiles)
-				//tile.Show(isShown);
 			return true;
 		}
 
-		internal void Render(EntityManager entityManager)
+		internal void Render()
 		{
-			foreach (var tile in Tiles)
+			isShown = true;
+			if(!_chunkTiles.IsCreated)
+				_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent);
+			for (int i = 0; i < SIZE * SIZE; i++)
 			{
-				tile.Render(entityManager);
+				_chunkTiles[i] = Tiles[i].Render();
 			}
+		}
+
+		public void ReplaceTile(HexCoords tilePos, TileInfo newTile)
+		{
+			var tile = this[tilePos];
+			tile.Destroy();
+			var n = new Tile(tile.Coords, tile.Height, newTile);
+			this[tilePos] = n;
+			_chunkTiles[tilePos.ToIndex(SIZE)] = n.Render();
 		}
 	}
 
@@ -118,6 +126,7 @@ public class Map<T> where T : Tile
 		ShortDiagonal = Mathf.Sqrt(3f) * TileEdgeLength;
 		LongDiagonal = 2 * TileEdgeLength;
 		Parent = parent;
+		ActiveMap = this;
 	}
 
 	/// <summary>
@@ -125,29 +134,27 @@ public class Map<T> where T : Tile
 	/// </summary>
 	/// <param name="coord">Position</param>
 	/// <returns>Tile at position</returns>
-	public T this[HexCoords coord]
+	public Tile this[HexCoords coord]
 	{
 		get
 		{
-			var chunkX = Mathf.FloorToInt((float)coord.OffsetX / Chunk.SIZE);
-			var chunkZ = Mathf.FloorToInt((float)coord.OffsetZ / Chunk.SIZE);
+			var (chunkX, chunkZ) = coord.GetChunkPos();
 			var index = chunkX + chunkZ * Width;
 			if (index < 0 || index > Length)
 				return null;
 			var chunk = Chunks[index];
 			if (chunk == null)
 				return null;
-			return chunk[HexCoords.FromOffsetCoords(coord.OffsetX - (chunkX * Chunk.SIZE), coord.OffsetZ - (chunkZ * Chunk.SIZE), TileEdgeLength)];
+			return chunk[coord.ToChunkLocalCoord(chunkX, chunkZ)];
 		}
 
 		set
 		{
-			var chunkX = coord.OffsetX / Chunk.SIZE;
-			var chunkZ = coord.OffsetZ / Chunk.SIZE;
+			var (chunkX, chunkZ) = coord.GetChunkPos();
 			var chunk = Chunks[chunkX + chunkZ * Width];
 			if (chunk == null)
 				chunk = Chunks[chunkX + chunkZ * Width] = new Chunk(HexCoords.FromOffsetCoords(chunkX, chunkZ, TileEdgeLength));
-			chunk[HexCoords.FromOffsetCoords(coord.OffsetX - chunkX * Chunk.SIZE, coord.OffsetZ - chunkZ * Chunk.SIZE, TileEdgeLength)] = value;
+			chunk[coord.ToChunkLocalCoord(chunkX, chunkZ)] = value;
 		}
 	}
 
@@ -159,7 +166,7 @@ public class Map<T> where T : Tile
 	/// <param name="y">Y component</param>
 	/// <param name="z">Z component</param>
 	/// <returns>Tile at position</returns>
-	public T this[int x, int y, int z]
+	public Tile this[int x, int y, int z]
 	{
 		get
 		{
@@ -185,16 +192,12 @@ public class Map<T> where T : Tile
 		}
 	}
 
-	public void Render(Transform parent)
-	{
-		foreach (var chunk in Chunks)
-			chunk?.Render(parent);
-	}
-
 	public void Render(EntityManager entityManager)
 	{
+		if (EM == null)
+			EM = entityManager;
 		foreach (var chunk in Chunks)
-			chunk?.Render(entityManager);
+			chunk?.Render();
 	}
 
 	/// <summary>
@@ -202,9 +205,9 @@ public class Map<T> where T : Tile
 	/// </summary>
 	/// <param name="coords">Center tile location</param>
 	/// <returns>Neihboring tiles arranged clockwise starting from the left</returns>
-	public T[] GetNeighbors(HexCoords coords)
+	public Tile[] GetNeighbors(HexCoords coords)
 	{
-		T[] neighbors = new T[6];
+		Tile[] neighbors = new Tile[6];
 		neighbors[0] = this[coords.X - 1, coords.Y, coords.Z + 1]; //Left
 		neighbors[1] = this[coords.X - 1, coords.Y + 1, coords.Z]; //Top Left
 		neighbors[2] = this[coords.X, coords.Y + 1, coords.Z - 1]; //Top Right
@@ -226,6 +229,8 @@ public class Map<T> where T : Tile
 		{
 			var p = ray.GetPoint(i);
 			var t = this[HexCoords.FromPosition(p)];
+			if (t == null)
+				continue;
 			Debug.DrawRay(p, Vector3.up, Color.red, 5);
 			if (Mathf.Abs(t.Height - p.y) > InnerRadius)
 				continue;
@@ -237,11 +242,11 @@ public class Map<T> where T : Tile
 	}
 
 
-	public List<T> HexSelect(HexCoords center, int radius)
+	public List<Tile> HexSelect(HexCoords center, int radius)
 	{
-		var selection = new List<T>();
+		var selection = new List<Tile>();
 		radius = Mathf.Abs(radius);
-		if(radius == 0)
+		if (radius == 0)
 		{
 			selection.Add(this[center]);
 			return selection;
@@ -257,16 +262,16 @@ public class Map<T> where T : Tile
 			{
 				int z = -x - y;
 				var t = this[center.X + x, center.Y + y, center.Z + z];
-				if(t != null)
+				if (t != null)
 					selection.Add(t);
 			}
 		}
 		return selection;
 	}
 
-	public List<T> CircularSelect(HexCoords center, float radius)
+	public List<Tile> CircularSelect(HexCoords center, float radius)
 	{
-		var selection = new List<T>();
+		var selection = new List<Tile>();
 		radius = Mathf.Abs(radius);
 		radius *= InnerRadius;
 		if (radius == 0)
@@ -280,10 +285,10 @@ public class Map<T> where T : Tile
 			{
 				var p = HexCoords.FromPosition(new Vector3(x + center.WorldX, 0, z + center.WorldZ), InnerRadius);
 				var d = Mathf.Pow(p.WorldX - center.WorldX, 2) + Mathf.Pow(p.WorldZ - center.WorldZ, 2);
-				if(d <= radius * radius)
+				if (d <= radius * radius)
 				{
-					var t = this[p]; 
-					if(t != null)
+					var t = this[p];
+					if (t != null)
 						selection.Add(t);
 				}
 			}
@@ -304,7 +309,7 @@ public class Map<T> where T : Tile
 		var innerSelection = CircularSelect(center, innerRadius);
 		var c = this[center];
 		float height = c.Height;
-		if(mode == FlattenMode.Average)
+		if (mode == FlattenMode.Average)
 			height = innerSelection.Average(t => t.Height);
 
 		foreach (var tile in innerSelection)
@@ -320,7 +325,7 @@ public class Map<T> where T : Tile
 			var d = Mathf.Pow(center.WorldX - tile.Coords.WorldX, 2) + Mathf.Pow(center.WorldZ - tile.Coords.WorldZ, 2);
 			d -= innerRadius * innerRadius;
 			d = MathUtils.Map(d, 0, (outerRadius * outerRadius) - (innerRadius * innerRadius), 0, 1);
-			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1-d));
+			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
 		}
 	}
 
@@ -349,18 +354,60 @@ public class Map<T> where T : Tile
 		}
 	}
 
-	public void ReplaceTile(HexCoords tilePos, T newTile)
+	public void ReplaceTile(Tile tile, TileInfo newTile)
 	{
-		this[tilePos].Destroy();
-		this[tilePos] = newTile;
-		newTile.Render(Parent);
+		var coord = tile.Coords;
+		var (chunkX, chunkZ) = coord.GetChunkPos();
+		var index = chunkX + chunkZ * Width;
+		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
+		var chunk = Chunks[index];
+		chunk.ReplaceTile(localCoord, newTile);
 	}
 
-	public T[] GetNeighbors(T tile) => GetNeighbors(tile.Coords);
+	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
 
 	public void Destroy()
 	{
 		foreach (var chunk in Chunks)
 			chunk?.Destroy();
 	}
+
+
+
+	#region IDisposable Support
+	private bool disposedValue = false; // To detect redundant calls
+
+	protected virtual void Dispose(bool disposing)
+	{
+		if (!disposedValue)
+		{
+			if (disposing)
+			{
+				// TODO: dispose managed state (managed objects).
+			}
+
+			// TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+			// TODO: set large fields to null.
+			Destroy();
+
+			disposedValue = true;
+		}
+	}
+
+	// TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+	~Map()
+	{
+		// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+		Dispose(false);
+	}
+
+	// This code added to correctly implement the disposable pattern.
+	public void Dispose()
+	{
+		// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+		Dispose(true);
+		// TODO: uncomment the following line if the finalizer is overridden above.
+		GC.SuppressFinalize(this);
+	}
+	#endregion
 }

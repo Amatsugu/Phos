@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: Snow
   m_EditorClassIdentifier: 
+  mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
+  material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
   tilePrefab: {fileID: 5264131763701783464, guid: c2f8706ad10ba8b4f8ffbd81f7a84143,
     type: 3}
-  mesh: {fileID: 4300000, guid: c23024fe422f8b942a34d20696169ec2, type: 3}
-  material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}

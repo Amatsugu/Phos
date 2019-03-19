@@ -29,6 +29,5 @@ public class WorldTile : MonoBehaviour
 
 	private void OnMouseUp()
 	{
-		_renderer.TileSelected(coord);
 	}
 }

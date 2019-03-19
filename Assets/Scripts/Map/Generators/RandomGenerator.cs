@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Unity.Collections;
+using Unity.Jobs;
+using UnityEngine;
 
 
 [CreateAssetMenu(menuName = "Map Asset/Generator/Random")]
@@ -6,10 +10,10 @@ public class RandomGenerator : MapGenerator
 {
 
 	[System.Serializable]
-	public class NoiseLayer
+	public struct NoiseLayer
 	{
-		public bool enabled = true;
-		public bool useFirstLayerAsMask = true;
+		public bool enabled;
+		public bool useFirstLayerAsMask;
 		public NoiseSettings noiseSettings;
 	}
 
@@ -29,11 +33,44 @@ public class RandomGenerator : MapGenerator
 
 	private float maxElevation = float.MinValue;
 
-	public override Tile3D Generate(int x, int z)
+	public override Tile PaintTile(Tile tile)
+	{
+		tile.info = tileMapper.GetTile(tile.Height, seaLevel, maxElevation);
+		return tile;
+	}
+
+	public override Map GenerateMap(Transform parent = null)
+	{
+		if (!useSeed)
+			seed = (int)(new System.DateTime(1990, 1, 1) - System.DateTime.Now).TotalSeconds;
+		Random.InitState(seed);
+		maxElevation = float.MinValue;
+		noiseFilters = new INoiseFilter[noiseLayers.Length];
+		for (int i = 0; i < noiseLayers.Length; i++)
+			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings);
+		Map map = new Map((int)Size.x, (int)Size.y, parent, edgeLength)
+		{
+			SeaLevel = seaLevel
+		};
+		var chunkSize = Map.Chunk.SIZE;
+		for (int z = 0; z < map.Width * chunkSize; z++)
+		{
+			for (int x = 0; x < map.Height * chunkSize; x++)
+			{
+				var coord = HexCoords.FromOffsetCoords(x, z, edgeLength);
+				var height = GenerateHeightMap(x, z);
+				var tInfo = tileMapper.GetTile(height, seaLevel);
+				map[coord] = PaintTile(new Tile(coord, height, null));
+			}
+		}
+		return map;
+	}
+
+	public float GenerateHeightMap(int x, int y)
 	{
 		float elevation = 0;
 		float firstLayer = 0;
-		var point = new Vector3(x, 0, z) / noiseScale;
+		var point = new Vector3(x, 0, y) / noiseScale;
 		if (noiseFilters.Length > 0)
 		{
 			firstLayer = noiseFilters[0].Evaluate(point);
@@ -44,34 +81,11 @@ public class RandomGenerator : MapGenerator
 		{
 			if (noiseLayers[i].enabled)
 			{
-				float mask = (noiseLayers[i].useFirstLayerAsMask) ? firstLayer : 1;
-				mask -= seaLevel;
+				float mask = (noiseLayers[i].useFirstLayerAsMask) ? firstLayer - seaLevel : 1;
 				mask = Mathf.Max(0, mask);
 				elevation += noiseFilters[i].Evaluate(point) * mask;
 			}
 		}
-		if (maxElevation < elevation)
-			maxElevation = elevation;
-		return PaintTile(CreateTile(null, x, z, elevation));
-	}
-
-	public override Tile3D PaintTile(Tile3D tile)
-	{
-		tile.info = tileMapper.GetTile(tile.Height, seaLevel, maxElevation);
-		return tile;
-	}
-
-	public override Map<Tile3D> GenerateMap(Transform parent = null)
-	{
-		if (!useSeed)
-			seed = (int)(new System.DateTime(1990, 1, 1) - System.DateTime.Now).TotalSeconds;
-		Random.InitState(seed);
-		maxElevation = float.MinValue;
-		noiseFilters = new INoiseFilter[noiseLayers.Length];
-		for (int i = 0; i < noiseLayers.Length; i++)
-			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings);
-		Map<Tile3D> map = base.GenerateMap(parent);
-		map.SeaLevel = seaLevel;
-		return map;
+		return elevation;
 	}
 }

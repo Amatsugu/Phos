@@ -2,33 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-public abstract class Tile
+public class Tile
 {
 	public HexCoords Coords { get; protected set; }
 	public Vector3 SurfacePoint { get; protected set; }
 	public float Height { get; protected set; }
 
-	public bool isShown = false;
 	public TileInfo info;
 
-	protected GameObject _tileObject;
 	protected Entity _tileEntity;
-	protected EntityManager _entityManager;
-
 
 	public Tile(HexCoords coords)
 	{
 		this.Coords = coords;
 	}
-
-	public abstract void Render(Transform parent);
-
-	public abstract void TileClicked();
-
-	public abstract void Destroy();
+	public Tile(HexCoords coords, float height, TileInfo tInfo = null) : this(coords)
+	{
+		Height = height;
+		info = tInfo;
+		SurfacePoint = new Vector3(coords.WorldX, height, coords.WorldZ);
+	}
 
 	// override object.Equals
 	public override bool Equals(object obj)
@@ -50,20 +47,37 @@ public abstract class Tile
 
 	public void UpdateHeight(float height)
 	{
-		if (_tileEntity == null)
-			_tileObject.transform.localScale = new Vector3(1, Height = height, 1);
-		else
-			_entityManager.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height = height, 1) });
+		Height = height;
+		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
 		SurfacePoint = new Vector3(Coords.WorldX, height, Coords.WorldZ);
+		foreach (var renderer in info.renderers)
+			renderer.Render(this, _tileEntity);
 	}
 
-	public void Show(bool shown)
+
+	public virtual void Destroy()
 	{
-		if (shown == isShown)
-			return;
-		isShown = shown;
-		_tileObject.SetActive(isShown);
+		Map.EM.DestroyEntity(_tileEntity);
 	}
 
-	public abstract void Render(EntityManager entityManager);
+	public virtual void TileClicked()
+	{
+
+	}
+
+	public virtual Entity Render()
+	{
+		_tileEntity = info.Instantiate(Coords.WorldXZ, new Vector3(1, Height, 1));
+		foreach (var renderer in info.renderers)
+		{
+			renderer.Render(this, _tileEntity);
+		}
+		return _tileEntity;
+	}
+
+	internal void SetParent(Entity parent)
+	{
+		Map.EM.AddComponent(_tileEntity, typeof(Parent));
+		Map.EM.SetComponentData(_tileEntity, new Parent { Value = parent });
+	}
 }

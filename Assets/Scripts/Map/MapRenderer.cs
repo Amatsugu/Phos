@@ -16,20 +16,19 @@ public class MapRenderer : MonoBehaviour
 	public MapGenerator generator;
 	public GameObject oceanPlane;
 	public GameObject selector;
-	public bool useECS = true;
-
 
 	[HideInInspector]
-	public Map<Tile3D> map;
+	public Map map;
 	[HideInInspector]
 	public Vector3 min, max;
-	public GameObject headquartersObj;
+	public TileInfo hqTile;
 
 	private Transform _ocean;
-	//private GameObject _hq;
 	private Camera _cam;
 	private Vector3 _lastCamPos;
 	private Plane[] _camPlanes;
+	private EntityManager _entityManager;
+	private Entity _hq;
 
 	private void Start()
 	{
@@ -37,33 +36,26 @@ public class MapRenderer : MonoBehaviour
 		_cam = FindObjectOfType<Camera>();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
-		var chunkSize = Map<Tile3D>.Chunk.SIZE;
+		var chunkSize = Map.Chunk.SIZE;
 		min = Vector3.zero;
 		max = new Vector3(map.Width * chunkSize * map.ShortDiagonal, 0, map.Height * chunkSize * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 	}
 
+	private void OnDestroy()
+	{
+		map.Dispose();
+	}
+
 	public void Init()
 	{
-		var em = World.Active.GetOrCreateManager<EntityManager>();
+		_entityManager = World.Active.GetOrCreateManager<EntityManager>();
 		map = generator.GenerateMap(transform);
-		if (!useECS)
-			map.Render(transform);
-		else
-			map.Render(em);
+		map.Render(_entityManager);
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
 		pos.y = map.SeaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
-	}
-
-	public void TileSelected(HexCoords pos)
-	{
-		if (!selector.activeInHierarchy)
-			selector.SetActive(true);
-		map.HexFlatten(pos, 1, 6, Map<Tile3D>.FlattenMode.Average);
-		selector.transform.position = map[pos].SurfacePoint;
-		Instantiate(headquartersObj, map[pos].SurfacePoint, Quaternion.identity);
 	}
 
 	public float GetHeight(HexCoords coord, int radius = 0)
@@ -87,11 +79,11 @@ public class MapRenderer : MonoBehaviour
 		var camPos = _cam.transform.position;
 		if (_lastCamPos != camPos)
 		{
-			if(!useECS)
-			{
+			//if(!useECS)
+			//{
 				GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
 				map.UpdateView(_camPlanes);
-			}
+			//}
 			_lastCamPos = _cam.transform.position;
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z + 2 * _ocean.localScale.z);
 		}
@@ -99,11 +91,12 @@ public class MapRenderer : MonoBehaviour
 		if (Input.GetKeyUp(KeyCode.Mouse0))
 		{
 			var mPos = Input.mousePosition;
-			var t = map.GetTileFromRay(_cam.ScreenPointToRay(mPos));
+			var t = map.GetTileFromRay(_cam.ScreenPointToRay(mPos), camPos.y * 2);
 			if (t != null)
 			{
+				map.HexFlatten(t.Coords, 1, 6, Map.FlattenMode.Average);
 				selector.transform.position = t.SurfacePoint;
-				map.HexFlatten(t.Coords, 1, 6);
+				map.ReplaceTile(t, hqTile);
 			}
 
 		}

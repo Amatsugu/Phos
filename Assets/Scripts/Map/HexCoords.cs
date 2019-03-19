@@ -65,6 +65,19 @@ public struct HexCoords
 		return new HexCoords(iX, iY, edgeLength);
 	}
 
+	public HexCoords ToChunkLocalCoord()
+	{
+		var (x, z) = GetChunkPos();
+		return ToChunkLocalCoord(x, z);
+	}
+
+	public HexCoords ToChunkLocalCoord(int chunkX, int chunkZ) => FromOffsetCoords(OffsetX - (chunkX * Map.Chunk.SIZE), OffsetZ - (chunkZ * Map.Chunk.SIZE), EdgeLength);
+
+	public (int chunkX, int chunkZ) GetChunkPos()
+	{
+		return (Mathf.FloorToInt((float)OffsetX / Map.Chunk.SIZE), Mathf.FloorToInt((float)OffsetZ / Map.Chunk.SIZE));
+	}
+
 	public int ToIndex(int mapWidth)
 	{
 		return X + Y * mapWidth + Y / 2;

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
-  m_Name: Grass
+  m_Name: HQ Tile
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
-  material: {fileID: 2100000, guid: 2866af085bdcb3e4083ccd811b041108, type: 2}
-  tilePrefab: {fileID: 4771652169232489713, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
-    type: 3}
+  mesh: {fileID: -3003489983209062016, guid: 7752b6427a1396d4f98a3248f1a088b6, type: 3}
+  material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
+  renderers:
+  - {fileID: 11400000, guid: 1972199a946262f45bf40a1ac99defe9, type: 2}
