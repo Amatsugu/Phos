@@ -40,11 +40,11 @@ public class Map : IDisposable
 		{
 			chunkCoord = coord;
 			Tiles = new Tile[SIZE * SIZE];
-			var worldCoord = HexCoords.FromOffsetCoords(coord.OffsetX * SIZE, coord.OffsetZ * SIZE, coord.EdgeLength);
+			var worldCoord = HexCoords.FromOffsetCoords(coord.offsetX * SIZE, coord.offsetZ * SIZE, coord.edgeLength);
 			_bounds = new Bounds
 			{
-				min = worldCoord.WorldXZ,
-				max = worldCoord.WorldXZ + new Vector3(SIZE * coord.ShortDiagonal, 100, SIZE * 1.5f)
+				min = worldCoord.worldXZ,
+				max = worldCoord.worldXZ + new Vector3(SIZE * coord.shortDiagonal, 100, SIZE * 1.5f)
 			};
 			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent);
 		}
@@ -73,13 +73,20 @@ public class Map : IDisposable
 
 		public void Destroy()
 		{
-			foreach (var tile in _chunkTiles)
+			try
 			{
-				EM.DestroyEntity(tile);
+				foreach (var tile in _chunkTiles)
+					EM.DestroyEntity(tile);
+			}catch
+			{
+				Debug.LogWarning("Unable to Destroy tiles");
 			}
-			if (_chunkTiles.IsCreated)
-				_chunkTiles.Dispose();
-			_chunkTiles = default;
+			finally
+			{
+				if (_chunkTiles.IsCreated)
+					_chunkTiles.Dispose();
+				_chunkTiles = default;
+			}
 		}
 
 		public bool Show(bool shown)
@@ -88,9 +95,9 @@ public class Map : IDisposable
 				return false;
 
 			if (shown)
-				EM.RemoveComponent(_chunkTiles, typeof(Disabled));
+				EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
 			else
-				EM.AddComponent(_chunkTiles, typeof(Disabled));
+				EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
 			isShown = shown;
 			return true;
 		}
@@ -208,12 +215,12 @@ public class Map : IDisposable
 	public Tile[] GetNeighbors(HexCoords coords)
 	{
 		Tile[] neighbors = new Tile[6];
-		neighbors[0] = this[coords.X - 1, coords.Y, coords.Z + 1]; //Left
-		neighbors[1] = this[coords.X - 1, coords.Y + 1, coords.Z]; //Top Left
-		neighbors[2] = this[coords.X, coords.Y + 1, coords.Z - 1]; //Top Right
-		neighbors[3] = this[coords.X + 1, coords.Y, coords.Z - 1]; //Right
-		neighbors[4] = this[coords.X + 1, coords.Y - 1, coords.Z]; //Bottom Right
-		neighbors[5] = this[coords.X, coords.Y - 1, coords.Z + 1]; //Bottom Left
+		neighbors[0] = this[coords.x - 1, coords.y, coords.z + 1]; //Left
+		neighbors[1] = this[coords.x - 1, coords.y + 1, coords.z]; //Top Left
+		neighbors[2] = this[coords.x, coords.y + 1, coords.z - 1]; //Top Right
+		neighbors[3] = this[coords.x + 1, coords.y, coords.z - 1]; //Right
+		neighbors[4] = this[coords.x + 1, coords.y - 1, coords.z]; //Bottom Right
+		neighbors[5] = this[coords.x, coords.y - 1, coords.z + 1]; //Bottom Left
 		return neighbors;
 	}
 
@@ -241,7 +248,6 @@ public class Map : IDisposable
 		return null;
 	}
 
-
 	public List<Tile> HexSelect(HexCoords center, int radius)
 	{
 		var selection = new List<Tile>();
@@ -261,7 +267,7 @@ public class Map : IDisposable
 			for (int x = xMin; x <= xMax; x++)
 			{
 				int z = -x - y;
-				var t = this[center.X + x, center.Y + y, center.Z + z];
+				var t = this[center.x + x, center.y + y, center.z + z];
 				if (t != null)
 					selection.Add(t);
 			}
@@ -283,8 +289,8 @@ public class Map : IDisposable
 		{
 			for (float z = -radius; z < radius; z++)
 			{
-				var p = HexCoords.FromPosition(new Vector3(x + center.WorldX, 0, z + center.WorldZ), InnerRadius);
-				var d = Mathf.Pow(p.WorldX - center.WorldX, 2) + Mathf.Pow(p.WorldZ - center.WorldZ, 2);
+				var p = HexCoords.FromPosition(new Vector3(x + center.worldX, 0, z + center.worldZ), InnerRadius);
+				var d = Mathf.Pow(p.worldX - center.worldX, 2) + Mathf.Pow(p.worldZ - center.worldZ, 2);
 				if (d <= radius * radius)
 				{
 					var t = this[p];
@@ -322,7 +328,7 @@ public class Map : IDisposable
 		var outerSelection = CircularSelect(center, outerRadius).Except(innerSelection);
 		foreach (var tile in outerSelection)
 		{
-			var d = Mathf.Pow(center.WorldX - tile.Coords.WorldX, 2) + Mathf.Pow(center.WorldZ - tile.Coords.WorldZ, 2);
+			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
 			d -= innerRadius * innerRadius;
 			d = MathUtils.Map(d, 0, (outerRadius * outerRadius) - (innerRadius * innerRadius), 0, 1);
 			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
@@ -347,7 +353,7 @@ public class Map : IDisposable
 		var outerSelection = HexSelect(center, outerRadius).Except(innerSelection);
 		foreach (var tile in outerSelection)
 		{
-			var d = Mathf.Pow(center.WorldX - tile.Coords.WorldX, 2) + Mathf.Pow(center.WorldZ - tile.Coords.WorldZ, 2);
+			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
 			d -= innerRadius * innerRadius * LongDiagonal;
 			d = MathUtils.Map(d, 0, (outerRadius * outerRadius * LongDiagonal) - (innerRadius * innerRadius * LongDiagonal), 0, 1);
 			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));

@@ -24,7 +24,7 @@ public class Tile
 	{
 		Height = height;
 		info = tInfo;
-		SurfacePoint = new Vector3(coords.WorldX, height, coords.WorldZ);
+		SurfacePoint = new Vector3(coords.worldX, height, coords.worldZ);
 	}
 
 	// override object.Equals
@@ -49,7 +49,7 @@ public class Tile
 	{
 		Height = height;
 		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
-		SurfacePoint = new Vector3(Coords.WorldX, height, Coords.WorldZ);
+		SurfacePoint = new Vector3(Coords.worldX, height, Coords.worldZ);
 		foreach (var renderer in info.renderers)
 			renderer.Render(this, _tileEntity);
 	}
@@ -67,7 +67,8 @@ public class Tile
 
 	public virtual Entity Render()
 	{
-		_tileEntity = info.Instantiate(Coords.WorldXZ, new Vector3(1, Height, 1));
+		_tileEntity = info.Instantiate(Coords, new Vector3(1, Height, 1));
+
 		foreach (var renderer in info.renderers)
 		{
 			renderer.Render(this, _tileEntity);

@@ -8,10 +8,10 @@ public struct WorldTileData : IComponentData
     
 }
 
-public class WorldTileSystem : ComponentSystem
-{
-	protected override void OnUpdate()
-	{
+//public class WorldTileSystem : ComponentSystem
+//{
+	//protected override void OnUpdate()
+	//{
 		
-	}
-}
+	//}
+//}

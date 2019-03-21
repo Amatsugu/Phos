@@ -2,52 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 public struct HexCoords
 {
-	public int X { get; private set; }
-	public int Y { get; private set; }
-	public int Z
-	{
-		get
-		{
-			return -X - Y;
-		}
-	}
-
-	public float EdgeLength { get; }
-	public float InnerRadius { get; }
-	public float ShortDiagonal { get; }
-
-	public float WorldX { get; }
-	public float WorldZ { get; }
-
-
-	public Vector3 WorldXZ { get; }
-	public Vector2 WorldXY { get; }
-	public int OffsetX { get; }
-	public int OffsetZ { get; }
+	//Position
+	[SerializeField]
+	public readonly int x;
+	[SerializeField]
+	public readonly int y;
+	[SerializeField]
+	public readonly int z;
+	//Hex info
+	[HideInInspector]
+	public readonly float edgeLength;
+	[HideInInspector]
+	public readonly float innerRadius;
+	[HideInInspector]
+	public readonly float shortDiagonal;
+	//World Pos
+	public readonly float worldX;
+	public readonly float worldZ;
+	[SerializeField]
+	public readonly Vector3 worldXZ;
+	public readonly Vector2 worldXY;
+	//Offsets
+	[SerializeField]
+	public readonly int offsetX;
+	[SerializeField]
+	public readonly int offsetZ;
 
 	public HexCoords(int x, int y, float edgeLength)
 	{
-		X = x;
-		Y = y;
-		EdgeLength = edgeLength;
-		InnerRadius = Mathf.Sqrt(3f) / 2f * EdgeLength;
-		ShortDiagonal = Mathf.Sqrt(3f) * EdgeLength;
-		OffsetX = x + y / 2;
-		OffsetZ = y;
-		WorldX = (OffsetX + OffsetZ * .5f - OffsetZ / 2) * (InnerRadius * 2f);
-		WorldZ = OffsetZ * (EdgeLength * 1.5f);
-		WorldXZ = new Vector3(WorldX, 0, WorldZ);
-		WorldXY = new Vector2(WorldX, WorldZ);
+		this.x = x;
+		this.y = y;
+		this.z = -x - y;
+		this.edgeLength = edgeLength;
+		innerRadius = Mathf.Sqrt(3f) / 2f * this.edgeLength;
+		shortDiagonal = Mathf.Sqrt(3f) * this.edgeLength;
+		offsetX = x + y / 2;
+		offsetZ = y;
+		worldX = (offsetX + offsetZ * .5f - offsetZ / 2) * (innerRadius * 2f);
+		worldZ = offsetZ * (this.edgeLength * 1.5f);
+		worldXZ = new Vector3(worldX, 0, worldZ);
+		worldXY = new Vector2(worldX, worldZ);
 	}
 
-	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength)
-	{
-		return new HexCoords(x - Z / 2, Z, edgeLength);
-	}
-
+	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength) => new HexCoords(x - (Z / 2), Z, edgeLength);
 
 	public static HexCoords FromPosition(Vector3 position, float edgeLength = 1)
 	{
@@ -71,32 +70,17 @@ public struct HexCoords
 		return ToChunkLocalCoord(x, z);
 	}
 
-	public HexCoords ToChunkLocalCoord(int chunkX, int chunkZ) => FromOffsetCoords(OffsetX - (chunkX * Map.Chunk.SIZE), OffsetZ - (chunkZ * Map.Chunk.SIZE), EdgeLength);
+	public HexCoords ToChunkLocalCoord(int chunkX, int chunkZ) => FromOffsetCoords(offsetX - (chunkX * Map.Chunk.SIZE), offsetZ - (chunkZ * Map.Chunk.SIZE), edgeLength);
 
-	public (int chunkX, int chunkZ) GetChunkPos()
-	{
-		return (Mathf.FloorToInt((float)OffsetX / Map.Chunk.SIZE), Mathf.FloorToInt((float)OffsetZ / Map.Chunk.SIZE));
-	}
+	public (int chunkX, int chunkZ) GetChunkPos() => (Mathf.FloorToInt((float)offsetX / Map.Chunk.SIZE), Mathf.FloorToInt((float)offsetZ / Map.Chunk.SIZE));
 
-	public int ToIndex(int mapWidth)
-	{
-		return X + Y * mapWidth + Y / 2;
-	}
+	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
 
-	public override string ToString()
-	{
-		return $"({X}, {Y}, {Z})";
-	}
+	public override string ToString() => $"({x}, {y}, {z})";
 
-	public static bool operator ==(HexCoords a, HexCoords b)
-	{
-		return a.Equals(b);
-	}
+	public static bool operator ==(HexCoords a, HexCoords b) => a.Equals(b);
 
-	public static bool operator !=(HexCoords a, HexCoords b)
-	{
-		return !a.Equals(b);
-	}
+	public static bool operator !=(HexCoords a, HexCoords b) => !a.Equals(b);
 
 	// override object.Equals
 	public override bool Equals(object obj)
@@ -107,12 +91,9 @@ public struct HexCoords
 		}
 
 		var h = (HexCoords)obj;
-		return (h.X == X && h.Y == Y);
+		return (h.x == x && h.y == y);
 	}
 
 	// override object.GetHashCode
-	public override int GetHashCode()
-	{
-		return base.GetHashCode();
-	}
+	public override int GetHashCode() => base.GetHashCode();
 }

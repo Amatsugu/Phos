@@ -92,7 +92,7 @@ public class MapRenderer : MonoBehaviour
 		{
 			var mPos = Input.mousePosition;
 			var t = map.GetTileFromRay(_cam.ScreenPointToRay(mPos), camPos.y * 2);
-			if (t != null)
+			if (t != null && t.Height > map.SeaLevel)
 			{
 				map.HexFlatten(t.Coords, 1, 6, Map.FlattenMode.Average);
 				selector.transform.position = t.SurfacePoint;

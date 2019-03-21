@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -19,12 +20,7 @@ public class MeshEntity : ScriptableObject
 		if (_entity == null || !em.Exists(_entity))
 		{
 			Debug.Log($"Create Entity {name}");
-			var architype = em.CreateArchetype(
-				typeof(Translation),
-				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
-				//typeof(ChunkWorldRenderBounds),
-				typeof(NonUniformScale)
-				);
+			var architype = GetArchetype();
 			RenderMesh sharedMesh = new RenderMesh
 			{
 				castShadows = UnityEngine.Rendering.ShadowCastingMode.On,
@@ -39,6 +35,16 @@ public class MeshEntity : ScriptableObject
 			return _entity;
 		}
 		return _entity;
+	}
+
+	protected virtual EntityArchetype GetArchetype(bool localToParent = false)
+	{
+		return Map.EM.CreateArchetype(
+				typeof(Translation),
+				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
+				//typeof(ChunkWorldRenderBounds),
+				typeof(NonUniformScale)
+				);
 	}
 
 	public Entity Instantiate(Vector3 position) => Instantiate(position, Vector3.one);
