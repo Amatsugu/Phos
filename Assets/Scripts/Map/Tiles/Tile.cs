@@ -48,10 +48,11 @@ public class Tile
 	public void UpdateHeight(float height)
 	{
 		Height = height;
-		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
+		if(info is BuildingTileInfo)
+			Map.EM.SetComponentData(_tileEntity, new Translation { Value = new Vector3(Coords.worldX, height, Coords.worldZ) });
+		else
+			Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
 		SurfacePoint = new Vector3(Coords.worldX, height, Coords.worldZ);
-		foreach (var renderer in info.renderers)
-			renderer.Render(this, _tileEntity);
 	}
 
 
@@ -68,11 +69,6 @@ public class Tile
 	public virtual Entity Render()
 	{
 		_tileEntity = info.Instantiate(Coords, new Vector3(1, Height, 1));
-
-		foreach (var renderer in info.renderers)
-		{
-			renderer.Render(this, _tileEntity);
-		}
 		return _tileEntity;
 	}
 

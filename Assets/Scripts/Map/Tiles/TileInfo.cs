@@ -8,9 +8,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile Info")]
 public class TileInfo : MeshEntity
 {
-	public TileRenderer[] renderers;
-
-
 	protected override EntityArchetype GetArchetype(bool localToParent = false)
 	{
 		return Map.EM.CreateArchetype(
@@ -21,10 +18,15 @@ public class TileInfo : MeshEntity
 				);
 	}
 
-	public Entity Instantiate(HexCoords pos, Vector3 scale)
+	public virtual Entity Instantiate(HexCoords pos, Vector3 scale)
 	{
 		var e = Instantiate(pos.worldXZ, scale);
 		Map.EM.SetComponentData(e, new HexPosition { coords = pos });
 		return e;
+	}
+
+	public virtual Tile CreateTile(HexCoords pos, float height)
+	{
+		return new Tile(pos, height, this);
 	}
 }

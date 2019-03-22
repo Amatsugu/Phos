@@ -364,9 +364,10 @@ MonoBehaviour:
   generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
   selector: {fileID: 6888193548383895851}
+  hqTile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
+  resourceList: {fileID: 11400000, guid: c901ba43007104e41956c9d33011aa23, type: 2}
   min: {x: 0, y: 0, z: 0}
   max: {x: 0, y: 0, z: 0}
-  hqTile: {fileID: 11400000, guid: 59910362fbdaa7048a43541f0fea4ac3, type: 2}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0

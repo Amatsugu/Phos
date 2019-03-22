@@ -60,7 +60,7 @@ public class RandomGenerator : MapGenerator
 				var coord = HexCoords.FromOffsetCoords(x, z, edgeLength);
 				var height = GenerateHeightMap(x, z);
 				var tInfo = tileMapper.GetTile(height, seaLevel);
-				map[coord] = PaintTile(new Tile(coord, height, null));
+				map[coord] = tInfo.CreateTile(coord, height);
 			}
 		}
 		return map;

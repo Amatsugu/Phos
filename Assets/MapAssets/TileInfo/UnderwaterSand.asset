@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: UnderwaterSand
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
-  material: {fileID: 2100000, guid: d1bd85203ec745d40bae4db357bd5dda, type: 2}
-  tilePrefab: {fileID: 7196555812497546746, guid: 0beeadb238bfcd3448e90157942b09ef,
-    type: 3}
+  material: {fileID: 2100000, guid: 691ada38dc6cea649b1fa292e387714a, type: 2}

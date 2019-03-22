@@ -17,12 +17,13 @@ public class MapRenderer : MonoBehaviour
 	public GameObject oceanPlane;
 	public GameObject selector;
 
+	public TileInfo hqTile;
+	public ResourceList resourceList;
+
 	[HideInInspector]
 	public Map map;
 	[HideInInspector]
 	public Vector3 min, max;
-	public TileInfo hqTile;
-
 	private Transform _ocean;
 	private Camera _cam;
 	private Vector3 _lastCamPos;
@@ -40,6 +41,7 @@ public class MapRenderer : MonoBehaviour
 		min = Vector3.zero;
 		max = new Vector3(map.Width * chunkSize * map.ShortDiagonal, 0, map.Height * chunkSize * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
+		ResourceDatabase.Init(resourceList.resourceDefinations);
 	}
 
 	private void OnDestroy()
