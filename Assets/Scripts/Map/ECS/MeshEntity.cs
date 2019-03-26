@@ -31,7 +31,7 @@ public class MeshEntity : ScriptableObject
 			};
 
 			_entity = em.CreateEntity(architype);
-			em.AddSharedComponentData(_entity, sharedMesh);
+			em.SetSharedComponentData(_entity, sharedMesh);
 			return _entity;
 		}
 		return _entity;
@@ -43,7 +43,9 @@ public class MeshEntity : ScriptableObject
 				typeof(Translation),
 				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
 				//typeof(ChunkWorldRenderBounds),
-				typeof(NonUniformScale)
+				typeof(NonUniformScale),
+				typeof(RenderMesh),
+				null
 				);
 	}
 

@@ -7,11 +7,11 @@ using UnityEngine;
 public struct ProductionData : ISharedComponentData
 {
 	public int[] resourceIds;
-	public int[] productionRates;
+	public int[] rates;
 }
 
 public struct ConsumptionData : ISharedComponentData
 {
 	public int[] resourceIds;
-	public int[] consumptionRates;
+	public int[] rates;
 }

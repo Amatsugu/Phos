@@ -43,6 +43,11 @@ public class ResourceDatabase
 		return id >= INST._resourceDefs.Length ? null : INST._resourceDefs[id].resourceTile;
 	}
 
+	public static int GetSpriteId(int id)
+	{
+		return id >= INST._resourceDefs.Length ? -1 : INST._resourceDefs[id].spriteID;
+	}
+
 	public static int[] GetIdArray()
 	{
 		return Enumerable.Range(0, INST._resourceDefs.Length).ToArray();

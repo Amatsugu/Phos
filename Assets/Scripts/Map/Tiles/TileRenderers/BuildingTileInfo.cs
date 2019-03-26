@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -11,30 +12,77 @@ public class BuildingTileInfo : TileInfo
 	public int size = 3;
 	public int influenceRange = 6;
 
+	public Resource[] production;
+	public Resource[] consumption;
+
+	[System.Serializable]
+	public struct Resource
+	{
+		public string name;
+		public int ammount;
+		public int perTileBonus;
+	}
+
+	/*protected override EntityArchetype GetArchetype(bool localToParent = false)
+	{
+		return Map.EM.CreateArchetype(
+				typeof(Translation),
+				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
+				typeof(NonUniformScale),
+				typeof(RenderMesh),
+				typeof(HexPosition)
+				//production.Length > 0 ? typeof(ProductionData) : null,
+				//consumption.Length > 0 ? typeof(ConsumptionData) : null
+				);
+	}*/
 
 	public override Entity Instantiate(HexCoords pos, Vector3 scale)
 	{
 		var p = pos.worldXZ;
 		p.y = scale.y;
 		var e = Instantiate(p, Vector3.one);
-		var influenceTiles = Map.ActiveMap.HexSelect(pos, influenceRange);
-		var production = new ProductionData
+		var influenceTiles = Map.ActiveMap.HexSelect(pos, influenceRange).GroupBy(t => t.info.name).ToDictionary(g => g.Key, g => g.Count());
+		if (production.Length > 0)
 		{
-			resourceIds = new int[]
-			{
-				ResourceDatabase.GetResourceId("Power"),
-				ResourceDatabase.GetResourceId("Stone"),
-				ResourceDatabase.GetResourceId("Food"),
-				ResourceDatabase.GetResourceId("Water")
-			}
-		};
-		production.productionRates = new int[production.resourceIds.Length];
-		for (int i = 0; i < production.resourceIds.Length; i++)
-		{
-			production.productionRates[i] = 10 + influenceTiles.Count(t => t.info == ResourceDatabase.GetResourceTile(production.resourceIds[i]));
-		}
 
-		Map.EM.AddSharedComponentData(e, production);
+			var pData = new ProductionData
+			{
+				resourceIds = new int[production.Length],
+				rates = new int[production.Length]
+			};
+			for (int i = 0; i < production.Length; i++)
+			{
+				var rId = ResourceDatabase.GetResourceId(production[i].name);
+				var tileName = ResourceDatabase.GetResourceTile(rId)?.name ?? production[i].name;
+				pData.resourceIds[i] = rId;
+				pData.rates[i] = production[i].ammount + (influenceTiles.ContainsKey(tileName) ? influenceTiles[tileName] * production[i].perTileBonus : 0);
+			}
+
+			Map.EM.AddSharedComponentData(e, pData);
+		}
+		if (consumption.Length > 0)
+		{
+
+			var cData = new ConsumptionData
+			{
+				resourceIds = new int[consumption.Length],
+				rates = new int[consumption.Length]
+			};
+			for (int i = 0; i < consumption.Length; i++)
+			{
+				var rId = ResourceDatabase.GetResourceId(consumption[i].name);
+				var tileName = ResourceDatabase.GetResourceTile(rId)?.name ?? consumption[i].name;
+				cData.resourceIds[i] = rId;
+				cData.rates[i] = consumption[i].ammount + (influenceTiles.ContainsKey(tileName) ? influenceTiles[tileName] * consumption[i].perTileBonus : 0);
+			}
+
+			Map.EM.AddSharedComponentData(e, cData);
+		}
 		return e;
+	}
+
+	public override Tile CreateTile(HexCoords pos, float height)
+	{
+		return new BuildingTile(pos, height, this);
 	}
 }

@@ -113,13 +113,14 @@ public class Map : IDisposable
 			}
 		}
 
-		public void ReplaceTile(HexCoords tilePos, TileInfo newTile)
+		public Tile ReplaceTile(HexCoords tilePos, TileInfo newTile)
 		{
 			var tile = this[tilePos];
-			tile.Destroy();
-			var n = new Tile(tile.Coords, tile.Height, newTile);
+			var n = newTile.CreateTile(tile.Coords, tile.Height);
 			this[tilePos] = n;
+			tile.Destroy();
 			_chunkTiles[tilePos.ToIndex(SIZE)] = n.Render();
+			return n;
 		}
 	}
 
@@ -360,14 +361,14 @@ public class Map : IDisposable
 		}
 	}
 
-	public void ReplaceTile(Tile tile, TileInfo newTile)
+	public Tile ReplaceTile(Tile tile, TileInfo newTile)
 	{
 		var coord = tile.Coords;
 		var (chunkX, chunkZ) = coord.GetChunkPos();
 		var index = chunkX + chunkZ * Width;
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 		var chunk = Chunks[index];
-		chunk.ReplaceTile(localCoord, newTile);
+		return chunk.ReplaceTile(localCoord, newTile);
 	}
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);

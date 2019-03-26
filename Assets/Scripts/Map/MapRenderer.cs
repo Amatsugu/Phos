@@ -31,7 +31,7 @@ public class MapRenderer : MonoBehaviour
 	private EntityManager _entityManager;
 	private Entity _hq;
 
-	private void Start()
+	private void Awake()
 	{
 		Init();
 		_cam = FindObjectOfType<Camera>();

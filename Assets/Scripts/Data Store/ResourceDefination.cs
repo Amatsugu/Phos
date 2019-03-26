@@ -7,5 +7,5 @@ public class ResourceDefination
 {
 	public string name;
 	public TileInfo resourceTile;
-	public Sprite icon;
+	public int spriteID;
 }

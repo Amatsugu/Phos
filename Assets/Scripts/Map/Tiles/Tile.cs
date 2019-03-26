@@ -16,12 +16,9 @@ public class Tile
 
 	protected Entity _tileEntity;
 
-	public Tile(HexCoords coords)
+	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
 	{
-		this.Coords = coords;
-	}
-	public Tile(HexCoords coords, float height, TileInfo tInfo = null) : this(coords)
-	{
+		Coords = coords;
 		Height = height;
 		info = tInfo;
 		SurfacePoint = new Vector3(coords.worldX, height, coords.worldZ);
@@ -45,13 +42,10 @@ public class Tile
 		return Coords.GetHashCode();
 	}
 
-	public void UpdateHeight(float height)
+	public virtual void UpdateHeight(float height)
 	{
 		Height = height;
-		if(info is BuildingTileInfo)
-			Map.EM.SetComponentData(_tileEntity, new Translation { Value = new Vector3(Coords.worldX, height, Coords.worldZ) });
-		else
-			Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
+		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
 		SurfacePoint = new Vector3(Coords.worldX, height, Coords.worldZ);
 	}
 

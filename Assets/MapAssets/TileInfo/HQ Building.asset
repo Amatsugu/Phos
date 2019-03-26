@@ -16,3 +16,17 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
   size: 3
   influenceRange: 6
+  production:
+  - name: Power
+    ammount: 10
+    perTileBonus: 0
+  - name: Water
+    ammount: 10
+    perTileBonus: 1
+  - name: Stone
+    ammount: 10
+    perTileBonus: 1
+  - name: Food
+    ammount: 10
+    perTileBonus: 1
+  consumption: []

@@ -14,6 +14,7 @@ public class TileInfo : MeshEntity
 				typeof(Translation),
 				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
 				typeof(NonUniformScale),
+				typeof(RenderMesh),
 				typeof(HexPosition)
 				);
 	}

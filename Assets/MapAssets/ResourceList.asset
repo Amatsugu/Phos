@@ -15,13 +15,13 @@ MonoBehaviour:
   resourceDefinations:
   - name: Power
     resourceTile: {fileID: 0}
-    icon: {fileID: 0}
+    spriteID: 0
   - name: Stone
     resourceTile: {fileID: 11400000, guid: f998f30b51bed924bbcfcf0266a9321b, type: 2}
-    icon: {fileID: 0}
+    spriteID: 1
   - name: Food
     resourceTile: {fileID: 11400000, guid: c24e58ddad3ec62478f1d6dc66af159f, type: 2}
-    icon: {fileID: 0}
+    spriteID: 2
   - name: Water
     resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
-    icon: {fileID: 0}
+    spriteID: 3
