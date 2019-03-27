@@ -2,29 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Text;
 
 public class GameUI : MonoBehaviour
 {
 	public TMP_Text text;
+	public TMP_Text resourcePanel;
 
 	private TMP_Text[] _rText;
 
 	void Start()
 	{
-		_rText = new TMP_Text[ResourceDatabase.ResourceCount];
-		for (int i = 0; i < _rText.Length; i++)
-		{
-			_rText[i] = Instantiate(text, transform);
-			_rText[i].rectTransform.anchoredPosition = new Vector2(0, _rText[i].rectTransform.rect.height * -i);
-			_rText[i].text = $"{ResourceDatabase.GetResourceName(i)} : {HQSystem.resCount?[i]}";
-		}
+
 	}
 
 	void Update()
 	{
-		for (int i = 0; i < _rText.Length; i++)
+		var sb = new StringBuilder();
+		for (int i = 0; i < ResourceDatabase.ResourceCount; i++)
 		{
-			_rText[i].SetText($"<sprite={ResourceDatabase.GetSpriteId(i)}> {HQSystem.resCount?[i]}");
+			sb.Append($"<sprite={ResourceDatabase.GetSpriteId(i)}> <size=.75em><voffset=.25em>{HQSystem.resCount?[i]}</voffset></size> ");
 		}
+		resourcePanel.SetText(sb);
 	}
 }

@@ -25,3 +25,18 @@ MonoBehaviour:
   - name: Water
     resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
     spriteID: 3
+  - name: Iron
+    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    spriteID: 1
+  - name: Coal
+    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    spriteID: 1
+  - name: Copper
+    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    spriteID: 1
+  - name: Gold
+    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    spriteID: 1
+  - name: Steel
+    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    spriteID: 1

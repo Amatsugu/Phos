@@ -15,11 +15,15 @@ public class CameraController : MonoBehaviour
 	private float _lastHeight;
 	private float _anim = 0;
 	private HexCoords _lastCoord;
+	private Camera _cam;
+
+	private Vector3 _lastClickPos;
 
     // Start is called before the first frame update
     void Awake()
     {
 		_targetHeight = maxHeight;
+		_cam = GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -38,8 +42,24 @@ public class CameraController : MonoBehaviour
 			moveVector.z = 1;
 		else if (Input.GetKey(KeyCode.S))
 			moveVector.z = -1;
-
 		pos += moveVector * moveSpeed * Time.deltaTime;
+
+		//Drag Panning
+		Vector3 curPos;
+		var mPos = Input.mousePosition;
+		if(Input.GetKeyDown(KeyCode.Mouse1))
+		{
+			curPos = _lastClickPos = new Vector3(mPos.x, 0, mPos.y);
+		}
+		if(Input.GetKey(KeyCode.Mouse1))
+		{
+			curPos = new Vector3(mPos.x, 0, mPos.y); ;
+			var delta = _lastClickPos - curPos;
+			delta.y = 0;
+			pos += delta * Time.deltaTime;
+
+			_lastClickPos = curPos;
+		}
 
 		//Zooming
 		var scroll = Input.mouseScrollDelta.y * zoomAmmount;
@@ -66,6 +86,7 @@ public class CameraController : MonoBehaviour
 		pos.x = Mathf.Clamp(pos.x, mapRenderer.min.x, mapRenderer.max.x);
 		pos.z = Mathf.Clamp(pos.z, mapRenderer.min.z, mapRenderer.max.z);
 		transform.position = pos;
+
 
 
 	}

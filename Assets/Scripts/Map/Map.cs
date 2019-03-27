@@ -148,7 +148,7 @@ public class Map : IDisposable
 		{
 			var (chunkX, chunkZ) = coord.GetChunkPos();
 			var index = chunkX + chunkZ * Width;
-			if (index < 0 || index > Length)
+			if (index < 0 || index >= Length)
 				return null;
 			var chunk = Chunks[index];
 			if (chunk == null)
@@ -230,7 +230,7 @@ public class Map : IDisposable
 	/// </summary>
 	/// <param name="ray">Ray to cast</param>
 	/// <returns>The tile if found</returns>
-	public Tile GetTileFromRay(Ray ray, float distance = float.MaxValue, float increment = 0.1f)
+	public Tile GetTileFromRay(Ray ray, float distance = 50000f, float increment = 0.1f)
 	{
 		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red, 5);
 		for (float i = 0; i < distance; i += increment)

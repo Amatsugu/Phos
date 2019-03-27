@@ -7,9 +7,9 @@ public struct RigidNoiseFilter : INoiseFilter
 	Noise noise;
 	NoiseSettings.RigidNoiseSettings settings;
 
-	public RigidNoiseFilter(NoiseSettings.RigidNoiseSettings noiseSettings)
+	public RigidNoiseFilter(NoiseSettings.RigidNoiseSettings noiseSettings, int seed = 0)
 	{
-		noise = new Noise(0);
+		noise = new Noise(seed);
 		this.settings = noiseSettings;
 	}
 

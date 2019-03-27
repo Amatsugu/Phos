@@ -20,7 +20,7 @@ MonoBehaviour:
   - tileInfo: {fileID: 11400000, guid: f998f30b51bed924bbcfcf0266a9321b, type: 2}
     startHeight: 10
   - tileInfo: {fileID: 11400000, guid: a45b2388e4f92d044936a1d2865af49a, type: 2}
-    startHeight: 20
+    startHeight: 25
   oceanLayers:
   - tileInfo: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
     startHeight: 0

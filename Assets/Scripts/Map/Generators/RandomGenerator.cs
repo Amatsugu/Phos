@@ -47,7 +47,7 @@ public class RandomGenerator : MapGenerator
 		maxElevation = float.MinValue;
 		noiseFilters = new INoiseFilter[noiseLayers.Length];
 		for (int i = 0; i < noiseLayers.Length; i++)
-			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings);
+			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings, seed);
 		Map map = new Map((int)Size.x, (int)Size.y, parent, edgeLength)
 		{
 			SeaLevel = seaLevel

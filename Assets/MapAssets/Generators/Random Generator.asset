@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
   m_Name: Random Generator
   m_EditorClassIdentifier: 
-  Size: {x: 10, y: 10}
+  Size: {x: 16, y: 16}
   tileMapper: {fileID: 11400000, guid: 53d4e23fb41281647959dab06f3d19b8, type: 2}
   seaLevel: 4
   edgeLength: 1
   featureGenerators: []
   useJobs: 0
   Regen: 0
-  noiseScale: 235.87
+  noiseScale: 312.03
   noiseLayers:
   - enabled: 1
     useFirstLayerAsMask: 0
@@ -28,11 +28,11 @@ MonoBehaviour:
       simpleNoiseSettings:
         strength: 2.93
         layerCount: 4
-        baseRoughness: 6.25
-        roughness: 0.6
+        baseRoughness: 2.14
+        roughness: 0.87
         persistence: 0.77
-        minValue: 0.05
-        center: {x: 0, y: 56.1, z: 0}
+        minValue: -0.16
+        center: {x: 0, y: 0, z: 0}
       rigidNoiseSettings:
         strength: 1.35
         layerCount: 8
@@ -43,17 +43,17 @@ MonoBehaviour:
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.34
   - enabled: 1
-    useFirstLayerAsMask: 1
+    useFirstLayerAsMask: 0
     noiseSettings:
       type: 0
       simpleNoiseSettings:
-        strength: 1.8
+        strength: -0.35
         layerCount: 3
-        baseRoughness: 3.5
-        roughness: 3.85
-        persistence: 0.88
-        minValue: 0.11
-        center: {x: 4.54, y: 0, z: 0}
+        baseRoughness: 2.85
+        roughness: 2.53
+        persistence: 1.49
+        minValue: 0
+        center: {x: 0, y: 0, z: 0}
       rigidNoiseSettings:
         strength: 2.29
         layerCount: 4
@@ -76,13 +76,13 @@ MonoBehaviour:
         minValue: 1.7
         center: {x: 4.54, y: 0, z: 0}
       rigidNoiseSettings:
-        strength: 7.75
+        strength: 10.44
         layerCount: 4
-        baseRoughness: 3.04
-        roughness: 6.1
+        baseRoughness: 3.06
+        roughness: 7.96
         persistence: 1.57
         minValue: 0
         center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 0.37
+        weightMultiplier: 0.21
   useSeed: 0
-  seed: -921699389
+  seed: -922514758
