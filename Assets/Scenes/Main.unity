@@ -1100,7 +1100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 20
   minHeightFromGround: 8
-  maxHeight: 80
+  maxHeight: 800
   zoomAmmount: 1
   zoomSpeed: 1
   mapRenderer: {fileID: 196126402}

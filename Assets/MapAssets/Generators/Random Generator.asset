@@ -12,14 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
   m_Name: Random Generator
   m_EditorClassIdentifier: 
-  Size: {x: 16, y: 16}
+  Size: {x: 24, y: 24}
   tileMapper: {fileID: 11400000, guid: 53d4e23fb41281647959dab06f3d19b8, type: 2}
-  seaLevel: 4
+  seaLevel: 5
   edgeLength: 1
   featureGenerators: []
   useJobs: 0
   Regen: 0
-  noiseScale: 312.03
+  biomePainter: {fileID: 11400000, guid: d2bf891ec26bcaf428240b2ac77408a3, type: 2}
+  biomeFold: 1
+  biomeEditor: {fileID: 0}
+  noiseScale: 350
   noiseLayers:
   - enabled: 1
     useFirstLayerAsMask: 0
@@ -31,7 +34,7 @@ MonoBehaviour:
         baseRoughness: 2.14
         roughness: 0.87
         persistence: 0.77
-        minValue: -0.16
+        minValue: -0.2
         center: {x: 0, y: 0, z: 0}
       rigidNoiseSettings:
         strength: 1.35
@@ -47,11 +50,11 @@ MonoBehaviour:
     noiseSettings:
       type: 0
       simpleNoiseSettings:
-        strength: -0.35
-        layerCount: 3
+        strength: -0.23
+        layerCount: 4
         baseRoughness: 2.85
-        roughness: 2.53
-        persistence: 1.49
+        roughness: 2
+        persistence: 1
         minValue: 0
         center: {x: 0, y: 0, z: 0}
       rigidNoiseSettings:
@@ -83,6 +86,6 @@ MonoBehaviour:
         persistence: 1.57
         minValue: 0
         center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 0.21
+        weightMultiplier: 0.28
   useSeed: 0
-  seed: -922514758
+  seed: -922571704

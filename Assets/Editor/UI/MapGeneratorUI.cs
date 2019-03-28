@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(MapGenerator), true)]
+[CustomEditor(typeof(RandomGenerator), true)]
 public class MapGeneratorUI : Editor
 {
-	private MapGenerator creator;
+	private RandomGenerator creator;
 	private bool _autoRegen;
 	private void OnEnable()
 	{
-		creator = target as MapGenerator;
+		creator = target as RandomGenerator;
 	}
 
 	public override void OnInspectorGUI()
@@ -30,5 +30,19 @@ public class MapGeneratorUI : Editor
 		GUILayout.EndVertical();
 		if(_autoRegen)
 			creator.Regen = EditorGUI.EndChangeCheck();
+
+		creator.biomeFold = EditorGUILayout.InspectorTitlebar(creator.biomeFold, creator.biomePainter);
+		using (var check = new EditorGUI.ChangeCheckScope())
+		{
+			if (creator.biomeFold)
+			{
+				CreateCachedEditor(creator.biomePainter, null, ref creator.biomeEditor);
+				creator.biomeEditor.OnInspectorGUI();
+				if (_autoRegen)
+				{
+					creator.Regen = check.changed;
+				}
+			}
+		}
 	}
 }

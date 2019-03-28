@@ -42,23 +42,26 @@ public class CameraController : MonoBehaviour
 			moveVector.z = 1;
 		else if (Input.GetKey(KeyCode.S))
 			moveVector.z = -1;
+		if (Input.GetKey(KeyCode.LeftShift))
+			moveVector *= 2;
 		pos += moveVector * moveSpeed * Time.deltaTime;
 
 		//Drag Panning
 		Vector3 curPos;
 		var mPos = Input.mousePosition;
-		if(Input.GetKeyDown(KeyCode.Mouse1))
+		var ray = _cam.ScreenPointToRay(mPos);
+		var height = pos.y - mapRenderer.map.SeaLevel;
+		var d = height / Mathf.Sin(_cam.transform.eulerAngles.x * Mathf.Deg2Rad);
+		if (Input.GetKeyDown(KeyCode.Mouse1))
 		{
-			curPos = _lastClickPos = new Vector3(mPos.x, 0, mPos.y);
+			curPos = _lastClickPos = ray.GetPoint(d);
 		}
 		if(Input.GetKey(KeyCode.Mouse1))
 		{
-			curPos = new Vector3(mPos.x, 0, mPos.y); ;
+			curPos = ray.GetPoint(d);
 			var delta = _lastClickPos - curPos;
 			delta.y = 0;
-			pos += delta * Time.deltaTime;
-
-			_lastClickPos = curPos;
+			pos += delta;
 		}
 
 		//Zooming

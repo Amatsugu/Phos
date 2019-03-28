@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Jobs;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -17,6 +18,11 @@ public class RandomGenerator : MapGenerator
 		public NoiseSettings noiseSettings;
 	}
 
+	public BiomePainter biomePainter;
+	[HideInInspector]
+	public bool biomeFold;
+	[HideInInspector]
+	public Editor biomeEditor;
 	public float noiseScale = .5f;
 	
 
@@ -41,6 +47,7 @@ public class RandomGenerator : MapGenerator
 
 	public override Map GenerateMap(Transform parent = null)
 	{
+		Start:
 		if (!useSeed)
 			seed = (int)(new System.DateTime(1990, 1, 1) - System.DateTime.Now).TotalSeconds;
 		Random.InitState(seed);
@@ -53,12 +60,29 @@ public class RandomGenerator : MapGenerator
 			SeaLevel = seaLevel
 		};
 		var chunkSize = Map.Chunk.SIZE;
+		var heightMap = new float[map.Width * map.Height * chunkSize * chunkSize];
+		var landToSeaRatio = 0f;
+		for (int z = 0; z < map.Width * chunkSize; z++)
+		{
+			for (int x = 0; x < map.Height * chunkSize; x++)
+			{
+				var sample = GenerateHeightMap(x, z);
+				if (sample > seaLevel)
+					landToSeaRatio++;
+				heightMap[x + z * (map.Width * chunkSize)] = sample;
+			}
+		}
+		landToSeaRatio /= heightMap.Length;
+		//Prevent the ratio of land to sea from being too low
+		if (landToSeaRatio < .4f)
+			goto Start;
+		//var biomeMap = biomePainter.GetMoistureMap(map.Width * chunkSize, map.Height * chunkSize, noiseFilters[0], noiseScale, seaLevel);
 		for (int z = 0; z < map.Width * chunkSize; z++)
 		{
 			for (int x = 0; x < map.Height * chunkSize; x++)
 			{
 				var coord = HexCoords.FromOffsetCoords(x, z, edgeLength);
-				var height = GenerateHeightMap(x, z);
+				var height = heightMap[x + z * (map.Width * chunkSize)];
 				var tInfo = tileMapper.GetTile(height, seaLevel);
 				map[coord] = tInfo.CreateTile(coord, height);
 			}

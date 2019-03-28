@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Unity.Jobs;
+using UnityEngine.SceneManagement;
 
 public class MapRenderer : MonoBehaviour
 {
@@ -78,6 +79,10 @@ public class MapRenderer : MonoBehaviour
 
 	private void Update()
 	{
+		//TODO: Remove this when testing complete
+		if (Input.GetKey(KeyCode.R))
+			SceneManager.LoadScene(0);
+
 		var camPos = _cam.transform.position;
 		if (_lastCamPos != camPos)
 		{
