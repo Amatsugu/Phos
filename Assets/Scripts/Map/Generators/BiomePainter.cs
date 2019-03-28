@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile Mapper/Biome Painter")]
@@ -62,6 +63,28 @@ public class BiomePainter : ScriptableObject
 		}
 
 		return moistureMap;
+	}
+
+	public int[] GetTempMap(int width, int height, float[] heightMap, float seaLevel, int seed)
+	{
+		Random.InitState(seed);
+		var tempMap = new int[width * height];
+		var equator = Random.Range(0, height);
+		var maxD = Mathf.Abs((height / 2) - equator);
+		maxD = maxD < equator ? equator : maxD;
+		var maxHeight = heightMap.Max() - seaLevel;
+		for (int z = 0; z < height; z++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				var d = Mathf.Abs(z - equator);
+				var tE = MathUtils.Map(d, 0, maxD, 0, 3);
+				var tH = MathUtils.Map(heightMap[x + z * width], 0, maxHeight, 0, 3);
+				var t = Mathf.RoundToInt((tH + tE) / 2f);
+				tempMap[x + z * width] = t;
+			}
+		}
+		return tempMap;
 	}
 
 

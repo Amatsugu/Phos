@@ -34,7 +34,7 @@ public class RandomGenerator : MapGenerator
 
 	private void OnEnable()
 	{
-		noiseFilters = null;	
+		noiseFilters = null;
 	}
 
 	private float maxElevation = float.MinValue;
@@ -66,7 +66,7 @@ public class RandomGenerator : MapGenerator
 		{
 			for (int x = 0; x < map.Height * chunkSize; x++)
 			{
-				var sample = GenerateHeightMap(x, z);
+				var sample = GenerateHeight(x, z);
 				if (sample > seaLevel)
 					landToSeaRatio++;
 				heightMap[x + z * (map.Width * chunkSize)] = sample;
@@ -76,7 +76,10 @@ public class RandomGenerator : MapGenerator
 		//Prevent the ratio of land to sea from being too low
 		if (landToSeaRatio < .4f)
 			goto Start;
-		//var biomeMap = biomePainter.GetMoistureMap(map.Width * chunkSize, map.Height * chunkSize, noiseFilters[0], noiseScale, seaLevel);
+
+
+		//var tempMap = biomePainter.GetTempMap(map.Width * chunkSize, map.Height * chunkSize, heightMap, seaLevel, seed);
+		//var moustureMap = biomePainter.GetMoistureMap(map.Width * chunkSize, map.Height * chunkSize, noiseFilters[0], noiseScale, seaLevel);
 		for (int z = 0; z < map.Width * chunkSize; z++)
 		{
 			for (int x = 0; x < map.Height * chunkSize; x++)
@@ -84,13 +87,14 @@ public class RandomGenerator : MapGenerator
 				var coord = HexCoords.FromOffsetCoords(x, z, edgeLength);
 				var height = heightMap[x + z * (map.Width * chunkSize)];
 				var tInfo = tileMapper.GetTile(height, seaLevel);
+				//var tInfo = biomePainter.GetTile(moustureMap[x + z * (map.Width * chunkSize)], height, seaLevel);
 				map[coord] = tInfo.CreateTile(coord, height);
 			}
 		}
 		return map;
 	}
 
-	public float GenerateHeightMap(int x, int y)
+	public float GenerateHeight(int x, int y)
 	{
 		float elevation = 0;
 		float firstLayer = 0;

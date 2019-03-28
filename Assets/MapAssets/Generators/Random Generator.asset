@@ -81,11 +81,11 @@ MonoBehaviour:
       rigidNoiseSettings:
         strength: 10.44
         layerCount: 4
-        baseRoughness: 3.06
-        roughness: 7.96
+        baseRoughness: 2.6
+        roughness: 4
         persistence: 1.57
         minValue: 0
         center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 0.28
-  useSeed: 0
-  seed: -922571704
+        weightMultiplier: 0.35
+  useSeed: 1
+  seed: -922586925
