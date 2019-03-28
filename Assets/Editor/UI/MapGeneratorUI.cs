@@ -40,7 +40,7 @@ public class MapGeneratorUI : Editor
 				creator.biomeEditor.OnInspectorGUI();
 				if (_autoRegen)
 				{
-					creator.Regen = check.changed;
+					creator.Regen = creator.Regen ? true : check.changed;
 				}
 			}
 		}
