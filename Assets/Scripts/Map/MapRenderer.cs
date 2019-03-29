@@ -95,18 +95,7 @@ public class MapRenderer : MonoBehaviour
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z + 2 * _ocean.localScale.z);
 		}
 
-		/*if (Input.GetKeyUp(KeyCode.Mouse0))
-		{
-			var mPos = Input.mousePosition;
-			var t = map.GetTileFromRay(_cam.ScreenPointToRay(mPos), camPos.y * 2);
-			if (t != null && t.Height > map.SeaLevel)
-			{
-				map.HexFlatten(t.Coords, 1, 6, Map.FlattenMode.Average);
-				selector.transform.position = t.SurfacePoint;
-				map.ReplaceTile(t, hqTile);
-			}
-
-		}*/
+		
 		if (generator.Regen)
 		{
 			generator.Regen = false;

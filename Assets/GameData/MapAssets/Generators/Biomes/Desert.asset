@@ -10,17 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d0f1707e00235e4fbe7b24a949b9187, type: 3}
-  m_Name: StackedMapper
+  m_Name: Desert
   m_EditorClassIdentifier: 
   surfaceLayers:
   - tileInfo: {fileID: 11400000, guid: e1aad5cf5998f104ab3436a7be0e85d6, type: 2}
     startHeight: 0
-  - tileInfo: {fileID: 11400000, guid: c24e58ddad3ec62478f1d6dc66af159f, type: 2}
-    startHeight: 1.5
-  - tileInfo: {fileID: 11400000, guid: f998f30b51bed924bbcfcf0266a9321b, type: 2}
-    startHeight: 10
-  - tileInfo: {fileID: 11400000, guid: a45b2388e4f92d044936a1d2865af49a, type: 2}
-    startHeight: 25
   oceanLayers:
   - tileInfo: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
     startHeight: 0

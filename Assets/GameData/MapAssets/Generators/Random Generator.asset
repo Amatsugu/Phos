@@ -19,9 +19,8 @@ MonoBehaviour:
   featureGenerators: []
   useJobs: 0
   Regen: 0
-  biomePainter: {fileID: 11400000, guid: d2bf891ec26bcaf428240b2ac77408a3, type: 2}
+  biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
   biomeFold: 1
-  biomeEditor: {fileID: 0}
   noiseScale: 350
   noiseLayers:
   - enabled: 1
@@ -88,4 +87,4 @@ MonoBehaviour:
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.35
   useSeed: 0
-  seed: -922647378
+  seed: -922722602

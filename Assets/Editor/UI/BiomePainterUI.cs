@@ -10,8 +10,10 @@ public class BiomePainterUI : Editor
 	private void OnEnable()
 	{
 		painter = target as BiomePainter;
-		if (painter.biomes == null || painter.biomes.Length != 16)
-			painter.biomes = new TileInfo[16];
+		if (painter == null)
+			return;
+		if (painter.biomes == null)
+			painter.biomes = new TileMapper[16];
 	}
 
 	public override void OnInspectorGUI()
@@ -33,9 +35,10 @@ public class BiomePainterUI : Editor
 			GUILayout.Label($"{z}  ");
 			for (int x = 3; x >= 0; x--)
 			{
-				painter.biomes[x + z * 4] = EditorGUILayout.ObjectField(painter.biomes[x + z * 4], typeof(TileInfo), false) as TileInfo;
+				painter.biomes[x + z * 4] = EditorGUILayout.ObjectField(painter.biomes[x + z * 4], typeof(TileMapper), false) as TileMapper;
 			}
 			GUILayout.EndHorizontal();
 		}
+		
 	}
 }

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d0f1707e00235e4fbe7b24a949b9187, type: 3}
+  m_Name: Woodland
+  m_EditorClassIdentifier: 
+  surfaceLayers:
+  - tileInfo: {fileID: 11400000, guid: e1aad5cf5998f104ab3436a7be0e85d6, type: 2}
+    startHeight: 0
+  - tileInfo: {fileID: 11400000, guid: bfeefccfe04fe9540b4dc2b4a0e529eb, type: 2}
+    startHeight: 1.5
+  - tileInfo: {fileID: 11400000, guid: f998f30b51bed924bbcfcf0266a9321b, type: 2}
+    startHeight: 15
+  - tileInfo: {fileID: 11400000, guid: a45b2388e4f92d044936a1d2865af49a, type: 2}
+    startHeight: 25
+  oceanLayers:
+  - tileInfo: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    startHeight: 0

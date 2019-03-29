@@ -32,16 +32,19 @@ public class MapGeneratorUI : Editor
 		if(_autoRegen)
 			creator.Regen = EditorGUI.EndChangeCheck();
 
-		creator.biomeFold = EditorGUILayout.InspectorTitlebar(creator.biomeFold, creator.biomePainter);
-		using (var check = new EditorGUI.ChangeCheckScope())
+		if (creator.biomePainter != null)
 		{
-			if (creator.biomeFold)
+			creator.biomeFold = EditorGUILayout.InspectorTitlebar(creator.biomeFold, creator.biomePainter);
+			using (var check = new EditorGUI.ChangeCheckScope())
 			{
-				CreateCachedEditor(creator.biomePainter, null, ref editor);
-				editor.OnInspectorGUI();
-				if (_autoRegen)
+				if (creator.biomeFold)
 				{
-					creator.Regen = creator.Regen ? true : check.changed;
+					CreateCachedEditor(creator.biomePainter, null, ref editor);
+					editor.OnInspectorGUI();
+					if (_autoRegen)
+					{
+						creator.Regen = creator.Regen ? true : check.changed;
+					}
 				}
 			}
 		}

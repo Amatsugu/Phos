@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile Mapper/Biome Painter")]
 public class BiomePainter : ScriptableObject
 {
-	public TileInfo[] biomes;
+	public TileMapper[] biomes;
 
 
 	public int[] GetBiomeMap()
@@ -63,9 +63,9 @@ public class BiomePainter : ScriptableObject
 	}
 
 
-	public TileInfo GetTile(int biome)
+	public TileInfo GetTile(int biome, float height, float seaLevel)
 	{
-		return biomes[biome];
+		return biomes[biome].GetTile(height, seaLevel);
 	}
 
 }
