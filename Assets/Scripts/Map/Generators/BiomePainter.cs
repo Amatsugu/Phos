@@ -8,35 +8,10 @@ public class BiomePainter : ScriptableObject
 {
 	public TileInfo[] biomes;
 
-	public float noiseScale;
-	public NoiseSettings settings;
 
-
-	public int[] GetBiomeMap(int width, int height, int seed)
+	public int[] GetBiomeMap()
 	{
-		var heightMap = new float[width * height];
-		float min = float.MaxValue, max = float.MinValue;
-		var n = NoiseFilterFactory.CreateNoiseFilter(settings, seed);
-		for (int z = 0; z < height; z++)
-		{
-			for (int x = 0; x < width; x++)
-			{
-				var sample = n.Evaluate(new Vector3(x / noiseScale, 0, z / noiseScale));
-				if (min > sample)
-					min = sample;
-				if (max < sample)
-					max = sample;
-				heightMap[x + z * width] = sample;
-			}
-		}
-
-		var biomeMap = new int[width * height];
-		for (int i = 0; i < biomeMap.Length; i++)
-		{
-			biomeMap[i] = Mathf.Clamp(Mathf.RoundToInt(MathUtils.Map(heightMap[i], min, max, 0, biomes.Length-1)), 0, biomes.Length-1);
-		}
-
-		return biomeMap;
+		return null;
 	}
 
 	public int[] GetMoistureMap(int width, int height, INoiseFilter filter, float noiseScale, float seaLevel)
@@ -80,18 +55,16 @@ public class BiomePainter : ScriptableObject
 				var d = Mathf.Abs(z - equator);
 				var tE = MathUtils.Map(d, 0, maxD, 0, 3);
 				var tH = MathUtils.Map(heightMap[x + z * width], 0, maxHeight, 0, 3);
-				var t = Mathf.RoundToInt((tH + tE) / 2f);
-				tempMap[x + z * width] = t;
+				var t = Mathf.Clamp(Mathf.RoundToInt((tH + tE) / 2f), 0, 3);
+				tempMap[x + z * width] = 3-t;
 			}
 		}
 		return tempMap;
 	}
 
 
-	public TileInfo GetTile(int biome, float height, float seaLevel)
+	public TileInfo GetTile(int biome)
 	{
-		//if (height <= seaLevel)
-			//return biomes[0];
 		return biomes[biome];
 	}
 

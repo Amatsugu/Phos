@@ -24,6 +24,8 @@ public class CameraController : MonoBehaviour
     {
 		_targetHeight = maxHeight;
 		_cam = GetComponent<Camera>();
+		if (Application.isEditor)
+			maxHeight = 500;
     }
 
     // Update is called once per frame

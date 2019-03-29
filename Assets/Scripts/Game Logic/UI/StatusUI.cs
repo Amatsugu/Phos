@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using System.Text;
 
-public class GameUI : MonoBehaviour
+public class SatusUI : MonoBehaviour
 {
 	public TMP_Text text;
 	public TMP_Text resourcePanel;

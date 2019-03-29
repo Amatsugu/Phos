@@ -95,7 +95,7 @@ public class MapRenderer : MonoBehaviour
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z + 2 * _ocean.localScale.z);
 		}
 
-		if (Input.GetKeyUp(KeyCode.Mouse0))
+		/*if (Input.GetKeyUp(KeyCode.Mouse0))
 		{
 			var mPos = Input.mousePosition;
 			var t = map.GetTileFromRay(_cam.ScreenPointToRay(mPos), camPos.y * 2);
@@ -106,7 +106,7 @@ public class MapRenderer : MonoBehaviour
 				map.ReplaceTile(t, hqTile);
 			}
 
-		}
+		}*/
 		if (generator.Regen)
 		{
 			generator.Regen = false;

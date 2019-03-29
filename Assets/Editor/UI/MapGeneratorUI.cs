@@ -7,6 +7,7 @@ using UnityEditor;
 public class MapGeneratorUI : Editor
 {
 	private RandomGenerator creator;
+	public static Editor editor;
 	private bool _autoRegen;
 	private void OnEnable()
 	{
@@ -36,8 +37,8 @@ public class MapGeneratorUI : Editor
 		{
 			if (creator.biomeFold)
 			{
-				CreateCachedEditor(creator.biomePainter, null, ref creator.biomeEditor);
-				creator.biomeEditor.OnInspectorGUI();
+				CreateCachedEditor(creator.biomePainter, null, ref editor);
+				editor.OnInspectorGUI();
 				if (_autoRegen)
 				{
 					creator.Regen = creator.Regen ? true : check.changed;

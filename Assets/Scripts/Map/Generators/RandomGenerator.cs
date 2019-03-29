@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Jobs;
-using UnityEditor;
 using UnityEngine;
 
 
@@ -21,8 +21,6 @@ public class RandomGenerator : MapGenerator
 	public BiomePainter biomePainter;
 	[HideInInspector]
 	public bool biomeFold;
-	[HideInInspector]
-	public Editor biomeEditor;
 	public float noiseScale = .5f;
 	
 
@@ -47,11 +45,14 @@ public class RandomGenerator : MapGenerator
 
 	public override Map GenerateMap(Transform parent = null)
 	{
+		var reject = 0;
+		var totalStartTime = DateTime.Now;
 		Start:
 		if (!useSeed)
 			seed = (int)(new System.DateTime(1990, 1, 1) - System.DateTime.Now).TotalSeconds;
-		Random.InitState(seed);
+		UnityEngine.Random.InitState(seed);
 		maxElevation = float.MinValue;
+		var startTime = DateTime.Now;
 		noiseFilters = new INoiseFilter[noiseLayers.Length];
 		for (int i = 0; i < noiseLayers.Length; i++)
 			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings, seed);
@@ -75,22 +76,32 @@ public class RandomGenerator : MapGenerator
 		landToSeaRatio /= heightMap.Length;
 		//Prevent the ratio of land to sea from being too low
 		if (landToSeaRatio < .4f)
+		{
+			reject++;
 			goto Start;
-
-
-		//var tempMap = biomePainter.GetTempMap(map.Width * chunkSize, map.Height * chunkSize, heightMap, seaLevel, seed);
-		//var moustureMap = biomePainter.GetMoistureMap(map.Width * chunkSize, map.Height * chunkSize, noiseFilters[0], noiseScale, seaLevel);
+		}
+		Debug.Log($"Generate HightMap... {(DateTime.Now-startTime).TotalMilliseconds}ms {reject} Rejects");
+		startTime = DateTime.Now;
+		var tempMap = biomePainter.GetTempMap(map.Width * chunkSize, map.Height * chunkSize, heightMap, seaLevel, seed);
+		Debug.Log($"Generate Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		startTime = DateTime.Now;
+		var moustureMap = biomePainter.GetMoistureMap(map.Width * chunkSize, map.Height * chunkSize, noiseFilters[0], noiseScale, seaLevel);
+		Debug.Log($"Generate Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		startTime = DateTime.Now;
 		for (int z = 0; z < map.Width * chunkSize; z++)
 		{
 			for (int x = 0; x < map.Height * chunkSize; x++)
 			{
 				var coord = HexCoords.FromOffsetCoords(x, z, edgeLength);
-				var height = heightMap[x + z * (map.Width * chunkSize)];
-				var tInfo = tileMapper.GetTile(height, seaLevel);
-				//var tInfo = biomePainter.GetTile(moustureMap[x + z * (map.Width * chunkSize)], height, seaLevel);
+				var i = x + z * (map.Width * chunkSize);
+				var height = heightMap[i];
+				//var tInfo = tileMapper.GetTile(height, seaLevel);
+				var tInfo = biomePainter.GetTile(tempMap[i] + moustureMap[i] * 4);
 				map[coord] = tInfo.CreateTile(coord, height);
 			}
 		}
+		Debug.Log($"Paint map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		Debug.Log($"Done... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		return map;
 	}
 
