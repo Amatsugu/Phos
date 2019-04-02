@@ -18,8 +18,9 @@ public class BiomePainterUI : Editor
 
 	public override void OnInspectorGUI()
 	{
-		GUILayout.Label("Horizontal Temperature");
-		GUILayout.Label("Vertical Moisture");
+		EditorGUI.BeginChangeCheck();
+		var biomeProp = serializedObject.FindProperty("biomes");
+		serializedObject.ApplyModifiedProperties();
 		GUILayout.BeginHorizontal();
 		for (int i = -1; i < 4; i++)
 		{
@@ -38,6 +39,11 @@ public class BiomePainterUI : Editor
 				painter.biomes[x + z * 4] = EditorGUILayout.ObjectField(painter.biomes[x + z * 4], typeof(TileMapper), false) as TileMapper;
 			}
 			GUILayout.EndHorizontal();
+		}
+		if (EditorGUI.EndChangeCheck())
+		{
+			EditorUtility.SetDirty(painter);
+			Undo.RecordObject(painter, "Biome Painter");
 		}
 		
 	}

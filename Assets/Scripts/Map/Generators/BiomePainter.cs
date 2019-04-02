@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile Mapper/Biome Painter")]
 public class BiomePainter : ScriptableObject
 {
+	[SerializeField]
 	public TileMapper[] biomes;
 
 

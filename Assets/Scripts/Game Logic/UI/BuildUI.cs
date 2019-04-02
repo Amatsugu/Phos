@@ -13,13 +13,22 @@ public class BuildUI : MonoBehaviour
 	public UnitInfo[] Millitary;
 	public UnitInfo[] Defense;
 
+	//UI
 	public RectTransform buildWindow;
+	public RectTransform toolTip;
+	public TMP_Text toolTipTitle;
+	public TMP_Text toolTipBody;
+	public TMP_Text toolTipCost;
+	public TMP_Text toolTipProd;
+	public Vector2 tooltipOffset;
+
 	public RectTransform unitUIPrefab;
 
 	private RectTransform[] activeUnits;
 	private UnitInfo selectedUnit;
 	private bool placeMode;
 	private Camera cam;
+	private bool toolTipVisible;
 
 	void Start()
 	{
@@ -44,24 +53,44 @@ public class BuildUI : MonoBehaviour
 				//selector.transform.position = t.SurfacePoint;
 				Map.ActiveMap.ReplaceTile(t, selectedUnit.tile);
 			}
-
 		}
+		if(toolTipVisible)
+		{
+			toolTip.anchoredPosition = Input.mousePosition + (Vector3)tooltipOffset;
+		}
+	}
+
+	public void ShowToolTip(string title, string body, string costInfo, string productionInfo)
+	{
+		toolTip.gameObject.SetActive(toolTipVisible = true);
+		toolTipTitle.SetText(title);
+		toolTipBody.SetText(body);
+		toolTipCost.SetText(costInfo);
+		toolTipProd.SetText(productionInfo);
+	}
+
+	public void HideToolTip()
+	{
+		toolTip.gameObject.SetActive(toolTipVisible = false);
 	}
 
 	public void ShowBuildWindow(UnitInfo[] units)
 	{
 		buildWindow.gameObject.SetActive(true);
-		for (int i = 0; i < Tech.Length; i++)
+		for (int i = 0; i < units.Length; i++)
 		{
+			var unit = units[i];
 			if(activeUnits[i] == null)
 			{
 				activeUnits[i] = Instantiate(unitUIPrefab, buildWindow);
 				activeUnits[i].anchoredPosition = new Vector2(5 + (i * 170), 5);
 			}
-			activeUnits[i].GetComponentInChildren<TMP_Text>().SetText(Tech[i].name);
-			activeUnits[i].GetComponent<Button>().onClick.AddListener(() =>
+			activeUnits[i].GetComponentInChildren<TMP_Text>().SetText(unit.name);
+			var btn = activeUnits[i].GetComponent<Button>();
+			btn.onClick.RemoveAllListeners();
+			btn.onClick.AddListener(() =>
 			{
-				selectedUnit = Tech[i];
+				selectedUnit = unit;
 				placeMode = true;
 			});
 		}
@@ -69,9 +98,10 @@ public class BuildUI : MonoBehaviour
 
 	public void HideBuildWindow()
 	{
+		buildWindow.gameObject.SetActive(false);
 		for (int i = 0; i < activeUnits.Length; i++)
 		{
-			activeUnits[i].gameObject.SetActive(false);
+			activeUnits[i]?.gameObject.SetActive(false);
 		}
 	}
 }
