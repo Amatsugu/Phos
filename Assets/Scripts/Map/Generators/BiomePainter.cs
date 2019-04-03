@@ -24,8 +24,6 @@ public class BiomePainter : ScriptableObject
 			for (int x = 0; x < width; x++)
 			{
 				var sample = filter.Evaluate(new Vector3(x / noiseScale, 0, z / noiseScale));
-				//if (min > sample)
-					//min = sample;
 				if (max < sample)
 					max = sample;
 				heightMap[x + z * width] = sample;

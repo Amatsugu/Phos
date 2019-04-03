@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 771b8b82c96dd6d43afe929d49b511a8, type: 3}
-  m_Name: TestUnit
+  m_Name: Headquaters
   m_EditorClassIdentifier: 
   cost:
   - name: Power
     ammount: 1
-    perTileBonus: 0
   icon: {fileID: 0}
-  description: A Test Unit
+  description: The HQ
   tile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}

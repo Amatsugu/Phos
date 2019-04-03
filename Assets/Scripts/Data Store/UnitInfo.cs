@@ -16,6 +16,7 @@ public class UnitInfo : ScriptableObject
 	{
 		public string name;
 		public int ammount;
+		public bool perTick;
 	}
 
 	public string GetProductionString()
@@ -23,7 +24,7 @@ public class UnitInfo : ScriptableObject
 		var costString = "";
 		for (int i = 0; i < tile.production.Length; i++)
 		{
-			costString += $"<sprite={ResourceDatabase.GetResourceId(tile.production[i].name)}> <size=.75em><voffset=.25em>{tile.production[i].ammount}</voffset></size>";
+			costString += $"<size=.75em><voffset=.25em>+</voffset></size><sprite={ResourceDatabase.GetResourceId(tile.production[i].name)}> <size=.75em><voffset=.25em>{tile.production[i].ammount}/t</voffset></size>";
 			if (i != tile.production.Length - 1)
 				costString += "\n";
 		}
@@ -35,7 +36,7 @@ public class UnitInfo : ScriptableObject
 		var costString = "";
 		for (int i = 0; i < cost.Length; i++)
 		{
-			costString += $"<sprite={ResourceDatabase.GetResourceId(cost[i].name)}> <size=.75em><voffset=.25em>{cost[i].ammount}</voffset></size>";
+			costString += $"<size=.75em><voffset=.25em>-</voffset></size><sprite={ResourceDatabase.GetResourceId(cost[i].name)}> <size=.75em><voffset=.25em>{cost[i].ammount}{(cost[i].perTick ? "/t" : "")}</voffset></size>";
 			if (i != cost.Length - 1)
 				costString += "\n";
 		}

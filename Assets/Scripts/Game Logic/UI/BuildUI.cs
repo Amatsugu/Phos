@@ -35,6 +35,7 @@ public class BuildUI : MonoBehaviour
 		buildWindow.gameObject.SetActive(false);
 		activeUnits = new RectTransform[6];
 		ShowBuildWindow(Tech);
+		ShowToolTip(Tech[0].name, Tech[0].description, Tech[0].GetCostString(), Tech[0].GetProductionString());
 		cam = Camera.main;
 	}
 
@@ -54,9 +55,13 @@ public class BuildUI : MonoBehaviour
 				Map.ActiveMap.ReplaceTile(t, selectedUnit.tile);
 			}
 		}
+
 		if(toolTipVisible)
 		{
-			toolTip.anchoredPosition = Input.mousePosition + (Vector3)tooltipOffset;
+			var pos = Input.mousePosition + (Vector3)tooltipOffset;
+			pos.x = Mathf.Clamp(pos.x, 0, Screen.width - toolTip.rect.width);
+			pos.y = Mathf.Clamp(pos.y, 0, Screen.height - toolTip.rect.height);
+			toolTip.anchoredPosition = pos;
 		}
 	}
 
@@ -90,6 +95,7 @@ public class BuildUI : MonoBehaviour
 			btn.onClick.RemoveAllListeners();
 			btn.onClick.AddListener(() =>
 			{
+				ShowToolTip(unit.name, unit.description, unit.GetCostString(), unit.GetProductionString());
 				selectedUnit = unit;
 				placeMode = true;
 			});
