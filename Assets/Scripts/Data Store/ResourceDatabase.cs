@@ -19,7 +19,7 @@ public class ResourceDatabase
 	private static ResourceDatabase _instance;
 	#endregion
 
-	public static int ResourceCount => INST._resourceDefs.Length;
+	public static int ResourceCount => (INST._resourceDefs == null) ? 0 : INST._resourceDefs.Length;
 
 	private ResourceDefination[] _resourceDefs;
 
