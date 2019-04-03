@@ -45,7 +45,8 @@ public class BiomePainterUI : Editor
 		if (EditorGUI.EndChangeCheck())
 		{
 			serializedObject.ApplyModifiedProperties();
-			Debug.Log(biomeProp.objectReferenceValue.name);
+			EditorUtility.SetDirty(painter);
+			Undo.RecordObject(painter, "Biome Painter");
 		}
 		
 	}
