@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using Unity.Collections;
+
 using Unity.Entities;
-using UnityEngine;
 
 
 public class HQSystem : ComponentSystem
@@ -28,7 +24,7 @@ public class HQSystem : ComponentSystem
 		if (DateTime.Now < nextTic)
 			return;
 		nextTic = nextTic.AddSeconds(1 / ticRate);
-		Entities.ForEach<ProductionData>((e, p) =>
+		Entities.WithNone<InactiveBuilding>().ForEach<ProductionData>((e, p) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{
@@ -40,10 +36,27 @@ public class HQSystem : ComponentSystem
 					resCount[res] = maxStorage;
 			}
 		});
+		Entities.ForEach<ConsumptionData>((e, p) =>
+		{
+			for (int i = 0; i < p.resourceIds.Length; i++)
+			{
+				int res = p.resourceIds[i];
+				if(resCount[res] < p.rates[i])
+				{
+					if (!EntityManager.HasComponent<InactiveBuilding>(e))
+						PostUpdateCommands.AddComponent(e, new InactiveBuilding());
+				}
+				else
+				{
+					if (EntityManager.HasComponent<InactiveBuilding>(e))
+						PostUpdateCommands.RemoveComponent(e, typeof(InactiveBuilding));
+					resCount[res] -= p.rates[i];
+				}
+			}
+		});
 	}
 
 	protected override void OnStopRunning()
 	{
-		//resCount.Dispose();
 	}
 }

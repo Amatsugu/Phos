@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: -3003489983209062016, guid: 7752b6427a1396d4f98a3248f1a088b6, type: 3}
   material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
-  size: 3
+  size: 1
   influenceRange: 6
   production:
   - name: Power

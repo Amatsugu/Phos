@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 771b8b82c96dd6d43afe929d49b511a8, type: 3}
-  m_Name: Headquaters
+  m_Script: {fileID: 11500000, guid: 15dce6ee827b60949a5c98bab2fea005, type: 3}
+  m_Name: SelectionIndicator
   m_EditorClassIdentifier: 
-  cost: []
-  icon: {fileID: 0}
-  description: The HQ
-  tile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
+  mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
+  material: {fileID: 2100000, guid: 5933559cb851de1408527dee1509615a, type: 2}

@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: a5888e538e2dc514fb2925893ccfbb5e, type: 2}
-  size: 3
-  influenceRange: 6
+  size: 0
+  influenceRange: 3
   production:
   - name: Stone
     ammount: 5
     perTileBonus: 0
-  consumption: []
+  consumption:
+  - name: Power
+    ammount: 1
+    perTileBonus: 0

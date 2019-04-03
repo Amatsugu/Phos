@@ -232,18 +232,25 @@ public class Map : IDisposable
 	/// <returns>The tile if found</returns>
 	public Tile GetTileFromRay(Ray ray, float distance = 50000f, float increment = 0.1f)
 	{
-		Debug.DrawRay(ray.origin, ray.direction * distance, Color.red, 5);
+		if (increment == 0.1f)
+			increment = InnerRadius;
 		for (float i = 0; i < distance; i += increment)
 		{
 			var p = ray.GetPoint(i);
 			var t = this[HexCoords.FromPosition(p)];
 			if (t == null)
 				continue;
-			Debug.DrawRay(p, Vector3.up, Color.red, 5);
-			if (Mathf.Abs(t.Height - p.y) > InnerRadius)
+			if (p.y > t.Height + TileEdgeLength)
 				continue;
-			Debug.DrawLine(t.SurfacePoint, p, Color.magenta, 5);
-			if (Vector3.Distance(t.SurfacePoint, p) <= TileEdgeLength)
+			if(p.y <= t.Height && p.y >= 0)
+			{
+				var a = t.Coords.worldXZ;
+				var b = p;
+				b.y = 0;
+				if ((a - b).sqrMagnitude <= TileEdgeLength * TileEdgeLength)
+					return t;
+			}
+			if ((t.SurfacePoint - p).sqrMagnitude <= TileEdgeLength * TileEdgeLength)
 				return t;
 		}
 		return null;

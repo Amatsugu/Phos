@@ -16,9 +16,7 @@ public class MapRenderer : MonoBehaviour
 	public TileInfo tile;
 	public MapGenerator generator;
 	public GameObject oceanPlane;
-	public GameObject selector;
 
-	public TileInfo hqTile;
 	public ResourceList resourceList;
 
 	[HideInInspector]
@@ -30,7 +28,6 @@ public class MapRenderer : MonoBehaviour
 	private Vector3 _lastCamPos;
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
-	private Entity _hq;
 
 	private void Awake()
 	{

@@ -16,7 +16,6 @@ public class UnitInfo : ScriptableObject
 	{
 		public string name;
 		public int ammount;
-		public bool perTick;
 	}
 
 	public string GetProductionString()
@@ -36,8 +35,16 @@ public class UnitInfo : ScriptableObject
 		var costString = "";
 		for (int i = 0; i < cost.Length; i++)
 		{
-			costString += $"<size=.75em><voffset=.25em>-</voffset></size><sprite={ResourceDatabase.GetResourceId(cost[i].name)}> <size=.75em><voffset=.25em>{cost[i].ammount}{(cost[i].perTick ? "/t" : "")}</voffset></size>";
+			costString += $"<size=.75em><voffset=.25em>-</voffset></size><sprite={ResourceDatabase.GetResourceId(cost[i].name)}> <size=.75em><voffset=.25em>{cost[i].ammount}</voffset></size>";
 			if (i != cost.Length - 1)
+				costString += "\n";
+		}
+		if (tile.consumption.Length > 0)
+			costString += "\n";
+		for (int i = 0; i < tile.consumption.Length; i++)
+		{
+			costString += $"<size=.75em><voffset=.25em>-</voffset></size><sprite={ResourceDatabase.GetResourceId(tile.consumption[i].name)}> <size=.75em><voffset=.25em>{tile.consumption[i].ammount}/t</voffset></size>";
+			if (i != tile.production.Length - 1)
 				costString += "\n";
 		}
 		return costString;
