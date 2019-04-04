@@ -6,7 +6,8 @@ using Unity.Entities;
 public class HQSystem : ComponentSystem
 {
 	public static int[] resCount;
-	public static int maxStorage;
+	public static int[] lastTickNet;
+    public static int maxStorage;
 
 	public DateTime nextTic;
 	public float ticRate = 1;
@@ -15,7 +16,8 @@ public class HQSystem : ComponentSystem
 	protected override void OnStartRunning()
 	{
 		resCount = new int[ResourceDatabase.ResourceCount];
-		maxStorage = 1000;
+		lastTickNet = new int[ResourceDatabase.ResourceCount];
+        maxStorage = 1000;
 		nextTic = DateTime.Now.AddSeconds(1 / ticRate);
 	}
 
@@ -24,11 +26,13 @@ public class HQSystem : ComponentSystem
 		if (DateTime.Now < nextTic)
 			return;
 		nextTic = nextTic.AddSeconds(1 / ticRate);
-		Entities.WithNone<InactiveBuilding>().ForEach<ProductionData>((e, p) =>
+        lastTickNet = new int[ResourceDatabase.ResourceCount];
+		Entities.WithNone<InactiveBuilding, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{
 				int res = p.resourceIds[i];
+                lastTickNet[res] += p.rates[i];
 				if (resCount[res] == maxStorage)
 					continue;
 				resCount[res] += p.rates[i];
@@ -36,7 +40,13 @@ public class HQSystem : ComponentSystem
 					resCount[res] = maxStorage;
 			}
 		});
-		Entities.ForEach<ConsumptionData>((e, p) =>
+
+        Entities.WithAll<FirstTickTag>().ForEach(e =>
+        {
+            PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
+        });
+
+        Entities.ForEach<ConsumptionData>((e, p) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{
@@ -44,7 +54,10 @@ public class HQSystem : ComponentSystem
 				if(resCount[res] < p.rates[i])
 				{
 					if (!EntityManager.HasComponent<InactiveBuilding>(e))
+                    {
 						PostUpdateCommands.AddComponent(e, new InactiveBuilding());
+                        break;
+                    }
 				}
 				else
 				{
@@ -52,6 +65,7 @@ public class HQSystem : ComponentSystem
 						PostUpdateCommands.RemoveComponent(e, typeof(InactiveBuilding));
 					resCount[res] -= p.rates[i];
 				}
+                lastTickNet[res] -= p.rates[i];
 			}
 		});
 	}

@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: TaigaForest
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
-  material: {fileID: 2100000, guid: c5bd27640a28cbf40bc7a31293db797e, type: 2}
+  material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
+  decorators:
+  - {fileID: 11400000, guid: a38156ecfbcec93438842889caaf92ea, type: 2}

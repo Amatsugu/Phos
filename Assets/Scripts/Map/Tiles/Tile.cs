@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -14,7 +16,12 @@ public class Tile
 
 	public TileInfo info;
 
+	public float moisture, temperature;
+	public int biomeId;
+	public bool IsShown { get; private set; }
+
 	protected Entity _tileEntity;
+	private NativeArray<Entity> _decor;
 
 	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
 	{
@@ -22,6 +29,14 @@ public class Tile
 		Height = height;
 		info = tInfo;
 		SurfacePoint = new Vector3(coords.worldX, height, coords.worldZ);
+	}
+
+	public Tile SetBiome(int biome, float moisture, float temperature)
+	{
+		this.moisture = moisture;
+		this.temperature = temperature;
+		biomeId = biome;
+		return this;
 	}
 
 	// override object.Equals
@@ -47,6 +62,14 @@ public class Tile
 		Height = height;
 		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
 		SurfacePoint = new Vector3(Coords.worldX, height, Coords.worldZ);
+		/*int lastIndex = 0;
+		for (int i = 0; i < info.decorators.Length; i++)
+		{
+			var count = info.decorators[i].GetDecorEntityCount(this);
+			var slice = _decor.Slice(lastIndex, count);
+			info.decorators[i].UpdateHeight(slice, this, _tileEntity);
+			lastIndex += count;
+		}*/
 	}
 
 	public virtual void OnRemoved()
@@ -63,17 +86,40 @@ public class Tile
 	public virtual void Destroy()
 	{
 		Map.EM.DestroyEntity(_tileEntity);
+		Map.EM.DestroyEntity(_decor);
+		_decor.Dispose();
+	}
+
+	public void Show(bool isShown)
+	{
+		if (isShown == IsShown)
+			return;
+		if(isShown)
+		{
+			Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
+		}else
+		{
+			Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
+		}
+		IsShown = isShown;
 	}
 
 	public virtual Entity Render()
 	{
 		_tileEntity = info.Instantiate(Coords, new Vector3(1, Height, 1));
+		_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent);
+		int lastIndex = 0;
+		for (int i = 0; i < info.decorators.Length; i++)
+		{
+			var e = info.decorators[i].Render(this, _tileEntity);
+			var count = info.decorators[i].GetDecorEntityCount(this);
+			for (int j = lastIndex; j < count; j++)
+			{
+				_decor[j] = e[j - lastIndex];
+			}
+			lastIndex += count;
+		}
 		return _tileEntity;
 	}
 
-	internal void SetParent(Entity parent)
-	{
-		Map.EM.AddComponent(_tileEntity, typeof(Parent));
-		Map.EM.SetComponentData(_tileEntity, new Parent { Value = parent });
-	}
 }

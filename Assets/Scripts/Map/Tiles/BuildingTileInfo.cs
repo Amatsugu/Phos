@@ -24,18 +24,19 @@ public class BuildingTileInfo : TileInfo
 		public int perTileBonus;
 	}
 
-	/*protected override EntityArchetype GetArchetype(bool localToParent = false)
+	protected override EntityArchetype GetArchetype(bool localToParent = false)
 	{
 		return Map.EM.CreateArchetype(
 				typeof(Translation),
 				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
 				typeof(NonUniformScale),
 				typeof(RenderMesh),
-				typeof(HexPosition)
+				typeof(HexPosition),
+                typeof(FirstTickTag)
 				//production.Length > 0 ? typeof(ProductionData) : null,
 				//consumption.Length > 0 ? typeof(ConsumptionData) : null
 				);
-	}*/
+	}
 
 	public override Entity Instantiate(HexCoords pos, Vector3 scale)
 	{

@@ -84,17 +84,25 @@ public class Map : IDisposable
 					_chunkTiles.Dispose();
 				_chunkTiles = default;
 			}
+			for (int i = 0; i < Tiles.Length; i++)
+				Tiles[i].Destroy();
 		}
 
 		public bool Show(bool shown)
 		{
 			if (shown == isShown)
 				return false;
-
+			for (int i = 0; i < Tiles.Length; i++)
+				Tiles[i].Show(shown);
 			if (shown)
+			{
 				EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+			}
 			else
+			{
 				EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+
+			}
 			isShown = shown;
 			return true;
 		}

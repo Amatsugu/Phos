@@ -8,6 +8,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile Info")]
 public class TileInfo : MeshEntity
 {
+    public TileDecorator[] decorators;
+
 	protected override EntityArchetype GetArchetype(bool localToParent = false)
 	{
 		return Map.EM.CreateArchetype(

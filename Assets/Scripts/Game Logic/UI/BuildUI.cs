@@ -60,6 +60,7 @@ public class BuildUI : MonoBehaviour
 		_selectedUnit = HQUnit;
 		toolTip.HideToolTip();
 		InfoBanner.SetText("Place HQ Building");
+        HideBuildWindow();
 	}
 
 	// Update is called once per frame
@@ -167,7 +168,7 @@ public class BuildUI : MonoBehaviour
 		HideBuildWindow();
 		if (_hqMode)
 			return;
-		_buildBarRect.y = buildWindow.position.y + buildWindow.rect.height;
+		_buildBarRect.height = buildWindow.position.y + buildWindow.rect.height;
 		buildWindow.gameObject.SetActive(true);
 		for (int i = 0; i < units.Length; i++)
 		{
@@ -199,7 +200,7 @@ public class BuildUI : MonoBehaviour
 	public void HideBuildWindow()
 	{
 		buildWindow.gameObject.SetActive(false);
-		_buildBarRect.y = buildWindow.position.y;
+		_buildBarRect.height = buildWindow.position.y;
 		for (int i = 0; i < _activeUnits.Length; i++)
 		{
 			_activeUnits[i]?.gameObject.SetActive(false);

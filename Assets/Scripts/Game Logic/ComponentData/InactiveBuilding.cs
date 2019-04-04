@@ -11,3 +11,8 @@ public struct BuildingOffTag : IComponentData
 {
 
 }
+
+public struct FirstTickTag : IComponentData
+{
+
+}
