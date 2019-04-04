@@ -49,15 +49,20 @@ public class Tile
 		SurfacePoint = new Vector3(Coords.worldX, height, Coords.worldZ);
 	}
 
+	public virtual void OnRemoved()
+	{
+
+	}
+
+	public virtual void OnPlaced()
+	{
+
+	}
+
 
 	public virtual void Destroy()
 	{
 		Map.EM.DestroyEntity(_tileEntity);
-	}
-
-	public virtual void TileClicked()
-	{
-
 	}
 
 	public virtual Entity Render()

@@ -77,9 +77,6 @@ public class Map : IDisposable
 			{
 				foreach (var tile in _chunkTiles)
 					EM.DestroyEntity(tile);
-			}catch
-			{
-				Debug.LogWarning("Unable to Destroy tiles");
 			}
 			finally
 			{
@@ -118,8 +115,10 @@ public class Map : IDisposable
 			var tile = this[tilePos];
 			var n = newTile.CreateTile(tile.Coords, tile.Height);
 			this[tilePos] = n;
+			tile.OnRemoved();
 			tile.Destroy();
 			_chunkTiles[tilePos.ToIndex(SIZE)] = n.Render();
+			n.OnPlaced();
 			return n;
 		}
 	}

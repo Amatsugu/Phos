@@ -10,6 +10,7 @@ using UnityEngine;
 public class BuildingTileInfo : TileInfo
 {
 	public int size = 3;
+	public int powerTransferRadius = 0;
 	public int influenceRange = 6;
 
 	public Resource[] production;

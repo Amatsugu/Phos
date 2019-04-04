@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biomes:
   - {fileID: 11400000, guid: 50629baa8a6304d43bf131801b89485f, type: 2}
-  - {fileID: 11400000, guid: 50629baa8a6304d43bf131801b89485f, type: 2}
+  - {fileID: 11400000, guid: 53d4e23fb41281647959dab06f3d19b8, type: 2}
   - {fileID: 11400000, guid: 53d4e23fb41281647959dab06f3d19b8, type: 2}
   - {fileID: 11400000, guid: 31fd865dae24d054ca766f3ba10a7df0, type: 2}
   - {fileID: 11400000, guid: 50629baa8a6304d43bf131801b89485f, type: 2}
-  - {fileID: 11400000, guid: 05a1d73d263d80a44b039e8002cf157e, type: 2}
+  - {fileID: 11400000, guid: 1dc9bcd0fb2b4a841b5cde95f403c243, type: 2}
   - {fileID: 11400000, guid: 1dc9bcd0fb2b4a841b5cde95f403c243, type: 2}
   - {fileID: 11400000, guid: dc5eb438a1855b84b9faa0c9cb6368e5, type: 2}
   - {fileID: 11400000, guid: 50629baa8a6304d43bf131801b89485f, type: 2}
   - {fileID: 11400000, guid: 05a1d73d263d80a44b039e8002cf157e, type: 2}
   - {fileID: 11400000, guid: e1930c393b89e48419b3f646a15ace2d, type: 2}
   - {fileID: 11400000, guid: af2eab85110cf5e4e8c35da9c5cde326, type: 2}
-  - {fileID: 11400000, guid: 50629baa8a6304d43bf131801b89485f, type: 2}
+  - {fileID: 11400000, guid: 05a1d73d263d80a44b039e8002cf157e, type: 2}
   - {fileID: 11400000, guid: 05a1d73d263d80a44b039e8002cf157e, type: 2}
   - {fileID: 11400000, guid: e1930c393b89e48419b3f646a15ace2d, type: 2}
   - {fileID: 11400000, guid: af2eab85110cf5e4e8c35da9c5cde326, type: 2}

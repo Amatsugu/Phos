@@ -15,7 +15,7 @@ public class BiomePainter : ScriptableObject
 		return null;
 	}
 
-	public int[] GetMoistureMap(int width, int height, INoiseFilter filter, float noiseScale, float seaLevel)
+	public float[] GetMoistureMap(int width, int height, INoiseFilter filter, float noiseScale, float seaLevel)
 	{
 		var heightMap = new float[width * height];
 		float min = seaLevel, max = float.MinValue;
@@ -30,19 +30,17 @@ public class BiomePainter : ScriptableObject
 			}
 		}
 
-		var moistureMap = new int[width * height];
+		var moistureMap = new float[width * height];
 		for (int i = 0; i < moistureMap.Length; i++)
-		{
-			moistureMap[i] = Mathf.Clamp(Mathf.RoundToInt(MathUtils.Map(heightMap[i], min, max, 0, 3)), 0, 3);
-		}
+			moistureMap[i] = Mathf.Clamp(MathUtils.Map(heightMap[i], min, max, 0, 4), 0, 3);
 
 		return moistureMap;
 	}
 
-	public int[] GetTempMap(int width, int height, float[] heightMap, float seaLevel, int seed)
+	public float[] GetTempMap(int width, int height, float[] heightMap, float seaLevel, int seed)
 	{
 		Random.InitState(seed);
-		var tempMap = new int[width * height];
+		var tempMap = new float[width * height];
 		var equator = Random.Range(0, height);
 		var maxD = Mathf.Abs((height / 2) - equator);
 		maxD = maxD < equator ? equator : maxD;
@@ -52,9 +50,9 @@ public class BiomePainter : ScriptableObject
 			for (int x = 0; x < width; x++)
 			{
 				var d = Mathf.Abs(z - equator);
-				var tE = MathUtils.Map(d, 0, maxD, 0, 3);
-				var tH = MathUtils.Map(heightMap[x + z * width], 0, maxHeight, 0, 3);
-				var t = Mathf.Clamp(Mathf.RoundToInt((tH + tE) / 2f), 0, 3);
+				var tE = Mathf.Clamp(MathUtils.Map(d, 0, maxD, 0, 4), 0, 3);
+				var tH = Mathf.Clamp(MathUtils.Map(value: heightMap[x + (z * width)], min: 0, max: maxHeight, a: 0, b: 4), 0, 3);
+				var t = Mathf.Clamp(value: (tH + tE) / 2f, min: 0, max: 3);
 				tempMap[x + z * width] = 3-t;
 			}
 		}

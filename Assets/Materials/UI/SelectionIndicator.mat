@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Selection
+  m_Name: SelectionIndicator
   m_Shader: {fileID: -6465566751694194690, guid: a159b8659c3d3fa4aa6729718eca07e1,
     type: 3}
   m_ShaderKeywords: _NORMALMAP_TANGENT_SPACE
@@ -228,7 +228,7 @@ Material:
     - _ZTestModeDistortion: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_917C605: {r: 506.0286, g: 0, b: 198.70233, a: 1}
+    - Color_917C605: {r: 766.9961, g: 0, b: 301.17648, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 10.432951, g: 0, b: 4.0967083, a: 1}

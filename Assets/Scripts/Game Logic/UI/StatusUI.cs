@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using System.Text;
 
 public class StatusUI : MonoBehaviour
@@ -25,4 +26,5 @@ public class StatusUI : MonoBehaviour
 		}
 		resourcePanel.SetText(sb);
 	}
+
 }
