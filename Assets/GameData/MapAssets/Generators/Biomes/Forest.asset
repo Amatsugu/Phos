@@ -15,7 +15,7 @@ MonoBehaviour:
   surfaceLayers:
   - tileInfo: {fileID: 11400000, guid: e1aad5cf5998f104ab3436a7be0e85d6, type: 2}
     startHeight: 0
-  - tileInfo: {fileID: 11400000, guid: c24e58ddad3ec62478f1d6dc66af159f, type: 2}
+  - tileInfo: {fileID: 11400000, guid: fd1b8e3f589fd76439b6181c154b96dc, type: 2}
     startHeight: 1.5
   - tileInfo: {fileID: 11400000, guid: f998f30b51bed924bbcfcf0266a9321b, type: 2}
     startHeight: 15

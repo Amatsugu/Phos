@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: Forest
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
-  material: {fileID: 2100000, guid: 36f7502459f60294c87e4296655ca6a5, type: 2}
+  material: {fileID: 2100000, guid: 2866af085bdcb3e4083ccd811b041108, type: 2}
+  decorators:
+  - {fileID: 11400000, guid: 92426f10f99341d43b22fb2711cfdb3b, type: 2}

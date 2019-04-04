@@ -96,7 +96,7 @@ public class RandomGenerator : MapGenerator
 				var i = x + z * (map.Width * chunkSize);
 				var height = heightMap[i];
                 //var tInfo = tileMapper.GetTile(height, seaLevel);
-                int biomeId = Mathf.FloorToInt(tempMap[i]) + Mathf.FloorToInt(moustureMap[i]) * 4;
+                int biomeId = Mathf.RoundToInt(tempMap[i]) + Mathf.RoundToInt(moustureMap[i]) * 4;
                 var tInfo = biomePainter.GetTile(biomeId, height, seaLevel);
 				map[coord] = tInfo.CreateTile(coord, height).SetBiome(biomeId, moustureMap[i], tempMap[i]);
 			}

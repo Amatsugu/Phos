@@ -14,12 +14,13 @@ public abstract class TileDecorator : ScriptableObject
 
 	public abstract Entity[] Render(Tile tile, Entity parent);
 
-	/*
 	public virtual void UpdateHeight(NativeSlice<Entity> decor, Tile tile, Entity parent)
 	{
 		foreach (var tileDecor in decor)
 		{
-			Map.EM.SetComponentData(tileDecor, new Translation { Value = tile.SurfacePoint });
+			var p = Map.EM.GetComponentData<Translation>(tileDecor);
+			p.Value.y = tile.Height;
+			Map.EM.SetComponentData(tileDecor, p);
 		}
-	}*/
+	}
 }

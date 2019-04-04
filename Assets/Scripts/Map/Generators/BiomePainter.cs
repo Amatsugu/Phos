@@ -32,7 +32,7 @@ public class BiomePainter : ScriptableObject
 
 		var moistureMap = new float[width * height];
 		for (int i = 0; i < moistureMap.Length; i++)
-			moistureMap[i] = Mathf.Clamp(MathUtils.Map(heightMap[i], min, max, 0, 4), 0, 3);
+			moistureMap[i] = Mathf.Clamp(MathUtils.Map(heightMap[i], min, max, 0, 3), 0, 3);
 
 		return moistureMap;
 	}
@@ -50,10 +50,10 @@ public class BiomePainter : ScriptableObject
 			for (int x = 0; x < width; x++)
 			{
 				var d = Mathf.Abs(z - equator);
-				var tE = Mathf.Clamp(MathUtils.Map(d, 0, maxD, 0, 4), 0, 3);
-				var tH = Mathf.Clamp(MathUtils.Map(value: heightMap[x + (z * width)], min: 0, max: maxHeight, a: 0, b: 4), 0, 3);
+				var tE = 3-MathUtils.Map(d, 0, maxD, 0, 3);
+				var tH = 3-MathUtils.Map(value: heightMap[x + (z * width)], min: 0, max: maxHeight, a: 0, b: 2);
 				var t = Mathf.Clamp(value: (tH + tE) / 2f, min: 0, max: 3);
-				tempMap[x + z * width] = 3-t;
+				tempMap[x + z * width] = t;
 			}
 		}
 		return tempMap;

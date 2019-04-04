@@ -62,14 +62,14 @@ public class Tile
 		Height = height;
 		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
 		SurfacePoint = new Vector3(Coords.worldX, height, Coords.worldZ);
-		/*int lastIndex = 0;
+		int lastIndex = 0;
 		for (int i = 0; i < info.decorators.Length; i++)
 		{
 			var count = info.decorators[i].GetDecorEntityCount(this);
 			var slice = _decor.Slice(lastIndex, count);
 			info.decorators[i].UpdateHeight(slice, this, _tileEntity);
 			lastIndex += count;
-		}*/
+		}
 	}
 
 	public virtual void OnRemoved()
