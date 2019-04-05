@@ -6,7 +6,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Map Asset/Building")]
+[CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
 public class BuildingTileInfo : TileInfo
 {
 	public int size = 3;

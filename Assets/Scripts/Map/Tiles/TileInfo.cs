@@ -5,7 +5,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile Info")]
+[CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
 public class TileInfo : MeshEntity
 {
     public TileDecorator[] decorators;

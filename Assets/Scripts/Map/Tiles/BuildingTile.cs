@@ -6,8 +6,11 @@ using UnityEngine;
 
 public class BuildingTile : Tile
 {
-	public BuildingTile(HexCoords coords, float height, TileInfo tInfo = null) : base(coords, height, tInfo)
+	public BuildingTileInfo buildingInfo;
+
+	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
+		buildingInfo = tInfo;
 	}
 
 	public override void UpdateHeight(float height)

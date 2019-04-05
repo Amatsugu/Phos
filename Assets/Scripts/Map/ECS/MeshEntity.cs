@@ -44,7 +44,8 @@ public class MeshEntity : ScriptableObject
 				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
 				//typeof(ChunkWorldRenderBounds),
 				typeof(NonUniformScale),
-				typeof(RenderMesh)
+				typeof(RenderMesh),
+				typeof(PerInstanceCullingTag)
 				);
 	}
 

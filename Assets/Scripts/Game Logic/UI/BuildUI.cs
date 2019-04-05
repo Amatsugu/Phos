@@ -38,6 +38,7 @@ public class BuildUI : MonoBehaviour
 	private bool _toolTipVisible;
 	private NativeArray<Entity> _selectIndicatorEntities;
 	private NativeArray<Entity> _powerIndicatorEntities;
+	private NativeArray<Entity> _poweredTileIndicatorEntities;
 	private EntityManager _EM;
 	private Rect _buildBarRect;
 
@@ -48,6 +49,7 @@ public class BuildUI : MonoBehaviour
 		_cam = Camera.main;
 		_selectIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
 		_powerIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
+		_poweredTileIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
 		_EM = World.Active.EntityManager;
 		_buildBarRect = new Rect
 		{
@@ -77,24 +79,33 @@ public class BuildUI : MonoBehaviour
 		var mPos = Input.mousePosition;
 		if (_placeMode && !_buildBarRect.Contains(mPos))
 		{
-			var t = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos), _cam.transform.position.y * 2);
-			if (t != null && t.Height > Map.ActiveMap.SeaLevel)
+			var poweredTiles = Map.ActiveMap.GetPoweredTiles();
+			if (poweredTiles.Count > 0 && !_hqMode)
 			{
-				var selectedTiles = Map.ActiveMap.HexSelect(t.Coords, _selectedUnit.tile.size);
-				ShowIndicators(ref _selectIndicatorEntities, selectIndicatorEntity, selectedTiles);
-				if(_selectedUnit.tile.powerTransferRadius > 0)
+				ShowIndicators(ref _poweredTileIndicatorEntities, powerIndicatorEntity, poweredTiles);
+			}
+			var selectedTile = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos), _cam.transform.position.y * 2);
+			if (selectedTile != null && selectedTile.Height > Map.ActiveMap.SeaLevel)
+			{
+				var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.size);
+				ShowIndicators(ref _selectIndicatorEntities, selectIndicatorEntity, tilesToOccupy);
+				if (_selectedUnit.tile.powerTransferRadius > 0)
 				{
-					var poweredTiles = Map.ActiveMap.HexSelect(t.Coords, _selectedUnit.tile.powerTransferRadius).Except(selectedTiles).ToList();
-					ShowIndicators(ref _powerIndicatorEntities, powerIndicatorEntity, poweredTiles);
+					var willPowerTiles = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.powerTransferRadius).Except(tilesToOccupy);
+					ShowIndicators(ref _powerIndicatorEntities, powerIndicatorEntity, willPowerTiles.Except(poweredTiles).ToList());
 				}
 				if (Input.GetKeyUp(KeyCode.Mouse0))
 				{
-					Map.ActiveMap.HexFlatten(t.Coords, 1, 6, Map.FlattenMode.Average);
-					Map.ActiveMap.ReplaceTile(t, _selectedUnit.tile);
-					if(_hqMode)
+					if (_hqMode || (!tilesToOccupy.Any(t => t is BuildingTile) && poweredTiles.Contains(selectedTile)))
 					{
-						_placeMode = _hqMode = false;
-						InfoBanner.SetActive(false);
+						Map.ActiveMap.HexFlatten(selectedTile.Coords, 1, 6, Map.FlattenMode.Average);
+						Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit.tile);
+						if (_hqMode)
+						{
+							_placeMode = _hqMode = false;
+							InfoBanner.SetActive(false);
+						}
+						HideAllIndicators();
 					}
 				}
 			}
@@ -109,6 +120,14 @@ public class BuildUI : MonoBehaviour
 	{
 		HideIndicators(_selectIndicatorEntities);
 		HideIndicators(_powerIndicatorEntities);
+		HideIndicators(_poweredTileIndicatorEntities);
+	}
+
+	private void OnDestroy()
+	{
+		_selectIndicatorEntities.Dispose();
+		_powerIndicatorEntities.Dispose();
+		_poweredTileIndicatorEntities.Dispose();
 	}
 
 	void HideIndicators(NativeArray<Entity> entities)
@@ -157,11 +176,6 @@ public class BuildUI : MonoBehaviour
 		}
 	}
 
-	private void OnDestroy()
-	{
-		_selectIndicatorEntities.Dispose();
-		_powerIndicatorEntities.Dispose();
-	}
 
 	public void ShowBuildWindow(UnitInfo[] units)
 	{

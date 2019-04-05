@@ -2,14 +2,24 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Map Assest/Tile Decorators/Trees")]
+[CreateAssetMenu(menuName = "Map Asset/Tile Decorators/Trees")]
 public class TreeDecorator : TileDecorator
 {
+	public int minPerTile = 0;
+	public int maxPerTile = 3;
+	public float densityPower = 2;
+	public float minHeight = .5f;
+	public float maxHeight = 4;
+	public float minSize = 0.1f;
+	public float maxSize = .5f;
+
+
 	public override int GetDecorEntityCount(Tile tile)
 	{
-		return Mathf.RoundToInt((tile.moisture + tile.temperature) / 2);
+		return Mathf.FloorToInt(Mathf.Clamp(Mathf.Pow((tile.moisture + tile.temperature) / 2, densityPower), minPerTile, maxPerTile) * densityMulti);
 	}
 
 	public override Entity[] Render(Tile tile, Entity parent)
@@ -18,10 +28,9 @@ public class TreeDecorator : TileDecorator
 		var entities = new Entity[count];
 		for (int i = 0; i < count; i++)
 		{
-			var size = Random.Range(0.1f, .5f);
-			var height = Random.Range(.5f, 2);
-			var pos = Random.onUnitSphere * (tile.Coords.innerRadius - size);
-			pos.y = height/2f;
+			var size = Random.Range(minSize, maxSize);
+			var height = Random.Range(minHeight, maxHeight);
+			var pos = Random.onUnitSphere * (tile.Coords.innerRadius - (size/2f));
 			entities[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size));
 		}
 		return entities;

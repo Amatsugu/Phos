@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102f659bf2a9e4743b6be12d17fda05a, type: 3}
   m_Name: Taiga Tree Decors
   m_EditorClassIdentifier: 
-  meshEntity: {fileID: 11400000, guid: 8a1973ffdd8c6b94f9a20daf4cc7f2a2, type: 2}
+  meshEntity: {fileID: 11400000, guid: 2875fb87523145843a5049ec1d582b94, type: 2}
+  densityMulti: 0.5
+  densityPower: 2
+  minHeight: 0.5
+  maxHeight: 4
+  minSize: 0.1
+  maxSize: 0.5

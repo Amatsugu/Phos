@@ -27,6 +27,9 @@ public class Map : IDisposable
 	public Transform Parent { get; }
 	public Chunk[] Chunks { get; }
 
+	public HQTile HQ;
+	private List<BuildingTile> _powerTransferTiles;
+
 	public class Chunk
 	{
 		public const int SIZE = 16;
@@ -77,6 +80,10 @@ public class Map : IDisposable
 			{
 				foreach (var tile in _chunkTiles)
 					EM.DestroyEntity(tile);
+			}
+			catch
+			{
+
 			}
 			finally
 			{
@@ -131,7 +138,7 @@ public class Map : IDisposable
 		}
 	}
 
-	public Map(int height, int width, Transform parent, float edgeLength = 1)
+	public Map(int height, int width, float edgeLength = 1)
 	{
 		Width = width;
 		Height = height;
@@ -140,7 +147,7 @@ public class Map : IDisposable
 		InnerRadius = Mathf.Sqrt(3f) / 2f * TileEdgeLength;
 		ShortDiagonal = Mathf.Sqrt(3f) * TileEdgeLength;
 		LongDiagonal = 2 * TileEdgeLength;
-		Parent = parent;
+		_powerTransferTiles = new List<BuildingTile>();
 		ActiveMap = this;
 	}
 
@@ -375,6 +382,11 @@ public class Map : IDisposable
 		}
 	}
 
+	public List<Tile> GetPoweredTiles()
+	{
+		return _powerTransferTiles.SelectMany(t => HexSelect(t.Coords, t.buildingInfo.powerTransferRadius)).Distinct().ToList();
+	}
+
 	public Tile ReplaceTile(Tile tile, TileInfo newTile)
 	{
 		var coord = tile.Coords;
@@ -382,7 +394,17 @@ public class Map : IDisposable
 		var index = chunkX + chunkZ * Width;
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 		var chunk = Chunks[index];
-		return chunk.ReplaceTile(localCoord, newTile);
+		var nT = chunk.ReplaceTile(localCoord, newTile);
+		switch(nT)
+		{
+			case HQTile t:
+				_powerTransferTiles.Add(HQ = t);
+				break;
+			case BuildingTile t when t.buildingInfo.powerTransferRadius > 0:
+				_powerTransferTiles.Add(t);
+				break;
+		}
+		return nT;
 	}
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);

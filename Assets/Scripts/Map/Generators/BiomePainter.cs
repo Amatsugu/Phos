@@ -51,7 +51,8 @@ public class BiomePainter : ScriptableObject
 			{
 				var d = Mathf.Abs(z - equator);
 				var tE = 3-MathUtils.Map(d, 0, maxD, 0, 3);
-				var tH = 3-MathUtils.Map(value: heightMap[x + (z * width)], min: 0, max: maxHeight, a: 0, b: 2);
+				var tH = Mathf.Pow(MathUtils.Map(value: heightMap[x + (z * width)], min: 0, max: maxHeight, a: 0, b: 1), 2) * 3;
+				tH = 3 - tH;
 				var t = Mathf.Clamp(value: (tH + tE) / 2f, min: 0, max: 3);
 				tempMap[x + z * width] = t;
 			}

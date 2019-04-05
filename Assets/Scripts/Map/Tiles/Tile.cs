@@ -85,9 +85,17 @@ public class Tile
 
 	public virtual void Destroy()
 	{
-		Map.EM.DestroyEntity(_tileEntity);
-		Map.EM.DestroyEntity(_decor);
-		_decor.Dispose();
+		try
+		{
+			Map.EM.DestroyEntity(_tileEntity);
+			Map.EM.DestroyEntity(_decor);
+		}catch
+		{
+
+		}finally
+		{
+			_decor.Dispose();
+		}
 	}
 
 	public void Show(bool isShown)

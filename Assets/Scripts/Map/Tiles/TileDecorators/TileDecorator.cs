@@ -8,7 +8,8 @@ using UnityEngine;
 
 public abstract class TileDecorator : ScriptableObject
 {
-	public MeshEntity meshEntity;
+	public MeshEntityRotatable meshEntity;
+	public float densityMulti = 1;
 
     public abstract int GetDecorEntityCount(Tile tile);
 
