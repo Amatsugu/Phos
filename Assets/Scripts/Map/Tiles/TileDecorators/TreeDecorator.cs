@@ -30,7 +30,7 @@ public class TreeDecorator : TileDecorator
 		{
 			var size = Random.Range(minSize, maxSize);
 			var height = Random.Range(minHeight, maxHeight);
-			var pos = Random.onUnitSphere * (tile.Coords.innerRadius - (size/2f));
+			var pos = new Vector3(Random.value, 0, Random.value) * (tile.Coords.innerRadius - (size/2f));
 			entities[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size));
 		}
 		return entities;

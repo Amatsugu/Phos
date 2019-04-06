@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: d15a66e16191615489e8e1475d82526e, type: 2}
   densityMulti: 1
+  minPerTile: 0
+  maxPerTile: 3
   densityPower: 0.5
   minHeight: 0.5
   maxHeight: 4
