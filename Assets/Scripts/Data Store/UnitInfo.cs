@@ -35,7 +35,11 @@ public class UnitInfo : ScriptableObject
 		var costString = "";
 		for (int i = 0; i < cost.Length; i++)
 		{
-			costString += $"<size=.75em><voffset=.25em>-</voffset></size><sprite={ResourceDatabase.GetResourceId(cost[i].name)}> <size=.75em><voffset=.25em>{cost[i].ammount}</voffset></size>";
+			var id = ResourceDatabase.GetResourceId(cost[i].name);
+			var curCost = $"<size=.75em><voffset=.25em>-</voffset></size><sprite={id}> <size=.75em><voffset=.25em>{cost[i].ammount}</voffset></size>";
+			if (ResourceSystem.resCount[id] < cost[i].ammount)
+				curCost = $"<color=#ff0000>{curCost}</color>";
+			costString += curCost;
 			if (i != cost.Length - 1)
 				costString += "\n";
 		}

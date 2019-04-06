@@ -125,14 +125,14 @@ public class Map : IDisposable
 			}
 		}
 
-		public Tile ReplaceTile(HexCoords tilePos, TileInfo newTile)
+		public Tile ReplaceTile(HexCoords chunkCoord, TileInfo newTile)
 		{
-			var tile = this[tilePos];
+			var tile = this[chunkCoord];
 			var n = newTile.CreateTile(tile.Coords, tile.Height);
-			this[tilePos] = n;
+			this[chunkCoord] = n;
 			tile.OnRemoved();
 			tile.Destroy();
-			_chunkTiles[tilePos.ToIndex(SIZE)] = n.Render();
+			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
 			n.OnPlaced();
 			return n;
 		}
@@ -359,6 +359,8 @@ public class Map : IDisposable
 
 	public void HexFlatten(HexCoords center, int innerRadius, int outerRadius, FlattenMode mode = FlattenMode.Center)
 	{
+		if (innerRadius == 0 || outerRadius == 0)
+			return;
 		var innerSelection = HexSelect(center, innerRadius);
 		var c = this[center];
 		float height = c.Height;

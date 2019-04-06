@@ -57,11 +57,21 @@ public class Tile
 		return Coords.GetHashCode();
 	}
 
-	public virtual void UpdateHeight(float height)
+	public void UpdateHeight(float height)
 	{
 		Height = height;
-		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, height, 1) });
-		SurfacePoint = new Vector3(Coords.worldX, height, Coords.worldZ);
+		OnHeightChanged();
+		UpdateDecorations();
+	}
+
+	public virtual void OnHeightChanged()
+	{
+		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
+		SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
+	}
+
+	private void UpdateDecorations()
+	{
 		int lastIndex = 0;
 		for (int i = 0; i < info.decorators.Length; i++)
 		{
@@ -98,7 +108,7 @@ public class Tile
 		}
 	}
 
-	public void Show(bool isShown)
+	public virtual void Show(bool isShown)
 	{
 		if (isShown == IsShown)
 			return;
@@ -114,6 +124,7 @@ public class Tile
 
 	public virtual Entity Render()
 	{
+		IsShown = true;
 		_tileEntity = info.Instantiate(Coords, new Vector3(1, Height, 1));
 		_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent);
 		int lastIndex = 0;

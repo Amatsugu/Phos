@@ -18,6 +18,17 @@ public class MeshEntityUI : Editor
 	{
 		base.OnInspectorGUI();
 		if (meshEntity.material != null)
+		{
+			EditorGUILayout.InspectorTitlebar(true, meshEntity.material);
 			CreateEditor(meshEntity.material).OnInspectorGUI();
+		}
+		if(meshEntity is BuildingTileInfo b)
+		{
+			if(b.buildingMesh != null)
+			{
+				EditorGUILayout.InspectorTitlebar(true, b.buildingMesh);
+				CreateEditor(b.buildingMesh).OnInspectorGUI();
+			}
+		}
 	}
 }

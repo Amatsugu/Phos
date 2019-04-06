@@ -4289,13 +4289,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9dd5c87b537df74b990262c1deb7ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tech:
+  Tech: []
+  Resource:
   - {fileID: 11400000, guid: 9739069a8fcfb9a46882ae57a8416d78, type: 2}
-  - {fileID: 11400000, guid: 2067d702ec74d714fb71b7388302f55a, type: 2}
-  - {fileID: 11400000, guid: 2067d702ec74d714fb71b7388302f55a, type: 2}
-  Resource: []
   Economy: []
-  Structure: []
+  Structure:
+  - {fileID: 11400000, guid: dc9bc0c354b72384497275eb7e22e31a, type: 2}
   Millitary: []
   Defense: []
   HQUnit: {fileID: 11400000, guid: 2067d702ec74d714fb71b7388302f55a, type: 2}

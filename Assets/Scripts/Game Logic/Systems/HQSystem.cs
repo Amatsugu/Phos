@@ -3,7 +3,7 @@
 using Unity.Entities;
 
 
-public class HQSystem : ComponentSystem
+public class ResourceSystem : ComponentSystem
 {
 	public static int[] resCount;
 	public static int[] lastTickNet;

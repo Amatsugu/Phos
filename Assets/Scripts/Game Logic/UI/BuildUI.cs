@@ -37,8 +37,6 @@ public class BuildUI : MonoBehaviour
 	private Camera _cam;
 	private bool _toolTipVisible;
 	private NativeArray<Entity> _selectIndicatorEntities;
-	private NativeArray<Entity> _powerIndicatorEntities;
-	private NativeArray<Entity> _poweredTileIndicatorEntities;
 	private EntityManager _EM;
 	private Rect _buildBarRect;
 
@@ -48,8 +46,6 @@ public class BuildUI : MonoBehaviour
 		_activeUnits = new UIUnitIcon[6];
 		_cam = Camera.main;
 		_selectIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
-		_powerIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
-		_poweredTileIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
 		_EM = World.Active.EntityManager;
 		_buildBarRect = new Rect
 		{
@@ -58,11 +54,11 @@ public class BuildUI : MonoBehaviour
 			width = buildWindow.rect.width,
 			height = buildWindow.position.y
 		};
+        HideBuildWindow();
 		_placeMode = _hqMode = true;
 		_selectedUnit = HQUnit;
 		toolTip.HideToolTip();
 		InfoBanner.SetText("Place HQ Building");
-        HideBuildWindow();
 	}
 
 	// Update is called once per frame
@@ -79,26 +75,18 @@ public class BuildUI : MonoBehaviour
 		var mPos = Input.mousePosition;
 		if (_placeMode && !_buildBarRect.Contains(mPos))
 		{
-			var poweredTiles = Map.ActiveMap.GetPoweredTiles();
-			if (poweredTiles.Count > 0 && !_hqMode)
-			{
-				ShowIndicators(ref _poweredTileIndicatorEntities, powerIndicatorEntity, poweredTiles);
-			}
 			var selectedTile = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos), _cam.transform.position.y * 2);
 			if (selectedTile != null && selectedTile.Height > Map.ActiveMap.SeaLevel)
 			{
 				var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.size);
 				ShowIndicators(ref _selectIndicatorEntities, selectIndicatorEntity, tilesToOccupy);
-				if (_selectedUnit.tile.powerTransferRadius > 0)
-				{
-					var willPowerTiles = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.powerTransferRadius).Except(tilesToOccupy);
-					ShowIndicators(ref _powerIndicatorEntities, powerIndicatorEntity, willPowerTiles.Except(poweredTiles).ToList());
-				}
 				if (Input.GetKeyUp(KeyCode.Mouse0))
 				{
-					if (_hqMode || (!tilesToOccupy.Any(t => t is BuildingTile) && poweredTiles.Contains(selectedTile)))
+					if (_hqMode || (!tilesToOccupy.Any(t => t is BuildingTile)))
 					{
-						Map.ActiveMap.HexFlatten(selectedTile.Coords, 1, 6, Map.FlattenMode.Average);
+						if (!_hqMode)
+							ConsumeResourse();
+						Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
 						Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit.tile);
 						if (_hqMode)
 						{
@@ -116,18 +104,35 @@ public class BuildUI : MonoBehaviour
 			HideAllIndicators();
 	}
 
+	void ConsumeResourse()
+	{
+		for (int i = 0; i < _selectedUnit.cost.Length; i++)
+		{
+			var cost = _selectedUnit.cost[i];
+			ResourceSystem.resCount[ResourceDatabase.GetResourceId(cost.name)] -= cost.ammount;
+		}
+
+	}
+
+	bool HasResourse(UnitInfo.Resource[] resources)
+	{
+		for (int i = 0; i < resources.Length; i++)
+		{
+			var id = ResourceDatabase.GetResourceId(resources[i].name);
+			if (ResourceSystem.resCount[id] < resources[i].ammount)
+				return false;
+		}
+		return true;
+	}
+
 	void HideAllIndicators()
 	{
 		HideIndicators(_selectIndicatorEntities);
-		HideIndicators(_powerIndicatorEntities);
-		HideIndicators(_poweredTileIndicatorEntities);
 	}
 
 	private void OnDestroy()
 	{
 		_selectIndicatorEntities.Dispose();
-		_powerIndicatorEntities.Dispose();
-		_poweredTileIndicatorEntities.Dispose();
 	}
 
 	void HideIndicators(NativeArray<Entity> entities)
@@ -196,11 +201,15 @@ public class BuildUI : MonoBehaviour
 			_activeUnits[i].text.SetText(unit.name);
 			_activeUnits[i].OnClick += () =>
 			{
-				_selectedUnit = unit;
-				_placeMode = true;
+				if(HasResourse(unit.cost))
+				{
+					_selectedUnit = unit;
+					_placeMode = true;
+				}
 			};
 			_activeUnits[i].OnMouseEnter += () => toolTip.ShowToolTip(unit.name, unit.description, unit.GetCostString(), unit.GetProductionString());
 			_activeUnits[i].OnMouseExit += () => toolTip.HideToolTip();
+			_activeUnits[i].icon.sprite = unit.icon;
 		}
 	}
 
@@ -213,6 +222,8 @@ public class BuildUI : MonoBehaviour
 
 	public void HideBuildWindow()
 	{
+		_placeMode = false;
+		_selectedUnit = null;
 		buildWindow.gameObject.SetActive(false);
 		_buildBarRect.height = buildWindow.position.y;
 		for (int i = 0; i < _activeUnits.Length; i++)

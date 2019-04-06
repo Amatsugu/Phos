@@ -9,9 +9,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
 public class BuildingTileInfo : TileInfo
 {
-	public int size = 3;
+	public MeshEntity buildingMesh;
+	public int size = 0;
 	public int powerTransferRadius = 0;
-	public int influenceRange = 6;
+	public int influenceRange = 0;
 
 	public Resource[] production;
 	public Resource[] consumption;
@@ -40,13 +41,10 @@ public class BuildingTileInfo : TileInfo
 
 	public override Entity Instantiate(HexCoords pos, Vector3 scale)
 	{
-		var p = pos.worldXZ;
-		p.y = scale.y;
-		var e = Instantiate(p, Vector3.one);
+		var e = base.Instantiate(pos, scale);
 		var influenceTiles = Map.ActiveMap.HexSelect(pos, influenceRange).GroupBy(t => t.info.name).ToDictionary(g => g.Key, g => g.Count());
 		if (production.Length > 0)
 		{
-
 			var pData = new ProductionData
 			{
 				resourceIds = new int[production.Length],
@@ -85,6 +83,9 @@ public class BuildingTileInfo : TileInfo
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
-		return new BuildingTile(pos, height, this);
+		if(consumption.Length == 0)
+			return new BuildingTile(pos, height, this);
+		else
+			return new PoweredBuildingTile(pos, height, this);
 	}
 }

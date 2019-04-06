@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
-  m_Name: Foundation
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Name: MineMesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
-  material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
-  decorators: []
+  mesh: {fileID: -1277366460620338370, guid: fa53ae7b443ce1e46b7beecc71d52a19, type: 3}
+  material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}

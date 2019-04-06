@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Name: HQ Foundation
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 0}
+  material: {fileID: 0}
+  decorators: []
+  buildingMesh: {fileID: 0}
+  size: 0
+  powerTransferRadius: 0
+  influenceRange: 0
+  production: []
+  consumption: []

@@ -18,4 +18,15 @@ public class HQTile : BuildingTile
 				Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.foundationTile);
 		}
 	}
+
+	public override void OnHeightChanged()
+	{
+		base.OnHeightChanged();
+		var foundation = Map.ActiveMap.HexSelect(Coords, buildingInfo.size);
+		for (int i = 0; i < foundation.Count; i++)
+		{
+			if(foundation[i] != this)
+				foundation[i].UpdateHeight(Height);
+		}
+	}
 }

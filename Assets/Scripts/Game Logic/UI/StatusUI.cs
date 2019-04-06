@@ -23,7 +23,7 @@ public class StatusUI : MonoBehaviour
 		for (int i = 0; i < ResourceDatabase.ResourceCount; i++)
 		{
             sb.Append($"<sprite={ResourceDatabase.GetSpriteId(i)}>");
-            sb.Append($"<size=.75em><voffset=.25em>{HQSystem.resCount?[i]} [{(HQSystem.lastTickNet?[i] >= 0 ? "+" : "")}{HQSystem.lastTickNet?[i]}]</voffset></size> ");
+            sb.Append($"<size=.75em><voffset=.25em>{ResourceSystem.resCount?[i]} [{(ResourceSystem.lastTickNet?[i] >= 0 ? "+" : "")}{ResourceSystem.lastTickNet?[i]}]</voffset></size> ");
 		}
 		resourcePanel.SetText(sb);
 	}

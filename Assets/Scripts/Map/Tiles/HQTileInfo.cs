@@ -7,7 +7,7 @@ using UnityEngine;
 public class HQTileInfo : BuildingTileInfo
 {
 
-	public TileInfo foundationTile;
+	public BuildingTileInfo foundationTile;
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
