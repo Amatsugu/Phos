@@ -10,19 +10,35 @@ public class ChildOfSystem : ComponentSystem
 {
 	protected override void OnUpdate()
 	{
-		/*Entities.ForEach((Entity e, ref ChildOf c, ref LocalTranslation lT, ref ParentHeigharcy p, ref Translation t) =>{
-			t.Value = p.totalOfset + lT.position;
-			if (EntityManager.HasComponent<FrozenRenderSceneTag>(c.parent) && !EntityManager.HasComponent<FrozenRenderSceneTag>(e))
-				PostUpdateCommands.AddSharedComponent(e, new FrozenRenderSceneTag());
-			else
-				PostUpdateCommands.RemoveComponent(e, typeof(FrozenRenderSceneTag));
+		Entities.WithNone<Disabled, Frozen>().ForEach((Entity e, ref ChildOf c, ref LocalTranslation lT, ref ParentHeigharcy p, ref Translation t) =>
+		{
+			if(!lT.Applied)
+			{
+				t.Value = p.totalOfset + lT.Value;
+				lT.Applied = true;
+			}
+		});
+		/*
+		Entities.WithNone<Disabled, Frozen>().ForEach((Entity e, ref ChildOf c) =>
+		{
+			if (EntityManager.HasComponent<Frozen>(c.parent))
+				PostUpdateCommands.AddComponent(e, new Frozen());
 		});
 
-		Entities.WithNone<ParentHeigharcy>().ForEach((Entity e, ref ChildOf c) =>
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref ChildOf c, ref Frozen _) =>
 		{
-			PostUpdateCommands.AddComponent(e, DetermineHeigharcy(c.parent));
+			if (!EntityManager.HasComponent<Frozen>(c.parent))
+				PostUpdateCommands.RemoveComponent<Frozen>(e);
 		});
 		*/
+		Entities.WithNone<ParentHeigharcy>().ForEach((Entity e, ref ChildOf c) =>
+		{
+			if (EntityManager.Exists(c.parent))
+				PostUpdateCommands.AddComponent(e, DetermineHeigharcy(c.parent));
+			else
+				PostUpdateCommands.RemoveComponent<ChildOf>(e);
+		});
+
 
 	}
 
@@ -33,9 +49,10 @@ public class ChildOfSystem : ComponentSystem
 		{
 			var c = EntityManager.GetComponentData<ChildOf>(parent);
 			var p = EntityManager.GetComponentData<LocalTranslation>(parent);
-			totalOffset -= p.position;
+			totalOffset += p.Value;
 			parent = c.parent;
 		}
+		totalOffset += EntityManager.GetComponentData<Translation>(parent).Value;
 		return new ParentHeigharcy
 		{
 			topParent = parent,
@@ -46,7 +63,8 @@ public class ChildOfSystem : ComponentSystem
 
 public struct LocalTranslation : IComponentData
 {
-	public float3 position;
+	public float3 Value;
+	public bool Applied;
 }
 
 public struct ChildOf : IComponentData

@@ -35,7 +35,6 @@ public class BuildUI : MonoBehaviour
 	private bool _placeMode;
 	private bool _hqMode;
 	private Camera _cam;
-	private bool _toolTipVisible;
 	private NativeArray<Entity> _selectIndicatorEntities;
 	private EntityManager _EM;
 	private Rect _buildBarRect;

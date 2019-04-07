@@ -6,7 +6,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-public class ConnectedTile : BuildingTile
+public class ConnectedTile : PoweredBuildingTile
 {
 	public ConnectedTileInfo connectedTileInfo;
 
@@ -16,19 +16,12 @@ public class ConnectedTile : BuildingTile
 	{
 		connectedTileInfo = tInfo;
 		_connections = new NativeArray<Entity>(6, Allocator.Persistent);
-		for (int i = 0; i < 6; i++)
-		{
-			_connections[i] = connectedTileInfo.connectionMesh.Instantiate(SurfacePoint, Vector3.one, Quaternion.Euler(new Vector3(0, (i * 60) - 90, 0)));
-			//Map.EM.AddComponent(_connections[i], typeof(ChildOf));
-			//Map.EM.AddComponent(_connections[i], typeof(LocalTranslation));
-			//Map.EM.SetComponentData(_connections[i], new ChildOf { parent = _tileEntity });
-			//Map.EM.SetComponentData(_connections[i], new LocalTranslation { position = SurfacePoint});
-		}
 	}
 
 	public override void OnPlaced()
 	{
-		base.OnPlaced();
+		for (int i = 0; i < 6; i++)
+			_connections[i] = connectedTileInfo.connectionMesh.Instantiate(SurfacePoint, Vector3.one, Quaternion.Euler(new Vector3(0, (i * 60) - 90, 0)));
 		UpdateConnections();
 		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < neighbors.Length; i++)
@@ -36,6 +29,7 @@ public class ConnectedTile : BuildingTile
 			if (neighbors[i] is ConnectedTile t)
 				t.UpdateConnections();
 		}
+		base.OnPlaced();
 	}
 
 	public override void OnRemoved()
@@ -60,6 +54,22 @@ public class ConnectedTile : BuildingTile
 		}
 	}
 
+	public override void OnHQConnected()
+	{
+		base.OnHQConnected();
+		UpdateConnections();
+	}
+
+	public override void OnHQDisconnected()
+	{
+		base.OnHQDisconnected();
+		for (int i = 0; i < 6; i++)
+		{
+			if (!Map.EM.HasComponent<Disabled>(_connections[i]))
+				Map.EM.AddComponent(_connections[i], typeof(Disabled));
+		}
+	}
+
 	public override void Destroy()
 	{
 		base.Destroy();
@@ -80,19 +90,15 @@ public class ConnectedTile : BuildingTile
 	{
 		base.Show(isShown);
 		if (isShown)
-			UpdateConnections();
+			Map.EM.RemoveComponent(_connections, typeof(Frozen));
 		else
-		{
-			for (int i = 0; i < 6; i++)
-			{
-				if (!Map.EM.HasComponent<FrozenRenderSceneTag>(_connections[i]))
-					Map.EM.AddComponent(_connections[i], typeof(FrozenRenderSceneTag));
-			}
-		}
+			Map.EM.AddComponent(_connections, typeof(Frozen));
 	}
 
 	public void UpdateConnections()
 	{
+		if (!HasHQConnection)
+			return;
 		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < neighbors.Length; i++)
 		{
@@ -101,12 +107,12 @@ public class ConnectedTile : BuildingTile
 				continue;
 			if (n is ConnectedTile || n is PoweredBuildingTile || n is HQTile)
 			{
-				if(Map.EM.HasComponent<FrozenRenderSceneTag>(_connections[i]))
-					Map.EM.RemoveComponent(_connections[i], typeof(FrozenRenderSceneTag));
+				if(Map.EM.HasComponent<Disabled>(_connections[i]))
+					Map.EM.RemoveComponent(_connections[i], typeof(Disabled));
 			}else
 			{
-				if (!Map.EM.HasComponent<FrozenRenderSceneTag>(_connections[i]))
-					Map.EM.AddComponent(_connections[i], typeof(FrozenRenderSceneTag));
+				if (!Map.EM.HasComponent<Disabled>(_connections[i]))
+					Map.EM.AddComponent(_connections[i], typeof(Disabled));
 			}
 		}
 	}

@@ -103,11 +103,11 @@ public class Map : IDisposable
 				Tiles[i].Show(shown);
 			if (shown)
 			{
-				EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+				EM.RemoveComponent(_chunkTiles, typeof(Frozen));
 			}
 			else
 			{
-				EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+				EM.AddComponent(_chunkTiles, typeof(Frozen));
 
 			}
 			isShown = shown;
@@ -402,7 +402,7 @@ public class Map : IDisposable
 			case HQTile t:
 				_powerTransferTiles.Add(HQ = t);
 				break;
-			case BuildingTile t when t.buildingInfo.powerTransferRadius > 0:
+			case PoweredBuildingTile t:
 				_powerTransferTiles.Add(t);
 				break;
 		}

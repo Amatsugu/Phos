@@ -33,4 +33,4 @@ MonoBehaviour:
     ammount: 10
     perTileBonus: 1
   consumption: []
-  foundationTile: {fileID: 11400000, guid: 474e4aa47c25f1a4b8130088874e72ec, type: 2}
+  foundationTile: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}

@@ -6,6 +6,7 @@ public class HQTile : BuildingTile
 {
 	public HQTile(HexCoords coords, float height, HQTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
+		HasHQConnection = true;
 	}
 
 	public override void OnPlaced()
@@ -28,5 +29,20 @@ public class HQTile : BuildingTile
 			if(foundation[i] != this)
 				foundation[i].UpdateHeight(Height);
 		}
+	}
+
+	
+}
+
+public class SubHQTile : PoweredBuildingTile
+{
+	public SubHQTile(HexCoords coords, float height, SubHQTileInfo tInfo = null) : base(coords, height, tInfo)
+	{
+	}
+
+	public override void OnHQDisconnected()
+	{
+		base.OnHQDisconnected();
+		OnHQConnected();
 	}
 }

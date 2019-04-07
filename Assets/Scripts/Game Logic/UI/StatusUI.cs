@@ -10,8 +10,6 @@ public class StatusUI : MonoBehaviour
 	public TMP_Text text;
 	public TMP_Text resourcePanel;
 
-	private TMP_Text[] _rText;
-
 	void Start()
 	{
 

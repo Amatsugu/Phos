@@ -9,6 +9,8 @@ public class BuildingTile : Tile
 {
 	public BuildingTileInfo buildingInfo;
 
+	public bool HasHQConnection { get; protected set; }
+
 	private Entity _building;
 
 	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
@@ -28,6 +30,43 @@ public class BuildingTile : Tile
 		base.OnHeightChanged();
 		if (buildingInfo.buildingMesh != null)
 			Map.EM.SetComponentData(_building, new Translation { Value = SurfacePoint });
+	}
+
+	public virtual void OnHQConnected()
+	{
+		if (HasHQConnection)
+			return;
+		HasHQConnection = true;
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] is PoweredBuildingTile b)
+				b.OnHQConnected();
+			else if (neighbors[i] is ConnectedTile t)
+				t.OnHQConnected();
+		}
+	}
+
+	public virtual void OnHQDisconnected()
+	{
+		if (!HasHQConnection)
+			return;
+		HasHQConnection = false;
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] is PoweredBuildingTile b)
+				b.OnHQDisconnected();
+			else if (neighbors[i] is ConnectedTile t)
+				t.OnHQDisconnected();
+		}
+	}
+
+	public override void Destroy()
+	{
+		base.Destroy();
+		if (buildingInfo.buildingMesh != null)
+			Map.EM.DestroyEntity(_building);
 	}
 
 	public override void Show(bool isShown)
@@ -51,11 +90,22 @@ public class PoweredBuildingTile : BuildingTile
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
+		Debug.Log($"{buildingInfo.name} Placed");
 		var neightbors = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < 6; i++)
 		{
 			if (neightbors[i] is ConnectedTile t)
 				t.UpdateConnections();
+			if (neightbors[i] is BuildingTile b && b.HasHQConnection)
+				OnHQConnected();
 		}
+		if (!HasHQConnection)
+			OnHQDisconnected();
+	}
+
+	public override void OnRemoved()
+	{
+		base.OnRemoved();
+		OnHQDisconnected();	
 	}
 }

@@ -110,16 +110,13 @@ public class Tile
 
 	public virtual void Show(bool isShown)
 	{
-		if (isShown == IsShown)
+		if (IsShown == isShown)
 			return;
-		if(isShown)
-		{
-			Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
-		}else
-		{
-			Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
-		}
 		IsShown = isShown;
+		if(isShown)
+			Map.EM.RemoveComponent(_decor, typeof(Frozen));
+		else
+			Map.EM.AddComponent(_decor, typeof(Frozen));
 	}
 
 	public virtual Entity Render()

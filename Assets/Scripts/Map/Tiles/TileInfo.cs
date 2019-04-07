@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -10,15 +11,11 @@ public class TileInfo : MeshEntity
 {
     public TileDecorator[] decorators;
 
-	protected override EntityArchetype GetArchetype(bool localToParent = false)
+	public override ComponentType[] GetComponents()
 	{
-		return Map.EM.CreateArchetype(
-				typeof(Translation),
-				localToParent ? typeof(LocalToParent) : typeof(LocalToWorld),
-				typeof(NonUniformScale),
-				typeof(RenderMesh),
-				typeof(HexPosition)
-				);
+		return base.GetComponents().Concat(new ComponentType[]{
+			typeof(HexPosition)
+		}).ToArray();
 	}
 
 	public virtual Entity Instantiate(HexCoords pos, Vector3 scale)

@@ -30,5 +30,13 @@ public class MeshEntityUI : Editor
 				CreateEditor(b.buildingMesh).OnInspectorGUI();
 			}
 		}
+		if (meshEntity is HQTileInfo hq)
+		{
+			if (hq.foundationTile != null)
+			{
+				EditorGUILayout.InspectorTitlebar(true, hq.foundationTile);
+				CreateEditor(hq.foundationTile).OnInspectorGUI();
+			}
+		}
 	}
 }

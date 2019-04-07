@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: a71afc00c1593154c969aaba5600777d, type: 3}
   m_Name: HQ Foundation
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
+  mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
+  material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
   decorators: []
   buildingMesh: {fileID: 0}
   size: 0
