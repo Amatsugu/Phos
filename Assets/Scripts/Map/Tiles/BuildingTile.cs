@@ -8,8 +8,8 @@ using UnityEngine;
 public class BuildingTile : Tile
 {
 	public BuildingTileInfo buildingInfo;
+	public int distanceToHQ;
 
-	public bool HasHQConnection { get; protected set; }
 
 	private Entity _building;
 
@@ -32,36 +32,6 @@ public class BuildingTile : Tile
 			Map.EM.SetComponentData(_building, new Translation { Value = SurfacePoint });
 	}
 
-	public virtual void OnHQConnected()
-	{
-		if (HasHQConnection)
-			return;
-		HasHQConnection = true;
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-		{
-			if (neighbors[i] is PoweredBuildingTile b)
-				b.OnHQConnected();
-			else if (neighbors[i] is ConnectedTile t)
-				t.OnHQConnected();
-		}
-	}
-
-	public virtual void OnHQDisconnected()
-	{
-		if (!HasHQConnection)
-			return;
-		HasHQConnection = false;
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-		{
-			if (neighbors[i] is PoweredBuildingTile b)
-				b.OnHQDisconnected();
-			else if (neighbors[i] is ConnectedTile t)
-				t.OnHQDisconnected();
-		}
-	}
-
 	public override void Destroy()
 	{
 		base.Destroy();
@@ -75,14 +45,18 @@ public class BuildingTile : Tile
 		if (buildingInfo.buildingMesh == null)
 			return;
 		if (isShown)
-			Map.EM.RemoveComponent(_building, typeof(FrozenRenderSceneTag));
+			Map.EM.RemoveComponent(_building, typeof(Frozen));
 		else
-			Map.EM.AddComponent(_building, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(_building, typeof(Frozen));
 	}
 }
 
 public class PoweredBuildingTile : BuildingTile
 {
+	public bool HasHQConnection { get; protected set; }
+
+	private bool _init = false;
+
 	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
 	}
@@ -90,22 +64,60 @@ public class PoweredBuildingTile : BuildingTile
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
-		Debug.Log($"{buildingInfo.name} Placed");
+		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
 		var neightbors = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < 6; i++)
 		{
-			if (neightbors[i] is ConnectedTile t)
-				t.UpdateConnections();
-			if (neightbors[i] is BuildingTile b && b.HasHQConnection)
+			if (neightbors[i] is PoweredBuildingTile b && b.HasHQConnection)
+			{
 				OnHQConnected();
+				break;
+			}
 		}
 		if (!HasHQConnection)
 			OnHQDisconnected();
+		_init = true;
+	}
+
+	public virtual void OnHQConnected()
+	{
+		if (_init && HasHQConnection)
+			return;
+		HasHQConnection = true;
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] is PoweredBuildingTile b)
+				b.OnHQConnected();
+		}
+		if(Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
+			Map.EM.RemoveComponent<ConsumptionDebuff>(_tileEntity);
+	}
+
+	public virtual void OnHQDisconnected()
+	{
+		if (_init && !HasHQConnection)
+			return;
+		HasHQConnection = false;
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] is PoweredBuildingTile b)
+				b.OnHQDisconnected();
+		}
+		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
+		{
+			Map.EM.AddComponent(_tileEntity, typeof(ConsumptionDebuff));
+			Map.EM.SetComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
+		}
 	}
 
 	public override void OnRemoved()
 	{
 		base.OnRemoved();
-		OnHQDisconnected();	
+		OnHQDisconnected();
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+			neighbors[i].TileUpdated(this);
 	}
 }

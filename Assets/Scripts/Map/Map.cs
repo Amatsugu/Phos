@@ -133,7 +133,6 @@ public class Map : IDisposable
 			tile.OnRemoved();
 			tile.Destroy();
 			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
-			n.OnPlaced();
 			return n;
 		}
 	}
@@ -397,7 +396,10 @@ public class Map : IDisposable
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 		var chunk = Chunks[index];
 		var nT = chunk.ReplaceTile(localCoord, newTile);
-		switch(nT)
+		var neighbors = GetNeighbors(nT);
+		for (int i = 0; i < 6; i++)
+			neighbors[i].TileUpdated(nT);
+		switch (nT)
 		{
 			case HQTile t:
 				_powerTransferTiles.Add(HQ = t);
@@ -406,6 +408,7 @@ public class Map : IDisposable
 				_powerTransferTiles.Add(t);
 				break;
 		}
+		nT.OnPlaced();
 		return nT;
 	}
 

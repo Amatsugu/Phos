@@ -32,6 +32,13 @@ public class ConnectedTile : PoweredBuildingTile
 		base.OnPlaced();
 	}
 
+	public override void TileUpdated(Tile src)
+	{
+		base.TileUpdated(src);
+		if(src is PoweredBuildingTile)
+			UpdateConnections();
+	}
+
 	public override void OnRemoved()
 	{
 		base.OnRemoved();

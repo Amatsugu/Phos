@@ -92,6 +92,10 @@ public class Tile
 
 	}
 
+	public virtual void TileUpdated(Tile src)
+	{
+
+	}
 
 	public virtual void Destroy()
 	{
