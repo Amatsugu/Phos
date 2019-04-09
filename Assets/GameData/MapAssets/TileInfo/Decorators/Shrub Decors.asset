@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 102f659bf2a9e4743b6be12d17fda05a, type: 3}
+  m_Name: Shrub Decors
+  m_EditorClassIdentifier: 
+  meshEntity: {fileID: 11400000, guid: df4b63e56cfb61b4a8d267dc83564c3f, type: 2}
+  densityMulti: 1
+  minPerTile: 0
+  maxPerTile: 2
+  densityPower: 2
+  minHeight: 0.1
+  maxHeight: 0.5
+  minSize: 0.1
+  maxSize: 0.5
+  noise:
+    type: 0
+    simpleNoiseSettings:
+      strength: 1
+      layerCount: 4
+      baseRoughness: 3
+      roughness: 2
+      persistence: 0.5
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+    rigidNoiseSettings:
+      strength: 1
+      layerCount: 3
+      baseRoughness: 1.94
+      roughness: 2
+      persistence: 0.5
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
+  noiseScale: 15

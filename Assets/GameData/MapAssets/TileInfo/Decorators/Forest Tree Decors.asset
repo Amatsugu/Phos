@@ -19,5 +19,5 @@ MonoBehaviour:
   densityPower: 1
   minHeight: 0.5
   maxHeight: 4
-  minSize: 0.1
+  minSize: 0.2
   maxSize: 0.5

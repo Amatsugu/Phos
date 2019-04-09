@@ -26,6 +26,8 @@ public class Map : IDisposable
 
 	public float InnerRadius { get; }
 	public float SeaLevel;
+	public int Seed { get; private set; }
+
 	public Transform Parent { get; }
 	public Chunk[] Chunks { get; }
 
@@ -132,6 +134,7 @@ public class Map : IDisposable
 		{
 			var tile = this[chunkCoord];
 			var n = newTile.CreateTile(tile.Coords, tile.Height);
+			n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			this[chunkCoord] = n;
 			tile.OnRemoved();
 			tile.Destroy();
@@ -140,10 +143,11 @@ public class Map : IDisposable
 		}
 	}
 
-	public Map(int height, int width, float edgeLength = 1)
+	public Map(int height, int width, int seed, float edgeLength = 1)
 	{
 		Width = width;
 		Height = height;
+		this.Seed = seed;
 		Chunks = new Chunk[width * height];
 		TileEdgeLength = edgeLength;
 		InnerRadius = Mathf.Sqrt(3f) / 2f * TileEdgeLength;

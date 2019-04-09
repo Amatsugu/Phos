@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
   material: {fileID: 2100000, guid: a5888e538e2dc514fb2925893ccfbb5e, type: 2}
+  decorators:
+  - {fileID: 11400000, guid: 958614e15c0ebe040903fb60275689fa, type: 2}

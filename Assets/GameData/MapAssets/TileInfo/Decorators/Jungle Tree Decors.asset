@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Jungle Tree Decors
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: 826a8d44cd9508845ab9124b565f5435, type: 2}
-  densityMulti: 0.4
+  densityMulti: 1
   minPerTile: 0
   maxPerTile: 3
-  densityPower: 1.5
+  densityPower: 1
   minHeight: 0.5
   maxHeight: 4
-  minSize: 0.1
+  minSize: 0.2
   maxSize: 0.5
