@@ -35,6 +35,8 @@ public class BuildingTile : Tile
 	public override void Destroy()
 	{
 		base.Destroy();
+		if (Map.IsDisposing)
+			return;
 		if (buildingInfo.buildingMesh != null)
 			Map.EM.DestroyEntity(_building);
 	}
@@ -116,8 +118,8 @@ public class PoweredBuildingTile : BuildingTile
 	{
 		base.OnRemoved();
 		OnHQDisconnected();
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-			neighbors[i].TileUpdated(this);
+		//var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		//for (int i = 0; i < 6; i++)
+		//neighbors[i].TileUpdated(this);
 	}
 }

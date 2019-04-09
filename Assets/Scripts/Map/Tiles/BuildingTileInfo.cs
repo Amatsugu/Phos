@@ -9,7 +9,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
 public class BuildingTileInfo : TileInfo
 {
-	public MeshEntity buildingMesh;
+	public MeshEntityRotatable buildingMesh;
 	public int size = 0;
 	public int powerTransferRadius = 0;
 	public int influenceRange = 0;
@@ -76,9 +76,9 @@ public class BuildingTileInfo : TileInfo
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
-		if(consumption.Length == 0)
-			return new BuildingTile(pos, height, this);
-		else
+		if(consumption.Length != 0 || production.Any(p => p.name == "Power"))
 			return new PoweredBuildingTile(pos, height, this);
+		else
+			return new BuildingTile(pos, height, this);
 	}
 }

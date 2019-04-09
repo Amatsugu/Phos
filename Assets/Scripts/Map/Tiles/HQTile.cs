@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
 
 public class HQTile : BuildingTile
@@ -37,6 +38,13 @@ public class SubHQTile : PoweredBuildingTile
 {
 	public SubHQTile(HexCoords coords, float height, SubHQTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
+	}
+
+	public override void TileUpdated(Tile src)
+	{
+		base.TileUpdated(src);
+		if (src is HQTile)
+			OnHQConnected();
 	}
 
 	public override void OnHQDisconnected()

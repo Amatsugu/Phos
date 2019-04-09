@@ -9,6 +9,8 @@ public class CameraController : MonoBehaviour
 	public float maxHeight = 20;
 	public float zoomAmmount = 1;
 	public float zoomSpeed = 2;
+	public float edgePanSize = 100;
+	public bool edgePan = false;
 	public MapRenderer mapRenderer;
 
 	private float _targetHeight;
@@ -44,20 +46,32 @@ public class CameraController : MonoBehaviour
 			moveVector.z = 1;
 		else if (Input.GetKey(KeyCode.S))
 			moveVector.z = -1;
+		var mPos = Input.mousePosition;
+
+		if (edgePan)
+		{
+			//Edge Panning
+			if (mPos.x < edgePanSize)
+				moveVector.x = -1;
+			else if (mPos.x > Screen.width - edgePanSize)
+				moveVector.x = 1;
+			if (mPos.y < edgePanSize)
+				moveVector.z = -1;
+			else if (mPos.y > Screen.height - edgePanSize)
+				moveVector.z = 1;
+		}
+
 		if (Input.GetKey(KeyCode.LeftShift))
 			moveVector *= 2;
 		pos += moveVector * moveSpeed * Time.deltaTime;
 
 		//Drag Panning
 		Vector3 curPos;
-		var mPos = Input.mousePosition;
 		var ray = _cam.ScreenPointToRay(mPos);
 		var height = pos.y - mapRenderer.map.SeaLevel;
 		var d = height / Mathf.Sin(_cam.transform.eulerAngles.x * Mathf.Deg2Rad);
 		if (Input.GetKeyDown(KeyCode.Mouse1))
-		{
-			curPos = _lastClickPos = ray.GetPoint(d);
-		}
+			_lastClickPos = ray.GetPoint(d);
 		if(Input.GetKey(KeyCode.Mouse1))
 		{
 			curPos = ray.GetPoint(d);

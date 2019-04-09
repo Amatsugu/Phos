@@ -14,7 +14,9 @@ public class Map : IDisposable
 {
 	public static Map ActiveMap;
 	public static EntityManager EM;
+	public static bool IsDisposing { get; private set; }
 
+	public string Name;
 	public int Height { get; }
 	public int Width { get; }
 	public int Length => Chunks.Length;
@@ -29,6 +31,7 @@ public class Map : IDisposable
 
 	public HQTile HQ;
 	private List<BuildingTile> _powerTransferTiles;
+	private bool _isRendered;
 
 	public class Chunk
 	{
@@ -215,6 +218,9 @@ public class Map : IDisposable
 
 	public void Render(EntityManager entityManager)
 	{
+		if (_isRendered)
+			return;
+		_isRendered = true;
 		if (EM == null)
 			EM = entityManager;
 		foreach (var chunk in Chunks)
@@ -390,6 +396,8 @@ public class Map : IDisposable
 
 	public Tile ReplaceTile(Tile tile, TileInfo newTile)
 	{
+		if (!_isRendered)
+			throw new Exception("Cannot use ReplaceTile for an unrendered map");
 		var coord = tile.Coords;
 		var (chunkX, chunkZ) = coord.GetChunkPos();
 		var index = chunkX + chunkZ * Width;
@@ -397,8 +405,6 @@ public class Map : IDisposable
 		var chunk = Chunks[index];
 		var nT = chunk.ReplaceTile(localCoord, newTile);
 		var neighbors = GetNeighbors(nT);
-		for (int i = 0; i < 6; i++)
-			neighbors[i].TileUpdated(nT);
 		switch (nT)
 		{
 			case HQTile t:
@@ -416,6 +422,9 @@ public class Map : IDisposable
 
 	public void Destroy()
 	{
+		if (!_isRendered)
+			return;
+		_isRendered = false;
 		foreach (var chunk in Chunks)
 			chunk?.Destroy();
 	}
@@ -429,13 +438,11 @@ public class Map : IDisposable
 	{
 		if (!disposedValue)
 		{
+			IsDisposing = true;
 			if (disposing)
 			{
-				// TODO: dispose managed state (managed objects).
 			}
 
-			// TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-			// TODO: set large fields to null.
 			Destroy();
 
 			disposedValue = true;

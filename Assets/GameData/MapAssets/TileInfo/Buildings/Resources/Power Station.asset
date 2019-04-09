@@ -9,28 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd7df0f29ab0544459ea32b53d242a8e, type: 3}
-  m_Name: HQ Tile Info
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Name: Power Station
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
   material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
   decorators: []
-  buildingMesh: {fileID: 11400000, guid: 08df32c5fb76d624cab4d82ba537c212, type: 2}
-  size: 1
-  powerTransferRadius: 6
-  influenceRange: 6
+  buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  size: 0
+  powerTransferRadius: 0
+  influenceRange: 3
   production:
   - name: Power
     ammount: 5
     perTileBonus: 0
-  - name: Water
-    ammount: 2
-    perTileBonus: 1
-  - name: Stone
-    ammount: 2
-    perTileBonus: 1
-  - name: Food
-    ammount: 2
-    perTileBonus: 1
   consumption: []
-  foundationTile: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}

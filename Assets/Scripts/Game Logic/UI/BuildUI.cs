@@ -11,6 +11,8 @@ using System.Linq;
 
 public class BuildUI : MonoBehaviour
 {
+	public TileInfo grass;
+
 	public UnitInfo[] Tech;
 	public UnitInfo[] Resource;
 	public UnitInfo[] Economy;
@@ -20,7 +22,9 @@ public class BuildUI : MonoBehaviour
 	public UnitInfo HQUnit;
 
 	/*	UI	*/
-	public UIInfoBanner InfoBanner;
+	public UIInfoBanner infoBanner;
+	public BaseNameWindowUI baseNameUI;
+	public TMP_Text baseNameText;
 	//Indicators
 	public MeshEntity selectIndicatorEntity;
 	public MeshEntity powerIndicatorEntity;
@@ -57,7 +61,7 @@ public class BuildUI : MonoBehaviour
 		_placeMode = _hqMode = true;
 		_selectedUnit = HQUnit;
 		toolTip.HideToolTip();
-		InfoBanner.SetText("Place HQ Building");
+		infoBanner.SetText("Place HQ Building");
 	}
 
 	// Update is called once per frame
@@ -66,41 +70,62 @@ public class BuildUI : MonoBehaviour
 		if (Input.GetKey(KeyCode.Escape))
 		{
 			if (_placeMode && !_hqMode)
+			{
 				_placeMode = false;
+				HideAllIndicators();
+			}
 			else
 				HideBuildWindow();
 
 		}
 		var mPos = Input.mousePosition;
-		if (_placeMode && !_buildBarRect.Contains(mPos))
+		if (!_buildBarRect.Contains(mPos))
 		{
+
 			var selectedTile = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos), _cam.transform.position.y * 2);
-			if (selectedTile != null && selectedTile.Height > Map.ActiveMap.SeaLevel)
+			if (_placeMode)
 			{
-				var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.size);
-				ShowIndicators(ref _selectIndicatorEntities, selectIndicatorEntity, tilesToOccupy);
-				if (Input.GetKeyUp(KeyCode.Mouse0))
+				if (selectedTile != null && selectedTile.Height > Map.ActiveMap.SeaLevel)
 				{
-					if (_hqMode || (!tilesToOccupy.Any(t => t is BuildingTile)))
+					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.size);
+					ShowIndicators(ref _selectIndicatorEntities, selectIndicatorEntity, tilesToOccupy);
+					if (Input.GetKeyUp(KeyCode.Mouse0))
 					{
-						if (!_hqMode)
-							ConsumeResourse();
-						Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
-						Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit.tile);
-						if (_hqMode)
+						if (_hqMode || (!tilesToOccupy.Any(t => t is BuildingTile)))
 						{
-							_placeMode = _hqMode = false;
-							InfoBanner.SetActive(false);
+							if (!_hqMode)
+								ConsumeResourse();
+							Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
+							Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit.tile);
+							if (_hqMode)
+							{
+								baseNameUI.Show();
+								_placeMode = false;
+								_cam.GetComponent<CameraController>().enabled = false;
+								baseNameUI.OnHide += () =>
+								{
+									_placeMode = _hqMode = false;
+									infoBanner.SetActive(false);
+									_cam.GetComponent<CameraController>().enabled = true;
+									baseNameText.text = baseNameUI.text.text;
+								};
+							}
+							HideAllIndicators();
 						}
-						HideAllIndicators();
 					}
 				}
+				else
+					HideAllIndicators();
 			}
 			else
-				HideAllIndicators();
+			{
+				if (Input.GetKeyUp(KeyCode.Mouse2))
+				{
+					if (selectedTile != null && !(selectedTile is HQTile && selectedTile is SubHQTile))
+						Map.ActiveMap.ReplaceTile(selectedTile, grass);
+				}
+			}
 		}
-		else
-			HideAllIndicators();
 	}
 
 	void ConsumeResourse()

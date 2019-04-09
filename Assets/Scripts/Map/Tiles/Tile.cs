@@ -60,6 +60,7 @@ public class Tile
 	public void UpdateHeight(float height)
 	{
 		Height = height;
+		SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
 		OnHeightChanged();
 		UpdateDecorations();
 	}
@@ -67,7 +68,6 @@ public class Tile
 	public virtual void OnHeightChanged()
 	{
 		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
-		SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
 	}
 
 	private void UpdateDecorations()
@@ -89,7 +89,9 @@ public class Tile
 
 	public virtual void OnPlaced()
 	{
-
+		var neighbors = Map.ActiveMap.GetNeighbors(this);
+		for (int i = 0; i < 6; i++)
+			neighbors[i]?.TileUpdated(this);
 	}
 
 	public virtual void TileUpdated(Tile src)

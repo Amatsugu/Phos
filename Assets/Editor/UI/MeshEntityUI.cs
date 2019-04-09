@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(MeshEntity), true)]
-
 public class MeshEntityUI : Editor
 {
 	private MeshEntity meshEntity;
@@ -24,7 +23,7 @@ public class MeshEntityUI : Editor
 		}
 		if(meshEntity is BuildingTileInfo b)
 		{
-			if(b.buildingMesh != null)
+			if(b.buildingMesh != null && b.buildingMesh != b)
 			{
 				EditorGUILayout.InspectorTitlebar(true, b.buildingMesh);
 				CreateEditor(b.buildingMesh).OnInspectorGUI();
@@ -32,7 +31,7 @@ public class MeshEntityUI : Editor
 		}
 		if (meshEntity is HQTileInfo hq)
 		{
-			if (hq.foundationTile != null)
+			if (hq.foundationTile != null && hq.foundationTile != hq)
 			{
 				EditorGUILayout.InspectorTitlebar(true, hq.foundationTile);
 				CreateEditor(hq.foundationTile).OnInspectorGUI();

@@ -31,15 +31,15 @@ public class MapRenderer : MonoBehaviour
 
 	private void Awake()
 	{
-		Init();
 		_cam = FindObjectOfType<Camera>();
+		ResourceDatabase.Init(resourceList.resourceDefinations);
+		Init();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
 		var chunkSize = Map.Chunk.SIZE;
 		min = Vector3.zero;
 		max = new Vector3(map.Width * chunkSize * map.ShortDiagonal, 0, map.Height * chunkSize * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
-		ResourceDatabase.Init(resourceList.resourceDefinations);
 	}
 
 	private void OnDestroy()
