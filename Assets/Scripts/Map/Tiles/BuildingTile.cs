@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -63,20 +64,21 @@ public class PoweredBuildingTile : BuildingTile
 	{
 	}
 
+	public override void TileUpdated(Tile src)
+	{
+		if (CheckHQConnection(this))
+			OnHQConnected();
+		else
+			OnHQDisconnected();
+	}
+
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
 		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
-		var neightbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-		{
-			if (neightbors[i] is PoweredBuildingTile b && b.HasHQConnection)
-			{
-				OnHQConnected();
-				break;
-			}
-		}
-		if (!HasHQConnection)
+		if (CheckHQConnection(this))
+			OnHQConnected();
+		else
 			OnHQDisconnected();
 		_init = true;
 	}
@@ -92,7 +94,7 @@ public class PoweredBuildingTile : BuildingTile
 			if (neighbors[i] is PoweredBuildingTile b)
 				b.OnHQConnected();
 		}
-		if(Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
+		if (Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 			Map.EM.RemoveComponent<ConsumptionDebuff>(_tileEntity);
 	}
 
@@ -100,13 +102,6 @@ public class PoweredBuildingTile : BuildingTile
 	{
 		if (_init && !HasHQConnection)
 			return;
-		HasHQConnection = false;
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-		{
-			if (neighbors[i] is PoweredBuildingTile b)
-				b.OnHQDisconnected();
-		}
 		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 		{
 			Map.EM.AddComponent(_tileEntity, typeof(ConsumptionDebuff));
@@ -114,12 +109,37 @@ public class PoweredBuildingTile : BuildingTile
 		}
 	}
 
+	public bool CheckHQConnection(Tile prev)
+	{
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] == prev)
+				continue;
+			if (neighbors[i] is SubHQTile)
+			{
+				OnHQConnected();
+				return true;
+			}
+			if(neighbors[i] is PoweredBuildingTile p)
+			{
+				if (p.CheckHQConnection(this))
+				{
+					OnHQConnected();
+					return true;
+				}
+			}
+		}
+		OnHQDisconnected();
+		return false;
+	}
+
 	public override void OnRemoved()
 	{
 		base.OnRemoved();
 		OnHQDisconnected();
-		//var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		//for (int i = 0; i < 6; i++)
-		//neighbors[i].TileUpdated(this);
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+			neighbors[i].TileUpdated(this);
 	}
 }

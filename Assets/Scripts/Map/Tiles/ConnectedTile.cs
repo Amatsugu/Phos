@@ -22,14 +22,14 @@ public class ConnectedTile : PoweredBuildingTile
 	{
 		for (int i = 0; i < 6; i++)
 			_connections[i] = connectedTileInfo.connectionMesh.Instantiate(SurfacePoint, Vector3.one, Quaternion.Euler(new Vector3(0, (i * 60) - 90, 0)));
-		UpdateConnections();
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < neighbors.Length; i++)
-		{
-			if (neighbors[i] is ConnectedTile t)
-				t.UpdateConnections();
-		}
+		//var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		//for (int i = 0; i < neighbors.Length; i++)
+		//{
+		//	if (neighbors[i] is ConnectedTile t)
+		//		t.UpdateConnections();
+		//}
 		base.OnPlaced();
+		UpdateConnections();
 	}
 
 	public override void TileUpdated(Tile src)

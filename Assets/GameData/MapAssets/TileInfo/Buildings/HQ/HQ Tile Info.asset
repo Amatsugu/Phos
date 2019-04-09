@@ -21,13 +21,13 @@ MonoBehaviour:
   influenceRange: 6
   production:
   - name: Power
-    ammount: 5
+    ammount: 10
     perTileBonus: 0
   - name: Water
     ammount: 2
     perTileBonus: 1
   - name: Stone
-    ammount: 2
+    ammount: 10
     perTileBonus: 1
   - name: Food
     ammount: 2

@@ -20,7 +20,7 @@ public class MeshEntity : ScriptableObject
 		var em = Map.EM;
 		if (_entity == null || !em.Exists(_entity))
 		{
-			Debug.Log($"Create Entity {name}");
+			//Debug.Log($"Create Entity {name}");
 			var architype = GetArchetype();
 			RenderMesh sharedMesh = new RenderMesh
 			{

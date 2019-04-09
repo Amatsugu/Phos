@@ -49,7 +49,7 @@ public class SubHQTile : PoweredBuildingTile
 
 	public override void OnHQDisconnected()
 	{
-		//base.OnHQDisconnected();
+		//base.OnHQDisconnected()
 		OnHQConnected();
 	}
 }

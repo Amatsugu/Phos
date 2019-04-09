@@ -110,7 +110,8 @@ public class Tile
 
 		}finally
 		{
-			_decor.Dispose();
+			if(_decor.IsCreated)
+				_decor.Dispose();
 		}
 	}
 
@@ -129,6 +130,8 @@ public class Tile
 	{
 		IsShown = true;
 		_tileEntity = info.Instantiate(Coords, new Vector3(1, Height, 1));
+		if (info.decorators.Length == 0)
+			return _tileEntity;
 		_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent);
 		int lastIndex = 0;
 		for (int i = 0; i < info.decorators.Length; i++)

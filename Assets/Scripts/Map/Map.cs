@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Rendering;
@@ -227,8 +228,10 @@ public class Map : IDisposable
 		_isRendered = true;
 		if (EM == null)
 			EM = entityManager;
-		foreach (var chunk in Chunks)
-			chunk?.Render();
+		var start = DateTime.Now;
+		for (int i = 0; i < Chunks.Length; i++)
+			Chunks[i].Render();
+		Debug.Log($"Render... {(DateTime.Now - start).TotalMilliseconds}ms");
 	}
 
 	/// <summary>
