@@ -95,5 +95,12 @@ public struct HexCoords
 	}
 
 	// override object.GetHashCode
-	public override int GetHashCode() => base.GetHashCode();
+	const int prime = 31;
+	public override int GetHashCode()
+	{
+		int hash = 23;
+		hash = hash * prime + offsetX;
+		hash = hash * prime * offsetZ;
+		return hash;
+	}
 }

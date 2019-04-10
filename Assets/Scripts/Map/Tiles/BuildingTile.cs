@@ -66,41 +66,29 @@ public class PoweredBuildingTile : BuildingTile
 
 	public override void TileUpdated(Tile src)
 	{
-		if (CheckHQConnection(this))
-			OnHQConnected();
-		else
-			OnHQDisconnected();
+		EstablishHQConnection();
 	}
 
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
 		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
-		if (CheckHQConnection(this))
-			OnHQConnected();
-		else
-			OnHQDisconnected();
+		EstablishHQConnection();
 		_init = true;
 	}
 
 	public virtual void OnHQConnected()
 	{
-		if (_init && HasHQConnection)
+		if (HasHQConnection)
 			return;
 		HasHQConnection = true;
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-		{
-			if (neighbors[i] is PoweredBuildingTile b)
-				b.OnHQConnected();
-		}
 		if (Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 			Map.EM.RemoveComponent<ConsumptionDebuff>(_tileEntity);
 	}
 
 	public virtual void OnHQDisconnected()
 	{
-		if (_init && !HasHQConnection)
+		if (!HasHQConnection)
 			return;
 		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 		{
@@ -109,35 +97,51 @@ public class PoweredBuildingTile : BuildingTile
 		}
 	}
 
-	public bool CheckHQConnection(Tile prev)
+	public void EstablishHQConnection()
 	{
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		if (this is SubHQTile)
+			return;
+		var	visited = new HashSet<PoweredBuildingTile>();
+		if(CheckHQConnection(visited))
+		{
+			foreach (var tile in visited)
+				tile.OnHQConnected();
+		}else
+			foreach (var tile in visited)
+				tile.OnHQDisconnected();
+	}
+
+	public bool CheckHQConnection(HashSet<PoweredBuildingTile> visited = null)
+	{
+		visited.Add(this);
+		bool foundHQ = false;
+		var nT = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < 6; i++)
 		{
-			if (neighbors[i] == prev)
+			if (nT[i] == null)
 				continue;
-			if (neighbors[i] is SubHQTile)
+			if (visited.Contains(nT[i]))
+				continue;
+			if (nT[i] is SubHQTile)
 			{
-				OnHQConnected();
-				return true;
+				foundHQ = true;
+				continue;
 			}
-			if(neighbors[i] is PoweredBuildingTile p)
+			if (nT[i] is PoweredBuildingTile p)
 			{
-				if (p.CheckHQConnection(this))
+				if(p.CheckHQConnection(visited))
 				{
-					OnHQConnected();
-					return true;
+					foundHQ = true;
 				}
+
 			}
 		}
-		OnHQDisconnected();
-		return false;
+		return foundHQ;
 	}
 
 	public override void OnRemoved()
 	{
 		base.OnRemoved();
-		OnHQDisconnected();
 		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < 6; i++)
 			neighbors[i].TileUpdated(this);

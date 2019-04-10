@@ -137,9 +137,9 @@ public class Map : IDisposable
 			var n = newTile.CreateTile(tile.Coords, tile.Height);
 			n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			this[chunkCoord] = n;
+			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
 			tile.OnRemoved();
 			tile.Destroy();
-			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
 			return n;
 		}
 	}
@@ -411,7 +411,6 @@ public class Map : IDisposable
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 		var chunk = Chunks[index];
 		var nT = chunk.ReplaceTile(localCoord, newTile);
-		var neighbors = GetNeighbors(nT);
 		switch (nT)
 		{
 			case HQTile t:
@@ -426,6 +425,24 @@ public class Map : IDisposable
 	}
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
+
+	public float GetHeight(Vector3 worldPos, int radius = 0) => GetHeight(HexCoords.FromPosition(worldPos, TileEdgeLength), radius);
+
+	public float GetHeight(HexCoords coord, int radius = 0)
+	{
+		if (radius == 0)
+		{
+			var t = this[coord];
+			if (t == null)
+				return this.SeaLevel;
+			return t.Height;
+		}
+		var selection = this.HexSelect(coord, radius);
+		if (selection.Count == 0)
+			return SeaLevel;
+		var max = selection.Max(t => t.Height);
+		return (max < SeaLevel) ? SeaLevel : max;
+	}
 
 	public void Destroy()
 	{

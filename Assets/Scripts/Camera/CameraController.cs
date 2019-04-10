@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
 	private float _targetHeight;
 	private float _lastHeight;
 	private float _anim = 0;
-	private HexCoords _lastCoord;
+	private Vector3 _lastCoord;
 	private Camera _cam;
 
 	private Vector3 _lastClickPos;
@@ -86,8 +86,8 @@ public class CameraController : MonoBehaviour
 		_targetHeight -= scroll;
 		if (_targetHeight > maxHeight)
 			_targetHeight = maxHeight;
-		_lastCoord = HexCoords.FromPosition(pos, mapRenderer.map.TileEdgeLength);
-		var minHeight = mapRenderer.GetHeight(_lastCoord, 2) + minHeightFromGround;
+		_lastCoord = pos;
+		var minHeight = Map.ActiveMap.GetHeight(_lastCoord, 2) + minHeightFromGround;
 
 		if(minHeight != _lastHeight)
 		{

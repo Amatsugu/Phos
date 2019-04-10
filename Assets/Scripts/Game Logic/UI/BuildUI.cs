@@ -21,6 +21,8 @@ public class BuildUI : MonoBehaviour
 	public UnitInfo[] Defense;
 	public UnitInfo HQUnit;
 
+	public MobileUnitInfo testUnit;
+
 	/*	UI	*/
 	public UIInfoBanner infoBanner;
 	public BaseNameWindowUI baseNameUI;
@@ -108,6 +110,7 @@ public class BuildUI : MonoBehaviour
 									infoBanner.SetActive(false);
 									_cam.GetComponent<CameraController>().enabled = true;
 									baseNameText.text = baseNameUI.text.text;
+									testUnit.Instantiate(selectedTile.SurfacePoint, Quaternion.identity);
 								};
 							}
 							HideAllIndicators();

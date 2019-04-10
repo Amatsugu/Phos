@@ -386,11 +386,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -2204,7 +2204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &636739578
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3305,7 +3305,7 @@ MonoBehaviour:
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
   m_isInputParsingRequired: 0
-  m_inputSource: 3
+  m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
   - {fileID: 0}
@@ -5416,6 +5416,7 @@ MonoBehaviour:
   Millitary: []
   Defense: []
   HQUnit: {fileID: 11400000, guid: 2067d702ec74d714fb71b7388302f55a, type: 2}
+  testUnit: {fileID: 11400000, guid: 420bc2c408e15d648b951074f598b77e, type: 2}
   infoBanner: {fileID: 1107210684}
   baseNameUI: {fileID: 636739581}
   baseNameText: {fileID: 2124582711}

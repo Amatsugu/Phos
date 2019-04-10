@@ -49,7 +49,7 @@ public class MapRenderer : MonoBehaviour
 
 	public void Init()
 	{
-		_entityManager = World.Active.GetOrCreateManager<EntityManager>();
+		_entityManager = World.Active.EntityManager;
 		map = generator.GenerateMap(transform);
 		map.Render(_entityManager);
 		var pos = oceanPlane.transform.localScale;
@@ -58,21 +58,7 @@ public class MapRenderer : MonoBehaviour
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
 	}
 
-	public float GetHeight(HexCoords coord, int radius = 0)
-	{
-		if (radius == 0)
-		{
-			var t = map[coord];
-			if (t == null)
-				return map.SeaLevel;
-			return t.Height;
-		}
-		var selection = map.HexSelect(coord, radius);
-		if (selection.Count == 0)
-			return map.SeaLevel;
-		var max = selection.Max(t => t.Height);
-		return (max < map.SeaLevel) ? map.SeaLevel : max;
-	}
+	
 
 	private void Update()
 	{
