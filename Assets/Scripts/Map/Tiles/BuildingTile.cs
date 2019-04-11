@@ -37,7 +37,7 @@ public class BuildingTile : Tile
 	public override void Destroy()
 	{
 		base.Destroy();
-		if (Map.IsDisposing)
+		if (!Map.ActiveMap.IsRendered)
 			return;
 		if (buildingInfo.buildingMesh != null)
 			Map.EM.DestroyEntity(_building);

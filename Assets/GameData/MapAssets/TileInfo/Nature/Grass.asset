@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
   material: {fileID: 2100000, guid: 2866af085bdcb3e4083ccd811b041108, type: 2}
+  decorators: []
+  Name: Grass
+  Description: This is grass

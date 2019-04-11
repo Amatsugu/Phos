@@ -150,16 +150,16 @@ MonoBehaviour:
   m_AdvancedMode: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.084
+    m_Value: 0.188
     min: 0
     max: 1
   scatter:
     m_OverrideState: 1
-    m_Value: 0.664
+    m_Value: 0.558
     min: 0
     max: 1
   tint:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
@@ -201,31 +201,31 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   length:
-    m_OverrideState: 0
-    m_Value: 0.15
+    m_OverrideState: 1
+    m_Value: 1
     min: 0
     max: 1
   opacity:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
     min: 0
     max: 1
   distanceScaleFactor:
-    m_OverrideState: 0
-    m_Value: 0.5
+    m_OverrideState: 1
+    m_Value: 0.299
     min: 0
     max: 1
   maxDistance:
-    m_OverrideState: 0
-    m_Value: 50
+    m_OverrideState: 1
+    m_Value: 47.7
     min: 0
   fadeDistance:
-    m_OverrideState: 0
-    m_Value: 5
+    m_OverrideState: 1
+    m_Value: 6.58
     min: 0
   sampleCount:
-    m_OverrideState: 0
-    m_Value: 8
+    m_OverrideState: 1
+    m_Value: 30
     min: 4
     max: 64
 --- !u!114 &-1376810000236155332
@@ -405,7 +405,7 @@ MonoBehaviour:
     m_Value: 1
   focusDistance:
     m_OverrideState: 1
-    m_Value: 32.47
+    m_Value: 23.5
     min: 0.1
   nearFocusStart:
     m_OverrideState: 1
@@ -884,7 +884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29b00527f85bb3346a4d2cb710971587, type: 3}
   m_Name: VolumetricFog
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   colorMode:
     m_OverrideState: 1
@@ -902,7 +902,7 @@ MonoBehaviour:
     max: 1
   maxFogDistance:
     m_OverrideState: 1
-    m_Value: 1723.84
+    m_Value: 3381.8
     min: 0
   mipFogMaxMip:
     m_OverrideState: 0
@@ -919,17 +919,17 @@ MonoBehaviour:
     min: 0
   albedo:
     m_OverrideState: 1
-    m_Value: {r: 0.89143467, g: 0, b: 1, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 30
+    m_Value: 94.5
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 671
   meanHeight:
     m_OverrideState: 1
     m_Value: 1
@@ -946,7 +946,7 @@ MonoBehaviour:
     max: 1
   enableDistantFog:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
 --- !u!114 &4012965862458178473
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1020,7 +1020,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.309
+    m_Value: 0.337
     min: 0
     max: 1
   smoothness:
@@ -1099,8 +1099,8 @@ MonoBehaviour:
   active: 0
   m_AdvancedMode: 0
   enable:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
   opacity:
     m_OverrideState: 0
     m_Value: 1

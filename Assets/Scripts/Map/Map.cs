@@ -15,7 +15,7 @@ public class Map : IDisposable
 {
 	public static Map ActiveMap;
 	public static EntityManager EM;
-	public static bool IsDisposing { get; private set; }
+	public bool IsRendered { get; private set; }
 
 	public string Name;
 	public int Height { get; }
@@ -34,7 +34,6 @@ public class Map : IDisposable
 
 	public HQTile HQ;
 	private List<BuildingTile> _powerTransferTiles;
-	private bool _isRendered;
 
 	public class Chunk
 	{
@@ -225,9 +224,9 @@ public class Map : IDisposable
 
 	public void Render(EntityManager entityManager)
 	{
-		if (_isRendered)
+		if (IsRendered)
 			return;
-		_isRendered = true;
+		IsRendered = true;
 		if (EM == null)
 			EM = entityManager;
 		var start = DateTime.Now;
@@ -405,7 +404,7 @@ public class Map : IDisposable
 
 	public Tile ReplaceTile(Tile tile, TileInfo newTile)
 	{
-		if (!_isRendered)
+		if (!IsRendered)
 			throw new Exception("Cannot use ReplaceTile for an unrendered map");
 		var coord = tile.Coords;
 		var (chunkX, chunkZ) = coord.GetChunkPos();
@@ -456,9 +455,9 @@ public class Map : IDisposable
 
 	public void Destroy()
 	{
-		if (!_isRendered)
+		if (!IsRendered)
 			return;
-		_isRendered = false;
+		IsRendered = false;
 		foreach (var chunk in Chunks)
 			chunk?.Destroy();
 	}
@@ -472,7 +471,6 @@ public class Map : IDisposable
 	{
 		if (!disposedValue)
 		{
-			IsDisposing = true;
 			if (disposing)
 			{
 			}

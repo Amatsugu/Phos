@@ -4492,8 +4492,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6693,6 +6693,7 @@ MonoBehaviour:
   placeMode: 0
   unitUIPrefab: {fileID: 7193113062237196750, guid: 329028d3ecaedbf4bad5d594d82c8f17,
     type: 3}
+  uiBlock: 0
 --- !u!1 &1664156941
 GameObject:
   m_ObjectHideFlags: 0
