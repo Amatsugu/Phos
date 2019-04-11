@@ -22,7 +22,7 @@ public class TileInfo : MeshEntity
 	public override ComponentType[] GetComponents()
 	{
 		return base.GetComponents().Concat(new ComponentType[]{
-			typeof(HexPosition)
+			typeof(HexPosition),
 		}).ToArray();
 	}
 

@@ -194,9 +194,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void ShowBuildWindow(UnitInfo[] units)
 	{
-		HideBuildWindow();
 		if (_hqMode)
 			return;
+		HideBuildWindow();
 		buildWindow.gameObject.SetActive(true);
 		for (int i = 0; i < units.Length; i++)
 		{
@@ -231,6 +231,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void HideBuildWindow()
 	{
+		HideAllIndicators();
 		placeMode = false;
 		_selectedUnit = null;
 		buildWindow.gameObject.SetActive(false);

@@ -84,7 +84,6 @@ public class Tile
 
 	public virtual void OnRemoved()
 	{
-
 	}
 
 	public virtual void OnPlaced()

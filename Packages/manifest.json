@@ -9,6 +9,7 @@
     "com.unity.entities": "0.0.12-preview.30",
     "com.unity.jobs": "0.0.7-preview.10",
     "com.unity.package-manager-ui": "2.2.0",
+    "com.unity.physics": "0.0.2-preview.1",
     "com.unity.postprocessing": "2.1.5",
     "com.unity.probuilder": "4.0.4",
     "com.unity.render-pipelines.core": "5.10.0",

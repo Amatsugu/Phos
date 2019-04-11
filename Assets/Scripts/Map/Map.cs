@@ -35,17 +35,22 @@ public class Map : IDisposable
 	public HQTile HQ;
 	private List<BuildingTile> _powerTransferTiles;
 
-	public class Chunk
+	public struct Chunk
 	{
 		public const int SIZE = 16;
 		public Tile[] Tiles;
 		public HexCoords chunkCoord;
-		public bool isShown = false;
+		public bool isShown;
+		public bool isCreated;
 
 		private Bounds _bounds;
 		private NativeArray<Entity> _chunkTiles;
+
+
 		public Chunk(HexCoords coord)
 		{
+			isShown = false;
+			isCreated = true;
 			chunkCoord = coord;
 			Tiles = new Tile[SIZE * SIZE];
 			var worldCoord = HexCoords.FromOffsetCoords(coord.offsetX * SIZE, coord.offsetZ * SIZE, coord.edgeLength);
@@ -173,7 +178,7 @@ public class Map : IDisposable
 			if (index < 0 || index >= Length)
 				return null;
 			var chunk = Chunks[index];
-			if (chunk == null)
+			if (!chunk.isCreated)
 				return null;
 			return chunk[coord.ToChunkLocalCoord(chunkX, chunkZ)];
 		}
@@ -182,9 +187,10 @@ public class Map : IDisposable
 		{
 			var (chunkX, chunkZ) = coord.GetChunkPos();
 			var chunk = Chunks[chunkX + chunkZ * Width];
-			if (chunk == null)
-				chunk = Chunks[chunkX + chunkZ * Width] = new Chunk(HexCoords.FromOffsetCoords(chunkX, chunkZ, TileEdgeLength));
+			if (!chunk.isCreated)
+				chunk = new Chunk(HexCoords.FromOffsetCoords(chunkX, chunkZ, TileEdgeLength));
 			chunk[coord.ToChunkLocalCoord(chunkX, chunkZ)] = value;
+			Chunks[chunkX + chunkZ * Width] = chunk;
 		}
 	}
 
@@ -213,11 +219,10 @@ public class Map : IDisposable
 	internal void UpdateView(Plane[] camPlanes)
 	{
 		var chunksChanged = 0;
-		foreach (var chunk in Chunks)
+
+		for (int i = 0; i < Chunks.Length; i++)
 		{
-			if (chunk == null)
-				continue;
-			if (chunk.Show(chunk.InView(camPlanes)))
+			if (Chunks[i].Show(Chunks[i].InView(camPlanes)))
 				chunksChanged++;
 		}
 	}
@@ -410,8 +415,7 @@ public class Map : IDisposable
 		var (chunkX, chunkZ) = coord.GetChunkPos();
 		var index = chunkX + chunkZ * Width;
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
-		var chunk = Chunks[index];
-		var nT = chunk.ReplaceTile(localCoord, newTile);
+		var nT = Chunks[index].ReplaceTile(localCoord, newTile);
 		switch (nT)
 		{
 			case HQTile t:
@@ -459,7 +463,7 @@ public class Map : IDisposable
 			return;
 		IsRendered = false;
 		foreach (var chunk in Chunks)
-			chunk?.Destroy();
+			chunk.Destroy();
 	}
 
 

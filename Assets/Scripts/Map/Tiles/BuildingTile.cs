@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -67,6 +68,7 @@ public class PoweredBuildingTile : BuildingTile
 
 	public override void TileUpdated(Tile src)
 	{
+		if(!(src is PoweredBuildingTile))
 		EstablishHQConnection();
 	}
 
@@ -83,6 +85,12 @@ public class PoweredBuildingTile : BuildingTile
 		if (_init && HasHQConnection)
 			return;
 		HasHQConnection = true;
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] is PoweredBuildingTile p && !p.HasHQConnection)
+				p.OnHQConnected();
+		}
 		if (Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 			Map.EM.RemoveComponent<ConsumptionDebuff>(_tileEntity);
 	}
@@ -106,23 +114,19 @@ public class PoweredBuildingTile : BuildingTile
 			HasHQConnection = true;
 			return;
 		}
-		var	visited = new HashSet<PoweredBuildingTile>();
-		if (CheckHQConnection(visited))
-		{
-			foreach (var tile in visited)
-				tile.OnHQConnected();
-		}
-		else
+		var visited = new HashSet<PoweredBuildingTile>();
+		if (!CheckHQConnection(visited))
 		{
 			foreach (var tile in visited)
 				tile.OnHQDisconnected();
 		}
+		else
+			OnHQConnected();
 	}
 
-	public bool CheckHQConnection(HashSet<PoweredBuildingTile> visited = null)
+	public bool CheckHQConnection(HashSet<PoweredBuildingTile> visited)
 	{
 		visited.Add(this);
-		bool foundHQ = false;
 		var nT = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < 6; i++)
 		{
@@ -132,26 +136,19 @@ public class PoweredBuildingTile : BuildingTile
 				continue;
 			if (nT[i] is SubHQTile)
 			{
-				foundHQ = true;
-				continue;
+				return true;
 			}
 			if (nT[i] is PoweredBuildingTile p)
 			{
 				if(p.CheckHQConnection(visited))
-				{
-					foundHQ = true;
-				}
-
+					return true;
 			}
 		}
-		return foundHQ;
+		return false;
 	}
 
 	public override void OnRemoved()
 	{
 		base.OnRemoved();
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-			neighbors[i].TileUpdated(this);
 	}
 }
