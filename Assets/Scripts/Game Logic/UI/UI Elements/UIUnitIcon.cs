@@ -5,10 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIUnitIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class UIUnitIcon : UIHover, IPointerClickHandler
 {
-	public event System.Action OnMouseEnter;
-	public event System.Action OnMouseExit;
 	public event System.Action OnClick;
 
 	public TMP_Text text;
@@ -25,16 +23,6 @@ public class UIUnitIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 	void Awake()
 	{
 		_rTransform = GetComponent<RectTransform>();
-	}
-
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		OnMouseEnter?.Invoke();
-	}
-
-	public void OnPointerExit(PointerEventData eventData)
-	{
-		OnMouseExit?.Invoke();
 	}
 
 	public void OnPointerClick(PointerEventData eventData)

@@ -10,6 +10,14 @@ using UnityEngine;
 public class TileInfo : MeshEntity
 {
     public TileDecorator[] decorators;
+	public string Name;
+	public string Description;
+
+	private void OnDisable()
+	{
+		if (string.IsNullOrWhiteSpace(Name))
+			Name = name;
+	}
 
 	public override ComponentType[] GetComponents()
 	{

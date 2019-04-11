@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class BuildingTile : Tile
 {
+	public TileInfo originalTile;
 	public BuildingTileInfo buildingInfo;
 	public int distanceToHQ;
 
@@ -58,7 +59,7 @@ public class PoweredBuildingTile : BuildingTile
 {
 	public bool HasHQConnection { get; protected set; }
 
-	private bool _init = false;
+	private bool _init;
 
 	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
@@ -79,7 +80,7 @@ public class PoweredBuildingTile : BuildingTile
 
 	public virtual void OnHQConnected()
 	{
-		if (HasHQConnection)
+		if (_init && HasHQConnection)
 			return;
 		HasHQConnection = true;
 		if (Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
@@ -88,8 +89,9 @@ public class PoweredBuildingTile : BuildingTile
 
 	public virtual void OnHQDisconnected()
 	{
-		if (!HasHQConnection)
+		if (_init && !HasHQConnection)
 			return;
+		HasHQConnection = false;
 		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 		{
 			Map.EM.AddComponent(_tileEntity, typeof(ConsumptionDebuff));
@@ -100,15 +102,21 @@ public class PoweredBuildingTile : BuildingTile
 	public void EstablishHQConnection()
 	{
 		if (this is SubHQTile)
+		{
+			HasHQConnection = true;
 			return;
+		}
 		var	visited = new HashSet<PoweredBuildingTile>();
-		if(CheckHQConnection(visited))
+		if (CheckHQConnection(visited))
 		{
 			foreach (var tile in visited)
 				tile.OnHQConnected();
-		}else
+		}
+		else
+		{
 			foreach (var tile in visited)
 				tile.OnHQDisconnected();
+		}
 	}
 
 	public bool CheckHQConnection(HashSet<PoweredBuildingTile> visited = null)

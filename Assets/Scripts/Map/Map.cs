@@ -138,6 +138,8 @@ public class Map : IDisposable
 			n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			this[chunkCoord] = n;
 			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
+			if (n is BuildingTile b)
+				b.originalTile = tile.info;
 			tile.OnRemoved();
 			tile.Destroy();
 			return n;
@@ -422,6 +424,14 @@ public class Map : IDisposable
 		}
 		nT.OnPlaced();
 		return nT;
+	}
+
+	public void RevertTile(BuildingTile tile)
+	{
+		if (tile.originalTile != null)
+			ReplaceTile(tile, tile.originalTile);
+		else
+			Debug.LogWarning("No Original Tile to revert to");
 	}
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);

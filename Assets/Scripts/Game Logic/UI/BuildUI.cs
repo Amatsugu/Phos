@@ -8,11 +8,10 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Rendering;
 using System.Linq;
+using UnityEngine.EventSystems;
 
-public class BuildUI : MonoBehaviour
+public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
-	public TileInfo grass;
-
 	public UnitInfo[] Tech;
 	public UnitInfo[] Resource;
 	public UnitInfo[] Economy;
@@ -33,17 +32,18 @@ public class BuildUI : MonoBehaviour
 	public RectTransform buildWindow;
 	//Tooltip
 	public UITooltip toolTip;
+	//State
+	public bool placeMode;
 
 	public RectTransform unitUIPrefab;
+	public bool uiBlock;
 
 	private UIUnitIcon[] _activeUnits;
 	private UnitInfo _selectedUnit;
-	private bool _placeMode;
 	private bool _hqMode;
 	private Camera _cam;
 	private NativeArray<Entity> _selectIndicatorEntities;
 	private EntityManager _EM;
-	private Rect _buildBarRect;
 
 	void Start()
 	{
@@ -52,15 +52,8 @@ public class BuildUI : MonoBehaviour
 		_cam = Camera.main;
 		_selectIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
 		_EM = World.Active.EntityManager;
-		_buildBarRect = new Rect
-		{
-			x = buildWindow.position.x - buildWindow.rect.width/2f,
-			y = 0,
-			width = buildWindow.rect.width,
-			height = buildWindow.position.y
-		};
         HideBuildWindow();
-		_placeMode = _hqMode = true;
+		placeMode = _hqMode = true;
 		_selectedUnit = HQUnit;
 		toolTip.HideToolTip();
 		infoBanner.SetText("Place HQ Building");
@@ -71,21 +64,19 @@ public class BuildUI : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.Escape))
 		{
-			if (_placeMode && !_hqMode)
+			if (placeMode && !_hqMode)
 			{
-				_placeMode = false;
+				placeMode = false;
 				HideAllIndicators();
 			}
 			else
 				HideBuildWindow();
-
 		}
 		var mPos = Input.mousePosition;
-		if (!_buildBarRect.Contains(mPos))
+		if (!uiBlock)
 		{
-
 			var selectedTile = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos), _cam.transform.position.y * 2);
-			if (_placeMode)
+			if (placeMode)
 			{
 				if (selectedTile != null && selectedTile.Height > Map.ActiveMap.SeaLevel)
 				{
@@ -102,11 +93,11 @@ public class BuildUI : MonoBehaviour
 							if (_hqMode)
 							{
 								baseNameUI.Show();
-								_placeMode = false;
+								placeMode = false;
 								_cam.GetComponent<CameraController>().enabled = false;
 								baseNameUI.OnHide += () =>
 								{
-									_placeMode = _hqMode = false;
+									placeMode = _hqMode = false;
 									infoBanner.SetActive(false);
 									_cam.GetComponent<CameraController>().enabled = true;
 									baseNameText.text = baseNameUI.text.text;
@@ -119,14 +110,6 @@ public class BuildUI : MonoBehaviour
 				}
 				else
 					HideAllIndicators();
-			}
-			else
-			{
-				if (Input.GetKeyUp(KeyCode.Mouse2))
-				{
-					if (selectedTile != null && !(selectedTile is HQTile && selectedTile is SubHQTile))
-						Map.ActiveMap.ReplaceTile(selectedTile, grass);
-				}
 			}
 		}
 	}
@@ -214,7 +197,6 @@ public class BuildUI : MonoBehaviour
 		HideBuildWindow();
 		if (_hqMode)
 			return;
-		_buildBarRect.height = buildWindow.position.y + buildWindow.rect.height;
 		buildWindow.gameObject.SetActive(true);
 		for (int i = 0; i < units.Length; i++)
 		{
@@ -231,11 +213,11 @@ public class BuildUI : MonoBehaviour
 				if(HasResourse(unit.cost))
 				{
 					_selectedUnit = unit;
-					_placeMode = true;
+					placeMode = true;
 				}
 			};
-			_activeUnits[i].OnMouseEnter += () => toolTip.ShowToolTip(unit.name, unit.description, unit.GetCostString(), unit.GetProductionString());
-			_activeUnits[i].OnMouseExit += () => toolTip.HideToolTip();
+			_activeUnits[i].OnHover += () => toolTip.ShowToolTip(unit.name, unit.description, unit.GetCostString(), unit.GetProductionString());
+			_activeUnits[i].OnBlur += () => toolTip.HideToolTip();
 			_activeUnits[i].icon.sprite = unit.icon;
 		}
 	}
@@ -249,13 +231,22 @@ public class BuildUI : MonoBehaviour
 
 	public void HideBuildWindow()
 	{
-		_placeMode = false;
+		placeMode = false;
 		_selectedUnit = null;
 		buildWindow.gameObject.SetActive(false);
-		_buildBarRect.height = buildWindow.position.y;
 		for (int i = 0; i < _activeUnits.Length; i++)
 		{
 			_activeUnits[i]?.gameObject.SetActive(false);
 		}
+	}
+
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+		uiBlock = true;
+	}
+
+	public void OnPointerExit(PointerEventData eventData)
+	{
+		uiBlock = false;
 	}
 }
