@@ -43,7 +43,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private bool _hqMode;
 	private Camera _cam;
 	private NativeArray<Entity> _selectIndicatorEntities;
+	private NativeArray<Entity> _powerIndicatorEntities;
 	private EntityManager _EM;
+
+	private Tile _startPoint;
+	private List<Tile> _buildPath;
 
 	void Start()
 	{
@@ -51,6 +55,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_activeUnits = new UIUnitIcon[6];
 		_cam = Camera.main;
 		_selectIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
+		_powerIndicatorEntities = new NativeArray<Entity>(0, Allocator.Persistent);
 		_EM = World.Active.EntityManager;
         HideBuildWindow();
 		placeMode = _hqMode = true;
@@ -82,14 +87,37 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				{
 					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.size);
 					ShowIndicators(ref _selectIndicatorEntities, selectIndicatorEntity, tilesToOccupy);
+					if(!_hqMode && Input.GetKeyDown(KeyCode.Mouse0))
+					{
+						_startPoint = selectedTile;
+					}
+					if (!_hqMode && Input.GetKey(KeyCode.Mouse0))
+					{
+						_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile);
+						if (_buildPath != null)
+							ShowIndicators(ref _powerIndicatorEntities, powerIndicatorEntity, _buildPath);
+					}
 					if (Input.GetKeyUp(KeyCode.Mouse0))
 					{
-						if (_hqMode || (!tilesToOccupy.Any(t => t is BuildingTile)))
+						_startPoint = null;
+						if (_hqMode || _buildPath != null || (!tilesToOccupy.Any(t => t is BuildingTile)))
 						{
 							if (!_hqMode)
 								ConsumeResourse();
-							Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
-							Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit.tile);
+							if (_buildPath == null)
+							{
+								Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
+								Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit.tile);
+							}else
+							{
+								for (int i = 0; i < _buildPath.Count; i++)
+								{
+									if (_buildPath[i] is BuildingTile)
+										continue;
+									Map.ActiveMap.HexFlatten(_buildPath[i].Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
+									Map.ActiveMap.ReplaceTile(_buildPath[i], _selectedUnit.tile);
+								}
+							}
 							if (_hqMode)
 							{
 								baseNameUI.Show();
@@ -104,8 +132,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 									testUnit.Instantiate(selectedTile.SurfacePoint, Quaternion.identity);
 								};
 							}
-							HideAllIndicators();
 						}
+						HideAllIndicators();
 					}
 				}
 				else
@@ -138,32 +166,38 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	void HideAllIndicators()
 	{
 		HideIndicators(_selectIndicatorEntities);
+		HideIndicators(_powerIndicatorEntities);
 	}
 
 	private void OnDestroy()
 	{
 		_selectIndicatorEntities.Dispose();
+		_powerIndicatorEntities.Dispose();
 	}
 
 	void HideIndicators(NativeArray<Entity> entities)
 	{
 		for (int i = 0; i < entities.Length; i++)
 		{
-			if (!_EM.HasComponent<FrozenRenderSceneTag>(entities[i]))
-				_EM.AddComponent(entities[i], typeof(FrozenRenderSceneTag));
+			if (!_EM.HasComponent<Frozen>(entities[i]))
+				_EM.AddComponent(entities[i], typeof(Frozen));
 		}
 	}
 
 	void GrowIndicators(ref NativeArray<Entity> entities, MeshEntity meshEntity, int count)
 	{
-		if (count <= _selectIndicatorEntities.Length)
+		if (count <= entities.Length)
 			return;
 		var newEntities = new NativeArray<Entity>(count, Allocator.Persistent);
 		for (int i = 0; i < count; i++)
 		{
-			if (i < _selectIndicatorEntities.Length)
-				newEntities[i] = _selectIndicatorEntities[i];
+			if (i < entities.Length)
+			{
+				newEntities[i] = entities[i];
+				continue;
+			}
 			newEntities[i] = meshEntity.Instantiate(Vector3.zero, Vector3.one * .9f);
+			Map.EM.AddComponent(newEntities[i], typeof(Frozen));
 		}
 		entities.Dispose();
 		entities = newEntities;
@@ -179,14 +213,14 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			if (i < tiles.Count)
 			{
-				if (_EM.HasComponent<FrozenRenderSceneTag>(indicators[i]))
-					_EM.RemoveComponent<FrozenRenderSceneTag>(indicators[i]);
+				if (_EM.HasComponent<Frozen>(indicators[i]))
+					_EM.RemoveComponent<Frozen>(indicators[i]);
 				_EM.SetComponentData(indicators[i], new Translation { Value = tiles[i].SurfacePoint });
 			}
 			else
 			{
-				if (!_EM.HasComponent<FrozenRenderSceneTag>(indicators[i]))
-					_EM.AddComponent(indicators[i], typeof(FrozenRenderSceneTag));
+				if (!_EM.HasComponent<Frozen>(indicators[i]))
+					_EM.AddComponent(indicators[i], typeof(Frozen));
 			}
 		}
 	}

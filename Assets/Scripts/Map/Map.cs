@@ -439,6 +439,111 @@ public class Map : IDisposable
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
 
+	public List<Tile> GetPath(Tile src, Tile dst)
+	{
+		if (src == dst)
+			return null;
+		PathNode BestFScore(HashSet<PathNode> nodes)
+		{
+			PathNode best = nodes.First();
+			foreach (var node in nodes)
+			{
+				if (best.CalculateF(dst) > node.CalculateF(dst))
+					best = node;
+			}
+			return best;
+		}
+
+		var open = new HashSet<PathNode>
+		{
+			new PathNode(src, 1)
+		};
+		var closed = new HashSet<PathNode>();
+		var dstNode = new PathNode(dst, 1);
+		PathNode last = null;
+		while (open.Count > 0)
+		{
+			if (closed.Contains(dstNode))
+				break;
+			PathNode curTileNode;
+			curTileNode = BestFScore(open);
+			open.Remove(curTileNode);
+			closed.Add(curTileNode);
+			last = curTileNode;
+			foreach (Tile neighbor in GetNeighbors(curTileNode.tile))
+			{
+				if (neighbor == null)
+					continue;
+				var adj = new PathNode(neighbor, curTileNode.G + 1, curTileNode);
+				if (closed.Contains(adj))
+					continue;
+				if (!open.Contains(adj))
+					open.Add(adj);
+				else
+				{
+					var o = open.First(oAdj => oAdj.Equals(adj));
+					if (adj.CalculateF(dst) < o.CalculateF(dst))
+					{
+						open.Remove(o);
+						open.Add(adj);
+					}
+				}
+			}
+			if (open.Count > 1000)
+			{
+				Debug.LogWarning("Big Path");
+				return null;
+			}
+		}
+		var curNode = last;
+		if (curNode == null)
+			return null;
+		List<Tile> path = new List<Tile>();
+		do
+		{
+			path.Add(curNode.tile);
+			curNode = curNode.src;
+		} while (curNode != null);
+		path.Reverse();
+		return path;
+	}
+
+	private class PathNode
+	{
+		public Tile tile;
+		public int G;
+		public PathNode src;
+
+		public PathNode(Tile tile, int g, PathNode src = null)
+		{
+			this.tile = tile;
+			G = g;
+			this.src = src;
+		}
+
+
+		public float CalculateF(Tile b)
+		{
+			var d = tile.SurfacePoint - b.SurfacePoint;
+			return G + (Mathf.Abs(d.x) + Mathf.Abs(d.y) + Mathf.Abs(d.z));
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is PathNode n)
+			{
+				return n.tile.Equals(tile);
+			}
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return tile.GetHashCode();
+		}
+	}
+
+
 	public float GetHeight(Vector3 worldPos, int radius = 0) => GetHeight(HexCoords.FromPosition(worldPos, TileEdgeLength), radius);
 
 	public float GetHeight(HexCoords coord, int radius = 0)
