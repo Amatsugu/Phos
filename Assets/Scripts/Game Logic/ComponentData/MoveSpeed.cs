@@ -14,3 +14,7 @@ public struct Heading : IComponentData
 	public float3 Value;
 }
 
+public struct Destination : IComponentData
+{
+	public float3 Value;
+}

@@ -18,7 +18,7 @@ public class MobileUnitInfo : MeshEntityRotatable
 	public Entity Instantiate(Vector3 pos, Quaternion rotation)
 	{
 		var e = Instantiate(pos, Vector3.one, rotation);
-		Map.EM.SetComponentData(e, new MoveSpeed { Value = 1 });
+		Map.EM.SetComponentData(e, new MoveSpeed { Value = 2 });
 		Map.EM.SetComponentData(e, new Heading { Value = Vector3.forward });
 		return e;
 	}

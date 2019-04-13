@@ -47,7 +47,7 @@ public class MeshEntity : ScriptableObject
 			typeof(LocalToWorld),
 			typeof(NonUniformScale),
 			typeof(RenderMesh),
-			typeof(PerInstanceCullingTag)
+			typeof(PerInstanceCullingTag),
 		};
 	}
 
