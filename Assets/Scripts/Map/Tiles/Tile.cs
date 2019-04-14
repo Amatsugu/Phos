@@ -84,16 +84,25 @@ public class Tile
 
 	public virtual void OnRemoved()
 	{
+		var neighbors = Map.ActiveMap.GetNeighbors(this);
+		for (int i = 0; i < 6; i++)
+			neighbors[i]?.TileUpdated(this, TileUpdateType.Removed);
 	}
 
 	public virtual void OnPlaced()
 	{
 		var neighbors = Map.ActiveMap.GetNeighbors(this);
 		for (int i = 0; i < 6; i++)
-			neighbors[i]?.TileUpdated(this);
+			neighbors[i]?.TileUpdated(this, TileUpdateType.Placed);
 	}
 
-	public virtual void TileUpdated(Tile src)
+	public enum TileUpdateType
+	{
+		Placed,
+		Removed
+	}
+
+	public virtual void TileUpdated(Tile src, TileUpdateType updateType)
 	{
 
 	}
@@ -113,6 +122,16 @@ public class Tile
 				_decor.Dispose();
 		}
 	}
+
+	/*public static bool operator ==(Tile a, Tile b)
+	{
+		return a.Equals(b);
+	}
+
+	public static bool operator !=(Tile a, Tile b)
+	{
+		return !(a == b);
+	}*/
 
 	public virtual void Show(bool isShown)
 	{
@@ -145,5 +164,4 @@ public class Tile
 		}
 		return _tileEntity;
 	}
-
 }

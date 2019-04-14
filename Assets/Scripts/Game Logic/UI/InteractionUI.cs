@@ -44,7 +44,7 @@ public class InteractionUI : MonoBehaviour
 			{
 				var ray = _cam.ScreenPointToRay(mPos);
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
-				if (tile != null)
+				if (tile != null && tile is BuildingTile)
 				{
 					ShowPanel(tile);
 				}

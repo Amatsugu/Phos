@@ -21,14 +21,12 @@ public struct HexCoords
 	//World Pos
 	public readonly float worldX;
 	public readonly float worldZ;
-	[SerializeField]
 	public readonly Vector3 worldXZ;
 	public readonly Vector2 worldXY;
 	//Offsets
-	[SerializeField]
 	public readonly int offsetX;
-	[SerializeField]
 	public readonly int offsetZ;
+	public readonly bool isCreated;
 
 	public HexCoords(int x, int y, float edgeLength)
 	{
@@ -44,6 +42,7 @@ public struct HexCoords
 		worldZ = offsetZ * (this.edgeLength * 1.5f);
 		worldXZ = new Vector3(worldX, 0, worldZ);
 		worldXY = new Vector2(worldX, worldZ);
+		isCreated = true;
 	}
 
 	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength) => new HexCoords(x - (Z / 2), Z, edgeLength);
@@ -85,12 +84,16 @@ public struct HexCoords
 	// override object.Equals
 	public override bool Equals(object obj)
 	{
+		if (!isCreated)
+			return false;
 		if (obj == null || GetType() != obj.GetType())
 		{
 			return false;
 		}
 
 		var h = (HexCoords)obj;
+		if (!h.isCreated)
+			return false;
 		return (h.x == x && h.y == y);
 	}
 

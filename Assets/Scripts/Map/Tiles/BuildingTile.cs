@@ -61,45 +61,91 @@ public class PoweredBuildingTile : BuildingTile
 	public bool HasHQConnection { get; protected set; }
 
 	private bool _init;
+	private HexCoords _connectionSrc;
+	private float _connectionTime;
 
 	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
 	}
 
-	public override void TileUpdated(Tile src)
+	public override void TileUpdated(Tile src, TileUpdateType updateType)
 	{
-		if(!(src is PoweredBuildingTile))
-		EstablishHQConnection();
+		base.TileUpdated(src, updateType);
+		if(updateType == TileUpdateType.Removed)
+		{
+			if(src.Coords == _connectionSrc)
+			{
+				if (src is PoweredBuildingTile pb && pb.Coords == _connectionSrc)
+					OnHQDisconnected(pb, new HashSet<Tile>());
+			}
+		}else
+		{
+			if (!HasHQConnection)
+				FindNewConnectionSrc();
+		}
 	}
 
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
 		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
-		EstablishHQConnection();
+		FindNewConnectionSrc();
 		_init = true;
 	}
 
-	public virtual void OnHQConnected()
+	public void FindNewConnectionSrc()
+	{
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		PoweredBuildingTile best = null;
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] is PoweredBuildingTile pb && pb.HasHQConnection)
+			{
+				if (best == null)
+					best = pb;
+				else if (pb.distanceToHQ < best.distanceToHQ)
+					best = pb;
+			}
+		}
+		if (best != null)
+			OnHQConnected(best);
+	}
+
+	public virtual void OnHQConnected(PoweredBuildingTile src)
 	{
 		if (_init && HasHQConnection)
 			return;
+		_connectionTime = Time.time;
+		_connectionSrc = src.Coords;
 		HasHQConnection = true;
 		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < 6; i++)
 		{
-			if (neighbors[i] is PoweredBuildingTile p && !p.HasHQConnection)
-				p.OnHQConnected();
+			if (neighbors[i] is PoweredBuildingTile p)
+				p.OnHQConnected(this);
 		}
 		if (Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 			Map.EM.RemoveComponent<ConsumptionDebuff>(_tileEntity);
 	}
 
-	public virtual void OnHQDisconnected()
+	public virtual void OnHQDisconnected(PoweredBuildingTile src, HashSet<Tile> visited)
 	{
 		if (_init && !HasHQConnection)
 			return;
+		//if (src.Coords != _connectionSrc)
+			//return;
+		if (visited.Contains(this))
+			return;
+		visited.Add(this);
 		HasHQConnection = false;
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < 6; i++)
+		{
+			if (neighbors[i] is PoweredBuildingTile p)
+			{
+				p.OnHQDisconnected(this, visited);
+			}
+		}
 		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 		{
 			Map.EM.AddComponent(_tileEntity, typeof(ConsumptionDebuff));
@@ -107,7 +153,7 @@ public class PoweredBuildingTile : BuildingTile
 		}
 	}
 
-	public void EstablishHQConnection()
+	/*public void EstablishHQConnection()
 	{
 		if (this is SubHQTile)
 		{
@@ -145,10 +191,6 @@ public class PoweredBuildingTile : BuildingTile
 			}
 		}
 		return false;
-	}
+	}*/
 
-	public override void OnRemoved()
-	{
-		base.OnRemoved();
-	}
 }

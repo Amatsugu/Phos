@@ -18,36 +18,18 @@ public class ConnectedTile : PoweredBuildingTile
 		_connections = new NativeArray<Entity>(6, Allocator.Persistent);
 	}
 
+	public override void TileUpdated(Tile src, TileUpdateType updateType)
+	{
+		base.TileUpdated(src, updateType);
+		UpdateConnections();
+	}
+
 	public override void OnPlaced()
 	{
 		for (int i = 0; i < 6; i++)
 			_connections[i] = connectedTileInfo.connectionMesh.Instantiate(SurfacePoint, Vector3.one, Quaternion.Euler(new Vector3(0, (i * 60) - 90, 0)));
-		//var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		//for (int i = 0; i < neighbors.Length; i++)
-		//{
-		//	if (neighbors[i] is ConnectedTile t)
-		//		t.UpdateConnections();
-		//}
 		base.OnPlaced();
 		UpdateConnections();
-	}
-
-	public override void TileUpdated(Tile src)
-	{
-		base.TileUpdated(src);
-		if(src is PoweredBuildingTile)
-			UpdateConnections();
-	}
-
-	public override void OnRemoved()
-	{
-		base.OnRemoved();
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < neighbors.Length; i++)
-		{
-			if (neighbors[i] is ConnectedTile t)
-				t.UpdateConnections();
-		}
 	}
 
 	public override void OnHeightChanged()
@@ -61,20 +43,16 @@ public class ConnectedTile : PoweredBuildingTile
 		}
 	}
 
-	public override void OnHQConnected()
+	public override void OnHQConnected(PoweredBuildingTile src)
 	{
-		base.OnHQConnected();
+		base.OnHQConnected(src);
 		UpdateConnections();
 	}
 
-	public override void OnHQDisconnected()
+	public override void OnHQDisconnected(PoweredBuildingTile src, HashSet<Tile> visited)
 	{
-		base.OnHQDisconnected();
-		for (int i = 0; i < 6; i++)
-		{
-			if (!Map.EM.HasComponent<Disabled>(_connections[i]))
-				Map.EM.AddComponent(_connections[i], typeof(Disabled));
-		}
+		base.OnHQDisconnected(src, visited);
+		UpdateConnections();
 	}
 
 	public override void Destroy()
@@ -105,14 +83,21 @@ public class ConnectedTile : PoweredBuildingTile
 	public void UpdateConnections()
 	{
 		if (!HasHQConnection)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				if (!Map.EM.HasComponent<Disabled>(_connections[i]))
+					Map.EM.AddComponent(_connections[i], typeof(Disabled));
+			}
 			return;
+		}
 		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < neighbors.Length; i++)
 		{
 			var n = neighbors[i];
 			if (n == null)
 				continue;
-			if (n is ConnectedTile || n is PoweredBuildingTile || n is HQTile)
+			if (n is PoweredBuildingTile pb && pb.HasHQConnection)
 			{
 				if(Map.EM.HasComponent<Disabled>(_connections[i]))
 					Map.EM.RemoveComponent(_connections[i], typeof(Disabled));

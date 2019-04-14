@@ -144,8 +144,6 @@ public class Map : IDisposable
 			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
 			if (n is BuildingTile b)
 				b.originalTile = tile.info;
-			tile.OnRemoved();
-			tile.Destroy();
 			return n;
 		}
 	}
@@ -425,6 +423,8 @@ public class Map : IDisposable
 				_powerTransferTiles.Add(t);
 				break;
 		}
+		tile.OnRemoved();
+		tile.Destroy();
 		nT.OnPlaced();
 		return nT;
 	}
