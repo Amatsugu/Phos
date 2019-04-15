@@ -439,7 +439,7 @@ public class Map : IDisposable
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
 
-	public List<Tile> GetPath(Tile src, Tile dst)
+	public List<Tile> GetPath(Tile src, Tile dst, float maxIncline = float.MaxValue, Func<Tile, bool?> filter = null)
 	{
 		if (src == dst)
 			return null;
@@ -474,6 +474,12 @@ public class Map : IDisposable
 			{
 				if (neighbor == null)
 					continue;
+				if (Mathf.Abs(neighbor.Height - curTileNode.tile.Height) > maxIncline)
+					continue;
+				if(filter != null && filter(neighbor) != true && !neighbor.Equals(dst))
+				{
+					continue;
+				}
 				var adj = new PathNode(neighbor, curTileNode.G + 1, curTileNode);
 				if (closed.Contains(adj))
 					continue;
@@ -495,6 +501,8 @@ public class Map : IDisposable
 				return null;
 			}
 		}
+		if (open.Count == 0)
+			return null;
 		var curNode = last;
 		if (curNode == null)
 			return null;
@@ -522,7 +530,7 @@ public class Map : IDisposable
 		}
 
 
-		public float CalculateF(Tile b)
+		public float CalculateF(global::Tile b)
 		{
 			var d = tile.SurfacePoint - b.SurfacePoint;
 			return G + (Mathf.Abs(d.x) + Mathf.Abs(d.y) + Mathf.Abs(d.z));

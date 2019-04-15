@@ -46,7 +46,7 @@ public class SubHQTile : PoweredBuildingTile
 		HasHQConnection = true;
 	}
 
-	public override void OnHQDisconnected(PoweredBuildingTile src, HashSet<Tile> visited)
+	public override void OnHQDisconnected(PoweredBuildingTile src, HashSet<Tile> visited, bool verified = false)
 	{
 		if (src is SubHQTile)
 			return;

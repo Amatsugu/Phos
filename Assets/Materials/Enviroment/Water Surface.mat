@@ -161,14 +161,14 @@ Material:
     - Vector1_A8C4976A: 1
     - Vector1_ACEC88AB: 0.69
     - Vector1_BBFE5044: 0.06
-    - Vector1_C4602B0E: 0.209
+    - Vector1_C4602B0E: 0.168
     - Vector1_C7DA6486: 0.02
-    - Vector1_CBD5F7DA: 5
+    - Vector1_CBD5F7DA: 12.24
     - Vector1_CF5CC24A: 0.2
     - Vector1_E4B277E8: 0.943
     - Vector1_E67AA53E: 0.529
     - Vector1_F070807D: 6.551
-    - Vector1_F80BFA85: 5
+    - Vector1_F80BFA85: 1.75
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1

@@ -91,7 +91,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					{
 						_startPoint = selectedTile;
 					}
-					if (!_hqMode && Input.GetKey(KeyCode.Mouse0))
+					if (!_hqMode && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
 					{
 						_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile);
 						if (_buildPath != null)
@@ -277,6 +277,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
+		HideAllIndicators();
 		uiBlock = true;
 	}
 
