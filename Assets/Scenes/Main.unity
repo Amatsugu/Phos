@@ -6684,13 +6684,16 @@ MonoBehaviour:
   infoBanner: {fileID: 1107210684}
   baseNameUI: {fileID: 636739581}
   baseNameText: {fileID: 2124582711}
+  buildWindow: {fileID: 1620701536}
   selectIndicatorEntity: {fileID: 11400000, guid: 33177b445fb1df34f9e26941d4a375cb,
     type: 2}
-  powerIndicatorEntity: {fileID: 11400000, guid: 4e5b6917309bbd34b84ac9dc69f42e35,
+  placementPathIndicatorEntity: {fileID: 11400000, guid: 8008d5fa1f8f32144b2e2757dd3c3866,
     type: 2}
-  buildWindow: {fileID: 1620701536}
+  errorIndicatorEntity: {fileID: 11400000, guid: 786c4d272c5b71b46ba6741ea64fcce6,
+    type: 2}
   toolTip: {fileID: 1004422062}
   placeMode: 0
+  hqMode: 0
   unitUIPrefab: {fileID: 7193113062237196750, guid: 329028d3ecaedbf4bad5d594d82c8f17,
     type: 3}
   uiBlock: 0

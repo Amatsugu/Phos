@@ -35,6 +35,8 @@ public class InteractionUI : MonoBehaviour
 
 	void Update()
 	{
+		if (buildUI.hqMode)
+			return;
 		var mPos = Input.mousePosition;
 		if (Input.GetKeyUp(KeyCode.Escape))
 			interactionPanel.HidePanel();
