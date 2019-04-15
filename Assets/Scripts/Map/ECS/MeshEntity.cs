@@ -17,7 +17,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual Entity GetEntity()
 	{
-		var em = Map.EM;
+		var em = World.Active.EntityManager;
 		if (_entity == null || !em.Exists(_entity))
 		{
 			//Debug.Log($"Create Entity {name}");
@@ -38,7 +38,7 @@ public class MeshEntity : ScriptableObject
 		return _entity;
 	}
 
-	protected virtual EntityArchetype GetArchetype() => Map.EM.CreateArchetype(GetComponents());
+	protected virtual EntityArchetype GetArchetype() => World.Active.EntityManager.CreateArchetype(GetComponents());
 
 	public virtual ComponentType[] GetComponents()
 	{
@@ -55,20 +55,22 @@ public class MeshEntity : ScriptableObject
 
 	public Entity Instantiate(Vector3 position, Vector3 scale)
 	{
-		var e = Map.EM.Instantiate(GetEntity());
-		Map.EM.SetComponentData(e, new Translation { Value = position });
-		Map.EM.SetComponentData(e, new NonUniformScale { Value = scale });
+		var em = World.Active.EntityManager;
+		var e = em.Instantiate(GetEntity());
+		em.SetComponentData(e, new Translation { Value = position });
+		em.SetComponentData(e, new NonUniformScale { Value = scale });
 		return e;
 	}
 
 	public Entity Instantiate(Vector3 position, Vector3 scale, Entity parent)
 	{
+		var em = World.Active.EntityManager;
 		var e = Map.EM.Instantiate(GetEntity());
-		Map.EM.SetComponentData(e, new NonUniformScale { Value = scale });
-		Map.EM.AddComponent(e, typeof(LocalTranslation));
-		Map.EM.SetComponentData(e, new LocalTranslation { Value = position });
-		Map.EM.AddComponent(e, typeof(ChildOf));
-		Map.EM.SetComponentData(e, new ChildOf { parent = parent });
+		em.SetComponentData(e, new NonUniformScale { Value = scale });
+		em.AddComponent(e, typeof(LocalTranslation));
+		em.SetComponentData(e, new LocalTranslation { Value = position });
+		em.AddComponent(e, typeof(ChildOf));
+		em.SetComponentData(e, new ChildOf { parent = parent });
 		return e;
 	}
 }

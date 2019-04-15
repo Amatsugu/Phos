@@ -2028,7 +2028,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   volumeAnchorOverride: {fileID: 0}
   antialiasing: 3
-  SMAAQuality: 0
+  SMAAQuality: 2
   dithering: 0
   stopNaNs: 1
   physicalParameters:
