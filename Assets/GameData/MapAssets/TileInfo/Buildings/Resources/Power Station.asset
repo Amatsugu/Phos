@@ -17,14 +17,14 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  Name: Power Station
-  Description: 
+  description: Produces power
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
   size: 0
   powerTransferRadius: 0
   influenceRange: 3
+  cost: []
+  icon: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840, type: 3}
   production:
   - name: Power
     ammount: 5
-    perTileBonus: 0
   consumption: []

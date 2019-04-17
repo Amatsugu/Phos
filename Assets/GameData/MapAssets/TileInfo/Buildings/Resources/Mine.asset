@@ -17,17 +17,16 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  Name: Mine
-  Description: 
+  description: A basic mine that can be used to mine t1 and t2 resources.
   buildingMesh: {fileID: 11400000, guid: fdad5a311b68bd5448df43a04167253f, type: 2}
   size: 0
   powerTransferRadius: 0
   influenceRange: 3
+  cost: []
+  icon: {fileID: -5109177819046786902, guid: 010e16e474393c44cace5a0040035840, type: 3}
   production:
   - name: Stone
     ammount: 5
-    perTileBonus: 0
   consumption:
   - name: Power
     ammount: 1
-    perTileBonus: 0

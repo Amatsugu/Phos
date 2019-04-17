@@ -17,12 +17,14 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  Name: Resource Conduit
-  Description: 
+  description: Removes the extra cost of powering buildings that are not connected
+    to the HQ.
   buildingMesh: {fileID: 0}
   size: 0
   powerTransferRadius: 0
   influenceRange: 0
+  cost: []
+  icon: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840, type: 3}
   production: []
   consumption: []
   tileConnections: []

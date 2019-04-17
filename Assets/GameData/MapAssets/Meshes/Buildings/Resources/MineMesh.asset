@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: MineMesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: -1277366460620338370, guid: fa53ae7b443ce1e46b7beecc71d52a19, type: 3}
+  mesh: {fileID: -2432090755550338912, guid: cbb73a31a297f4049b46600c59f83d99, type: 3}
   material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
+  castShadows: 1
+  receiveShadows: 1

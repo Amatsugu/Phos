@@ -574,9 +574,9 @@ public class Map : IDisposable
 	{
 		if (!IsRendered)
 			return;
-		IsRendered = false;
 		foreach (var chunk in Chunks)
 			chunk.Destroy();
+		IsRendered = false;
 	}
 
 

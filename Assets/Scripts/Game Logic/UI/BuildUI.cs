@@ -12,13 +12,13 @@ using UnityEngine.EventSystems;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
-	public UnitInfo[] Tech;
-	public UnitInfo[] Resource;
-	public UnitInfo[] Economy;
-	public UnitInfo[] Structure;
-	public UnitInfo[] Millitary;
-	public UnitInfo[] Defense;
-	public UnitInfo HQUnit;
+	public BuildingTileInfo[] Tech;
+	public BuildingTileInfo[] Resource;
+	public BuildingTileInfo[] Economy;
+	public BuildingTileInfo[] Structure;
+	public BuildingTileInfo[] Millitary;
+	public BuildingTileInfo[] Defense;
+	public HQTileInfo HQTile;
 
 	public MobileUnitInfo testUnit;
 
@@ -43,7 +43,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public bool uiBlock;
 
 	private UIUnitIcon[] _activeUnits;
-	private UnitInfo _selectedUnit;
+	private BuildingTileInfo _selectedUnit;
 	private Camera _cam;
 	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
 	private EntityManager _EM;
@@ -60,7 +60,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_EM = World.Active.EntityManager;
         HideBuildWindow();
 		placeMode = hqMode = true;
-		_selectedUnit = HQUnit;
+		_selectedUnit = HQTile;
 		toolTip.HideToolTip();
 		infoBanner.SetText("Place HQ Building");
 	}
@@ -86,7 +86,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			{
 				if (selectedTile != null)
 				{
-					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.tile.size);
+					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.size);
 					var validPlacement = false;
 					HideAllIndicators();
 					//Path Placement
@@ -142,8 +142,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 								ConsumeResourse();
 							if (_buildPath == null)
 							{
-								Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
-								Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit.tile);
+								Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.size, _selectedUnit.influenceRange, Map.FlattenMode.Average);
+								Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit);
 							}else
 							{
 								for (int i = 0; i < _buildPath.Count; i++)
@@ -152,8 +152,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 										continue;
 									if (_buildPath[i] is BuildingTile)
 										continue;
-									Map.ActiveMap.HexFlatten(_buildPath[i].Coords, _selectedUnit.tile.size, _selectedUnit.tile.influenceRange, Map.FlattenMode.Average);
-									Map.ActiveMap.ReplaceTile(_buildPath[i], _selectedUnit.tile);
+									Map.ActiveMap.HexFlatten(_buildPath[i].Coords, _selectedUnit.size, _selectedUnit.influenceRange, Map.FlattenMode.Average);
+									Map.ActiveMap.ReplaceTile(_buildPath[i], _selectedUnit);
 								}
 							}
 							if (hqMode)
@@ -190,7 +190,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	}
 
-	bool HasResourse(UnitInfo.Resource[] resources)
+	bool HasResourse(BuildingTileInfo.Resource[] resources)
 	{
 		for (int i = 0; i < resources.Length; i++)
 		{
@@ -270,7 +270,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	}
 
 
-	public void ShowBuildWindow(UnitInfo[] units)
+	public void ShowBuildWindow(BuildingTileInfo[] units)
 	{
 		if (hqMode)
 			return;
