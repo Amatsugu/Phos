@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: Savanah
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
+  mesh: {fileID: 5062246478642505140, guid: cc4423e9f1d16434cb28f8fef00f2d1b, type: 3}
   material: {fileID: 2100000, guid: a5888e538e2dc514fb2925893ccfbb5e, type: 2}
+  castShadows: 1
+  receiveShadows: 1
   decorators:
   - {fileID: 11400000, guid: 958614e15c0ebe040903fb60275689fa, type: 2}
+  Name: 
+  Description: 

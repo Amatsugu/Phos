@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1852c72404f4c31468f84418951e687a, type: 3}
   m_Name: Resource Conduit
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: a1be57f6a3a366646851bb3dfc337b26, type: 3}
-  material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
+  mesh: {fileID: 5062246478642505140, guid: cc4423e9f1d16434cb28f8fef00f2d1b, type: 3}
+  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  castShadows: 1
+  receiveShadows: 1
   decorators: []
+  Name: Resource Conduit
+  Description: 
   buildingMesh: {fileID: 0}
   size: 0
   powerTransferRadius: 0

@@ -537,7 +537,6 @@ MonoBehaviour:
   meanHeight:
     m_OverrideState: 0
     m_Value: 10
-    min: 1
   anisotropy:
     m_OverrideState: 0
     m_Value: 0
@@ -732,7 +731,6 @@ MonoBehaviour:
   meanHeight:
     m_OverrideState: 0
     m_Value: 10
-    min: 1
   anisotropy:
     m_OverrideState: 0
     m_Value: 0
@@ -932,8 +930,7 @@ MonoBehaviour:
     m_Value: 671
   meanHeight:
     m_OverrideState: 1
-    m_Value: 1
-    min: 1
+    m_Value: 671
   anisotropy:
     m_OverrideState: 1
     m_Value: 0

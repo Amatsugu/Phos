@@ -15,7 +15,7 @@ public class PhysicsTest : MonoBehaviour
 		var em = World.Active.EntityManager;
 		var e = meshEntity.Instantiate(new Vector3(-7, 1.5f, -5));
 		em.AddComponent(e, typeof(PhysicsCollider));
-    }
+	}
 
     // Update is called once per frame
     void Update()

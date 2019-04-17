@@ -12,6 +12,8 @@ public class MeshEntity : ScriptableObject
 {
 	public Mesh mesh;
 	public Material material;
+	public UnityEngine.Rendering.ShadowCastingMode castShadows = UnityEngine.Rendering.ShadowCastingMode.On;
+	public bool receiveShadows = true;
 
 	protected Entity _entity;
 
@@ -24,11 +26,11 @@ public class MeshEntity : ScriptableObject
 			var architype = GetArchetype();
 			RenderMesh sharedMesh = new RenderMesh
 			{
-				castShadows = UnityEngine.Rendering.ShadowCastingMode.On,
+				castShadows = castShadows,
 				mesh = mesh,
 				subMesh = 0,
 				material = material,
-				receiveShadows = true
+				receiveShadows = receiveShadows
 			};
 
 			_entity = em.CreateEntity(architype);
