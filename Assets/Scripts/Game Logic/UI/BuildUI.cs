@@ -110,7 +110,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						_startPoint = selectedTile;
 					}
 					//Indicators
-					if(!HasResourse(_selectedUnit.cost))
+					if(!ResourceSystem.HasResourses(_selectedUnit.cost))
 					{
 						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 					}
@@ -139,7 +139,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						if (validPlacement)
 						{
 							if (!hqMode)
-								ConsumeResourse();
+								ResourceSystem.ConsumeResourses(_selectedUnit.cost);
 							if (_buildPath == null)
 							{
 								Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.size, _selectedUnit.influenceRange, Map.FlattenMode.Average);
@@ -178,27 +178,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					HideAllIndicators();
 			}
 		}
-	}
-
-	void ConsumeResourse()
-	{
-		for (int i = 0; i < _selectedUnit.cost.Length; i++)
-		{
-			var cost = _selectedUnit.cost[i];
-			ResourceSystem.resCount[ResourceDatabase.GetResourceId(cost.name)] -= cost.ammount;
-		}
-
-	}
-
-	bool HasResourse(BuildingTileInfo.Resource[] resources)
-	{
-		for (int i = 0; i < resources.Length; i++)
-		{
-			var id = ResourceDatabase.GetResourceId(resources[i].name);
-			if (ResourceSystem.resCount[id] < resources[i].ammount)
-				return false;
-		}
-		return true;
 	}
 
 	void HideIndicator(MeshEntity indicator)
@@ -288,7 +267,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			_activeUnits[i].text.SetText(unit.name);
 			_activeUnits[i].OnClick += () =>
 			{
-				if(HasResourse(unit.cost))
+				if(ResourceSystem.HasResourses(unit.cost))
 				{
 					_selectedUnit = unit;
 					placeMode = true;

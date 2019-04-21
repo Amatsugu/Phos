@@ -423,6 +423,15 @@ public class Map : IDisposable
 				_powerTransferTiles.Add(t);
 				break;
 		}
+		switch (tile)
+		{
+			case HQTile t:
+				_powerTransferTiles.Remove(t);
+				break;
+			case PoweredBuildingTile t:
+				_powerTransferTiles.Remove(t);
+				break;
+		}
 		tile.OnRemoved();
 		tile.Destroy();
 		nT.OnPlaced();

@@ -12,6 +12,7 @@ public class BuildingTile : Tile
 	public TileInfo originalTile;
 	public BuildingTileInfo buildingInfo;
 	public int distanceToHQ;
+	public int upgradeLevel = 0;
 
 
 	private Entity _building;
@@ -40,8 +41,14 @@ public class BuildingTile : Tile
 		base.Destroy();
 		if (!Map.ActiveMap.IsRendered)
 			return;
-		if (buildingInfo.buildingMesh != null)
-			Map.EM.DestroyEntity(_building);
+		try
+		{
+			if (buildingInfo.buildingMesh != null)
+				Map.EM.DestroyEntity(_building);
+		}catch
+		{
+
+		}
 	}
 
 	public override void Show(bool isShown)

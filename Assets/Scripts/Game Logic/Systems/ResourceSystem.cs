@@ -1,13 +1,15 @@
 ﻿using System;
 
 using Unity.Entities;
-
+using Unity.Mathematics;
+using UnityEngine;
 
 public class ResourceSystem : ComponentSystem
 {
 	public static int[] resCount;
-	public static int[] lastTickNet;
-    public static int maxStorage;
+	public static int[] totalDemand;
+	public static int[] totalProduction;
+	public static int maxStorage;
 
 	public DateTime nextTic;
 	public float ticRate = 1;
@@ -16,8 +18,9 @@ public class ResourceSystem : ComponentSystem
 	protected override void OnStartRunning()
 	{
 		resCount = new int[ResourceDatabase.ResourceCount];
-		lastTickNet = new int[ResourceDatabase.ResourceCount];
-        maxStorage = 1000;
+		totalDemand = new int[ResourceDatabase.ResourceCount];
+		totalProduction = new int[ResourceDatabase.ResourceCount];
+		maxStorage = 1000;
 		nextTic = DateTime.Now.AddSeconds(1 / ticRate);
 	}
 
@@ -26,13 +29,14 @@ public class ResourceSystem : ComponentSystem
 		if (DateTime.Now < nextTic)
 			return;
 		nextTic = nextTic.AddSeconds(1 / ticRate);
-        lastTickNet = new int[ResourceDatabase.ResourceCount];
+		totalDemand = new int[ResourceDatabase.ResourceCount];
+		totalProduction = new int[ResourceDatabase.ResourceCount];
 		Entities.WithNone<InactiveBuilding, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{
 				int res = p.resourceIds[i];
-                lastTickNet[res] += p.rates[i];
+				totalProduction[res] += p.rates[i];
 				if (resCount[res] == maxStorage)
 					continue;
 				resCount[res] += p.rates[i];
@@ -73,6 +77,7 @@ public class ResourceSystem : ComponentSystem
 	bool ConsumeResourse(Entity e, int rID, int rate, float multi = 1)
 	{
 		var totalRate = multi == 1 ? rate : (int)(rate * multi);
+		totalDemand[rID] -= totalRate;
 		if (resCount[rID] < totalRate)
 		{
 			if (!EntityManager.HasComponent<InactiveBuilding>(e))
@@ -86,12 +91,40 @@ public class ResourceSystem : ComponentSystem
 			if (EntityManager.HasComponent<InactiveBuilding>(e))
 				PostUpdateCommands.RemoveComponent(e, typeof(InactiveBuilding));
 			resCount[rID] -= totalRate;
-			lastTickNet[rID] -= totalRate;
 		}
 		return true;
 	}
 
 	protected override void OnStopRunning()
 	{
+	}
+
+	public static void ConsumeResourses(BuildingTileInfo.Resource[] resources, float multi = 1)
+	{
+		for (int i = 0; i < resources.Length; i++)
+		{
+			var cost = resources[i];
+			resCount[ResourceDatabase.GetResourceId(cost.name)] -= Mathf.FloorToInt(cost.ammount * multi);
+		}
+	}
+
+	public static void AddResources(BuildingTileInfo.Resource[] resources, float multi = 1)
+	{
+		for (int i = 0; i < resources.Length; i++)
+		{
+			var cost = resources[i];
+			resCount[ResourceDatabase.GetResourceId(cost.name)] += Mathf.FloorToInt(cost.ammount * multi);
+		}
+	}
+
+	public static bool HasResourses(BuildingTileInfo.Resource[] resources, float multi = 1)
+	{
+		for (int i = 0; i < resources.Length; i++)
+		{
+			var id = ResourceDatabase.GetResourceId(resources[i].name);
+			if (resCount[id] < Mathf.FloorToInt(resources[i].ammount * multi))
+				return false;
+		}
+		return true;
 	}
 }

@@ -24,7 +24,9 @@ public class InteractionUI : MonoBehaviour
 
 	void DestroyTile()
 	{
-		Map.ActiveMap.RevertTile(_selectedTile as BuildingTile);
+		var t = _selectedTile as BuildingTile;
+		Map.ActiveMap.RevertTile(t);
+		ResourceSystem.AddResources(t.buildingInfo.cost, .5f);
 		interactionPanel.HidePanel();
 	}
 

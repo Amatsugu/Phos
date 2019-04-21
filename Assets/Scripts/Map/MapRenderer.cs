@@ -64,16 +64,16 @@ public class MapRenderer : MonoBehaviour
 	{
 		//TODO: Remove this when testing complete
 		if (Input.GetKey(KeyCode.R))
+		{
+			map.Destroy();
 			SceneManager.LoadScene(0);
+		}
 
 		var camPos = _cam.transform.position;
 		if (_lastCamPos != camPos)
 		{
-			//if(!useECS)
-			//{
-				GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
-				map.UpdateView(_camPlanes);
-			//}
+			GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
+			map.UpdateView(_camPlanes);
 			_lastCamPos = _cam.transform.position;
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z + 2 * _ocean.localScale.z);
 		}
