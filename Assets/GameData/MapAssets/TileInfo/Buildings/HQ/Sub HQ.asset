@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71afc00c1593154c969aaba5600777d, type: 3}
   m_Name: Sub HQ
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: cc4423e9f1d16434cb28f8fef00f2d1b, type: 3}
+  mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  Name: HQ Foundation
-  Description: 
+  description: 
   buildingMesh: {fileID: 0}
   size: 0
   powerTransferRadius: 0
   influenceRange: 0
+  cost: []
+  icon: {fileID: 0}
   production: []
   consumption: []

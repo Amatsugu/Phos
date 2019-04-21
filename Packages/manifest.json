@@ -1,12 +1,14 @@
 {
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
+    "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "2.0.8",
     "com.unity.analytics": "3.2.2",
     "com.unity.burst": "1.0.0",
     "com.unity.collab-proxy": "1.2.16",
     "com.unity.collections": "0.0.9-preview.17",
     "com.unity.entities": "0.0.12-preview.30",
+    "com.unity.ext.nunit": "1.0.0",
     "com.unity.jobs": "0.0.7-preview.10",
     "com.unity.package-manager-ui": "2.2.0",
     "com.unity.physics": "0.0.2-preview.1",
@@ -16,6 +18,7 @@
     "com.unity.render-pipelines.high-definition": "6.5.3-preview",
     "com.unity.rendering.hybrid": "0.0.1-preview.10",
     "com.unity.shadergraph": "6.5.3",
+    "com.unity.test-framework": "1.0.9",
     "com.unity.textmeshpro": "1.3.0",
     "com.unity.timeline": "1.0.0",
     "com.unity.modules.ai": "1.0.0",

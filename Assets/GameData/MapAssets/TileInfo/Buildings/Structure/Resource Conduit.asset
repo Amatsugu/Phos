@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1852c72404f4c31468f84418951e687a, type: 3}
   m_Name: Resource Conduit
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: cc4423e9f1d16434cb28f8fef00f2d1b, type: 3}
+  mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1

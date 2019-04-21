@@ -31,3 +31,13 @@ The following packages were updated:
   com.unity.render-pipelines.high-definition from version 4.10.0-preview to 5.2.3-preview
   com.unity.render-pipelines.lightweight from version 4.10.0-preview to 5.2.3
   com.unity.shadergraph from version 4.10.0-preview to 5.2.3
+
+=== Sun Apr 21 04:54:56 2019
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.2d.tilemap@1.0.0
+  com.unity.ext.nunit@1.0.0
+  com.unity.test-framework@1.0.9

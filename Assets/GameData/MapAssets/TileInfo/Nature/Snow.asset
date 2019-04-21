@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: Snow
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: cc4423e9f1d16434cb28f8fef00f2d1b, type: 3}
+  mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
   material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  Name: 
-  Description: 
+  description: 
