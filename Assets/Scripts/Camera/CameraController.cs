@@ -68,7 +68,7 @@ public class CameraController : MonoBehaviour
 		//Drag Panning
 		Vector3 curPos;
 		var ray = _cam.ScreenPointToRay(mPos);
-		var height = pos.y - mapRenderer.map.SeaLevel;
+		var height = pos.y - mapRenderer.map.seaLevel;
 		var d = height / Mathf.Sin(_cam.transform.eulerAngles.x * Mathf.Deg2Rad);
 		if (Input.GetKeyDown(KeyCode.Mouse1))
 			_lastClickPos = ray.GetPoint(d);

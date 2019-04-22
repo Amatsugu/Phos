@@ -24,15 +24,10 @@ public abstract class MapGenerator : ScriptableObject
 			return;
 		foreach (var fg in featureGenerators)
 		{
-			if (fg != null)
-			{
-				Debug.Log("Running Feature Generator: " + fg.GetType().Name);
-				fg.Generate(map);
-			}
+			Debug.Log("Running Feature Generator: " + fg.GetType().Name);
+			fg.Generate(map);
 		}
 	}
-
-	public abstract Tile PaintTile(Tile tile);
 
 	public abstract Map GenerateMap(Transform parent = null);
 

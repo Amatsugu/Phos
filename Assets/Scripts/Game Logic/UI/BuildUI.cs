@@ -95,9 +95,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile);
 						if (_buildPath != null)
 						{
-							if(_buildPath.Any(t => t.Height <= Map.ActiveMap.SeaLevel))
+							if(_buildPath.Any(t => t.Height <= Map.ActiveMap.seaLevel))
 							{
-								var invalidTiles = _buildPath.Where(t => t.Height <= Map.ActiveMap.SeaLevel);
+								var invalidTiles = _buildPath.Where(t => t.Height <= Map.ActiveMap.seaLevel);
 								ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 								ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
 							}
@@ -114,9 +114,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					{
 						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 					}
-					else if(tilesToOccupy.Any(t => t.Height <= Map.ActiveMap.SeaLevel))
+					else if(tilesToOccupy.Any(t => t.Height <= Map.ActiveMap.seaLevel))
 					{
-						var invalidTiles = tilesToOccupy.Where(t => t.Height <= Map.ActiveMap.SeaLevel);
+						var invalidTiles = tilesToOccupy.Where(t => t.Height <= Map.ActiveMap.seaLevel);
 						ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 						ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
 					}
@@ -148,7 +148,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 							{
 								for (int i = 0; i < _buildPath.Count; i++)
 								{
-									if (_buildPath[i].Height <= Map.ActiveMap.SeaLevel)
+									if (_buildPath[i].Height <= Map.ActiveMap.seaLevel)
 										continue;
 									if (_buildPath[i] is BuildingTile)
 										continue;

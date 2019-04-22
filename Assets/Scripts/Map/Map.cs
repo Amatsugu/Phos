@@ -18,15 +18,17 @@ public class Map : IDisposable
 	public bool IsRendered { get; private set; }
 
 	public string Name;
-	public int Height { get; }
-	public int Width { get; }
-	public int Length => Chunks.Length;
-	public float TileEdgeLength { get; }
-	public float LongDiagonal { get; }
-	public float ShortDiagonal { get; }
+	public readonly int height;
+	public readonly int totalHeight;
+	public readonly int width;
+	public readonly int totalWidth;
+	public readonly int length;
+	public readonly float tileEdgeLength;
+	public readonly float tongDiagonal;
+	public readonly float shortDiagonal;
+	public readonly float innerRadius;
 
-	public float InnerRadius { get; }
-	public float SeaLevel;
+	public float seaLevel;
 	public int Seed { get; private set; }
 
 	public Transform Parent { get; }
@@ -34,6 +36,23 @@ public class Map : IDisposable
 
 	public HQTile HQ;
 	private List<BuildingTile> _powerTransferTiles;
+
+	public Map(int height, int width, int seed, float edgeLength = 1)
+	{
+		this.width = width;
+		this.height = height;
+		totalWidth = width * Chunk.SIZE;
+		totalHeight = height * Chunk.SIZE;
+		Seed = seed;
+		length = width * height;
+		Chunks = new Chunk[length];
+		tileEdgeLength = edgeLength;
+		innerRadius = Mathf.Sqrt(3f) / 2f * tileEdgeLength;
+		shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
+		tongDiagonal = 2 * tileEdgeLength;
+		_powerTransferTiles = new List<BuildingTile>();
+		ActiveMap = this;
+	}
 
 	public struct Chunk
 	{
@@ -148,20 +167,6 @@ public class Map : IDisposable
 		}
 	}
 
-	public Map(int height, int width, int seed, float edgeLength = 1)
-	{
-		Width = width;
-		Height = height;
-		this.Seed = seed;
-		Chunks = new Chunk[width * height];
-		TileEdgeLength = edgeLength;
-		InnerRadius = Mathf.Sqrt(3f) / 2f * TileEdgeLength;
-		ShortDiagonal = Mathf.Sqrt(3f) * TileEdgeLength;
-		LongDiagonal = 2 * TileEdgeLength;
-		_powerTransferTiles = new List<BuildingTile>();
-		ActiveMap = this;
-	}
-
 	/// <summary>
 	/// Get a tile the given HexCoords position
 	/// </summary>
@@ -172,8 +177,8 @@ public class Map : IDisposable
 		get
 		{
 			var (chunkX, chunkZ) = coord.GetChunkPos();
-			var index = chunkX + chunkZ * Width;
-			if (index < 0 || index >= Length)
+			var index = chunkX + chunkZ * width;
+			if (index < 0 || index >= length)
 				return null;
 			var chunk = Chunks[index];
 			if (!chunk.isCreated)
@@ -184,11 +189,11 @@ public class Map : IDisposable
 		set
 		{
 			var (chunkX, chunkZ) = coord.GetChunkPos();
-			var chunk = Chunks[chunkX + chunkZ * Width];
+			var chunk = Chunks[chunkX + chunkZ * width];
 			if (!chunk.isCreated)
-				chunk = new Chunk(HexCoords.FromOffsetCoords(chunkX, chunkZ, TileEdgeLength));
+				chunk = new Chunk(HexCoords.FromOffsetCoords(chunkX, chunkZ, tileEdgeLength));
 			chunk[coord.ToChunkLocalCoord(chunkX, chunkZ)] = value;
-			Chunks[chunkX + chunkZ * Width] = chunk;
+			Chunks[chunkX + chunkZ * width] = chunk;
 		}
 	}
 
@@ -204,7 +209,7 @@ public class Map : IDisposable
 	{
 		get
 		{
-			return this[new HexCoords(x, y, TileEdgeLength)];
+			return this[new HexCoords(x, y, tileEdgeLength)];
 		}
 
 	}
@@ -263,24 +268,24 @@ public class Map : IDisposable
 	public Tile GetTileFromRay(Ray ray, float distance = 50000f, float increment = 0.1f)
 	{
 		if (increment == 0.1f)
-			increment = InnerRadius;
+			increment = innerRadius;
 		for (float i = 0; i < distance; i += increment)
 		{
 			var p = ray.GetPoint(i);
 			var t = this[HexCoords.FromPosition(p)];
 			if (t == null)
 				continue;
-			if (p.y > t.Height + TileEdgeLength)
+			if (p.y > t.Height + tileEdgeLength)
 				continue;
 			if(p.y <= t.Height && p.y >= 0)
 			{
 				var a = t.Coords.worldXZ;
 				var b = p;
 				b.y = 0;
-				if ((a - b).sqrMagnitude <= TileEdgeLength * TileEdgeLength)
+				if ((a - b).sqrMagnitude <= tileEdgeLength * tileEdgeLength)
 					return t;
 			}
-			if ((t.SurfacePoint - p).sqrMagnitude <= TileEdgeLength * TileEdgeLength)
+			if ((t.SurfacePoint - p).sqrMagnitude <= tileEdgeLength * tileEdgeLength)
 				return t;
 		}
 		return null;
@@ -317,7 +322,7 @@ public class Map : IDisposable
 	{
 		var selection = new List<Tile>();
 		radius = Mathf.Abs(radius);
-		radius *= InnerRadius;
+		radius *= innerRadius;
 		if (radius == 0)
 		{
 			selection.Add(this[center]);
@@ -327,7 +332,7 @@ public class Map : IDisposable
 		{
 			for (float z = -radius; z < radius; z++)
 			{
-				var p = HexCoords.FromPosition(new Vector3(x + center.worldX, 0, z + center.worldZ), InnerRadius);
+				var p = HexCoords.FromPosition(new Vector3(x + center.worldX, 0, z + center.worldZ), innerRadius);
 				var d = Mathf.Pow(p.worldX - center.worldX, 2) + Mathf.Pow(p.worldZ - center.worldZ, 2);
 				if (d <= radius * radius)
 				{
@@ -348,8 +353,8 @@ public class Map : IDisposable
 
 	public void CircularFlatten(HexCoords center, float innerRadius, float outerRadius, FlattenMode mode = FlattenMode.Center)
 	{
-		innerRadius *= LongDiagonal;
-		outerRadius *= LongDiagonal;
+		innerRadius *= tongDiagonal;
+		outerRadius *= tongDiagonal;
 		var innerSelection = CircularSelect(center, innerRadius);
 		var c = this[center];
 		float height = c.Height;
@@ -394,8 +399,8 @@ public class Map : IDisposable
 		foreach (var tile in outerSelection)
 		{
 			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
-			d -= innerRadius * innerRadius * LongDiagonal;
-			d = MathUtils.Map(d, 0, (outerRadius * outerRadius * LongDiagonal) - (innerRadius * innerRadius * LongDiagonal), 0, 1);
+			d -= innerRadius * innerRadius * tongDiagonal;
+			d = MathUtils.Map(d, 0, (outerRadius * outerRadius * tongDiagonal) - (innerRadius * innerRadius * tongDiagonal), 0, 1);
 			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
 		}
 	}
@@ -411,7 +416,7 @@ public class Map : IDisposable
 			throw new Exception("Cannot use ReplaceTile for an unrendered map");
 		var coord = tile.Coords;
 		var (chunkX, chunkZ) = coord.GetChunkPos();
-		var index = chunkX + chunkZ * Width;
+		var index = chunkX + chunkZ * width;
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 		var nT = Chunks[index].ReplaceTile(localCoord, newTile);
 		switch (nT)
@@ -561,7 +566,7 @@ public class Map : IDisposable
 	}
 
 
-	public float GetHeight(Vector3 worldPos, int radius = 0) => GetHeight(HexCoords.FromPosition(worldPos, TileEdgeLength), radius);
+	public float GetHeight(Vector3 worldPos, int radius = 0) => GetHeight(HexCoords.FromPosition(worldPos, tileEdgeLength), radius);
 
 	public float GetHeight(HexCoords coord, int radius = 0)
 	{
@@ -569,14 +574,14 @@ public class Map : IDisposable
 		{
 			var t = this[coord];
 			if (t == null)
-				return this.SeaLevel;
+				return this.seaLevel;
 			return t.Height;
 		}
 		var selection = this.HexSelect(coord, radius);
 		if (selection.Count == 0)
-			return SeaLevel;
+			return seaLevel;
 		var max = selection.Max(t => t.Height);
-		return (max < SeaLevel) ? SeaLevel : max;
+		return (max < seaLevel) ? seaLevel : max;
 	}
 
 	public void Destroy()

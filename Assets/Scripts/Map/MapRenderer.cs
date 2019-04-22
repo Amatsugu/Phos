@@ -36,9 +36,8 @@ public class MapRenderer : MonoBehaviour
 		Init();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
-		var chunkSize = Map.Chunk.SIZE;
 		min = Vector3.zero;
-		max = new Vector3(map.Width * chunkSize * map.ShortDiagonal, 0, map.Height * chunkSize * 1.5f);
+		max = new Vector3(map.totalWidth * map.shortDiagonal, 0, map.totalHeight * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 	}
 
@@ -54,7 +53,7 @@ public class MapRenderer : MonoBehaviour
 		map.Render(_entityManager);
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
-		pos.y = map.SeaLevel;
+		pos.y = map.seaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
 	}
 

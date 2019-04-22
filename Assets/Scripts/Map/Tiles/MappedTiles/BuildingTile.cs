@@ -10,7 +10,7 @@ using UnityEngine;
 public class BuildingTile : Tile
 {
 	public TileInfo originalTile;
-	public BuildingTileInfo buildingInfo;
+	public readonly BuildingTileInfo buildingInfo;
 	public int distanceToHQ;
 	public int upgradeLevel = 0;
 

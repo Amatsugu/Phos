@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class HQTile : BuildingTile
 {
+	public readonly HQTileInfo hqInfo;
+
 	public HQTile(HexCoords coords, float height, HQTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
+		hqInfo = tInfo;
 	}
 
 	public override void OnPlaced()

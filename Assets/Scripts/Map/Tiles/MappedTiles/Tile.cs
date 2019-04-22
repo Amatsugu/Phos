@@ -14,7 +14,7 @@ public class Tile
 	public Vector3 SurfacePoint { get; protected set; }
 	public float Height { get; protected set; }
 
-	public TileInfo info;
+	public readonly TileInfo info;
 
 	public float moisture, temperature;
 	public int biomeId;
@@ -122,16 +122,6 @@ public class Tile
 				_decor.Dispose();
 		}
 	}
-
-	/*public static bool operator ==(Tile a, Tile b)
-	{
-		return a.Equals(b);
-	}
-
-	public static bool operator !=(Tile a, Tile b)
-	{
-		return !(a == b);
-	}*/
 
 	public virtual void Show(bool isShown)
 	{

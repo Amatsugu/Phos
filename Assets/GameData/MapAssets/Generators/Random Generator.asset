@@ -16,7 +16,8 @@ MonoBehaviour:
   tileMapper: {fileID: 11400000, guid: 53d4e23fb41281647959dab06f3d19b8, type: 2}
   seaLevel: 5
   edgeLength: 1
-  featureGenerators: []
+  featureGenerators:
+  - {fileID: 11400000, guid: 93401847f3613cc40b2de43739f80765, type: 2}
   useJobs: 0
   Regen: 0
   biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
