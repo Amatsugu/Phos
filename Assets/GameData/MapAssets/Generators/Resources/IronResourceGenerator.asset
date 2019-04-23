@@ -12,3 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4e156c4c01662469b2a46dd44cc895, type: 3}
   m_Name: IronResourceGenerator
   m_EditorClassIdentifier: 
+  resource: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
+  rarity: 0.524
+  density: 1
+  settings:
+    type: 0
+    simpleNoiseSettings:
+      strength: 0.5
+      layerCount: 3
+      baseRoughness: 10
+      roughness: 3.56
+      persistence: 0.2
+      minValue: 0.9
+      center: {x: 0, y: 0, z: 0}
+    rigidNoiseSettings:
+      strength: 0
+      layerCount: 0
+      baseRoughness: 0
+      roughness: 0
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
+  noiseScale: 200

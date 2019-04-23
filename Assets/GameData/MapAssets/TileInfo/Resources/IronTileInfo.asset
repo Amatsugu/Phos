@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Jungle Tree
+  m_Script: {fileID: 11500000, guid: 349cd418e960646429bb24fb8abb8192, type: 3}
+  m_Name: IronTileInfo
   m_EditorClassIdentifier: 
   mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
-  material: {fileID: 2100000, guid: 94beb12df0bbef84a9b42051d488cea2, type: 2}
+  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
+  decorators: []
+  description: Iron Ore

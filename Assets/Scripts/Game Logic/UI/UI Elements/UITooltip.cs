@@ -21,7 +21,7 @@ public class UITooltip : MonoBehaviour
 		_thisGameObject = gameObject;
     }
 
-	private void Update()
+	private void LateUpdate()
 	{
 		if (ToolTipVisible)
 			UpdatePos();

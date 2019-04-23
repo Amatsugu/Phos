@@ -87,5 +87,5 @@ MonoBehaviour:
         minValue: 0
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.35
-  useSeed: 0
-  seed: -923694754
+  useSeed: 1
+  seed: -924830731

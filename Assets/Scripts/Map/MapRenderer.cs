@@ -50,6 +50,7 @@ public class MapRenderer : MonoBehaviour
 	{
 		_entityManager = World.Active.EntityManager;
 		map = generator.GenerateMap(transform);
+		generator.GenerateFeatures(map);
 		map.Render(_entityManager);
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;

@@ -35,7 +35,7 @@ public class InteractionUI : MonoBehaviour
 
 	}
 
-	void Update()
+	void LateUpdate()
 	{
 		if (buildUI.hqMode)
 			return;
