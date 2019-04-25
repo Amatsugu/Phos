@@ -79,13 +79,16 @@ public class InteractionUI : MonoBehaviour
 		switch (tile)
 		{
 			case HQTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.info.description, true, false);
+				interactionPanel.ShowPanel(tile.info.name, tile.info.description, showDestroyBtn: false);
 				break;
 			case SubHQTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.info.description, true, false);
+				interactionPanel.ShowPanel(tile.info.name, tile.info.description, showDestroyBtn: false);
+				break;
+			case PoweredBuildingTile p:
+				interactionPanel.ShowPanel(tile.info.name, $"{tile.info.description}\n\n<b>HQ Connection: {p.HasHQConnection}</b>");
 				break;
 			case BuildingTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.info.description, true, true);
+				interactionPanel.ShowPanel(tile.info.name, tile.info.description);
 				break;
 			default:
 				interactionPanel.ShowPanel(tile.info.name, tile.info.description, false, false);
