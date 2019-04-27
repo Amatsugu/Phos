@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: IronResourceGenerator
   m_EditorClassIdentifier: 
   resource: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
-  rarity: 0.524
-  density: 1
+  rarity: 0.158
+  density: 0.799
   settings:
     type: 0
     simpleNoiseSettings:

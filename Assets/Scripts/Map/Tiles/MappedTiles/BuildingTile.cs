@@ -115,6 +115,8 @@ public class PoweredBuildingTile : BuildingTile
 		}
 		if (best != null)
 			OnHQConnected(best);
+		else
+			OnHQDisconnected(this, new HashSet<Tile>(), true);
 	}
 
 	public virtual void OnHQConnected(PoweredBuildingTile src)
@@ -137,9 +139,12 @@ public class PoweredBuildingTile : BuildingTile
 	{
 		if (_init && !HasHQConnection)
 			return;
-		if (visited.Contains(this))
-			return;
-		visited.Add(this);
+		if (src != this)
+		{
+			if (visited.Contains(this))
+				return;
+			visited.Add(this);
+		}
 		HasHQConnection = false;
 		if (!verified)
 		{
@@ -151,12 +156,15 @@ public class PoweredBuildingTile : BuildingTile
 			}
 			verified = true;
 		}
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
+		if (src != this)
 		{
-			if (neighbors[i] is PoweredBuildingTile p)
+			var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+			for (int i = 0; i < 6; i++)
 			{
-				p.OnHQDisconnected(this, visited, verified);
+				if (neighbors[i] is PoweredBuildingTile p)
+				{
+					p.OnHQDisconnected(this, visited, verified);
+				}
 			}
 		}
 		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
@@ -165,45 +173,5 @@ public class PoweredBuildingTile : BuildingTile
 			Map.EM.SetComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
 		}
 	}
-
-	/*public void EstablishHQConnection()
-	{
-		if (this is SubHQTile)
-		{
-			HasHQConnection = true;
-			return;
-		}
-		var visited = new HashSet<PoweredBuildingTile>();
-		if (!CheckHQConnection(visited))
-		{
-			foreach (var tile in visited)
-				tile.OnHQDisconnected();
-		}
-		else
-			OnHQConnected();
-	}
-
-	public bool CheckHQConnection(HashSet<PoweredBuildingTile> visited)
-	{
-		visited.Add(this);
-		var nT = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-		{
-			if (nT[i] == null)
-				continue;
-			if (visited.Contains(nT[i]))
-				continue;
-			if (nT[i] is SubHQTile)
-			{
-				return true;
-			}
-			if (nT[i] is PoweredBuildingTile p)
-			{
-				if(p.CheckHQConnection(visited))
-					return true;
-			}
-		}
-		return false;
-	}*/
 
 }
