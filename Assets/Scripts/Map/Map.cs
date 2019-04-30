@@ -56,7 +56,7 @@ public class Map : IDisposable
 
 	public struct Chunk
 	{
-		public const int SIZE = 16;
+		public const int SIZE = 32;
 		public Tile[] Tiles;
 		public HexCoords chunkCoord;
 		public bool isShown;

@@ -12,14 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
   m_Name: Random Generator
   m_EditorClassIdentifier: 
-  Size: {x: 24, y: 24}
-  tileMapper: {fileID: 11400000, guid: 53d4e23fb41281647959dab06f3d19b8, type: 2}
+  Size: {x: 12, y: 12}
+  tileMapper: {fileID: 0}
   seaLevel: 5
   edgeLength: 1
   featureGenerators:
   - {fileID: 11400000, guid: 93401847f3613cc40b2de43739f80765, type: 2}
   useJobs: 0
   Regen: 0
+  borderSize: 64
+  borderCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
   biomeFold: 1
   noiseScale: 350
@@ -88,4 +113,4 @@ MonoBehaviour:
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.35
   useSeed: 0
-  seed: -925238067
+  seed: -925501314

@@ -18,6 +18,8 @@ public class RandomGenerator : MapGenerator
 		public NoiseSettings noiseSettings;
 	}
 
+	public int borderSize = 16;
+	public AnimationCurve borderCurve = AnimationCurve.EaseInOut(0,0,1,1);
 	public BiomePainter biomePainter;
 	[HideInInspector]
 	public bool biomeFold;
@@ -60,7 +62,25 @@ public class RandomGenerator : MapGenerator
 				var sample = GenerateHeight(x, z);
 				if (sample > seaLevel)
 					landToSeaRatio++;
-				heightMap[x + z * map.totalWidth] = sample;
+				var borderT = 1f;
+				if(x <= borderSize) 
+				{
+					borderT *= MathUtils.Map(x, 0, borderSize, 0, 1);
+				}
+				if(x >= map.totalWidth - borderSize)
+				{
+					borderT *= 1-MathUtils.Map(x, map.totalWidth - borderSize, map.totalWidth, 0, 1);
+				}
+				if (z <= borderSize)
+				{
+					borderT *= MathUtils.Map(z, 0, borderSize, 0, 1);
+				}
+				if (z >= map.totalHeight - borderSize)
+				{
+					borderT *= 1-MathUtils.Map(z, map.totalHeight - borderSize, map.totalHeight, 0, 1);
+				}
+				borderT = Mathf.Max(borderT, 0);
+				heightMap[x + z * map.totalWidth] = Mathf.Lerp(0.2f, sample, borderCurve.Evaluate(borderT));
 			}
 		}
 		landToSeaRatio /= heightMap.Length;

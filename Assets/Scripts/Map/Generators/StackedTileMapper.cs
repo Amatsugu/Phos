@@ -15,16 +15,16 @@ public class StackedTileMapper : TileMapper
 	public TileLayer[] surfaceLayers;
 	public TileLayer[] oceanLayers;
 
-	public override TileInfo GetTile(float sample, float seaLevel, float maxValue = 1)
+	public override TileInfo GetTile(float altitude, float seaLevel, float maxValue = 1)
 	{
 		TileInfo tile = null;
-		sample -= seaLevel;
-		if (sample < 0)
+		altitude -= seaLevel;
+		if (altitude < 0)
 		{
 			//sample = seaLevel - sample;
 			foreach (var tileLayer in oceanLayers)
 			{
-				if (sample <= tileLayer.startHeight)
+				if (altitude <= tileLayer.startHeight)
 					tile = tileLayer.tileInfo;
 			}
 		}
@@ -32,7 +32,7 @@ public class StackedTileMapper : TileMapper
 		{
 			foreach (var tileLayer in surfaceLayers)
 			{
-				if (sample >= tileLayer.startHeight)
+				if (altitude >= tileLayer.startHeight)
 					tile = tileLayer.tileInfo;
 			}
 		}
