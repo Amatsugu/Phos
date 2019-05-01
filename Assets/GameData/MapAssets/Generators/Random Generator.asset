@@ -70,7 +70,7 @@ MonoBehaviour:
         minValue: 0.03
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.34
-  - enabled: 1
+  - enabled: 0
     useFirstLayerAsMask: 0
     noiseSettings:
       type: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
         minValue: 0
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0
-  - enabled: 1
+  - enabled: 0
     useFirstLayerAsMask: 1
     noiseSettings:
       type: 1
@@ -112,5 +112,5 @@ MonoBehaviour:
         minValue: 0
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.35
-  useSeed: 0
-  seed: -925501314
+  useSeed: 1
+  seed: -925516888

@@ -18,8 +18,8 @@ public class ResourceGenerator : FeatureGenerator
 	{
 		//TODO: Write generator for resources
 		var filter = NoiseFilterFactory.CreateNoiseFilter(settings, map.Seed);
-		var adjustedDensity = MathUtils.Map(density, 0, 1, settings.type == NoiseSettings.FilterType.Simple ? settings.simpleNoiseSettings.strength : settings.rigidNoiseSettings.strength, 1);
-
+		var adjustedDensity = MathUtils.Map(density, 0, 1, 0, 1-(settings.type == NoiseSettings.FilterType.Simple ? settings.simpleNoiseSettings.minValue : settings.rigidNoiseSettings.minValue));
+		Debug.Log(adjustedDensity);
 		for (int z = 0; z < map.totalHeight; z++)
 		{
 			for (int x = 0; x < map.totalWidth; x++)
