@@ -46,7 +46,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
-  biomeFold: 1
   noiseScale: 350
   noiseLayers:
   - enabled: 1
@@ -70,7 +69,7 @@ MonoBehaviour:
         minValue: 0.03
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.34
-  - enabled: 0
+  - enabled: 1
     useFirstLayerAsMask: 0
     noiseSettings:
       type: 0
@@ -91,7 +90,7 @@ MonoBehaviour:
         minValue: 0
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0
-  - enabled: 0
+  - enabled: 1
     useFirstLayerAsMask: 1
     noiseSettings:
       type: 1
@@ -112,5 +111,9 @@ MonoBehaviour:
         minValue: 0
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.35
-  useSeed: 1
-  seed: -925516888
+  useSeed: 0
+  seed: -925600639
+  landSeaRatio: 0.4
+  biomeFold: 1
+  preview: 1
+  previewTex: {fileID: 0}

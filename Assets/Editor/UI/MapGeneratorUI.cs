@@ -9,9 +9,13 @@ public class MapGeneratorUI : Editor
 	private RandomGenerator creator;
 	public static Editor editor;
 	private bool _autoRegen;
+	private float _lstr;
+
 	private void OnEnable()
 	{
 		creator = target as RandomGenerator;
+		creator.previewTex = new Texture2D(400, 400);
+		GenTex();
 	}
 
 	public override void OnInspectorGUI()
@@ -22,16 +26,36 @@ public class MapGeneratorUI : Editor
 		if (!Application.isPlaying || _autoRegen)
 			GUI.enabled = false;
 		if(GUILayout.Button(new GUIContent("Regenerate","Regenerate the Map")))
-		{
 			creator.Regen = true;
-		}
 		if (!Application.isPlaying || _autoRegen)
 			GUI.enabled = true;
 		_autoRegen = GUILayout.Toggle(_autoRegen, new GUIContent("Auto Regen", "Regenerate automatically"));
 		GUILayout.EndVertical();
-		if(_autoRegen)
-			creator.Regen = EditorGUI.EndChangeCheck();
+		var hasChange = EditorGUI.EndChangeCheck();
+		if (_autoRegen)
+		{
+			creator.Regen = hasChange;
+			GenTex();
+		}
 
+		if (GUILayout.Button("Preview"))
+		{
+			creator.preview = !creator.preview;
+			if(creator.preview)
+				GenTex();
+		}
+		if(creator.preview)
+		{
+			if (hasChange)
+				GenTex();
+			if (_lstr < creator.landSeaRatio)
+				GUILayout.Label($"<color=red><b>Land to Sea Ratio {_lstr} < {creator.landSeaRatio}</b></color>", new GUIStyle { richText = true });
+			if(GUILayout.Button(creator.previewTex, GUILayout.Height(EditorGUIUtility.currentViewWidth - 20), GUILayout.Width(EditorGUIUtility.currentViewWidth - 20)))
+			{
+				creator.seed++;
+				GenTex();
+			}
+		}
 		if (creator.biomePainter != null)
 		{
 			creator.biomeFold = EditorGUILayout.InspectorTitlebar(creator.biomeFold, creator.biomePainter);
@@ -48,5 +72,53 @@ public class MapGeneratorUI : Editor
 				}
 			}
 		}
+	}
+
+	public void GenTex()
+	{
+		creator.InitFilters();
+		var max = 0f;
+		int w = creator.previewTex.width, h = creator.previewTex.height;
+		var hMap = new float[h * w];
+		var landToSeaRatio = 0f;
+		for (int z = 0; z < h; z++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				var sX = MathUtils.Map(x, 0, w, 0, creator.Size.x * Map.Chunk.SIZE);
+				var sZ = MathUtils.Map(z, 0, h, 0, creator.Size.y * Map.Chunk.SIZE);
+				var sample = creator.GenerateHeight(sX, sZ);
+				if (sample > max)
+					max = sample;
+				if (sample > creator.seaLevel)
+					landToSeaRatio++;
+				hMap[x + z * w] = sample;
+			}
+		}
+		_lstr = landToSeaRatio / hMap.Length;
+		for (int z = 0; z < h; z++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				var a = hMap[x + z * w];
+				if (a > creator.seaLevel)
+				{
+					var color = new Color(0, .8f, 0);
+					if (z - 1 >= 0)
+					{
+						var b = hMap[x + (z - 1) * w];
+						if (a - b < -.1f)
+							color = new Color(.4f, .9f, .4f);
+						else if (a - b > .1f)
+							color = new Color(0, .6f, 0);
+					}
+					creator.previewTex.SetPixel(x, z, color);
+				}else
+				{
+					creator.previewTex.SetPixel(x, z, Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Map(a, 0, creator.seaLevel, .5f, 1)));
+				}
+			}
+		}
+		creator.previewTex.Apply();
 	}
 }

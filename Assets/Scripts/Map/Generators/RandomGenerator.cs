@@ -21,14 +21,21 @@ public class RandomGenerator : MapGenerator
 	public int borderSize = 16;
 	public AnimationCurve borderCurve = AnimationCurve.EaseInOut(0,0,1,1);
 	public BiomePainter biomePainter;
-	[HideInInspector]
-	public bool biomeFold;
-	public float noiseScale = .5f;
-	
 
+
+	public float noiseScale = .5f;
 	public NoiseLayer[] noiseLayers;
 	public bool useSeed;
 	public int seed = 11;
+	public float landSeaRatio = .4f;
+
+
+	[HideInInspector]
+	public bool biomeFold;
+	[HideInInspector]
+	public bool preview;
+	[HideInInspector]
+	public Texture2D previewTex;
 
 	private INoiseFilter[] noiseFilters;
 
@@ -46,9 +53,7 @@ public class RandomGenerator : MapGenerator
 			seed = (int)(new System.DateTime(1990, 1, 1) - System.DateTime.Now).TotalSeconds;
 		UnityEngine.Random.InitState(seed);
 		var startTime = DateTime.Now;
-		noiseFilters = new INoiseFilter[noiseLayers.Length];
-		for (int i = 0; i < noiseLayers.Length; i++)
-			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings, seed);
+		InitFilters();
 		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength)
 		{
 			seaLevel = seaLevel
@@ -62,30 +67,13 @@ public class RandomGenerator : MapGenerator
 				var sample = GenerateHeight(x, z);
 				if (sample > seaLevel)
 					landToSeaRatio++;
-				var borderT = 1f;
-				if(x <= borderSize) 
-				{
-					borderT *= MathUtils.Map(x, 0, borderSize, 0, 1);
-				}
-				if(x >= map.totalWidth - borderSize)
-				{
-					borderT *= 1-MathUtils.Map(x, map.totalWidth - borderSize, map.totalWidth, 0, 1);
-				}
-				if (z <= borderSize)
-				{
-					borderT *= MathUtils.Map(z, 0, borderSize, 0, 1);
-				}
-				if (z >= map.totalHeight - borderSize)
-				{
-					borderT *= 1-MathUtils.Map(z, map.totalHeight - borderSize, map.totalHeight, 0, 1);
-				}
-				borderT = Mathf.Max(borderT, 0);
-				heightMap[x + z * map.totalWidth] = Mathf.Lerp(0.2f, sample, borderCurve.Evaluate(borderT));
+				
+				heightMap[x + z * map.totalWidth] = sample;
 			}
 		}
 		landToSeaRatio /= heightMap.Length;
 		//Prevent the ratio of land to sea from being too low
-		if (landToSeaRatio < .4f)
+		if (landToSeaRatio < landSeaRatio)
 		{
 			reject++;
 			goto Start;
@@ -115,11 +103,18 @@ public class RandomGenerator : MapGenerator
 		return map;
 	}
 
-	public float GenerateHeight(int x, int y)
+	public void InitFilters()
+	{
+		noiseFilters = new INoiseFilter[noiseLayers.Length];
+		for (int i = 0; i < noiseLayers.Length; i++)
+			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings, seed);
+	}
+
+	public float GenerateHeight(float x, float z)
 	{
 		float elevation = 0;
 		float firstLayer = 0;
-		var point = new Vector3(x, 0, y) / noiseScale;
+		var point = new Vector3(x, 0, z) / noiseScale;
 		if (noiseFilters.Length > 0)
 		{
 			firstLayer = noiseFilters[0].Evaluate(point);
@@ -135,6 +130,26 @@ public class RandomGenerator : MapGenerator
 				elevation += noiseFilters[i].Evaluate(point) * mask;
 			}
 		}
-		return elevation;
+		var borderT = 1f;
+		var w = (int)Size.x * Map.Chunk.SIZE;
+		var h = (int)Size.y * Map.Chunk.SIZE;
+		if (x <= borderSize)
+		{
+			borderT *= MathUtils.Map(x, 0, borderSize, 0, 1);
+		}
+		if (x >= w - borderSize)
+		{
+			borderT *= 1 - MathUtils.Map(x, w - borderSize, w, 0, 1);
+		}
+		if (z <= borderSize)
+		{
+			borderT *= MathUtils.Map(z, 0, borderSize, 0, 1);
+		}
+		if (z >= h - borderSize)
+		{
+			borderT *= 1 - MathUtils.Map(z, h - borderSize, h, 0, 1);
+		}
+		borderT = Mathf.Max(borderT, 0);
+		return Mathf.Lerp(0.2f, elevation, borderCurve.Evaluate(borderT));
 	}
 }
