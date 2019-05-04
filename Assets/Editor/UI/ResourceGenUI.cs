@@ -7,10 +7,11 @@ using UnityEngine;
 public class ResourceGenUI : Editor
 {
 	private ResourceGenerator gen;
+	private bool fold;
 	private void OnEnable()
 	{
 		gen = target as ResourceGenerator;
-		gen.previewTex = new Texture2D(512, 512);
+		gen.previewTex = new Texture2D(256, 256);
 		GenTex();
 	}
 
@@ -26,7 +27,12 @@ public class ResourceGenUI : Editor
 			GenTex();
 		}
 		if(gen.preview)
-			GUILayout.Box(gen.previewTex, GUILayout.Height(EditorGUIUtility.currentViewWidth - 20), GUILayout.Width(EditorGUIUtility.currentViewWidth - 20));
+			GUILayout.Box(gen.previewTex, GUILayout.Height(Mathf.Min(EditorGUIUtility.currentViewWidth - 20, gen.previewTex.height)), GUILayout.Width(EditorGUIUtility.currentViewWidth - 20));
+		if (gen.resource != null)
+		{
+			fold = EditorGUILayout.InspectorTitlebar(fold, gen.resource);
+			Editor.CreateEditor(gen.resource).OnInspectorGUI();
+		}
 		
 	}
 

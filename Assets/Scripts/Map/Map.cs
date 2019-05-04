@@ -44,6 +44,7 @@ public class Map : IDisposable
 		totalWidth = width * Chunk.SIZE;
 		totalHeight = height * Chunk.SIZE;
 		Seed = seed;
+		UnityEngine.Random.InitState(seed);
 		length = width * height;
 		Chunks = new Chunk[length];
 		tileEdgeLength = edgeLength;

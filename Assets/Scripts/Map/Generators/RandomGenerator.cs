@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Unity.Collections;
@@ -13,6 +14,7 @@ public class RandomGenerator : MapGenerator
 	[System.Serializable]
 	public struct NoiseLayer
 	{
+		public string name;
 		public bool enabled;
 		public bool useFirstLayerAsMask;
 		public NoiseSettings noiseSettings;
@@ -51,7 +53,6 @@ public class RandomGenerator : MapGenerator
 		Start:
 		if (!useSeed)
 			seed = (int)(new System.DateTime(1990, 1, 1) - System.DateTime.Now).TotalSeconds;
-		UnityEngine.Random.InitState(seed);
 		var startTime = DateTime.Now;
 		InitFilters();
 		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength)
@@ -60,6 +61,7 @@ public class RandomGenerator : MapGenerator
 		};
 		var heightMap = new float[map.totalWidth * map.totalHeight];
 		var landToSeaRatio = 0f;
+		float min = float.MaxValue, max = float.MinValue;
 		for (int z = 0; z < map.totalWidth; z++)
 		{
 			for (int x = 0; x < map.totalHeight; x++)
@@ -67,24 +69,28 @@ public class RandomGenerator : MapGenerator
 				var sample = GenerateHeight(x, z);
 				if (sample > seaLevel)
 					landToSeaRatio++;
-				
+				if (sample < min)
+					min = sample;
+				if (sample > max)
+					max = sample;
 				heightMap[x + z * map.totalWidth] = sample;
 			}
 		}
 		landToSeaRatio /= heightMap.Length;
 		//Prevent the ratio of land to sea from being too low
-		if (landToSeaRatio < landSeaRatio)
+		if (landToSeaRatio <= landSeaRatio)
 		{
 			reject++;
 			goto Start;
 		}
 		Debug.Log($"Generate HightMap... {(DateTime.Now-startTime).TotalMilliseconds}ms {reject} Rejects");
 		startTime = DateTime.Now;
-		var tempMap = biomePainter.GetTempMap(map.totalWidth, map.totalHeight, heightMap, seaLevel, seed);
+		var tempMap = biomePainter.GetTempMap(map.totalWidth, map.totalHeight, heightMap, min, max, seaLevel);
 		Debug.Log($"Generate Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		startTime = DateTime.Now;
-		var moustureMap = biomePainter.GetMoistureMap(map.totalWidth, map.totalHeight, noiseFilters[0], noiseScale, seaLevel);
+		var moistureMap = biomePainter.GetMoistureMap(map.totalWidth, map.totalHeight, heightMap, min, max, seaLevel);
 		Debug.Log($"Generate Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		SaveBiomeMaps(tempMap, moistureMap, map.totalWidth, map.totalHeight);
 		startTime = DateTime.Now;
 		for (int z = 0; z < map.totalWidth; z++)
 		{
@@ -93,9 +99,8 @@ public class RandomGenerator : MapGenerator
 				var coord = HexCoords.FromOffsetCoords(x, z, edgeLength);
 				var i = x + z * map.totalWidth;
 				var height = heightMap[i];
-                int biomeId = Mathf.RoundToInt(tempMap[i]) + Mathf.RoundToInt(moustureMap[i]) * 4;
-                var tInfo = biomePainter.GetTile(biomeId, height, seaLevel);
-				map[coord] = tInfo.CreateTile(coord, height).SetBiome(biomeId, moustureMap[i], tempMap[i]);
+                var (tInfo, biomeId) = biomePainter.GetTile(moistureMap[i], tempMap[i], height, seaLevel);
+				map[coord] = tInfo.CreateTile(coord, height).SetBiome(biomeId, moistureMap[i], tempMap[i]);
 			}
 		}
 		Debug.Log($"Paint map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
@@ -108,6 +113,31 @@ public class RandomGenerator : MapGenerator
 		noiseFilters = new INoiseFilter[noiseLayers.Length];
 		for (int i = 0; i < noiseLayers.Length; i++)
 			noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(noiseLayers[i].noiseSettings, seed);
+	}
+
+	public void SaveBiomeMaps(float[] tMap, float[] mMap, int h, int w)
+	{
+		var tTex = new Texture2D(w, h);
+		var mTex = new Texture2D(w, h);
+		var bTex = new Texture2D(w, h);
+		var colors = new Color[16];
+		for (int i = 0; i < 16; i++)
+		{
+			colors[i] = Color.HSVToRGB(MathUtils.Map(i, 0, 16, 0, 1), .5f, .5f);
+		}
+		for (int z = 0; z < h; z++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				var i = x + z * w;
+				tTex.SetPixel(x, z, colors[Mathf.RoundToInt(tMap[i])]);
+				mTex.SetPixel(x, z, colors[Mathf.RoundToInt(mMap[i])]);
+				bTex.SetPixel(x, z, colors[Mathf.RoundToInt(tMap[i]) + Mathf.RoundToInt(mMap[i]) * 4]);
+			}
+		}
+		File.WriteAllBytes("tMap.png", tTex.EncodeToPNG());
+		File.WriteAllBytes("mMap.png", mTex.EncodeToPNG());
+		File.WriteAllBytes("bMap.png", bTex.EncodeToPNG());
 	}
 
 	public float GenerateHeight(float x, float z)
@@ -150,6 +180,6 @@ public class RandomGenerator : MapGenerator
 			borderT *= 1 - MathUtils.Map(z, h - borderSize, h, 0, 1);
 		}
 		borderT = Mathf.Max(borderT, 0);
-		return Mathf.Lerp(0.2f, elevation, borderCurve.Evaluate(borderT));
+		return Mathf.Max(0.2f, Mathf.Lerp(0.2f, elevation, borderCurve.Evaluate(borderT)));
 	}
 }

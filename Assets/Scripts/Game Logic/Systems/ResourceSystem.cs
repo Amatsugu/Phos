@@ -104,7 +104,7 @@ public class ResourceSystem : ComponentSystem
 		for (int i = 0; i < resources.Length; i++)
 		{
 			var cost = resources[i];
-			resCount[ResourceDatabase.GetResourceId(cost.name)] -= Mathf.FloorToInt(cost.ammount * multi);
+			resCount[cost.id] -= Mathf.FloorToInt(cost.ammount * multi);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class ResourceSystem : ComponentSystem
 		for (int i = 0; i < resources.Length; i++)
 		{
 			var cost = resources[i];
-			resCount[ResourceDatabase.GetResourceId(cost.name)] += Mathf.FloorToInt(cost.ammount * multi);
+			resCount[cost.id] += Mathf.FloorToInt(cost.ammount * multi);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class ResourceSystem : ComponentSystem
 	{
 		for (int i = 0; i < resources.Length; i++)
 		{
-			var id = ResourceDatabase.GetResourceId(resources[i].name);
+			var id = resources[i].id;
 			if (resCount[id] < Mathf.FloorToInt(resources[i].ammount * multi))
 				return false;
 		}

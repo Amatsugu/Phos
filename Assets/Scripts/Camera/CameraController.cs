@@ -33,37 +33,46 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		if(Input.GetKeyDown(KeyCode.X))
+		{
+			this.enabled = false;
+			GetComponent<Orbit>().enabled = true;
+		}
 		//Panning
 		var pos = transform.position;
 		var moveVector = Vector3.zero;
-
-		if (Input.GetKey(KeyCode.A))
-			moveVector.x = -1;
-		else if (Input.GetKey(KeyCode.D))
-			moveVector.x = 1;
-
-		if (Input.GetKey(KeyCode.W))
-			moveVector.z = 1;
-		else if (Input.GetKey(KeyCode.S))
-			moveVector.z = -1;
 		var mPos = Input.mousePosition;
 
-		if (edgePan)
+		if (!Input.GetKey(KeyCode.Mouse1))
 		{
-			//Edge Panning
-			if (mPos.x < edgePanSize)
-				moveVector.x = -1;
-			else if (mPos.x > Screen.width - edgePanSize)
-				moveVector.x = 1;
-			if (mPos.y < edgePanSize)
-				moveVector.z = -1;
-			else if (mPos.y > Screen.height - edgePanSize)
-				moveVector.z = 1;
-		}
 
-		if (Input.GetKey(KeyCode.LeftShift))
-			moveVector *= 2;
-		pos += moveVector * moveSpeed * Time.deltaTime;
+			if (Input.GetKey(KeyCode.A))
+				moveVector.x = -1;
+			else if (Input.GetKey(KeyCode.D))
+				moveVector.x = 1;
+
+			if (Input.GetKey(KeyCode.W))
+				moveVector.z = 1;
+			else if (Input.GetKey(KeyCode.S))
+				moveVector.z = -1;
+
+			if (edgePan)
+			{
+				//Edge Panning
+				if (mPos.x < edgePanSize)
+					moveVector.x = -1;
+				else if (mPos.x > Screen.width - edgePanSize)
+					moveVector.x = 1;
+				if (mPos.y < edgePanSize)
+					moveVector.z = -1;
+				else if (mPos.y > Screen.height - edgePanSize)
+					moveVector.z = 1;
+			}
+
+			if (Input.GetKey(KeyCode.LeftShift))
+				moveVector *= 2;
+			pos += moveVector * moveSpeed * Time.deltaTime;
+		}
 
 		//Drag Panning
 		Vector3 curPos;

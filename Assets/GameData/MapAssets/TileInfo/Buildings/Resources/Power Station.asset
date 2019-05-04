@@ -22,9 +22,11 @@ MonoBehaviour:
   size: 0
   powerTransferRadius: 0
   influenceRange: 3
-  cost: []
+  cost:
+  - id: 1
+    ammount: 2
   icon: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840, type: 3}
   production:
-  - name: Power
+  - id: 0
     ammount: 5
   consumption: []

@@ -43,7 +43,7 @@ public class MapRenderer : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		map.Dispose();
+		map?.Dispose();
 	}
 
 	public void Init()
@@ -60,7 +60,7 @@ public class MapRenderer : MonoBehaviour
 
 	
 
-	private void Update()
+	private void LateUpdate()
 	{
 		//TODO: Remove this when testing complete
 		if (Input.GetKey(KeyCode.R))
@@ -75,7 +75,7 @@ public class MapRenderer : MonoBehaviour
 			GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
 			map.UpdateView(_camPlanes);
 			_lastCamPos = _cam.transform.position;
-			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z + 2 * _ocean.localScale.z);
+			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z);
 		}
 
 		

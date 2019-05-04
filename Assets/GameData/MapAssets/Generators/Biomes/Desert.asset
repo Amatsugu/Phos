@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Desert
   m_EditorClassIdentifier: 
   surfaceLayers:
-  - tileInfo: {fileID: 11400000, guid: e1aad5cf5998f104ab3436a7be0e85d6, type: 2}
+  - tileInfo: {fileID: 11400000, guid: 924d6fd564bc2794ca9d46c7f1609b20, type: 2}
     startHeight: 0
   oceanLayers:
   - tileInfo: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}

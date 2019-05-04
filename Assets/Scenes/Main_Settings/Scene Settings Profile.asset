@@ -45,7 +45,7 @@ MonoBehaviour:
     m_Value: 0
   fogType:
     m_OverrideState: 0
-    m_Value: 3
+    m_Value: 2
 --- !u!114 &-6766024874727542473
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -183,6 +183,63 @@ MonoBehaviour:
   anamorphic:
     m_OverrideState: 0
     m_Value: 1
+--- !u!114 &-2502751849313514801
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2150ee00179b2f4418ea8b21a7e98eea, type: 3}
+  m_Name: ExponentialFog
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  colorMode:
+    m_OverrideState: 0
+    m_Value: 1
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    hdr: 1
+    showAlpha: 0
+    showEyeDropper: 1
+  density:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 1
+  maxFogDistance:
+    m_OverrideState: 0
+    m_Value: 5000
+    min: 0
+  mipFogMaxMip:
+    m_OverrideState: 0
+    m_Value: 0.5
+    min: 0
+    max: 1
+  mipFogNear:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+  mipFogFar:
+    m_OverrideState: 0
+    m_Value: 1000
+    min: 0
+  fogDistance:
+    m_OverrideState: 0
+    m_Value: 200
+    min: 0
+  fogBaseHeight:
+    m_OverrideState: 0
+    m_Value: 0
+  fogHeightAttenuation:
+    m_OverrideState: 0
+    m_Value: 0.2
+    min: 0
+    max: 1
 --- !u!114 &-2372723906829927774
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -537,6 +594,7 @@ MonoBehaviour:
   meanHeight:
     m_OverrideState: 0
     m_Value: 10
+    min: 1
   anisotropy:
     m_OverrideState: 0
     m_Value: 0
@@ -731,6 +789,7 @@ MonoBehaviour:
   meanHeight:
     m_OverrideState: 0
     m_Value: 10
+    min: 1
   anisotropy:
     m_OverrideState: 0
     m_Value: 0
@@ -923,14 +982,15 @@ MonoBehaviour:
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 94.5
+    m_Value: 509.12
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: 671
+    m_Value: 79.3
   meanHeight:
     m_OverrideState: 1
     m_Value: 671
+    min: 1
   anisotropy:
     m_OverrideState: 1
     m_Value: 0

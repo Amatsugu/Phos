@@ -6,6 +6,6 @@ using UnityEngine;
 public class ResourceDefination
 {
 	public string name;
-	public TileInfo resourceTile;
+	public ResourceTileInfo resourceTile;
 	public int spriteID;
 }

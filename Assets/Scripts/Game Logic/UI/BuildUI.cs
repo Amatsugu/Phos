@@ -20,8 +20,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public BuildingTileInfo[] Defense;
 	public HQTileInfo HQTile;
 
-	public MobileUnitInfo testUnit;
-
 	/*	UI	*/
 	public UIInfoBanner infoBanner;
 	public BaseNameWindowUI baseNameUI;
@@ -167,7 +165,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 									infoBanner.SetActive(false);
 									_cam.GetComponent<CameraController>().enabled = true;
 									baseNameText.text = baseNameUI.text.text;
-									testUnit.Instantiate(selectedTile.SurfacePoint, Quaternion.identity);
+									//testUnit.Instantiate(selectedTile.SurfacePoint, Quaternion.identity);
 								};
 							}
 						}

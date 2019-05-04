@@ -22,11 +22,15 @@ MonoBehaviour:
   size: 0
   powerTransferRadius: 0
   influenceRange: 3
-  cost: []
+  cost:
+  - id: 0
+    ammount: 5
+  - id: 1
+    ammount: 5
   icon: {fileID: -5109177819046786902, guid: 010e16e474393c44cace5a0040035840, type: 3}
   production:
-  - name: Stone
+  - id: 1
     ammount: 5
   consumption:
-  - name: Power
+  - id: 0
     ammount: 1

@@ -16,27 +16,48 @@ MonoBehaviour:
   - name: Power
     resourceTile: {fileID: 0}
     spriteID: 0
-  - name: Stone
-    resourceTile: {fileID: 11400000, guid: f998f30b51bed924bbcfcf0266a9321b, type: 2}
+  - name: Metal
+    resourceTile: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
     spriteID: 1
-  - name: Food
-    resourceTile: {fileID: 11400000, guid: c24e58ddad3ec62478f1d6dc66af159f, type: 2}
+  - name: Carbon
+    resourceTile: {fileID: 11400000, guid: b5c46715dc3c516429087c81d7a495fa, type: 2}
     spriteID: 2
   - name: Water
-    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    resourceTile: {fileID: 0}
     spriteID: 3
-  - name: Iron
-    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
-    spriteID: 1
-  - name: Coal
-    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
-    spriteID: 1
-  - name: Copper
-    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
-    spriteID: 1
+  - name: Composite Metal
+    resourceTile: {fileID: 0}
+    spriteID: 4
+  - name: '[Ph]Fuel'
+    resourceTile: {fileID: 0}
+    spriteID: 5
+  - name: Silver
+    resourceTile: {fileID: 0}
+    spriteID: 6
   - name: Gold
-    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
+    resourceTile: {fileID: 0}
     spriteID: 1
-  - name: Steel
-    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
-    spriteID: 1
+  - name: Electrum
+    resourceTile: {fileID: 0}
+    spriteID: 7
+  - name: Deuterium
+    resourceTile: {fileID: 0}
+    spriteID: 8
+  - name: Tritium
+    resourceTile: {fileID: 0}
+    spriteID: 9
+  - name: Carbon Nanotubes
+    resourceTile: {fileID: 0}
+    spriteID: 10
+  - name: Phosphophylite
+    resourceTile: {fileID: 0}
+    spriteID: 11
+  - name: Super Conductor
+    resourceTile: {fileID: 0}
+    spriteID: 12
+  - name: Phos Metal
+    resourceTile: {fileID: 0}
+    spriteID: 13
+  - name: Refined Phos
+    resourceTile: {fileID: 0}
+    spriteID: 14

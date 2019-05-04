@@ -31,7 +31,6 @@ public class ResourceGenerator : FeatureGenerator
 		{
 			_filter = NoiseFilterFactory.CreateNoiseFilter(settings, map.Seed);
 			_adjustedDensity = MathUtils.Map(density, 0, 1, 0, 1 - (settings.type == NoiseSettings.FilterType.Simple ? settings.simpleNoiseSettings.minValue : settings.rigidNoiseSettings.minValue));
-			Debug.Log(_adjustedDensity);
 		}
 		for (int z = 0; z < map.totalHeight; z++)
 		{

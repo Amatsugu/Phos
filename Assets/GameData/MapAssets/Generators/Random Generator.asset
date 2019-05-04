@@ -18,6 +18,7 @@ MonoBehaviour:
   edgeLength: 1
   featureGenerators:
   - {fileID: 11400000, guid: 93401847f3613cc40b2de43739f80765, type: 2}
+  - {fileID: 11400000, guid: c9e48f60e45c00e4083aa5568f49129b, type: 2}
   useJobs: 0
   Regen: 0
   borderSize: 64
@@ -48,7 +49,8 @@ MonoBehaviour:
   biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
   noiseScale: 350
   noiseLayers:
-  - enabled: 1
+  - name: Shape
+    enabled: 1
     useFirstLayerAsMask: 0
     noiseSettings:
       type: 0
@@ -69,7 +71,8 @@ MonoBehaviour:
         minValue: 0.03
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.34
-  - enabled: 1
+  - name: Rough
+    enabled: 1
     useFirstLayerAsMask: 0
     noiseSettings:
       type: 0
@@ -90,7 +93,8 @@ MonoBehaviour:
         minValue: 0
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0
-  - enabled: 1
+  - name: Mountains
+    enabled: 1
     useFirstLayerAsMask: 1
     noiseSettings:
       type: 1
@@ -111,9 +115,31 @@ MonoBehaviour:
         minValue: 0
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 0.35
+  - name: Valleys
+    enabled: 1
+    useFirstLayerAsMask: 0
+    noiseSettings:
+      type: 1
+      simpleNoiseSettings:
+        strength: 1.35
+        layerCount: 5
+        baseRoughness: 2.86
+        roughness: 1.94
+        persistence: 0.88
+        minValue: 1.7
+        center: {x: 4.54, y: 0, z: 0}
+      rigidNoiseSettings:
+        strength: -1
+        layerCount: 3
+        baseRoughness: 3.87
+        roughness: 5.8
+        persistence: 0
+        minValue: 0
+        center: {x: 0, y: 0, z: 0}
+        weightMultiplier: 4.57
   useSeed: 0
-  seed: -925600639
-  landSeaRatio: 0.4
+  seed: -925788628
+  landSeaRatio: 0.25
   biomeFold: 1
   preview: 1
   previewTex: {fileID: 0}

@@ -9,12 +9,12 @@ public class MapGeneratorUI : Editor
 	private RandomGenerator creator;
 	public static Editor editor;
 	private bool _autoRegen;
-	private float _lstr;
+	private float _lsr;
 
 	private void OnEnable()
 	{
 		creator = target as RandomGenerator;
-		creator.previewTex = new Texture2D(400, 400);
+		creator.previewTex = new Texture2D(256, 256);
 		GenTex();
 	}
 
@@ -48,9 +48,9 @@ public class MapGeneratorUI : Editor
 		{
 			if (hasChange)
 				GenTex();
-			if (_lstr < creator.landSeaRatio)
-				GUILayout.Label($"<color=red><b>Land to Sea Ratio {_lstr} < {creator.landSeaRatio}</b></color>", new GUIStyle { richText = true });
-			if(GUILayout.Button(creator.previewTex, GUILayout.Height(EditorGUIUtility.currentViewWidth - 20), GUILayout.Width(EditorGUIUtility.currentViewWidth - 20)))
+			if (_lsr < creator.landSeaRatio)
+				GUILayout.Label($"<color=red><b>Land to Sea Ratio {_lsr} < {creator.landSeaRatio}</b></color>", new GUIStyle { richText = true });
+			if(GUILayout.Button(creator.previewTex, new GUIStyle { border = new RectOffset(0,0,0,0), imagePosition = ImagePosition.ImageOnly, alignment = TextAnchor.MiddleCenter}, GUILayout.Height(Mathf.Min(EditorGUIUtility.currentViewWidth - 20, creator.previewTex.height)), GUILayout.Width(EditorGUIUtility.currentViewWidth - 20)))
 			{
 				creator.seed++;
 				GenTex();
@@ -95,7 +95,7 @@ public class MapGeneratorUI : Editor
 				hMap[x + z * w] = sample;
 			}
 		}
-		_lstr = landToSeaRatio / hMap.Length;
+		_lsr = landToSeaRatio / hMap.Length;
 		for (int z = 0; z < h; z++)
 		{
 			for (int x = 0; x < w; x++)
@@ -107,9 +107,9 @@ public class MapGeneratorUI : Editor
 					if (z - 1 >= 0)
 					{
 						var b = hMap[x + (z - 1) * w];
-						if (a - b < -.1f)
+						if (a - b < -.3f)
 							color = new Color(.4f, .9f, .4f);
-						else if (a - b > .1f)
+						else if (a - b > .3f)
 							color = new Color(0, .6f, 0);
 					}
 					creator.previewTex.SetPixel(x, z, color);
