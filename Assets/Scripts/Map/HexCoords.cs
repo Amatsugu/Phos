@@ -70,6 +70,19 @@ public struct HexCoords
 
 	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
 
+	public static (float X, float Z) OffsetToWorldPos(int x, int z, float innerRadius, float edgeLength)
+	{
+		var worldX = (x + z * .5f - z / 2) * (innerRadius * 2f);
+		var worldZ = z * (edgeLength * 1.5f);
+		return (worldX, worldZ);
+	}
+
+	public static Vector3 OffsetToWorldPosXZ(int x, int z, float innerRadius, float edgeLength)
+	{
+		var (wX, wZ) = OffsetToWorldPos(x, z, innerRadius, edgeLength);
+		return new Vector3(wX, 0, wZ);
+	}
+
 	public override string ToString() => $"({x}, {y}, {z})";
 
 	public static bool operator ==(HexCoords a, HexCoords b) => a.Equals(b);

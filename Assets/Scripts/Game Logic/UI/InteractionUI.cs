@@ -12,6 +12,8 @@ public class InteractionUI : MonoBehaviour
 	private Tile _selectedTile = null;
 	private bool _uiBlocked;
 	private int _id = -1;
+	private Tile _start, _end;
+
 
 	void Start()
 	{
@@ -45,22 +47,53 @@ public class InteractionUI : MonoBehaviour
 			interactionPanel.HidePanel();
 		if (!buildUI.placeMode)
 		{
-			if (Input.GetKey(KeyCode.Mouse0) && !_uiBlocked && !buildUI.uiBlock)
+			if (!_uiBlocked && !buildUI.uiBlock)
 			{
-				var ray = _cam.ScreenPointToRay(mPos);
-				var tile = Map.ActiveMap.GetTileFromRay(ray);
-				if(tile != null)
+
+				if (Input.GetKeyDown(KeyCode.Mouse0))
 				{
-					if (tile.IsOccupied)
+					var ray = _cam.ScreenPointToRay(mPos);
+					_start = Map.ActiveMap.GetTileFromRay(ray);
+					interactionPanel.HidePanel();
+				}
+				if(Input.GetKey(KeyCode.Mouse0))
+				{
+					var ray = _cam.ScreenPointToRay(mPos);
+					_end = Map.ActiveMap.GetTileFromRay(ray);
+					if(_start != _end && _start != null && _end != null)
 					{
-						Debug.Log($"Unit Selected {_id = tile.GetUnits()[0]}");
-					}else if(tile is BuildingTile)
+						//Drag Select
+						var p0 = _start.Coords.worldXZ;
+						var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetX, _start.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+						var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetX, _end.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+						var p3 = _end.Coords.worldXZ;
+						Debug.DrawLine(p0, p1, Color.white);
+						Debug.DrawLine(p1, p3, Color.white);
+						Debug.DrawLine(p0, p2, Color.white);
+						Debug.DrawLine(p2, p3, Color.white);
+					}
+				}
+				if (Input.GetKeyUp(KeyCode.Mouse0))
+				{
+					var ray = _cam.ScreenPointToRay(mPos);
+					_end = Map.ActiveMap.GetTileFromRay(ray);
+					if (_start == _end)
 					{
-						ShowPanel(tile);
+						if (_end != null)
+						{
+							if (_end.IsOccupied)
+							{
+								Debug.Log($"Unit Selected {_id = _end.GetUnits()[0]}");
+							}
+							else if (_end is BuildingTile)
+							{
+								ShowPanel(_end);
+							}
+						}
 					}
 				}
 			}
-			if(Input.GetKey(KeyCode.Mouse1) && _id != -1)
+			if(Input.GetKeyUp(KeyCode.Mouse1) && _id != -1)
 			{
 				var ray = _cam.ScreenPointToRay(mPos);
 				var tile = Map.ActiveMap.GetTileFromRay(ray);

@@ -362,6 +362,39 @@ public class Map : IDisposable
 		return selection;
 	}
 
+	public List<Tile> BoxSelect(HexCoords left, HexCoords right)
+	{
+		var selection = new List<Tile>();
+		int xMin, xMax, zMin, zMax;
+		if(left.offsetX < right.offsetX)
+		{
+			xMin = left.offsetX;
+			xMax = right.offsetX;
+		}else
+		{
+			xMax = left.offsetX;
+			xMin = right.offsetX;
+		}
+		if (left.offsetZ < right.offsetZ)
+		{
+			zMin = left.offsetZ;
+			zMax = right.offsetZ;
+		}
+		else
+		{
+			zMax = left.offsetZ;
+			zMin = right.offsetZ;
+		}
+		for (int z = zMin; z < zMax; z++)
+		{
+			for (int x = xMin; x < xMax; x++)
+			{
+				selection.Add(this[HexCoords.FromOffsetCoords(x, z, tileEdgeLength)]);
+			}
+		}
+		return selection;
+	}
+
 	public enum FlattenMode
 	{
 		Center,
