@@ -13,7 +13,8 @@ public class Tile
 	public HexCoords Coords { get; protected set; }
 	public Vector3 SurfacePoint { get; protected set; }
 	public float Height { get; protected set; }
-	public bool IsOccupied { get => _occupyingUnit != -1; }
+	public bool IsOccupied { get => _occupancyCount > 0; }
+	public bool IsFullyOccupied { get => _occupancyCount == MAX_OCCUPANCY; }
 
 	public readonly TileInfo info;
 
@@ -24,7 +25,9 @@ public class Tile
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
 
-	private int _occupyingUnit = -1;
+	public const int MAX_OCCUPANCY = 3;
+	private int[] _occupyingUnits = new int[MAX_OCCUPANCY];
+	private int _occupancyCount = 0;
 
 	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
 	{
@@ -42,22 +45,53 @@ public class Tile
 		return this;
 	}
 
-	public bool OccupyTile(MobileUnit unit)
+	public bool OccupyTile(int unitId)
 	{
-		if (_occupyingUnit != -1)
+		if (_occupancyCount == MAX_OCCUPANCY)
 			return false;
-		_occupyingUnit = unit.id;
+		for (int i = 0; i < MAX_OCCUPANCY; i++)
+		{
+			if (_occupyingUnits[i] == 0)
+			{
+				_occupyingUnits[i] = unitId;
+				_occupancyCount++;
+				break;
+			}
+		}
 		return true;
 	}
 
-	public void DeOccupyTile()
+	public void DeOccupyTile(int unitId)
 	{
-		_occupyingUnit = -1;
+		if(_occupancyCount == 0)
+			throw new Exception("There are no units occupying this tile");
+		for (int i = 0; i < MAX_OCCUPANCY; i++)
+		{
+			if(_occupyingUnits[i] == unitId)
+			{
+				_occupyingUnits[i] = 0;
+				_occupancyCount--;
+				return;
+			}
+		}
+		throw new Exception($"Unit [{unitId}] is not occupying this tile.");
 	}
 
-	public int GetUnit()
+	public int GetOccupancyId(int unitId)
 	{
-		return _occupyingUnit;
+		if (_occupancyCount == 0)
+			throw new Exception("There are no units occupying this tile");
+		for (int i = 0; i < MAX_OCCUPANCY; i++)
+		{
+			if (_occupyingUnits[i] == unitId)
+				return i;
+		}
+		throw new Exception($"Unit [{unitId}] is not occupying this tile.");
+	}
+
+	public int[] GetUnits()
+	{
+		return _occupyingUnits;
 	}
 
 	// override object.Equals

@@ -36,7 +36,7 @@ public class Map : IDisposable
 
 	public HQTile HQ;
 	public Dictionary<int, MobileUnit> units;
-	private int _nextId = 0;
+	private int _nextId = 1;
 
 	public Map(int height, int width, int seed, float edgeLength = 1)
 	{
@@ -78,7 +78,7 @@ public class Map : IDisposable
 			_bounds = new Bounds
 			{
 				min = worldCoord.worldXZ,
-				max = worldCoord.worldXZ + new Vector3(SIZE * coord.shortDiagonal, 100, SIZE * 1.5f)
+				max = worldCoord.worldXZ + new Vector3(SIZE * ActiveMap.shortDiagonal, 100, SIZE * 1.5f)
 			};
 			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent);
 		}
@@ -449,6 +449,8 @@ public class Map : IDisposable
 	}
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
+
+	public List<Tile> GetPath(HexCoords src, HexCoords dst, float maxIncline = float.MaxValue, Func<Tile, bool?> filter = null) => GetPath(this[src], this[dst], maxIncline, filter);
 
 	public List<Tile> GetPath(Tile src, Tile dst, float maxIncline = float.MaxValue, Func<Tile, bool?> filter = null)
 	{

@@ -53,7 +53,7 @@ public class InteractionUI : MonoBehaviour
 				{
 					if (tile.IsOccupied)
 					{
-						Debug.Log($"Unit Selected {_id = tile.GetUnit()}");
+						Debug.Log($"Unit Selected {_id = tile.GetUnits()[0]}");
 					}else if(tile is BuildingTile)
 					{
 						ShowPanel(tile);

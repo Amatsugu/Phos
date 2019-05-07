@@ -14,10 +14,6 @@ public struct HexCoords
 	//Hex info
 	[HideInInspector]
 	public readonly float edgeLength;
-	[HideInInspector]
-	public readonly float innerRadius;
-	[HideInInspector]
-	public readonly float shortDiagonal;
 	//World Pos
 	public readonly float worldX;
 	public readonly float worldZ;
@@ -34,8 +30,7 @@ public struct HexCoords
 		this.y = y;
 		this.z = -x - y;
 		this.edgeLength = edgeLength;
-		innerRadius = Mathf.Sqrt(3f) / 2f * this.edgeLength;
-		shortDiagonal = Mathf.Sqrt(3f) * this.edgeLength;
+		var innerRadius = Mathf.Sqrt(3f) / 2f * this.edgeLength;
 		offsetX = x + y / 2;
 		offsetZ = y;
 		worldX = (offsetX + offsetZ * .5f - offsetZ / 2) * (innerRadius * 2f);

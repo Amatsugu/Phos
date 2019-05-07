@@ -18,3 +18,8 @@ public struct Destination : IComponentData
 {
 	public float3 Value;
 }
+
+public struct UnitId : IComponentData
+{
+	public int value;
+}

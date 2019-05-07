@@ -13,17 +13,18 @@ public class MobileUnitInfo : MeshEntityRotatable
 	{
 		return base.GetComponents().Concat(new ComponentType[] {
 			typeof(MoveSpeed),
-			typeof(Heading)
+			typeof(Heading),
+			typeof(UnitId)
 		}).ToArray();
 	}
 
 
-	public Entity Instantiate(Vector3 pos, Quaternion rotation)
+	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id)
 	{
-		Debug.Log($"Move speed {moveSpeed}");
 		var e = Instantiate(pos, Vector3.one, rotation);
 		Map.EM.SetComponentData(e, new MoveSpeed { Value = moveSpeed });
 		Map.EM.SetComponentData(e, new Heading { Value = Vector3.forward });
+		Map.EM.SetComponentData(e, new UnitId { value = id });
 		return e;
 	}
 }

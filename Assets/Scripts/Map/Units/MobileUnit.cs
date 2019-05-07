@@ -27,10 +27,10 @@ public class MobileUnit
 		if (IsRendered)
 			return _unitEntity;
 		IsRendered = true;
-		return _unitEntity =  info.Instantiate(_occupiedTile.worldXZ, Quaternion.identity);
+		return _unitEntity =  info.Instantiate(_occupiedTile.worldXZ, Quaternion.identity, id);
 	}
 
-	public void Shown(bool isShown)
+	public void Show(bool isShown)
 	{
 		if (isShown == _isShown)
 			return;
@@ -50,6 +50,7 @@ public class MobileUnit
 	public virtual void Die()
 	{
 		//TODO: Death Effect
+		Map.ActiveMap[_occupiedTile].DeOccupyTile(id);
 		Destroy();
 	}
 
@@ -60,10 +61,13 @@ public class MobileUnit
 
 	public void OccupyTile(Tile tile)
 	{
+		if (_occupiedTile == tile.Coords)
+			return;
 		if (_occupiedTile.isCreated)
-			Map.ActiveMap[_occupiedTile].DeOccupyTile();
-		if (tile.OccupyTile(this))
+			Map.ActiveMap[_occupiedTile].DeOccupyTile(id);
+		if (tile.OccupyTile(id))
 			_occupiedTile = tile.Coords;
+		Show(tile.IsShown);
 	}
 
 	public override int GetHashCode()
