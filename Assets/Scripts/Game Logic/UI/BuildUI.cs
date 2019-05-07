@@ -165,7 +165,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 									infoBanner.SetActive(false);
 									_cam.GetComponent<CameraController>().enabled = true;
 									baseNameText.text = baseNameUI.text.text;
-									//testUnit.Instantiate(selectedTile.SurfacePoint, Quaternion.identity);
 								};
 							}
 						}

@@ -15,12 +15,12 @@ public class HQTile : BuildingTile
 	public override void OnPlaced()
 	{
 		var info = this.info as HQTileInfo;
-		var tilesToReplace = Map.ActiveMap.HexSelect(Coords, info.size);
-		for (int i = 0; i < tilesToReplace.Count; i++)
+		var tilesToReplace = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < tilesToReplace.Length; i++)
 		{
-			if(tilesToReplace[i] != this)
-				Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.foundationTile);
+			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTile);
 		}
+		Map.ActiveMap.AddUnit(hqInfo.unitInfo, this);
 	}
 
 	public override void OnHeightChanged()

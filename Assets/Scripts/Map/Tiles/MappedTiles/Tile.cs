@@ -13,6 +13,7 @@ public class Tile
 	public HexCoords Coords { get; protected set; }
 	public Vector3 SurfacePoint { get; protected set; }
 	public float Height { get; protected set; }
+	public bool IsOccupied { get => _occupyingUnit != -1; }
 
 	public readonly TileInfo info;
 
@@ -22,6 +23,8 @@ public class Tile
 
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
+
+	private int _occupyingUnit = -1;
 
 	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
 	{
@@ -37,6 +40,24 @@ public class Tile
 		this.temperature = temperature;
 		biomeId = biome;
 		return this;
+	}
+
+	public bool OccupyTile(MobileUnit unit)
+	{
+		if (_occupyingUnit != -1)
+			return false;
+		_occupyingUnit = unit.id;
+		return true;
+	}
+
+	public void DeOccupyTile()
+	{
+		_occupyingUnit = -1;
+	}
+
+	public int GetUnit()
+	{
+		return _occupyingUnit;
 	}
 
 	// override object.Equals

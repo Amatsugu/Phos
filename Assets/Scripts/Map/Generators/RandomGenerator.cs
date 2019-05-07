@@ -88,7 +88,7 @@ public class RandomGenerator : MapGenerator
 		var tempMap = biomePainter.GetTempMap(map.totalWidth, map.totalHeight, heightMap, min, max, seaLevel);
 		Debug.Log($"Generate Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		startTime = DateTime.Now;
-		var moistureMap = biomePainter.GetMoistureMap(map.totalWidth, map.totalHeight, heightMap, min, max, seaLevel);
+		var moistureMap = biomePainter.GetMoistureMap(map.totalWidth, map.totalHeight, noiseFilters[0], noiseScale);
 		Debug.Log($"Generate Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		SaveBiomeMaps(tempMap, moistureMap, map.totalWidth, map.totalHeight);
 		startTime = DateTime.Now;

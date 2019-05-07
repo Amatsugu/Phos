@@ -11,6 +11,7 @@ public class InteractionUI : MonoBehaviour
 
 	private Tile _selectedTile = null;
 	private bool _uiBlocked;
+	private int _id = -1;
 
 	void Start()
 	{
@@ -48,9 +49,24 @@ public class InteractionUI : MonoBehaviour
 			{
 				var ray = _cam.ScreenPointToRay(mPos);
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
-				if (tile != null && tile is BuildingTile)
+				if(tile != null)
 				{
-					ShowPanel(tile);
+					if (tile.IsOccupied)
+					{
+						Debug.Log($"Unit Selected {_id = tile.GetUnit()}");
+					}else if(tile is BuildingTile)
+					{
+						ShowPanel(tile);
+					}
+				}
+			}
+			if(Input.GetKey(KeyCode.Mouse1) && _id != -1)
+			{
+				var ray = _cam.ScreenPointToRay(mPos);
+				var tile = Map.ActiveMap.GetTileFromRay(ray);
+				if(tile != null)
+				{
+					Map.ActiveMap.units[_id].MoveTo(tile.SurfacePoint);
 				}
 			}
 		}

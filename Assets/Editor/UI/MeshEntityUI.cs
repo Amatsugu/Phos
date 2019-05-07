@@ -31,10 +31,10 @@ public class MeshEntityUI : Editor
 		}
 		if (meshEntity is HQTileInfo hq)
 		{
-			if (hq.foundationTile != null && hq.foundationTile != hq)
+			if (hq.subHQTile != null && hq.subHQTile != hq)
 			{
-				EditorGUILayout.InspectorTitlebar(true, hq.foundationTile);
-				CreateEditor(hq.foundationTile).OnInspectorGUI();
+				EditorGUILayout.InspectorTitlebar(true, hq.subHQTile);
+				CreateEditor(hq.subHQTile).OnInspectorGUI();
 			}
 		}
 	}

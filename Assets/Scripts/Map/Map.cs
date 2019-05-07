@@ -35,7 +35,8 @@ public class Map : IDisposable
 	public Chunk[] Chunks { get; }
 
 	public HQTile HQ;
-	private List<BuildingTile> _powerTransferTiles;
+	public Dictionary<int, MobileUnit> units;
+	private int _nextId = 0;
 
 	public Map(int height, int width, int seed, float edgeLength = 1)
 	{
@@ -51,7 +52,7 @@ public class Map : IDisposable
 		innerRadius = Mathf.Sqrt(3f) / 2f * tileEdgeLength;
 		shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
 		tongDiagonal = 2 * tileEdgeLength;
-		_powerTransferTiles = new List<BuildingTile>();
+		units = new Dictionary<int, MobileUnit>(500);
 		ActiveMap = this;
 	}
 
@@ -215,6 +216,16 @@ public class Map : IDisposable
 
 	}
 
+	public MobileUnit AddUnit(MobileUnitInfo unitInfo, Tile tile)
+	{
+		var id = _nextId++;
+		var unit = new MobileUnit(id, unitInfo, tile);
+		units.Add(id, unit);
+		if (IsRendered)
+			unit.Render();
+		return unit;
+	}
+
 	public TileInfo[] GetTileTyes()
 	{
 		return Chunks.SelectMany(c => c.Tiles.Select(t => t.info)).Distinct().ToArray();
@@ -238,6 +249,11 @@ public class Map : IDisposable
 		IsRendered = true;
 		if (EM == null)
 			EM = entityManager;
+		foreach (var unit in units)
+		{
+			if (!unit.Value.IsRendered)
+				unit.Value.Render();
+		}
 		var start = DateTime.Now;
 		for (int i = 0; i < Chunks.Length; i++)
 			Chunks[i].Render();
@@ -406,11 +422,6 @@ public class Map : IDisposable
 		}
 	}
 
-	public List<Tile> GetPoweredTiles()
-	{
-		return _powerTransferTiles.SelectMany(t => HexSelect(t.Coords, t.buildingInfo.powerTransferRadius)).Distinct().ToList();
-	}
-
 	public Tile ReplaceTile(Tile tile, TileInfo newTile)
 	{
 		if (!IsRendered)
@@ -420,24 +431,9 @@ public class Map : IDisposable
 		var index = chunkX + chunkZ * width;
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 		var nT = Chunks[index].ReplaceTile(localCoord, newTile);
-		switch (nT)
-		{
-			case HQTile t:
-				_powerTransferTiles.Add(HQ = t);
-				break;
-			case PoweredBuildingTile t:
-				_powerTransferTiles.Add(t);
-				break;
-		}
-		switch (tile)
-		{
-			case HQTile t:
-				_powerTransferTiles.Remove(t);
-				break;
-			case PoweredBuildingTile t:
-				_powerTransferTiles.Remove(t);
-				break;
-		}
+		if (nT is HQTile t)
+			HQ = t;
+	
 		tile.OnRemoved();
 		tile.Destroy();
 		nT.OnPlaced();
