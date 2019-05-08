@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
@@ -83,7 +84,14 @@ public class Tile
 			if (_occupyingUnits[i] == unitId)
 				return i;
 		}
-		throw new Exception($"Unit [{unitId}] is not occupying this tile.");
+		throw new Exception($"Unit [{unitId}] is not occupying this tile. Occupants [{string.Join(", ",_occupyingUnits)}]");
+	}
+
+	public float3 GetOccipancyPos(int unitId)
+	{
+		var oId = GetOccupancyId(unitId);
+		var a = (360f / MAX_OCCUPANCY) * oId * Mathf.Deg2Rad;
+		return new float3(Mathf.Cos(a), 0, Mathf.Sin(a));
 	}
 
 	public int[] GetUnits()

@@ -524,7 +524,7 @@ public class Map : IDisposable
 					continue;
 				if (Mathf.Abs(neighbor.Height - curTileNode.tile.Height) > maxIncline)
 					continue;
-				if(filter != null && !filter(neighbor) && !neighbor.Equals(dst))
+				if(filter != null && !filter(neighbor) && !neighbor.Equals(dst) && !neighbor.Equals(src))
 				{
 					continue;
 				}

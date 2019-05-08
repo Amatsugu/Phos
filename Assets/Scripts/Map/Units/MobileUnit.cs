@@ -40,11 +40,15 @@ public class MobileUnit
 			Map.EM.AddComponent(_unitEntity, typeof(Frozen));
 	}
 
-	public void MoveTo(Vector3 pos)
+	public void MoveTo(Vector3 pos, int groupId)
 	{
 		if(!Map.EM.HasComponent<Destination>(_unitEntity))
+		{
 			Map.EM.AddComponent(_unitEntity, typeof(Destination));
+			Map.EM.AddComponent(_unitEntity, typeof(PathGroup));
+		}
 		Map.EM.SetComponentData(_unitEntity, new Destination { Value = pos });
+		Map.EM.SetComponentData(_unitEntity, new PathGroup { Value = groupId });
 	}
 
 	public virtual void Die()
@@ -59,15 +63,19 @@ public class MobileUnit
 		Map.EM.DestroyEntity(_unitEntity);
 	}
 
-	public void OccupyTile(Tile tile)
+	public bool OccupyTile(Tile tile)
 	{
 		if (_occupiedTile == tile.Coords)
-			return;
+			return true;
 		if (_occupiedTile.isCreated)
 			Map.ActiveMap[_occupiedTile].DeOccupyTile(id);
 		if (tile.OccupyTile(id))
+		{
 			_occupiedTile = tile.Coords;
-		Show(tile.IsShown);
+			Show(tile.IsShown);
+			return true;
+		}
+		return false;
 	}
 
 	public override int GetHashCode()

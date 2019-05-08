@@ -28,3 +28,16 @@ public struct NextTile : IComponentData
 {
 	public float3 Value;
 }
+
+public struct Path : ISharedComponentData
+{
+	public List<Tile> Value;
+}
+
+public struct PathGroup : IComponentData
+{
+	public int Value;
+	public int Delay;
+	public int Progress;
+}
+

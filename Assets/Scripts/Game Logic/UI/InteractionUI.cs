@@ -15,7 +15,7 @@ public class InteractionUI : MonoBehaviour
 	private bool _uiBlocked;
 	private List<int> _selectedUnits;
 	private Tile _start, _end;
-
+	private int groupId;
 
 	void Start()
 	{
@@ -27,11 +27,7 @@ public class InteractionUI : MonoBehaviour
 		interactionPanel.OnUpgradeClick += UpgradeTile;
 		interactionPanel.OnDestroyClick += DestroyTile;
 		selectionRect.gameObject.SetActive(false);
-		for (int r = 0; r < 10; r++)
-		{
-			var s = Map.ActiveMap.HexSelect(HexCoords.FromPosition(new Vector3(100, 0, 100), 1), r);
-			Debug.Log($"R {r} P: {1 + 3*(r + 1)*(r)} C: {s.Count}");
-		}
+			//Debug.Log($"R {r} P: {1 + 3*(r + 1)*(r)} C: {s.Count}");
 	}
 
 	void DestroyTile()
@@ -132,16 +128,22 @@ public class InteractionUI : MonoBehaviour
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
 				if(tile != null)
 				{
-					IEnumerable<Tile> selection = Map.ActiveMap.HexSelect(tile.Coords, 1).Where(t => !(t is BuildingTile));
-					var r = 1;
-					while(selection.Count() < _selectedUnits.Count)
-					{
+					var c = _selectedUnits.Count / Tile.MAX_OCCUPANCY;
+					c++;
+					var r = CalculateR(c);
+					var selection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
+					while (selection.Count() < c)
 						selection = Map.ActiveMap.HexSelect(tile.Coords, ++r).Where(t => !(t is BuildingTile));
-					}
 					var s = selection.ToArray();
-					for (int i = 0; i < _selectedUnits.Count; i++)
+					for (int t = 0; t < s.Length; t++)
 					{
-						Map.ActiveMap.units[_selectedUnits[i]].MoveTo(s[i].SurfacePoint);
+						for (int i = t * Tile.MAX_OCCUPANCY; i < (t * Tile.MAX_OCCUPANCY) + Tile.MAX_OCCUPANCY; i++)
+						{
+							if (i >= _selectedUnits.Count)
+								break;
+							Map.ActiveMap.units[_selectedUnits[i]].MoveTo(s[t].SurfacePoint, groupId);
+						}
+						groupId++;
 					}
 				}
 			}
@@ -163,6 +165,14 @@ public class InteractionUI : MonoBehaviour
 			interactionPanel.AnchoredPosition = uiPos;
 		}
 
+	}
+
+	int CalculateR(int units)
+	{
+		var r = 0;
+		while ((1 + 3 * (r + 1) * (r)) < units)
+			r++;
+		return r;
 	}
 
 	void ShowPanel(Tile tile)
