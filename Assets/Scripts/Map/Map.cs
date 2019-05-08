@@ -24,7 +24,7 @@ public class Map : IDisposable
 	public readonly int totalWidth;
 	public readonly int length;
 	public readonly float tileEdgeLength;
-	public readonly float tongDiagonal;
+	public readonly float longDiagonal;
 	public readonly float shortDiagonal;
 	public readonly float innerRadius;
 
@@ -51,7 +51,7 @@ public class Map : IDisposable
 		tileEdgeLength = edgeLength;
 		innerRadius = Mathf.Sqrt(3f) / 2f * tileEdgeLength;
 		shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
-		tongDiagonal = 2 * tileEdgeLength;
+		longDiagonal = 2 * tileEdgeLength;
 		units = new Dictionary<int, MobileUnit>(500);
 		ActiveMap = this;
 	}
@@ -403,8 +403,8 @@ public class Map : IDisposable
 
 	public void CircularFlatten(HexCoords center, float innerRadius, float outerRadius, FlattenMode mode = FlattenMode.Center)
 	{
-		innerRadius *= tongDiagonal;
-		outerRadius *= tongDiagonal;
+		innerRadius *= longDiagonal;
+		outerRadius *= longDiagonal;
 		var innerSelection = CircularSelect(center, innerRadius);
 		var c = this[center];
 		float height = c.Height;
@@ -449,8 +449,8 @@ public class Map : IDisposable
 		foreach (var tile in outerSelection)
 		{
 			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
-			d -= innerRadius * innerRadius * tongDiagonal;
-			d = MathUtils.Map(d, 0, (outerRadius * outerRadius * tongDiagonal) - (innerRadius * innerRadius * tongDiagonal), 0, 1);
+			d -= innerRadius * innerRadius * longDiagonal;
+			d = MathUtils.Map(d, 0, (outerRadius * outerRadius * longDiagonal) - (innerRadius * innerRadius * longDiagonal), 0, 1);
 			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
 		}
 	}
@@ -483,10 +483,12 @@ public class Map : IDisposable
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
 
-	public List<Tile> GetPath(HexCoords src, HexCoords dst, float maxIncline = float.MaxValue, Func<Tile, bool?> filter = null) => GetPath(this[src], this[dst], maxIncline, filter);
+	public List<Tile> GetPath(HexCoords src, HexCoords dst, float maxIncline = float.MaxValue, Func<Tile, bool> filter = null) => GetPath(this[src], this[dst], maxIncline, filter);
 
-	public List<Tile> GetPath(Tile src, Tile dst, float maxIncline = float.MaxValue, Func<Tile, bool?> filter = null)
+	public List<Tile> GetPath(Tile src, Tile dst, float maxIncline = float.MaxValue, Func<Tile, bool> filter = null)
 	{
+		if (src == null || dst == null)
+			return null;
 		if (src == dst)
 			return null;
 		PathNode BestFScore(HashSet<PathNode> nodes)
@@ -522,7 +524,7 @@ public class Map : IDisposable
 					continue;
 				if (Mathf.Abs(neighbor.Height - curTileNode.tile.Height) > maxIncline)
 					continue;
-				if(filter != null && filter(neighbor) != true && !neighbor.Equals(dst))
+				if(filter != null && !filter(neighbor) && !neighbor.Equals(dst))
 				{
 					continue;
 				}

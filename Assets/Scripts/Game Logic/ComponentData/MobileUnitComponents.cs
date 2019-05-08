@@ -21,5 +21,10 @@ public struct Destination : IComponentData
 
 public struct UnitId : IComponentData
 {
-	public int value;
+	public int Value;
+}
+
+public struct NextTile : IComponentData
+{
+	public float3 Value;
 }

@@ -20,7 +20,12 @@ public class HQTile : BuildingTile
 		{
 			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTile);
 		}
-		Map.ActiveMap.AddUnit(hqInfo.unitInfo, this);
+		var spawnTiles = Map.ActiveMap.HexSelect(Coords, 3);
+		for (int i = 0; i < spawnTiles.Count; i++)
+		{
+			if(!(spawnTiles[i] is BuildingTile))
+				Map.ActiveMap.AddUnit(hqInfo.unitInfo, spawnTiles[i]);
+		}
 	}
 
 	public override void OnHeightChanged()

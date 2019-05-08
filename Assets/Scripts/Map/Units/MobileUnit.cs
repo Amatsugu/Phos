@@ -27,7 +27,7 @@ public class MobileUnit
 		if (IsRendered)
 			return _unitEntity;
 		IsRendered = true;
-		return _unitEntity =  info.Instantiate(_occupiedTile.worldXZ, Quaternion.identity, id);
+		return _unitEntity =  info.Instantiate(Map.ActiveMap[_occupiedTile].SurfacePoint, Quaternion.identity, id);
 	}
 
 	public void Show(bool isShown)

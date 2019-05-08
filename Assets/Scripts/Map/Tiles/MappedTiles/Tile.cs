@@ -63,8 +63,6 @@ public class Tile
 
 	public void DeOccupyTile(int unitId)
 	{
-		if(_occupancyCount == 0)
-			throw new Exception("There are no units occupying this tile");
 		for (int i = 0; i < MAX_OCCUPANCY; i++)
 		{
 			if(_occupyingUnits[i] == unitId)
@@ -74,7 +72,6 @@ public class Tile
 				return;
 			}
 		}
-		throw new Exception($"Unit [{unitId}] is not occupying this tile.");
 	}
 
 	public int GetOccupancyId(int unitId)

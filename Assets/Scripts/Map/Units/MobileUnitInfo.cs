@@ -24,7 +24,7 @@ public class MobileUnitInfo : MeshEntityRotatable
 		var e = Instantiate(pos, Vector3.one, rotation);
 		Map.EM.SetComponentData(e, new MoveSpeed { Value = moveSpeed });
 		Map.EM.SetComponentData(e, new Heading { Value = Vector3.forward });
-		Map.EM.SetComponentData(e, new UnitId { value = id });
+		Map.EM.SetComponentData(e, new UnitId { Value = id });
 		return e;
 	}
 }
