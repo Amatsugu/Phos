@@ -27,6 +27,11 @@ public class InteractionUI : MonoBehaviour
 		interactionPanel.OnUpgradeClick += UpgradeTile;
 		interactionPanel.OnDestroyClick += DestroyTile;
 		selectionRect.gameObject.SetActive(false);
+		for (int r = 0; r < 10; r++)
+		{
+			var s = Map.ActiveMap.HexSelect(HexCoords.FromPosition(new Vector3(100, 0, 100), 1), r);
+			Debug.Log($"R {r} P: {1 + 3*(r + 1)*(r)} C: {s.Count}");
+		}
 	}
 
 	void DestroyTile()
