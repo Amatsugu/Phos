@@ -10,4 +10,10 @@ public class ResourceTile : Tile
 	{
 		resInfo = tInfo;
 	}
+
+
+	public override TileInfo GetMeshEntity()
+	{
+		return originalTile ?? info;
+	}
 }

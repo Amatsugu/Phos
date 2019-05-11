@@ -22,6 +22,8 @@ public class Tile
 	public float moisture, temperature;
 	public int biomeId;
 	public bool IsShown { get; private set; }
+	public TileInfo originalTile;
+
 
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
@@ -75,6 +77,27 @@ public class Tile
 		}
 	}
 
+	public virtual string GetDescription()
+	{
+		var unitStr = "";
+		for (int i = 0; i < MAX_OCCUPANCY; i++)
+		{
+			if (_occupyingUnits[i] == 0)
+				continue;
+			var e = Map.ActiveMap.units[_occupyingUnits[i]].Entity;
+			unitStr += $"Unit[{_occupyingUnits[i]}]";
+			if (Map.EM.HasComponent<Path>(e))
+			{
+				var pg = Map.EM.GetComponentData<PathGroup>(e);
+				unitStr += $"Progress:{pg.Progress} Group:{pg.Value}";
+			}
+			unitStr += "\n";
+		}
+		return $"{info.description}\n" +
+			$"Occupancy: {_occupancyCount}/{MAX_OCCUPANCY}\n" +
+			unitStr;
+	}
+
 	public int GetOccupancyId(int unitId)
 	{
 		if (_occupancyCount == 0)
@@ -91,7 +114,7 @@ public class Tile
 	{
 		var oId = GetOccupancyId(unitId);
 		var a = (360f / MAX_OCCUPANCY) * oId * Mathf.Deg2Rad;
-		return new float3(Mathf.Cos(a), 0, Mathf.Sin(a));
+		return new float3(Mathf.Cos(a), 0, Mathf.Sin(a)) * .5f;
 	}
 
 	public int[] GetUnits()
@@ -194,10 +217,15 @@ public class Tile
 			Map.EM.AddComponent(_decor, typeof(Frozen));
 	}
 
+	public virtual TileInfo GetMeshEntity()
+	{
+		return info;
+	}
+
 	public virtual Entity Render()
 	{
 		IsShown = true;
-		_tileEntity = info.Instantiate(Coords, new Vector3(1, Height, 1));
+		_tileEntity = GetMeshEntity().Instantiate(Coords, new Vector3(1, Height, 1));
 		if (info.decorators.Length == 0)
 			return _tileEntity;
 		_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent);

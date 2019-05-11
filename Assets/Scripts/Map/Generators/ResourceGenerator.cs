@@ -42,7 +42,9 @@ public class ResourceGenerator : FeatureGenerator
 					continue;
 				if (GetSample(x,z) == 1)
 				{
-					map[pos] = resource.CreateTile(pos, h);
+					var res = resource.CreateTile(pos, h);
+					res.originalTile = map[pos].info;
+					map[pos] = res;
 				}
 			}
 		}

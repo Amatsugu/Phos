@@ -7,6 +7,6 @@ public class ResourceTileInfo : TileInfo
 {
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
-		return base.CreateTile(pos, height);
+		return new ResourceTile(pos, height, this);
 	}
 }

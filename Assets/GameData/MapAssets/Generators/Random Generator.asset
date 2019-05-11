@@ -138,7 +138,7 @@ MonoBehaviour:
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 4.57
   useSeed: 0
-  seed: -925838603
+  seed: -926351869
   landSeaRatio: 0.25
   biomeFold: 1
   preview: 1

@@ -17,7 +17,27 @@ MonoBehaviour:
   minPerTile: 0
   maxPerTile: 4
   densityPower: 1
-  minHeight: 0.5
-  maxHeight: 4
-  minSize: 0.2
-  maxSize: 0.5
+  minHeight: 1
+  maxHeight: 2
+  minSize: 1
+  maxSize: 2
+  noise:
+    type: 0
+    simpleNoiseSettings:
+      strength: 1
+      layerCount: 1
+      baseRoughness: 2
+      roughness: 1
+      persistence: 0.5
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+    rigidNoiseSettings:
+      strength: 0
+      layerCount: 0
+      baseRoughness: 0
+      roughness: 0
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
+  noiseScale: 15

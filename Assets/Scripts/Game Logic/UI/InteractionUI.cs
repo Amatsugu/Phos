@@ -100,15 +100,9 @@ public class InteractionUI : MonoBehaviour
 						_selectedUnits.Clear();
 						if (_start == _end)
 						{
-							if (_end.IsOccupied)
-							{
-								_selectedUnits.AddRange(_end.GetUnits().Where(u => u != 0));
-							}
-							else if (_end is BuildingTile)
-							{
-								ShowPanel(_end);
-							}
-						}else
+							ShowPanel(_end);
+						}
+						else
 						{
 							var selection = Map.ActiveMap.BoxSelect(_start.Coords, _end.Coords);
 							var selectionWithUnits = selection.Where(t => t.IsOccupied);
@@ -128,22 +122,42 @@ public class InteractionUI : MonoBehaviour
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
 				if(tile != null)
 				{
-					var c = _selectedUnits.Count / Tile.MAX_OCCUPANCY;
-					c++;
-					var r = CalculateR(c);
-					var selection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
-					while (selection.Count() < c)
-						selection = Map.ActiveMap.HexSelect(tile.Coords, ++r).Where(t => !(t is BuildingTile));
-					var s = selection.ToArray();
-					for (int t = 0; t < s.Length; t++)
+
+					//TODO: Create a system that will dynamicly group/ungroup units
+					var unitGroups = _selectedUnits.GroupBy(u => Map.ActiveMap.units[u].occupiedTile);
+					var groupCount = unitGroups.Count();
+
+					var dstTileCount = _selectedUnits.Count / Tile.MAX_OCCUPANCY;
+					var r = CalculateR(dstTileCount);
+					var dstSelection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
+					while (dstSelection.Count() < dstTileCount)
+						dstSelection = Map.ActiveMap.HexSelect(tile.Coords, ++r).Where(t => !(t is BuildingTile));
+					var dstTiles = dstSelection.ToArray();
+
+					var curGroupSize = 0;
+					var curGroup = 0;
+
+					foreach (var unitGroup in unitGroups)
 					{
-						for (int i = t * Tile.MAX_OCCUPANCY; i < (t * Tile.MAX_OCCUPANCY) + Tile.MAX_OCCUPANCY; i++)
+						foreach (var unitId in unitGroup)
 						{
-							if (i >= _selectedUnits.Count)
-								break;
-							Map.ActiveMap.units[_selectedUnits[i]].MoveTo(s[t].SurfacePoint, groupId);
+							Map.ActiveMap.units[unitId].MoveTo(dstTiles[curGroup].SurfacePoint, groupId);
+
+							curGroupSize++;
+							if(curGroupSize == Tile.MAX_OCCUPANCY)
+							{
+								curGroupSize = 0;
+								curGroup++;
+								unchecked
+								{
+									groupId++;
+								}
+							}
 						}
-						groupId++;
+						unchecked
+						{
+							groupId++;
+						}
 					}
 				}
 			}
@@ -181,19 +195,19 @@ public class InteractionUI : MonoBehaviour
 		switch (tile)
 		{
 			case HQTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.info.description, showDestroyBtn: false);
+				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case SubHQTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.info.description, showDestroyBtn: false);
-				break;
-			case PoweredBuildingTile p:
-				interactionPanel.ShowPanel(tile.info.name, $"{tile.info.description}\n\n<b>HQ Connection: {p.HasHQConnection}</b>");
+				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case BuildingTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.info.description);
+				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription());
+				break;
+			case ResourceTile _:
+				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), false, false);
 				break;
 			default:
-				interactionPanel.ShowPanel(tile.info.name, tile.info.description, false, false);
+				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), false, false);
 				break;
 		}
 	}

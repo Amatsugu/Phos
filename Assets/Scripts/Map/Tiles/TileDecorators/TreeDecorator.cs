@@ -46,8 +46,8 @@ public class TreeDecorator : TileDecorator
 		{
 			var size = _rand.Range(minSize, maxSize);
 			var height = _rand.Range(minHeight, maxHeight);
-			var pos = new Vector3(_rand.NextFloat(), 0, _rand.NextFloat()) * (Map.ActiveMap.innerRadius - (size/2f));
-			entities[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size));
+			var pos = new Vector3(_rand.NextFloat(), 0, _rand.NextFloat()) * (Map.ActiveMap.innerRadius);
+			entities[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size), Quaternion.Euler(0, _rand.Range(0, 360), 0));
 		}
 		return entities;
 

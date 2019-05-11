@@ -7,11 +7,11 @@ using UnityEngine;
 public class MobileUnit
 {
 	public int id;
-	private HexCoords _occupiedTile;
+	public HexCoords occupiedTile;
 	public MobileUnitInfo info;
-	public bool IsRendered { get; private set; }
+	public Entity Entity { get; protected set; }
+	public bool IsRendered { get; protected set; }
 
-	private Entity _unitEntity;
 	private bool _isShown;
 
 
@@ -25,9 +25,9 @@ public class MobileUnit
 	public Entity Render()
 	{
 		if (IsRendered)
-			return _unitEntity;
+			return Entity;
 		IsRendered = true;
-		return _unitEntity =  info.Instantiate(Map.ActiveMap[_occupiedTile].SurfacePoint, Quaternion.identity, id);
+		return Entity =  info.Instantiate(Map.ActiveMap[occupiedTile].SurfacePoint, Quaternion.identity, id);
 	}
 
 	public void Show(bool isShown)
@@ -35,43 +35,44 @@ public class MobileUnit
 		if (isShown == _isShown)
 			return;
 		if(_isShown = isShown)
-			Map.EM.RemoveComponent(_unitEntity, typeof(Frozen));
+			Map.EM.RemoveComponent(Entity, typeof(Frozen));
 		else
-			Map.EM.AddComponent(_unitEntity, typeof(Frozen));
+			Map.EM.AddComponent(Entity, typeof(Frozen));
 	}
 
 	public void MoveTo(Vector3 pos, int groupId)
 	{
-		if(!Map.EM.HasComponent<Destination>(_unitEntity))
+		if(!Map.EM.HasComponent<Destination>(Entity))
 		{
-			Map.EM.AddComponent(_unitEntity, typeof(Destination));
-			Map.EM.AddComponent(_unitEntity, typeof(PathGroup));
+			Map.EM.AddComponent(Entity, typeof(Destination));
+			Map.EM.AddComponent(Entity, typeof(PathGroup));
 		}
-		Map.EM.SetComponentData(_unitEntity, new Destination { Value = pos });
-		Map.EM.SetComponentData(_unitEntity, new PathGroup { Value = groupId });
+		if (Map.EM.HasComponent<Path>(Entity))
+			Map.EM.RemoveComponent<Path>(Entity);
+		Map.EM.SetComponentData(Entity, new Destination { Value = pos });
+		Map.EM.SetComponentData(Entity, new PathGroup { Value = groupId, Progress = 0, Delay = 0 });
 	}
 
 	public virtual void Die()
 	{
 		//TODO: Death Effect
-		Map.ActiveMap[_occupiedTile].DeOccupyTile(id);
+		Map.ActiveMap[occupiedTile].DeOccupyTile(id);
 		Destroy();
 	}
 
 	public void Destroy()
 	{
-		Map.EM.DestroyEntity(_unitEntity);
+		Map.EM.DestroyEntity(Entity);
 	}
 
 	public bool OccupyTile(Tile tile)
 	{
-		if (_occupiedTile == tile.Coords)
+		if (occupiedTile == tile.Coords)
 			return true;
-		if (_occupiedTile.isCreated)
-			Map.ActiveMap[_occupiedTile].DeOccupyTile(id);
 		if (tile.OccupyTile(id))
 		{
-			_occupiedTile = tile.Coords;
+			Map.ActiveMap[occupiedTile].DeOccupyTile(id);
+			occupiedTile = tile.Coords;
 			Show(tile.IsShown);
 			return true;
 		}

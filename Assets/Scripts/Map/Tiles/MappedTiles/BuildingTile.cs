@@ -9,7 +9,6 @@ using UnityEngine;
 
 public class BuildingTile : Tile
 {
-	public TileInfo originalTile;
 	public readonly BuildingTileInfo buildingInfo;
 	public int distanceToHQ;
 	public int upgradeLevel = 0;
@@ -72,6 +71,12 @@ public class PoweredBuildingTile : BuildingTile
 
 	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
+	}
+
+	public override string GetDescription()
+	{
+		return base.GetDescription() + "\n" +
+			$"Has HQ Connection: {HasHQConnection}";
 	}
 
 	public override void TileUpdated(Tile src, TileUpdateType updateType)
