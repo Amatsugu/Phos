@@ -127,7 +127,7 @@ public class InteractionUI : MonoBehaviour
 					var unitGroups = _selectedUnits.GroupBy(u => Map.ActiveMap.units[u].occupiedTile);
 					var groupCount = unitGroups.Count();
 
-					var dstTileCount = _selectedUnits.Count / Tile.MAX_OCCUPANCY;
+					var dstTileCount = _selectedUnits.Count / (Tile.MAX_OCCUPANCY-1);
 					var r = CalculateR(dstTileCount);
 					var dstSelection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
 					while (dstSelection.Count() < dstTileCount)
@@ -144,7 +144,7 @@ public class InteractionUI : MonoBehaviour
 							Map.ActiveMap.units[unitId].MoveTo(dstTiles[curGroup].SurfacePoint, groupId);
 
 							curGroupSize++;
-							if(curGroupSize == Tile.MAX_OCCUPANCY)
+							if(curGroupSize == Tile.MAX_OCCUPANCY-1)
 							{
 								curGroupSize = 0;
 								curGroup++;
@@ -172,7 +172,7 @@ public class InteractionUI : MonoBehaviour
 				uiPos.x = 0;
 			if (uiPos.x + interactionPanel.Width > Screen.width)
 				uiPos.x = Screen.width - interactionPanel.Width;
-			if (uiPos.y < 0)
+			if (uiPos.y < interactionPanel.Height)
 				uiPos.y = interactionPanel.Height;
 			if (uiPos.y > Screen.height)
 				uiPos.y = Screen.height;
@@ -195,19 +195,19 @@ public class InteractionUI : MonoBehaviour
 		switch (tile)
 		{
 			case HQTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), showDestroyBtn: false);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case SubHQTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), showDestroyBtn: false);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case BuildingTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription());
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());
 				break;
 			case ResourceTile _:
-				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), false, false);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), false, false);
 				break;
 			default:
-				interactionPanel.ShowPanel(tile.info.name, tile.GetDescription(), false, false);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), false, false);
 				break;
 		}
 	}

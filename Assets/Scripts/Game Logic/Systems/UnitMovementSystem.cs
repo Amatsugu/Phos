@@ -19,21 +19,22 @@ public class UnitMovementSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
-		Entities.WithNone<Path>().ForEach((Entity e, ref PathGroup pg, ref Translation t, ref Destination d) =>
+		Entities.WithNone<Path>().ForEach((Entity e, ref PathGroup pg, ref Translation t, ref Destination d, ref UnitId id) =>
 		{
-			if (math.distancesq(t.Value, d.Value) < 1f)
+			if (math.distancesq(t.Value, d.Value) < 0.0005f)
 			{
 				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
-			var curCoord = HexCoords.FromPosition(t.Value, Map.ActiveMap.tileEdgeLength);
+			var unit = Map.ActiveMap.units[id.Value];
+			var curCoord = unit.occupiedTile;
 			Path path;
 			if (paths.ContainsKey(pg.Value))
 				path = paths[pg.Value];
 			else
 			{
 				var dst = HexCoords.FromPosition(d.Value, Map.ActiveMap.tileEdgeLength);
-				if (curCoord == dst)
+				if (curCoord == dst || Map.ActiveMap[dst].IsFullyOccupied)
 				{
 					PostUpdateCommands.RemoveComponent<PathGroup>(e);
 					PostUpdateCommands.RemoveComponent<Destination>(e);
@@ -46,7 +47,7 @@ public class UnitMovementSystem : ComponentSystem
 				};
 				if(path.Value == null)
 				{
-					Debug.LogWarning($"Null Path From: {curCoord} To: {HexCoords.FromPosition(d.Value, Map.ActiveMap.tileEdgeLength)}");
+					Debug.LogWarning($"Null Path From: {curCoord} To: {dst}");
 					PostUpdateCommands.RemoveComponent<PathGroup>(e);
 					PostUpdateCommands.RemoveComponent<Destination>(e);
 					return;
@@ -54,9 +55,11 @@ public class UnitMovementSystem : ComponentSystem
 				paths.Add(pg.Value, path);
 			}
 #if DEBUG
+			var c = MathUtils.Map((pg.Value * 10) % 360, 0, 360, 0, 1);
+			var off = new Vector3(0, c, 0);
 			for (int i = 0; i < path.Value.Count - 1; i++)
 			{
-				Debug.DrawLine(path.Value[i].SurfacePoint, path.Value[i + 1].SurfacePoint, Color.HSVToRGB(MathUtils.Map((pg.Value * 45) % 360, 0, 360, 0, 1), 1, 1), 5);
+				Debug.DrawLine(path.Value[i].SurfacePoint + off, path.Value[i + 1].SurfacePoint + off, Color.HSVToRGB(c, 1, 1), 5);
 			}
 #endif
 			PostUpdateCommands.AddSharedComponent(e, path);
@@ -69,7 +72,7 @@ public class UnitMovementSystem : ComponentSystem
 			//TODO: Make sure units move into their positions on the destination tile
 			pg.Progress = Mathf.Min(p.Value.Count - 1, pg.Progress);
 			var nextTile = p.Value[pg.Progress+1];
-			if(nextTile.IsFullyOccupied)
+			if(nextTile.IsFullyOccupied && !nextTile.Equals(p.Value.Last()))
 			{
 				pg.Delay++;
 				if(pg.Delay > 3)
@@ -82,11 +85,20 @@ public class UnitMovementSystem : ComponentSystem
 				}
 				return;
 			}
+			var unit = Map.ActiveMap.units[id.Value];
 			var curCoord = HexCoords.FromPosition(t.Value, Map.ActiveMap.tileEdgeLength);
 			var curTile = Map.ActiveMap[curCoord];
-			if(!Map.ActiveMap.units[id.Value].OccupyTile(curTile))
+			if(!unit.OccupyTile(curTile))
 			{
 				pg.Delay++;
+				if (pg.Delay > 3)
+				{
+					PostUpdateCommands.RemoveComponent<Path>(e);
+					paths.Remove(pg.Value);
+					Debug.Log($"Group {pg.Value} Recaluclating {curCoord} {unit.occupiedTile}");
+					pg.Delay = 0;
+					pg.Progress = 0;
+				}
 				return;
 			}
 			pg.Delay = 0;
@@ -96,7 +108,7 @@ public class UnitMovementSystem : ComponentSystem
 			t.Value += h.Value * m.Value * Time.deltaTime;
 			t.Value.y = curTile.Height;
 			PostUpdateCommands.SetComponent(e, new Rotation { Value = Quaternion.LookRotation(h.Value, Vector3.up) });
-			if (math.distancesq(t.Value, ntPos) < .05f)
+			if (math.distancesq(t.Value, ntPos) < .0005f)
 			{
 				pg.Progress++;
 				if (pg.Progress + 1 >= p.Value.Count)

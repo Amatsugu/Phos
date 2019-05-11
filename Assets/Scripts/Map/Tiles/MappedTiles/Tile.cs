@@ -28,7 +28,7 @@ public class Tile
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
 
-	public const int MAX_OCCUPANCY = 3;
+	public const int MAX_OCCUPANCY = 4;
 	private int[] _occupyingUnits = new int[MAX_OCCUPANCY];
 	private int _occupancyCount = 0;
 
@@ -77,6 +77,11 @@ public class Tile
 		}
 	}
 
+	public virtual string GetName()
+	{
+		return $"{info.name} {Coords}";
+	}
+
 	public virtual string GetDescription()
 	{
 		var unitStr = "";
@@ -113,7 +118,7 @@ public class Tile
 	public float3 GetOccipancyPos(int unitId)
 	{
 		var oId = GetOccupancyId(unitId);
-		var a = (360f / MAX_OCCUPANCY) * oId * Mathf.Deg2Rad;
+		var a = (360f / (MAX_OCCUPANCY-1)) * oId * Mathf.Deg2Rad;
 		return new float3(Mathf.Cos(a), 0, Mathf.Sin(a)) * .5f;
 	}
 
