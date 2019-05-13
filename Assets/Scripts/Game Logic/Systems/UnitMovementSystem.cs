@@ -63,13 +63,13 @@ public class UnitMovementSystem : ComponentSystem
 			}
 #endif
 			PostUpdateCommands.AddSharedComponent(e, path);
+			pg.Progress = pg.Delay = 0;
 
 		});
 
 
 		Entities.WithAll<Rotation>().ForEach((Entity e, Path p, ref PathGroup pg, ref Translation t, ref Heading h, ref MoveSpeed m, ref UnitId id) =>
 		{
-			//TODO: Make sure units move into their positions on the destination tile
 			pg.Progress = Mathf.Min(p.Value.Count - 1, pg.Progress);
 			var nextTile = p.Value[pg.Progress+1];
 			if(nextTile.IsFullyOccupied && !nextTile.Equals(p.Value.Last()))
@@ -79,9 +79,6 @@ public class UnitMovementSystem : ComponentSystem
 				{
 					PostUpdateCommands.RemoveComponent<Path>(e);
 					paths.Remove(pg.Value);
-					Debug.Log($"Group {pg.Value} Recaluclating");
-					pg.Delay = 0;
-					pg.Progress = 0;
 				}
 				return;
 			}
@@ -95,9 +92,6 @@ public class UnitMovementSystem : ComponentSystem
 				{
 					PostUpdateCommands.RemoveComponent<Path>(e);
 					paths.Remove(pg.Value);
-					Debug.Log($"Group {pg.Value} Recaluclating {curCoord} {unit.occupiedTile}");
-					pg.Delay = 0;
-					pg.Progress = 0;
 				}
 				return;
 			}
@@ -116,6 +110,8 @@ public class UnitMovementSystem : ComponentSystem
 					PostUpdateCommands.RemoveComponent<Path>(e);
 					PostUpdateCommands.RemoveComponent<PathGroup>(e);
 					PostUpdateCommands.RemoveComponent<Destination>(e);
+					paths.Remove(pg.Value);
+
 				}
 				return;
 			}

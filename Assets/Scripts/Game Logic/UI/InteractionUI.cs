@@ -6,8 +6,8 @@ using UnityEngine;
 public class InteractionUI : MonoBehaviour
 {
 	public BuildUI buildUI;
-	public RectTransform selectionRect;
 	public UIInteractionPanel interactionPanel;
+	public Transform selectionBox;
 
 	private Camera _cam;
 
@@ -26,7 +26,7 @@ public class InteractionUI : MonoBehaviour
 		interactionPanel.OnHover += () => _uiBlocked = true;
 		interactionPanel.OnUpgradeClick += UpgradeTile;
 		interactionPanel.OnDestroyClick += DestroyTile;
-		selectionRect.gameObject.SetActive(false);
+		selectionBox.gameObject.SetActive(false);
 			//Debug.Log($"R {r} P: {1 + 3*(r + 1)*(r)} C: {s.Count}");
 	}
 
@@ -67,7 +67,6 @@ public class InteractionUI : MonoBehaviour
 					_end = Map.ActiveMap.GetTileFromRay(ray);
 					if(_start != _end && _start != null && _end != null)
 					{
-						selectionRect.gameObject.SetActive(true);
 						//Drag Select
 						var p0 = _start.Coords.worldXZ;
 						var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetX, _start.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
@@ -80,19 +79,16 @@ public class InteractionUI : MonoBehaviour
 						Debug.DrawLine(p2, p3, Color.white);
 						var sp0 = _cam.WorldToScreenPoint(p0);
 						var sp3 = _cam.WorldToScreenPoint(p3);
-						Vector3 left = sp0;
-						if (sp0.x > sp3.x)
-							left.x = sp3.x;
-						if (sp0.y < sp3.y)
-							left.y = sp3.y;
-						selectionRect.position = left;
-						selectionRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Abs(sp3.x - sp0.x));
-						selectionRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Abs(sp3.y - sp0.y));
+						var w = p0.x - p1.x;
+						var h = p0.z - p2.z; 
+						selectionBox.position = new Vector3(p0.x - (w/2), 0, p0.z - (h/2));
+						selectionBox.localScale = new Vector3(w, 100, h);
+						selectionBox.gameObject.SetActive(true);
 					}
 				}
 				if (Input.GetKeyUp(KeyCode.Mouse0))
 				{
-					selectionRect.gameObject.SetActive(false);
+					selectionBox.gameObject.SetActive(false);
 					var ray = _cam.ScreenPointToRay(mPos);
 					_end = Map.ActiveMap.GetTileFromRay(ray);
 					if (_start != null && _end != null)
