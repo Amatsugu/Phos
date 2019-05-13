@@ -21,9 +21,9 @@ MonoBehaviour:
       layerCount: 3
       baseRoughness: 7
       roughness: 2.25
-      persistence: 0.76
+      persistence: 0.71
       minValue: 0.87
-      center: {x: 0, y: 0, z: 0}
+      center: {x: 0, y: 3.63, z: 0}
     rigidNoiseSettings:
       strength: 1
       layerCount: 3
@@ -35,4 +35,3 @@ MonoBehaviour:
       weightMultiplier: 0.13
   noiseScale: 500
   preview: 1
-  previewTex: {fileID: 0}

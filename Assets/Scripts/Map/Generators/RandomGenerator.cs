@@ -36,8 +36,6 @@ public class RandomGenerator : MapGenerator
 	public bool biomeFold;
 	[HideInInspector]
 	public bool preview;
-	[HideInInspector]
-	public Texture2D previewTex;
 
 	private INoiseFilter[] noiseFilters;
 
@@ -90,7 +88,7 @@ public class RandomGenerator : MapGenerator
 		startTime = DateTime.Now;
 		var moistureMap = biomePainter.GetMoistureMap(map.totalWidth, map.totalHeight, noiseFilters[0], noiseScale);
 		Debug.Log($"Generate Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
-		SaveBiomeMaps(tempMap, moistureMap, map.totalWidth, map.totalHeight);
+		//SaveBiomeMaps(tempMap, moistureMap, map.totalWidth, map.totalHeight);
 		startTime = DateTime.Now;
 		for (int z = 0; z < map.totalWidth; z++)
 		{
@@ -131,7 +129,7 @@ public class RandomGenerator : MapGenerator
 			{
 				var i = x + z * w;
 				tTex.SetPixel(x, z, colors[Mathf.RoundToInt(tMap[i])]);
-				mTex.SetPixel(x, z, colors[Mathf.RoundToInt(mMap[i])]);
+				mTex.SetPixel(x, z, colors[15-Mathf.RoundToInt(mMap[i])]);
 				bTex.SetPixel(x, z, colors[Mathf.RoundToInt(tMap[i]) + Mathf.RoundToInt(mMap[i]) * 4]);
 			}
 		}

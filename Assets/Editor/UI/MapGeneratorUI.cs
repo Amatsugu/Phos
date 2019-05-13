@@ -10,11 +10,15 @@ public class MapGeneratorUI : Editor
 	public static Editor editor;
 	private bool _autoRegen;
 	private float _lsr;
+	private Color[] _previewTexColors;
+	private Texture2D _previewTex;
 
 	private void OnEnable()
 	{
 		creator = target as RandomGenerator;
-		creator.previewTex = new Texture2D(256, 256);
+		_previewTex = new Texture2D(256, 256);
+		_previewTex.filterMode = FilterMode.Point;
+		_previewTexColors = _previewTex.GetPixels();
 		GenTex();
 	}
 
@@ -50,7 +54,7 @@ public class MapGeneratorUI : Editor
 				GenTex();
 			if (_lsr < creator.landSeaRatio)
 				GUILayout.Label($"<color=red><b>Land to Sea Ratio {_lsr} < {creator.landSeaRatio}</b></color>", new GUIStyle { richText = true });
-			if(GUILayout.Button(creator.previewTex, new GUIStyle { border = new RectOffset(0,0,0,0), imagePosition = ImagePosition.ImageOnly, alignment = TextAnchor.MiddleCenter}, GUILayout.Height(Mathf.Min(EditorGUIUtility.currentViewWidth - 20, creator.previewTex.height)), GUILayout.Width(EditorGUIUtility.currentViewWidth - 20)))
+			if(GUILayout.Button(_previewTex, new GUIStyle { border = new RectOffset(0,0,0,0), imagePosition = ImagePosition.ImageOnly, alignment = TextAnchor.MiddleCenter}, GUILayout.Height(Mathf.Min(EditorGUIUtility.currentViewWidth - 20, _previewTex.height)), GUILayout.Width(EditorGUIUtility.currentViewWidth - 20)))
 			{
 				creator.seed++;
 				GenTex();
@@ -78,7 +82,7 @@ public class MapGeneratorUI : Editor
 	{
 		creator.InitFilters();
 		var max = 0f;
-		int w = creator.previewTex.width, h = creator.previewTex.height;
+		int w = _previewTex.width, h = _previewTex.height;
 		var hMap = new float[h * w];
 		var landToSeaRatio = 0f;
 		for (int z = 0; z < h; z++)
@@ -112,13 +116,16 @@ public class MapGeneratorUI : Editor
 						else if (a - b > .3f)
 							color = new Color(0, .6f, 0);
 					}
-					creator.previewTex.SetPixel(x, z, color);
+					_previewTexColors[x + z * _previewTex.height] = color;
+					//_previewTex.SetPixel(x, z, color);
 				}else
 				{
-					creator.previewTex.SetPixel(x, z, Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Map(a, 0, creator.seaLevel, .5f, 1)));
+					_previewTexColors[x + z * _previewTex.height] = Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Map(a, 0, creator.seaLevel, .5f, 1));
+					//_previewTex.SetPixel(x, z, Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Map(a, 0, creator.seaLevel, .5f, 1)));
 				}
 			}
 		}
-		creator.previewTex.Apply();
+		_previewTex.SetPixels(_previewTexColors);
+		_previewTex.Apply();
 	}
 }

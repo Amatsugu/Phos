@@ -14,8 +14,6 @@ public class ResourceGenerator : FeatureGenerator
 
 	[HideInInspector]
 	public bool preview;
-	[HideInInspector]
-	public Texture2D previewTex;
 
 	private INoiseFilter _filter;
 	private float _adjustedDensity;
