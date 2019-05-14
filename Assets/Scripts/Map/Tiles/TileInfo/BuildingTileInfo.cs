@@ -88,7 +88,7 @@ public class BuildingTileInfo : TileInfo
 		var costString = "";
 		for (int i = 0; i < production.Length; i++)
 		{
-			costString += $"<size=.75em><voffset=.25em>+</voffset></size><sprite={ResourceDatabase.GetSpriteId(production[i].id)}> <size=.75em><voffset=.25em>{production[i].ammount}/t</voffset></size>";
+			costString += $"+<sprite={ResourceDatabase.GetSpriteId(production[i].id)}> {production[i].ammount}/t";
 			if (i != production.Length - 1)
 				costString += "\n";
 		}
@@ -101,7 +101,7 @@ public class BuildingTileInfo : TileInfo
 		for (int i = 0; i < cost.Length; i++)
 		{
 			var id = cost[i].id;
-			var curCost = $"<size=.75em><voffset=.25em>-</voffset></size><sprite={ResourceDatabase.GetSpriteId(id)}> <size=.75em><voffset=.25em>{cost[i].ammount}</voffset></size>";
+			var curCost = $"-<sprite={ResourceDatabase.GetSpriteId(id)}> {cost[i].ammount}";
 			if (ResourceSystem.resCount[id] < cost[i].ammount)
 				curCost = $"<color=#ff0000>{curCost}</color>";
 			costString += curCost;
@@ -112,7 +112,7 @@ public class BuildingTileInfo : TileInfo
 			costString += "\n";
 		for (int i = 0; i < consumption.Length; i++)
 		{
-			costString += $"<size=.75em><voffset=.25em>-</voffset></size><sprite={ResourceDatabase.GetSpriteId(consumption[i].id)}> <size=.75em><voffset=.25em>{consumption[i].ammount}/t</voffset></size>";
+			costString += $"-<sprite={ResourceDatabase.GetSpriteId(consumption[i].id)}> {consumption[i].ammount}/t";
 			if (i != production.Length - 1)
 				costString += "\n";
 		}

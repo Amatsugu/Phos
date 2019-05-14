@@ -23,7 +23,7 @@ public class StatusUI : MonoBehaviour
 		{
 			_resourceText.Append($"<sprite={ResourceDatabase.GetSpriteId(i)}>");
 			var lastTickNet = ResourceSystem.totalProduction?[i] + ResourceSystem.totalDemand?[i];
-			_resourceText.Append($"<size=.75em><voffset=.25em>{ResourceSystem.resCount?[i]} [{(lastTickNet >= 0 ? "+" : "")}{lastTickNet}]</voffset></size> ");
+			_resourceText.Append($"{ResourceSystem.resCount?[i]} [{(lastTickNet >= 0 ? "+" : "")}{lastTickNet}]");
 		}
 		resourcePanel.SetText(_resourceText);
 	}

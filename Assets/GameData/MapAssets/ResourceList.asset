@@ -36,28 +36,28 @@ MonoBehaviour:
     spriteID: 6
   - name: Gold
     resourceTile: {fileID: 0}
-    spriteID: 1
+    spriteID: 7
   - name: Electrum
     resourceTile: {fileID: 0}
-    spriteID: 7
+    spriteID: 0
   - name: Deuterium
     resourceTile: {fileID: 0}
-    spriteID: 8
+    spriteID: 1
   - name: Tritium
     resourceTile: {fileID: 0}
-    spriteID: 9
+    spriteID: 2
   - name: Carbon Nanotubes
     resourceTile: {fileID: 0}
-    spriteID: 10
+    spriteID: 3
   - name: Phosphophylite
     resourceTile: {fileID: 0}
-    spriteID: 11
+    spriteID: 4
   - name: Super Conductor
     resourceTile: {fileID: 0}
-    spriteID: 12
+    spriteID: 5
   - name: Phos Metal
     resourceTile: {fileID: 0}
-    spriteID: 13
+    spriteID: 6
   - name: Refined Phos
     resourceTile: {fileID: 0}
-    spriteID: 14
+    spriteID: 7
