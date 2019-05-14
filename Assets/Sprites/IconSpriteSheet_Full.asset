@@ -10,75 +10,74 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84a92b25f83d49b9bc132d206b370281, type: 3}
-  m_Name: IconSpriteSheet
+  m_Name: IconSpriteSheet_Full
   m_EditorClassIdentifier: 
-  hashCode: -29319091
-  material: {fileID: 5971052069760343991}
+  hashCode: -822845503
+  material: {fileID: 7016721618593850980}
   materialHashCode: 0
-  spriteSheet: {fileID: 2800000, guid: 010e16e474393c44cace5a0040035840, type: 3}
+  spriteSheet: {fileID: 2800000, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   spriteInfoList:
   - id: 0
     x: 0
-    y: 896
-    width: 128
-    height: 128
+    y: 1536
+    width: 512
+    height: 512
     xOffset: 0
-    yOffset: 120
-    xAdvance: 128
-    scale: 1
-    name: Power
-    hashCode: 94339295
+    yOffset: 350
+    xAdvance: 512
+    scale: 1.5
+    name: IconSpriteSheet_Full_0
+    hashCode: 1569410894
     unicode: 0
-    pivot: {x: -64, y: 64}
-    sprite: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840,
+    pivot: {x: -256, y: 256}
+    sprite: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
   - id: 1
-    x: 128
-    y: 896
-    width: 128
-    height: 128
+    x: 512
+    y: 1536
+    width: 512
+    height: 512
     xOffset: 0
-    yOffset: 120
-    xAdvance: 128
-    scale: 1
-    name: Stone
-    hashCode: 99184899
+    yOffset: 350
+    xAdvance: 512
+    scale: 1.6
+    name: IconSpriteSheet_Full_1
+    hashCode: 1569410895
     unicode: 0
-    pivot: {x: -64, y: 64}
-    sprite: {fileID: -5109177819046786902, guid: 010e16e474393c44cace5a0040035840,
+    pivot: {x: -256, y: 256}
+    sprite: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
   - id: 2
-    x: 256
-    y: 896
-    width: 128
-    height: 128
+    x: 1024
+    y: 1536
+    width: 512
+    height: 512
     xOffset: 0
-    yOffset: 120
-    xAdvance: 128
-    scale: 1
-    name: Food
-    hashCode: 2626498
+    yOffset: 350
+    xAdvance: 512
+    scale: 2
+    name: IconSpriteSheet_Full_2
+    hashCode: 1569410892
     unicode: 0
-    pivot: {x: -64, y: 64}
-    sprite: {fileID: 3414657202290878509, guid: 010e16e474393c44cace5a0040035840,
+    pivot: {x: -256, y: 256}
+    sprite: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
   - id: 3
-    x: 384
-    y: 896
-    width: 128
-    height: 128
+    x: 1536
+    y: 1536
+    width: 512
+    height: 512
     xOffset: 0
-    yOffset: 120
-    xAdvance: 128
-    scale: 1
-    name: Water
-    hashCode: 104373205
+    yOffset: 350
+    xAdvance: 512
+    scale: 2
+    name: IconSpriteSheet_Full_3
+    hashCode: 1569410893
     unicode: 0
-    pivot: {x: -64, y: 64}
-    sprite: {fileID: 5223461305758084474, guid: 010e16e474393c44cace5a0040035840,
-      type: 3}
+    pivot: {x: -256, y: 256}
+    sprite: {fileID: 756898814474196213, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   fallbackSpriteAssets: []
---- !u!21 &5971052069760343991
+--- !u!21 &7016721618593850980
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 1

@@ -3402,7 +3402,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: 94e675755f1b42e4d8a914c23d1973da, type: 2}
+  m_spriteAsset: {fileID: 11400000, guid: 14dee688bee8009468e127ec49960f06, type: 2}
   m_tintAllSprites: 0
   m_overrideHtmlColors: 0
   m_faceColor:
@@ -3562,7 +3562,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: 94e675755f1b42e4d8a914c23d1973da, type: 2}
+  m_spriteAsset: {fileID: 11400000, guid: 14dee688bee8009468e127ec49960f06, type: 2}
   m_tintAllSprites: 0
   m_overrideHtmlColors: 0
   m_faceColor:
@@ -6622,9 +6622,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: <sprite=0> <size=.75em><voffset=.25em>Resources</voffset></size> <sprite=1>
-    <size=.75em><voffset=.25em>Resources</voffset></size> <sprite=2> <size=.75em><voffset=.25em>Resources</voffset></size>
-    <sprite=3> <size=.75em><voffset=.25em>Resources</voffset></size>
+  m_text: '<sprite=0> Resources <sprite=1> Resources <sprite=2> Resources <sprite=3>
+    Resources '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6643,7 +6642,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: 94e675755f1b42e4d8a914c23d1973da, type: 2}
+  m_spriteAsset: {fileID: 11400000, guid: 14dee688bee8009468e127ec49960f06, type: 2}
   m_tintAllSprites: 0
   m_overrideHtmlColors: 0
   m_faceColor:
@@ -6659,7 +6658,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 4097
+  m_textAlignment: 513
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -6693,9 +6692,9 @@ MonoBehaviour:
   m_margin: {x: 20, y: 0, z: 20, w: 0}
   m_textInfo:
     textComponent: {fileID: 1696382944}
-    characterCount: 47
+    characterCount: 48
     spriteCount: 0
-    spaceCount: 7
+    spaceCount: 8
     wordCount: 5
     linkCount: 0
     lineCount: 1

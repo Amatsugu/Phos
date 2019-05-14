@@ -18,13 +18,13 @@ MonoBehaviour:
     spriteID: 0
   - name: Metal
     resourceTile: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
-    spriteID: 1
+    spriteID: 2
   - name: Carbon
     resourceTile: {fileID: 11400000, guid: b5c46715dc3c516429087c81d7a495fa, type: 2}
-    spriteID: 2
+    spriteID: 3
   - name: Water
     resourceTile: {fileID: 0}
-    spriteID: 3
+    spriteID: 1
   - name: Composite Metal
     resourceTile: {fileID: 0}
     spriteID: 4

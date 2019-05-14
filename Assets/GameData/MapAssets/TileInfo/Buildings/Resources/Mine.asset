@@ -27,7 +27,7 @@ MonoBehaviour:
     ammount: 5
   - id: 1
     ammount: 5
-  icon: {fileID: -5109177819046786902, guid: 010e16e474393c44cace5a0040035840, type: 3}
+  icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   production:
   - id: 1
     ammount: 5
