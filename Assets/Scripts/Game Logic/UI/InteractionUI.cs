@@ -72,13 +72,13 @@ public class InteractionUI : MonoBehaviour
 						var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetX, _start.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
 						var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetX, _end.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
 						var p3 = _end.Coords.worldXZ;
+#if DEBUG
 						p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
 						Debug.DrawLine(p0, p1, Color.white);
 						Debug.DrawLine(p1, p3, Color.white);
 						Debug.DrawLine(p0, p2, Color.white);
 						Debug.DrawLine(p2, p3, Color.white);
-						var sp0 = _cam.WorldToScreenPoint(p0);
-						var sp3 = _cam.WorldToScreenPoint(p3);
+#endif
 						var w = p0.x - p1.x;
 						var h = p0.z - p2.z; 
 						selectionBox.position = new Vector3(p0.x - (w/2), 0, p0.z - (h/2));
@@ -128,7 +128,7 @@ public class InteractionUI : MonoBehaviour
 					var dstSelection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
 					while (dstSelection.Count() < dstTileCount)
 						dstSelection = Map.ActiveMap.HexSelect(tile.Coords, ++r).Where(t => !(t is BuildingTile));
-					var dstTiles = dstSelection.ToArray();
+					var dstTiles = dstSelection/*.OrderBy(t => Vector3.SqrMagnitude(tile.SurfacePoint - t.SurfacePoint))*/.ToArray();
 
 					var curGroupSize = 0;
 					var curGroup = 0;
@@ -166,13 +166,22 @@ public class InteractionUI : MonoBehaviour
 			var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
 			if (uiPos.x < 0)
 				uiPos.x = 0;
-			if (uiPos.x + interactionPanel.Width > Screen.width)
+			else if (uiPos.x + interactionPanel.Width > Screen.width)
 				uiPos.x = Screen.width - interactionPanel.Width;
 			if (uiPos.y < interactionPanel.Height)
 				uiPos.y = interactionPanel.Height;
-			if (uiPos.y > Screen.height)
+			else if (uiPos.y > Screen.height)
 				uiPos.y = Screen.height;
 			interactionPanel.AnchoredPosition = uiPos;
+
+			if (uiPos.x < -interactionPanel.Width)
+				interactionPanel.HidePanel();
+			else if (uiPos.x > Screen.width)
+				interactionPanel.HidePanel();
+			if (uiPos.y < 0)
+				interactionPanel.HidePanel();
+			else if (uiPos.y > Screen.height + interactionPanel.Height)
+				interactionPanel.HidePanel();
 		}
 
 	}

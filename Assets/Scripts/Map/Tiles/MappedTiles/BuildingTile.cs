@@ -16,7 +16,7 @@ public class BuildingTile : Tile
 
 	private Entity _building;
 
-	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
+	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
 	{
 		buildingInfo = tInfo;
 	}
@@ -69,7 +69,7 @@ public class PoweredBuildingTile : BuildingTile
 	private bool _init;
 	private HexCoords _connectionSrc;
 
-	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo = null) : base(coords, height, tInfo)
+	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
 	{
 	}
 

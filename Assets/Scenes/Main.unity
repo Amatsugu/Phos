@@ -5243,6 +5243,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1369379223}
+  - component: {fileID: 1369379224}
   m_Layer: 8
   m_Name: _PPS
   m_TagString: Untagged
@@ -5267,6 +5268,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1369379224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369379222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9494a34cbbfad6d4d936f2336c1476ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 282
+  uiBase: {fileID: 538560001}
 --- !u!1 &1383650449
 GameObject:
   m_ObjectHideFlags: 0
@@ -6176,7 +6191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Tech: []
   Resource:
-  - {fileID: 11400000, guid: f22ee723ab00baf41a026cfbadc360df, type: 2}
+  - {fileID: 11400000, guid: 0ef12f3aada833948909acbc675a5953, type: 2}
   - {fileID: 11400000, guid: c6dc8c018e7494742882468f5336e6b0, type: 2}
   Economy: []
   Structure:

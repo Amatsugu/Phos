@@ -90,7 +90,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					//Path Placement
 					if (!hqMode && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
 					{
-						_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile);
+						_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
 						if (_buildPath != null)
 						{
 							if(_buildPath.Any(t => t.Height <= Map.ActiveMap.seaLevel))
@@ -194,8 +194,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	private void OnDestroy()
+	private void OnDisable()
 	{
+		HideAllIndicators();
 	}
 
 	void HideIndicators(List<Entity> entities)

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
   material: {fileID: 2100000, guid: 0e66970b266f32e4ea82137046fdf1da, type: 2}
-  castShadows: 1
+  castShadows: 0
   receiveShadows: 1
