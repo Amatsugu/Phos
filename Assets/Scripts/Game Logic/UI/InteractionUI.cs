@@ -174,13 +174,13 @@ public class InteractionUI : MonoBehaviour
 				uiPos.y = Screen.height;
 			interactionPanel.AnchoredPosition = uiPos;
 
-			if (uiPos.x < -interactionPanel.Width)
+			if (uiPos.x <= -interactionPanel.Width)
 				interactionPanel.HidePanel();
-			else if (uiPos.x > Screen.width)
+			else if (uiPos.x >= Screen.width)
 				interactionPanel.HidePanel();
-			if (uiPos.y < 0)
+			if (uiPos.y <= 0)
 				interactionPanel.HidePanel();
-			else if (uiPos.y > Screen.height + interactionPanel.Height)
+			else if (uiPos.y >= Screen.height + interactionPanel.Height)
 				interactionPanel.HidePanel();
 		}
 

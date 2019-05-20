@@ -21,7 +21,7 @@ public class UnitMovementSystem : ComponentSystem
 	{
 		Entities.WithNone<Path>().ForEach((Entity e, ref PathGroup pg, ref Translation t, ref Destination d, ref UnitId id) =>
 		{
-			if (math.distancesq(t.Value, d.Value) < 0.0005f)
+			if (math.distancesq(t.Value, d.Value) < 0.005f)
 			{
 				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
@@ -102,7 +102,7 @@ public class UnitMovementSystem : ComponentSystem
 			t.Value += h.Value * m.Value * Time.deltaTime;
 			t.Value.y = curTile.Height;
 			PostUpdateCommands.SetComponent(e, new Rotation { Value = Quaternion.LookRotation(h.Value, Vector3.up) });
-			if (math.distancesq(t.Value, ntPos) < .0005f)
+			if (math.distancesq(t.Value, ntPos) < .005f)
 			{
 				pg.Progress++;
 				if (pg.Progress + 1 >= p.Value.Count)

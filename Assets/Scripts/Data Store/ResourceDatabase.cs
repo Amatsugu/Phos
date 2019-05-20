@@ -33,6 +33,16 @@ public class ResourceDatabase
 		throw new System.Exception($"Resource '{name}' does not exits");
 	}
 
+	public static int GetResourceId(ResourceTileInfo tileInfo)
+	{
+		for (int i = 0; i < INST._resourceDefs.Length; i++)
+		{
+			if (INST._resourceDefs[i].resourceTile == tileInfo)
+				return i;
+		}
+		throw new System.Exception($"Resource '{tileInfo.name}' does not exits");
+	}
+
 	public static string GetResourceName(int id)
 	{
 		return id >= INST._resourceDefs.Length ? null : INST._resourceDefs[id].name;

@@ -40,9 +40,9 @@ public class MeshEntity : ScriptableObject
 		return _entity;
 	}
 
-	protected virtual EntityArchetype GetArchetype() => World.Active.EntityManager.CreateArchetype(GetComponents());
+	protected virtual EntityArchetype GetArchetype() => World.Active.EntityManager.CreateArchetype(GetComponents().ToArray());
 
-	public virtual ComponentType[] GetComponents()
+	public virtual IEnumerable<ComponentType> GetComponents()
 	{
 		return new ComponentType[]{
 			typeof(Translation),

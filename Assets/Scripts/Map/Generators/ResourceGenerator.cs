@@ -35,6 +35,8 @@ public class ResourceGenerator : FeatureGenerator
 			for (int x = 0; x < map.totalWidth; x++)
 			{
 				var pos = HexCoords.FromOffsetCoords(x, z, map.tileEdgeLength);
+				if (map[pos] is ResourceTile)
+					continue;
 				var h = map[pos].Height;
 				if (h < Map.ActiveMap.seaLevel)
 					continue;

@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
   m_Name: Random Generator
   m_EditorClassIdentifier: 
-  Size: {x: 12, y: 12}
+  Size: {x: 16, y: 16}
   tileMapper: {fileID: 0}
   seaLevel: 5
   edgeLength: 1
   featureGenerators:
   - {fileID: 11400000, guid: 93401847f3613cc40b2de43739f80765, type: 2}
   - {fileID: 11400000, guid: c9e48f60e45c00e4083aa5568f49129b, type: 2}
+  - {fileID: 11400000, guid: 19cbb8bc839fbdf4e9f0b5f479e64ea3, type: 2}
+  - {fileID: 11400000, guid: 473d589591da6e14e9845fd435ad0948, type: 2}
   useJobs: 0
   Regen: 0
   borderSize: 64
@@ -138,7 +140,7 @@ MonoBehaviour:
         center: {x: 0, y: 0, z: 0}
         weightMultiplier: 4.57
   useSeed: 0
-  seed: -926570657
+  seed: -927147679
   landSeaRatio: 0.25
   biomeFold: 1
   preview: 1

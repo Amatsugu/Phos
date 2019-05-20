@@ -153,6 +153,8 @@ public class Map : IDisposable
 			for (int i = 0; i < SIZE * SIZE; i++)
 			{
 				_chunkTiles[i] = Tiles[i].Render();
+				//EM.AddComponent(_chunkTiles[i], typeof(ChunkWorldRenderBounds));
+				//EM.SetComponentData(_chunkTiles[i], new ChunkWorldRenderBounds { Value = new Unity.Mathematics.AABB { Center = _bounds.center, Extents = _bounds.extents } });
 			}
 		}
 
@@ -308,7 +310,7 @@ public class Map : IDisposable
 		return null;
 	}
 
-	public List<Tile> HexSelect(HexCoords center, int radius)
+	public List<Tile> HexSelect(HexCoords center, int radius, bool excludeCenter = false)
 	{
 		var selection = new List<Tile>();
 		radius = Mathf.Abs(radius);
@@ -328,8 +330,11 @@ public class Map : IDisposable
 			{
 				int z = -x - y;
 				var t = this[center.x + x, center.y + y, center.z + z];
-				if (t != null)
-					selection.Add(t);
+				if (t == null)
+					continue;
+				if (excludeCenter && t.Coords == center)
+					continue;
+				selection.Add(t);
 			}
 		}
 		return selection;

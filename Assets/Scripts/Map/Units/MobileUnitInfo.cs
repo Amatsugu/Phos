@@ -9,13 +9,13 @@ public class MobileUnitInfo : MeshEntityRotatable
 {
 	public float moveSpeed = 1;
 
-	public override ComponentType[] GetComponents()
+	public override IEnumerable<ComponentType> GetComponents()
 	{
 		return base.GetComponents().Concat(new ComponentType[] {
 			typeof(MoveSpeed),
 			typeof(Heading),
 			typeof(UnitId)
-		}).ToArray();
+		});
 	}
 
 

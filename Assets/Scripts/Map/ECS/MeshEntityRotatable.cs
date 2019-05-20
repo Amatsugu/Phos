@@ -9,11 +9,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ECS/Rotatable Mesh Enity")]
 public class MeshEntityRotatable : MeshEntity
 {
-	public override ComponentType[] GetComponents()
+	public override IEnumerable<ComponentType> GetComponents()
 	{
 		return base.GetComponents().Concat(new ComponentType[]{
 			typeof(Rotation)
-		}).ToArray();
+		});
 	}
 
 	public Entity Instantiate(Vector3 position, Vector3 scale, Quaternion rotation)

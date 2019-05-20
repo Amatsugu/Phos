@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IronOreResourceGenerator
   m_EditorClassIdentifier: 
   resource: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
-  density: 0
+  density: 1
   settings:
     type: 0
     simpleNoiseSettings:
@@ -35,4 +35,3 @@ MonoBehaviour:
       weightMultiplier: 0.13
   noiseScale: 500
   preview: 1
-  previewTex: {fileID: 0}

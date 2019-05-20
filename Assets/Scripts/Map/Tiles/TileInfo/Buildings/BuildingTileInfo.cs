@@ -26,11 +26,11 @@ public class BuildingTileInfo : TileInfo
 		public int ammount;
 	}
 
-	public override ComponentType[] GetComponents()
+	public override IEnumerable<ComponentType> GetComponents()
 	{
 		return base.GetComponents().Concat(new ComponentType[]{
 			typeof(FirstTickTag)
-		}).ToArray();
+		});
 	}
 
 	public override Entity Instantiate(HexCoords pos, Vector3 scale)

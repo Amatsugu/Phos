@@ -32,10 +32,10 @@ MonoBehaviour:
     resourceTile: {fileID: 0}
     spriteID: 5
   - name: Silver
-    resourceTile: {fileID: 0}
+    resourceTile: {fileID: 11400000, guid: 9aff72993e7e56042a67d5091984d80d, type: 2}
     spriteID: 6
   - name: Gold
-    resourceTile: {fileID: 0}
+    resourceTile: {fileID: 11400000, guid: 5f2425752e5adba4cb465b4a23a554fc, type: 2}
     spriteID: 7
   - name: Electrum
     resourceTile: {fileID: 0}

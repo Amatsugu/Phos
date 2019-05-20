@@ -12,11 +12,11 @@ public class TileInfo : MeshEntity
     public TileDecorator[] decorators;
 	public string description;
 
-	public override ComponentType[] GetComponents()
+	public override IEnumerable<ComponentType> GetComponents()
 	{
 		return base.GetComponents().Concat(new ComponentType[]{
-			typeof(HexPosition),
-		}).ToArray();
+			typeof(HexPosition)
+		});
 	}
 
 	public virtual Entity Instantiate(HexCoords pos, Vector3 scale)

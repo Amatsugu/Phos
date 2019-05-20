@@ -27,43 +27,43 @@ MonoBehaviour:
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 1
-    m_Scale: 1.6
+    m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_1
     m_HashCode: 1569410895
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 2
-    m_Scale: 2
+    m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_2
     m_HashCode: 1569410892
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 3
-    m_Scale: 2
+    m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_3
     m_HashCode: 1569410893
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 4
-    m_Scale: 2
+    m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_4
     m_HashCode: 1569410890
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 5
-    m_Scale: 2
+    m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_5
     m_HashCode: 1569410891
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 6
-    m_Scale: 2
+    m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_6
     m_HashCode: 1569410888
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 7
-    m_Scale: 2
+    m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_7
     m_HashCode: 1569410889
   m_SpriteGlyphTable:
@@ -111,7 +111,7 @@ MonoBehaviour:
       m_Y: 1536
       m_Width: 512
       m_Height: 512
-    m_Scale: 1.5
+    m_Scale: 1.2
     m_AtlasIndex: 0
     sprite: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
@@ -127,7 +127,7 @@ MonoBehaviour:
       m_Y: 1536
       m_Width: 512
       m_Height: 512
-    m_Scale: 1.5
+    m_Scale: 1.2
     m_AtlasIndex: 0
     sprite: {fileID: 756898814474196213, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   - m_Index: 4
@@ -142,7 +142,7 @@ MonoBehaviour:
       m_Y: 1024
       m_Width: 512
       m_Height: 512
-    m_Scale: 1.5
+    m_Scale: 1.2
     m_AtlasIndex: 0
     sprite: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
@@ -174,7 +174,7 @@ MonoBehaviour:
       m_Y: 1024
       m_Width: 512
       m_Height: 512
-    m_Scale: 1.5
+    m_Scale: 1.2
     m_AtlasIndex: 0
     sprite: {fileID: -910342561807809153, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
@@ -190,7 +190,7 @@ MonoBehaviour:
       m_Y: 1024
       m_Width: 512
       m_Height: 512
-    m_Scale: 1.5
+    m_Scale: 1.2
     m_AtlasIndex: 0
     sprite: {fileID: -7947723104890870202, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}

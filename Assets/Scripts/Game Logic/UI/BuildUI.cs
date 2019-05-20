@@ -28,9 +28,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	//Indicators
 	public MeshEntity selectIndicatorEntity;
 	public MeshEntity placementPathIndicatorEntity;
+	public MeshEntity gatheringIndicatorEntity;
 	public MeshEntity errorIndicatorEntity;
 	//Tooltip
 	public UITooltip toolTip;
+	public TMP_Text floatingText;
 	//State
 	[HideInInspector]
 	public bool placeMode;
@@ -48,6 +50,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	private Tile _startPoint;
 	private List<Tile> _buildPath;
+	private System.Func<Tile, bool> invalidTileSelector;
 
 	void Start()
 	{
@@ -61,6 +64,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_selectedUnit = HQTile;
 		toolTip.HideToolTip();
 		infoBanner.SetText("Place HQ Building");
+		invalidTileSelector = t =>
+			t.Height <= Map.ActiveMap.seaLevel ||
+			t is BuildingTile ||
+			t is ResourceTile;
 	}
 
 	// Update is called once per frame
@@ -90,10 +97,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					//Path Placement
 					if (!hqMode && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
 					{
-						_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
+						if (!(selectedTile is ResourceTile))
+							_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
+						else
+							_buildPath = null;
 						if (_buildPath != null)
 						{
-							if(_buildPath.Any(t => t.Height <= Map.ActiveMap.seaLevel))
+							if (_buildPath.Any(t => t.Height <= Map.ActiveMap.seaLevel))
 							{
 								var invalidTiles = _buildPath.Where(t => t.Height <= Map.ActiveMap.seaLevel);
 								ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
@@ -108,19 +118,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						_startPoint = selectedTile;
 					}
 					//Indicators
-					if(!ResourceSystem.HasResourses(_selectedUnit.cost))
+					if (!ResourceSystem.HasResourses(_selectedUnit.cost))
 					{
 						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 					}
-					else if(tilesToOccupy.Any(t => t.Height <= Map.ActiveMap.seaLevel))
+					else if (tilesToOccupy.Any(invalidTileSelector))
 					{
-						var invalidTiles = tilesToOccupy.Where(t => t.Height <= Map.ActiveMap.seaLevel);
-						ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
-						ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
-					}
-					else if(tilesToOccupy.Any(t => t is BuildingTile))
-					{
-						var invalidTiles = tilesToOccupy.Where(t => t is BuildingTile);
+						var invalidTiles = tilesToOccupy.Where(invalidTileSelector);
 						ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 						ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
 					}
@@ -128,6 +132,31 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					{
 						ShowIndicators(selectIndicatorEntity, tilesToOccupy);
 						validPlacement = true;
+					}
+					if (_selectedUnit is ResourceGatheringBuildingInfo r)
+					{
+						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile).ToList();
+						var resCount = new Dictionary<int, int>();
+						for (int i = 0; i < res.Count; i++)
+						{
+							var id = ResourceDatabase.GetResourceId(res[i].info as ResourceTileInfo);
+							if (resCount.ContainsKey(id))
+								resCount[id]++;
+							else
+								resCount.Add(id, 1);
+						}
+						var sb = new System.Text.StringBuilder();
+						foreach (var resItem in resCount)
+						{
+							if (resItem.Value > 0)
+								sb.AppendLine($"+{resItem.Value}<sprite={ResourceDatabase.GetSpriteId(resItem.Key)}>");
+						}
+						floatingText.SetText(sb);
+						var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
+						pos.y += 20;
+						floatingText.rectTransform.position = pos;
+						floatingText.gameObject.SetActive(true);
+						ShowIndicators(gatheringIndicatorEntity, res);
 					}
 
 					//Placement
@@ -142,13 +171,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 							{
 								Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.size, _selectedUnit.influenceRange, Map.FlattenMode.Average);
 								Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit);
-							}else
+							}
+							else
 							{
 								for (int i = 0; i < _buildPath.Count; i++)
 								{
-									if (_buildPath[i].Height <= Map.ActiveMap.seaLevel)
-										continue;
-									if (_buildPath[i] is BuildingTile)
+									if (invalidTileSelector(_buildPath[i]))
 										continue;
 									Map.ActiveMap.HexFlatten(_buildPath[i].Coords, _selectedUnit.size, _selectedUnit.influenceRange, Map.FlattenMode.Average);
 									Map.ActiveMap.ReplaceTile(_buildPath[i], _selectedUnit);
@@ -192,6 +220,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			HideIndicator(indicators.Key);
 		}
+		floatingText.gameObject.SetActive(false);
+		toolTip.HideToolTip();
 	}
 
 	private void OnDisable()
