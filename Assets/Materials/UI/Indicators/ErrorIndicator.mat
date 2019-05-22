@@ -11,7 +11,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: a159b8659c3d3fa4aa6729718eca07e1,
     type: 3}
   m_ShaderKeywords: _NORMALMAP_TANGENT_SPACE
-  m_LightmapFlags: 1
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -112,8 +112,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_3EE48FA8: 4.01
-    - Vector1_5C627842: 2.64
-    - Vector1_9B86633A: 0.27
+    - Vector1_5C627842: 2.12
+    - Vector1_9B86633A: 1.15
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
@@ -228,7 +228,7 @@ Material:
     - _ZTestModeDistortion: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_917C605: {r: 766.9961, g: 0, b: 0, a: 1}
+    - Color_917C605: {r: 1024, g: 0, b: 7.7285156, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 10.432951, g: 0, b: 4.0967083, a: 1}

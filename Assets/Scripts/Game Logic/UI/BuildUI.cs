@@ -135,28 +135,37 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					}
 					if (_selectedUnit is ResourceGatheringBuildingInfo r)
 					{
-						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile).ToList();
-						var resCount = new Dictionary<int, int>();
-						for (int i = 0; i < res.Count; i++)
+						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile rt && !rt.gatherer.isCreated).ToList();
+						if (res.Count > 0)
 						{
-							var id = ResourceDatabase.GetResourceId(res[i].info as ResourceTileInfo);
-							if (resCount.ContainsKey(id))
-								resCount[id]++;
-							else
-								resCount.Add(id, 1);
-						}
-						var sb = new System.Text.StringBuilder();
-						foreach (var resItem in resCount)
+							validPlacement = true;
+							var resCount = new Dictionary<int, int>();
+							for (int i = 0; i < res.Count; i++)
+							{
+								var id = ResourceDatabase.GetResourceId(res[i].info as ResourceTileInfo);
+								if (resCount.ContainsKey(id))
+									resCount[id]++;
+								else
+									resCount.Add(id, 1);
+							}
+							var sb = new System.Text.StringBuilder();
+							foreach (var resItem in resCount)
+							{
+								if (resItem.Value > 0)
+									sb.AppendLine($"+{resItem.Value}<sprite={ResourceDatabase.GetSpriteId(resItem.Key)}>");
+							}
+							floatingText.SetText(sb);
+							var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
+							pos.y += 20;
+							floatingText.rectTransform.position = pos;
+							floatingText.gameObject.SetActive(true);
+							ShowIndicators(gatheringIndicatorEntity, res);
+						}else
 						{
-							if (resItem.Value > 0)
-								sb.AppendLine($"+{resItem.Value}<sprite={ResourceDatabase.GetSpriteId(resItem.Key)}>");
+							validPlacement = false;
+							HideAllIndicators();
+							ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 						}
-						floatingText.SetText(sb);
-						var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
-						pos.y += 20;
-						floatingText.rectTransform.position = pos;
-						floatingText.gameObject.SetActive(true);
-						ShowIndicators(gatheringIndicatorEntity, res);
 					}
 
 					//Placement
