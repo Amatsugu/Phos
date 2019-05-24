@@ -35,4 +35,3 @@ MonoBehaviour:
       weightMultiplier: 0.13
   noiseScale: 500
   preview: 1
-  previewTex: {fileID: 0}

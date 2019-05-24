@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SilverOreResourceGenerator
   m_EditorClassIdentifier: 
   resource: {fileID: 11400000, guid: 9aff72993e7e56042a67d5091984d80d, type: 2}
-  density: 0
+  density: 0.422
   settings:
     type: 0
     simpleNoiseSettings:
@@ -22,7 +22,7 @@ MonoBehaviour:
       baseRoughness: 7
       roughness: 2.25
       persistence: 0.71
-      minValue: 0.87
+      minValue: 0.79
       center: {x: 6.56, y: 0, z: 0}
     rigidNoiseSettings:
       strength: 1

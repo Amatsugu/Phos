@@ -40,7 +40,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		}
 		for (int i = 0; i < gatherInfo.resourcesToGather.Length; i++)
 		{
-			prodData.resourceIds[1] = gatherInfo.resourcesToGather[i].id;
+			prodData.resourceIds[i] = gatherInfo.resourcesToGather[i].id;
 		}
 		if (Map.EM.HasComponent<ProductionData>(_tileEntity))
 		{
@@ -54,6 +54,12 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		}
 		else
 			Map.EM.AddSharedComponentData(_tileEntity, prodData);
+
+		var p = Map.EM.GetSharedComponentData<ProductionData>(_tileEntity);
+		for (int i = 0; i < p.resourceIds.Length; i++)
+		{
+			Debug.Log($"{p.resourceIds[i]} : {p.rates[i]}");
+		}
 	}
 
 	public override void OnRemoved()

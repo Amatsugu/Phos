@@ -135,7 +135,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					}
 					if (_selectedUnit is ResourceGatheringBuildingInfo r)
 					{
-						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile rt && !rt.gatherer.isCreated).ToList();
+						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile rt && !rt.gatherer.isCreated).Where(rt => r.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();
 						if (res.Count > 0)
 						{
 							validPlacement = true;
@@ -235,7 +235,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	private void OnDisable()
 	{
-		HideAllIndicators();
+		if(Map.ActiveMap.IsRendered)
+			HideAllIndicators();
 	}
 
 	void HideIndicators(List<Entity> entities)

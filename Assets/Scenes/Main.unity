@@ -6431,8 +6431,14 @@ MonoBehaviour:
   Tech: []
   Resource:
   - {fileID: 11400000, guid: 0ef12f3aada833948909acbc675a5953, type: 2}
+  - {fileID: 11400000, guid: ba0f6b1eb8dc15140b1a78d6d5193a76, type: 2}
   - {fileID: 11400000, guid: c6dc8c018e7494742882468f5336e6b0, type: 2}
-  Economy: []
+  - {fileID: 11400000, guid: fcfbc5a667690e540b3cbcda9dd74c53, type: 2}
+  Economy:
+  - {fileID: 11400000, guid: 2e4734b90a718294d9106a9cd2c5f510, type: 2}
+  - {fileID: 11400000, guid: 806da794f6c07bb419f217c1384051b6, type: 2}
+  - {fileID: 11400000, guid: d02481ac5a9ada04faab17721ee4fe04, type: 2}
+  - {fileID: 11400000, guid: 763826ebcd88b8f44bd20f65c32a52f7, type: 2}
   Structure:
   - {fileID: 11400000, guid: 3cc0710394c6484469d70a3f22497434, type: 2}
   Millitary: []

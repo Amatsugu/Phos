@@ -10,27 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
-  m_Name: Mine
+  m_Name: Metal Forge
   m_EditorClassIdentifier: 
   mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  description: A basic mine that can be used to mine t1 and t2 resources.
-  buildingMesh: {fileID: 11400000, guid: fdad5a311b68bd5448df43a04167253f, type: 2}
+  description: Produces power
+  buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
   size: 0
-  powerTransferRadius: 0
-  influenceRange: 3
+  influenceRange: 0
   cost:
-  - id: 0
-    ammount: 5
   - id: 1
-    ammount: 5
-  icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+    ammount: 2
+  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   production:
-  - id: 1
+  - id: 4
     ammount: 5
   consumption:
   - id: 0
+    ammount: 5
+  - id: 1
+    ammount: 5
+  - id: 2
     ammount: 1
