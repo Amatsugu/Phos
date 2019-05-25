@@ -13,18 +13,11 @@ public class BuildingTileInfo : TileInfo
 	public int size = 0;
 	public int influenceRange = 0;
 	[SerializeField]
-	public Resource[] cost;
+	public ResourceIndentifier[] cost;
 	public Sprite icon;
 
-	public Resource[] production;
-	public Resource[] consumption;
-
-	[System.Serializable]
-	public struct Resource
-	{
-		public int id;
-		public int ammount;
-	}
+	public ResourceIndentifier[] production;
+	public ResourceIndentifier[] consumption;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{

@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System.Linq;
 
-[CustomPropertyDrawer(typeof(BuildingTileInfo.Resource))]
+[CustomPropertyDrawer(typeof(ResourceIndentifier))]
 public class ResourceListUI : PropertyDrawer
 {
 	private ResourceList _resList;

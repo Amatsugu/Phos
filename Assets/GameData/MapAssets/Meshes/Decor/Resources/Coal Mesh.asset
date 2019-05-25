@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 349cd418e960646429bb24fb8abb8192, type: 3}
-  m_Name: Coal
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Name: Coal Mesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
+  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: d3cdf54e36ea51f4b96e63988b3d98ed, type: 2}
   castShadows: 1
   receiveShadows: 1
-  decorators:
-  - {fileID: 11400000, guid: 94b511a7c24baa146b96da3344e7b478, type: 2}
-  description: Coal

@@ -23,7 +23,7 @@ MonoBehaviour:
       roughness: 2.25
       persistence: 0.71
       minValue: 0.79
-      center: {x: 0, y: 3.63, z: 0}
+      center: {x: 0, y: 4.56, z: 0}
     rigidNoiseSettings:
       strength: 1
       layerCount: 3

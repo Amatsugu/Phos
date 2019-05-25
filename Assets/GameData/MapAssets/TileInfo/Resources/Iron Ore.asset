@@ -16,5 +16,6 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 0aa1c517a135c88409fae2b7f28389b5, type: 2}
   castShadows: 1
   receiveShadows: 1
-  decorators: []
+  decorators:
+  - {fileID: 11400000, guid: 73a842b313405304fbbd3068479fc460, type: 2}
   description: Iron Ore

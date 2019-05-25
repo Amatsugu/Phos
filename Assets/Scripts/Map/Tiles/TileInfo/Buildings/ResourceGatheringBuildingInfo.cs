@@ -7,7 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building/Resoruce Gathering")]
 public class ResourceGatheringBuildingInfo : BuildingTileInfo
 {
-	public Resource[] resourcesToGather;
+	public ResourceIndentifier[] resourcesToGather;
 	public int gatherRange = 3;
 
 	public override Tile CreateTile(HexCoords pos, float height)

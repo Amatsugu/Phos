@@ -31,7 +31,7 @@ public class ResourceSystem : ComponentSystem
 		nextTic = nextTic.AddSeconds(1 / ticRate);
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];
-		Entities.WithNone<InactiveBuilding, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
+		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{
@@ -80,16 +80,16 @@ public class ResourceSystem : ComponentSystem
 		totalDemand[rID] -= totalRate;
 		if (resCount[rID] < totalRate)
 		{
-			if (!EntityManager.HasComponent<InactiveBuilding>(e))
+			if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
 			{
-				PostUpdateCommands.AddComponent(e, new InactiveBuilding());
+				PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
 				return false;
 			}
 		}
 		else
 		{
-			if (EntityManager.HasComponent<InactiveBuilding>(e))
-				PostUpdateCommands.RemoveComponent(e, typeof(InactiveBuilding));
+			if (EntityManager.HasComponent<InactiveBuildingTag>(e))
+				PostUpdateCommands.RemoveComponent(e, typeof(InactiveBuildingTag));
 			resCount[rID] -= totalRate;
 		}
 		return true;
@@ -99,25 +99,23 @@ public class ResourceSystem : ComponentSystem
 	{
 	}
 
-	public static void ConsumeResourses(BuildingTileInfo.Resource[] resources, float multi = 1)
+	public static void ConsumeResourses(ResourceIndentifier[] resources, float multi = 1)
 	{
 		for (int i = 0; i < resources.Length; i++)
-		{
-			var cost = resources[i];
-			resCount[cost.id] -= Mathf.FloorToInt(cost.ammount * multi);
-		}
+			ConsumeResource(resources[i], multi);
 	}
 
-	public static void AddResources(BuildingTileInfo.Resource[] resources, float multi = 1)
+	public static void ConsumeResource(ResourceIndentifier resource, float multi = 1) => resCount[resource.id] -= Mathf.FloorToInt(resource.ammount * multi);
+
+	public static void AddResources(ResourceIndentifier[] resources, float multi = 1)
 	{
 		for (int i = 0; i < resources.Length; i++)
-		{
-			var cost = resources[i];
-			resCount[cost.id] += Mathf.FloorToInt(cost.ammount * multi);
-		}
+			AddResource(resources[i]);
 	}
 
-	public static bool HasResourses(BuildingTileInfo.Resource[] resources, float multi = 1)
+	public static void AddResource(ResourceIndentifier resource, float multi = 1) => resCount[resource.id] += Mathf.FloorToInt(resource.ammount * multi);
+
+	public static bool HasResourses(ResourceIndentifier[] resources, float multi = 1)
 	{
 		for (int i = 0; i < resources.Length; i++)
 		{
@@ -126,5 +124,10 @@ public class ResourceSystem : ComponentSystem
 				return false;
 		}
 		return true;
+	}
+
+	public static bool HasResource(ResourceIndentifier resource, float multi = 1)
+	{
+		return resCount[resource.id] >= Mathf.FloorToInt(resource.ammount * multi);
 	}
 }

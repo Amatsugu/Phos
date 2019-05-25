@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 349cd418e960646429bb24fb8abb8192, type: 3}
-  m_Name: Silver Ore
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Name: Silver Mesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
+  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: f5d9e41e16a38274d9ca24e304f85fee, type: 2}
   castShadows: 1
   receiveShadows: 1
-  decorators:
-  - {fileID: 11400000, guid: b45ac7d4323be654fb507646e05cd4de, type: 2}
-  description: Silver Ore

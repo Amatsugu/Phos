@@ -21,3 +21,23 @@ MonoBehaviour:
   maxHeight: 4
   minSize: 0.2
   maxSize: 0.5
+  noise:
+    type: 0
+    simpleNoiseSettings:
+      strength: 0
+      layerCount: 0
+      baseRoughness: 0
+      roughness: 0
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+    rigidNoiseSettings:
+      strength: 0
+      layerCount: 0
+      baseRoughness: 0
+      roughness: 0
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
+  noiseScale: 250

@@ -73,9 +73,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	// Update is called once per frame
 	void Update()
 	{
-		if (Input.GetKey(KeyCode.Escape))
+		if (Input.GetKey(KeyCode.Escape) && !hqMode)
 		{
-			if (placeMode && !hqMode)
+			if (placeMode)
 			{
 				placeMode = false;
 				HideAllIndicators();
