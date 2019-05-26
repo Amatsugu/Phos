@@ -6647,7 +6647,7 @@ GameObject:
   - component: {fileID: 1122771324}
   - component: {fileID: 1122771323}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6687,6 +6687,7 @@ MonoBehaviour:
   node: {fileID: 888403162}
   vertConnector: {fileID: 624653773}
   horizConnector: {fileID: 299577508}
+  offset: {x: 50, y: 50, z: 0}
   nodeSize: {x: 100, y: 100}
   nodeSpacing: {x: 50, y: 50}
   regen: 0

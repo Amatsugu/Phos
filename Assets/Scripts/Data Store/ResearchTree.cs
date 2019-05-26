@@ -19,7 +19,12 @@ public class ResearchTree
 
 public class ResearchTech : IEnumerable<ResearchTech>
 {
+	public static int CUR_ID;
+	public int id;
 	public string name;
+	public string description;
+	public bool isResearched;
+	public ResourceIndentifier[] resourceCost;
 
 	public ResearchTech[] children;
 	public int Count { get; private set; }
@@ -28,9 +33,11 @@ public class ResearchTech : IEnumerable<ResearchTech>
 	const int MAX_CHILDREN = 6;
 
 
-	public ResearchTech(string name)
+	public ResearchTech(string name, string description = "", bool isResearched = false)
 	{
 		this.name = name;
+		id = CUR_ID++;
+		this.isResearched = isResearched;
 		children = new ResearchTech[MAX_CHILDREN];
 	}
 
