@@ -56,6 +56,10 @@ public class MapRenderer : MonoBehaviour
 		pos *= 2;
 		pos.y = map.seaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
+
+
+
+		
 	}
 
 	
