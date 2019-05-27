@@ -17,6 +17,9 @@ public class ResearchTreeUI : Editor
 			_window.serializedTarget = serializedObject;
 			_window.name = $"Research Tree: {_window.target.name}";
 			_window.Show();
+			serializedObject.ApplyModifiedProperties();
+			EditorUtility.SetDirty(target);
+			Undo.RecordObject(target, $"Research Tree {target.name}");
 		}
 	}
 }
@@ -37,21 +40,29 @@ public class ResearchTreeEditorWindow : EditorWindow
 	private Vector2 _totalSize;
 
 	private float _zoom = 1;
-
+	private int _totalC = 100;
 
 	void OnGUI()
 	{
+		if (serializedTarget == null)
+		{
+			Close();
+			return;
+		}
 		_zoom = GUI.HorizontalSlider(new Rect(0, 0, 200, 20), _zoom, .5f, 1f);
 		GUI.Label(new Rect(210, 0, 200, 20), $"{Mathf.Round(_zoom * 10)/10}x Node Count: {target.Count()}");
-		//_offset.y = 35;
 		_nodeSize = _baseNodeSize * _zoom;
 		_nodeSpacing = _baseNodeSpacing * _zoom;
 		_totalSize = _nodeSize + _nodeSpacing;
-		//GUI.Box(new Rect(0, 35, position.width, position.height - 35), GUIContent.none);
-		var boxRect = new Rect(0, 20, position.width, position.height - 35);
-		_scrollPos = GUI.BeginScrollView(boxRect, _scrollPos, new Rect(0, 0, 10000, 10000), true, true);
-		DrawTree(target.baseNode);
+		GUI.Box(new Rect(0, 20, position.width, position.height - 20), GUIContent.none);
+		var boxRect = new Rect(0, 20, position.width, position.height - 20);
+		_scrollPos = GUI.BeginScrollView(boxRect, _scrollPos, new Rect(0, 0, (target.GetDepth()+1) * _totalSize.x, _totalC * _totalSize.y), true, true);
+		_totalC = DrawTree(target.baseNode) + 1;
+		
 		GUI.EndScrollView();
+		var curEvent = Event.current;
+		if (curEvent.type == EventType.MouseMove)
+			_scrollPos += curEvent.delta;
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0)
@@ -62,7 +73,9 @@ public class ResearchTreeEditorWindow : EditorWindow
 		EditorGUI.BeginChangeCheck();
 		GUI.BeginGroup(nodeRect);
 		GUI.Box(new Rect(Vector2.zero, _nodeSize), GUIContent.none);
-		curTech.name = GUI.TextField(new Rect(0, _nodeSize.y - 20, _nodeSize.x, 20), curTech.name);
+		curTech.name = EditorGUI.TextField(new Rect(depth == 0 ? 0 : 20, _nodeSize.y - 20, _nodeSize.x, 20), curTech.name);
+		curTech.icon = EditorGUI.ObjectField(new Rect(0, 0, _nodeSize.x, _nodeSize.y - 20), curTech.icon, typeof(Sprite), false) as Sprite;
+		GUI.Label(new Rect(_nodeSize.x - 20, _nodeSize.y - 20, 20,20), $"{curTech.id}");
 		GUI.EndGroup();
 		if(EditorGUI.EndChangeCheck())
 			SaveObjectState();
@@ -85,7 +98,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 			lastC = DrawTree(curTech.children[i], depth + 1, i == 0 ? lastC : lastC + 1);
 			var minusPos = cPos;
 			minusPos.x += (i == 0) ? _nodeSpacing.x : (_nodeSpacing.x / 2);
-			minusPos.y -= _nodeSize.y/2;
+			minusPos.y += _nodeSize.y/2 - 20; 
 			if (GUI.Button(new Rect(minusPos, new Vector2(20,20)), "-"))
 			{
 				removeAt = i;

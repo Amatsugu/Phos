@@ -18,6 +18,11 @@ public class ResearchTree : ScriptableObject
 	{
 		return baseNode.DeepCount() + 1;
 	}
+
+	public int GetDepth()
+	{
+		return baseNode.GetDepth() + 1;
+	}
 }
 
 public class ResearchTech : IEnumerable<ResearchTech>
@@ -25,6 +30,7 @@ public class ResearchTech : IEnumerable<ResearchTech>
 	public static int CUR_ID;
 	public int id;
 	public string name;
+	public Sprite icon;
 	public string description;
 	public bool isResearched;
 	public ResourceIndentifier[] resourceCost;
@@ -33,7 +39,7 @@ public class ResearchTech : IEnumerable<ResearchTech>
 	public int Count { get; private set; }
 
 
-	public const int MAX_CHILDREN = 6;
+	public const int MAX_CHILDREN = 3;
 
 
 	public ResearchTech(string name, string description = "", bool isResearched = false)
@@ -74,17 +80,28 @@ public class ResearchTech : IEnumerable<ResearchTech>
 		return count;
 	}
 
+	public int GetDepth(int curDepth = 0)
+	{
+		var d = curDepth;
+		for (int i = 0; i < Count; i++)
+		{
+			var cD = children[i].GetDepth(curDepth + 1);
+			if (cD > d)
+				d = cD;
+		}
+		return d;
+	}
+
 	public void RemoveChild(int index)
 	{
 		if (index >= Count)
 			throw new IndexOutOfRangeException($"{index} is greater than or equal to {Count}");
-		var newArr = new ResearchTech[MAX_CHILDREN];
-		Count--;
-		for (int i = 0, j = 0; i < children.Length; i++)
+		for (int i = index+1; i < children.Length; i++)
 		{
-			if(i != index)
-				newArr[j++] = children[i];
+			children[i - 1] = children[i];
+			//if (i == Count)
+				//children[i] = null;
 		}
-		children = newArr;
+		Count--;
 	}
 }
