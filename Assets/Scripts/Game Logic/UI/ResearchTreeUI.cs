@@ -26,7 +26,7 @@ public class ResearchTreeUI : MonoBehaviour
 	{
 		uiElements = new List<RectTransform>();
 		//Test research
-		_researchTree = new ResearchTree(new ResearchTech("Base Node", isResearched: true));
+		/*_researchTree = new ResearchTree(new ResearchTech("Base Node", isResearched: true));
 		_researchTree.baseNode
 			.AddChild(new ResearchTech("T1 Node", isResearched: true)
 				.AddChild(new ResearchTech("T2 Node"))
@@ -40,7 +40,7 @@ public class ResearchTreeUI : MonoBehaviour
 
 		_totalOffset = nodeSize + nodeSpacing;
 
-		DrawTree(_researchTree.baseNode);
+		DrawTree(_researchTree.baseNode);*/
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
@@ -61,12 +61,12 @@ public class ResearchTreeUI : MonoBehaviour
 				curNode.GetComponent<Image>().color = new Color(.2f, .2f, .2f);
 		}
 		uiElements.Add(curNode);
-		var lastWidth = c;
+		var lastC = c;
 		for (int i = 0; i < curTech.Count; i++)
 		{
 			var cPos = pos;
 			cPos.x += (i == 0) ? nodeSize.x : (nodeSize.x + (nodeSpacing.x/2));
-			cPos.y = ((lastWidth + i) * -_totalOffset.y) - (nodeSize.y/2);
+			cPos.y = ((i == 0 ? lastC : lastC + 1) * -_totalOffset.y) - (nodeSize.y/2);
 			cPos.y -= offset.y;
 			var curConnector = Instantiate(horizConnector, cPos, Quaternion.identity, transform);
 			curConnector.anchoredPosition = cPos;
@@ -84,9 +84,9 @@ public class ResearchTreeUI : MonoBehaviour
 				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,  pos.y - cPos.y - (nodeSize.y/2));
 				uiElements.Add(hConnector);
 			}
-			lastWidth = DrawTree(curTech.children[i], depth + 1, lastWidth + i, curTech.isResearched);
+			lastC = DrawTree(curTech.children[i], depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
 		}
-		return lastWidth;
+		return lastC;
 	}
 
 	void OnValidate()

@@ -1,14 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResearchTree
+[CreateAssetMenu(menuName = "Game Data/Research Tree")]
+public class ResearchTree : ScriptableObject
 {
 	public ResearchTech baseNode;
 
-	public ResearchTree(ResearchTech root)
+	void OnEnable()
 	{
-		baseNode = root;
+		if(baseNode == null)
+			baseNode = new ResearchTech(name, isResearched: true);
 	}
 
 	public int Count()
@@ -30,7 +33,7 @@ public class ResearchTech : IEnumerable<ResearchTech>
 	public int Count { get; private set; }
 
 
-	const int MAX_CHILDREN = 6;
+	public const int MAX_CHILDREN = 6;
 
 
 	public ResearchTech(string name, string description = "", bool isResearched = false)
@@ -69,5 +72,19 @@ public class ResearchTech : IEnumerable<ResearchTech>
 			count += children[i].DeepCount();
 		}
 		return count;
+	}
+
+	public void RemoveChild(int index)
+	{
+		if (index >= Count)
+			throw new IndexOutOfRangeException($"{index} is greater than or equal to {Count}");
+		var newArr = new ResearchTech[MAX_CHILDREN];
+		Count--;
+		for (int i = 0, j = 0; i < children.Length; i++)
+		{
+			if(i != index)
+				newArr[j++] = children[i];
+		}
+		children = newArr;
 	}
 }
