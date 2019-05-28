@@ -99,8 +99,6 @@ public class ResearchTech : IEnumerable<ResearchTech>
 		for (int i = index+1; i < children.Length; i++)
 		{
 			children[i - 1] = children[i];
-			//if (i == Count)
-				//children[i] = null;
 		}
 		Count--;
 	}
