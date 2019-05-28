@@ -13,25 +13,6 @@ MonoBehaviour:
   m_Name: CoalResourceGenerator
   m_EditorClassIdentifier: 
   resource: {fileID: 11400000, guid: b5c46715dc3c516429087c81d7a495fa, type: 2}
-  density: 1
-  settings:
-    type: 0
-    simpleNoiseSettings:
-      strength: 1
-      layerCount: 3
-      baseRoughness: 8.45
-      roughness: 1.92
-      persistence: 0.96
-      minValue: 1.12
-      center: {x: 0, y: 0, z: 1}
-    rigidNoiseSettings:
-      strength: 1
-      layerCount: 3
-      baseRoughness: 3.9
-      roughness: 5.06
-      persistence: 0.2
-      minValue: 0.16
-      center: {x: 0, y: 0, z: 0}
-      weightMultiplier: 0.13
-  noiseScale: 500
+  ratity: 2
+  density: 0.365
   preview: 1

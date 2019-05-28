@@ -6,6 +6,12 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
+public enum PlacementMode
+{
+	Single,
+	Path
+}
+
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
 public class BuildingTileInfo : TileInfo
 {
@@ -15,9 +21,11 @@ public class BuildingTileInfo : TileInfo
 	[SerializeField]
 	public ResourceIndentifier[] cost;
 	public Sprite icon;
+	public PlacementMode placementMode = PlacementMode.Single;
 
 	public ResourceIndentifier[] production;
 	public ResourceIndentifier[] consumption;
+
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
@@ -78,8 +86,8 @@ public class BuildingTileInfo : TileInfo
 		var costString = "";
 		for (int i = 0; i < production.Length; i++)
 		{
-			costString += $"+<sprite={ResourceDatabase.GetSpriteId(production[i].id)}> {production[i].ammount}/t";
-			if (i != production.Length - 1)
+			costString += $"<sprite={ResourceDatabase.GetSpriteId(production[i].id)}> +{production[i].ammount}/t";
+			if (i < production.Length - 1)
 				costString += "\n";
 		}
 		return costString;
@@ -91,7 +99,7 @@ public class BuildingTileInfo : TileInfo
 		for (int i = 0; i < cost.Length; i++)
 		{
 			var id = cost[i].id;
-			var curCost = $"-<sprite={ResourceDatabase.GetSpriteId(id)}> {cost[i].ammount}";
+			var curCost = $"<sprite={ResourceDatabase.GetSpriteId(id)}> -{cost[i].ammount}";
 			if (ResourceSystem.resCount[id] < cost[i].ammount)
 				curCost = $"<color=#ff0000>{curCost}</color>";
 			costString += curCost;
@@ -102,8 +110,8 @@ public class BuildingTileInfo : TileInfo
 			costString += "\n";
 		for (int i = 0; i < consumption.Length; i++)
 		{
-			costString += $"-<sprite={ResourceDatabase.GetSpriteId(consumption[i].id)}> {consumption[i].ammount}/t";
-			if (i != production.Length - 1)
+			costString += $"<sprite={ResourceDatabase.GetSpriteId(consumption[i].id)}> -{consumption[i].ammount}/t";
+			if (i < consumption.Length -1)
 				costString += "\n";
 		}
 		return costString;

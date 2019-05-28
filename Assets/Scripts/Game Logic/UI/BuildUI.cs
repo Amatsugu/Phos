@@ -46,16 +46,19 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private BuildingTileInfo _selectedUnit;
 	private Camera _cam;
 	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
+	private Dictionary<MeshEntity, int> _renderedEntities;
 	private EntityManager _EM;
 
 	private Tile _startPoint;
 	private List<Tile> _buildPath;
 	private System.Func<Tile, bool> invalidTileSelector;
+	private Tile _lastSelectedTile = null;
 
 	void Start()
 	{
 		buildWindow.gameObject.SetActive(false);
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
+		_renderedEntities = new Dictionary<MeshEntity, int>();
 		_activeUnits = new UIUnitIcon[6];
 		_cam = Camera.main;
 		_EM = World.Active.EntityManager;
@@ -91,80 +94,91 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			{
 				if (selectedTile != null)
 				{
-					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.size);
 					var validPlacement = false;
-					HideAllIndicators();
-					//Path Placement
-					if (!hqMode && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
+					if (_lastSelectedTile != selectedTile)
 					{
-						if (!(selectedTile is ResourceTile))
-							_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
-						else
-							_buildPath = null;
-						if (_buildPath != null)
+						_lastSelectedTile = selectedTile;
+
+						var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.size);
+						//Path Placement
+						if (_selectedUnit.placementMode == PlacementMode.Path && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
 						{
-							if (_buildPath.Any(t => t.Height <= Map.ActiveMap.seaLevel))
+							if (!(selectedTile is ResourceTile))
+								_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
+							else
+								_buildPath = null;
+							if (_buildPath != null)
 							{
-								var invalidTiles = _buildPath.Where(t => t.Height <= Map.ActiveMap.seaLevel);
-								ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
-								ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
+								if (_buildPath.Any(t => t.Height <= Map.ActiveMap.seaLevel))
+								{
+									var invalidTiles = _buildPath.Where(t => t.Height <= Map.ActiveMap.seaLevel);
+									ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
+									ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
+								}
+								else
+								{
+									HideIndicator(errorIndicatorEntity);
+									ShowIndicators(placementPathIndicatorEntity, _buildPath);
+								}
+							}
+						}
+						if (_selectedUnit.placementMode == PlacementMode.Path && Input.GetKeyDown(KeyCode.Mouse0))
+						{
+							_startPoint = selectedTile;
+						}
+						//Indicators
+						if (!ResourceSystem.HasResourses(_selectedUnit.cost))
+						{
+							HideIndicator(selectIndicatorEntity);
+							ShowIndicators(errorIndicatorEntity, tilesToOccupy);
+						}
+						else if (tilesToOccupy.Any(invalidTileSelector))
+						{
+							var invalidTiles = tilesToOccupy.Where(invalidTileSelector);
+							ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
+							ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
+						}
+						else
+						{
+							HideIndicator(errorIndicatorEntity);
+							ShowIndicators(selectIndicatorEntity, tilesToOccupy);
+							validPlacement = true;
+						}
+						if (_selectedUnit is ResourceGatheringBuildingInfo r)
+						{
+							var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile rt && !rt.gatherer.isCreated).Where(rt => r.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();
+							if (res.Count > 0)
+							{
+								validPlacement = true;
+								var resCount = new Dictionary<int, int>();
+								for (int i = 0; i < res.Count; i++)
+								{
+									var id = ResourceDatabase.GetResourceId(res[i].info as ResourceTileInfo);
+									if (resCount.ContainsKey(id))
+										resCount[id]++;
+									else
+										resCount.Add(id, 1);
+								}
+								var sb = new System.Text.StringBuilder();
+								foreach (var resItem in resCount)
+								{
+									if (resItem.Value > 0)
+										sb.AppendLine($"+{resItem.Value}<sprite={ResourceDatabase.GetSpriteId(resItem.Key)}>");
+								}
+								floatingText.SetText(sb);
+								var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
+								pos.y += 20;
+								floatingText.rectTransform.position = pos;
+								floatingText.gameObject.SetActive(true);
+								ShowIndicators(gatheringIndicatorEntity, res);
+								HideIndicator(errorIndicatorEntity);
 							}
 							else
-								ShowIndicators(placementPathIndicatorEntity, _buildPath);
-						}
-					}
-					if (!hqMode && Input.GetKeyDown(KeyCode.Mouse0))
-					{
-						_startPoint = selectedTile;
-					}
-					//Indicators
-					if (!ResourceSystem.HasResourses(_selectedUnit.cost))
-					{
-						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
-					}
-					else if (tilesToOccupy.Any(invalidTileSelector))
-					{
-						var invalidTiles = tilesToOccupy.Where(invalidTileSelector);
-						ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
-						ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
-					}
-					else
-					{
-						ShowIndicators(selectIndicatorEntity, tilesToOccupy);
-						validPlacement = true;
-					}
-					if (_selectedUnit is ResourceGatheringBuildingInfo r)
-					{
-						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile rt && !rt.gatherer.isCreated).Where(rt => r.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();
-						if (res.Count > 0)
-						{
-							validPlacement = true;
-							var resCount = new Dictionary<int, int>();
-							for (int i = 0; i < res.Count; i++)
 							{
-								var id = ResourceDatabase.GetResourceId(res[i].info as ResourceTileInfo);
-								if (resCount.ContainsKey(id))
-									resCount[id]++;
-								else
-									resCount.Add(id, 1);
+								validPlacement = false;
+								HideIndicator(gatheringIndicatorEntity);
+								ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 							}
-							var sb = new System.Text.StringBuilder();
-							foreach (var resItem in resCount)
-							{
-								if (resItem.Value > 0)
-									sb.AppendLine($"+{resItem.Value}<sprite={ResourceDatabase.GetSpriteId(resItem.Key)}>");
-							}
-							floatingText.SetText(sb);
-							var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
-							pos.y += 20;
-							floatingText.rectTransform.position = pos;
-							floatingText.gameObject.SetActive(true);
-							ShowIndicators(gatheringIndicatorEntity, res);
-						}else
-						{
-							validPlacement = false;
-							HideAllIndicators();
-							ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 						}
 					}
 
@@ -174,6 +188,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						_startPoint = null;
 						if (validPlacement)
 						{
+							HideAllIndicators();
 							if (!hqMode)
 								ResourceSystem.ConsumeResourses(_selectedUnit.cost);
 							if (_buildPath == null)
@@ -205,7 +220,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 								};
 							}
 						}
-						HideAllIndicators();
 					}
 				}
 				else
@@ -216,11 +230,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void HideIndicator(MeshEntity indicator)
 	{
-		for (int i = 0; i < _indicatorEntities[indicator].Count; i++)
+		if (!_indicatorEntities.ContainsKey(indicator))
+			return;
+		for (int i = 0; i < _renderedEntities[indicator]; i++)
 		{
-			if (!_EM.HasComponent<Frozen>(_indicatorEntities[indicator][i]))
-				_EM.AddComponent(_indicatorEntities[indicator][i], typeof(Frozen));
+			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(FrozenRenderSceneTag));
 		}
+		_renderedEntities[indicator] = 0;
 	}
 
 	void HideAllIndicators()
@@ -239,31 +255,26 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			HideAllIndicators();
 	}
 
-	void HideIndicators(List<Entity> entities)
-	{
-		for (int i = 0; i < entities.Count; i++)
-		{
-			if (!_EM.HasComponent<Frozen>(entities[i]))
-				_EM.AddComponent(entities[i], typeof(Frozen));
-		}
-	}
-
 	void GrowIndicators(MeshEntity indicatorMesh, int count)
 	{
 		List<Entity> entities;
 		if (!_indicatorEntities.ContainsKey(indicatorMesh))
 		{
 			_indicatorEntities.Add(indicatorMesh, entities = new List<Entity>());
-		}else
+			_renderedEntities.Add(indicatorMesh, 0);
+		}
+		else
 		{
 			entities = _indicatorEntities[indicatorMesh];
 			if (count <= entities.Count)
 				return;
 		}
-		for (int i = 0; i < count; i++)
+		var curSize = entities.Count;
+		for (int i = curSize; i < count; i++)
 		{
-			entities.Add(indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
-			Map.EM.AddComponent(entities[i], typeof(Frozen));
+			Entity curEntity;
+			entities.Add(curEntity = indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
+			Map.EM.AddComponent(curEntity, typeof(FrozenRenderSceneTag));
 		}
 	}
 
@@ -274,16 +285,20 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			if (i < tiles.Count)
 			{
-				if (_EM.HasComponent<Frozen>(_indicatorEntities[indicatorMesh][i]))
-					_EM.RemoveComponent<Frozen>(_indicatorEntities[indicatorMesh][i]);
+				if(i < _renderedEntities[indicatorMesh])
+					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
+
 				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint });
 			}
 			else
 			{
-				if (!_EM.HasComponent<Frozen>(_indicatorEntities[indicatorMesh][i]))
-					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(Frozen));
+				if (i >= _renderedEntities[indicatorMesh])
+					break;
+				if(i < _renderedEntities[indicatorMesh])
+					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(FrozenRenderSceneTag));
 			}
 		}
+		_renderedEntities[indicatorMesh] = tiles.Count;
 	}
 
 

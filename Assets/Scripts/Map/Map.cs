@@ -134,11 +134,13 @@ public class Map : IDisposable
 				Tiles[i].Show(shown);
 			if (shown)
 			{
-				EM.RemoveComponent(_chunkTiles, typeof(Frozen));
+				//EM.RemoveComponent(_chunkTiles, typeof(Frozen));
+				EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
 			}
 			else
 			{
-				EM.AddComponent(_chunkTiles, typeof(Frozen));
+				//EM.AddComponent(_chunkTiles, typeof(Frozen));
+				EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
 
 			}
 			isShown = shown;
@@ -258,7 +260,10 @@ public class Map : IDisposable
 		}
 		var start = DateTime.Now;
 		for (int i = 0; i < Chunks.Length; i++)
+		{
 			Chunks[i].Render();
+			Chunks[i].Show(false);
+		}
 		Debug.Log($"Render... {(DateTime.Now - start).TotalMilliseconds}ms");
 	}
 

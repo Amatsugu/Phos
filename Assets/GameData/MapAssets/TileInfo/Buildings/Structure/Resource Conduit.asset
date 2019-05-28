@@ -21,12 +21,12 @@ MonoBehaviour:
     to the HQ.
   buildingMesh: {fileID: 0}
   size: 0
-  powerTransferRadius: 0
   influenceRange: 0
   cost:
   - id: 1
     ammount: 1
   icon: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840, type: 3}
+  placementMode: 1
   production: []
   consumption: []
   tileConnections: []

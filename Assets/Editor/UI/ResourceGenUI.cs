@@ -43,12 +43,12 @@ public class ResourceGenUI : Editor
 
 	private void GenTex()
 	{
-		var noise = NoiseFilterFactory.CreateNoiseFilter(gen.settings, 0);
+		var map = gen.PrepareMap(_previewTex.width, _previewTex.height);
 		for (int z = 0; z < _previewTex.height; z++)
 		{
 			for (int x = 0; x < _previewTex.width; x++)
 			{
-				var c = gen.GetSample(x, z, noise);
+				var c = 1- map[x + z * _previewTex.width];
 				_previewTexColors[x + z * _previewTex.height] = new Color(c, c, c);
 				//_previewTex.SetPixel(x, z, new Color(c, c, c));
 			}

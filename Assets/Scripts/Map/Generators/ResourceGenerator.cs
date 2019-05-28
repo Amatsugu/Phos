@@ -6,30 +6,68 @@ using UnityEngine;
 public class ResourceGenerator : FeatureGenerator
 {
 	public ResourceTileInfo resource;
+	[Range(1, 10)]
+	public int ratity = 3;
 	[Range(0f, 1f)]
-	public float density;
+	public float density = .5f;
 
-	public NoiseSettings settings;
-	public float noiseScale;
 
 	[HideInInspector]
 	public bool preview;
 
-	private INoiseFilter _filter;
-	private float _adjustedDensity;
 
-	private void OnDisable()
+	public int[] PrepareMap(int width, int height, int seed = 0)
 	{
-		_filter = null;
+		var rand = new System.Random(seed + name.GetHashCode());
+		var resourceMap = new int[width * height];
+		for (int i = 0; i < resourceMap.Length; i++)
+		{
+			resourceMap[i] = rand.NextDouble() >= density ? 1 : 0;
+		}
+		for (int i = 0; i < ratity; i++)
+		{
+			DistributeResource(resourceMap, width, height);
+		}
+		return resourceMap;
+	}
+
+	private void DistributeResource(int[] map, int w, int h)
+	{
+		int GetNeighborCount(int gX, int gZ)
+		{
+			var c = 0;
+			for (int z = gZ -1; z <= gZ + 1; z++)
+			{
+				for (int x = gX - 1; x <= gX + 1; x++)
+				{
+					if (x < 0 || z < 0 || x >= w || z >= h)
+					{
+						c++;
+						continue;
+					}
+					if (x != gX || z != gZ)
+						c += map[x + z * w];
+				}
+			}
+			return c;
+		}
+		for (int z = 0; z < h; z++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				var nt = GetNeighborCount(x, z);
+				if (nt > 4)
+					map[x + z * w] = 1;
+				else if(nt < 4)
+					map[x + z * w] = 0;
+			}
+		}
+
 	}
 
 	public override void Generate(Map map)
 	{
-		if (_filter == null)
-		{
-			_filter = NoiseFilterFactory.CreateNoiseFilter(settings, map.Seed);
-			_adjustedDensity = MathUtils.Map(density, 0, 1, 0, 1 - (settings.type == NoiseSettings.FilterType.Simple ? settings.simpleNoiseSettings.minValue : settings.rigidNoiseSettings.minValue));
-		}
+		var resourceMap = PrepareMap(map.totalWidth, map.totalHeight, map.Seed);
 		for (int z = 0; z < map.totalHeight; z++)
 		{
 			for (int x = 0; x < map.totalWidth; x++)
@@ -40,7 +78,7 @@ public class ResourceGenerator : FeatureGenerator
 				var h = map[pos].Height;
 				if (h < Map.ActiveMap.seaLevel)
 					continue;
-				if (GetSample(x,z) == 1)
+				if (resourceMap[x + z * map.totalWidth] == 0)
 				{
 					var res = resource.CreateTile(pos, h);
 					res.originalTile = map[pos].info;
@@ -48,19 +86,5 @@ public class ResourceGenerator : FeatureGenerator
 				}
 			}
 		}
-	}
-
-	public float GetSample(int x, int z, INoiseFilter filter = null)
-	{
-		if (filter == null)
-			filter = _filter;
-		else
-			_adjustedDensity = MathUtils.Map(density, 0, 1, 0, 1 - (settings.type == NoiseSettings.FilterType.Simple ? settings.simpleNoiseSettings.minValue : settings.rigidNoiseSettings.minValue));
-		var sample = 1 - filter.Evaluate(new Vector3(x / noiseScale, z / noiseScale));
-		if (sample <= _adjustedDensity)
-		{
-			return 1;
-		}
-		return 0;
 	}
 }

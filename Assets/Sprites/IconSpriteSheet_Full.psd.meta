@@ -4,28 +4,28 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -1554024534391354863
-    second: IconSpriteSheet_Full_0
+    second: Power
   - first:
       213: -7748967718012387419
-    second: IconSpriteSheet_Full_1
+    second: Water
   - first:
       213: 2647467648574043659
-    second: IconSpriteSheet_Full_2
+    second: Metal
   - first:
       213: 756898814474196213
-    second: IconSpriteSheet_Full_3
+    second: Carbon
   - first:
       213: -2202851767225367483
-    second: IconSpriteSheet_Full_4
+    second: Composite Metal
   - first:
       213: -4264389267444819633
-    second: IconSpriteSheet_Full_5
+    second: '[Ph]Fuel'
   - first:
       213: -910342561807809153
-    second: IconSpriteSheet_Full_6
+    second: Silver
   - first:
       213: -7947723104890870202
-    second: IconSpriteSheet_Full_7
+    second: Gold
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_0
+      name: Power
       rect:
         serializedVersion: 2
         x: 0
@@ -118,7 +118,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -131,7 +131,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_1
+      name: Water
       rect:
         serializedVersion: 2
         x: 512
@@ -139,7 +139,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -152,7 +152,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_2
+      name: Metal
       rect:
         serializedVersion: 2
         x: 1024
@@ -160,7 +160,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -173,7 +173,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_3
+      name: Carbon
       rect:
         serializedVersion: 2
         x: 1536
@@ -181,7 +181,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -194,7 +194,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_4
+      name: Composite Metal
       rect:
         serializedVersion: 2
         x: 0
@@ -202,7 +202,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -215,7 +215,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_5
+      name: '[Ph]Fuel'
       rect:
         serializedVersion: 2
         x: 512
@@ -223,7 +223,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -236,7 +236,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_6
+      name: Silver
       rect:
         serializedVersion: 2
         x: 1024
@@ -244,7 +244,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -257,7 +257,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconSpriteSheet_Full_7
+      name: Gold
       rect:
         serializedVersion: 2
         x: 1536
@@ -265,7 +265,7 @@ TextureImporter:
         width: 512
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

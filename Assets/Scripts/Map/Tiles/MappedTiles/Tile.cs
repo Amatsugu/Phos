@@ -217,9 +217,15 @@ public class Tile
 			return;
 		IsShown = isShown;
 		if(isShown)
-			Map.EM.RemoveComponent(_decor, typeof(Frozen));
+		{
+			//Map.EM.RemoveComponent(_decor, typeof(Frozen));
+			Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
+		}
 		else
-			Map.EM.AddComponent(_decor, typeof(Frozen));
+		{
+			//Map.EM.AddComponent(_decor, typeof(Frozen));
+			Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
+		}
 	}
 
 	public virtual TileInfo GetMeshEntity()

@@ -56,10 +56,6 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			Map.EM.AddSharedComponentData(_tileEntity, prodData);
 
 		var p = Map.EM.GetSharedComponentData<ProductionData>(_tileEntity);
-		for (int i = 0; i < p.resourceIds.Length; i++)
-		{
-			Debug.Log($"{p.resourceIds[i]} : {p.rates[i]}");
-		}
 	}
 
 	public override void OnRemoved()

@@ -13,25 +13,6 @@ MonoBehaviour:
   m_Name: IronOreResourceGenerator
   m_EditorClassIdentifier: 
   resource: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
-  density: 0.773
-  settings:
-    type: 0
-    simpleNoiseSettings:
-      strength: 1
-      layerCount: 3
-      baseRoughness: 7
-      roughness: 2.25
-      persistence: 0.76
-      minValue: 0.87
-      center: {x: 0, y: 0, z: 0}
-    rigidNoiseSettings:
-      strength: 1
-      layerCount: 3
-      baseRoughness: 3.9
-      roughness: 5.06
-      persistence: 0.2
-      minValue: 0.16
-      center: {x: 0, y: 0, z: 0}
-      weightMultiplier: 0.13
-  noiseScale: 500
+  ratity: 2
+  density: 0.389
   preview: 1

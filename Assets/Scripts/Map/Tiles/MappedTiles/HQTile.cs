@@ -20,7 +20,7 @@ public class HQTile : BuildingTile
 		{
 			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTile);
 		}
-		var spawnTiles = Map.ActiveMap.HexSelect(Coords, 6);
+		var spawnTiles = Map.ActiveMap.HexSelect(Coords, 2);
 		for (int i = 0; i < spawnTiles.Count; i++)
 		{
 			if(!(spawnTiles[i] is BuildingTile))
