@@ -53,6 +53,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private List<Tile> _buildPath;
 	private System.Func<Tile, bool> invalidTileSelector;
 	private Tile _lastSelectedTile = null;
+	private bool _validPlacement;
 
 	void Start()
 	{
@@ -94,9 +95,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			{
 				if (selectedTile != null)
 				{
-					var validPlacement = false;
 					if (_lastSelectedTile != selectedTile)
 					{
+						_validPlacement = true;
 						_lastSelectedTile = selectedTile;
 
 						var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.size);
@@ -114,11 +115,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 									var invalidTiles = _buildPath.Where(t => t.Height <= Map.ActiveMap.seaLevel);
 									ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 									ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
+									_validPlacement = false;
 								}
 								else
 								{
 									HideIndicator(errorIndicatorEntity);
 									ShowIndicators(placementPathIndicatorEntity, _buildPath);
+									_validPlacement = false;
 								}
 							}
 						}
@@ -131,25 +134,27 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						{
 							HideIndicator(selectIndicatorEntity);
 							ShowIndicators(errorIndicatorEntity, tilesToOccupy);
+							_validPlacement = false;
 						}
 						else if (tilesToOccupy.Any(invalidTileSelector))
 						{
 							var invalidTiles = tilesToOccupy.Where(invalidTileSelector);
 							ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 							ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
+							_validPlacement = false;
 						}
 						else
 						{
 							HideIndicator(errorIndicatorEntity);
 							ShowIndicators(selectIndicatorEntity, tilesToOccupy);
-							validPlacement = true;
+							_validPlacement = true;
 						}
 						if (_selectedUnit is ResourceGatheringBuildingInfo r)
 						{
 							var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile rt && !rt.gatherer.isCreated).Where(rt => r.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();
 							if (res.Count > 0)
 							{
-								validPlacement = true;
+								_validPlacement = true;
 								var resCount = new Dictionary<int, int>();
 								for (int i = 0; i < res.Count; i++)
 								{
@@ -175,18 +180,17 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 							}
 							else
 							{
-								validPlacement = false;
+								_validPlacement = false;
 								HideIndicator(gatheringIndicatorEntity);
 								ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 							}
 						}
 					}
-
 					//Placement
 					if (Input.GetKeyUp(KeyCode.Mouse0))
 					{
 						_startPoint = null;
-						if (validPlacement)
+						if (_validPlacement)
 						{
 							HideAllIndicators();
 							if (!hqMode)

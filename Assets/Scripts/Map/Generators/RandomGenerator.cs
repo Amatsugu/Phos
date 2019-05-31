@@ -49,9 +49,9 @@ public class RandomGenerator : MapGenerator
 		var reject = 0;
 		var totalStartTime = DateTime.Now;
 		Start:
-		if (!useSeed)
-			seed = (int)(new System.DateTime(1990, 1, 1) - System.DateTime.Now).TotalSeconds;
 		var startTime = DateTime.Now;
+		if (!useSeed)
+			seed = startTime.GetHashCode();
 		InitFilters();
 		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength)
 		{

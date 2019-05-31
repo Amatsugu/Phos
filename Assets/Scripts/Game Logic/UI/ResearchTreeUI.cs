@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static ResearchTree;
 
 public class ResearchTreeUI : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class ResearchTreeUI : MonoBehaviour
 	public bool regen;
 
 
-	private ResearchTree _researchTree;
+	public ResearchTree ResearchTree;
 	private List<RectTransform> uiElements;
 
 	private Vector2 _totalOffset;
@@ -25,22 +26,9 @@ public class ResearchTreeUI : MonoBehaviour
 	void Start()
 	{
 		uiElements = new List<RectTransform>();
-		//Test research
-		/*_researchTree = new ResearchTree(new ResearchTech("Base Node", isResearched: true));
-		_researchTree.baseNode
-			.AddChild(new ResearchTech("T1 Node", isResearched: true)
-				.AddChild(new ResearchTech("T2 Node"))
-				.AddChild(new ResearchTech("T2 Node", isResearched: true)
-					.AddChild(new ResearchTech("T3 Node"))
-					.AddChild(new ResearchTech("T3 Node")
-						.AddChild(new ResearchTech("T4 Node")))))
-			.AddChild(new ResearchTech("T1 Node")
-				.AddChild(new ResearchTech("T2 Node"))
-				.AddChild(new ResearchTech("T2 Node")));
-
 		_totalOffset = nodeSize + nodeSpacing;
 
-		DrawTree(_researchTree.baseNode);*/
+		DrawTree(ResearchTree.BaseNode);
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
@@ -50,6 +38,7 @@ public class ResearchTreeUI : MonoBehaviour
 		curNode.anchoredPosition = pos;
 		curNode.gameObject.SetActive(true);
 		curNode.gameObject.name = $"d: {depth} c:{c}";
+		curNode.GetComponent<Image>().sprite = curTech.icon;
 		curNode.GetComponentInChildren<TMP_Text>().SetText($"{curTech.name} [{curTech.id}]");
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, nodeSize.x);
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, nodeSize.y);
@@ -84,7 +73,7 @@ public class ResearchTreeUI : MonoBehaviour
 				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,  pos.y - cPos.y - (nodeSize.y/2));
 				uiElements.Add(hConnector);
 			}
-			lastC = DrawTree(curTech.children[i], depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
+			lastC = DrawTree(ResearchTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
 		}
 		return lastC;
 	}
@@ -101,6 +90,6 @@ public class ResearchTreeUI : MonoBehaviour
 		}
 		uiElements.Clear();
 		_totalOffset = nodeSize + nodeSpacing;
-		DrawTree(_researchTree.baseNode);
+		DrawTree(ResearchTree.BaseNode);
 	}
 }

@@ -6691,6 +6691,7 @@ MonoBehaviour:
   nodeSize: {x: 100, y: 100}
   nodeSpacing: {x: 50, y: 50}
   regen: 0
+  ResearchTree: {fileID: 11400000, guid: 8169f6193e761634f9f4c4bf53bb26af, type: 2}
 --- !u!114 &1122771324
 MonoBehaviour:
   m_ObjectHideFlags: 0

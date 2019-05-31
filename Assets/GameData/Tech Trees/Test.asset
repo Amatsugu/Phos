@@ -12,3 +12,117 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a5cfeb5c0ccfe64981eff148f98cef8, type: 3}
   m_Name: Test
   m_EditorClassIdentifier: 
+  _nodes:
+  - id: 0
+    name: Test
+    icon: {fileID: 0}
+    description: 
+    isResearched: 1
+    resourceCost: []
+    childrenIDs: 020000000300000003000000
+  - id: 1
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 060000000700000008000000
+  - id: 2
+    name: Node 1
+    icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 010000000400000005000000
+  - id: 3
+    name: Node 2
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  - id: 4
+    name: Node 1
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  - id: 5
+    name: Node 2
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 0b0000000000000000000000
+  - id: 6
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 090000000a0000000f000000
+  - id: 7
+    name: Node 1
+    icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  - id: 8
+    name: Node 2
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  - id: 9
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  - id: 10
+    name: Node 1
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  - id: 11
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 0c0000000000000000000000
+  - id: 12
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 0d0000000000000000000000
+  - id: 13
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 0e0000000000000000000000
+  - id: 14
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  - id: 15
+    name: Node 2
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+  Count: 16
