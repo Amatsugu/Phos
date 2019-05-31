@@ -22,7 +22,6 @@ public class ResearchTree : ScriptableObject
 			_nodes.Add(child);
 		else
 			_nodes[child.id] = child;
-		Debug.Log($"{parent.id} {child.id}");
 		Count++;
 
 		_nodes[parent.id].AddChild(child);
@@ -97,7 +96,7 @@ public class ResearchTree : ScriptableObject
 
 		//public ResearchTech[] children;
 		public int[] childrenIDs;
-		public int Count { get; private set; }
+		public int Count;
 
 
 		public const int MAX_CHILDREN = 3;
