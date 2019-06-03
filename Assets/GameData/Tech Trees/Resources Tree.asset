@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a5cfeb5c0ccfe64981eff148f98cef8, type: 3}
+  m_Name: Resources Tree
+  m_EditorClassIdentifier: 
+  nodes:
+  - id: 0
+    name: Resources Tree
+    icon: {fileID: 0}
+    description: 
+    isResearched: 1
+    resourceCost: []
+    childrenIDs: 010000000200000003000000
+    Count: 3
+  - id: 1
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 040000000000000000000000
+    Count: 1
+  - id: 2
+    name: Node 1
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+    Count: 0
+  - id: 3
+    name: Node 2
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+    Count: 0
+  - id: 4
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 060000000000000000000000
+    Count: 1
+  - id: 9
+    name: Node 1
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+    Count: 0
+  - id: 6
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 070000000800000000000000
+    Count: 2
+  - id: 7
+    name: Node 0
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+    Count: 0
+  - id: 8
+    name: Node 1
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 090000000000000000000000
+    Count: 1
+  - id: 9
+    name: Node 1
+    icon: {fileID: 0}
+    description: 
+    isResearched: 0
+    resourceCost: []
+    childrenIDs: 000000000000000000000000
+    Count: 0
+  Count: 10

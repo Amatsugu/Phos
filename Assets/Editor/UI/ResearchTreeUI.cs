@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using static ResearchTree;
@@ -60,8 +61,8 @@ public class ResearchTreeEditorWindow : EditorWindow
 			Close();
 			return;
 		}
-		_zoom = GUI.HorizontalSlider(new Rect(0, 0, 200, 20), _zoom, .5f, 1f);
-		GUI.Label(new Rect(210, 0, 200, 20), $"{Mathf.Round(_zoom * 10)/10}x Node Count: {target.Count}");
+		_zoom = GUI.HorizontalSlider(new Rect(0, 0, 200, 20), _zoom, .5f, 2f);
+		GUI.Label(new Rect(210, 0, 500, 20), $"Zoom: {Mathf.Round(_zoom * 10)/10}x\t Node Count: {target.Count}\t Tree Depth:{target.GetDepth()}\t Tree Breath: {_totalC}");
 		_nodeSize = _baseNodeSize * _zoom;
 		_nodeSpacing = _baseNodeSpacing * _zoom;
 		_totalSize = _nodeSize + _nodeSpacing;
@@ -69,20 +70,31 @@ public class ResearchTreeEditorWindow : EditorWindow
 		var boxRect = new Rect(0, 20, position.width - 400, position.height - 20);
 		_scrollPos = GUI.BeginScrollView(boxRect, _scrollPos, new Rect(0, 0, (target.GetDepth()+1) * _totalSize.x, _totalC * _totalSize.y), true, true);
 		_totalC = DrawTree(target.BaseNode) + 1;
-		
 		GUI.EndScrollView();
-		var curEvent = Event.current;
-		if (curEvent.type == EventType.MouseMove)
-			_scrollPos += curEvent.delta;
-
+		
 		//Side Bar
 		GUI.BeginGroup(new Rect(boxRect.width, 20, 400, boxRect.height));
 		GUI.Box(new Rect(0,0, 400, boxRect.height), GUIContent.none);
 		if(_selectedNode != null)
 		{
-			var itemRect = new Rect(10,0, 150, 20);
+			var itemRect = new Rect(10,0, 400, 20);
+			GUI.Label(itemRect, $"Move To ");
+			if (_selectedNode.id == 0)
+				GUI.enabled = false;
+			var nodes = target.nodes.Where(t => t != null && t.id != _selectedNode.id && t.Count < ResearchTech.MAX_CHILDREN).Where(t => !target.IsDeepChild(_selectedNode, t));
+			using (var change = new EditorGUI.ChangeCheckScope())
+			{
+				var selection = EditorGUI.IntPopup(itemRect, "Move To", 0, nodes.Select(t => $"{t.name} [{t.id}]").Prepend("--Select Dst--").ToArray(), nodes.Select(t => t.id + 1).Prepend(0).ToArray()); 
+				if(change.changed && selection != 0)
+				{
+					target.MoveChild(selection - 1, _selectedNode);
+				}
+			}
+			GUI.enabled = true;
+			itemRect.y += 25;
+			itemRect.width = 150;
 			GUI.Label(itemRect, $"Id {_selectedNode.id}");
-			itemRect.y = 25;
+			itemRect.y += 25;
 			GUI.Label(itemRect, "Name");
 			itemRect.x = 150;
 			itemRect.width = 240;
@@ -104,6 +116,16 @@ public class ResearchTreeEditorWindow : EditorWindow
 			itemRect.x = 150;
 			itemRect.height = 200;
 			_selectedNode.description = EditorGUI.TextArea(itemRect, _selectedNode.description);
+			itemRect.y += 205;
+			itemRect.x = 0;
+			itemRect.width = 400;
+			itemRect.height = 20;
+			var sp = serializedTarget.FindProperty($"nodes.Array.data[{_selectedNode.id}].resourceCost.Array");
+			if(sp != null)
+			{
+				EditorGUI.PropertyField(itemRect, sp, new GUIContent("Resource Cost"), true);
+			}else
+				_selectedNode = target.BaseNode;
 
 		}
 		else
@@ -121,11 +143,9 @@ public class ResearchTreeEditorWindow : EditorWindow
 		EditorGUI.BeginChangeCheck();
 		GUI.BeginGroup(nodeRect);
 		GUI.Box(new Rect(Vector2.zero, _nodeSize), GUIContent.none);
-		curTech.name = EditorGUI.TextField(new Rect(depth == 0 ? 0 : 20, _nodeSize.y - 20, _nodeSize.x, 20), curTech.name);
+		curTech.name = EditorGUI.TextField(new Rect(depth == 0 ? 0 : 20, _nodeSize.y - 20, _nodeSize.x - (depth == 0 ? 20 : 40), 20), curTech.name);
 		curTech.icon = EditorGUI.ObjectField(new Rect(0, 0, _nodeSize.x, _nodeSize.y - 20), curTech.icon, typeof(Sprite), false) as Sprite;
-		GUI.Label(new Rect(_nodeSize.x - 20, _nodeSize.y - 20, 20,20), $"{curTech.id}");
-		var cEvent = Event.current;
-		if (cEvent.isMouse && cEvent.button == 0 && nodeRect.Contains(cEvent.mousePosition))
+		if(GUI.Button(new Rect(_nodeSize.x - 20, _nodeSize.y - 20, 20,20), $"{curTech.id}"))
 		{
 			_selectedNode = curTech;
 		}
@@ -166,7 +186,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 		{
 			if(GUI.Button(new Rect(pos.x + _nodeSize.x, pos.y + (_nodeSize.y/2) - 10, 20, 20), "+"))
 			{
-				target.AddChild(curTech, new ResearchTech($"Node {curTech.Count}"));
+				_selectedNode = target.AddChild(curTech, new ResearchTech($"Node {curTech.Count}"));
 				SaveObjectState();
 			}
 		}

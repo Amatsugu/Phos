@@ -26,20 +26,13 @@ public class ResourceListUI : PropertyDrawer
 		label.text = _resources[s];
 		EditorGUI.BeginProperty(position, label, property);
 		position = EditorGUI.PrefixLabel(position, label);
-		var width = EditorGUIUtility.currentViewWidth - position.x;
+		var width = position.width;
 		var resPos = new Rect(position.x - 15, position.y, width/2, position.height);
-		var ammountPos = new Rect(resPos.x + (width/2), position.y, width/2, position.height);
+		var ammountPos = new Rect(resPos.x + (width/2), position.y, (width/2) + 15, position.height);
 		s = EditorGUI.Popup(resPos, s, _resources);
 		idProp.intValue = s;
 		EditorGUI.PropertyField(ammountPos, property.FindPropertyRelative("ammount"), GUIContent.none);
 		EditorGUI.EndProperty();
 	}
 
-	public override VisualElement CreatePropertyGUI(SerializedProperty property)
-	{
-		var ve = new VisualElement();
-		ve.Add(new PropertyField(property.FindPropertyRelative("name")));
-		ve.Add(new PropertyField(property.FindPropertyRelative("ammount")));
-		return ve;
-	}
 }

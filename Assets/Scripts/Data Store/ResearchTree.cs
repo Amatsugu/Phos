@@ -8,28 +8,29 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game Data/Research Tree")]
 public class ResearchTree : ScriptableObject
 {
-	public ResearchTech BaseNode => _nodes[0];
+	public ResearchTech BaseNode => nodes[0];
 
 	[SerializeField]
-	private List<ResearchTech> _nodes;
+	public List<ResearchTech> nodes;
 
 	public int Count;
 
-	public void AddChild(ResearchTech parent, ResearchTech child)
+	public ResearchTech AddChild(ResearchTech parent, ResearchTech child)
 	{
 		child.id = GetNextId();
-		if (child.id >= _nodes.Count)
-			_nodes.Add(child);
+		if (child.id >= nodes.Count)
+			nodes.Add(child);
 		else
-			_nodes[child.id] = child;
+			nodes[child.id] = child;
 		Count++;
 
-		_nodes[parent.id].AddChild(child);
+		nodes[parent.id].AddChild(child);
+		return child;
 	}
 
 	public void Reset()
 	{
-		_nodes = new List<ResearchTech>
+		nodes = new List<ResearchTech>
 		{
 			new ResearchTech(name, isResearched: true)
 		};
@@ -50,27 +51,64 @@ public class ResearchTree : ScriptableObject
 		}
 		parent.RemoveChild(childIndex);
 		Count--;
-		_nodes[childId].id = -1;
+		nodes[childId].id = -1;
+	}
+
+	public void MoveChild(int dstId, ResearchTech node)
+	{
+		var parent = GetParent(node);
+		var nodeIndex = parent.IndexOf(node);
+		parent.RemoveChild(nodeIndex);
+		AddChild(nodes[dstId], node);
+	}
+
+	public bool IsDeepChild(ResearchTech parent, ResearchTech child)
+	{
+		if (parent.IsParentOf(child))
+			return true;
+		for (int i = 0; i < parent.Count; i++)
+		{
+			if(IsDeepChild(nodes[parent.childrenIDs[i]], child))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public ResearchTech GetParent(ResearchTech child)
+	{
+		if (child.id == 0)
+			return null;
+		for (int i = 0; i < nodes.Count; i++)
+		{
+			if(nodes[i] != null)
+			{
+				if (nodes[i].IsParentOf(child))
+					return nodes[i];
+			}
+		}
+		return null;
 	}
 
 	public ResearchTech GetChild(int id)
 	{
-		return _nodes[id];
+		return nodes[id];
 	}
 
 	public int GetNextId()
 	{
-		for (int i = 0; i < _nodes.Count; i++)
+		for (int i = 0; i < nodes.Count; i++)
 		{
-			if (!_nodes[i].IsValid)
+			if (!nodes[i].IsValid)
 				return i;
 		}
-		return _nodes.Count;
+		return nodes.Count;
 	}
 
 	void OnEnable()
 	{
-		if(_nodes == null)
+		if(nodes == null)
 		{
 			Reset();
 		}
@@ -108,6 +146,7 @@ public class ResearchTree : ScriptableObject
 			this.isResearched = isResearched;
 			this.id = id;
 			childrenIDs = new int[MAX_CHILDREN];
+			resourceCost = new ResourceIndentifier[0];
 			//children = new ResearchTech[MAX_CHILDREN];
 		}
 
@@ -152,6 +191,26 @@ public class ResearchTree : ScriptableObject
 				childrenIDs[i - 1] = childrenIDs[i];
 			}
 			Count--;
+		}
+
+		public bool IsParentOf(ResearchTech child)
+		{
+			for (int i = 0; i < Count; i++)
+			{
+				if (childrenIDs[i] == child.id)
+					return true;
+			}
+			return false;
+		}
+
+		public int IndexOf(ResearchTech child)
+		{
+			for (int i = 0; i < Count; i++)
+			{
+				if (childrenIDs[i] == child.id)
+					return i;
+			}
+			return -1;
 		}
 
 		public override int GetHashCode()

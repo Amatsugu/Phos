@@ -24,7 +24,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public UIInfoBanner infoBanner;
 	public BaseNameWindowUI baseNameUI;
 	public TMP_Text baseNameText;
-	public RectTransform buildWindow;
+	public GameObject buildWindow;
+	public RectTransform scrollContent;
 	//Indicators
 	public MeshEntity selectIndicatorEntity;
 	public MeshEntity placementPathIndicatorEntity;
@@ -42,7 +43,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public RectTransform unitUIPrefab;
 	public bool uiBlock;
 
-	private UIUnitIcon[] _activeUnits;
+	private List<UIUnitIcon> _activeUnits;
 	private BuildingTileInfo _selectedUnit;
 	private Camera _cam;
 	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
@@ -57,10 +58,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void Start()
 	{
-		buildWindow.gameObject.SetActive(false);
+		buildWindow.SetActive(false);
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
-		_activeUnits = new UIUnitIcon[6];
+		_activeUnits = new List<UIUnitIcon>();
 		_cam = Camera.main;
 		_EM = World.Active.EntityManager;
         HideBuildWindow();
@@ -250,7 +251,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			HideIndicator(indicators.Key);
 		}
 		floatingText.gameObject.SetActive(false);
-		toolTip.HideToolTip();
 	}
 
 	private void OnDisable()
@@ -311,16 +311,23 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		if (hqMode)
 			return;
 		HideBuildWindow();
-		buildWindow.gameObject.SetActive(true);
+		buildWindow.SetActive(true);
+		if(_activeUnits.Count < units.Length)
+		{
+			GrowUnitsUI(units.Length);
+		}
+		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (units.Length * 170));
 		for (int i = 0; i < units.Length; i++)
 		{
 			var unit = units[i];
-			if(_activeUnits[i] == null)
+#if DEBUG
+			if(unit == null)
 			{
-				_activeUnits[i] = Instantiate(unitUIPrefab, buildWindow).GetComponent<UIUnitIcon>();
-				_activeUnits[i].anchoredPosition = new Vector2(5 + (i * 170), 5);
+				Debug.LogWarning("Null unit in list, aborting");
+				break;
 			}
-			_activeUnits[i]?.gameObject.SetActive(true);
+#endif
+			_activeUnits[i].gameObject.SetActive(true);
 			_activeUnits[i].text.SetText(unit.name);
 			_activeUnits[i].OnClick += () =>
 			{
@@ -336,6 +343,16 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
+	public void GrowUnitsUI(int count)
+	{
+		for (int i = _activeUnits.Count; i < count; i++)
+		{
+			var unit = Instantiate(unitUIPrefab, scrollContent).GetComponent<UIUnitIcon>();
+			unit.anchoredPosition = new Vector2(5 + (i * 170), 5);
+			_activeUnits.Add(unit);
+		}
+	}
+
 	public void ShowTechWindow() => ShowBuildWindow(Tech);
 	public void ShowResourcesWindow() => ShowBuildWindow(Resource);
 	public void ShowEcoWindow() => ShowBuildWindow(Economy);
@@ -348,8 +365,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		HideAllIndicators();
 		placeMode = false;
 		_selectedUnit = null;
-		buildWindow.gameObject.SetActive(false);
-		for (int i = 0; i < _activeUnits.Length; i++)
+		buildWindow.SetActive(false);
+		for (int i = 0; i < _activeUnits.Count; i++)
 		{
 			_activeUnits[i]?.gameObject.SetActive(false);
 		}
