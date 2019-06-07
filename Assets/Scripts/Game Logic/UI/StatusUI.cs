@@ -7,27 +7,41 @@ using System.Text;
 
 public class StatusUI : MonoBehaviour
 {
-	public TMP_Text resourcePanel;
+	public RectTransform resourcePanel;
+	public GameObject resourceDisplayPrefab;
+	public float minWidth = 164f;
 
-	private StringBuilder _resourceText;
+	private UIResourceDisplay[] _displays;
 
 	void Start()
 	{
-		_resourceText = new StringBuilder();
+		_displays = new UIResourceDisplay[ResourceDatabase.ResourceCount];
+		var w = Mathf.Max(minWidth, resourcePanel.rect.width/_displays.Length);
+		Debug.Log(resourcePanel.rect.width/_displays.Length);
+		//TODO: retrieve resource id list from resource database
+		for (int i = 0; i < _displays.Length; i++)
+		{
+			var rDisp = Instantiate(resourceDisplayPrefab, new Vector3(i * w, 0, 0), Quaternion.identity, resourcePanel).GetComponent<RectTransform>();
+			rDisp.anchoredPosition = new Vector3(i * w, 0, 0);
+			_displays[i] = rDisp.GetComponent<UIResourceDisplay>();
+			_displays[i].SetWidth(w);
+			/// TODO: implement get sprite method
+			//_displays[i].SetIcon(ResourceDatabase.get)
+		}
 	}
 
 	void Update()
 	{
-		_resourceText.Clear();
-		for (int i = 0; i < ResourceDatabase.ResourceCount; i++)
+		if (ResourceSystem.resCount.Length == 0) //TODO: Resolve Resourse Database creation
+			return;
+		for (int i = 0; i < _displays.Length; i++)
 		{
-			if (ResourceSystem.resCount?[i] <= 0)
-				continue;
-			_resourceText.Append($"<sprite={ResourceDatabase.GetSpriteId(i)}>");
-			var lastTickNet = ResourceSystem.totalProduction?[i] + ResourceSystem.totalDemand?[i];
-			_resourceText.Append($"{ResourceSystem.resCount?[i]} [{(lastTickNet >= 0 ? "+" : "")}{lastTickNet}]");
+			_displays[i].SetInfo(ResourceSystem.resCount[i],
+								ResourceSystem.totalProduction[i],
+								Mathf.Abs(ResourceSystem.totalDemand[i]),
+								ResourceSystem.totalProduction[i] + ResourceSystem.totalDemand[i],
+								ResourceSystem.resCount[i] == ResourceSystem.maxStorage);
 		}
-		resourcePanel.SetText(_resourceText);
 	}
 
 }

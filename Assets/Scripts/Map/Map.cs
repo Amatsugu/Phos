@@ -656,7 +656,6 @@ public class Map : IDisposable
 		}
 	}
 
-	// TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
 	~Map()
 	{
 		// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
@@ -668,7 +667,6 @@ public class Map : IDisposable
 	{
 		// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
 		Dispose(true);
-		// TODO: uncomment the following line if the finalizer is overridden above.
 		GC.SuppressFinalize(this);
 	}
 	#endregion

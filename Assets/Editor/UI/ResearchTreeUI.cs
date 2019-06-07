@@ -5,24 +5,24 @@ using UnityEditor;
 using UnityEngine;
 using static ResearchTree;
 
-[CustomEditor(typeof(ResearchTree))]
+[CustomEditor(typeof(ResearchTreeInfo))]
 public class ResearchTreeUI : Editor
 {
 	private ResearchTreeEditorWindow _window;
-	private ResearchTree tree;
+	private ResearchTreeInfo treeInfo;
 
 	void OnEnable()
 	{
-		tree = target as ResearchTree;
+		treeInfo = target as ResearchTreeInfo;
 	}
 
 	public override void OnInspectorGUI()
 	{
-		EditorGUILayout.LabelField($"{tree.BaseNode.name} Count:{tree.Count}");
+		EditorGUILayout.LabelField($"{treeInfo.tree.BaseNode.name} Count:{treeInfo.tree.Count}");
 		if(GUILayout.Button("Edit Tree"))
 		{
 			_window = EditorWindow.GetWindow<ResearchTreeEditorWindow>();
-			_window.target = tree;
+			_window.target = treeInfo;
 			_window.serializedTarget = serializedObject;
 			_window.titleContent = new GUIContent($"Research Tree: {_window.target.name}");
 			_window.Show();
@@ -30,7 +30,7 @@ public class ResearchTreeUI : Editor
 
 		if (GUILayout.Button("Reset"))
 		{
-			tree.Reset();
+			treeInfo.tree.Reset();
 		}
 	}
 }
@@ -38,7 +38,7 @@ public class ResearchTreeUI : Editor
 
 public class ResearchTreeEditorWindow : EditorWindow
 {
-	public ResearchTree target;
+	public ResearchTreeInfo target;
 	public SerializedObject serializedTarget;
 
 	private Vector2 _baseNodeSize = new Vector2(100, 130);
@@ -62,14 +62,14 @@ public class ResearchTreeEditorWindow : EditorWindow
 			return;
 		}
 		_zoom = GUI.HorizontalSlider(new Rect(0, 0, 200, 20), _zoom, .5f, 2f);
-		GUI.Label(new Rect(210, 0, 500, 20), $"Zoom: {Mathf.Round(_zoom * 10)/10}x\t Node Count: {target.Count}\t Tree Depth:{target.GetDepth()}\t Tree Breath: {_totalC}");
+		GUI.Label(new Rect(210, 0, 500, 20), $"Zoom: {Mathf.Round(_zoom * 10)/10}x\t Node Count: {target.tree.Count}\t Tree Depth:{target.tree.GetDepth()}\t Tree Breath: {_totalC}");
 		_nodeSize = _baseNodeSize * _zoom;
 		_nodeSpacing = _baseNodeSpacing * _zoom;
 		_totalSize = _nodeSize + _nodeSpacing;
 		GUI.Box(new Rect(0, 20, position.width, position.height - 20), GUIContent.none);
 		var boxRect = new Rect(0, 20, position.width - 400, position.height - 20);
-		_scrollPos = GUI.BeginScrollView(boxRect, _scrollPos, new Rect(0, 0, (target.GetDepth()+1) * _totalSize.x, _totalC * _totalSize.y), true, true);
-		_totalC = DrawTree(target.BaseNode) + 1;
+		_scrollPos = GUI.BeginScrollView(boxRect, _scrollPos, new Rect(0, 0, (target.tree.GetDepth()+1) * _totalSize.x, _totalC * _totalSize.y), true, true);
+		_totalC = DrawTree(target.tree.BaseNode) + 1;
 		GUI.EndScrollView();
 		
 		//Side Bar
@@ -81,13 +81,13 @@ public class ResearchTreeEditorWindow : EditorWindow
 			GUI.Label(itemRect, $"Move To ");
 			if (_selectedNode.id == 0)
 				GUI.enabled = false;
-			var nodes = target.nodes.Where(t => t != null && t.id != _selectedNode.id && t.Count < ResearchTech.MAX_CHILDREN).Where(t => !target.IsDeepChild(_selectedNode, t));
+			var nodes = target.tree.nodes.Where(t => t != null && t.id != _selectedNode.id && t.Count < ResearchTech.MAX_CHILDREN).Where(t => !target.tree.IsDeepChild(_selectedNode, t));
 			using (var change = new EditorGUI.ChangeCheckScope())
 			{
 				var selection = EditorGUI.IntPopup(itemRect, "Move To", 0, nodes.Select(t => $"{t.name} [{t.id}]").Prepend("--Select Dst--").ToArray(), nodes.Select(t => t.id + 1).Prepend(0).ToArray()); 
 				if(change.changed && selection != 0)
 				{
-					target.MoveChild(selection - 1, _selectedNode);
+					target.tree.MoveChild(selection - 1, _selectedNode);
 				}
 			}
 			GUI.enabled = true;
@@ -125,12 +125,12 @@ public class ResearchTreeEditorWindow : EditorWindow
 			{
 				EditorGUI.PropertyField(itemRect, sp, new GUIContent("Resource Cost"), true);
 			}else
-				_selectedNode = target.BaseNode;
+				_selectedNode = target.tree.BaseNode;
 
 		}
 		else
 		{
-			_selectedNode = target.BaseNode;
+			_selectedNode = target.tree.BaseNode;
 		}
 		GUI.EndGroup();
 	}
@@ -168,7 +168,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 				hPos.y = pos.y + (_nodeSize.y / 2);
 				GUI.Box(new Rect(hPos, new Vector2(1, cPos.y - pos.y - (_nodeSize.y / 2))), GUIContent.none);
 			}
-			lastC = DrawTree(target.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1);
+			lastC = DrawTree(target.tree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1);
 			var minusPos = cPos;
 			minusPos.x += (i == 0) ? _nodeSpacing.x : (_nodeSpacing.x / 2);
 			minusPos.y += _nodeSize.y/2 - 20;
@@ -179,14 +179,14 @@ public class ResearchTreeEditorWindow : EditorWindow
 		}
 		if(removeAt != -1)
 		{
-			target.RemoveChild(curTech, removeAt);
+			target.tree.RemoveChild(curTech, removeAt);
 			SaveObjectState();
 		}
 		if(curTech.Count < ResearchTech.MAX_CHILDREN)
 		{
 			if(GUI.Button(new Rect(pos.x + _nodeSize.x, pos.y + (_nodeSize.y/2) - 10, 20, 20), "+"))
 			{
-				_selectedNode = target.AddChild(curTech, new ResearchTech($"Node {curTech.Count}"));
+				_selectedNode = target.tree.AddChild(curTech, new ResearchTech($"Node {curTech.Count}"));
 				SaveObjectState();
 			}
 		}
@@ -197,6 +197,6 @@ public class ResearchTreeEditorWindow : EditorWindow
 	{
 		serializedTarget.ApplyModifiedProperties();
 		EditorUtility.SetDirty(target);
-		Undo.RecordObject(target, $"Research Tree {target.name}");
+		Undo.RecordObject(target, $"Research Tree {target.tree.name}");
 	}
 }

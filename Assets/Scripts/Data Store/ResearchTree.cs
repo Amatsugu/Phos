@@ -5,9 +5,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(menuName = "Game Data/Research Tree")]
-public class ResearchTree : ScriptableObject
+public class ResearchTree
 {
+
+	public ResearchTree(string name)
+	{
+		this.name = name;
+		Reset();
+	}
+
+	public string name;
 	public ResearchTech BaseNode => nodes[0];
 
 	[SerializeField]

@@ -119,7 +119,6 @@ public class InteractionUI : MonoBehaviour
 				if(tile != null)
 				{
 
-					//TODO: Create a system that will dynamicly group/ungroup units
 					var unitGroups = _selectedUnits.GroupBy(u => Map.ActiveMap.units[u].occupiedTile);
 					var groupCount = unitGroups.Count();
 

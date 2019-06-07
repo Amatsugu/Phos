@@ -14,13 +14,17 @@ public class ResourceSystem : ComponentSystem
 	public DateTime nextTic;
 	public float ticRate = 1;
 
-
-	protected override void OnStartRunning()
+	protected override void OnCreate()
 	{
+		base.OnCreate();
 		resCount = new int[ResourceDatabase.ResourceCount];
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];
 		maxStorage = 1000;
+	}
+
+	protected override void OnStartRunning()
+	{
 		nextTic = DateTime.Now.AddSeconds(1 / ticRate);
 	}
 
@@ -29,21 +33,10 @@ public class ResourceSystem : ComponentSystem
 		if (DateTime.Now < nextTic)
 			return;
 		nextTic = nextTic.AddSeconds(1 / ticRate);
+		if(resCount.Length != ResourceDatabase.ResourceCount)
+			resCount = new int[ResourceDatabase.ResourceCount];
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];
-		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
-		{
-			for (int i = 0; i < p.resourceIds.Length; i++)
-			{
-				int res = p.resourceIds[i];
-				totalProduction[res] += p.rates[i];
-				if (resCount[res] == maxStorage)
-					continue;
-				resCount[res] += p.rates[i];
-				if (resCount[res] > maxStorage)
-					resCount[res] = maxStorage;
-			}
-		});
 
         Entities.WithAll<FirstTickTag>().ForEach(e =>
         {
@@ -65,6 +58,21 @@ public class ResourceSystem : ComponentSystem
 			{
 				if (!ConsumeResourse(e, c.resourceIds[i], c.rates[i], d.distance * ConsumptionDebuff.multi))
 					break;
+			}
+		});
+
+
+		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
+		{
+			for (int i = 0; i < p.resourceIds.Length; i++)
+			{
+				int res = p.resourceIds[i];
+				totalProduction[res] += p.rates[i];
+				if (resCount[res] == maxStorage)
+					continue;
+				resCount[res] += p.rates[i];
+				if (resCount[res] > maxStorage)
+					resCount[res] = maxStorage;
 			}
 		});
 	}

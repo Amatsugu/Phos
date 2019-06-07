@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static ResearchTree;
 
-public class ResearchTreeUI : MonoBehaviour
+public class ResearchTreeUI : UIWindow, IBuildingUI
 {
 	public RectTransform node;
 	public RectTransform vertConnector;
@@ -18,8 +18,8 @@ public class ResearchTreeUI : MonoBehaviour
 	public bool regen;
 
 
-	public ResearchTree ResearchTree;
 	private List<RectTransform> uiElements;
+	private ResearchTree _researchTree;
 
 	private Vector2 _totalOffset;
 
@@ -27,8 +27,6 @@ public class ResearchTreeUI : MonoBehaviour
 	{
 		uiElements = new List<RectTransform>();
 		_totalOffset = nodeSize + nodeSpacing;
-
-		DrawTree(ResearchTree.BaseNode);
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
@@ -73,23 +71,29 @@ public class ResearchTreeUI : MonoBehaviour
 				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,  pos.y - cPos.y - (nodeSize.y/2));
 				uiElements.Add(hConnector);
 			}
-			lastC = DrawTree(ResearchTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
+			lastC = DrawTree(_researchTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
 		}
 		return lastC;
 	}
 
-	void OnValidate()
+	public void Show(IteractiveBuildingTile target)
 	{
-		if (!Application.isPlaying)
-			return;
-		if (uiElements == null)
-			return;
+		Open();
+
+	}
+
+	public void Hide()
+	{
+		Close();
+	}
+
+	public override void OnOpened()
+	{
 		for (int i = 0; i < uiElements.Count; i++)
 		{
 			Destroy(uiElements[i].gameObject);
 		}
 		uiElements.Clear();
-		_totalOffset = nodeSize + nodeSpacing;
-		DrawTree(ResearchTree.BaseNode);
+		DrawTree(_researchTree.BaseNode);
 	}
 }
