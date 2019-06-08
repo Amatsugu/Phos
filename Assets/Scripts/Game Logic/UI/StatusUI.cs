@@ -9,25 +9,24 @@ public class StatusUI : MonoBehaviour
 {
 	public RectTransform resourcePanel;
 	public GameObject resourceDisplayPrefab;
-	public float minWidth = 164f;
+	public float padding = 5;
 
 	private UIResourceDisplay[] _displays;
 
 	void Start()
 	{
 		_displays = new UIResourceDisplay[ResourceDatabase.ResourceCount];
-		var w = Mathf.Max(minWidth, resourcePanel.rect.width/_displays.Length);
-		Debug.Log(resourcePanel.rect.width/_displays.Length);
 		//TODO: retrieve resource id list from resource database
+		var w = resourceDisplayPrefab.GetComponent<RectTransform>().rect.width + padding;
 		for (int i = 0; i < _displays.Length; i++)
 		{
-			var rDisp = Instantiate(resourceDisplayPrefab, new Vector3(i * w, 0, 0), Quaternion.identity, resourcePanel).GetComponent<RectTransform>();
+			var rDisp = Instantiate(resourceDisplayPrefab, Vector3.zero, Quaternion.identity, resourcePanel).GetComponent<RectTransform>();
 			rDisp.anchoredPosition = new Vector3(i * w, 0, 0);
 			_displays[i] = rDisp.GetComponent<UIResourceDisplay>();
-			_displays[i].SetWidth(w);
 			/// TODO: implement get sprite method
-			//_displays[i].SetIcon(ResourceDatabase.get)
+			_displays[i].SetIcon(ResourceDatabase.GetSprite(i));
 		}
+		resourcePanel.GetComponent<UIStack>().UpdateChildren();
 	}
 
 	void Update()
@@ -36,6 +35,14 @@ public class StatusUI : MonoBehaviour
 			return;
 		for (int i = 0; i < _displays.Length; i++)
 		{
+			if(ResourceSystem.resCount[i] == 0)
+			{
+				_displays[i].gameObject.SetActive(false);
+				continue;
+			}else
+			{
+				_displays[i].gameObject.SetActive(true);
+			}
 			_displays[i].SetInfo(ResourceSystem.resCount[i],
 								ResourceSystem.totalProduction[i],
 								Mathf.Abs(ResourceSystem.totalDemand[i]),

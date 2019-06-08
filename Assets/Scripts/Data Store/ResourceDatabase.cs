@@ -58,6 +58,11 @@ public class ResourceDatabase
 		return id >= INST._resourceDefs.Length ? -1 : INST._resourceDefs[id].spriteID;
 	}
 
+	public static Sprite GetSprite(int id)
+	{
+		return INST._resourceDefs[id].sprite;
+	}
+
 	public static int[] GetIdArray()
 	{
 		return Enumerable.Range(0, INST._resourceDefs.Length).ToArray();

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIResourceDisplay : MonoBehaviour
+public class UIResourceDisplay : UIHover
 {
 	public Image icon;
 	public TMP_Text storedText;
@@ -12,6 +12,9 @@ public class UIResourceDisplay : MonoBehaviour
 	public TMP_Text consumeText;
 	public TMP_Text netText;
 	public TMP_Text netSignText;
+	public RectTransform logisticsRect;
+	public RectTransform inOutRect;
+	public float expandSpeed;
 
 
 	public Color negativeColor = Color.red;
@@ -22,22 +25,61 @@ public class UIResourceDisplay : MonoBehaviour
 	private bool _atMax = false;
 	private float _animProgress;
 	private RectTransform _thisTransform;
+	private bool _expanded = true;
+	private float _expandProgress;
+	private float _baseWidth;
+	private float _inOutWidth;
+	private float _logisticsWidth;
 
     void Awake()
 	{
 		_thisTransform = GetComponent<RectTransform>();
 		SetInfo(0, 0, 0, 0, false);
+
+		_inOutWidth = inOutRect.rect.width;
+		_logisticsWidth = logisticsRect.rect.width;
+		_baseWidth = _thisTransform.rect.width;
+		Close();
+
+		OnHover += Open;
+		OnBlur += Close;
+		//StartCoroutine(ExpandAnim());
 	}
 
+
+	public void Close()
+	{
+		if (!_expanded)
+			return;
+		_expanded = false;
+	}
+
+
+	public void Update()
+	{
+		if(_expanded)
+		{
+			_expandProgress += Time.deltaTime * expandSpeed;
+		}else
+			_expandProgress -= Time.deltaTime * expandSpeed;
+		_expandProgress = Mathf.Clamp(_expandProgress, 0, 1);
+		var t = _expandProgress * _expandProgress * _expandProgress;
+		_thisTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_baseWidth - _inOutWidth, _baseWidth, t));
+		logisticsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_logisticsWidth - _inOutWidth, _logisticsWidth, t));
+
+		//yield return new WaitForEndOfFrame();
+	}
+
+	public void Open()
+	{
+		if (_expanded)
+			return;
+		_expanded = true;
+	}
 
 	public void SetIcon(Sprite sprite)
 	{
 		icon.sprite = sprite;
-	}
-
-	public void SetWidth(float width)
-	{
-		_thisTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
 	}
 
 	public void SetInfo(int stored, int income, int consumption, int netIncome, bool atMax = false)

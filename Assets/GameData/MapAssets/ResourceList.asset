@@ -15,49 +15,72 @@ MonoBehaviour:
   resourceDefinations:
   - name: Power
     resourceTile: {fileID: 0}
+    sprite: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
     spriteID: 0
   - name: Metal
     resourceTile: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
+    sprite: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
     spriteID: 2
   - name: Carbon
     resourceTile: {fileID: 11400000, guid: b5c46715dc3c516429087c81d7a495fa, type: 2}
+    sprite: {fileID: 756898814474196213, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
     spriteID: 3
   - name: Water
     resourceTile: {fileID: 0}
+    sprite: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
     spriteID: 1
   - name: Composite Metal
     resourceTile: {fileID: 0}
+    sprite: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
     spriteID: 4
   - name: '[Ph]Fuel'
     resourceTile: {fileID: 0}
+    sprite: {fileID: -4264389267444819633, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
     spriteID: 5
   - name: Silver
     resourceTile: {fileID: 11400000, guid: 9aff72993e7e56042a67d5091984d80d, type: 2}
+    sprite: {fileID: -910342561807809153, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
     spriteID: 6
   - name: Gold
     resourceTile: {fileID: 11400000, guid: 5f2425752e5adba4cb465b4a23a554fc, type: 2}
+    sprite: {fileID: -7947723104890870202, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
     spriteID: 7
   - name: Electrum
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 0
   - name: Deuterium
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 1
   - name: Tritium
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 2
   - name: Carbon Nanotubes
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 3
   - name: Phosphophylite
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 4
   - name: Super Conductor
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 5
   - name: Phos Metal
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 6
   - name: Refined Phos
     resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
     spriteID: 7
