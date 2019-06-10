@@ -8,7 +8,7 @@ public abstract class FeatureGenerator : ScriptableObject
 	{
 		get
 		{
-			return "<b>" + name + ":</b> ";
+			return $"<b>{name}</b> ";
 		}
 	}
 	public abstract void Generate(Map map);

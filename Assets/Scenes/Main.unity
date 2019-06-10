@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.075289145, g: 0.21154472, b: 0.112101994, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -505,7 +505,6 @@ MonoBehaviour:
   resourcePanel: {fileID: 849044139}
   resourceDisplayPrefab: {fileID: 2162334617834054866, guid: a97d900c5d19ee448943de8173ed7983,
     type: 3}
-  padding: 0
 --- !u!1 &118014431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,7 +1348,6 @@ MonoBehaviour:
   tile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
   generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
-  resourceList: {fileID: 11400000, guid: c901ba43007104e41956c9d33011aa23, type: 2}
   min: {x: 0, y: 0, z: 0}
   max: {x: 0, y: 0, z: 0}
 --- !u!1 &205018792
@@ -3325,6 +3323,8 @@ MonoBehaviour:
   hideOnStart: 1
   hideOnBlur: 0
   text: {fileID: 459679554}
+  baseNameText: {fileID: 2124582711}
+  interactionUI: {fileID: 442054994}
 --- !u!1 &638017536
 GameObject:
   m_ObjectHideFlags: 0
@@ -6032,8 +6032,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1369379223}
   - component: {fileID: 1369379224}
+  - component: {fileID: 1369379225}
   m_Layer: 8
-  m_Name: _PPS
+  m_Name: _GLOBAL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6070,6 +6071,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 282
   uiBase: {fileID: 538560001}
+--- !u!114 &1369379225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369379222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db3a1348a83acc84098a948ae8fb4a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceList: {fileID: 11400000, guid: c901ba43007104e41956c9d33011aa23, type: 2}
 --- !u!1 &1371959984
 GameObject:
   m_ObjectHideFlags: 0
@@ -7468,7 +7482,6 @@ MonoBehaviour:
   HQTile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
   infoBanner: {fileID: 1107210684}
   baseNameUI: {fileID: 636739581}
-  baseNameText: {fileID: 2124582711}
   buildWindow: {fileID: 1620701535}
   scrollContent: {fileID: 867663154}
   selectIndicatorEntity: {fileID: 11400000, guid: 33177b445fb1df34f9e26941d4a375cb,
@@ -9795,8 +9808,9 @@ GameObject:
   - component: {fileID: 2124582710}
   - component: {fileID: 2124582712}
   - component: {fileID: 2124582711}
+  - component: {fileID: 2124582713}
   m_Layer: 0
-  m_Name: City Name
+  m_Name: Base Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9942,6 +9956,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124582709}
   m_CullTransparentMesh: 0
+--- !u!114 &2124582713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124582709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 0
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 2124582711}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 636739581}
+        m_MethodName: Show
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, Unity.ugui, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1001 &7193113063228729523
 PrefabInstance:
   m_ObjectHideFlags: 0

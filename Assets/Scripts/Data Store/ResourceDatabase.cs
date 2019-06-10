@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ResourceDatabase
+public class ResourceDatabase : MonoBehaviour
 {
+	public ResourceList resourceList;
 	#region Singleton
 	public static ResourceDatabase INST
 	{
 		get
 		{
 			if (_instance == null)
-				return _instance = new ResourceDatabase();
+				return _instance = GameObject.FindObjectOfType<ResourceDatabase>();
 			return _instance;
 		}
 	}
@@ -19,15 +20,14 @@ public class ResourceDatabase
 	private static ResourceDatabase _instance;
 	#endregion
 
-	public static int ResourceCount => (INST._resourceDefs == null) ? 0 : INST._resourceDefs.Length;
 
-	private ResourceDefination[] _resourceDefs;
+	public static int ResourceCount => INST.resourceList.resourceDefinations.Length;
 
 	public static int GetResourceId(string name)
 	{
-		for (int i = 0; i < INST._resourceDefs.Length; i++)
+		for (int i = 0; i < INST.resourceList.resourceDefinations.Length; i++)
 		{
-			if (INST._resourceDefs[i].name == name)
+			if (INST.resourceList.resourceDefinations[i].name == name)
 				return i;
 		}
 		throw new System.Exception($"Resource '{name}' does not exits");
@@ -35,9 +35,9 @@ public class ResourceDatabase
 
 	public static int GetResourceId(ResourceTileInfo tileInfo)
 	{
-		for (int i = 0; i < INST._resourceDefs.Length; i++)
+		for (int i = 0; i < INST.resourceList.resourceDefinations.Length; i++)
 		{
-			if (INST._resourceDefs[i].resourceTile == tileInfo)
+			if (INST.resourceList.resourceDefinations[i].resourceTile == tileInfo)
 				return i;
 		}
 		throw new System.Exception($"Resource '{tileInfo.name}' does not exits");
@@ -45,33 +45,30 @@ public class ResourceDatabase
 
 	public static string GetResourceName(int id)
 	{
-		return id >= INST._resourceDefs.Length ? null : INST._resourceDefs[id].name;
+		return INST.resourceList.resourceDefinations[id].name;
 	}
 
 	public static TileInfo GetResourceTile(int id)
 	{
-		return id >= INST._resourceDefs.Length ? null : INST._resourceDefs[id].resourceTile;
+		return INST.resourceList.resourceDefinations[id].resourceTile;
 	}
 
 	public static int GetSpriteId(int id)
 	{
-		return id >= INST._resourceDefs.Length ? -1 : INST._resourceDefs[id].spriteID;
+		return INST.resourceList.resourceDefinations[id].spriteID;
 	}
 
 	public static Sprite GetSprite(int id)
 	{
-		return INST._resourceDefs[id].sprite;
+		return INST.resourceList.resourceDefinations[id].sprite;
 	}
 
 	public static int[] GetIdArray()
 	{
-		return Enumerable.Range(0, INST._resourceDefs.Length).ToArray();
+		return Enumerable.Range(0, INST.resourceList.resourceDefinations.Length).ToArray();
 	}
 
-	public static void Init(ResourceDefination[] resourceDefinations)
-	{
-		INST._resourceDefs = resourceDefinations;
-	}
+	
 
 
 }

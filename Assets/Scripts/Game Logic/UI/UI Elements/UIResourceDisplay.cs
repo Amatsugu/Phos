@@ -43,7 +43,6 @@ public class UIResourceDisplay : UIHover
 
 		OnHover += Open;
 		OnBlur += Close;
-		//StartCoroutine(ExpandAnim());
 	}
 
 
@@ -67,7 +66,6 @@ public class UIResourceDisplay : UIHover
 		_thisTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_baseWidth - _inOutWidth, _baseWidth, t));
 		logisticsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_logisticsWidth - _inOutWidth, _logisticsWidth, t));
 
-		//yield return new WaitForEndOfFrame();
 	}
 
 	public void Open()

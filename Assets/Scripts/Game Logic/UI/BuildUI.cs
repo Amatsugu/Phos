@@ -23,7 +23,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	/*	UI	*/
 	public UIInfoBanner infoBanner;
 	public BaseNameWindowUI baseNameUI;
-	public TMP_Text baseNameText;
 	public GameObject buildWindow;
 	public RectTransform scrollContent;
 	//Indicators
@@ -219,14 +218,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 							{
 								baseNameUI.Show();
 								placeMode = false;
-								_cam.GetComponent<CameraController>().enabled = false;
-								baseNameUI.OnHide += () =>
+								void onHide()
 								{
 									placeMode = hqMode = false;
 									infoBanner.SetActive(false);
-									_cam.GetComponent<CameraController>().enabled = true;
-									baseNameText.text = baseNameUI.text.text;
-								};
+									baseNameUI.OnHide -= onHide;
+								}
+								baseNameUI.OnHide += onHide;
 							}
 						}
 					}

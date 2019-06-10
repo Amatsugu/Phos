@@ -17,8 +17,6 @@ public class MapRenderer : MonoBehaviour
 	public MapGenerator generator;
 	public GameObject oceanPlane;
 
-	public ResourceList resourceList;
-
 	[HideInInspector]
 	public Map map;
 	[HideInInspector]
@@ -32,7 +30,6 @@ public class MapRenderer : MonoBehaviour
 	private void Awake()
 	{
 		_cam = FindObjectOfType<Camera>();
-		ResourceDatabase.Init(resourceList.resourceDefinations);
 		Init();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);

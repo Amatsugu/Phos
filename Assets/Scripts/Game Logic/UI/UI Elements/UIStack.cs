@@ -18,11 +18,10 @@ public class UIStack : MonoBehaviour
 
 	public void UpdateChildren()
 	{
-		_children = GetComponentsInChildren<RectTransform>().Where(c => c.parent == transform).ToArray();
-		Debug.Log(_children.Length);
+		_children = GetComponentsInChildren<RectTransform>(true).Where(c => c.parent == transform).ToArray();
 	}
 
-	void Update()
+	void LateUpdate()
     {
 		var curOffset = 0f;
 		for (int i = 0; i < _children.Length; i++)

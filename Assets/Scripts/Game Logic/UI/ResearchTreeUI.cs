@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static ResearchTree;
 
-public class ResearchTreeUI : UIWindow, IBuildingUI
+public class ResearchTreeUI : UIPanel, IBuildingUI
 {
 	public RectTransform node;
 	public RectTransform vertConnector;
@@ -23,10 +23,11 @@ public class ResearchTreeUI : UIWindow, IBuildingUI
 
 	private Vector2 _totalOffset;
 
-	void Start()
+	void Awake()
 	{
 		uiElements = new List<RectTransform>();
 		_totalOffset = nodeSize + nodeSpacing;
+		OnShow += OnOpened;
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
@@ -78,16 +79,11 @@ public class ResearchTreeUI : UIWindow, IBuildingUI
 
 	public void Show(IteractiveBuildingTile target)
 	{
-		Open();
+		Show();
 
 	}
 
-	public void Hide()
-	{
-		Close();
-	}
-
-	public override void OnOpened()
+	public void OnOpened()
 	{
 		for (int i = 0; i < uiElements.Count; i++)
 		{

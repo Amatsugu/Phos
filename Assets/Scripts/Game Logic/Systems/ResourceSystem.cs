@@ -33,8 +33,6 @@ public class ResourceSystem : ComponentSystem
 		if (DateTime.Now < nextTic)
 			return;
 		nextTic = nextTic.AddSeconds(1 / ticRate);
-		if(resCount.Length != ResourceDatabase.ResourceCount)
-			resCount = new int[ResourceDatabase.ResourceCount];
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];
 

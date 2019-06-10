@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public abstract class UIPanel : MonoBehaviour
+public abstract class UIPanel : UIHover
 {
 
 	public RectTransform PanelBase { get; private set; }
