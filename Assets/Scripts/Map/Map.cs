@@ -31,11 +31,11 @@ public class Map : IDisposable
 	public float seaLevel;
 	public int Seed { get; private set; }
 
-	public Transform Parent { get; }
 	public Chunk[] Chunks { get; }
 
 	public HQTile HQ;
 	public Dictionary<int, MobileUnit> units;
+	public List<int>[] unitLocations;
 	private int _nextId = 1;
 
 	public Map(int height, int width, int seed, float edgeLength = 1)
@@ -53,6 +53,7 @@ public class Map : IDisposable
 		shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
 		longDiagonal = 2 * tileEdgeLength;
 		units = new Dictionary<int, MobileUnit>(500);
+		unitLocations = new List<int>[height * width];
 		ActiveMap = this;
 	}
 
@@ -224,10 +225,87 @@ public class Map : IDisposable
 	{
 		var id = _nextId++;
 		var unit = new MobileUnit(id, unitInfo, tile);
+		var chunkIndex = tile.Coords.GetChunkIndex(width);
+		if(unitLocations[chunkIndex] == null)
+			unitLocations[chunkIndex] = new List<int>();
+		unitLocations[chunkIndex].Add(id);
 		units.Add(id, unit);
 		if (IsRendered)
 			unit.Render();
 		return unit;
+	}
+
+	public void MoveUnit(int unitId, int srcChunk, int dstChunk)
+	{
+		Debug.Log($"Moving {unitId} from {srcChunk} to {dstChunk}");
+		if (unitLocations[srcChunk].Remove(unitId))
+		{
+			if (unitLocations[dstChunk] == null)
+				unitLocations[dstChunk] = new List<int>();
+			unitLocations[dstChunk].Add(unitId);
+		}
+		Debug.Log($"src {unitLocations[srcChunk].Contains(unitId)} dst {unitLocations[dstChunk].Contains(unitId)}");
+	}
+
+	public List<int> SelectUnits(HexCoords left, HexCoords right)
+	{
+		var cLeft = left.GetChunkPos();
+		var cRight = right.GetChunkPos();
+		int cZMin, cZMax;
+		int cXMin, cXMax;
+		Vector3 worldLeft, worldRight;
+		worldLeft = worldRight = Vector3.zero;
+		if(left.offsetZ < right.offsetZ)
+		{
+			cZMin = cLeft.chunkZ;
+			cZMax = cRight.chunkZ;
+			worldLeft.z = left.worldZ;
+			worldRight.z = right.worldZ;
+		}
+		else
+		{
+			cZMin = cRight.chunkZ;
+			cZMax = cLeft.chunkZ;
+			worldLeft.z = right.worldZ;
+			worldRight.z = left.worldZ;
+		}
+		if (left.offsetX < right.offsetX)
+		{
+			cXMin = cLeft.chunkX;
+			cXMax = cRight.chunkX;
+			worldLeft.x = left.worldX;
+			worldRight.x = right.worldX;
+		}
+		else
+		{
+			cXMin = cRight.chunkX;
+			cXMax = cLeft.chunkX;
+			worldLeft.x = right.worldX;
+			worldRight.x = left.worldX;
+		}
+		cXMin = Math.Max(0, cXMin);
+		cZMin = Math.Max(0, cZMin);
+		cXMax = Math.Min(width, cXMax);
+		cZMax = Math.Min(height, cZMax);
+		var selectedUnits = new List<int>();
+		for (int cZ = cZMin; cZ <= cZMax; cZ++)
+		{
+			for (int cX = cXMin; cX <= cXMax; cX++)
+			{
+				var cIndex = cX + cZ * width;
+				Debug.Log($"searching {cIndex}");
+				if (unitLocations[cIndex] == null || unitLocations[cIndex].Count == 0)
+					continue;
+				for (int i = 0; i < unitLocations[cIndex].Count; i++)
+				{
+					var unit = units[unitLocations[cIndex][i]];
+					if (unit.Position.x >= worldLeft.x && unit.Position.x <= worldRight.x &&
+						unit.Position.z >= worldLeft.z && unit.Position.z <= worldRight.z)
+						selectedUnits.Add(unit.id);
+				}
+			}
+		}
+		return selectedUnits;
 	}
 
 	public TileInfo[] GetTileTyes()

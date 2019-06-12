@@ -9,16 +9,29 @@ public class MobileUnit
 	public int id;
 	public HexCoords occupiedTile;
 	public MobileUnitInfo info;
+	public Vector3 Position
+	{
+		get => _position;
+		set
+		{
+			_position = value;
+			if (IsRendered)
+				Map.EM.SetComponentData(Entity, new Translation { Value = value });
+		}
+	}
+
 	public Entity Entity { get; protected set; }
 	public bool IsRendered { get; protected set; }
 
 	private bool _isShown;
+	public Vector3 _position;
 
 
 	public MobileUnit(int id, MobileUnitInfo info, Tile t)
 	{
 		this.id = id;
 		this.info = info;
+		Position = t.SurfacePoint;
 		OccupyTile(t);
 	}
 
@@ -26,8 +39,8 @@ public class MobileUnit
 	{
 		if (IsRendered)
 			return Entity;
-		IsRendered = true;
-		return Entity =  info.Instantiate(Map.ActiveMap[occupiedTile].SurfacePoint, Quaternion.identity, id);
+		IsRendered  = _isShown = true;
+		return Entity =  info.Instantiate(Position, Quaternion.identity, id);
 	}
 
 	public void Show(bool isShown)
@@ -56,7 +69,7 @@ public class MobileUnit
 	public virtual void Die()
 	{
 		//TODO: Death Effect
-		Map.ActiveMap[occupiedTile].DeOccupyTile(id);
+		//Map.ActiveMap[occupiedTile].DeOccupyTile(id);
 		Destroy();
 	}
 
@@ -71,9 +84,20 @@ public class MobileUnit
 			return true;
 		if (tile.OccupyTile(id))
 		{
+			var w = Map.ActiveMap.width;
+			if(occupiedTile.isCreated)
+			{
+				var curChunk = occupiedTile.GetChunkIndex(w);
+				var newChunk = tile.Coords.GetChunkIndex(w);
+				if (newChunk != curChunk)
+				{
+					Map.ActiveMap.MoveUnit(id, curChunk, newChunk);
+				}
+			}
 			Map.ActiveMap[occupiedTile].DeOccupyTile(id);
 			occupiedTile = tile.Coords;
-			Show(tile.IsShown);
+			if(IsRendered)
+				_position = Map.EM.GetComponentData<Translation>(Entity).Value;
 			return true;
 		}
 		return false;

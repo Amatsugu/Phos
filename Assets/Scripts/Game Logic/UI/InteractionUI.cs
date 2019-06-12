@@ -100,14 +100,14 @@ public class InteractionUI : MonoBehaviour
 						}
 						else
 						{
-							var selection = Map.ActiveMap.BoxSelect(_start.Coords, _end.Coords);
+							/*var selection = Map.ActiveMap.BoxSelect(_start.Coords, _end.Coords);
 							var selectionWithUnits = selection.Where(t => t.IsOccupied);
 							if (selectionWithUnits.Count() > 0)
 							{
 								var units = selectionWithUnits.SelectMany(t => t.GetUnits().Where(u => u != 0));
 								_selectedUnits.AddRange(units);
-							}
-
+							}*/
+							_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
 						}
 					}
 				}

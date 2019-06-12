@@ -68,6 +68,12 @@ public struct HexCoords
 
 	public (int chunkX, int chunkZ) GetChunkPos() => (Mathf.FloorToInt((float)offsetX / Map.Chunk.SIZE), Mathf.FloorToInt((float)offsetZ / Map.Chunk.SIZE));
 
+	public int GetChunkIndex(int width)
+	{
+		var (cx, cz) = GetChunkPos();
+		return cx + cz * width;
+	}
+
 	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
 
 	public static (float X, float Z) OffsetToWorldPos(int x, int z, float innerRadius, float edgeLength)

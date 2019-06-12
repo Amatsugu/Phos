@@ -85,7 +85,8 @@ public class UnitMovementSystem : ComponentSystem
 			var unit = Map.ActiveMap.units[id.Value];
 			var curCoord = HexCoords.FromPosition(t.Value, Map.ActiveMap.tileEdgeLength);
 			var curTile = Map.ActiveMap[curCoord];
-			if(!unit.OccupyTile(curTile))
+
+			if (!unit.OccupyTile(curTile))
 			{
 				pg.Delay++;
 				if (pg.Delay > 3)
@@ -95,6 +96,8 @@ public class UnitMovementSystem : ComponentSystem
 				}
 				return;
 			}
+
+
 			pg.Delay = 0;
 			var tOffset = curTile.GetOccipancyPos(id.Value);
 			var ntPos = (float3)nextTile.SurfacePoint + tOffset;
