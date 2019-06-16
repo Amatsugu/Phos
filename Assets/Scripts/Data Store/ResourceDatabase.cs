@@ -21,7 +21,7 @@ public class ResourceDatabase : MonoBehaviour
 	#endregion
 
 
-	public static int ResourceCount => INST.resourceList.resourceDefinations.Length;
+	public static int ResourceCount => INST == null ? 0 : INST.resourceList.resourceDefinations.Length;
 
 	public static int GetResourceId(string name)
 	{

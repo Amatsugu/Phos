@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.075289145, g: 0.21154472, b: 0.112101994, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1348,6 +1348,7 @@ MonoBehaviour:
   tile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
   generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
+  line: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
   min: {x: 0, y: 0, z: 0}
   max: {x: 0, y: 0, z: 0}
 --- !u!1 &205018792

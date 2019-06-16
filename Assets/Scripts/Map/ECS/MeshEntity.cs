@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -62,6 +63,12 @@ public class MeshEntity : ScriptableObject
 		em.SetComponentData(e, new Translation { Value = position });
 		em.SetComponentData(e, new NonUniformScale { Value = scale });
 		return e;
+	}
+
+	public void Instantiate(NativeArray<Entity> output)
+	{
+		var em = World.Active.EntityManager;
+		em.Instantiate(GetEntity(), output);
 	}
 
 	public Entity Instantiate(Vector3 position, Vector3 scale, Entity parent)

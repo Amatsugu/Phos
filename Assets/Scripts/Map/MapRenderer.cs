@@ -16,6 +16,7 @@ public class MapRenderer : MonoBehaviour
 	public TileInfo tile;
 	public MapGenerator generator;
 	public GameObject oceanPlane;
+	public MeshEntityRotatable line;
 
 	[HideInInspector]
 	public Map map;

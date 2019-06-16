@@ -40,6 +40,8 @@ public struct HexCoords
 		isCreated = true;
 	}
 
+	public static float CalculateInnerRadius(float edgeLength) => Mathf.Sqrt(3f) / 2f * edgeLength;
+
 	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength) => new HexCoords(x - (Z / 2), Z, edgeLength);
 
 	public static HexCoords FromPosition(Vector3 position, float edgeLength = 1)
@@ -76,6 +78,7 @@ public struct HexCoords
 
 	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
 
+	
 	public static (float X, float Z) OffsetToWorldPos(int x, int z, float innerRadius, float edgeLength)
 	{
 		var worldX = (x + z * .5f - z / 2) * (innerRadius * 2f);
