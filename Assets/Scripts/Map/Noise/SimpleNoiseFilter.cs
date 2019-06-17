@@ -5,9 +5,9 @@ using UnityEngine;
 public struct SimpleNoiseFilter : INoiseFilter
 {
 	Noise noise;
-	NoiseSettings.SimpleNoiseSettings settings;
+	NoiseSettings settings;
 
-	public SimpleNoiseFilter(NoiseSettings.SimpleNoiseSettings noiseSettings, int seed = 0)
+	public SimpleNoiseFilter(NoiseSettings noiseSettings, int seed = 0)
 	{
 		noise = new Noise(seed);
 		this.settings = noiseSettings;

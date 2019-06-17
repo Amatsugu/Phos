@@ -11,6 +11,7 @@ public class InitializeClouds : MonoBehaviour
 {
 	// Start is called before the first frame update
 	public MeshEntity cloudMesh;
+	public float windSpeed = .5f;
 	public float clouldHeight;
 	public int fieldHeight = 200;
 	public int fieldWidth = 100;
@@ -43,6 +44,11 @@ public class InitializeClouds : MonoBehaviour
 		}
     }
 
+	void OnValidate()
+	{
+		if (Application.isPlaying)
+			CloudSystem.INST.UpdateSettings();
+	}
 	void OnDestroy()
 	{
 		_clouds.Dispose();

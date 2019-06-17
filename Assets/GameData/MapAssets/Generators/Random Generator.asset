@@ -56,91 +56,55 @@ MonoBehaviour:
     useFirstLayerAsMask: 0
     noiseSettings:
       type: 0
-      simpleNoiseSettings:
-        strength: 2.93
-        layerCount: 4
-        baseRoughness: 2.14
-        roughness: 0.87
-        persistence: 0.77
-        minValue: -0.2
-        center: {x: 0, y: 0, z: 0}
-      rigidNoiseSettings:
-        strength: 1.35
-        layerCount: 8
-        baseRoughness: 0.11
-        roughness: 6.15
-        persistence: 1.75
-        minValue: 0.03
-        center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 0.34
+      strength: 2.93
+      layerCount: 4
+      baseRoughness: 2.14
+      roughness: 0.87
+      persistence: 0.77
+      minValue: -0.2
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
   - name: Rough
     enabled: 1
     useFirstLayerAsMask: 0
     noiseSettings:
       type: 0
-      simpleNoiseSettings:
-        strength: -0.23
-        layerCount: 4
-        baseRoughness: 2.85
-        roughness: 2
-        persistence: 1
-        minValue: 0
-        center: {x: 0, y: 0, z: 0}
-      rigidNoiseSettings:
-        strength: 2.29
-        layerCount: 4
-        baseRoughness: 4.33
-        roughness: 5.49
-        persistence: 1.05
-        minValue: 0
-        center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 0
+      strength: -0.23
+      layerCount: 4
+      baseRoughness: 2.85
+      roughness: 2
+      persistence: 1
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
   - name: Mountains
     enabled: 1
     useFirstLayerAsMask: 1
     noiseSettings:
       type: 1
-      simpleNoiseSettings:
-        strength: 1.35
-        layerCount: 5
-        baseRoughness: 2.86
-        roughness: 1.94
-        persistence: 0.88
-        minValue: 1.7
-        center: {x: 4.54, y: 0, z: 0}
-      rigidNoiseSettings:
-        strength: 10.44
-        layerCount: 4
-        baseRoughness: 2.6
-        roughness: 4
-        persistence: 1.57
-        minValue: 0
-        center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 0.35
+      strength: 10.44
+      layerCount: 4
+      baseRoughness: 2.6
+      roughness: 4
+      persistence: 1.57
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0.35
   - name: Valleys
     enabled: 1
     useFirstLayerAsMask: 0
     noiseSettings:
       type: 1
-      simpleNoiseSettings:
-        strength: 1.35
-        layerCount: 5
-        baseRoughness: 2.86
-        roughness: 1.94
-        persistence: 0.88
-        minValue: 1.7
-        center: {x: 4.54, y: 0, z: 0}
-      rigidNoiseSettings:
-        strength: -1
-        layerCount: 3
-        baseRoughness: 3.87
-        roughness: 5.8
-        persistence: 0
-        minValue: 0
-        center: {x: 0, y: 0, z: 0}
-        weightMultiplier: 4.57
+      strength: -1
+      layerCount: 3
+      baseRoughness: 3.87
+      roughness: 5.8
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 4.57
   useSeed: 0
-  seed: -927909906
+  seed: -1896602528
   landSeaRatio: 0.35
   biomeFold: 1
   preview: 1

@@ -9,9 +9,9 @@ public class NoiseFilterFactory
 		switch(settings.type)
 		{
 			case NoiseSettings.FilterType.Simple:
-				return new SimpleNoiseFilter(settings.simpleNoiseSettings, seed);
+				return new SimpleNoiseFilter(settings, seed);
 			case NoiseSettings.FilterType.Rigid:
-				return new RigidNoiseFilter(settings.rigidNoiseSettings, seed);
+				return new RigidNoiseFilter(settings, seed);
 			default:
 				return null;
 		}

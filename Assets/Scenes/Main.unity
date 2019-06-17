@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18546839, g: 0.30033568, b: 0.30942157, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2332,28 +2332,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cloudMesh: {fileID: 11400000, guid: 719264d59cc4e1b499b7b868e507c937, type: 2}
+  windSpeed: 0.1
   clouldHeight: 40
   fieldHeight: 60
   fieldWidth: 100
   noiseSettings:
     type: 0
-    simpleNoiseSettings:
-      strength: 0
-      layerCount: 0
-      baseRoughness: 0
-      roughness: 0
-      persistence: 0
-      minValue: 0
-      center: {x: 0, y: 0, z: 0}
-    rigidNoiseSettings:
-      strength: 0
-      layerCount: 0
-      baseRoughness: 0
-      roughness: 0
-      persistence: 0
-      minValue: 0
-      center: {x: 0, y: 0, z: 0}
-      weightMultiplier: 0
+    strength: 1
+    layerCount: 2
+    baseRoughness: 0.7
+    roughness: 5.23
+    persistence: 0.16
+    minValue: 0.73
+    center: {x: 0, y: 0, z: 0}
+    weightMultiplier: 0
 --- !u!1 &536096453
 GameObject:
   m_ObjectHideFlags: 0
