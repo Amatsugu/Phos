@@ -12358,6 +12358,7 @@ GameObject:
   - component: {fileID: 2048121246}
   - component: {fileID: 2048121245}
   - component: {fileID: 2048121244}
+  - component: {fileID: 2048121242}
   m_Layer: 0
   m_Name: MainCam
   m_TagString: MainCamera
@@ -12365,6 +12366,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2048121242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048121241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d03a093f09cdc9438f676ccc69ab582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cloudMesh: {fileID: 11400000, guid: 719264d59cc4e1b499b7b868e507c937, type: 2}
+  clouldCount: 100
 --- !u!45 &2048121244
 Skybox:
   m_ObjectHideFlags: 0

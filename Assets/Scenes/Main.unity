@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.075289145, g: 0.21154472, b: 0.112101994, a: 1}
+  m_IndirectSpecularColor: {r: 0.18546839, g: 0.30033568, b: 0.30942157, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2101,6 +2101,7 @@ GameObject:
   - component: {fileID: 534669906}
   - component: {fileID: 534669909}
   - component: {fileID: 534669908}
+  - component: {fileID: 534669910}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2318,6 +2319,41 @@ MonoBehaviour:
   edgePan: 0
   mapRenderer: {fileID: 196126402}
   buildUI: {fileID: 1635046459}
+--- !u!114 &534669910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d03a093f09cdc9438f676ccc69ab582, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cloudMesh: {fileID: 11400000, guid: 719264d59cc4e1b499b7b868e507c937, type: 2}
+  clouldHeight: 40
+  fieldHeight: 60
+  fieldWidth: 100
+  noiseSettings:
+    type: 0
+    simpleNoiseSettings:
+      strength: 0
+      layerCount: 0
+      baseRoughness: 0
+      roughness: 0
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+    rigidNoiseSettings:
+      strength: 0
+      layerCount: 0
+      baseRoughness: 0
+      roughness: 0
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
 --- !u!1 &536096453
 GameObject:
   m_ObjectHideFlags: 0

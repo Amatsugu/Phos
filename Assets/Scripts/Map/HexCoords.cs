@@ -42,6 +42,8 @@ public struct HexCoords
 
 	public static float CalculateInnerRadius(float edgeLength) => Mathf.Sqrt(3f) / 2f * edgeLength;
 
+	public static float CalculateShortDiagonal(float edgeLength) => Mathf.Sqrt(3f) * edgeLength;
+
 	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength) => new HexCoords(x - (Z / 2), Z, edgeLength);
 
 	public static HexCoords FromPosition(Vector3 position, float edgeLength = 1)

@@ -113,10 +113,10 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   exposure:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 0.55
   multiplier:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
     min: 0
   upperHemisphereLuxValue:
@@ -137,34 +137,34 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   sunSize:
-    m_OverrideState: 0
-    m_Value: 0.04
+    m_OverrideState: 1
+    m_Value: 0.066
     min: 0
     max: 1
   sunSizeConvergence:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 5
     min: 1
     max: 10
   atmosphereThickness:
     m_OverrideState: 1
-    m_Value: 1.37
+    m_Value: 0.91
     min: 0
     max: 5
   skyTint:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0.8927181, b: 1, a: 1}
+    m_Value: {r: 0.9019608, g: 0.9948222, b: 1, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   groundColor:
     m_OverrideState: 1
-    m_Value: {r: 0.23776388, g: 0.4056604, b: 0, a: 1}
+    m_Value: {r: 0.4046763, g: 0, b: 0.44313726, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   enableSunDisk:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
 --- !u!114 &-5081067763854273005
 MonoBehaviour:
@@ -846,7 +846,6 @@ MonoBehaviour:
   meanHeight:
     m_OverrideState: 0
     m_Value: 10
-    min: 1
   anisotropy:
     m_OverrideState: 0
     m_Value: 0
@@ -1041,7 +1040,6 @@ MonoBehaviour:
   meanHeight:
     m_OverrideState: 0
     m_Value: 10
-    min: 1
   anisotropy:
     m_OverrideState: 0
     m_Value: 0
@@ -1242,7 +1240,6 @@ MonoBehaviour:
   meanHeight:
     m_OverrideState: 1
     m_Value: 671
-    min: 1
   anisotropy:
     m_OverrideState: 1
     m_Value: 0
@@ -1470,26 +1467,26 @@ MonoBehaviour:
     min: 1
     max: 4
   cascadeShadowSplit0:
-    m_OverrideState: 0
-    m_Value: 0.05
+    m_OverrideState: 1
+    m_Value: 0.042
   cascadeShadowSplit1:
-    m_OverrideState: 0
-    m_Value: 0.15
+    m_OverrideState: 1
+    m_Value: 0.11
   cascadeShadowSplit2:
-    m_OverrideState: 0
-    m_Value: 0.3
+    m_OverrideState: 1
+    m_Value: 0.198
   cascadeShadowBorder0:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 0.3726667
   cascadeShadowBorder1:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 0.20882353
   cascadeShadowBorder2:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 0.23409091
   cascadeShadowBorder3:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 0.09975062
 --- !u!114 &5364598400842625620
 MonoBehaviour:
   m_ObjectHideFlags: 3
