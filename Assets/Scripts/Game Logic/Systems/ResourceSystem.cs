@@ -36,30 +36,40 @@ public class ResourceSystem : ComponentSystem
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];
 
-        Entities.WithAll<FirstTickTag>().ForEach(e =>
-        {
-            PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
-        });
-
+        
+		//Consumption
         Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach<ConsumptionData>((e, c) =>
 		{
-			for (int i = 0; i < c.resourceIds.Length; i++)
+			if (HasAllResources(c.resourceIds, c.rates))
 			{
-				if (!ConsumeResourse(e, c.resourceIds[i], c.rates[i]))
-					break;
+				ConsumeResourse(c.resourceIds, c.rates);
+				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
+					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
+			}else
+			{
+				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
+					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
 			}
+
 		});
 
+		//Debuffed Consumption
 		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ConsumptionData c, ref ConsumptionDebuff d) =>
 		{
-			for (int i = 0; i < c.resourceIds.Length; i++)
+			if (HasAllResources(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi))
 			{
-				if (!ConsumeResourse(e, c.resourceIds[i], c.rates[i], d.distance * ConsumptionDebuff.multi))
-					break;
+				ConsumeResourse(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi);
+				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
+					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
+			}
+			else
+			{
+				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
+					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
 			}
 		});
 
-
+		//Production
 		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
@@ -73,6 +83,12 @@ public class ResourceSystem : ComponentSystem
 					resCount[res] = maxStorage;
 			}
 		});
+
+		//Prevent production of resources on first tick
+		Entities.WithAll<FirstTickTag>().ForEach(e =>
+		{
+			PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
+		});
 	}
 
 	void ProduceResource()
@@ -80,25 +96,43 @@ public class ResourceSystem : ComponentSystem
 
 	}
 
-	bool ConsumeResourse(Entity e, int rID, int rate, float multi = 1)
+	bool HasAllResources(int[] ids, int[] rates, float multi = 1, bool recordDemand = true)
 	{
-		var totalRate = multi == 1 ? rate : (int)(rate * multi);
-		totalDemand[rID] -= totalRate;
-		if (resCount[rID] < totalRate)
+		for (int i = 0; i < ids.Length; i++)
 		{
-			if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
+			var totalRate = multi == 1 ? rates[i] : (int)(rates[i] * multi);
+			if(recordDemand)
+				totalDemand[ids[i]] -= totalRate;
+			if (resCount[ids[i]] < totalRate)
 			{
-				PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
 				return false;
 			}
 		}
-		else
-		{
-			if (EntityManager.HasComponent<InactiveBuildingTag>(e))
-				PostUpdateCommands.RemoveComponent(e, typeof(InactiveBuildingTag));
-			resCount[rID] -= totalRate;
-		}
+
 		return true;
+	}
+
+	bool HasAllResources(ResourceIndentifier[] resources, float multi = 1, bool recordDemand = false)
+	{
+		for (int i = 0; i < resources.Length; i++)
+		{
+			var totalRate = multi == 1 ? resources[i].ammount : (int)(resources[i].ammount * multi);
+			if (recordDemand)
+				totalDemand[resources[i].id] -= totalRate;
+			if (resCount[resources[i].id] < totalRate)
+				return false;
+		}
+
+		return true;
+	}
+
+	void ConsumeResourse(int[] ids, int[] rates, float multi = 1)
+	{
+		for (int i = 0; i < ids.Length; i++)
+		{
+			var totalRate = multi == 1 ? rates[i] : (int)(rates[i] * multi);
+			resCount[ids[i]] -= totalRate;
+		}
 	}
 
 	protected override void OnStopRunning()

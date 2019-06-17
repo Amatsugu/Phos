@@ -24,7 +24,6 @@ public class StatusUI : MonoBehaviour
 			_displays[i].SetIcon(ResourceDatabase.GetSprite(i));
 			rDisp.gameObject.SetActive(false);
 		}
-		resourcePanel.GetComponent<UIStack>().UpdateChildren();
 	}
 
 	void Update()
