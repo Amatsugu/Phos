@@ -2346,6 +2346,7 @@ MonoBehaviour:
     minValue: 0.73
     center: {x: 0, y: 0, z: 0}
     weightMultiplier: 0
+  camDisolveDist: 10
 --- !u!1 &536096453
 GameObject:
   m_ObjectHideFlags: 0

@@ -54,20 +54,24 @@ MonoBehaviour:
     spriteID: 7
   - name: Electrum
     resourceTile: {fileID: 0}
-    sprite: {fileID: 0}
-    spriteID: 0
+    sprite: {fileID: -550988092767783048, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+    spriteID: 11
   - name: Deuterium
     resourceTile: {fileID: 0}
-    sprite: {fileID: 0}
-    spriteID: 1
+    sprite: {fileID: -8010261840859185662, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+    spriteID: 8
   - name: Tritium
     resourceTile: {fileID: 0}
-    sprite: {fileID: 0}
-    spriteID: 2
+    sprite: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+    spriteID: 9
   - name: Carbon Nanotubes
     resourceTile: {fileID: 0}
-    sprite: {fileID: 0}
-    spriteID: 3
+    sprite: {fileID: -4024748925766376699, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+    spriteID: 10
   - name: Phosphophylite
     resourceTile: {fileID: 0}
     sprite: {fileID: 0}

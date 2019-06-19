@@ -16,6 +16,8 @@ public class InitializeClouds : MonoBehaviour
 	public int fieldHeight = 200;
 	public int fieldWidth = 100;
 	public NoiseSettings noiseSettings;
+	[Range(1, 100)]
+	public float camDisolveDist = 10;
 
 	private NativeArray<Entity> _clouds;
 

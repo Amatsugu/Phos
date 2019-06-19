@@ -42,13 +42,20 @@ public class ResourceSystem : ComponentSystem
 		{
 			if (HasAllResources(c.resourceIds, c.rates))
 			{
-				ConsumeResourse(c.resourceIds, c.rates);
+				ConsumeResourses(c.resourceIds, c.rates);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
+				{
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
+					Debug.Log("Removed Inactivity");
+				}
 			}else
 			{
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
+				{
 					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
+					Debug.Log("Added Inactivity");
+				}
+
 			}
 
 		});
@@ -58,14 +65,20 @@ public class ResourceSystem : ComponentSystem
 		{
 			if (HasAllResources(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi))
 			{
-				ConsumeResourse(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi);
+				ConsumeResourses(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
+				{
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
+					Debug.Log("Removed Inactivity");
+				}
 			}
 			else
 			{
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
+				{
 					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
+					Debug.Log("Added Inactivity");
+				}
 			}
 		});
 
@@ -87,7 +100,11 @@ public class ResourceSystem : ComponentSystem
 		//Prevent production of resources on first tick
 		Entities.WithAll<FirstTickTag>().ForEach(e =>
 		{
-			PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
+			if (EntityManager.Exists(e))
+			{
+				PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
+				Debug.Log("Removed first tick tag");
+			}
 		});
 	}
 
@@ -126,7 +143,7 @@ public class ResourceSystem : ComponentSystem
 		return true;
 	}
 
-	void ConsumeResourse(int[] ids, int[] rates, float multi = 1)
+	void ConsumeResourses(int[] ids, int[] rates, float multi = 1)
 	{
 		for (int i = 0; i < ids.Length; i++)
 		{

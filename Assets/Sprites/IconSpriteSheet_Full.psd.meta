@@ -26,10 +26,49 @@ TextureImporter:
   - first:
       213: -7947723104890870202
     second: Gold
+  - first:
+      213: -1554024534391354863
+    second: Power
+  - first:
+      213: -7748967718012387419
+    second: Water
+  - first:
+      213: 2647467648574043659
+    second: Metal
+  - first:
+      213: 756898814474196213
+    second: Carbon
+  - first:
+      213: -2202851767225367483
+    second: Composite Metal
+  - first:
+      213: -4264389267444819633
+    second: Fuel
+  - first:
+      213: -910342561807809153
+    second: Silver
+  - first:
+      213: -7947723104890870202
+    second: Gold
+  - first:
+      213: -8010261840859185662
+    second: Deuterium
+  - first:
+      213: -3950912798310049422
+    second: Tritium
+  - first:
+      213: -4024748925766376699
+    second: Carbon Nanotube
+  - first:
+      213: -550988092767783048
+    second: Electrum
+  - first:
+      213: -1290835823840038161
+    second: IconSpriteSheet_Full_12
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
-    mipMapMode: 0
+    mipMapMode: 1
     enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
@@ -55,8 +94,8 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
+    filterMode: 0
+    aniso: 16
     mipBias: -100
     wrapU: 1
     wrapV: 1
@@ -65,13 +104,13 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
+  spriteExtrude: 0
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 512
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -124,7 +163,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2474f7d6773ad8c47b9923867fe57c63
+      spriteID: 603e75da4233c344695ad0477f66ee83
       internalID: -1554024534391354863
       vertices: []
       indices: 
@@ -145,7 +184,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 824a69bf26b0fea4998f94a548afc763
+      spriteID: 28005b47b2e758f4381ae284d6223c92
       internalID: -7748967718012387419
       vertices: []
       indices: 
@@ -166,7 +205,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 449829d0f909d0249add925878564b82
+      spriteID: 6b7519b1bc22c3149abbead77f282ddd
       internalID: 2647467648574043659
       vertices: []
       indices: 
@@ -187,7 +226,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97a89730ae6e523459d8689355f62534
+      spriteID: 3357c0d9fd8d57642915ca22f837cb2c
       internalID: 756898814474196213
       vertices: []
       indices: 
@@ -208,18 +247,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9dd8cbc3cf0c8d54eb8204778641d0cb
+      spriteID: 9332d07039e6baf4890b9a90dc1038dc
       internalID: -2202851767225367483
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: '[Ph]Fuel'
+      name: Fuel
       rect:
         serializedVersion: 2
-        x: 512
-        y: 1024
+        x: 516
+        y: 1020
         width: 512
         height: 512
       alignment: 0
@@ -229,7 +268,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 853d769d15fb15040acdebf29caa091c
+      spriteID: e294c52139fb4284681c14e669293437
       internalID: -4264389267444819633
       vertices: []
       indices: 
@@ -250,7 +289,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 995c0401aa73cfb4fb19f5688f67fe51
+      spriteID: 60163c432854c5840a534105bdd9d538
       internalID: -910342561807809153
       vertices: []
       indices: 
@@ -271,8 +310,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2e1258df5693aaf4d8b37fe5c8831135
+      spriteID: 6b262c9357317b141b5521e8f63fde6b
       internalID: -7947723104890870202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Deuterium
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4766c39b8232c6c449c43c68d3b2c7f9
+      internalID: -8010261840859185662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tritium
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d877455030ced2c43a1e093be3d93b7f
+      internalID: -3950912798310049422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Carbon Nanotube
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa0c1686dc9ba8d44a8255b99f3f0922
+      internalID: -4024748925766376699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Electrum
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5c4ee5787f08e24fb903b39c36f32b4
+      internalID: -550988092767783048
       vertices: []
       indices: 
       edges: []

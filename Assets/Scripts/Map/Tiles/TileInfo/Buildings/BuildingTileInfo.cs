@@ -27,12 +27,12 @@ public class BuildingTileInfo : TileInfo
 	public ResourceIndentifier[] consumption;
 
 
-	public override IEnumerable<ComponentType> GetComponents()
+	/*public override IEnumerable<ComponentType> GetComponents()
 	{
 		return base.GetComponents().Concat(new ComponentType[]{
 			typeof(FirstTickTag)
 		});
-	}
+	}*/
 
 	public override Entity Instantiate(HexCoords pos, Vector3 scale)
 	{
@@ -70,6 +70,7 @@ public class BuildingTileInfo : TileInfo
 
 			Map.EM.AddSharedComponentData(e, cData);
 		}
+		Map.EM.AddComponent(e, typeof(FirstTickTag));
 		return e;
 	}
 

@@ -33,11 +33,27 @@ public struct HexCoords
 		var innerRadius = Mathf.Sqrt(3f) / 2f * this.edgeLength;
 		offsetX = x + y / 2;
 		offsetZ = y;
-		worldX = (offsetX + offsetZ * .5f - offsetZ / 2) * (innerRadius * 2f);
-		worldZ = offsetZ * (this.edgeLength * 1.5f);
+		//worldX = (offsetX + offsetZ * .5f - offsetZ / 2) * (innerRadius * 2f);
+		//worldZ = offsetZ * (this.edgeLength * 1.5f);
+		(worldX, worldZ) = OffsetToWorldPos(offsetX, offsetZ, innerRadius, edgeLength);
+
 		worldXZ = new Vector3(worldX, 0, worldZ);
 		worldXY = new Vector2(worldX, worldZ);
 		isCreated = true;
+	}
+
+	public static Vector3 SnapToGrid(Vector3 worldPos, float innerRadius, float edgeLength)
+	{
+		float x = worldPos.x / (innerRadius * 2f);
+		float z = -x;
+		float offset = worldPos.z / (edgeLength * 3f);
+		z -= offset;
+		x -= offset;
+		int iX = Mathf.RoundToInt(x);
+		int iY = Mathf.RoundToInt(-x - z);
+		var offsetX = iX + iY / 2;
+		var offsetZ = iY;
+		return OffsetToWorldPosXZ(offsetX, offsetZ, innerRadius, edgeLength);
 	}
 
 	public static float CalculateInnerRadius(float edgeLength) => Mathf.Sqrt(3f) / 2f * edgeLength;
@@ -55,10 +71,7 @@ public struct HexCoords
 		z -= offset;
 		x -= offset;
 		int iX = Mathf.RoundToInt(x);
-		int iZ = Mathf.RoundToInt(z);
 		int iY = Mathf.RoundToInt(-x -z);
-		//if (iX + iY + iZ != 0)
-			//Debug.LogWarning("Rounding error");
 		return new HexCoords(iX, iY, edgeLength);
 	}
 

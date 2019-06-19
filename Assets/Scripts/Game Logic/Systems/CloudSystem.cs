@@ -12,6 +12,7 @@ public class CloudSystem : JobComponentSystem
 {
 	public MeshEntity cloudMesh;
 	public float size = 4;
+	public int gridSize = 2;
 	public int maxClouds = 5000;
 	public NoiseSettings noiseSettings;
 	public float noiseScale = 50;
@@ -26,6 +27,8 @@ public class CloudSystem : JobComponentSystem
 	private Transform _cam;
 	private float _windSpeed;
 	private float _maxValue;
+	private float _camDisolveDist;
+	private float _innerRadius;
 
 	struct CloudsJob : IJobForEachWithEntity<CloudData, Translation, NonUniformScale>
 	{
@@ -38,13 +41,16 @@ public class CloudSystem : JobComponentSystem
 		[ReadOnly]
 		public float3 camPos;
 		[ReadOnly]
+		public float3 rawCamPos;
+		[ReadOnly]
 		public float maxValue;
+		[ReadOnly]
+		public float disolveDist;
 
 		public void Execute(Entity e, int index, ref CloudData c, ref Translation t, ref NonUniformScale s)
 		{
+			//var disolve = Vector3.SqrMagnitude(t.Value - rawCamPos) / disolveDist;
 			t.Value = c.pos + camPos;
-
-			//var cloudSize = Mathf.PerlinNoise(t.Value.x / 50f + xOff, t.Value.z / 50f) * test;
 			var cloudSize = cloudFilter.Evaluate(new Vector3(t.Value.x / 50f, t.Value.z / 50f, 0) + offset);
 			cloudSize = math.max(0, cloudSize);
 			cloudSize = MathUtils.Map(cloudSize, 0, maxValue, 0, 1);
@@ -55,9 +61,12 @@ public class CloudSystem : JobComponentSystem
 
 			var cloudHeight = cloudFilter.Evaluate(new Vector3(t.Value.x / 15f + 200, t.Value.z / 15f + 200) + offset);
 			cloudHeight = MathUtils.Map(cloudHeight, 0, 1, 1, 4);
-			//cloudHeight = Mathf.RoundToInt(cloudHeight);
-
-
+			/*
+			disolve = math.clamp(disolve, 0, 1);
+			disolve = disolve <= .5f ? .5f : disolve;
+			disolve = MathUtils.Map(disolve, .5f, 1, 0, 1);
+			cloudSize *= disolve;
+			*/
 			s.Value = new float3(size * cloudSize, cloudHeight, size * cloudSize);
 		}
 	}
@@ -76,7 +85,8 @@ public class CloudSystem : JobComponentSystem
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
-		_shortDiag = HexCoords.CalculateShortDiagonal(2);
+		_shortDiag = HexCoords.CalculateShortDiagonal(gridSize);
+		_innerRadius = HexCoords.CalculateInnerRadius(gridSize);
 		_cam = Camera.main.transform;
 		var init = Object.FindObjectOfType<InitializeClouds>();
 		noiseSettings = init.noiseSettings;
@@ -85,6 +95,7 @@ public class CloudSystem : JobComponentSystem
 		_cloudFieldWidth = init.fieldWidth / 2f;
 		_windSpeed = init.windSpeed;
 		_maxValue = 1 - noiseSettings.minValue;
+		_camDisolveDist = init.camDisolveDist * init.camDisolveDist;
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -98,14 +109,16 @@ public class CloudSystem : JobComponentSystem
 
 		_offset += _windDir * Time.deltaTime * _windSpeed;
 
-		var pos = HexCoords.FromPosition(_cam.position, 2).worldXZ;
+		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var job = new CloudsJob
 		{
 			fieldSize = maxClouds,
 			size = size,
 			offset = _offset,
 			camPos = new float3(pos.x - _cloudFieldWidth * _shortDiag, 0, pos.z),
-			maxValue = _maxValue
+			maxValue = _maxValue,
+			disolveDist = _camDisolveDist,
+			rawCamPos = _cam.position
 		};
 		return job.Schedule(this, inputDeps);
 	}
