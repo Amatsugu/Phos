@@ -71,6 +71,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			t.Height <= Map.ActiveMap.seaLevel ||
 			t is BuildingTile ||
 			t is ResourceTile;
+		if(selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
+			Debug.LogError("Null");
 	}
 
 	// Update is called once per frame
@@ -241,7 +243,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			return;
 		for (int i = 0; i < _renderedEntities[indicator]; i++)
 		{
-			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(FrozenRenderSceneTag));
+			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(Disabled));
 		}
 		_renderedEntities[indicator] = 0;
 	}
@@ -257,8 +259,16 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	private void OnDisable()
 	{
-		if(Map.ActiveMap.IsRendered)
-			HideAllIndicators();
+		if (Map.ActiveMap.IsRendered)
+		{
+			foreach (var indicator in _indicatorEntities)
+			{
+				foreach (var e in indicator.Value)
+				{
+					Map.EM.DestroyEntity(e);
+				}
+			}
+		}
 	}
 
 	void GrowIndicators(MeshEntity indicatorMesh, int count)
@@ -280,7 +290,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			Entity curEntity;
 			entities.Add(curEntity = indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
-			Map.EM.AddComponent(curEntity, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(curEntity, typeof(Disabled));
 		}
 	}
 
@@ -292,7 +302,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			if (i < tiles.Count)
 			{
 				if(i >= _renderedEntities[indicatorMesh])
-					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
+					_EM.RemoveComponent<Disabled>(_indicatorEntities[indicatorMesh][i]);
 
 				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint });
 			}
@@ -301,7 +311,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if (i >= _renderedEntities[indicatorMesh])
 					break;
 				if(i < _renderedEntities[indicatorMesh])
-					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(FrozenRenderSceneTag));
+					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(Disabled));
 			}
 		}
 		_renderedEntities[indicatorMesh] = tiles.Count;

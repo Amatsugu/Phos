@@ -27,7 +27,7 @@ public class ConnectedTile : PoweredBuildingTile
 	public override void OnPlaced()
 	{
 		for (int i = 0; i < 6; i++)
-			_connections[i] = connectedTileInfo.connectionMesh.Instantiate(SurfacePoint, Vector3.one, Quaternion.Euler(new Vector3(0, (i * 60) + 90, 0)));
+			_connections[i] = connectedTileInfo.connectionMesh.Instantiate(SurfacePoint, Vector3.one, Quaternion.Euler(new Vector3(0, (i * 60) - 90, 0)));
 		base.OnPlaced();
 		UpdateConnections();
 	}

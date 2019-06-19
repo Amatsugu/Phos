@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Ice Surface
+  m_Name: Tower
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0e66970b266f32e4ea82137046fdf1da, type: 2}
+  mesh: {fileID: -1277366460620338370, guid: 2a683fed900f02c4d9e7877625dfa2fa, type: 3}
+  material: {fileID: 2100000, guid: 832fbd138ec579349bf6a61bd9431c40, type: 2}
   castShadows: 1
   receiveShadows: 1

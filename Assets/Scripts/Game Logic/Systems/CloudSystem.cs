@@ -28,6 +28,9 @@ public class CloudSystem : JobComponentSystem
 	private float _windSpeed;
 	private float _maxValue;
 	private float _camDisolveDist;
+	private float _camDisolveOffset;
+	public float _disolveUpper;
+	public float _disolveLower;
 	private float _innerRadius;
 
 	struct CloudsJob : IJobForEachWithEntity<CloudData, Translation, NonUniformScale>
@@ -46,10 +49,13 @@ public class CloudSystem : JobComponentSystem
 		public float maxValue;
 		[ReadOnly]
 		public float disolveDist;
+		[ReadOnly]
+		public float disolveUpper;
+		[ReadOnly]
+		public float disolveLower;
 
 		public void Execute(Entity e, int index, ref CloudData c, ref Translation t, ref NonUniformScale s)
 		{
-			//var disolve = Vector3.SqrMagnitude(t.Value - rawCamPos) / disolveDist;
 			t.Value = c.pos + camPos;
 			var cloudSize = cloudFilter.Evaluate(new Vector3(t.Value.x / 50f, t.Value.z / 50f, 0) + offset);
 			cloudSize = math.max(0, cloudSize);
@@ -61,12 +67,33 @@ public class CloudSystem : JobComponentSystem
 
 			var cloudHeight = cloudFilter.Evaluate(new Vector3(t.Value.x / 15f + 200, t.Value.z / 15f + 200) + offset);
 			cloudHeight = MathUtils.Map(cloudHeight, 0, 1, 1, 4);
-			/*
-			disolve = math.clamp(disolve, 0, 1);
-			disolve = disolve <= .5f ? .5f : disolve;
-			disolve = MathUtils.Map(disolve, .5f, 1, 0, 1);
-			cloudSize *= disolve;
-			*/
+
+
+			var vDist = t.Value.y - rawCamPos.y;
+			//disolve = Vector3.SqrMagnitude(t.Value - (rawCamPos)) / disolveDist;
+			var disolve = Vector3.SqrMagnitude(new float3(t.Value.x, 0, t.Value.z) - new float3(rawCamPos.x, 0, rawCamPos.z)) / disolveDist;
+			if (disolve <= 1)
+			{
+				if (vDist > -disolveLower && vDist < 0)
+				{
+					vDist = -vDist;
+					disolve = math.lerp(disolve, 1, vDist / disolveLower);
+				}
+				else if (vDist < disolveUpper && vDist >= 0)
+				{
+					disolve = math.lerp(disolve, 1, (vDist / disolveUpper));
+				}
+				else
+					disolve = 1;
+				disolve -= .5f;
+				disolve = math.clamp(disolve, 0, 1);
+				disolve *= 2;
+				//disolve = 1 - disolve;
+				disolve = disolve * disolve * disolve;
+				//disolve = 1 - disolve;
+				cloudSize = math.lerp(0, cloudSize, disolve);
+				cloudHeight = math.lerp(0, cloudHeight, disolve);
+			}
 			s.Value = new float3(size * cloudSize, cloudHeight, size * cloudSize);
 		}
 	}
@@ -96,13 +123,15 @@ public class CloudSystem : JobComponentSystem
 		_windSpeed = init.windSpeed;
 		_maxValue = 1 - noiseSettings.minValue;
 		_camDisolveDist = init.camDisolveDist * init.camDisolveDist;
+		_camDisolveOffset = init.disolveOffsetDist;
+		_disolveLower = init.disolveLowerBound;
+		_disolveUpper = init.disolveUpperBound;
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		var windSampleDir = Mathf.PerlinNoise(_offset.x, _offset.z) * Mathf.PI * 2; ;
-		//windSampleDir = MathUtils.Map(windSampleDir, 0, _maxValue, 0, 1);
-		var windSampleStr = Mathf.PerlinNoise(_offset.x + 100, _offset.z + 100) * Mathf.PI * 2; ;
+		var windSampleDir = Mathf.PerlinNoise(_offset.x / 50, _offset.z / 50) * Mathf.PI * 2; ;
+		var windSampleStr = Mathf.PerlinNoise(_offset.x / 100 + 100, _offset.z / 100 + 100) * Mathf.PI * 2; ;
 		_windDir.x = Mathf.Cos(windSampleDir);
 		_windDir.z = Mathf.Sin(windSampleDir);
 		_windDir.y = Mathf.Cos(windSampleStr);
@@ -118,8 +147,13 @@ public class CloudSystem : JobComponentSystem
 			camPos = new float3(pos.x - _cloudFieldWidth * _shortDiag, 0, pos.z),
 			maxValue = _maxValue,
 			disolveDist = _camDisolveDist,
-			rawCamPos = _cam.position
+			rawCamPos = _cam.position + (_cam.forward * _camDisolveOffset),
+			disolveLower = _disolveLower,
+			disolveUpper = _disolveUpper
 		};
+		Debug.DrawRay(job.rawCamPos, Vector3.right, Color.blue);
+		Debug.DrawRay(job.rawCamPos, Vector3.up * _disolveUpper, Color.green);
+		Debug.DrawRay(job.rawCamPos, Vector3.up * -_disolveLower, Color.yellow);
 		return job.Schedule(this, inputDeps);
 	}
 }

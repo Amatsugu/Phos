@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: Forest Tree
   m_EditorClassIdentifier: 
-  mesh: {fileID: -2432090755550338912, guid: e1c96577c1cc61e4db8bcac0cf8875e6, type: 3}
+  mesh: {fileID: -2837682660325928517, guid: b7b1894fff78f1b418fb438c2cba6a76, type: 3}
   material: {fileID: 2100000, guid: 36f7502459f60294c87e4296655ca6a5, type: 2}
   castShadows: 1
   receiveShadows: 1

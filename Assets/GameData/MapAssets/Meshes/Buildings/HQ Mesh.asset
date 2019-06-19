@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: HQ Mesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: -2432090755550338912, guid: f2782ec80138c18449d291a1a8af96cd, type: 3}
+  mesh: {fileID: -3003489983209062016, guid: 7752b6427a1396d4f98a3248f1a088b6, type: 3}
   material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
   castShadows: 1
   receiveShadows: 1

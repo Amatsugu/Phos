@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
   m_Name: UnderwaterSand
   m_EditorClassIdentifier: 
-  mesh: {fileID: -2432090755550338912, guid: 838cc3384ff3a71439ba06156e9d902c, type: 3}
+  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 691ada38dc6cea649b1fa292e387714a, type: 2}
   castShadows: 1
   receiveShadows: 1

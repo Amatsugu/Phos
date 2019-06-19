@@ -44,17 +44,11 @@ public class ResourceSystem : ComponentSystem
 			{
 				ConsumeResourses(c.resourceIds, c.rates);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
-				{
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
-					Debug.Log("Removed Inactivity");
-				}
 			}else
 			{
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
-				{
 					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
-					Debug.Log("Added Inactivity");
-				}
 
 			}
 
@@ -67,18 +61,12 @@ public class ResourceSystem : ComponentSystem
 			{
 				ConsumeResourses(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
-				{
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
-					Debug.Log("Removed Inactivity");
-				}
 			}
 			else
 			{
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
-				{
 					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
-					Debug.Log("Added Inactivity");
-				}
 			}
 		});
 
@@ -101,10 +89,7 @@ public class ResourceSystem : ComponentSystem
 		Entities.WithAll<FirstTickTag>().ForEach(e =>
 		{
 			if (EntityManager.Exists(e))
-			{
 				PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
-				Debug.Log("Removed first tick tag");
-			}
 		});
 	}
 

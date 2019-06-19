@@ -18,6 +18,10 @@ public class InitializeClouds : MonoBehaviour
 	public NoiseSettings noiseSettings;
 	[Range(1, 100)]
 	public float camDisolveDist = 10;
+	[Range(1, 50)]
+	public float disolveOffsetDist = 20;
+	public float disolveUpperBound = 0;
+	public float disolveLowerBound = 0;
 
 	private NativeArray<Entity> _clouds;
 
