@@ -484,12 +484,12 @@ MonoBehaviour:
     min: 0
     max: 1
   maxDistance:
-    m_OverrideState: 0
-    m_Value: 50
+    m_OverrideState: 1
+    m_Value: 30
     min: 0
   fadeDistance:
     m_OverrideState: 1
-    m_Value: 5.19
+    m_Value: 5
     min: 0
   sampleCount:
     m_OverrideState: 1
@@ -741,6 +741,7 @@ MonoBehaviour:
   - {fileID: 3987789495178957945}
   - {fileID: 5460159405741296130}
   - {fileID: -1288728292750449191}
+  - {fileID: 3120685041554550170}
 --- !u!114 &89749441251608970
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1253,6 +1254,80 @@ MonoBehaviour:
   enableDistantFog:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &3120685041554550170
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29b00527f85bb3346a4d2cb710971587, type: 3}
+  m_Name: VolumetricFog
+  m_EditorClassIdentifier: 
+  active: 0
+  m_AdvancedMode: 0
+  colorMode:
+    m_OverrideState: 0
+    m_Value: 1
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    hdr: 1
+    showAlpha: 0
+    showEyeDropper: 1
+  density:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 1
+  maxFogDistance:
+    m_OverrideState: 1
+    m_Value: 9821
+    min: 0
+  mipFogMaxMip:
+    m_OverrideState: 0
+    m_Value: 0.5
+    min: 0
+    max: 1
+  mipFogNear:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+  mipFogFar:
+    m_OverrideState: 0
+    m_Value: 1000
+    min: 0
+  albedo:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    hdr: 0
+    showAlpha: 1
+    showEyeDropper: 1
+  meanFreePath:
+    m_OverrideState: 1
+    m_Value: 10
+    min: 1
+  baseHeight:
+    m_OverrideState: 1
+    m_Value: 0
+  meanHeight:
+    m_OverrideState: 1
+    m_Value: 17.1
+  anisotropy:
+    m_OverrideState: 1
+    m_Value: 0
+    min: -1
+    max: 1
+  globalLightProbeDimmer:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 1
+  enableDistantFog:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &3513975643755573475
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1458,8 +1533,8 @@ MonoBehaviour:
   active: 1
   m_AdvancedMode: 0
   maxShadowDistance:
-    m_OverrideState: 0
-    m_Value: 500
+    m_OverrideState: 1
+    m_Value: 233.1
     min: 0
   cascadeShadowSplitCount:
     m_OverrideState: 1
@@ -1468,13 +1543,13 @@ MonoBehaviour:
     max: 4
   cascadeShadowSplit0:
     m_OverrideState: 1
-    m_Value: 0.042
+    m_Value: 0.109824106
   cascadeShadowSplit1:
     m_OverrideState: 1
-    m_Value: 0.11
+    m_Value: 0.25954527
   cascadeShadowSplit2:
     m_OverrideState: 1
-    m_Value: 0.198
+    m_Value: 0.48991847
   cascadeShadowBorder0:
     m_OverrideState: 1
     m_Value: 0.3726667
@@ -1483,10 +1558,10 @@ MonoBehaviour:
     m_Value: 0.20882353
   cascadeShadowBorder2:
     m_OverrideState: 1
-    m_Value: 0.23409091
+    m_Value: 0.24062496
   cascadeShadowBorder3:
     m_OverrideState: 1
-    m_Value: 0.09975062
+    m_Value: 0.076009504
 --- !u!114 &5364598400842625620
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1616,7 +1691,7 @@ MonoBehaviour:
     m_Value: 1
   fogType:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 3
 --- !u!114 &6822040729707119202
 MonoBehaviour:
   m_ObjectHideFlags: 3

@@ -259,16 +259,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	private void OnDisable()
 	{
-		if (Map.ActiveMap.IsRendered)
-		{
-			foreach (var indicator in _indicatorEntities)
-			{
-				foreach (var e in indicator.Value)
-				{
-					Map.EM.DestroyEntity(e);
-				}
-			}
-		}
 	}
 
 	void GrowIndicators(MeshEntity indicatorMesh, int count)
