@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Cloud
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 7b3fb16832874b94f915350e4b5addc0, type: 2}
+  material: {fileID: 2100000, guid: 832fbd138ec579349bf6a61bd9431c40, type: 2}
   castShadows: 1
   receiveShadows: 0
