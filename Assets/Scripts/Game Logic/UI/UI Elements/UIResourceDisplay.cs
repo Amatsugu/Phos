@@ -85,7 +85,7 @@ public class UIResourceDisplay : UIHover
 		storedText.SetText(stored.ToString());
 		incomeText.SetText(income.ToString());
 		consumeText.SetText(consumption.ToString());
-		netText.SetText(netIncome.ToString());
+		netText.SetText(Mathf.Abs(netIncome).ToString());
 		if(netIncome == 0)
 		{
 			netText.color = warningColor;
