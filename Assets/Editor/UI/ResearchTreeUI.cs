@@ -120,7 +120,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 			itemRect.x = 0;
 			itemRect.width = 400;
 			itemRect.height = 20;
-			var sp = serializedTarget.FindProperty($"nodes.Array.data[{_selectedNode.id}].resourceCost.Array");
+			var sp = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].resourceCost.Array");
 			if(sp != null)
 			{
 				EditorGUI.PropertyField(itemRect, sp, new GUIContent("Resource Cost"), true);

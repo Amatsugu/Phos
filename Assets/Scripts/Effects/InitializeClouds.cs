@@ -52,11 +52,15 @@ public class InitializeClouds : MonoBehaviour
 
 	void OnValidate()
 	{
+		if (!enabled)
+			return;
+
 		if (Application.isPlaying)
 			CloudSystem.INST.UpdateSettings();
 	}
 	void OnDestroy()
 	{
-		_clouds.Dispose();
+		if(enabled)
+			_clouds.Dispose();
 	}
 }

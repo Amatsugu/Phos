@@ -26,8 +26,10 @@ public abstract class UIPanel : UIHover
 	private void Start()
 	{
 		PanelBase = GetComponent<RectTransform>();
-		if(hideOnStart)
+		if (hideOnStart)
 			Hide();
+		else
+			OnShow?.Invoke();
 		if(closeButton != null)
 		{
 			var click = new Button.ButtonClickedEvent();
