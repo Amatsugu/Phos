@@ -13,7 +13,6 @@ public class CloudSystem : JobComponentSystem
 	public MeshEntity cloudMesh;
 	public float size = 4;
 	public int gridSize = 2;
-	public int maxClouds = 5000;
 	public NoiseSettings noiseSettings;
 	public float noiseScale = 50;
 
@@ -35,8 +34,6 @@ public class CloudSystem : JobComponentSystem
 
 	struct CloudsJob : IJobForEachWithEntity<CloudData, Translation, NonUniformScale>
 	{
-		[ReadOnly]
-		public int fieldSize;
 		[ReadOnly]
 		public float size;
 		[ReadOnly]
@@ -119,7 +116,7 @@ public class CloudSystem : JobComponentSystem
 		noiseSettings = init.noiseSettings;
 		cloudFilter = NoiseFilterFactory.CreateNoiseFilter(noiseSettings, 1);
 		_windDir = UnityEngine.Random.insideUnitSphere;
-		_cloudFieldWidth = init.fieldWidth / 2f;
+		_cloudFieldWidth = (init.fieldWidth * _shortDiag) / 2f;
 		_windSpeed = init.windSpeed;
 		_maxValue = 1 - noiseSettings.minValue;
 		_camDisolveDist = init.camDisolveDist * init.camDisolveDist;
@@ -141,10 +138,9 @@ public class CloudSystem : JobComponentSystem
 		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var job = new CloudsJob
 		{
-			fieldSize = maxClouds,
 			size = size,
 			offset = _offset,
-			camPos = new float3(pos.x - _cloudFieldWidth * _shortDiag, 0, pos.z),
+			camPos = new float3(pos.x - _cloudFieldWidth, 0, pos.z),
 			maxValue = _maxValue,
 			disolveDist = _camDisolveDist,
 			rawCamPos = _cam.position + (_cam.forward * _camDisolveOffset),
