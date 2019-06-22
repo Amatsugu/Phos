@@ -121,7 +121,7 @@ public class RandomGenerator : MapGenerator
 		var colors = new Color[16];
 		for (int i = 0; i < 16; i++)
 		{
-			colors[i] = Color.HSVToRGB(MathUtils.Map(i, 0, 16, 0, 1), .5f, .5f);
+			colors[i] = Color.HSVToRGB(MathUtils.Remap(i, 0, 16, 0, 1), .5f, .5f);
 		}
 		for (int z = 0; z < h; z++)
 		{
@@ -163,19 +163,19 @@ public class RandomGenerator : MapGenerator
 		var h = (int)Size.y * Map.Chunk.SIZE;
 		if (x <= borderSize)
 		{
-			borderT *= MathUtils.Map(x, 0, borderSize, 0, 1);
+			borderT *= MathUtils.Remap(x, 0, borderSize, 0, 1);
 		}
 		if (x >= w - borderSize)
 		{
-			borderT *= 1 - MathUtils.Map(x, w - borderSize, w, 0, 1);
+			borderT *= 1 - MathUtils.Remap(x, w - borderSize, w, 0, 1);
 		}
 		if (z <= borderSize)
 		{
-			borderT *= MathUtils.Map(z, 0, borderSize, 0, 1);
+			borderT *= MathUtils.Remap(z, 0, borderSize, 0, 1);
 		}
 		if (z >= h - borderSize)
 		{
-			borderT *= 1 - MathUtils.Map(z, h - borderSize, h, 0, 1);
+			borderT *= 1 - MathUtils.Remap(z, h - borderSize, h, 0, 1);
 		}
 		borderT = Mathf.Max(borderT, 0);
 		return Mathf.Max(0.2f, Mathf.Lerp(0.2f, elevation, borderCurve.Evaluate(borderT)));

@@ -43,7 +43,7 @@ public class ResourceDatabase : MonoBehaviour
 		throw new System.Exception($"Resource '{tileInfo.name}' does not exits");
 	}
 
-	public static string GetResourceName(int id)
+	public static string GetResourceName(int id, string locale = "en")
 	{
 		return INST.resourceList.resourceDefinations[id].name;
 	}
@@ -67,6 +67,18 @@ public class ResourceDatabase : MonoBehaviour
 	{
 		return Enumerable.Range(0, INST.resourceList.resourceDefinations.Length).ToArray();
 	}
+
+	public static string GetResourceString(string name) => GetResourceString(GetResourceId(name));
+
+	public static string GetResourceString(int id, bool longVersion = false)
+	{
+		if(longVersion)
+			return $"<sprite={GetSpriteId(id)}> {GetResourceName(id)}";
+		else
+			return $"<sprite={GetSpriteId(id)}>";
+	}
+
+
 
 	
 

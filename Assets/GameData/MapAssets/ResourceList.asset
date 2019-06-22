@@ -18,7 +18,7 @@ MonoBehaviour:
     sprite: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
     spriteID: 0
-  - name: Metal
+  - name: Iron
     resourceTile: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
     sprite: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
@@ -28,11 +28,11 @@ MonoBehaviour:
     sprite: {fileID: 756898814474196213, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
     spriteID: 3
   - name: Water
-    resourceTile: {fileID: 0}
+    resourceTile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}
     sprite: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
     spriteID: 1
-  - name: Composite Metal
+  - name: Steel
     resourceTile: {fileID: 0}
     sprite: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
@@ -75,16 +75,20 @@ MonoBehaviour:
   - name: Phosphophylite
     resourceTile: {fileID: 0}
     sprite: {fileID: 0}
-    spriteID: 4
+    spriteID: 12
   - name: Super Conductor
     resourceTile: {fileID: 0}
     sprite: {fileID: 0}
-    spriteID: 5
+    spriteID: 13
   - name: Phos Metal
     resourceTile: {fileID: 0}
     sprite: {fileID: 0}
-    spriteID: 6
+    spriteID: 14
   - name: Refined Phos
     resourceTile: {fileID: 0}
     sprite: {fileID: 0}
-    spriteID: 7
+    spriteID: 15
+  - name: Lithium
+    resourceTile: {fileID: 0}
+    sprite: {fileID: 0}
+    spriteID: 16

@@ -118,7 +118,7 @@ public class ResourceSystem : ComponentSystem
 	{
 		for (int i = 0; i < resources.Length; i++)
 		{
-			var totalRate = multi == 1 ? resources[i].ammount : (int)(resources[i].ammount * multi);
+			var totalRate = multi == 1 ? (int)resources[i].ammount : (int)(resources[i].ammount * multi);
 			if (recordDemand)
 				totalDemand[resources[i].id] -= totalRate;
 			if (resCount[resources[i].id] < totalRate)

@@ -64,6 +64,7 @@ public class Map : IDisposable
 		public HexCoords chunkCoord;
 		public bool isShown;
 		public bool isCreated;
+		public bool isRendered;
 
 		private Bounds _bounds;
 		private NativeArray<Entity> _chunkTiles;
@@ -72,6 +73,7 @@ public class Map : IDisposable
 		public Chunk(HexCoords coord)
 		{
 			isShown = false;
+			isRendered = false;
 			isCreated = true;
 			chunkCoord = coord;
 			Tiles = new Tile[SIZE * SIZE];
@@ -110,8 +112,11 @@ public class Map : IDisposable
 		{
 			try
 			{
-				foreach (var tile in _chunkTiles)
-					EM.DestroyEntity(tile);
+				if (!isRendered)
+				{
+					foreach (var tile in _chunkTiles)
+						EM.DestroyEntity(tile);
+				}
 			}
 			catch
 			{
@@ -121,7 +126,6 @@ public class Map : IDisposable
 			{
 				if (_chunkTiles.IsCreated)
 					_chunkTiles.Dispose();
-				_chunkTiles = default;
 			}
 			for (int i = 0; i < Tiles.Length; i++)
 				Tiles[i].Destroy();
@@ -129,6 +133,13 @@ public class Map : IDisposable
 
 		public bool Show(bool shown)
 		{
+			if(!isRendered && shown)
+			{
+				Render();
+				return true;
+			}
+			if (!isRendered)
+				return false;
 			if (shown == isShown)
 				return false;
 			for (int i = 0; i < Tiles.Length; i++)
@@ -151,6 +162,7 @@ public class Map : IDisposable
 		internal void Render()
 		{
 			isShown = true;
+			isRendered = true;
 			if(!_chunkTiles.IsCreated)
 				_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent);
 			for (int i = 0; i < SIZE * SIZE; i++)
@@ -163,6 +175,8 @@ public class Map : IDisposable
 
 		public Tile ReplaceTile(HexCoords chunkCoord, TileInfo newTile)
 		{
+			if (!isRendered)
+				Render();
 			var tile = this[chunkCoord];
 			var n = newTile.CreateTile(tile.Coords, tile.Height);
 			n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
@@ -315,6 +329,8 @@ public class Map : IDisposable
 
 	internal void UpdateView(Plane[] camPlanes)
 	{
+		if (!IsRendered)
+			throw new Exception("Map is not rendered yet");
 		var chunksChanged = 0;
 
 		for (int i = 0; i < Chunks.Length; i++)
@@ -331,6 +347,7 @@ public class Map : IDisposable
 		IsRendered = true;
 		if (EM == null)
 			EM = entityManager;
+		/*
 		foreach (var unit in units)
 		{
 			if (!unit.Value.IsRendered)
@@ -343,6 +360,7 @@ public class Map : IDisposable
 			Chunks[i].Show(false);
 		}
 		Debug.Log($"Render... {(DateTime.Now - start).TotalMilliseconds}ms");
+		*/
 	}
 
 	/// <summary>
@@ -511,7 +529,7 @@ public class Map : IDisposable
 		{
 			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
 			d -= innerRadius * innerRadius;
-			d = MathUtils.Map(d, 0, (outerRadius * outerRadius) - (innerRadius * innerRadius), 0, 1);
+			d = MathUtils.Remap(d, 0, (outerRadius * outerRadius) - (innerRadius * innerRadius), 0, 1);
 			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
 		}
 	}
@@ -538,7 +556,7 @@ public class Map : IDisposable
 		{
 			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
 			d -= innerRadius * innerRadius * longDiagonal;
-			d = MathUtils.Map(d, 0, (outerRadius * outerRadius * longDiagonal) - (innerRadius * innerRadius * longDiagonal), 0, 1);
+			d = MathUtils.Remap(d, 0, (outerRadius * outerRadius * longDiagonal) - (innerRadius * innerRadius * longDiagonal), 0, 1);
 			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
 		}
 	}

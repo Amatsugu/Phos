@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: IronOreResourceGenerator
   m_EditorClassIdentifier: 
   resource: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
-  ratity: 2
-  density: 0.389
+  ratity: 4
+  density: 0.377
   preview: 1

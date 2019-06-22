@@ -48,7 +48,7 @@ public class BuildingTileInfo : TileInfo
 			{
 				var rId = production[i].id;
 				pData.resourceIds[i] = rId;
-				pData.rates[i] = production[i].ammount;
+				pData.rates[i] = (int)production[i].ammount;
 			}
 
 			Map.EM.AddSharedComponentData(e, pData);
@@ -65,7 +65,7 @@ public class BuildingTileInfo : TileInfo
 			{
 				var rId = consumption[i].id;
 				cData.resourceIds[i] = rId;
-				cData.rates[i] = consumption[i].ammount;
+				cData.rates[i] = (int)consumption[i].ammount;
 			}
 
 			Map.EM.AddSharedComponentData(e, cData);
@@ -87,7 +87,7 @@ public class BuildingTileInfo : TileInfo
 		var costString = "";
 		for (int i = 0; i < production.Length; i++)
 		{
-			costString += $"<sprite={ResourceDatabase.GetSpriteId(production[i].id)}> +{production[i].ammount}/t";
+			costString += $"{ResourceDatabase.GetResourceString(production[i].id)} +{production[i].ammount}/t";
 			if (i < production.Length - 1)
 				costString += "\n";
 		}
@@ -100,7 +100,7 @@ public class BuildingTileInfo : TileInfo
 		for (int i = 0; i < cost.Length; i++)
 		{
 			var id = cost[i].id;
-			var curCost = $"<sprite={ResourceDatabase.GetSpriteId(id)}> -{cost[i].ammount}";
+			var curCost = $"{ResourceDatabase.GetResourceString(id)} -{cost[i].ammount}";
 			if (ResourceSystem.resCount[id] < cost[i].ammount)
 				curCost = $"<color=#ff0000>{curCost}</color>";
 			costString += curCost;
@@ -111,7 +111,7 @@ public class BuildingTileInfo : TileInfo
 			costString += "\n";
 		for (int i = 0; i < consumption.Length; i++)
 		{
-			costString += $"<sprite={ResourceDatabase.GetSpriteId(consumption[i].id)}> -{consumption[i].ammount}/t";
+			costString += $"{ResourceDatabase.GetResourceString(consumption[i].id)} -{consumption[i].ammount}/t";
 			if (i < consumption.Length -1)
 				costString += "\n";
 		}

@@ -17,7 +17,7 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  description: Produces power
+  description: Produces electrum
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
   size: 0
   influenceRange: 0

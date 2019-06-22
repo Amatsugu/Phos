@@ -9,30 +9,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c2f48f35186256469050c882e08c1e1, type: 3}
-  m_Name: Basic Mine
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Name: Phos Lab
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  description: 
-  buildingMesh: {fileID: 11400000, guid: fdad5a311b68bd5448df43a04167253f, type: 2}
+  description: Produces power
+  buildingMesh: {fileID: 11400000, guid: e62d3f653db9df84fbc5fd56f75ae0fe, type: 2}
   size: 0
-  influenceRange: 4
+  influenceRange: 0
   cost:
   - id: 1
-    ammount: 10
-  icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+    ammount: 2
+  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0
-  production: []
+  production:
+  - id: 14
+    ammount: 5
   consumption:
   - id: 0
-    ammount: 4
-  resourcesToGather:
-  - id: 1
-    ammount: 0.5
-  - id: 2
+    ammount: 100
+  - id: 15
+    ammount: 3
+  - id: 4
+    ammount: 5
+  - id: 13
     ammount: 1
-  gatherRange: 3
+  - id: 11
+    ammount: 5

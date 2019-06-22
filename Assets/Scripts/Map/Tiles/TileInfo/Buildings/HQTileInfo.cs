@@ -7,6 +7,8 @@ using UnityEngine;
 public class HQTileInfo : BuildingTileInfo
 {
 
+	public ResourceIndentifier[] startingResources;
+
 	public SubHQTileInfo subHQTile;
 	public MobileUnitInfo unitInfo;
 

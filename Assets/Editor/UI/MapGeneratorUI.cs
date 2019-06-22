@@ -89,8 +89,8 @@ public class MapGeneratorUI : Editor
 		{
 			for (int x = 0; x < w; x++)
 			{
-				var sX = MathUtils.Map(x, 0, w, 0, creator.Size.x * Map.Chunk.SIZE);
-				var sZ = MathUtils.Map(z, 0, h, 0, creator.Size.y * Map.Chunk.SIZE);
+				var sX = MathUtils.Remap(x, 0, w, 0, creator.Size.x * Map.Chunk.SIZE);
+				var sZ = MathUtils.Remap(z, 0, h, 0, creator.Size.y * Map.Chunk.SIZE);
 				var sample = creator.GenerateHeight(sX, sZ);
 				if (sample > max)
 					max = sample;
@@ -120,7 +120,7 @@ public class MapGeneratorUI : Editor
 					//_previewTex.SetPixel(x, z, color);
 				}else
 				{
-					_previewTexColors[x + z * _previewTex.height] = Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Map(a, 0, creator.seaLevel, .5f, 1));
+					_previewTexColors[x + z * _previewTex.height] = Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Remap(a, 0, creator.seaLevel, .5f, 1));
 					//_previewTex.SetPixel(x, z, Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Map(a, 0, creator.seaLevel, .5f, 1)));
 				}
 			}

@@ -55,7 +55,7 @@ public class UnitMovementSystem : ComponentSystem
 				paths.Add(pg.Value, path);
 			}
 #if DEBUG
-			var c = MathUtils.Map((pg.Value * 10) % 360, 0, 360, 0, 1);
+			var c = MathUtils.Remap((pg.Value * 10) % 360, 0, 360, 0, 1);
 			var off = new Vector3(0, c, 0);
 			for (int i = 0; i < path.Value.Count - 1; i++)
 			{

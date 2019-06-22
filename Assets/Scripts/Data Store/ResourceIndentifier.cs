@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 public struct ResourceIndentifier
 {
 	public int id;
-	public int ammount;
+	public float ammount;
 }

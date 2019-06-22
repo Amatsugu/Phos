@@ -69,6 +69,7 @@ public class MapRenderer : MonoBehaviour
 		{
 			map.Destroy();
 			SceneManager.LoadScene(0);
+			return;
 		}
 
 		var camPos = _cam.transform.position;

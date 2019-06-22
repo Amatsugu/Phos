@@ -26,7 +26,7 @@ public struct SimpleNoiseFilter : INoiseFilter
 			freq *= settings.roughness;
 			amp *= settings.persistence;
 		}
-		noiseValue = noiseValue - settings.minValue;
+		noiseValue -= settings.minValue;
 		return noiseValue * settings.strength;
 	}
 

@@ -20,9 +20,10 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		var gatherTileInfo = gatherInfo.resourcesToGather.Select(r => ResourceDatabase.GetResourceTile(r.id)).ToArray();
 		var prodData = new ProductionData
 		{
-			rates = new int[gatherInfo.resourcesToGather.Length],
 			resourceIds = new int[gatherInfo.resourcesToGather.Length]
 		};
+
+		var approxRates = new float[gatherInfo.resourcesToGather.Length];
 		foreach (var tile in tilesInRange)
 		{
 			if (tile is ResourceTile rt)
@@ -32,12 +33,14 @@ public class GatheringBuildingTile : PoweredBuildingTile
 					if (gatherTileInfo[i] == rt.info && !rt.gatherer.isCreated)
 					{
 						rt.gatherer = Coords;
-						prodData.rates[i] += gatherInfo.resourcesToGather[i].ammount;
+						approxRates[i] += gatherInfo.resourcesToGather[i].ammount;
 						break;
 					}
 				}
 			}
 		}
+		prodData.rates = approxRates.Select(r => Mathf.FloorToInt(r)).ToArray();
+
 		for (int i = 0; i < gatherInfo.resourcesToGather.Length; i++)
 		{
 			prodData.resourceIds[i] = gatherInfo.resourcesToGather[i].id;

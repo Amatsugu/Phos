@@ -9,31 +9,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd7df0f29ab0544459ea32b53d242a8e, type: 3}
-  m_Name: HQ Tile Info
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Name: Fracking Platform
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
   decorators: []
-  description: 
-  buildingMesh: {fileID: 11400000, guid: 08df32c5fb76d624cab4d82ba537c212, type: 2}
-  size: 1
-  influenceRange: 6
-  cost: []
-  icon: {fileID: 0}
-  placementMode: 0
-  production:
-  - id: 0
-    ammount: 10
+  description: Scans for Phos deposits
+  buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  size: 0
+  influenceRange: 0
+  cost:
   - id: 1
     ammount: 2
-  consumption: []
-  startingResources:
-  - id: 0
-    ammount: 10
+  icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  placementMode: 0
+  production:
+  - id: 12
+    ammount: 2
   - id: 1
+    ammount: 1
+  - id: 2
+    ammount: 1
+  - id: 6
+    ammount: 1
+  - id: 7
+    ammount: 1
+  consumption:
+  - id: 0
+    ammount: 100
+  - id: 3
     ammount: 50
-  subHQTile: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}
-  unitInfo: {fileID: 11400000, guid: 8c4dc19ef577e654494f91bd6a995810, type: 2}

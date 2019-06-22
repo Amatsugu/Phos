@@ -82,7 +82,7 @@ public class InteractionUI : MonoBehaviour
 						var w = p0.x - p1.x;
 						var h = p0.z - p2.z; 
 						selectionBox.position = new Vector3(p0.x - (w/2), 0, p0.z - (h/2));
-						selectionBox.localScale = new Vector3(w, 30, h);
+						selectionBox.localScale = new Vector3(w, 80, h);
 						selectionBox.gameObject.SetActive(true);
 					}
 				}

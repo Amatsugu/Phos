@@ -154,7 +154,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					}
 					if (_selectedUnit is ResourceGatheringBuildingInfo r)
 					{
-						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true).Where(t => t is ResourceTile rt && !rt.gatherer.isCreated).Where(rt => r.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();
+						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true) //Select Tiles
+								.Where(t => t is ResourceTile rt && !rt.gatherer.isCreated) //Exclude Tiles that are not resource tiles or being gathered already
+								.Where(rt => r.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();
 						if (res.Count > 0)
 						{
 							_validPlacement = true;
@@ -168,10 +170,16 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 									resCount.Add(id, 1);
 							}
 							var sb = new System.Text.StringBuilder();
-							foreach (var resItem in resCount)
+							for (int i = 0; i < r.resourcesToGather.Length; i++)
 							{
-								if (resItem.Value > 0)
-									sb.AppendLine($"+{resItem.Value}<sprite={ResourceDatabase.GetSpriteId(resItem.Key)}>");
+								var rG = r.resourcesToGather[i];
+								if (resCount.ContainsKey(rG.id))
+								{
+									var gatherAmmount = (int)(resCount[rG.id] * rG.ammount);
+									if(gatherAmmount > 0)
+										sb.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(rG.id)}");
+								}
+
 							}
 							floatingText.SetText(sb);
 							var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);

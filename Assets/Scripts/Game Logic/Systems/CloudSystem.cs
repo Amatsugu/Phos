@@ -56,38 +56,40 @@ public class CloudSystem : JobComponentSystem
 			t.Value = c.pos + camPos;
 			var cloudSize = cloudFilter.Evaluate(new Vector3(t.Value.x / 50f, 0, t.Value.z / 50f) + offset);
 			cloudSize = math.max(0, cloudSize);
-			cloudSize = MathUtils.Map(cloudSize, 0, maxValue, 0, 1);
+			cloudSize = MathUtils.Remap(cloudSize, 0, maxValue, 0, 1);
 			cloudSize = 1 - cloudSize;
 			cloudSize = cloudSize * cloudSize * cloudSize;
 			cloudSize = 1 - cloudSize;
 
 
 			var cloudHeight = cloudFilter.Evaluate(new Vector3(t.Value.x / 15f + 200, 0, t.Value.z / 15f + 200) + offset);
-			cloudHeight = MathUtils.Map(cloudHeight, 0, 1, 1, 4);
+			cloudHeight = math.max(0, cloudHeight);
+			cloudHeight = MathUtils.Remap(cloudHeight, 0, 1, 1, 4);
 
 
 			var vDist = t.Value.y - rawCamPos.y;
-			//disolve = Vector3.SqrMagnitude(t.Value - (rawCamPos)) / disolveDist;
 			var disolve = Vector3.SqrMagnitude(new float3(t.Value.x, 0, t.Value.z) - new float3(rawCamPos.x, 0, rawCamPos.z)) / disolveDist;
 			if (disolve <= 1)
 			{
 				if (vDist > -disolveLower && vDist < 0)
 				{
 					vDist = -vDist;
-					disolve = math.lerp(disolve, 1, vDist / disolveLower);
+					var dT = vDist / disolveLower;
+					dT = math.pow(dT, 8);
+					disolve = math.lerp(disolve, 1, dT);
 				}
 				else if (vDist < disolveUpper && vDist >= 0)
 				{
-					disolve = math.lerp(disolve, 1, (vDist / disolveUpper));
+					var dT = (vDist / disolveUpper);
+					dT = dT.Pow(8);
+					disolve = math.lerp(disolve, 1, dT);
 				}
 				else
 					disolve = 1;
 				disolve -= .5f;
 				disolve = math.clamp(disolve, 0, 1);
 				disolve *= 2;
-				//disolve = 1 - disolve;
 				disolve = disolve * disolve * disolve;
-				//disolve = 1 - disolve;
 				cloudSize = math.lerp(0, cloudSize, disolve);
 				cloudHeight = math.lerp(0, cloudHeight, disolve);
 			}
