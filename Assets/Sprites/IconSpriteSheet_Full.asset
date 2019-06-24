@@ -28,26 +28,26 @@ MonoBehaviour:
     m_Unicode: 0
     m_GlyphIndex: 1
     m_Scale: 1.5
-    m_Name: IconSpriteSheet_Full_1
-    m_HashCode: 1569410895
+    m_Name: Water
+    m_HashCode: 104373205
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 2
     m_Scale: 1.5
-    m_Name: IconSpriteSheet_Full_2
-    m_HashCode: 1569410892
+    m_Name: Iron
+    m_HashCode: 2535162
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 3
     m_Scale: 1.5
-    m_Name: IconSpriteSheet_Full_3
-    m_HashCode: 1569410893
+    m_Name: Carbon
+    m_HashCode: -1632282445
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 4
     m_Scale: 1.5
-    m_Name: IconSpriteSheet_Full_4
-    m_HashCode: 1569410890
+    m_Name: Steel
+    m_HashCode: 99182891
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 5
@@ -66,6 +66,30 @@ MonoBehaviour:
     m_Scale: 1.5
     m_Name: IconSpriteSheet_Full_7
     m_HashCode: 1569410889
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 8
+    m_Scale: 1
+    m_Name: Deuterium
+    m_HashCode: -714592186
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 9
+    m_Scale: 1
+    m_Name: Tritium
+    m_HashCode: -797410582
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 10
+    m_Scale: 1
+    m_Name: Carbon Nanotube
+    m_HashCode: -356027749
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 11
+    m_Scale: 1
+    m_Name: Electrum
+    m_HashCode: 1403172177
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -76,7 +100,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 0
-      m_Y: 1536
+      m_Y: 2048
       m_Width: 512
       m_Height: 512
     m_Scale: 1.18
@@ -92,7 +116,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 512
-      m_Y: 1536
+      m_Y: 2048
       m_Width: 512
       m_Height: 512
     m_Scale: 1.2
@@ -108,7 +132,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 1024
-      m_Y: 1536
+      m_Y: 2048
       m_Width: 512
       m_Height: 512
     m_Scale: 1.2
@@ -124,7 +148,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 1536
-      m_Y: 1536
+      m_Y: 2048
       m_Width: 512
       m_Height: 512
     m_Scale: 1.2
@@ -139,7 +163,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 0
-      m_Y: 1024
+      m_Y: 1536
       m_Width: 512
       m_Height: 512
     m_Scale: 1.2
@@ -155,7 +179,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 512
-      m_Y: 1024
+      m_Y: 1536
       m_Width: 512
       m_Height: 512
     m_Scale: 1.2
@@ -171,7 +195,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 1024
-      m_Y: 1024
+      m_Y: 1536
       m_Width: 512
       m_Height: 512
     m_Scale: 1.2
@@ -187,12 +211,76 @@ MonoBehaviour:
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 1536
-      m_Y: 1024
+      m_Y: 1536
       m_Width: 512
       m_Height: 512
     m_Scale: 1.2
     m_AtlasIndex: 0
     sprite: {fileID: -7947723104890870202, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+  - m_Index: 8
+    m_Metrics:
+      m_Width: 512
+      m_Height: 512
+      m_HorizontalBearingX: -256
+      m_HorizontalBearingY: 256
+      m_HorizontalAdvance: 512
+    m_GlyphRect:
+      m_X: 0
+      m_Y: 1024
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -8010261840859185662, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+  - m_Index: 9
+    m_Metrics:
+      m_Width: 512
+      m_Height: 512
+      m_HorizontalBearingX: -256
+      m_HorizontalBearingY: 256
+      m_HorizontalAdvance: 512
+    m_GlyphRect:
+      m_X: 512
+      m_Y: 1024
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+  - m_Index: 10
+    m_Metrics:
+      m_Width: 512
+      m_Height: 512
+      m_HorizontalBearingX: -256
+      m_HorizontalBearingY: 256
+      m_HorizontalAdvance: 512
+    m_GlyphRect:
+      m_X: 1024
+      m_Y: 1024
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -4024748925766376699, guid: cb7fd186402fdca43b2f1535c208b329,
+      type: 3}
+  - m_Index: 11
+    m_Metrics:
+      m_Width: 512
+      m_Height: 512
+      m_HorizontalBearingX: -256
+      m_HorizontalBearingY: 256
+      m_HorizontalAdvance: 512
+    m_GlyphRect:
+      m_X: 1536
+      m_Y: 1024
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -550988092767783048, guid: cb7fd186402fdca43b2f1535c208b329,
       type: 3}
   spriteInfoList:
   - id: 0

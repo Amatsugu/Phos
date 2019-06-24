@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using System.Linq;
 
 [CustomPropertyDrawer(typeof(ResourceIndentifier))]
-public class ResourceListUI : PropertyDrawer
+public class ResourceIdentifierDrawer : PropertyDrawer
 {
 	private ResourceList _resList;
 	private string[] _resources;

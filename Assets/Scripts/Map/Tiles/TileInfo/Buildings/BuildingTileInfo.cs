@@ -16,6 +16,9 @@ public enum PlacementMode
 public class BuildingTileInfo : TileInfo
 {
 	public MeshEntityRotatable buildingMesh;
+	[Range(1, 6)]
+	public int tier;
+	public BuildingCategory category;
 	public int size = 0;
 	public int influenceRange = 0;
 	[SerializeField]

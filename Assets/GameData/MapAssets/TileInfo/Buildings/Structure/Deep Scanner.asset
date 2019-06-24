@@ -19,6 +19,8 @@ MonoBehaviour:
   decorators: []
   description: Scans for Phos deposits
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  tier: 4
+  category: 4
   size: 0
   influenceRange: 0
   cost:

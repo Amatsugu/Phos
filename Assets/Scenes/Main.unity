@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.15157352, g: 0.26381308, b: 0.31674808, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8131,28 +8131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9dd5c87b537df74b990262c1deb7ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tech: []
-  Resource:
-  - {fileID: 11400000, guid: 0ef12f3aada833948909acbc675a5953, type: 2}
-  - {fileID: 11400000, guid: 255a5856c262ab942bead534bc36634b, type: 2}
-  - {fileID: 11400000, guid: ba0f6b1eb8dc15140b1a78d6d5193a76, type: 2}
-  Economy:
-  - {fileID: 11400000, guid: 2e4734b90a718294d9106a9cd2c5f510, type: 2}
-  - {fileID: 11400000, guid: 806da794f6c07bb419f217c1384051b6, type: 2}
-  - {fileID: 11400000, guid: d02481ac5a9ada04faab17721ee4fe04, type: 2}
-  - {fileID: 11400000, guid: 763826ebcd88b8f44bd20f65c32a52f7, type: 2}
-  - {fileID: 11400000, guid: c6dc8c018e7494742882468f5336e6b0, type: 2}
-  - {fileID: 11400000, guid: fcfbc5a667690e540b3cbcda9dd74c53, type: 2}
-  - {fileID: 11400000, guid: b960653cf9a46154a84d6f0acf1f1f5f, type: 2}
-  - {fileID: 11400000, guid: 42be3b3def01a054285a788e34bee865, type: 2}
-  - {fileID: 11400000, guid: baf5151406270f649a0cded5e679cc9c, type: 2}
-  - {fileID: 11400000, guid: f229b54f71dfb364ebe347dd10929aa0, type: 2}
-  - {fileID: 11400000, guid: d89c88f38fcaf034b904d59a1cf8fc24, type: 2}
-  Structure:
-  - {fileID: 11400000, guid: 3cc0710394c6484469d70a3f22497434, type: 2}
-  - {fileID: 11400000, guid: 5992627ac9514d44ca66f9db77676ba0, type: 2}
-  Millitary: []
-  Defense: []
+  buildings: {fileID: 11400000, guid: 0916d0c03da4488419a09b66e76cac63, type: 2}
   HQTile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
   infoBanner: {fileID: 1107210684}
   baseNameUI: {fileID: 636739581}

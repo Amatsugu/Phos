@@ -12,12 +12,7 @@ using UnityEngine.EventSystems;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
-	public BuildingTileInfo[] Tech;
-	public BuildingTileInfo[] Resource;
-	public BuildingTileInfo[] Economy;
-	public BuildingTileInfo[] Structure;
-	public BuildingTileInfo[] Millitary;
-	public BuildingTileInfo[] Defense;
+	public BuildingDatabase buildings;
 	public HQTileInfo HQTile;
 
 	/*	UI	*/
@@ -363,12 +358,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	public void ShowTechWindow() => ShowBuildWindow(Tech);
-	public void ShowResourcesWindow() => ShowBuildWindow(Resource);
-	public void ShowEcoWindow() => ShowBuildWindow(Economy);
-	public void ShowStructureWindow() => ShowBuildWindow(Structure);
-	public void ShowMilitaryWindow() => ShowBuildWindow(Millitary);
-	public void ShowDefenseWindow() => ShowBuildWindow(Defense);
+	public void ShowTechWindow() => ShowBuildWindow(buildings[BuildingCategory.Tech]);
+	public void ShowResourcesWindow() => ShowBuildWindow(buildings[BuildingCategory.Resources]);
+	public void ShowEcoWindow() => ShowBuildWindow(buildings[BuildingCategory.Economy]);
+	public void ShowStructureWindow() => ShowBuildWindow(buildings[BuildingCategory.Structure]);
+	public void ShowMilitaryWindow() => ShowBuildWindow(buildings[BuildingCategory.Military]);
+	public void ShowDefenseWindow() => ShowBuildWindow(buildings[BuildingCategory.Defense]);
 
 	public void HideBuildWindow()
 	{

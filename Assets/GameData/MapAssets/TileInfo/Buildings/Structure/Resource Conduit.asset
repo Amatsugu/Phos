@@ -20,6 +20,8 @@ MonoBehaviour:
   description: Removes the extra cost of powering buildings that are not connected
     to the HQ.
   buildingMesh: {fileID: 0}
+  tier: 1
+  category: 4
   size: 0
   influenceRange: 0
   cost:

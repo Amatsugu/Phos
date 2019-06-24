@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
-  m_Name: Fusion Reactor
+  m_Name: Deuterium Processing Plant
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
@@ -19,6 +19,8 @@ MonoBehaviour:
   decorators: []
   description: 
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  tier: 3
+  category: 3
   size: 0
   influenceRange: 0
   cost:
@@ -27,12 +29,10 @@ MonoBehaviour:
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0
   production:
-  - id: 0
-    ammount: 150
+  - id: 9
+    ammount: 2
   consumption:
   - id: 0
     ammount: 30
-  - id: 9
-    ammount: 3
-  - id: 10
-    ammount: 3
+  - id: 3
+    ammount: 10
