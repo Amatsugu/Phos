@@ -8,6 +8,7 @@ using UnityEngine;
 
 public abstract class TileDecorator : ScriptableObject
 {
+	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Decor", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable meshEntity;
 	public float densityMulti = 1;
 

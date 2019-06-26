@@ -23,7 +23,7 @@ public class ResearchTreeUI : Editor
 		{
 			_window = EditorWindow.GetWindow<ResearchTreeEditorWindow>();
 			_window.target = treeInfo;
-			_window.serializedTarget = serializedObject;
+			//_window.serializedTarget = serializedObject;
 			_window.titleContent = new GUIContent($"Research Tree: {_window.target.name}");
 			_window.Show();
 		}
@@ -58,8 +58,9 @@ public class ResearchTreeEditorWindow : EditorWindow
 	{
 		if (serializedTarget == null)
 		{
-			Close();
-			return;
+			serializedTarget = new SerializedObject(target);
+			//Close();
+			//return;
 		}
 		_zoom = GUI.HorizontalSlider(new Rect(0, 0, 200, 20), _zoom, .5f, 2f);
 		GUI.Label(new Rect(210, 0, 500, 20), $"Zoom: {Mathf.Round(_zoom * 10)/10}x\t Node Count: {target.tree.Count}\t Tree Depth:{target.tree.GetDepth()}\t Tree Breath: {_totalC}");
@@ -77,7 +78,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 		GUI.Box(new Rect(0,0, 400, boxRect.height), GUIContent.none);
 		if(_selectedNode != null)
 		{
-			var itemRect = new Rect(10,0, 400, 20);
+			var itemRect = new Rect(10,0, 400, EditorGUIUtility.singleLineHeight);
 			GUI.Label(itemRect, $"Move To ");
 			if (_selectedNode.id == 0)
 				GUI.enabled = false;
@@ -108,7 +109,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 			itemRect.x = 250;
 			_selectedNode.icon = EditorGUI.ObjectField(itemRect, _selectedNode.icon, typeof(Sprite), false) as Sprite;
 			itemRect.y += 145;
-			itemRect.height = 20;
+			itemRect.height = EditorGUIUtility.singleLineHeight;
 			itemRect.width = 150;
 			itemRect.x = 10;
 			GUI.Label(itemRect, "Description");
@@ -117,16 +118,34 @@ public class ResearchTreeEditorWindow : EditorWindow
 			itemRect.height = 200;
 			_selectedNode.description = EditorGUI.TextArea(itemRect, _selectedNode.description);
 			itemRect.y += 205;
-			itemRect.x = 0;
-			itemRect.width = 400;
-			itemRect.height = 20;
-			var sp = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].resourceCost.Array");
-			if(sp != null)
+			itemRect.x = 10;
+			itemRect.width = 400- 60;
+			itemRect.height = EditorGUIUtility.singleLineHeight;
+			var rewardSP = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].reward");
+			EditorGUI.PropertyField(itemRect, rewardSP);
+			itemRect.x += itemRect.width + 5;
+			itemRect.width = 35;
+			/*if(GUI.Button(itemRect, "New"))
 			{
-				EditorGUI.PropertyField(itemRect, sp, new GUIContent("Resource Cost"), true);
+				var reward = ScriptableObject.CreateInstance<ResearchReward>();
+				var assetPath = $"Assets/GameData/Tech Trees/Rewards/[{_selectedNode.id}]{_selectedNode.name} Reward.asset";
+				if(!AssetDatabase.IsValidFolder($"Assets/GameData/Tech Trees/Rewards"))
+				{
+					AssetDatabase.CreateFolder($"Assets/GameData/Tech Trees/", "Rewards");
+				}
+				AssetDatabase.CreateAsset(reward, assetPath);
+				_selectedNode.reward = reward;
+				serializedTarget.UpdateIfRequiredOrScript();
+			}*/
+			itemRect.y += itemRect.height;
+			itemRect.x = 10;
+			itemRect.width = 400;
+			var costSP = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].resourceCost.Array");
+			if(costSP != null)
+			{
+				EditorGUI.PropertyField(itemRect, costSP, new GUIContent("Resource Cost"), true);
 			}else
 				_selectedNode = target.tree.BaseNode;
-
 		}
 		else
 		{
@@ -195,7 +214,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 
 	void SaveObjectState()
 	{
-		serializedTarget.ApplyModifiedProperties();
+		//serializedTarget.ApplyModifiedProperties();
 		EditorUtility.SetDirty(target);
 		Undo.RecordObject(target, $"Research Tree {target.tree.name}");
 	}

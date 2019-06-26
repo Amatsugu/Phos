@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class ResearchReward
+[CreateAssetMenu(menuName = "Game Data/Research Reward")]
+public class ResearchReward : ScriptableObject
 {
+	[System.Serializable]
 	public enum RewardType
 	{
 		Building,
@@ -13,10 +14,14 @@ public class ResearchReward
 		Custom
 	}
 
+	public RewardType type;
+	public BuildingIdentifier building;
+
 	
 }
 
 
+[System.Serializable]
 public struct BuildingIdentifier
 {
 	public BuildingTileInfo building;

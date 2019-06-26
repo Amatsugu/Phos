@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [System.Serializable]
 public class ResearchTree
@@ -137,6 +138,8 @@ public class ResearchTree
 		public string description;
 		public bool isResearched;
 		public ResourceIndentifier[] resourceCost;
+		[CreateNewAsset("Assets/GameData/Tech Trees/Rewards", typeof(ResearchReward))]
+		public ResearchReward reward;
 		public bool IsValid => id >= 0;
 
 		//public ResearchTech[] children;
