@@ -25,6 +25,11 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 
 	void Awake()
 	{
+		GameRegistry.INST.researchTreeUI = this;
+	}
+
+	void Start()
+	{
 		uiElements = new List<RectTransform>();
 		_totalOffset = nodeSize + nodeSpacing;
 		OnShow += OnOpened;

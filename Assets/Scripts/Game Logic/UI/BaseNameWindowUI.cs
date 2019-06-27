@@ -7,22 +7,18 @@ public class BaseNameWindowUI : UIPanel
 {
 	public TMP_InputField text;
 	public TMP_Text baseNameText;
-	public InteractionUI interactionUI;
 
 	void Awake()
 	{
-		var cam = Camera.main.GetComponent<CameraController>();
+		GameRegistry.INST.baseNameUI = this;
 		OnShow += () =>
 		{
-			cam.enabled = false;
-			interactionUI.interactionPanel.HidePanel();
-			interactionUI.enabled = false;
+			EventManager.InvokeEvent("nameWindowOpen");
 		};
 		OnHide += () =>
 		{
 			baseNameText.text = text.text;
-			interactionUI.enabled = true;
-			cam.enabled = true;
+			EventManager.InvokeEvent("nameWindowClose");
 		};
 	}
 }

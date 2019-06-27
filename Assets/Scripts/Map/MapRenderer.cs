@@ -29,9 +29,9 @@ public class MapRenderer : MonoBehaviour
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
 
-	private void Awake()
+	private void Start()
 	{
-		_cam = FindObjectOfType<Camera>();
+		_cam = GameRegistry.Camera;
 		Init();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
@@ -64,6 +64,7 @@ public class MapRenderer : MonoBehaviour
 		pos *= 2;
 		pos.y = map.seaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
+		EventManager.InvokeEvent("mapLoaded");
 	}
 	
 	private void LateUpdate()

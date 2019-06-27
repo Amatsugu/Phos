@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class InteractionUI : MonoBehaviour
 {
-	public BuildUI buildUI;
 	public UIInteractionPanel interactionPanel;
 	public Transform selectionBox;
 
@@ -17,9 +16,14 @@ public class InteractionUI : MonoBehaviour
 	private Tile _start, _end;
 	private int groupId;
 
+	void Awake()
+	{
+		GameRegistry.INST.interactionUI = this;
+	}
+
 	void Start()
 	{
-		_cam = Camera.main;
+		_cam = GameRegistry.Camera;
 		_selectedUnits = new List<int>();
 		interactionPanel.HidePanel();
 		interactionPanel.OnBlur += () => _uiBlocked = false;
@@ -27,7 +31,15 @@ public class InteractionUI : MonoBehaviour
 		interactionPanel.OnUpgradeClick += UpgradeTile;
 		interactionPanel.OnDestroyClick += DestroyTile;
 		selectionBox.gameObject.SetActive(false);
-			//Debug.Log($"R {r} P: {1 + 3*(r + 1)*(r)} C: {s.Count}");
+		EventManager.AddEventListener("nameWindowOpen", () =>
+		{
+			interactionPanel.HidePanel();
+			enabled = false;
+		});
+		EventManager.AddEventListener("nameWindowClose", () =>
+		{
+			enabled = true;
+		});
 	}
 
 	void DestroyTile()
@@ -45,14 +57,14 @@ public class InteractionUI : MonoBehaviour
 
 	void LateUpdate()
 	{
-		if (buildUI.hqMode)
+		if (GameRegistry.BuildUI.hqMode)
 			return;
 		var mPos = Input.mousePosition;
 		if (Input.GetKeyUp(KeyCode.Escape))
 			interactionPanel.HidePanel();
-		if (!buildUI.placeMode)
+		if (!GameRegistry.BuildUI.placeMode)
 		{
-			if (!_uiBlocked && !buildUI.uiBlock)
+			if (!_uiBlocked && !GameRegistry.BuildUI.uiBlock)
 			{
 
 				if (Input.GetKeyDown(KeyCode.Mouse0))

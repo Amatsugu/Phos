@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.15157352, g: 0.26381308, b: 0.31674808, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1220,7 +1220,7 @@ Light:
   serializedVersion: 9
   m_Type: 1
   m_Color: {r: 0.9811321, g: 0.9811321, b: 0.9811321, a: 1}
-  m_Intensity: 3.64
+  m_Intensity: 2.98
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1369,7 +1369,7 @@ MonoBehaviour:
   useVolumetric: 0
   featuresFoldout: 1
   showAdditionalSettings: 0
-  displayLightIntensity: 3.64
+  displayLightIntensity: 2.98
   displayAreaLightEmissiveMesh: 0
   areaLightCookie: {fileID: 0}
   areaLightShadowCone: 120
@@ -1451,7 +1451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cloudMesh: {fileID: 11400000, guid: 719264d59cc4e1b499b7b868e507c937, type: 2}
-  windSpeed: 0.1
+  windSpeed: 0.08
   clouldHeight: 45
   fieldHeight: 60
   fieldWidth: 100
@@ -1937,7 +1937,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77aef4c8108ec0844a8421e981b985d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildUI: {fileID: 1635046459}
   interactionPanel: {fileID: 719620472}
   selectionBox: {fileID: 156281963}
 --- !u!1 &459679552
@@ -2435,7 +2434,6 @@ MonoBehaviour:
   edgePanSize: 10
   edgePan: 0
   mapRenderer: {fileID: 196126402}
-  buildUI: {fileID: 1635046459}
 --- !u!1 &536096453
 GameObject:
   m_ObjectHideFlags: 0
@@ -3444,7 +3442,6 @@ MonoBehaviour:
   hideOnBlur: 0
   text: {fileID: 459679554}
   baseNameText: {fileID: 2124582711}
-  interactionUI: {fileID: 442054994}
 --- !u!1 &638017536
 GameObject:
   m_ObjectHideFlags: 0
@@ -6457,6 +6454,8 @@ GameObject:
   - component: {fileID: 1369379223}
   - component: {fileID: 1369379224}
   - component: {fileID: 1369379225}
+  - component: {fileID: 1369379227}
+  - component: {fileID: 1369379226}
   m_Layer: 8
   m_Name: _GLOBAL
   m_TagString: Untagged
@@ -6508,6 +6507,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceList: {fileID: 11400000, guid: c901ba43007104e41956c9d33011aa23, type: 2}
+--- !u!114 &1369379226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369379222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e937fb4ec9e1e394c94150d0c9a18083, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1369379227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369379222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6779fd7d245c63d498fbd9df43794f26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildUI: {fileID: 0}
+  interactionUI: {fileID: 0}
+  statusUI: {fileID: 0}
+  baseNameUI: {fileID: 0}
+  researchTreeUI: {fileID: 0}
+  mainCamera: {fileID: 0}
+  cameraController: {fileID: 0}
 --- !u!1 &1371959984
 GameObject:
   m_ObjectHideFlags: 0
@@ -7961,7 +7991,6 @@ MonoBehaviour:
   buildings: {fileID: 11400000, guid: 0916d0c03da4488419a09b66e76cac63, type: 2}
   HQTile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
   infoBanner: {fileID: 1107210684}
-  baseNameUI: {fileID: 636739581}
   buildWindow: {fileID: 1620701535}
   scrollContent: {fileID: 867663154}
   selectIndicatorEntity: {fileID: 11400000, guid: 33177b445fb1df34f9e26941d4a375cb,
@@ -9082,7 +9111,7 @@ GameObject:
   - component: {fileID: 1764648037}
   - component: {fileID: 1764648036}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: UIEventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

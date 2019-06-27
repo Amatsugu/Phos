@@ -17,7 +17,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	/*	UI	*/
 	public UIInfoBanner infoBanner;
-	public BaseNameWindowUI baseNameUI;
 	public GameObject buildWindow;
 	public RectTransform scrollContent;
 	//Indicators
@@ -49,13 +48,17 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private System.Func<Tile, bool> invalidTileSelector;
 	private bool _validPlacement;
 
+	void Awake()
+	{
+		GameRegistry.INST.buildUI = this;
+	}
+
 	void Start()
 	{
-		buildWindow.SetActive(false);
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
 		_activeUnits = new List<UIUnitIcon>();
-		_cam = Camera.main;
+		_cam = GameRegistry.Camera;
 		_EM = World.Active.EntityManager;
         HideBuildWindow();
 		placeMode = hqMode = true;
@@ -221,15 +224,15 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 							}
 							if (hqMode)
 							{
-								baseNameUI.Show();
+								GameRegistry.BaseNameUI.Show();
 								placeMode = false;
 								void onHide()
 								{
 									placeMode = hqMode = false;
 									infoBanner.SetActive(false);
-									baseNameUI.OnHide -= onHide;
+									GameRegistry.BaseNameUI.OnHide -= onHide;
 								}
-								baseNameUI.OnHide += onHide;
+								GameRegistry.BaseNameUI.OnHide += onHide;
 							}
 						}
 					}

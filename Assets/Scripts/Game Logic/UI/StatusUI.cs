@@ -12,6 +12,11 @@ public class StatusUI : MonoBehaviour
 
 	private UIResourceDisplay[] _displays;
 
+	void Awake()
+	{
+		GameRegistry.INST.statusUI = this;
+	}
+
 	void Start()
 	{
 		_displays = new UIResourceDisplay[ResourceDatabase.ResourceCount];

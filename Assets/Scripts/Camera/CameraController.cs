@@ -12,7 +12,6 @@ public class CameraController : MonoBehaviour
 	public float edgePanSize = 100;
 	public bool edgePan = false;
 	public MapRenderer mapRenderer;
-	public BuildUI buildUI;
 
 	private float _targetHeight;
 	private float _lastHeight;
@@ -21,18 +20,29 @@ public class CameraController : MonoBehaviour
 	private Camera _cam;
 
 	private Vector3 _lastClickPos;
+	void Awake()
+	{
+		GameRegistry.INST.cameraController = this;
+		GameRegistry.INST.mainCamera = _cam = GetComponent<Camera>();
+	}
 
-    // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
 		_targetHeight = maxHeight;
-		_cam = GetComponent<Camera>();
 		if (Application.isEditor)
 			maxHeight = 500;
-    }
+		EventManager.AddEventListener("nameWindowOpen", () =>
+		{
+			enabled = false;
+		});
+		EventManager.AddEventListener("nameWindowClose", () =>
+		{
+			enabled = true;
+		});
+	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
 		if(Input.GetKeyDown(KeyCode.X))
 		{
@@ -75,7 +85,7 @@ public class CameraController : MonoBehaviour
 			pos += moveVector * moveSpeed * Time.deltaTime;
 		}
 
-		if (!buildUI.uiBlock)
+		if (!GameRegistry.BuildUI.uiBlock)
 		{
 			//Drag Panning
 			Vector3 curPos;
