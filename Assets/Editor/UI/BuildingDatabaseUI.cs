@@ -16,7 +16,7 @@ public class BuildingDatabaseUI : Editor
 		database = target as BuildingDatabase;
 		if (database.buildings == null && !Application.isPlaying)
 		{
-			database.Refresh();
+			Refresh();
 			EditorUtility.SetDirty(database);
 			Undo.RecordObject(database, "Building Database");
 		}
@@ -27,7 +27,7 @@ public class BuildingDatabaseUI : Editor
 		GUI.enabled = !Application.isPlaying;
 		if(GUILayout.Button("Refresh"))
 		{
-			database.Refresh();
+			Refresh();
 			EditorUtility.SetDirty(database);
 			Undo.RecordObject(database, "Building Database");
 		}
@@ -46,6 +46,25 @@ public class BuildingDatabaseUI : Editor
 			{
 				GUILayout.Label($"\tT{building.tier} : {building.name}");
 			}
+		}
+	}
+
+	public void Refresh()
+	{
+		var bd = new Dictionary<BuildingCategory, List<BuildingTileInfo>>();
+		var assets = AssetDatabase.FindAssets("t:BuildingTileInfo", new[] { "Assets/GameData/MapAssets/TileInfo/Buildings" });
+		foreach (var asset in assets)
+		{
+			var assetPath = AssetDatabase.GUIDToAssetPath(asset);
+			var building = AssetDatabase.LoadAssetAtPath<BuildingTileInfo>(assetPath);
+			if (!bd.ContainsKey(building.category))
+				bd.Add(building.category, new List<BuildingTileInfo>());
+			bd[building.category].Add(building);
+		}
+		database.buildings = new Dictionary<BuildingCategory, BuildingTileInfo[]>();
+		foreach (var category in bd.Keys)
+		{
+			database.buildings.Add(category, bd[category].OrderBy(b => b.tier).ToArray());
 		}
 	}
 }
