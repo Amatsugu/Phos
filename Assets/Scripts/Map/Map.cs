@@ -68,6 +68,7 @@ public class Map : IDisposable
 
 		private Bounds _bounds;
 		private NativeArray<Entity> _chunkTiles;
+		private NativeArray<Entity> _chunkBatches;
 
 
 		public Chunk(HexCoords coord)
@@ -83,7 +84,8 @@ public class Map : IDisposable
 				min = worldCoord.worldXZ,
 				max = worldCoord.worldXZ + new Vector3(SIZE * ActiveMap.shortDiagonal, 100, SIZE * 1.5f)
 			};
-			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent);
+			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			_chunkBatches = default;
 		}
 
 		public Tile this[HexCoords coord]
@@ -126,6 +128,8 @@ public class Map : IDisposable
 			{
 				if (_chunkTiles.IsCreated)
 					_chunkTiles.Dispose();
+				if (_chunkBatches.IsCreated)
+					_chunkBatches.Dispose();
 			}
 			for (int i = 0; i < Tiles.Length; i++)
 				Tiles[i].Destroy();
@@ -146,13 +150,18 @@ public class Map : IDisposable
 				Tiles[i].Show(shown);
 			if (shown)
 			{
-				//EM.RemoveComponent(_chunkTiles, typeof(Frozen));
-				EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+				if(_chunkBatches.IsCreated)
+					EM.RemoveComponent(_chunkBatches, typeof(FrozenRenderSceneTag));
+				else
+					EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+
 			}
 			else
 			{
-				//EM.AddComponent(_chunkTiles, typeof(Frozen));
-				EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+				if(_chunkBatches.IsCreated)
+					EM.AddComponent(_chunkBatches, typeof(FrozenRenderSceneTag));
+				else
+					EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
 
 			}
 			isShown = shown;
@@ -164,12 +173,55 @@ public class Map : IDisposable
 			isShown = true;
 			isRendered = true;
 			if(!_chunkTiles.IsCreated)
-				_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent);
+				_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 			for (int i = 0; i < SIZE * SIZE; i++)
 			{
 				_chunkTiles[i] = Tiles[i].Render();
-				//EM.AddComponent(_chunkTiles[i], typeof(ChunkWorldRenderBounds));
-				//EM.SetComponentData(_chunkTiles[i], new ChunkWorldRenderBounds { Value = new Unity.Mathematics.AABB { Center = _bounds.center, Extents = _bounds.extents } });
+				Tiles[i].RenderDecorators();
+			}
+		}
+
+		internal void RenderTerrain()
+		{
+			isShown = true;
+			isRendered = true;
+			var tileGroups = Tiles.GroupBy(t => t.GetMeshEntity());
+			if (!_chunkBatches.IsCreated)
+				_chunkBatches = new NativeArray<Entity>(tileGroups.Count(), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			int c = 0;
+			var arch = EM.CreateArchetype(typeof(LocalToWorld), typeof(Scale), typeof(PerInstanceCullingTag), typeof(RenderMesh), typeof(Static));
+			foreach (var group in tileGroups)
+			{
+				var count = group.Count();
+				var combine = new CombineInstance[count];
+				var i = 0;
+				foreach (var tile in group)
+				{
+					combine[i].mesh = group.Key.mesh;
+					combine[i].transform = Matrix4x4.TRS(tile.Coords.worldXZ, Quaternion.identity, new Vector3(1, tile.Height, 1));
+					i++;
+				}
+				var mesh = new Mesh();
+				mesh.CombineMeshes(combine, true, true, false);
+				var e = EM.CreateEntity(arch);
+				EM.SetSharedComponentData(e, new RenderMesh
+				{
+					mesh = mesh,
+					material = group.Key.material,
+					subMesh = 0,
+					castShadows = group.Key.castShadows,
+					receiveShadows = group.Key.receiveShadows
+				});
+				EM.SetComponentData(e, new Scale { Value = 1 });
+				_chunkBatches[c++] = e;
+			}
+		}
+
+		internal void RenderDecorators()
+		{
+			for (int i = 0; i < Tiles.Length; i++)
+			{
+				Tiles[i].RenderDecorators();
 			}
 		}
 

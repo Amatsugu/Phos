@@ -15,6 +15,7 @@ public class MeshEntity : ScriptableObject
 	public Material material;
 	public UnityEngine.Rendering.ShadowCastingMode castShadows = UnityEngine.Rendering.ShadowCastingMode.On;
 	public bool receiveShadows = true;
+	public bool isStatic = true;
 
 	protected Entity _entity;
 
@@ -41,7 +42,8 @@ public class MeshEntity : ScriptableObject
 		return _entity;
 	}
 
-	protected virtual EntityArchetype GetArchetype() => World.Active.EntityManager.CreateArchetype(GetComponents().ToArray());
+	protected virtual EntityArchetype GetArchetype() => 
+		World.Active.EntityManager.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
 
 	public virtual IEnumerable<ComponentType> GetComponents()
 	{

@@ -17,6 +17,7 @@ public class MapRenderer : MonoBehaviour
 	public MapGenerator generator;
 	public GameObject oceanPlane;
 	public MeshEntityRotatable line;
+	public bool batched;
 
 	[HideInInspector]
 	public Map map;
@@ -50,18 +51,21 @@ public class MapRenderer : MonoBehaviour
 		map = generator.GenerateMap(transform);
 		generator.GenerateFeatures(map);
 		map.Render(_entityManager);
+		if (batched)
+		{
+			for (int i = 0; i < map.length; i++)
+			{
+				map.Chunks[i].RenderTerrain();
+				map.Chunks[i].RenderDecorators();
+			}
+		}
+		
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
 		pos.y = map.seaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
-
-
-
-		
 	}
-
 	
-
 	private void LateUpdate()
 	{
 		//TODO: Remove this when testing complete
@@ -88,13 +92,8 @@ public class MapRenderer : MonoBehaviour
 			map.Destroy();
 			Destroy(_ocean.gameObject);
 			Init();
-
 		}
-		
 	}
-
-	
-
 }
 
 

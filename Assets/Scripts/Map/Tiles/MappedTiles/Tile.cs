@@ -165,7 +165,7 @@ public class Tile
 		{
 			var count = info.decorators[i].GetDecorEntityCount(this);
 			var slice = _decor.Slice(lastIndex, count);
-			info.decorators[i].UpdateHeight(slice, this, _tileEntity);
+			info.decorators[i].UpdateHeight(slice, this);
 			lastIndex += count;
 		}
 	}
@@ -237,13 +237,18 @@ public class Tile
 	{
 		IsShown = true;
 		_tileEntity = GetMeshEntity().Instantiate(Coords, new Vector3(1, Height, 1));
+		return _tileEntity;
+	}
+
+	public virtual void RenderDecorators()
+	{
 		if (info.decorators.Length == 0)
-			return _tileEntity;
+			return;
 		_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent);
 		int lastIndex = 0;
 		for (int i = 0; i < info.decorators.Length; i++)
 		{
-			var e = info.decorators[i].Render(this, _tileEntity);
+			var e = info.decorators[i].Render(this);
 			var count = info.decorators[i].GetDecorEntityCount(this);
 			for (int j = lastIndex; j < count; j++)
 			{
@@ -251,6 +256,5 @@ public class Tile
 			}
 			lastIndex += count;
 		}
-		return _tileEntity;
 	}
 }

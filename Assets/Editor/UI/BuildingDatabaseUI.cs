@@ -14,10 +14,24 @@ public class BuildingDatabaseUI : Editor
 	private void OnEnable()
 	{
 		database = target as BuildingDatabase;
+		if (database.buildings == null && !Application.isPlaying)
+		{
+			database.Refresh();
+			EditorUtility.SetDirty(database);
+			Undo.RecordObject(database, "Building Database");
+		}
 	}
 
 	public override void OnInspectorGUI()
 	{
+		GUI.enabled = !Application.isPlaying;
+		if(GUILayout.Button("Refresh"))
+		{
+			database.Refresh();
+			EditorUtility.SetDirty(database);
+			Undo.RecordObject(database, "Building Database");
+		}
+		GUI.enabled = true;
 		var guiStyle = new GUIStyle
 		{
 			normal = new GUIStyleState

@@ -11,12 +11,27 @@ public class MeshDecorator : TileDecorator
 	public Vector3 rotation;
 	public Vector3 offset;
 
+	
+
 	public override int GetDecorEntityCount(Tile tile)
 	{
 		return 1;
 	}
 
-	public override Entity[] Render(Tile tile, Entity parent)
+	public override Matrix4x4[] GetTransformMatricies(Tile tile)
+	{
+		var rot = rotation;
+		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f) * 360f;
+		var qRot = Quaternion.Euler(rot);
+		var transforms = new Matrix4x4[GetDecorEntityCount(tile)];
+		for (int i = 0; i < transforms.Length; i++)
+		{
+			transforms[i] = Matrix4x4.TRS(tile.SurfacePoint + offset, qRot, Vector3.one);
+		}
+		return transforms;
+	}
+
+	public override Entity[] Render(Tile tile)
 	{
 		var rot = rotation;
 		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f) * 360f;
@@ -24,7 +39,7 @@ public class MeshDecorator : TileDecorator
 		return new Entity[] { e };
 	}
 
-	public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile, Entity parent)
+	public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile)
 	{
 		foreach (var tileDecor in decor)
 		{

@@ -9,14 +9,6 @@ public class BuildingDatabase : ScriptableObject
 {
 	public Dictionary<BuildingCategory, BuildingTileInfo[]> buildings;
 
-	void OnEnable()
-	{
-		if(!Application.isPlaying)
-		{
-			Refresh();
-		}
-	}
-
 	public BuildingTileInfo[] this[BuildingCategory c]
 	{
 		get

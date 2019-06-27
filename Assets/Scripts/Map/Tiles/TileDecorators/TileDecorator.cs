@@ -14,9 +14,9 @@ public abstract class TileDecorator : ScriptableObject
 
     public abstract int GetDecorEntityCount(Tile tile);
 
-	public abstract Entity[] Render(Tile tile, Entity parent);
+	public abstract Entity[] Render(Tile tile);
 
-	public virtual void UpdateHeight(NativeSlice<Entity> decor, Tile tile, Entity parent)
+	public virtual void UpdateHeight(NativeSlice<Entity> decor, Tile tile)
 	{
 		foreach (var tileDecor in decor)
 		{
@@ -25,4 +25,6 @@ public abstract class TileDecorator : ScriptableObject
 			Map.EM.SetComponentData(tileDecor, p);
 		}
 	}
+
+	public abstract Matrix4x4[] GetTransformMatricies(Tile tile);
 }
