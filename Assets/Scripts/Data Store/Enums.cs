@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public enum BuildingCategory
 {
-	Hidden,
+	Hidden = 0,
 	Tech,
 	Resources,
 	Economy,

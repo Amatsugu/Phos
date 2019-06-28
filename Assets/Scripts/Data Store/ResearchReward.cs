@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game Data/Research Reward")]
 public class ResearchReward : ScriptableObject
 {
-	[System.Serializable]
 	public enum RewardType
 	{
 		Building,
@@ -16,6 +15,7 @@ public class ResearchReward : ScriptableObject
 
 	public RewardType type;
 	public BuildingIdentifier building;
+	public UnitIdentifier unit;
 
 	
 }
@@ -24,5 +24,11 @@ public class ResearchReward : ScriptableObject
 [System.Serializable]
 public struct BuildingIdentifier
 {
-	public BuildingTileInfo building;
+	public int buildingId;
+}
+
+[System.Serializable]
+public struct UnitIdentifier
+{
+	public MobileUnitInfo unit;
 }

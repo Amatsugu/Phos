@@ -14,9 +14,12 @@ public class BuildingDatabaseUI : Editor
 	private void OnEnable()
 	{
 		database = target as BuildingDatabase;
-		if (database.buildings == null && !Application.isPlaying)
+		if (database.buildingCategories == null && !Application.isPlaying)
 		{
+			Debug.LogWarning("Building DB resetting");
+			database.Reset();
 			Refresh();
+			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(database);
 			Undo.RecordObject(database, "Building Database");
 		}
@@ -28,6 +31,7 @@ public class BuildingDatabaseUI : Editor
 		if(GUILayout.Button("Refresh"))
 		{
 			Refresh();
+			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(database);
 			Undo.RecordObject(database, "Building Database");
 		}
@@ -39,12 +43,16 @@ public class BuildingDatabaseUI : Editor
 				textColor = Color.red
 			}
 		};
-		foreach (var categories in database.buildings)
+		foreach (var categories in database.buildingCategories)
 		{
-			GUILayout.Label($"{categories.Key.ToString()} [{categories.Value.Length}]", guiStyle);
-			foreach (var building in categories.Value)
+			GUILayout.Label($"{categories.Key.ToString()} ({categories.Value.Length})", guiStyle);
+			foreach (var buildingID in categories.Value)
 			{
-				GUILayout.Label($"\tT{building.tier} : {building.name}");
+				var building = database.buildings[buildingID].info;
+				if(building != null)
+					GUILayout.Label($"[ID:{buildingID}] \tT{(building.tier)} : {building?.name}");
+				else
+					GUILayout.Label($"[ID:{buildingID}] \tT<missing/deleted asset>");
 			}
 		}
 	}
@@ -61,10 +69,49 @@ public class BuildingDatabaseUI : Editor
 				bd.Add(building.category, new List<BuildingTileInfo>());
 			bd[building.category].Add(building);
 		}
-		database.buildings = new Dictionary<BuildingCategory, BuildingTileInfo[]>();
 		foreach (var category in bd.Keys)
 		{
-			database.buildings.Add(category, bd[category].OrderBy(b => b.tier).ToArray());
+			var ordered = bd[category].OrderBy(b => b.tier).ToArray();
+			AddBuildings(category, ordered);
+		}
+		CullDeleted();
+	}
+
+	public void AddBuildings(BuildingCategory category, BuildingTileInfo[] orderedBuildings)
+	{
+		if (!database.buildingCategories.ContainsKey(category))
+			database.buildingCategories.Add(category, new int[orderedBuildings.Length]);
+		else
+			database.buildingCategories[category] = new int[orderedBuildings.Length];
+		for (int i = 0; i < orderedBuildings.Length; i++)
+		{
+			var b = orderedBuildings[i];
+			var existingB = database.buildings.Values.FirstOrDefault(bd => bd.info == b);
+			if (existingB == null)
+			{
+				existingB = new BuildingDatabase.BuildingDefination
+				{
+					id = database.GetNextId(),
+					info = b,
+					category = b.category
+				};
+				database.buildings.Add(existingB.id, existingB);
+			}
+			database.buildingCategories[category][i] = existingB.id;
+		}
+	}
+
+	public void CullDeleted()
+	{
+		var deleteIds = new List<int>();
+		foreach (var bd in database.buildings.Values)
+		{
+			if (bd.info == null)
+				deleteIds.Add(bd.id);
+		}
+		for (int i = 0; i < deleteIds.Count; i++)
+		{
+			database.buildings.Remove(deleteIds[i]);
 		}
 	}
 }

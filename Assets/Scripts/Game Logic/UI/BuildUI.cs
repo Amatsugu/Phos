@@ -314,40 +314,40 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	}
 
 
-	public void ShowBuildWindow(BuildingTileInfo[] units)
+	public void ShowBuildWindow(BuildingDatabase.BuildingDefination[] buildings)
 	{
 		if (hqMode)
 			return;
 		HideBuildWindow();
 		buildWindow.SetActive(true);
-		if(_activeUnits.Count < units.Length)
+		if(_activeUnits.Count < buildings.Length)
 		{
-			GrowUnitsUI(units.Length);
+			GrowUnitsUI(buildings.Length);
 		}
-		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (units.Length * 170));
-		for (int i = 0; i < units.Length; i++)
+		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (buildings.Length * 170));
+		for (int i = 0; i < buildings.Length; i++)
 		{
-			var unit = units[i];
+			var building = buildings[i].info;
 #if DEBUG
-			if(unit == null)
+			if(building == null)
 			{
-				Debug.LogWarning("Null unit in list, aborting");
+				Debug.LogWarning("Null building in list, aborting");
 				break;
 			}
 #endif
 			_activeUnits[i].gameObject.SetActive(true);
-			_activeUnits[i].text.SetText(unit.name);
+			_activeUnits[i].text.SetText(building.name);
 			_activeUnits[i].OnClick += () =>
 			{
-				if(ResourceSystem.HasResourses(unit.cost))
+				if(ResourceSystem.HasResourses(building.cost))
 				{
-					_selectedUnit = unit;
+					_selectedUnit = building;
 					placeMode = true;
 				}
 			};
-			_activeUnits[i].OnHover += () => toolTip.ShowToolTip(unit.name, unit.description, unit.GetCostString(), unit.GetProductionString());
+			_activeUnits[i].OnHover += () => toolTip.ShowToolTip(building.name, building.description, building.GetCostString(), building.GetProductionString());
 			_activeUnits[i].OnBlur += () => toolTip.HideToolTip();
-			_activeUnits[i].icon.sprite = unit.icon;
+			_activeUnits[i].icon.sprite = building.icon;
 		}
 	}
 

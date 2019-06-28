@@ -14,9 +14,18 @@ public class BuildingIdentifierDrawer : PropertyDrawer
 		var asset = AssetDatabase.FindAssets("t:BuildingDatabase").First();
 		var assetPath = AssetDatabase.GUIDToAssetPath(asset);
 		var db = AssetDatabase.LoadAssetAtPath<BuildingDatabase>(assetPath);
-		var buildings = db.buildings.SelectMany(c => c.Value.Select(b => $"[{c.Key}][T{b.tier}] {b.name}")).Prepend("--Select Building--").ToArray();
+		var buildings = db.buildings.Values.Select(b => b);
+		var names = buildings.Select(b => $" [{b.info.category}] T{b.info.tier} {b.info.name}").Prepend("--Select Building--").ToArray();
+		var ids = buildings.Select(b => b.id + 1).Prepend(0).ToArray();
 		EditorGUI.BeginProperty(position, label, property);
-		EditorGUI.Popup(position, 0, buildings);
+		var sProp = property.FindPropertyRelative("buildingId");
+		position.width = EditorGUIUtility.labelWidth;
+		GUI.Label(position, db.buildings[sProp.intValue].info.name);
+		position.x += position.width;
+		position.width = EditorGUIUtility.fieldWidth;
+		var selection =  EditorGUI.IntPopup(position, sProp.intValue + 1, names, ids) - 1;
+		sProp.intValue = selection;
 		EditorGUI.EndProperty();
+
 	}
 }
