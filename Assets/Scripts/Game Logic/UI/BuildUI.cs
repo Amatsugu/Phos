@@ -47,6 +47,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private List<Tile> _buildPath;
 	private System.Func<Tile, bool> invalidTileSelector;
 	private bool _validPlacement;
+	private BuildingDatabase.BuildingDefination[] _lastBuildingList;
 
 	void Awake()
 	{
@@ -71,6 +72,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			t is ResourceTile;
 		if(selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
 			Debug.LogError("Null");
+
+		EventManager.AddEventListener("buildingUnlocked", () =>
+		{
+			if(_lastBuildingList != null)
+				ShowBuildWindow(_lastBuildingList);
+		});
 	}
 
 	// Update is called once per frame
@@ -318,7 +325,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		if (hqMode)
 			return;
-		HideBuildWindow();
+		_lastBuildingList = buildings;
 		buildWindow.SetActive(true);
 		if(_activeUnits.Count < buildings.Length)
 		{
@@ -328,8 +335,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		for (int i = 0; i < buildings.Length; i++)
 		{
 			if (!buildings[i].isUnlocked)
+			{
+				_activeUnits[i].gameObject.SetActive(false);
 				continue;
-			activeCount++;
+			}
 			var building = buildings[i].info;
 #if DEBUG
 			if(building == null)
@@ -352,6 +361,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			_activeUnits[i].OnHover += () => toolTip.ShowToolTip(building.name, building.description, building.GetCostString(), building.GetProductionString());
 			_activeUnits[i].OnBlur += () => toolTip.HideToolTip();
 			_activeUnits[i].icon.sprite = building.icon;
+		}
+		for (int i = buildings.Length; i < _activeUnits.Count; i++)
+		{
+			_activeUnits[i].gameObject.SetActive(false);
 		}
 		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (activeCount * 170));
 	}
@@ -377,6 +390,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		HideAllIndicators();
 		placeMode = false;
+		_lastBuildingList = null;
 		_selectedUnit = null;
 		buildWindow.SetActive(false);
 		for (int i = 0; i < _activeUnits.Count; i++)

@@ -45,9 +45,9 @@ public abstract class CustomResearchAction : ScriptableObject
 
 
 [System.Serializable]
-public struct BuildingIdentifier
+public class BuildingIdentifier
 {
-	public int id;
+	public int id = -1;
 }
 
 [System.Serializable]
