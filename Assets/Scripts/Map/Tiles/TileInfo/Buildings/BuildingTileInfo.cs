@@ -26,6 +26,7 @@ public class BuildingTileInfo : TileInfo
 	public ResourceIndentifier[] cost;
 	public Sprite icon;
 	public PlacementMode placementMode = PlacementMode.Single;
+	public BuildingIdentifier upgrade;
 
 	public ResourceIndentifier[] production;
 	public ResourceIndentifier[] consumption;

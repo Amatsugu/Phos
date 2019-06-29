@@ -24,6 +24,8 @@ public class GameRegistry : MonoBehaviour
 	public static ResearchTreeUI ResearchTreeUI => INST.researchTreeUI;
 	public static Camera Camera => INST.mainCamera;
 	public static CameraController CameraController => INST.cameraController;
+	public static BuildingDatabase BuildingDatabase => INST.buildingDatabase;
+
 
 	public BuildUI buildUI;
 	public InteractionUI interactionUI;
@@ -32,5 +34,6 @@ public class GameRegistry : MonoBehaviour
 	public ResearchTreeUI researchTreeUI;
 	public Camera mainCamera;
 	public CameraController cameraController;
+	public BuildingDatabase buildingDatabase;
 
 }

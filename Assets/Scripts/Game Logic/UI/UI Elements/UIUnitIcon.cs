@@ -29,4 +29,13 @@ public class UIUnitIcon : UIHover, IPointerClickHandler
 	{
 		OnClick?.Invoke();
 	}
+
+	public void ClearClickEvents() => OnClick = null;
+
+	public override void ClearAllEvents()
+	{
+		base.ClearAllEvents();
+		ClearClickEvents();
+	}
+
 }

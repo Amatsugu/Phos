@@ -93,9 +93,14 @@ public class BuildingDatabaseUI : Editor
 				{
 					id = database.GetNextId(),
 					info = b,
-					category = b.category
+					category = b.category,
+					isUnlocked = b.tier == 1
 				};
 				database.buildings.Add(existingB.id, existingB);
+			}else
+			{
+				existingB.category = b.category;
+				existingB.isUnlocked = b.tier == 1;
 			}
 			database.buildingCategories[category][i] = existingB.id;
 		}

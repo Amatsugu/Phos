@@ -79,7 +79,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 			tmp[building.category].Add(building.id);
 		}
 		foreach (var key in tmp.Keys)
-			buildingCategories.Add(key, tmp[key]/*.OrderBy(id => buildings[id].info.tier)*/.ToArray());
+			buildingCategories.Add(key, tmp[key].ToArray());
 	}
 
 	public BuildingDefination[] this[BuildingCategory c]

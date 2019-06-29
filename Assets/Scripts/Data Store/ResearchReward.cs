@@ -9,22 +9,45 @@ public class ResearchReward : ScriptableObject
 	{
 		Building,
 		Unit,
-		Upgrade,
+		BuildingUpgrade,
 		Custom
 	}
 
 	public RewardType type;
 	public BuildingIdentifier building;
 	public UnitIdentifier unit;
+	public CustomResearchAction custom;
 
-	
+	public void ActivateReward()
+	{
+		switch(type)
+		{
+			case RewardType.Building:
+				GameRegistry.BuildingDatabase.buildings[building.id].isUnlocked = true;
+				break;
+			case RewardType.Unit:
+				//TODO: Implement unlocking unit
+				break;
+			case RewardType.BuildingUpgrade:
+				GameRegistry.BuildingDatabase.buildings[building.id].isUnlocked = true;
+				break;
+			case RewardType.Custom:
+				custom.Execute();
+				break;
+		}
+	}
+}
+
+public abstract class CustomResearchAction : ScriptableObject
+{
+	public abstract void Execute();
 }
 
 
 [System.Serializable]
 public struct BuildingIdentifier
 {
-	public int buildingId;
+	public int id;
 }
 
 [System.Serializable]

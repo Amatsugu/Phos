@@ -324,9 +324,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			GrowUnitsUI(buildings.Length);
 		}
-		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (buildings.Length * 170));
+		var activeCount = 0;
 		for (int i = 0; i < buildings.Length; i++)
 		{
+			if (!buildings[i].isUnlocked)
+				continue;
+			activeCount++;
 			var building = buildings[i].info;
 #if DEBUG
 			if(building == null)
@@ -345,10 +348,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					placeMode = true;
 				}
 			};
+			_activeUnits[i].ClearAllEvents();
 			_activeUnits[i].OnHover += () => toolTip.ShowToolTip(building.name, building.description, building.GetCostString(), building.GetProductionString());
 			_activeUnits[i].OnBlur += () => toolTip.HideToolTip();
 			_activeUnits[i].icon.sprite = building.icon;
 		}
+		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (activeCount * 170));
 	}
 
 	public void GrowUnitsUI(int count)

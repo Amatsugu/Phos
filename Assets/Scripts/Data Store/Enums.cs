@@ -11,5 +11,6 @@ public enum BuildingCategory
 	Economy,
 	Structure,
 	Military,
-	Defense
+	Defense,
+	Upgrade
 }
