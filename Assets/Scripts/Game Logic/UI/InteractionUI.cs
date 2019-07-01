@@ -8,6 +8,9 @@ public class InteractionUI : MonoBehaviour
 	public UIInteractionPanel interactionPanel;
 	public Transform selectionBox;
 
+	public RectTransform button1;
+	public RectTransform button2;
+
 	private Camera _cam;
 
 	private Tile _selectedTile = null;
@@ -66,37 +69,18 @@ public class InteractionUI : MonoBehaviour
 		{
 			if (!_uiBlocked && !GameRegistry.BuildUI.uiBlock)
 			{
-
 				if (Input.GetKeyDown(KeyCode.Mouse0))
 				{
 					var ray = _cam.ScreenPointToRay(mPos);
 					_start = Map.ActiveMap.GetTileFromRay(ray);
-					interactionPanel.HidePanel();
+					HidePanel();
 				}
 				if(Input.GetKey(KeyCode.Mouse0))
 				{
 					var ray = _cam.ScreenPointToRay(mPos);
 					_end = Map.ActiveMap.GetTileFromRay(ray);
 					if(_start != _end && _start != null && _end != null)
-					{
-						//Drag Select
-						var p0 = _start.Coords.worldXZ;
-						var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetX, _start.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
-						var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetX, _end.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
-						var p3 = _end.Coords.worldXZ;
-#if DEBUG
-						p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
-						Debug.DrawLine(p0, p1, Color.white);
-						Debug.DrawLine(p1, p3, Color.white);
-						Debug.DrawLine(p0, p2, Color.white);
-						Debug.DrawLine(p2, p3, Color.white);
-#endif
-						var w = p0.x - p1.x;
-						var h = p0.z - p2.z; 
-						selectionBox.position = new Vector3(p0.x - (w/2), 0, p0.z - (h/2));
-						selectionBox.localScale = new Vector3(w, 80, h);
-						selectionBox.gameObject.SetActive(true);
-					}
+						DisplaySelectionRect();
 				}
 				if (Input.GetKeyUp(KeyCode.Mouse0))
 				{
@@ -107,20 +91,9 @@ public class InteractionUI : MonoBehaviour
 					{
 						_selectedUnits.Clear();
 						if (_start == _end)
-						{
 							ShowPanel(_end);
-						}
 						else
-						{
-							/*var selection = Map.ActiveMap.BoxSelect(_start.Coords, _end.Coords);
-							var selectionWithUnits = selection.Where(t => t.IsOccupied);
-							if (selectionWithUnits.Count() > 0)
-							{
-								var units = selectionWithUnits.SelectMany(t => t.GetUnits().Where(u => u != 0));
-								_selectedUnits.AddRange(units);
-							}*/
 							_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
-						}
 					}
 				}
 			}
@@ -131,58 +104,24 @@ public class InteractionUI : MonoBehaviour
 				if(tile != null)
 				{
 
-					var unitGroups = _selectedUnits.GroupBy(u => Map.ActiveMap.units[u].occupiedTile);
-					var groupCount = unitGroups.Count();
-
-					var dstTileCount = _selectedUnits.Count / (Tile.MAX_OCCUPANCY-1);
-					var r = CalculateR(dstTileCount);
-					var dstSelection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
-					while (dstSelection.Count() < dstTileCount)
-						dstSelection = Map.ActiveMap.HexSelect(tile.Coords, ++r).Where(t => !(t is BuildingTile));
-					var dstTiles = dstSelection/*.OrderBy(t => Vector3.SqrMagnitude(tile.SurfacePoint - t.SurfacePoint))*/.ToArray();
-
-					var curGroupSize = 0;
-					var curGroup = 0;
-
-					foreach (var unitGroup in unitGroups)
-					{
-						foreach (var unitId in unitGroup)
-						{
-							Map.ActiveMap.units[unitId].MoveTo(dstTiles[curGroup].SurfacePoint, groupId);
-
-							curGroupSize++;
-							if(curGroupSize == Tile.MAX_OCCUPANCY-1)
-							{
-								curGroupSize = 0;
-								curGroup++;
-								unchecked
-								{
-									groupId++;
-								}
-							}
-						}
-						unchecked
-						{
-							groupId++;
-						}
-					}
+					InstructUnitMovement(tile);
 				}
 			}
 		}
 		else
-			interactionPanel.HidePanel();
+			HidePanel();
 
 		if(interactionPanel.PanelVisible)
 		{
-			var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
+			/*var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
 			if (uiPos.x <= -interactionPanel.Width)
-				interactionPanel.HidePanel();
+				HidePanel();
 			else if (uiPos.x >= Screen.width)
-				interactionPanel.HidePanel();
+				HidePanel();
 			if (uiPos.y <= 0)
-				interactionPanel.HidePanel();
+				HidePanel();
 			else if (uiPos.y >= Screen.height + interactionPanel.Height)
-				interactionPanel.HidePanel();
+				HidePanel();
 
 			if (uiPos.x < 0)
 				uiPos.x = 0;
@@ -193,9 +132,69 @@ public class InteractionUI : MonoBehaviour
 			else if (uiPos.y > Screen.height)
 				uiPos.y = Screen.height;
 
-			interactionPanel.AnchoredPosition = uiPos;
+			interactionPanel.AnchoredPosition = uiPos;*/
 		}
 
+	}
+
+	void DisplaySelectionRect()
+	{
+		//Drag Select
+		var p0 = _start.Coords.worldXZ;
+		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetX, _start.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetX, _end.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+		var p3 = _end.Coords.worldXZ;
+#if DEBUG
+		p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
+		Debug.DrawLine(p0, p1, Color.white);
+		Debug.DrawLine(p1, p3, Color.white);
+		Debug.DrawLine(p0, p2, Color.white);
+		Debug.DrawLine(p2, p3, Color.white);
+#endif
+		var w = p0.x - p1.x;
+		var h = p0.z - p2.z;
+		selectionBox.position = new Vector3(p0.x - (w / 2), 0, p0.z - (h / 2));
+		selectionBox.localScale = new Vector3(w, 80, h);
+		selectionBox.gameObject.SetActive(true);
+	}
+
+	void InstructUnitMovement(Tile tile)
+	{
+		var unitGroups = _selectedUnits.GroupBy(u => Map.ActiveMap.units[u].occupiedTile);
+		var groupCount = unitGroups.Count();
+
+		var dstTileCount = _selectedUnits.Count / (Tile.MAX_OCCUPANCY - 1);
+		var r = CalculateR(dstTileCount);
+		var dstSelection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
+		while (dstSelection.Count() < dstTileCount)
+			dstSelection = Map.ActiveMap.HexSelect(tile.Coords, ++r).Where(t => !(t is BuildingTile));
+		var dstTiles = dstSelection/*.OrderBy(t => Vector3.SqrMagnitude(tile.SurfacePoint - t.SurfacePoint))*/.ToArray();
+
+		var curGroupSize = 0;
+		var curGroup = 0;
+
+		foreach (var unitGroup in unitGroups)
+		{
+			foreach (var unitId in unitGroup)
+			{
+				Map.ActiveMap.units[unitId].MoveTo(dstTiles[curGroup].SurfacePoint, groupId);
+
+				curGroupSize++;
+				if (curGroupSize == Tile.MAX_OCCUPANCY - 1)
+				{
+					curGroupSize = 0;
+					curGroup++;
+					unchecked
+					{
+						groupId++;
+					}
+				}
+			}
+			unchecked
+			{
+				groupId++;
+			}
+		}
 	}
 
 	int CalculateR(int units)
@@ -206,9 +205,23 @@ public class InteractionUI : MonoBehaviour
 		return r;
 	}
 
+	void HidePanel()
+	{
+		interactionPanel.HidePanel();
+	}
+
 	void ShowPanel(Tile tile)
 	{
 		_selectedTile = tile;
+		interactionPanel.rectTransform.position = tile.SurfacePoint;
+		/*button1.gameObject.SetActive(true);
+		button2.gameObject.SetActive(true);
+		var b1Pos = tile.Coords.TranslateOffset(0, -1).worldXZ;
+		var b2Pos = tile.Coords.TranslateOffset(1, -1).worldXZ;
+		b1Pos.y = b2Pos.y = tile.Height;
+		button1.position = b1Pos;
+		button2.position = b2Pos;
+		return;*/
 		switch (tile)
 		{
 			case HQTile _:

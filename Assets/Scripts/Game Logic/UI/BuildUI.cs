@@ -66,6 +66,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	void Awake()
 	{
 		GameRegistry.INST.buildUI = this;
+		GameRegistry.INST.buildingDatabase = buildings;
 	}
 
 	void Start()
@@ -313,6 +314,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			var orderId = _readyToBuildOrders[i];
 			EventManager.RemoveAllEventListeners(orderId.ToString());
 			PlaceBuilding(_pendingBuildOrders[orderId]);
+			_pendingBuildOrders.Remove(orderId);
 		}
 		_readyToBuildOrders.Clear();
 	}

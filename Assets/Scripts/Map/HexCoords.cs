@@ -81,6 +81,8 @@ public struct HexCoords
 		return ToChunkLocalCoord(x, z);
 	}
 
+	public HexCoords TranslateOffset(int x, int z) => FromOffsetCoords(offsetX + x, offsetZ + z, edgeLength);
+
 	public HexCoords ToChunkLocalCoord(int chunkX, int chunkZ) => FromOffsetCoords(offsetX - (chunkX * Map.Chunk.SIZE), offsetZ - (chunkZ * Map.Chunk.SIZE), edgeLength);
 
 	public (int chunkX, int chunkZ) GetChunkPos() => (Mathf.FloorToInt((float)offsetX / Map.Chunk.SIZE), Mathf.FloorToInt((float)offsetZ / Map.Chunk.SIZE));
