@@ -16,6 +16,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
   decorators: []
   description: 
   buildingMesh: {fileID: 11400000, guid: fdad5a311b68bd5448df43a04167253f, type: 2}
@@ -28,6 +29,8 @@ MonoBehaviour:
     ammount: 10
   icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0
+  upgradeTarget:
+    id: -1
   production: []
   consumption:
   - id: 0

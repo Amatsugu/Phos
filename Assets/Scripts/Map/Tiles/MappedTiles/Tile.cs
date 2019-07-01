@@ -151,11 +151,13 @@ public class Tile
 		SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
 		OnHeightChanged();
 		UpdateDecorations();
+		SendTileUpdate(TileUpdateType.Height);
 	}
 
 	public virtual void OnHeightChanged()
 	{
 		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
+
 	}
 
 	private void UpdateDecorations()
@@ -172,22 +174,26 @@ public class Tile
 
 	public virtual void OnRemoved()
 	{
-		var neighbors = Map.ActiveMap.GetNeighbors(this);
-		for (int i = 0; i < 6; i++)
-			neighbors[i]?.TileUpdated(this, TileUpdateType.Removed);
+		SendTileUpdate(TileUpdateType.Removed);
 	}
 
 	public virtual void OnPlaced()
 	{
+		SendTileUpdate(TileUpdateType.Placed);
+	}
+
+	public virtual void SendTileUpdate(TileUpdateType type)
+	{
 		var neighbors = Map.ActiveMap.GetNeighbors(this);
 		for (int i = 0; i < 6; i++)
-			neighbors[i]?.TileUpdated(this, TileUpdateType.Placed);
+			neighbors[i]?.TileUpdated(this, type);
 	}
 
 	public enum TileUpdateType
 	{
 		Placed,
-		Removed
+		Removed,
+		Height
 	}
 
 	public virtual void TileUpdated(Tile src, TileUpdateType updateType)

@@ -21,7 +21,8 @@ public class BuildingTileInfo : TileInfo
 	public int tier;
 	public BuildingCategory category;
 	public int size = 0;
-	public int influenceRange = 0;
+	public int flattenOuterRange = 0;
+	public int resourceTransferRange = 0;
 	[SerializeField]
 	public ResourceIndentifier[] cost;
 	public Sprite icon;

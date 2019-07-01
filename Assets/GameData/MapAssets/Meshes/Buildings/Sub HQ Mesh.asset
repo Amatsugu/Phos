@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Sub HQ
+  m_Name: Sub HQ Mesh
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
   material: {fileID: 0}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1

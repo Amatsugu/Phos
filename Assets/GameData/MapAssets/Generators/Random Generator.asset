@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Size: {x: 16, y: 16}
   tileMapper: {fileID: 0}
-  seaLevel: 5
+  seaLevel: 4.9
   edgeLength: 1
   featureGenerators:
   - {fileID: 11400000, guid: 93401847f3613cc40b2de43739f80765, type: 2}
@@ -103,8 +103,9 @@ MonoBehaviour:
       minValue: 0
       center: {x: 0, y: 0, z: 0}
       weightMultiplier: 4.57
-  useSeed: 1
-  seed: 1148570873
+  useSeed: 0
+  useSeedDev: 1
+  seed: 1148570884
   landSeaRatio: 0.35
   biomeFold: 1
   preview: 1

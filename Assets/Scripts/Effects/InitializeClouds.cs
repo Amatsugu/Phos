@@ -56,7 +56,7 @@ public class InitializeClouds : MonoBehaviour
 			return;
 
 		if (Application.isPlaying)
-			CloudSystem.INST.UpdateSettings();
+			CloudSystem.INST?.UpdateSettings();
 	}
 	void OnDestroy()
 	{

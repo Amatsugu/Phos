@@ -28,6 +28,9 @@ public class RandomGenerator : MapGenerator
 	public float noiseScale = .5f;
 	public NoiseLayer[] noiseLayers;
 	public bool useSeed;
+#if DEBUG
+	public bool useSeedDev;
+#endif
 	public int seed = 11;
 	public float landSeaRatio = .4f;
 
@@ -48,10 +51,15 @@ public class RandomGenerator : MapGenerator
 	{
 		var reject = 0;
 		var totalStartTime = DateTime.Now;
-		Start:
+	Start:
 		var startTime = DateTime.Now;
+#if DEBUG
+		if(!useSeed || !useSeedDev)
+			seed = startTime.GetHashCode();
+#else
 		if (!useSeed)
 			seed = startTime.GetHashCode();
+#endif
 		InitFilters();
 		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength)
 		{
@@ -79,7 +87,10 @@ public class RandomGenerator : MapGenerator
 		if (landToSeaRatio <= landSeaRatio)
 		{
 			reject++;
-			goto Start;
+			if (reject < 10)
+				goto Start;
+			else
+				Debug.LogWarning("Unalble to find satisfactory level");
 		}
 		Debug.Log($"Generate HightMap... {(DateTime.Now-startTime).TotalMilliseconds}ms {reject} Rejects");
 		startTime = DateTime.Now;

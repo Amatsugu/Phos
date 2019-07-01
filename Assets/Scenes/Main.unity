@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0755471, g: 0.4048372, b: 0.73286766, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8033,6 +8033,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildings: {fileID: 11400000, guid: 0916d0c03da4488419a09b66e76cac63, type: 2}
   HQTile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
+  mesh: {fileID: 11400000, guid: e62d3f653db9df84fbc5fd56f75ae0fe, type: 2}
   infoBanner: {fileID: 1107210684}
   buildWindow: {fileID: 1620701535}
   scrollContent: {fileID: 867663154}

@@ -6,14 +6,20 @@ using UnityEngine.UI;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
+using System.Collections.Concurrent;
 using Unity.Rendering;
 using System.Linq;
 using UnityEngine.EventSystems;
+using AnimationSystem.Animations;
+using AnimationSystem.AnimationData;
+using Unity.Mathematics;
+using Random = UnityEngine.Random;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
 	public BuildingDatabase buildings;
 	public HQTileInfo HQTile;
+	public MeshEntityRotatable mesh;
 
 	/*	UI	*/
 	public UIInfoBanner infoBanner;
@@ -28,16 +34,16 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public UITooltip toolTip;
 	public TMP_Text floatingText;
 	//State
-	[HideInInspector]
+	//[HideInInspector]
 	public bool placeMode;
-	[HideInInspector]
+	//[HideInInspector]
 	public bool hqMode;
 
 	public RectTransform unitUIPrefab;
 	public bool uiBlock;
 
 	private List<UIUnitIcon> _activeUnits;
-	private BuildingTileInfo _selectedUnit;
+	private BuildingTileInfo _selectedBuilding;
 	private Camera _cam;
 	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
 	private Dictionary<MeshEntity, int> _renderedEntities;
@@ -48,6 +54,14 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private System.Func<Tile, bool> invalidTileSelector;
 	private bool _validPlacement;
 	private BuildingDatabase.BuildingDefination[] _lastBuildingList;
+	private Dictionary<int, BuildOrder> _pendingBuildOrders;
+	private List<int> _readyToBuildOrders;
+
+	struct BuildOrder
+	{
+		public Tile dstTile;
+		public BuildingTileInfo building;
+	}
 
 	void Awake()
 	{
@@ -56,6 +70,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void Start()
 	{
+		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
+		_readyToBuildOrders = new List<int>();
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
 		_activeUnits = new List<UIUnitIcon>();
@@ -63,10 +79,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_EM = World.Active.EntityManager;
         HideBuildWindow();
 		placeMode = hqMode = true;
-		_selectedUnit = HQTile;
+		_selectedBuilding = HQTile;
 		toolTip.HideToolTip();
 		infoBanner.SetText("Place HQ Building");
 		invalidTileSelector = t =>
+			_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||
 			t.Height <= Map.ActiveMap.seaLevel ||
 			t is BuildingTile ||
 			t is ResourceTile;
@@ -83,6 +100,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	// Update is called once per frame
 	void Update()
 	{
+		BuildReadyBuildings();
 		if (Input.GetKey(KeyCode.Escape) && !hqMode)
 		{
 			if (placeMode)
@@ -103,13 +121,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				{
 					_validPlacement = true;
 
-					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedUnit.size);
+					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
 					//Path Placement
-					if (_selectedUnit.placementMode == PlacementMode.Path && Input.GetKeyDown(KeyCode.Mouse0))
+					if (_selectedBuilding.placementMode == PlacementMode.Path && Input.GetKeyDown(KeyCode.Mouse0))
 					{
 						_startPoint = selectedTile;
 					}
-					if (_selectedUnit.placementMode == PlacementMode.Path && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
+					if (_selectedBuilding.placementMode == PlacementMode.Path && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
 					{
 						if (invalidTileSelector(selectedTile))
 						{
@@ -138,7 +156,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						}
 					}
 					//Indicators
-					if (!ResourceSystem.HasResourses(_selectedUnit.cost))
+					if (!ResourceSystem.HasResourses(_selectedBuilding.cost))
 					{
 						HideIndicator(selectIndicatorEntity);
 						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
@@ -157,7 +175,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						ShowIndicators(selectIndicatorEntity, tilesToOccupy);
 						_validPlacement = true;
 					}
-					if (_selectedUnit is ResourceGatheringBuildingInfo r)
+					if (_selectedBuilding is ResourceGatheringBuildingInfo r)
 					{
 						var res = Map.ActiveMap.HexSelect(selectedTile.Coords, r.gatherRange, true) //Select Tiles
 								.Where(t => t is ResourceTile rt && !rt.gatherer.isCreated) //Exclude Tiles that are not resource tiles or being gathered already
@@ -208,15 +226,14 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					if (Input.GetKeyUp(KeyCode.Mouse0))
 					{
 						_startPoint = null;
-						if (_validPlacement || _selectedUnit.placementMode == PlacementMode.Path)
+						if (_validPlacement || _selectedBuilding.placementMode == PlacementMode.Path)
 						{
 							HideAllIndicators();
 							if (!hqMode)
-								ResourceSystem.ConsumeResourses(_selectedUnit.cost);
+								ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
 							if (_buildPath == null)
 							{
-								Map.ActiveMap.HexFlatten(selectedTile.Coords, _selectedUnit.size, _selectedUnit.influenceRange, Map.FlattenMode.Average);
-								Map.ActiveMap.ReplaceTile(selectedTile, _selectedUnit);
+								QueueBuilding(selectedTile);
 							}
 							else
 							{
@@ -224,19 +241,17 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 								{
 									if (invalidTileSelector(_buildPath[i]))
 										continue;
-									Map.ActiveMap.HexFlatten(_buildPath[i].Coords, _selectedUnit.size, _selectedUnit.influenceRange, Map.FlattenMode.Average);
-									Map.ActiveMap.ReplaceTile(_buildPath[i], _selectedUnit);
+									QueueBuilding(_buildPath[i]);
 								}
 								_buildPath = null;
 							}
 							if (hqMode)
 							{
-								GameRegistry.BaseNameUI.Show();
 								placeMode = false;
+								infoBanner.SetActive(false);
 								void onHide()
 								{
 									placeMode = hqMode = false;
-									infoBanner.SetActive(false);
 									GameRegistry.BaseNameUI.OnHide -= onHide;
 								}
 								GameRegistry.BaseNameUI.OnHide += onHide;
@@ -248,6 +263,64 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					HideAllIndicators();
 			}
 		}
+	}
+
+	void QueueBuilding(Tile tile)
+	{
+		var pos = tile.SurfacePoint;
+		pos.y = Random.Range(90, 100);
+		var e = mesh.Instantiate(pos);
+		_EM.AddComponentData(e, new FallAnim
+		{
+			startSpeed = new float3(0,Random.Range(-100, -90),0)
+		}) ; 
+		_EM.AddComponentData(e, new Floor
+		{
+			Value = tile.Height
+		});
+		var callback = tile.Coords.GetHashCode();
+		_pendingBuildOrders.Add(callback, new BuildOrder
+		{
+			building = _selectedBuilding,
+			dstTile = tile
+		});
+		if (hqMode)
+		{
+			EventManager.AddEventListener(callback.ToString(), () =>
+			{
+				_readyToBuildOrders.Add(callback);
+				GameRegistry.BaseNameUI.Show();
+			});
+		}
+		else
+		{
+			EventManager.AddEventListener(callback.ToString(), () =>
+			{
+				_readyToBuildOrders.Add(callback);
+			});
+		}
+		_EM.AddComponentData(e, new HitFloorCallback
+		{
+			eventId = callback
+		});
+		_EM.AddComponentData(e, new Gravity { Value = 9.8f });
+	}
+
+	void BuildReadyBuildings()
+	{
+		for (int i = 0; i < _readyToBuildOrders.Count; i++)
+		{
+			var orderId = _readyToBuildOrders[i];
+			EventManager.RemoveAllEventListeners(orderId.ToString());
+			PlaceBuilding(_pendingBuildOrders[orderId]);
+		}
+		_readyToBuildOrders.Clear();
+	}
+
+	void PlaceBuilding(BuildOrder order)
+	{
+		Map.ActiveMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average);
+		Map.ActiveMap.ReplaceTile(order.dstTile, order.building);
 	}
 
 	void HideIndicator(MeshEntity indicator)
@@ -349,15 +422,16 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 #endif
 			_activeUnits[i].gameObject.SetActive(true);
 			_activeUnits[i].text.SetText(building.name);
+			_activeUnits[i].ClearAllEvents();
 			_activeUnits[i].OnClick += () =>
 			{
+				Debug.Log(building.name);
 				if(ResourceSystem.HasResourses(building.cost))
 				{
-					_selectedUnit = building;
+					_selectedBuilding = building;
 					placeMode = true;
 				}
 			};
-			_activeUnits[i].ClearAllEvents();
 			_activeUnits[i].OnHover += () => toolTip.ShowToolTip(building.name, building.description, building.GetCostString(), building.GetProductionString());
 			_activeUnits[i].OnBlur += () => toolTip.HideToolTip();
 			_activeUnits[i].icon.sprite = building.icon;
@@ -391,7 +465,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		HideAllIndicators();
 		placeMode = false;
 		_lastBuildingList = null;
-		_selectedUnit = null;
+		_selectedBuilding = null;
 		buildWindow.SetActive(false);
 		for (int i = 0; i < _activeUnits.Count; i++)
 		{
