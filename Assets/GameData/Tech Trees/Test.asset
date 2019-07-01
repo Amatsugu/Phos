@@ -22,7 +22,7 @@ MonoBehaviour:
       description: 
       isResearched: 1
       resourceCost: []
-      reward: {fileID: 11400000, guid: f39a7a1b379f64543bfd811d499d7634, type: 2}
+      reward: {fileID: 0}
       childrenIDs: 010000000200000003000000
       Count: 3
     - id: 1

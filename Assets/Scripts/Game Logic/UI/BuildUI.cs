@@ -19,7 +19,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
 	public BuildingDatabase buildings;
 	public HQTileInfo HQTile;
-	public MeshEntityRotatable mesh;
+	public MeshEntityRotatable landingMesh;
 
 	/*	UI	*/
 	public UIInfoBanner infoBanner;
@@ -269,7 +269,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		var pos = tile.SurfacePoint;
 		pos.y = Random.Range(90, 100);
-		var e = mesh.Instantiate(pos);
+		var e = landingMesh.Instantiate(pos);
 		_EM.AddComponentData(e, new FallAnim
 		{
 			startSpeed = new float3(0,Random.Range(-100, -90),0)
