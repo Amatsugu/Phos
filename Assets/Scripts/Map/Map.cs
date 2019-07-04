@@ -1,3 +1,4 @@
+using DataStore.ConduitGraph;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ public class Map : IDisposable
 	public Chunk[] Chunks { get; }
 
 	public HQTile HQ;
+	public ConduitGraph conduitGraph;
 	public Dictionary<int, MobileUnit> units;
 	public List<int>[] unitLocations;
 	private int _nextId = 1;
@@ -68,7 +70,6 @@ public class Map : IDisposable
 
 		private Bounds _bounds;
 		private NativeArray<Entity> _chunkTiles;
-		private NativeArray<Entity> _chunkBatches;
 
 
 		public Chunk(HexCoords coord)
@@ -85,7 +86,6 @@ public class Map : IDisposable
 				max = worldCoord.worldXZ + new Vector3(SIZE * ActiveMap.shortDiagonal, 100, SIZE * 1.5f)
 			};
 			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-			_chunkBatches = default;
 		}
 
 		public Tile this[HexCoords coord]
@@ -128,8 +128,6 @@ public class Map : IDisposable
 			{
 				if (_chunkTiles.IsCreated)
 					_chunkTiles.Dispose();
-				if (_chunkBatches.IsCreated)
-					_chunkBatches.Dispose();
 			}
 			for (int i = 0; i < Tiles.Length; i++)
 				Tiles[i].Destroy();
@@ -149,21 +147,9 @@ public class Map : IDisposable
 			for (int i = 0; i < Tiles.Length; i++)
 				Tiles[i].Show(shown);
 			if (shown)
-			{
-				if(_chunkBatches.IsCreated)
-					EM.RemoveComponent(_chunkBatches, typeof(FrozenRenderSceneTag));
-				else
-					EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
-
-			}
+				EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
 			else
-			{
-				if(_chunkBatches.IsCreated)
-					EM.AddComponent(_chunkBatches, typeof(FrozenRenderSceneTag));
-				else
-					EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
-
-			}
+				EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
 			isShown = shown;
 			return true;
 		}
@@ -181,7 +167,7 @@ public class Map : IDisposable
 			}
 		}
 
-		internal void RenderTerrain()
+		/*internal void RenderTerrain()
 		{
 			isShown = true;
 			isRendered = true;
@@ -215,7 +201,7 @@ public class Map : IDisposable
 				EM.SetComponentData(e, new Scale { Value = 1 });
 				_chunkBatches[c++] = e;
 			}
-		}
+		}*/
 
 		internal void RenderDecorators()
 		{
@@ -493,6 +479,62 @@ public class Map : IDisposable
 		return selection;
 	}
 
+	public void HexSelectForEach(HexCoords center, int radius, Action<Tile> action, bool excludeCenter = false)
+	{
+		radius = Mathf.Abs(radius);
+		if (radius == 0)
+			return;
+		for (int y = -radius; y <= radius; y++)
+		{
+			int xMin = -radius, xMax = radius;
+			if (y < 0)
+				xMin = -radius - y;
+			if (y > 0)
+				xMax = radius - y;
+			for (int x = xMin; x <= xMax; x++)
+			{
+				int z = -x - y;
+				var t = this[center.x + x, center.y + y, center.z + z];
+				if (t == null)
+					continue;
+				if (excludeCenter && t.Coords == center)
+					continue;
+				action(t);
+			}
+		}
+	}
+
+	public List<Tile> HexSelectWhere(HexCoords center, int radius, Func<Tile, bool> filter, bool excludeCenter = false)
+	{
+		radius = Mathf.Abs(radius);
+		var selection = new List<Tile>();
+		if (radius == 0)
+		{
+			selection.Add(this[center]);
+			return selection;
+		}
+		for (int y = -radius; y <= radius; y++)
+		{
+			int xMin = -radius, xMax = radius;
+			if (y < 0)
+				xMin = -radius - y;
+			if (y > 0)
+				xMax = radius - y;
+			for (int x = xMin; x <= xMax; x++)
+			{
+				int z = -x - y;
+				var t = this[center.x + x, center.y + y, center.z + z];
+				if (t == null)
+					continue;
+				if (excludeCenter && t.Coords == center)
+					continue;
+				if (filter(t))
+					selection.Add(t);
+			}
+		}
+		return selection;
+	}
+
 	public List<Tile> CircularSelect(HexCoords center, float radius)
 	{
 		var selection = new List<Tile>();
@@ -622,9 +664,6 @@ public class Map : IDisposable
 		var index = chunkX + chunkZ * width;
 		var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 		var nT = Chunks[index].ReplaceTile(localCoord, newTile);
-		if (nT is HQTile t)
-			HQ = t;
-	
 		tile.OnRemoved();
 		tile.Destroy();
 		nT.OnPlaced();
@@ -637,6 +676,13 @@ public class Map : IDisposable
 			ReplaceTile(tile, tile.originalTile);
 		else
 			Debug.LogWarning("No Original Tile to revert to");
+	}
+
+	public int GetDistance(HexCoords a, HexCoords b)
+	{
+		var dst = (a.worldXZ - b.worldXZ).magnitude;
+		var tileDist = Mathf.RoundToInt(dst / (innerRadius * 2));
+		return tileDist;
 	}
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);

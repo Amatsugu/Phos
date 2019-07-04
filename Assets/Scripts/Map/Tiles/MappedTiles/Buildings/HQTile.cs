@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using DataStore.ConduitGraph;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
@@ -14,6 +16,12 @@ public class HQTile : BuildingTile
 
 	public override void OnPlaced()
 	{
+#if DEBUG
+		if (Map.ActiveMap.HQ != null)
+			throw new Exception("Second HQ added");
+#endif
+		Map.ActiveMap.HQ = this;
+		Map.ActiveMap.conduitGraph = new ConduitGraph(Coords);
 		var info = this.info as HQTileInfo;
 		var tilesToReplace = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < tilesToReplace.Length; i++)

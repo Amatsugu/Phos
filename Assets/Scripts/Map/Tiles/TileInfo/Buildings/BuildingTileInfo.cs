@@ -18,7 +18,7 @@ public class BuildingTileInfo : TileInfo
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable buildingMesh;
 	[Range(1, 6)]
-	public int tier;
+	public int tier = 1;
 	public BuildingCategory category;
 	public int size = 0;
 	public int flattenOuterRange = 0;

@@ -95,6 +95,9 @@ public struct HexCoords
 
 	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
 
+	public float DistanceToSq(HexCoords b) => (worldXZ - b.worldXZ).sqrMagnitude;
+
+	public static float DistanceSq(HexCoords a, HexCoords b) => (a.worldXZ - b.worldXZ).sqrMagnitude;
 	
 	public static (float X, float Z) OffsetToWorldPos(int x, int z, float innerRadius, float edgeLength)
 	{
@@ -137,7 +140,7 @@ public struct HexCoords
 	{
 		int hash = 23;
 		hash = hash * prime + offsetX;
-		hash = hash * prime * offsetZ;
+		hash = hash * prime + offsetZ;
 		return hash;
 	}
 }

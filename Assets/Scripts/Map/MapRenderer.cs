@@ -51,14 +51,14 @@ public class MapRenderer : MonoBehaviour
 		map = generator.GenerateMap(transform);
 		generator.GenerateFeatures(map);
 		map.Render(_entityManager);
-		if (batched)
+		/*if (batched)
 		{
 			for (int i = 0; i < map.length; i++)
 			{
 				map.Chunks[i].RenderTerrain();
 				map.Chunks[i].RenderDecorators();
 			}
-		}
+		}*/
 		
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;

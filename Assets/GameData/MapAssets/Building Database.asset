@@ -89,3 +89,8 @@ MonoBehaviour:
     info: {fileID: 11400000, guid: baf5151406270f649a0cded5e679cc9c, type: 2}
     category: 1
     isUnlocked: 0
+  - id: 20
+    info: {fileID: 11400000, guid: 69df6771048597e47af78e977c2c3909, type: 2}
+    category: 4
+    isUnlocked: 1
+  _nextId: 21

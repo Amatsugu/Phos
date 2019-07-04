@@ -20,6 +20,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 	[SerializeField]
 	private BuildingDefination[] _buildingValues;
 
+	[SerializeField]
 	private int _nextId = 0;
 
 	[Serializable]
@@ -66,9 +67,14 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 
 	public void OnAfterDeserialize()
 	{
+		_nextId = 0;
 		buildings = new Dictionary<int, BuildingDefination>();
 		for (int i = 0; i < _buildingValues.Length; i++)
+		{
 			buildings.Add(_buildingValues[i].id, _buildingValues[i]);
+			if (_nextId <= _buildingValues[i].id)
+				_nextId = _buildingValues[i].id + 1;
+		}
 
 		var tmp = new Dictionary<BuildingCategory, List<int>>();
 		buildingCategories = new Dictionary<BuildingCategory, int[]>();

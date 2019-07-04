@@ -1,4 +1,7 @@
-﻿public class ResourceConduitTileInfo : BuildingTileInfo
+﻿using UnityEngine;
+
+[CreateAssetMenu(menuName = "Map Asset/Tile/Resource Conduit")]
+public class ResourceConduitTileInfo : BuildingTileInfo
 {
 	public int connectionRange;
 

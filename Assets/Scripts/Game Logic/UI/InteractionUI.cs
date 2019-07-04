@@ -212,16 +212,11 @@ public class InteractionUI : MonoBehaviour
 
 	void ShowPanel(Tile tile)
 	{
+		var dst = (Map.ActiveMap.HQ.Coords.worldXZ - tile.Coords.worldXZ).magnitude;
+		Debug.Log($"dst:{dst} tileDst:{dst / (Map.ActiveMap.innerRadius * 2)}");
 		_selectedTile = tile;
 		interactionPanel.rectTransform.position = tile.SurfacePoint;
-		/*button1.gameObject.SetActive(true);
-		button2.gameObject.SetActive(true);
-		var b1Pos = tile.Coords.TranslateOffset(0, -1).worldXZ;
-		var b2Pos = tile.Coords.TranslateOffset(1, -1).worldXZ;
-		b1Pos.y = b2Pos.y = tile.Height;
-		button1.position = b1Pos;
-		button2.position = b2Pos;
-		return;*/
+		
 		switch (tile)
 		{
 			case HQTile _:

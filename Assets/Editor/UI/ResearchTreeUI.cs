@@ -19,6 +19,7 @@ public class ResearchTreeUI : Editor
 	public override void OnInspectorGUI()
 	{
 		EditorGUILayout.LabelField($"{treeInfo.tree.BaseNode.name} Count:{treeInfo.tree.Count}");
+		treeInfo.tree.category = (BuildingCategory)EditorGUILayout.EnumPopup("Category", treeInfo.tree.category);
 		if(GUILayout.Button("Edit Tree"))
 		{
 			_window = EditorWindow.GetWindow<ResearchTreeEditorWindow>();

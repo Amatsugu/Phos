@@ -15,6 +15,8 @@ public class ResearchTree
 		Reset();
 	}
 
+
+	public BuildingCategory category;
 	public string name;
 	public ResearchTech BaseNode => nodes[0];
 
