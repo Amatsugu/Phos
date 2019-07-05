@@ -43,15 +43,15 @@ public class ConnectedTile : PoweredBuildingTile
 		}
 	}
 
-	public override void OnHQConnected(PoweredBuildingTile src)
+	public override void OnHQConnected()
 	{
-		base.OnHQConnected(src);
+		base.OnHQConnected();
 		UpdateConnections();
 	}
 
-	public override void OnHQDisconnected(PoweredBuildingTile src, HashSet<Tile> visited, bool verified = false)
+	public override void OnHQDisconnected()
 	{
-		base.OnHQDisconnected(src, visited, verified);
+		base.OnHQDisconnected();
 		UpdateConnections();
 	}
 

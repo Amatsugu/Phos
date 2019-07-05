@@ -66,9 +66,6 @@ public class PoweredBuildingTile : BuildingTile
 {
 	public bool HasHQConnection { get; protected set; }
 
-	private bool _init;
-	private HexCoords _connectionSrc;
-
 	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
 	{
 	}
@@ -79,103 +76,47 @@ public class PoweredBuildingTile : BuildingTile
 			$"Has HQ Connection: {HasHQConnection}";
 	}
 
-	public override void TileUpdated(Tile src, TileUpdateType updateType)
-	{
-		base.TileUpdated(src, updateType);
-		if(updateType == TileUpdateType.Removed)
-		{
-			if(src.Coords == _connectionSrc)
-			{
-				if (src is PoweredBuildingTile pb && pb.Coords == _connectionSrc)
-					OnHQDisconnected(pb, new HashSet<Tile>());
-			}
-		}else
-		{
-			if (!HasHQConnection)
-				FindNewConnectionSrc();
-		}
-	}
-
 	public override void OnPlaced()
 	{
 		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
-		FindNewConnectionSrc();
+		ConnectToConduit();
 		base.OnPlaced();
-		_init = true;
 	}
 
-	public void FindNewConnectionSrc()
+	public void ConnectToConduit()
 	{
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		PoweredBuildingTile best = null;
-		for (int i = 0; i < 6; i++)
-		{
-			if (neighbors[i] is PoweredBuildingTile pb && pb.HasHQConnection)
-			{
-				if (best == null)
-					best = pb;
-				else if (pb.distanceToHQ < best.distanceToHQ)
-					best = pb;
-			}
-		}
-		if (best != null)
-			OnHQConnected(best);
+		var closestConduit = Map.ActiveMap.conduitGraph.GetClosestNode(Coords);
+		if (closestConduit == null)
+			OnHQDisconnected();
 		else
-			OnHQDisconnected(this, new HashSet<Tile>(), true);
+		{
+			var conduit = (Map.ActiveMap[closestConduit.conduitPos] as ResourceConduitTile);
+			if (conduit == null)
+				OnHQDisconnected();
+			else if (conduit.IsInRange(Coords))
+				OnHQConnected();
+		}
 	}
 
-	public virtual void OnHQConnected(PoweredBuildingTile src)
+	public virtual void OnHQConnected()
 	{
-		if (_init && HasHQConnection)
-			return;
-		_connectionSrc = src.Coords;
 		HasHQConnection = true;
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < 6; i++)
-		{
-			if (neighbors[i] is PoweredBuildingTile p)
-				p.OnHQConnected(this);
-		}
 		if (Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 			Map.EM.RemoveComponent<ConsumptionDebuff>(_tileEntity);
 	}
 
-	public virtual void OnHQDisconnected(PoweredBuildingTile src, HashSet<Tile> visited, bool verified = false)
+	public virtual void OnHQDisconnected()
 	{
-		if (_init && !HasHQConnection)
-			return;
-		if (src != this)
+		if(HasHQConnection)
 		{
-			if (visited.Contains(this))
-				return;
-			visited.Add(this);
+			HasHQConnection = false;
+			ConnectToConduit();
+			return;
 		}
 		HasHQConnection = false;
-		if (!verified)
-		{
-			var path = Map.ActiveMap.GetPath(this, Map.ActiveMap.HQ, filter: t => t is PoweredBuildingTile);
-			if (path != null)
-			{
-				OnHQConnected(path[1] as PoweredBuildingTile);
-				return;
-			}
-			verified = true;
-		}
-		if (src != this)
-		{
-			var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-			for (int i = 0; i < 6; i++)
-			{
-				if (neighbors[i] is PoweredBuildingTile p)
-				{
-					p.OnHQDisconnected(this, visited, verified);
-				}
-			}
-		}
 		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 		{
-			Map.EM.AddComponent(_tileEntity, typeof(ConsumptionDebuff));
-			Map.EM.SetComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
+			Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
 		}
 	}
 

@@ -345,7 +345,6 @@ public class Map : IDisposable
 			for (int cX = cXMin; cX <= cXMax; cX++)
 			{
 				var cIndex = cX + cZ * width;
-				Debug.Log($"searching {cIndex}");
 				if (unitLocations[cIndex] == null || unitLocations[cIndex].Count == 0)
 					continue;
 				for (int i = 0; i < unitLocations[cIndex].Count; i++)

@@ -24,15 +24,27 @@ namespace DataStore.ConduitGraph
 			_baseNode = CreateNode(baseNode);
 		}
 
-		public bool ConnectNode(HexCoords nodePos, ConduitNode connectTo) => nodes[_coordMap[nodePos]].ConnectTo(connectTo);
+		public ConduitNode GetNode(HexCoords nodePos) => nodes[_coordMap[nodePos]];
 
-		public bool AddNode(HexCoords nodePos, ConduitNode connectTo)
+		public void ConnectNode(HexCoords nodePos, ConduitNode connectTo) => nodes[_coordMap[nodePos]].ConnectTo(connectTo);
+
+		public void RemoveNode(HexCoords nodePos)
 		{
-			if (connectTo.IsFull)
-				return false;
+			var node = nodes[_coordMap[nodePos]];
+			for (int i = 0; i < maxConnections; i++)
+			{
+				var id = node._connections[i];
+				if (id != -1)
+					nodes[id].DisconnectFrom(node);
+			}
+			nodes.Remove(node.id);
+			_coordMap.Remove(nodePos);
+		}
+
+		public void AddNode(HexCoords nodePos, ConduitNode connectTo)
+		{
 			var newNode = CreateNode(nodePos);
 			newNode.ConnectTo(connectTo);
-			return true;
 		}
 
 		ConduitNode CreateNode(HexCoords nodePos)
@@ -71,7 +83,7 @@ namespace DataStore.ConduitGraph
 			var visited = new HashSet<ConduitNode>();
 			TraverseGraph(_baseNode, visited);
 			if(visited.Count == Count)
-				return null;
+				return new ConduitNode[0];
 
 			var nodesArr = nodes.Values.ToArray();
 			var disconected = new ConduitNode[Count-visited.Count];
@@ -86,8 +98,10 @@ namespace DataStore.ConduitGraph
 
 		public void TraverseGraph(ConduitNode node, HashSet<ConduitNode> visited)
 		{
-			if(!visited.Contains(node))
+			if (!visited.Contains(node))
 				visited.Add(node);
+			else
+				return;
 			if (node.IsEmpty)
 				return;
 			for (int i = 0; i < node.maxConnections; i++)
@@ -133,19 +147,17 @@ namespace DataStore.ConduitGraph
 		}
 	}
 
-	public struct ConduitNode
+	public class ConduitNode
 	{
 		public readonly int maxConnections;
 		public readonly int id;
 		public HexCoords conduitPos;
-		public bool isCreated;
 
 		internal int[] _connections;
-		private int _connectionCount;
 
-		public int ConnectionCount => _connectionCount;
-		public bool IsEmpty => _connectionCount == 0;
-		public bool IsFull => _connectionCount == maxConnections;
+		public int ConnectionCount { get; private set; }
+		public bool IsEmpty => ConnectionCount == 0;
+		public bool IsFull => ConnectionCount == maxConnections;
 
 
 		public ConduitNode(int id, HexCoords pos, int maxConnections = 6)
@@ -156,17 +168,15 @@ namespace DataStore.ConduitGraph
 			_connections = new int[maxConnections];
 			for (int i = 0; i < maxConnections; i++)
 				_connections[i] = -1;
-			_connectionCount = 0;
-			isCreated = true;
+			ConnectionCount = 0;
 		}
 
-		internal bool ConnectTo(ConduitNode node)
+		internal void ConnectTo(ConduitNode node)
 		{
 			if (IsFull || node.IsFull)
-				return false;
+				throw new Exception("One of the nodes are full");
 			AddConnection(node.id);
 			node.AddConnection(id);
-			return true;
 		}
 
 		public bool IsConnectedTo(ConduitNode node)
@@ -181,6 +191,29 @@ namespace DataStore.ConduitGraph
 			return false;
 		}
 
+		public void DisconnectFrom(ConduitNode node)
+		{
+			if (IsEmpty)
+				throw new Exception($"This node is empty");
+			if (!IsConnectedTo(node))
+				throw new Exception($"This node[{id}] is not connected to [{node.id}]");
+			RemoveConnection(node.id);
+			node.RemoveConnection(id);
+		}
+
+		private void RemoveConnection(int nodeId)
+		{
+			for (int i = 0; i < maxConnections; i++)
+			{
+				if(_connections[i] == nodeId)
+				{
+					_connections[i] = -1;
+					ConnectionCount--;
+					break;
+				}
+			}
+		}
+
 		private void AddConnection(int nodeId)
 		{
 			for (int i = 0; i < maxConnections; i++)
@@ -188,7 +221,7 @@ namespace DataStore.ConduitGraph
 				if (_connections[i] == -1)
 				{
 					_connections[i] = nodeId;
-					_connectionCount++;
+					ConnectionCount++;
 					break;
 				}
 			}

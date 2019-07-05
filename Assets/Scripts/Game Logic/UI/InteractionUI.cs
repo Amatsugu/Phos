@@ -113,7 +113,7 @@ public class InteractionUI : MonoBehaviour
 
 		if(interactionPanel.PanelVisible)
 		{
-			/*var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
+			var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
 			if (uiPos.x <= -interactionPanel.Width)
 				HidePanel();
 			else if (uiPos.x >= Screen.width)
@@ -132,7 +132,7 @@ public class InteractionUI : MonoBehaviour
 			else if (uiPos.y > Screen.height)
 				uiPos.y = Screen.height;
 
-			interactionPanel.AnchoredPosition = uiPos;*/
+			interactionPanel.AnchoredPosition = uiPos;
 		}
 
 	}
@@ -212,8 +212,6 @@ public class InteractionUI : MonoBehaviour
 
 	void ShowPanel(Tile tile)
 	{
-		var dst = (Map.ActiveMap.HQ.Coords.worldXZ - tile.Coords.worldXZ).magnitude;
-		Debug.Log($"dst:{dst} tileDst:{dst / (Map.ActiveMap.innerRadius * 2)}");
 		_selectedTile = tile;
 		interactionPanel.rectTransform.position = tile.SurfacePoint;
 		

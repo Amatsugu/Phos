@@ -55,18 +55,6 @@ public class SubHQTile : PoweredBuildingTile
 {
 	public SubHQTile(HexCoords coords, float height, SubHQTileInfo tInfo = null) : base(coords, height, tInfo)
 	{
-		HasHQConnection = true;
-	}
-
-	public override void OnHQConnected(PoweredBuildingTile src)
-	{
-		HasHQConnection = true;
-	}
-
-	public override void OnHQDisconnected(PoweredBuildingTile src, HashSet<Tile> visited, bool verified = false)
-	{
-		if (src is SubHQTile)
-			return;
-		src.OnHQConnected(this);
+		
 	}
 }

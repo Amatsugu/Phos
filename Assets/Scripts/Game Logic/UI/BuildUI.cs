@@ -237,7 +237,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, range * range);
 			for (int i = 0; i < nodes.Length; i++)
 			{
-				if (nodes[i].isCreated)
+				if (nodes[i] != null)
 				{
 					Debug.DrawLine(selectedTile.SurfacePoint, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
 				}
