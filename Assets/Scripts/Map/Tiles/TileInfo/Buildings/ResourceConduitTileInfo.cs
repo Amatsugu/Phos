@@ -4,6 +4,7 @@
 public class ResourceConduitTileInfo : BuildingTileInfo
 {
 	public int connectionRange;
+	public MeshEntityRotatable lineEntity;
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{

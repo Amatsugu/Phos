@@ -9,28 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1852c72404f4c31468f84418951e687a, type: 3}
+  m_Script: {fileID: 11500000, guid: dce1f248ec013df4693b191f7fcbf51c, type: 3}
   m_Name: Resource Conduit
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
   decorators: []
-  description: Removes the extra cost of powering buildings that are not connected
-    to the HQ.
-  buildingMesh: {fileID: 0}
+  description: 
+  buildingMesh: {fileID: 11400000, guid: e62d3f653db9df84fbc5fd56f75ae0fe, type: 2}
   tier: 1
   category: 4
   size: 0
-  influenceRange: 0
-  cost:
-  - id: 1
-    ammount: 1
-  icon: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840, type: 3}
-  placementMode: 1
+  flattenOuterRange: 0
+  resourceTransferRange: 0
+  cost: []
+  icon: {fileID: 0}
+  placementMode: 0
+  upgradeTarget:
+    id: -1
   production: []
   consumption: []
-  tileConnections: []
-  connectToSelf: 1
-  connectionMesh: {fileID: 11400000, guid: 5306404444966034698d766208159d28, type: 2}
+  connectionRange: 8
+  lineEntity: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}

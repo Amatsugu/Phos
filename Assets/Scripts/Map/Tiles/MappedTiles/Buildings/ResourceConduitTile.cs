@@ -1,4 +1,5 @@
 ﻿using DataStore.ConduitGraph;
+using Effects.Lines;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
@@ -40,7 +41,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 				{
 					Map.ActiveMap.conduitGraph.ConnectNode(Coords, closest[i]);
 				}
-				Debug.DrawLine(Map.ActiveMap[closest[i].conduitPos].SurfacePoint, SurfacePoint, Color.magenta, 20);
+				//Debug.DrawLine(Map.ActiveMap[closest[i].conduitPos].SurfacePoint, SurfacePoint, Color.magenta, 20);
+				LineFactory.CreateStaticLine(conduitInfo.lineEntity, Map.ActiveMap[closest[i].conduitPos].SurfacePoint + Vector3.up, SurfacePoint + Vector3.up);
 			}
 		}
 		if (!nodeCreated)

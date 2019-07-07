@@ -65,10 +65,6 @@ MonoBehaviour:
     info: {fileID: 11400000, guid: ba0f6b1eb8dc15140b1a78d6d5193a76, type: 2}
     category: 2
     isUnlocked: 0
-  - id: 14
-    info: {fileID: 11400000, guid: 3cc0710394c6484469d70a3f22497434, type: 2}
-    category: 4
-    isUnlocked: 1
   - id: 15
     info: {fileID: 11400000, guid: 5992627ac9514d44ca66f9db77676ba0, type: 2}
     category: 4
