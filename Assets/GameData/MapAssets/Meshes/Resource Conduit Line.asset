@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Resource Conduit Pipe
+  m_Name: Resource Conduit Line
   m_EditorClassIdentifier: 
-  mesh: {fileID: 9020620440798828417, guid: a62a3c028e0a76447b0e043f8eccf261, type: 3}
-  material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
+  mesh: {fileID: -2432090755550338912, guid: 3f521c61e223bd94680dfadf6b446493, type: 3}
+  material: {fileID: 2100000, guid: 702d1c416cda76c4aa29e2c45a03e665, type: 2}
   castShadows: 1
-  receiveShadows: 1
+  receiveShadows: 0
+  isStatic: 1

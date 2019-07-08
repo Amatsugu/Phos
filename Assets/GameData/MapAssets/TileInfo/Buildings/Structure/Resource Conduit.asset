@@ -34,3 +34,4 @@ MonoBehaviour:
   consumption: []
   connectionRange: 8
   lineEntity: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
+  powerLineOffset: {x: 0, y: 2, z: 0}

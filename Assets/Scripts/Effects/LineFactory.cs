@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Effects.Lines
 {
@@ -27,6 +28,15 @@ namespace Effects.Lines
 		{
 			var (t,s,r) = PrepareLine(a, b, thiccness);
 			return line.Instantiate(t, s, r);
+		}
+
+		public static void UpdateStaticLine(Entity e, Vector3 a, Vector3 b, float thiccness = 0.1f)
+		{
+			var (t, s, r) = PrepareLine(a, b, thiccness);
+			var em = World.Active.EntityManager;
+			em.SetComponentData(e, new Translation { Value = t });
+			em.SetComponentData(e, new NonUniformScale { Value = s });
+			em.SetComponentData(e, new Rotation { Value = r });
 		}
 
 		public static (float3 translation, float3 scale, Quaternion rotation) PrepareLine(float3 a, float3 b, float thiccness)

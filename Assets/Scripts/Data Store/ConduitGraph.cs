@@ -41,6 +41,8 @@ namespace DataStore.ConduitGraph
 			_coordMap.Remove(nodePos);
 		}
 
+		public bool ContainsNode(HexCoords nodePos) => _coordMap.ContainsKey(nodePos);
+
 		public void AddNode(HexCoords nodePos, ConduitNode connectTo)
 		{
 			var newNode = CreateNode(nodePos);
@@ -131,6 +133,8 @@ namespace DataStore.ConduitGraph
 			}
 			return nodesInRange;
 		}
+
+		public ConduitNode[] GetConnections(HexCoords nodePos) => GetConnections(nodes[_coordMap[nodePos]]);
 
 		public ConduitNode[] GetConnections(ConduitNode node)
 		{
