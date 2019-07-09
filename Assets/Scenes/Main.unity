@@ -9228,6 +9228,8 @@ MonoBehaviour:
     type: 2}
   errorIndicatorEntity: {fileID: 11400000, guid: 786c4d272c5b71b46ba6741ea64fcce6,
     type: 2}
+  resourceConduitPreviewLine: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85,
+    type: 2}
   toolTip: {fileID: 1004422062}
   floatingText: {fileID: 628623409}
   placeMode: 0

@@ -81,11 +81,11 @@ public class PoweredBuildingTile : BuildingTile
 	public override void OnPlaced()
 	{
 		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
-		ConnectToConduit();
+		FindConduitConnections();
 		base.OnPlaced();
 	}
 
-	public virtual void ConnectToConduit()
+	public virtual void FindConduitConnections()
 	{
 		var closestConduit = Map.ActiveMap.conduitGraph.GetClosestNode(Coords);
 		if (closestConduit == null)
@@ -121,7 +121,7 @@ public class PoweredBuildingTile : BuildingTile
 			{
 				HasHQConnection = false;
 				_connectionInit = false;
-				ConnectToConduit();
+				FindConduitConnections();
 				return;
 			}
 			else

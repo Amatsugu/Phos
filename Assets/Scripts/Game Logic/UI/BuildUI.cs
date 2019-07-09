@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
-using System.Collections.Concurrent;
 using Unity.Rendering;
 using System.Linq;
 using UnityEngine.EventSystems;
@@ -14,6 +12,8 @@ using AnimationSystem.Animations;
 using AnimationSystem.AnimationData;
 using Unity.Mathematics;
 using Random = UnityEngine.Random;
+using DataStore.ConduitGraph;
+using Effects.Lines;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
@@ -22,22 +22,27 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public MeshEntityRotatable landingMesh;
 
 	/*	UI	*/
+	[Header("UI")]
 	public UIInfoBanner infoBanner;
 	public GameObject buildWindow;
 	public RectTransform scrollContent;
 	//Indicators
+	[Header("Indicators")]
 	public MeshEntity selectIndicatorEntity;
 	public MeshEntity placementPathIndicatorEntity;
 	public MeshEntity gatheringIndicatorEntity;
 	public MeshEntity powerIndicatorEntity;
 	public MeshEntity errorIndicatorEntity;
+	public MeshEntityRotatable resourceConduitPreviewLine;
 	//Tooltip
+	[Header("Tooltip")]
 	public UITooltip toolTip;
 	public TMP_Text floatingText;
+	
 	//State
-	//[HideInInspector]
+	[HideInInspector]
 	public bool placeMode;
-	//[HideInInspector]
+	[HideInInspector]
 	public bool hqMode;
 
 	public RectTransform unitUIPrefab;
@@ -235,6 +240,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		if (_validPlacement)
 		{
 			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, range * range);
+			ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
 			for (int i = 0; i < nodes.Length; i++)
 			{
 				if (nodes[i] != null)
@@ -243,13 +249,44 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				}
 			}
 		}
+		else
+			HideIndicator(resourceConduitPreviewLine);
 		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.connectionRange, true));
+	}
+
+	void ShowLines(MeshEntityRotatable line, Vector3 src, ConduitNode[] nodes, float thiccness = 0.1f, Vector3 offset = default)
+	{
+		GrowIndicators(line, nodes.Length);
+		int c = 0;
+		for (int i = 0, j = 0; i < _indicatorEntities[line].Count; i++, j++)
+		{
+			if (j < nodes.Length)
+			{
+				if (nodes[j] == null)
+				{
+					i--;
+					continue;
+				}
+				if (i >= _renderedEntities[line])
+					_EM.RemoveComponent<Disabled>(_indicatorEntities[line][i]);
+
+				var pos = Map.ActiveMap[nodes[j].conduitPos].SurfacePoint + offset;
+				LineFactory.UpdateStaticLine(_indicatorEntities[line][i], src, pos, thiccness);
+				c++;
+			}
+			else
+			{
+				if (i >= _renderedEntities[line])
+					break;
+				if (i < _renderedEntities[line])
+					_EM.AddComponent(_indicatorEntities[line][i], typeof(Disabled));
+			}
+		}
+		_renderedEntities[line] = c;
 	}
 
 	void ValidateResourceGatheringBuilding(Tile selectedTile, List<Tile> tilesToOccupy, ResourceGatheringBuildingInfo buildingInfo)
 	{
-		if (!_validPlacement)
-			return;
 		var res = Map.ActiveMap.HexSelect(selectedTile.Coords, buildingInfo.gatherRange, true) //Select Tiles
 								.Where(t => t is ResourceTile rt && !rt.gatherer.isCreated) //Exclude Tiles that are not resource tiles or being gathered already
 								.Where(rt => buildingInfo.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();

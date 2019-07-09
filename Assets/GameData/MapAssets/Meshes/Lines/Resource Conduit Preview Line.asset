@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15dce6ee827b60949a5c98bab2fea005, type: 3}
-  m_Name: PowerIndicator
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Name: Resource Conduit Preview Line
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 653eb4d6974a87b4297bd810a254c27d, type: 2}
+  mesh: {fileID: -2432090755550338912, guid: 3f521c61e223bd94680dfadf6b446493, type: 3}
+  material: {fileID: 2100000, guid: b13d9fad2a7253f4baf9d9bdda2f21b2, type: 2}
   castShadows: 0
   receiveShadows: 0
   isStatic: 1

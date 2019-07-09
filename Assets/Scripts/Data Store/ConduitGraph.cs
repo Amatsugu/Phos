@@ -98,6 +98,24 @@ namespace DataStore.ConduitGraph
 			return disconected;
 		}
 
+		public HashSet<ConduitNode> GetDisconectedNodesSet()
+		{
+			var visited = new HashSet<ConduitNode>();
+			TraverseGraph(_baseNode, visited);
+			if (visited.Count == Count)
+				return new HashSet<ConduitNode>();
+
+			var nodesArr = nodes.Values.ToArray();
+			var disconected = new HashSet<ConduitNode>();
+			var j = 0;
+			for (int i = 0; i < Count; i++)
+			{
+				if (!visited.Contains(nodesArr[i]))
+					disconected.Add(nodesArr[i]);
+			}
+			return disconected;
+		}
+
 		public void TraverseGraph(ConduitNode node, HashSet<ConduitNode> visited)
 		{
 			if (!visited.Contains(node))
