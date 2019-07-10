@@ -7,11 +7,13 @@ using static ResearchTree;
 
 public class ResearchTreeUI : UIPanel, IBuildingUI
 {
-	public ResearchTreeInfo techTree;
+	public ResearchDatabase researchDatabase;
+	[Header("Elements")]
 	public RectTransform node;
 	public RectTransform vertConnector;
 	public RectTransform horizConnector;
 
+	[Header("Config")]
 	public Vector3 offset = new Vector2();
 	public Vector2 nodeSize = new Vector2(100, 100);
 	public Vector2 nodeSpacing = new Vector2(50, 50);
@@ -22,10 +24,12 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 	private List<RectTransform> uiElements;
 
 	private Vector2 _totalOffset;
+	private ResearchTree _curTree;
 
 	void Awake()
 	{
 		GameRegistry.INST.researchTreeUI = this;
+		GameRegistry.INST.researchDatabase = researchDatabase;
 	}
 
 	void Start()
@@ -33,6 +37,7 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 		uiElements = new List<RectTransform>();
 		_totalOffset = nodeSize + nodeSpacing;
 		OnShow += OnOpened;
+		Show();
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
@@ -80,7 +85,7 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,  pos.y - cPos.y - (nodeSize.y/2));
 				uiElements.Add(hConnector);
 			}
-			lastC = DrawTree(techTree.tree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
+			lastC = DrawTree(_curTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
 		}
 		return lastC;
 	}
@@ -97,6 +102,6 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 			Destroy(uiElements[i].gameObject);
 		}
 		uiElements.Clear();
-		DrawTree(techTree.tree.BaseNode);
+		DrawTree((_curTree = researchDatabase[BuildingCategory.Hidden]).BaseNode);
 	}
 }

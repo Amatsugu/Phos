@@ -107,7 +107,6 @@ namespace DataStore.ConduitGraph
 
 			var nodesArr = nodes.Values.ToArray();
 			var disconected = new HashSet<ConduitNode>();
-			var j = 0;
 			for (int i = 0; i < Count; i++)
 			{
 				if (!visited.Contains(nodesArr[i]))

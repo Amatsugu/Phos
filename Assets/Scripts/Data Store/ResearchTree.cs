@@ -140,7 +140,7 @@ public class ResearchTree
 		public string description;
 		public bool isResearched;
 		public ResourceIndentifier[] resourceCost;
-		[CreateNewAsset("Assets/GameData/Tech Trees/Rewards", typeof(ResearchReward))]
+		//[CreateNewAsset("Assets/GameData/Tech Trees/Rewards", typeof(ResearchReward))]
 		public ResearchReward reward;
 		public bool IsValid => id >= 0;
 

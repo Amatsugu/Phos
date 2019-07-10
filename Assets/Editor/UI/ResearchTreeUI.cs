@@ -123,21 +123,17 @@ public class ResearchTreeEditorWindow : EditorWindow
 			itemRect.width = 400- 60;
 			itemRect.height = EditorGUIUtility.singleLineHeight;
 			var rewardSP = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].reward");
-			EditorGUI.PropertyField(itemRect, rewardSP);
+			_selectedNode.reward = EditorGUI.ObjectField(itemRect, _selectedNode.reward, typeof(ResearchReward), false) as ResearchReward;
 			itemRect.x += itemRect.width + 5;
 			itemRect.width = 35;
-			/*if(GUI.Button(itemRect, "New"))
+			if(GUI.Button(itemRect, "New"))
 			{
 				var reward = ScriptableObject.CreateInstance<ResearchReward>();
 				var assetPath = $"Assets/GameData/Tech Trees/Rewards/[{_selectedNode.id}]{_selectedNode.name} Reward.asset";
-				if(!AssetDatabase.IsValidFolder($"Assets/GameData/Tech Trees/Rewards"))
-				{
-					AssetDatabase.CreateFolder($"Assets/GameData/Tech Trees/", "Rewards");
-				}
 				AssetDatabase.CreateAsset(reward, assetPath);
 				_selectedNode.reward = reward;
 				serializedTarget.UpdateIfRequiredOrScript();
-			}*/
+			}
 			itemRect.y += itemRect.height;
 			itemRect.x = 10;
 			itemRect.width = 400;
