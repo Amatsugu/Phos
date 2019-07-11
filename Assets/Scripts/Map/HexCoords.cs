@@ -112,6 +112,10 @@ public struct HexCoords
 		return new Vector3(wX, 0, wZ);
 	}
 
+	public static float TileToWorldDist(int tileCount, float innerRadius) => tileCount * (2 * innerRadius);
+
+	public static int WorldToTileDist(float dist, float innerRadius) => Mathf.RoundToInt(dist / (2 * innerRadius));
+
 	public override string ToString() => $"({x}, {y}, {z})";
 
 	public static bool operator ==(HexCoords a, HexCoords b) => a.Equals(b);

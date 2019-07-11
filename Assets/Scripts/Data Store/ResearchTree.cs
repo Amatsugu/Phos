@@ -140,11 +140,9 @@ public class ResearchTree
 		public string description;
 		public bool isResearched;
 		public ResourceIndentifier[] resourceCost;
-		//[CreateNewAsset("Assets/GameData/Tech Trees/Rewards", typeof(ResearchReward))]
 		public ResearchReward reward;
 		public bool IsValid => id >= 0;
 
-		//public ResearchTech[] children;
 		public int[] childrenIDs;
 		public int Count;
 
@@ -155,11 +153,11 @@ public class ResearchTree
 		public ResearchTech(string name, string description = "", int id = 0, bool isResearched = false)
 		{
 			this.name = name;
+			this.description = description;
 			this.isResearched = isResearched;
 			this.id = id;
 			childrenIDs = new int[MAX_CHILDREN];
 			resourceCost = new ResourceIndentifier[0];
-			//children = new ResearchTech[MAX_CHILDREN];
 		}
 
 		internal ResearchTech AddChild(ResearchTech tech)

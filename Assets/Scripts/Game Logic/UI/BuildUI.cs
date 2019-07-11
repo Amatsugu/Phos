@@ -32,12 +32,16 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public MeshEntity placementPathIndicatorEntity;
 	public MeshEntity gatheringIndicatorEntity;
 	public MeshEntity powerIndicatorEntity;
+	public MeshEntity poweredTileIndicatorEntity;
 	public MeshEntity errorIndicatorEntity;
 	public MeshEntityRotatable resourceConduitPreviewLine;
 	//Tooltip
 	[Header("Tooltip")]
 	public UITooltip toolTip;
 	public TMP_Text floatingText;
+
+	[Header("Config")]
+	public int poweredTileDisplayRange;
 	
 	//State
 	[HideInInspector]
@@ -62,6 +66,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private BuildingDatabase.BuildingDefination[] _lastBuildingList;
 	private Dictionary<int, BuildOrder> _pendingBuildOrders;
 	private List<int> _readyToBuildOrders;
+	private float _poweredTileRangeSq;
 
 	struct BuildOrder
 	{
@@ -102,6 +107,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			if(_lastBuildingList != null)
 				ShowBuildWindow(_lastBuildingList);
 		});
+		_poweredTileRangeSq = HexCoords.TileToWorldDist(poweredTileDisplayRange, Map.ActiveMap.innerRadius);
+		_poweredTileRangeSq *= _poweredTileRangeSq;
 	}
 
 	// Update is called once per frame
@@ -181,6 +188,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						HideIndicator(errorIndicatorEntity);
 						ShowIndicators(selectIndicatorEntity, tilesToOccupy);
 					}
+					ShowPoweredTiles(selectedTile);
 					//Per Type validation
 					switch(_selectedBuilding)
 					{
@@ -232,6 +240,25 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					HideAllIndicators();
 			}
 		}
+	}
+
+	void ShowPoweredTiles(Tile selectedTile)
+	{
+		if (hqMode)
+			return;
+		var poweredTiles = new List<Tile>(500);
+		var conduitsInRange = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, _poweredTileRangeSq, false);
+		for (int i = 0; i < conduitsInRange.Length; i++)
+		{
+			if (conduitsInRange[i] == null)
+				continue;
+			var conduit = (Map.ActiveMap[conduitsInRange[i].conduitPos] as ResourceConduitTile);
+			if (conduit == null)
+				continue;
+			if (conduit.IsInRange(selectedTile.Coords))
+				poweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.connectionRange));
+		}
+		ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
 	}
 
 	void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)

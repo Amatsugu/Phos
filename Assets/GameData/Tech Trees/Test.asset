@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   tree:
+    category: 0
     name: 
     nodes:
     - id: 0
       name: Test Tree
-      icon: {fileID: 3414657202290878509, guid: 010e16e474393c44cace5a0040035840,
+      icon: {fileID: -7947723104890870202, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
       description: 
       isResearched: 1
@@ -63,8 +64,8 @@ MonoBehaviour:
       isResearched: 0
       resourceCost: []
       reward: {fileID: 0}
-      childrenIDs: 000000000000000000000000
-      Count: 0
+      childrenIDs: 0f0000000000000000000000
+      Count: 1
     - id: 5
       name: Node 0
       icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329,
@@ -95,13 +96,13 @@ MonoBehaviour:
       childrenIDs: 0a0000000000000000000000
       Count: 1
     - id: 8
-      name: Node 1
+      name: Test Node
       icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
       description: 
       isResearched: 0
       resourceCost: []
-      reward: {fileID: 0}
+      reward: {fileID: 11400000, guid: efda85fe96b49fa46872e919968814f7, type: 2}
       childrenIDs: 000000000000000000000000
       Count: 0
     - id: 9
@@ -112,8 +113,8 @@ MonoBehaviour:
       isResearched: 0
       resourceCost: []
       reward: {fileID: 0}
-      childrenIDs: 0c0000000d00000000000000
-      Count: 2
+      childrenIDs: 0c0000000d0000000e000000
+      Count: 3
     - id: 10
       name: Node 0
       icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329,
@@ -154,4 +155,23 @@ MonoBehaviour:
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0
-    Count: 14
+    - id: 14
+      name: Node 2
+      icon: {fileID: -4264389267444819633, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      description: 
+      isResearched: 0
+      resourceCost: []
+      reward: {fileID: 0}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    - id: 15
+      name: Node 0
+      icon: {fileID: 0}
+      description: 
+      isResearched: 0
+      resourceCost: []
+      reward: {fileID: 0}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    Count: 16

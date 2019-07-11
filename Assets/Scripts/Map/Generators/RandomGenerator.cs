@@ -54,7 +54,7 @@ public class RandomGenerator : MapGenerator
 	Start:
 		var startTime = DateTime.Now;
 #if DEBUG
-		if(!useSeed || !useSeedDev)
+		if(!(useSeed || useSeedDev))
 			seed = startTime.GetHashCode();
 #else
 		if (!useSeed)

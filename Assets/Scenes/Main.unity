@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.06202586, g: 0.28898466, b: 0.61386895, a: 1}
+  m_IndirectSpecularColor: {r: 0.074203216, g: 0.40122634, b: 0.8701586, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9228,12 +9228,15 @@ MonoBehaviour:
     type: 2}
   powerIndicatorEntity: {fileID: 11400000, guid: 4e5b6917309bbd34b84ac9dc69f42e35,
     type: 2}
+  poweredTileIndicatorEntity: {fileID: 11400000, guid: 7f2dfea71370ca941a2276f223ecb355,
+    type: 2}
   errorIndicatorEntity: {fileID: 11400000, guid: 786c4d272c5b71b46ba6741ea64fcce6,
     type: 2}
   resourceConduitPreviewLine: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85,
     type: 2}
   toolTip: {fileID: 1004422062}
   floatingText: {fileID: 628623409}
+  poweredTileDisplayRange: 29
   placeMode: 0
   hqMode: 0
   unitUIPrefab: {fileID: 7193113062237196750, guid: 329028d3ecaedbf4bad5d594d82c8f17,

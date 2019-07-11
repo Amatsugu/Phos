@@ -105,7 +105,7 @@ MonoBehaviour:
       weightMultiplier: 4.57
   useSeed: 0
   useSeedDev: 1
-  seed: 1148570884
+  seed: -343038221
   landSeaRatio: 0.35
   biomeFold: 1
   preview: 1

@@ -15,7 +15,7 @@ MonoBehaviour:
   meshEntity: {fileID: 11400000, guid: d15a66e16191615489e8e1475d82526e, type: 2}
   densityMulti: 1
   minPerTile: 0
-  maxPerTile: 4
+  maxPerTile: 1
   densityPower: 1
   minHeight: 1
   maxHeight: 2
@@ -23,21 +23,12 @@ MonoBehaviour:
   maxSize: 2
   noise:
     type: 0
-    simpleNoiseSettings:
-      strength: 1
-      layerCount: 1
-      baseRoughness: 2
-      roughness: 1
-      persistence: 0.5
-      minValue: 0
-      center: {x: 0, y: 0, z: 0}
-    rigidNoiseSettings:
-      strength: 0
-      layerCount: 0
-      baseRoughness: 0
-      roughness: 0
-      persistence: 0
-      minValue: 0
-      center: {x: 0, y: 0, z: 0}
-      weightMultiplier: 0
-  noiseScale: 15
+    strength: 1
+    layerCount: 2
+    baseRoughness: 1.86
+    roughness: 7.74
+    persistence: 0.58
+    minValue: 0.5
+    center: {x: 0, y: 0, z: 0}
+    weightMultiplier: 0
+  noiseScale: 6.9

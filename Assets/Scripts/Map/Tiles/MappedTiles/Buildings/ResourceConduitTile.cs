@@ -14,6 +14,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 	private float _rangeSqr;
 	private Dictionary<HexCoords, Entity> _conduitLines;
+	private bool _switchLines;
 
 	public ResourceConduitTile(HexCoords coords, float height, ResourceConduitTileInfo tInfo) : base(coords, height, tInfo)
 	{
@@ -32,6 +33,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 	public void UpdateLines()
 	{
+		Debug.Log("Updating Lines");
 		var lines = _conduitLines.Keys.ToArray();
 		for (int i = 0; i < lines.Length; i++)
 		{
@@ -39,13 +41,23 @@ public class ResourceConduitTile : PoweredBuildingTile
 			var a = SurfacePoint + conduitInfo.powerLineOffset;
 			var b = tile.SurfacePoint + conduitInfo.powerLineOffset;
 			if (Map.ActiveMap.conduitGraph.ContainsNode(lines[i]))
-				LineFactory.UpdateStaticLine(_conduitLines[lines[i]], a, b);
+			{
+				if(_switchLines)
+				{
+					Map.EM.DestroyEntity(_conduitLines[lines[i]]);
+					var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
+					_conduitLines[lines[i]] = LineFactory.CreateStaticLine(line, a, b);
+				}
+				else
+					LineFactory.UpdateStaticLine(_conduitLines[lines[i]], a, b);
+			}
 			else
 			{
 				Map.EM.DestroyEntity(_conduitLines[lines[i]]);
 				_conduitLines.Remove(lines[i]);
 			}
 		}
+		_switchLines = false;
 	}
 
 	public override void Show(bool isShown)
@@ -68,7 +80,9 @@ public class ResourceConduitTile : PoweredBuildingTile
 		var disconnectedNodesStart = Map.ActiveMap.conduitGraph.GetDisconectedNodes();
 		var closest = Map.ActiveMap.conduitGraph.GetNodesInRange(Coords, _rangeSqr);
 		var nodeCreated = false;
-		var gotConnectedNode = false;
+		var gotConnectedNode = closest.Any(n => n != null && (Map.ActiveMap[n.conduitPos] is HQTile || (Map.ActiveMap[n.conduitPos] as ResourceConduitTile).HasHQConnection));
+
+
 		//Find connections
 		for (int i = 0; i < closest.Length; i++)
 		{
@@ -84,19 +98,10 @@ public class ResourceConduitTile : PoweredBuildingTile
 					Map.ActiveMap.conduitGraph.ConnectNode(Coords, closest[i]);
 				}
 				var tile = Map.ActiveMap[closest[i].conduitPos];
-				switch(tile)
-				{
-					case ResourceConduitTile conduit:
-						if (conduit.HasHQConnection)
-							gotConnectedNode = true;
-						break;
-					case HQTile _:
-						gotConnectedNode = true;
-						break;
-				}
 				var a = tile.SurfacePoint + conduitInfo.powerLineOffset;
 				var b = SurfacePoint + conduitInfo.powerLineOffset;
-				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
+				var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
+				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			}
 		}
 		if (!nodeCreated)
@@ -173,7 +178,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 	{
 		if (_connectionInit && HasHQConnection)
 			return;
-		HasHQConnection = true;
+		_switchLines = HasHQConnection = true;
+		UpdateLines();
 		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.connectionRange, t =>
 		{
 			if (t is ResourceConduitTile)
@@ -188,6 +194,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 		if (_connectionInit && !HasHQConnection)
 			return;
 		HasHQConnection = false;
+		_switchLines = true;
+		UpdateLines();
 		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.connectionRange, t =>
 		{
 			if (t is ResourceConduitTile)
@@ -226,11 +234,13 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 	public override void Destroy()
 	{
+		base.Destroy();
+		if (!Map.ActiveMap.IsRendered)
+			return;
 		var lines = _conduitLines.Values.ToArray();
 		for (int i = 0; i < lines.Length; i++)
 		{
 			Map.EM.DestroyEntity(lines[i]);
 		}
-		base.Destroy();
 	}
 }
