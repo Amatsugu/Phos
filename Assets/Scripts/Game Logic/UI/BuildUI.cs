@@ -295,7 +295,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					continue;
 				}
 				if (i >= _renderedEntities[line])
-					_EM.RemoveComponent<Disabled>(_indicatorEntities[line][i]);
+					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[line][i]);
 
 				var pos = Map.ActiveMap[nodes[j].conduitPos].SurfacePoint + offset;
 				LineFactory.UpdateStaticLine(_indicatorEntities[line][i], src, pos, thiccness);
@@ -306,7 +306,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if (i >= _renderedEntities[line])
 					break;
 				if (i < _renderedEntities[line])
-					_EM.AddComponent(_indicatorEntities[line][i], typeof(Disabled));
+					_EM.AddComponent(_indicatorEntities[line][i], typeof(FrozenRenderSceneTag));
 			}
 		}
 		_renderedEntities[line] = c;
@@ -423,7 +423,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			return;
 		for (int i = 0; i < _renderedEntities[indicator]; i++)
 		{
-			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(Disabled));
+			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(FrozenRenderSceneTag));
 		}
 		_renderedEntities[indicator] = 0;
 	}
@@ -460,7 +460,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			Entity curEntity;
 			entities.Add(curEntity = indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
-			Map.EM.AddComponent(curEntity, typeof(Disabled));
+			Map.EM.AddComponent(curEntity, typeof(FrozenRenderSceneTag));
 		}
 	}
 
@@ -472,7 +472,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			if (i < tiles.Count)
 			{
 				if(i >= _renderedEntities[indicatorMesh])
-					_EM.RemoveComponent<Disabled>(_indicatorEntities[indicatorMesh][i]);
+					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
 
 				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint });
 			}
@@ -481,7 +481,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if (i >= _renderedEntities[indicatorMesh])
 					break;
 				if(i < _renderedEntities[indicatorMesh])
-					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(Disabled));
+					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(FrozenRenderSceneTag));
 			}
 		}
 		_renderedEntities[indicatorMesh] = tiles.Count;
