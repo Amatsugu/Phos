@@ -33,6 +33,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public MeshEntity gatheringIndicatorEntity;
 	public MeshEntity powerIndicatorEntity;
 	public MeshEntity poweredTileIndicatorEntity;
+	public MeshEntity unpoweredTileIndicatorEntity;
 	public MeshEntity errorIndicatorEntity;
 	public MeshEntityRotatable resourceConduitPreviewLine;
 	//Tooltip
@@ -42,6 +43,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	[Header("Config")]
 	public int poweredTileDisplayRange;
+	public float inidcatorOffset = .5f;
 	
 	//State
 	[HideInInspector]
@@ -205,7 +207,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						_startPoint = null;
 						if (_validPlacement || _selectedBuilding.placementMode == PlacementMode.Path)
 						{
-							HideAllIndicators();
 							if (!hqMode)
 								ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
 							if (_buildPath == null)
@@ -246,19 +247,27 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		if (hqMode)
 			return;
-		var poweredTiles = new List<Tile>(500);
+		var poweredTiles = new List<Tile>(250);
+		var unPoweredTiles = new List<Tile>(250);
 		var conduitsInRange = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, _poweredTileRangeSq, false);
-		for (int i = 0; i < conduitsInRange.Length; i++)
+		for (int i = 0; i < conduitsInRange.Count; i++)
 		{
-			if (conduitsInRange[i] == null)
-				continue;
 			var conduit = (Map.ActiveMap[conduitsInRange[i].conduitPos] as ResourceConduitTile);
 			if (conduit == null)
 				continue;
-			if (conduit.IsInRange(selectedTile.Coords))
+			if (conduit.HasHQConnection)
 				poweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.connectionRange));
+			else
+				unPoweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.connectionRange));
 		}
-		ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
+		if (poweredTiles.Count > 0)
+			ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
+		else
+			HideIndicator(poweredTileIndicatorEntity);
+		if (unPoweredTiles.Count > 0)
+			ShowIndicators(unpoweredTileIndicatorEntity, unPoweredTiles.Distinct().ToList());
+		else
+			HideIndicator(unpoweredTileIndicatorEntity);
 	}
 
 	void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)
@@ -268,32 +277,26 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, range * range);
 			ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
-			for (int i = 0; i < nodes.Length; i++)
+#if DEBUG
+			for (int i = 0; i < nodes.Count; i++)
 			{
-				if (nodes[i] != null)
-				{
-					Debug.DrawLine(selectedTile.SurfacePoint, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
-				}
+				Debug.DrawLine(selectedTile.SurfacePoint, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
 			}
+#endif
 		}
 		else
 			HideIndicator(resourceConduitPreviewLine);
 		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.connectionRange, true));
 	}
 
-	void ShowLines(MeshEntityRotatable line, Vector3 src, ConduitNode[] nodes, float thiccness = 0.1f, Vector3 offset = default)
+	void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f, Vector3 offset = default)
 	{
-		GrowIndicators(line, nodes.Length);
+		GrowIndicators(line, nodes.Count);
 		int c = 0;
 		for (int i = 0, j = 0; i < _indicatorEntities[line].Count; i++, j++)
 		{
-			if (j < nodes.Length)
+			if (j < nodes.Count)
 			{
-				if (nodes[j] == null)
-				{
-					i--;
-					continue;
-				}
 				if (i >= _renderedEntities[line])
 					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[line][i]);
 
@@ -474,7 +477,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if(i >= _renderedEntities[indicatorMesh])
 					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
 
-				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint });
+				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint + new Vector3(0, inidcatorOffset, 0) });
 			}
 			else
 			{

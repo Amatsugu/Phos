@@ -8,6 +8,7 @@ using static ResearchTree;
 public class ResearchTreeUI : UIPanel, IBuildingUI
 {
 	public ResearchDatabase researchDatabase;
+	public RectTransform nodeParent;
 	[Header("Elements")]
 	public RectTransform node;
 	public RectTransform vertConnector;
@@ -37,13 +38,14 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 		uiElements = new List<RectTransform>();
 		_totalOffset = nodeSize + nodeSpacing;
 		OnShow += OnOpened;
+		OnHide += () => GameRegistry.BuildUI.gameObject.SetActive(false);
 		Show();
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
 	{
 		var pos = new Vector3((depth * _totalOffset.x) + offset.x, (-c * _totalOffset.y) - offset.y);
-		var curNode = Instantiate(node, pos, Quaternion.identity, transform);
+		var curNode = Instantiate(node, pos, Quaternion.identity, nodeParent);
 		curNode.anchoredPosition = pos;
 		curNode.gameObject.SetActive(true);
 		curNode.gameObject.name = $"d: {depth} c:{c}";
@@ -67,7 +69,7 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 			cPos.x += (i == 0) ? nodeSize.x : (nodeSize.x + (nodeSpacing.x/2));
 			cPos.y = ((i == 0 ? lastC : lastC + 1) * -_totalOffset.y) - (nodeSize.y/2);
 			cPos.y -= offset.y;
-			var curConnector = Instantiate(horizConnector, cPos, Quaternion.identity, transform);
+			var curConnector = Instantiate(horizConnector, cPos, Quaternion.identity, nodeParent);
 			curConnector.gameObject.SetActive(true);
 			curConnector.anchoredPosition = cPos;
 			curConnector.transform.SetParent(curNode);
@@ -78,7 +80,7 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 				var hPos = cPos;
 				//hPos.y -= 25;
 				hPos.y = pos.y - (nodeSize.y/2);
-				var hConnector = Instantiate(vertConnector, hPos, Quaternion.identity, transform);
+				var hConnector = Instantiate(vertConnector, hPos, Quaternion.identity, nodeParent);
 				hConnector.gameObject.SetActive(true);
 				hConnector.anchoredPosition = hPos;
 				hConnector.transform.SetParent(curNode);
@@ -97,11 +99,13 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 
 	public void OnOpened()
 	{
+		GameRegistry.BuildUI.gameObject.SetActive(false);
 		for (int i = 0; i < uiElements.Count; i++)
 		{
 			Destroy(uiElements[i].gameObject);
 		}
 		uiElements.Clear();
-		DrawTree((_curTree = researchDatabase[BuildingCategory.Hidden]).BaseNode);
+		var c = DrawTree((_curTree = researchDatabase[BuildingCategory.Hidden]).BaseNode) + 1;
+		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, c * _totalOffset.y);
 	}
 }

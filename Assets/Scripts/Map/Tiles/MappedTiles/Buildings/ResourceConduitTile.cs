@@ -33,7 +33,6 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 	public void UpdateLines()
 	{
-		Debug.Log("Updating Lines");
 		var lines = _conduitLines.Keys.ToArray();
 		for (int i = 0; i < lines.Length; i++)
 		{
@@ -84,25 +83,26 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 
 		//Find connections
-		for (int i = 0; i < closest.Length; i++)
+		var connectionsMade = 0;
+		for (int i = 0; i < closest.Count; i++)
 		{
-			if (closest[i] != null)
+			if (connectionsMade >= Map.ActiveMap.conduitGraph.maxConnections)
+				break;
+			connectionsMade++;
+			if (!nodeCreated)
 			{
-				if (!nodeCreated)
-				{
-					Map.ActiveMap.conduitGraph.AddNode(Coords, closest[i]);
-					nodeCreated = true;
-				}
-				else
-				{
-					Map.ActiveMap.conduitGraph.ConnectNode(Coords, closest[i]);
-				}
-				var tile = Map.ActiveMap[closest[i].conduitPos];
-				var a = tile.SurfacePoint + conduitInfo.powerLineOffset;
-				var b = SurfacePoint + conduitInfo.powerLineOffset;
-				var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
-				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
+				Map.ActiveMap.conduitGraph.AddNode(Coords, closest[i]);
+				nodeCreated = true;
 			}
+			else
+			{
+				Map.ActiveMap.conduitGraph.ConnectNode(Coords, closest[i]);
+			}
+			var tile = Map.ActiveMap[closest[i].conduitPos];
+			var a = tile.SurfacePoint + conduitInfo.powerLineOffset;
+			var b = SurfacePoint + conduitInfo.powerLineOffset;
+			var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
+			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
 		}
 		if (!nodeCreated)
 		{
@@ -137,10 +137,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 		if (curNode.IsFull)
 			return;
 		var closest = Map.ActiveMap.conduitGraph.GetNodesInRange(Coords, _rangeSqr);
-		for (int i = 0; i < closest.Length; i++)
+		for (int i = 0; i < closest.Count; i++)
 		{
-			if (closest[i] == null)
-				continue;
 			if (closest[i] == curNode)
 				continue;
 			if (curNode.IsConnectedTo(closest[i]))

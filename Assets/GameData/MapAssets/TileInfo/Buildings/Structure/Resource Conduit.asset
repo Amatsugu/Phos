@@ -32,7 +32,7 @@ MonoBehaviour:
     id: -1
   production: []
   consumption: []
-  connectionRange: 8
+  connectionRange: 4
   lineEntity: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
   lineEntityInactive: {fileID: 11400000, guid: c7c93174831cb88429bc7e5a33ff5238, type: 2}
   powerLineOffset: {x: 0, y: 2, z: 0}

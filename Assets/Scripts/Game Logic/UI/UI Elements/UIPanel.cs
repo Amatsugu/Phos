@@ -23,7 +23,7 @@ public abstract class UIPanel : UIHover
 		}
 	}
 
-	private void Start()
+	void Start()
 	{
 		PanelBase = GetComponent<RectTransform>();
 		if (hideOnStart)

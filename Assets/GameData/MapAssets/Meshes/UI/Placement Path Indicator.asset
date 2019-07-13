@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15dce6ee827b60949a5c98bab2fea005, type: 3}
   m_Name: Placement Path Indicator
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
+  mesh: {fileID: 6500021456185103864, guid: e36a623d0086e58498aaec5ff9fb118e, type: 3}
   material: {fileID: 2100000, guid: 14165159e9a38b54abdeb71203ffc0ae, type: 2}
   castShadows: 0
   receiveShadows: 0
+  isStatic: 1

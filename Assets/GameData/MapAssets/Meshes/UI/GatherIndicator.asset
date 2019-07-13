@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15dce6ee827b60949a5c98bab2fea005, type: 3}
   m_Name: GatherIndicator
   m_EditorClassIdentifier: 
-  mesh: {fileID: -1277366460620338370, guid: 2a683fed900f02c4d9e7877625dfa2fa, type: 3}
+  mesh: {fileID: 6500021456185103864, guid: e36a623d0086e58498aaec5ff9fb118e, type: 3}
   material: {fileID: 2100000, guid: 74666ea9190a9594aa5fac5f0ab19c7e, type: 2}
   castShadows: 0
   receiveShadows: 0
+  isStatic: 1

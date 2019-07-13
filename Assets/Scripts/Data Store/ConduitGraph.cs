@@ -133,20 +133,17 @@ namespace DataStore.ConduitGraph
 			}
 		}
 
-		public ConduitNode[] GetNodesInRange(HexCoords nodePos, float rangeSq, bool excludeFull = true)
+		public List<ConduitNode> GetNodesInRange(HexCoords nodePos, float rangeSq, bool excludeFull = true)
 		{
-			var nodesInRange = new ConduitNode[maxConnections];
+			var nodesInRange = new List<ConduitNode>();
 			var pos = _coordMap.Keys.ToArray();
-			var j = 0;
 			for (int i = 0; i < _coordMap.Count; i++)
 			{
-				if (j >= maxConnections)
-					break;
 				var n = nodes[_coordMap[pos[i]]];
 				if (excludeFull && n.IsFull)
 					continue;
 				if (n.conduitPos.DistanceToSq(nodePos) <= rangeSq)
-					nodesInRange[j++] = n;
+					nodesInRange.Add(n);
 			}
 			return nodesInRange;
 		}
