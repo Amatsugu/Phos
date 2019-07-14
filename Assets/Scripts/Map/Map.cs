@@ -289,14 +289,12 @@ public class Map : IDisposable
 
 	public void MoveUnit(int unitId, int srcChunk, int dstChunk)
 	{
-		Debug.Log($"Moving {unitId} from {srcChunk} to {dstChunk}");
 		if (unitLocations[srcChunk].Remove(unitId))
 		{
 			if (unitLocations[dstChunk] == null)
 				unitLocations[dstChunk] = new List<int>();
 			unitLocations[dstChunk].Add(unitId);
 		}
-		Debug.Log($"src {unitLocations[srcChunk].Contains(unitId)} dst {unitLocations[dstChunk].Contains(unitId)}");
 	}
 
 	public List<int> SelectUnits(HexCoords left, HexCoords right)
