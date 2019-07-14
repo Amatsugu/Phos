@@ -230,9 +230,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 								void onHide()
 								{
 									placeMode = hqMode = false;
-									GameRegistry.BaseNameUI.OnHide -= onHide;
+									GameRegistry.BaseNameUI.panel.OnHide -= onHide;
 								}
-								GameRegistry.BaseNameUI.OnHide += onHide;
+								GameRegistry.BaseNameUI.panel.OnHide += onHide;
 							}
 						}
 					}
@@ -382,10 +382,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		});
 		if (hqMode)
 		{
+			HideAllIndicators();
 			EventManager.AddEventListener(callback.ToString(), () =>
 			{
 				_readyToBuildOrders.Add(callback);
-				GameRegistry.BaseNameUI.Show();
+				GameRegistry.BaseNameUI.panel.Show();
 			});
 		}
 		else

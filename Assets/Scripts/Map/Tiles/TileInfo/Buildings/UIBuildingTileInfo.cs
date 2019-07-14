@@ -8,6 +8,6 @@ public class InteractiveBuildingTileInfo : BuildingTileInfo
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
-		return new IteractiveBuildingTile(pos, height, this);
+		return new InteractiveBuildingTile(pos, height, this);
 	}
 }

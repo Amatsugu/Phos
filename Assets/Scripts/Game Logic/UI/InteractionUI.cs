@@ -58,7 +58,7 @@ public class InteractionUI : MonoBehaviour
 
 	}
 
-	void LateUpdate()
+	void Update()
 	{
 		if (GameRegistry.BuildUI.hqMode)
 			return;
@@ -75,11 +75,11 @@ public class InteractionUI : MonoBehaviour
 					_start = Map.ActiveMap.GetTileFromRay(ray);
 					HidePanel();
 				}
-				if(Input.GetKey(KeyCode.Mouse0))
+				if (Input.GetKey(KeyCode.Mouse0))
 				{
 					var ray = _cam.ScreenPointToRay(mPos);
 					_end = Map.ActiveMap.GetTileFromRay(ray);
-					if(_start != _end && _start != null && _end != null)
+					if (_start != _end && _start != null && _end != null)
 						DisplaySelectionRect();
 				}
 				if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -97,11 +97,11 @@ public class InteractionUI : MonoBehaviour
 					}
 				}
 			}
-			if(Input.GetKeyUp(KeyCode.Mouse1) && _selectedUnits.Count > 0)
+			if (Input.GetKeyUp(KeyCode.Mouse1) && _selectedUnits.Count > 0)
 			{
 				var ray = _cam.ScreenPointToRay(mPos);
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
-				if(tile != null)
+				if (tile != null)
 				{
 
 					InstructUnitMovement(tile);
@@ -110,7 +110,10 @@ public class InteractionUI : MonoBehaviour
 		}
 		else
 			HidePanel();
+	}
 
+	void LateUpdate()
+	{
 		if(interactionPanel.PanelVisible)
 		{
 			var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
@@ -218,10 +221,15 @@ public class InteractionUI : MonoBehaviour
 		switch (tile)
 		{
 			case HQTile _:
-				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				GameRegistry.ResearchTreeUI.Show(null);
+				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case SubHQTile _:
-				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				GameRegistry.ResearchTreeUI.Show(null);
+				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				break;
+			case ResearchBuildingTile rb:
+				GameRegistry.ResearchTreeUI.Show(rb);
 				break;
 			case BuildingTile _:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());

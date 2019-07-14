@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IBuildingUI
 {
-	void Show(IteractiveBuildingTile target);
+	void Show(InteractiveBuildingTile target);
 
 	void Hide();
 }

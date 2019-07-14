@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public abstract class UIPanel : UIHover
+public class UIPanel : UIHover
 {
 
 	public RectTransform PanelBase { get; private set; }
@@ -42,14 +42,9 @@ public abstract class UIPanel : UIHover
 	{
 		if (!hideOnBlur)
 			return;
-		if (Input.GetKeyDown(KeyCode.Mouse0))
+		if (Input.GetKeyDown(KeyCode.Mouse0) && !isHovered)
 		{
-			var rect = PanelBase.rect;
-			rect.x = PanelBase.position.x;
-			rect.y = PanelBase.position.y - rect.height;
-			if (!rect.Contains(Input.mousePosition))
-				Hide();
-
+			Hide();
 		}
 	}
 

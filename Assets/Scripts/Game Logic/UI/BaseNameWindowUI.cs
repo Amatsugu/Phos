@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class BaseNameWindowUI : UIPanel
+[RequireComponent(typeof(UIPanel))]
+public class BaseNameWindowUI : MonoBehaviour
 {
 	public TMP_InputField text;
 	public TMP_Text baseNameText;
+	[HideInInspector]
+	public UIPanel panel;
 
 	void Awake()
 	{
+		panel = GetComponent<UIPanel>();
 		GameRegistry.INST.baseNameUI = this;
-		OnShow += () =>
+		panel.OnShow += () =>
 		{
 			EventManager.InvokeEvent("nameWindowOpen");
 		};
-		OnHide += () =>
+		panel.OnHide += () =>
 		{
 			baseNameText.text = text.text;
 			EventManager.InvokeEvent("nameWindowClose");

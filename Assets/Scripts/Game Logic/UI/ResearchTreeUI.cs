@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using static ResearchTree;
 
-public class ResearchTreeUI : UIPanel, IBuildingUI
+[RequireComponent(typeof(UIPanel))]
+public class ResearchTreeUI : MonoBehaviour
 {
 	public ResearchDatabase researchDatabase;
 	public RectTransform nodeParent;
@@ -26,20 +27,28 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 
 	private Vector2 _totalOffset;
 	private ResearchTree _curTree;
+	private UIPanel _thisPanel;
+	private 
 
 	void Awake()
 	{
 		GameRegistry.INST.researchTreeUI = this;
 		GameRegistry.INST.researchDatabase = researchDatabase;
-	}
-
-	void Start()
-	{
+		_thisPanel = GetComponent<UIPanel>();
 		uiElements = new List<RectTransform>();
 		_totalOffset = nodeSize + nodeSpacing;
-		OnShow += OnOpened;
-		OnHide += () => GameRegistry.BuildUI.gameObject.SetActive(false);
-		Show();
+		_thisPanel.OnShow += () =>
+		{
+			GameRegistry.BuildUI.gameObject.SetActive(false);
+			GameRegistry.InteractionUI.enabled = false;
+			GameRegistry.CameraController.enabled = false;
+		};
+		_thisPanel.OnHide += () =>
+		{
+			GameRegistry.BuildUI.gameObject.SetActive(true);
+			GameRegistry.InteractionUI.enabled = true;
+			GameRegistry.CameraController.enabled = true;
+		};
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
@@ -92,14 +101,9 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 		return lastC;
 	}
 
-	public void Show(IteractiveBuildingTile target)
+	public void Show(ResearchBuildingTile tile)
 	{
-		Show();
-	}
-
-	public void OnOpened()
-	{
-		GameRegistry.BuildUI.gameObject.SetActive(false);
+		_thisPanel.Show();
 		for (int i = 0; i < uiElements.Count; i++)
 		{
 			Destroy(uiElements[i].gameObject);
@@ -107,5 +111,10 @@ public class ResearchTreeUI : UIPanel, IBuildingUI
 		uiElements.Clear();
 		var c = DrawTree((_curTree = researchDatabase[BuildingCategory.Hidden]).BaseNode) + 1;
 		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, c * _totalOffset.y);
+	}
+
+	public void Hide()
+	{
+		_thisPanel.Hide();
 	}
 }
