@@ -32,6 +32,7 @@ public class ResourceSystem : ComponentSystem
 	{
 		if (DateTime.Now < nextTic)
 			return;
+		EventManager.InvokeEvent("OnTick");
 		nextTic = nextTic.AddSeconds(1 / ticRate);
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];

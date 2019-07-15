@@ -236,7 +236,4 @@ public class ResearchTree
 				return false;
 		}
 	}
-
 }
-
-

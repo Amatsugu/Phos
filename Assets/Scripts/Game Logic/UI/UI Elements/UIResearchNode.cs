@@ -9,4 +9,5 @@ public class UIResearchNode : UIHover
 	public TMP_Text titleText;
 	public Image icon;
 	public RectTransform costDisplay;
+	public Button button;
 }

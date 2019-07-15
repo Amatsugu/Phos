@@ -14,6 +14,11 @@ public class ResearchTreeUI : MonoBehaviour
 	public RectTransform node;
 	public RectTransform vertConnector;
 	public RectTransform horizConnector;
+	[Header("Sidebar")]
+	public TMP_Text activeTitle;
+	public TMP_Text activeDesc;
+	public RectTransform activeCostParent;
+	public GameObject UIresource;
 
 	[Header("Config")]
 	public Vector3 offset = new Vector2();
@@ -23,19 +28,20 @@ public class ResearchTreeUI : MonoBehaviour
 	public bool regen;
 
 
-	private List<RectTransform> uiElements;
+	private List<RectTransform> _uiElements;
+	private List<UIResearchResource> _resources;
 
 	private Vector2 _totalOffset;
 	private ResearchTree _curTree;
 	private UIPanel _thisPanel;
-	private 
+	private BuildingCategory _selectedCategory;
 
 	void Awake()
 	{
 		GameRegistry.INST.researchTreeUI = this;
 		GameRegistry.INST.researchDatabase = researchDatabase;
 		_thisPanel = GetComponent<UIPanel>();
-		uiElements = new List<RectTransform>();
+		_uiElements = new List<RectTransform>();
 		_totalOffset = nodeSize + nodeSpacing;
 		_thisPanel.OnShow += () =>
 		{
@@ -49,6 +55,36 @@ public class ResearchTreeUI : MonoBehaviour
 			GameRegistry.InteractionUI.enabled = true;
 			GameRegistry.CameraController.enabled = true;
 		};
+		
+	}
+
+	void Start()
+	{
+		_resources = new List<UIResearchResource>();
+		EventManager.AddEventListener("OnTick", () =>
+		{
+			if (!_thisPanel.IsOpen)
+				return;
+			for (int i = 0; i < _resources.Count; i++)
+			{
+				_resources[i].UpdateData(0, 0, 0);
+			}
+		});
+	}
+
+	public void ShowEconomyTree() => ShowTree(BuildingCategory.Economy);
+	public void ShowDefenseTree() => ShowTree(BuildingCategory.Defense);
+	public void ShowMilitaryTree() => ShowTree(BuildingCategory.Military);
+	public void ShowResourcesTree() => ShowTree(BuildingCategory.Resources);
+	public void ShowStructureTree() => ShowTree(BuildingCategory.Structure);
+	public void ShowTechTree() => ShowTree(BuildingCategory.Tech);
+
+	public void ShowTree(BuildingCategory category)
+	{
+		ClearTree();
+		_selectedCategory = category;
+		var c = DrawTree((_curTree = researchDatabase[category]).BaseNode) + 1;
+		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, c * _totalOffset.y);
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
@@ -61,8 +97,14 @@ public class ResearchTreeUI : MonoBehaviour
 		var uiNode = curNode.GetComponent<UIResearchNode>();
 		uiNode.icon.sprite = curTech.icon;
 		uiNode.titleText.SetText(curTech.name);
+		uiNode.button.onClick.RemoveAllListeners();
+		uiNode.button.onClick.AddListener(() =>
+		{
+
+		});
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, nodeSize.x);
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, nodeSize.y);
+		
 		if (!curTech.isResearched)
 		{
 			if (parentResearched)
@@ -70,7 +112,7 @@ public class ResearchTreeUI : MonoBehaviour
 			else
 				uiNode.icon.color = new Color(.2f, .2f, .2f);
 		}
-		uiElements.Add(curNode);
+		_uiElements.Add(curNode);
 		var lastC = c;
 		for (int i = 0; i < curTech.Count; i++)
 		{
@@ -83,7 +125,7 @@ public class ResearchTreeUI : MonoBehaviour
 			curConnector.anchoredPosition = cPos;
 			curConnector.transform.SetParent(curNode);
 			curConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, i == 0 ? nodeSpacing.x : nodeSpacing.x/2);
-			uiElements.Add(curConnector);
+			_uiElements.Add(curConnector);
 			if(curTech.Count > 1 && i == curTech.Count-1)
 			{
 				var hPos = cPos;
@@ -94,7 +136,7 @@ public class ResearchTreeUI : MonoBehaviour
 				hConnector.anchoredPosition = hPos;
 				hConnector.transform.SetParent(curNode);
 				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,  pos.y - cPos.y - (nodeSize.y/2));
-				uiElements.Add(hConnector);
+				_uiElements.Add(hConnector);
 			}
 			lastC = DrawTree(_curTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
 		}
@@ -104,14 +146,18 @@ public class ResearchTreeUI : MonoBehaviour
 	public void Show(ResearchBuildingTile tile)
 	{
 		_thisPanel.Show();
-		for (int i = 0; i < uiElements.Count; i++)
-		{
-			Destroy(uiElements[i].gameObject);
-		}
-		uiElements.Clear();
-		var c = DrawTree((_curTree = researchDatabase[BuildingCategory.Hidden]).BaseNode) + 1;
-		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, c * _totalOffset.y);
+		ShowTree(BuildingCategory.Hidden);
 	}
+
+	void ClearTree()
+	{
+		for (int i = 0; i < _uiElements.Count; i++)
+		{
+			Destroy(_uiElements[i].gameObject);
+		}
+		_uiElements.Clear();
+	}
+
 
 	public void Hide()
 	{
