@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   building:
-    id: -1
+    id: 13
   unit:
     unit: {fileID: 0}
   custom: {fileID: 0}

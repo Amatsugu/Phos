@@ -32,7 +32,6 @@ public class ResourceSystem : ComponentSystem
 	{
 		if (DateTime.Now < nextTic)
 			return;
-		EventManager.InvokeEvent("OnTick");
 		nextTic = nextTic.AddSeconds(1 / ticRate);
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];
@@ -92,6 +91,7 @@ public class ResourceSystem : ComponentSystem
 			if (EntityManager.Exists(e))
 				PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
 		});
+		EventManager.InvokeEvent("OnTick");
 	}
 
 	void ProduceResource()
@@ -148,7 +148,11 @@ public class ResourceSystem : ComponentSystem
 			ConsumeResource(resources[i], multi);
 	}
 
-	public static void ConsumeResource(ResourceIndentifier resource, float multi = 1) => resCount[resource.id] -= Mathf.FloorToInt(resource.ammount * multi);
+	public static void ConsumeResource(ResourceIndentifier resource, float multi = 1)
+	{
+		var ammount = Mathf.FloorToInt(resource.ammount * multi);
+		resCount[resource.id] -= ammount;
+	}
 
 	public static void AddResources(ResourceIndentifier[] resources, float multi = 1)
 	{
@@ -172,5 +176,11 @@ public class ResourceSystem : ComponentSystem
 	public static bool HasResource(ResourceIndentifier resource, float multi = 1)
 	{
 		return resCount[resource.id] >= Mathf.FloorToInt(resource.ammount * multi);
+	}
+
+	public static void LogDemand(ResourceIndentifier resource, float multi = 1)
+	{
+		var totalRate = multi == 1 ? (int)resource.ammount : (int)(resource.ammount * multi);
+		totalDemand[resource.id] -= totalRate;
 	}
 }

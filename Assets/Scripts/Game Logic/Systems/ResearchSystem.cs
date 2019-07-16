@@ -41,8 +41,8 @@ public class ResearchSystem : ComponentSystem
 		var prog = researchProgress.Values.ToArray();
 		for (int i = 0; i < prog.Length; i++)
 		{
-			//TODO: Apply loaded info
-			//rDatabase[prog[i].identifier].isResearched = prog[i].isCompleted;
+			if(prog[i].isCompleted)
+				rDatabase[prog[i].identifier].reward?.ActivateReward();
 		}
 	}
 
@@ -55,10 +55,18 @@ public class ResearchSystem : ComponentSystem
 	{
 		base.OnStartRunning();
 		rDatabase = GameRegistry.ResearchDatabase;
+		EventManager.AddEventListener("OnTick", OnTick);
 	}
 
-	protected override void OnUpdate()
+	protected void OnTick()
 	{
+#if DEBUG
+		Entities.WithAll<ProductionData>().ForEach(e =>
+		{
+			ProcessResearch(BuildingCategory.Tech, 10);
+		});
+#endif
+
 		Entities.WithAll<ResearchBuildingTag>().WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
 			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
 		{
@@ -92,12 +100,12 @@ public class ResearchSystem : ComponentSystem
 				id = r.resources[i].id,
 				ammount = Mathf.Floor(Mathf.Min((1 * multi), r.resources[i].ammount))
 			};
+			ResourceSystem.LogDemand(resource);
 			if (ResourceSystem.HasResource(resource))
 			{
 				r.lastTickProgress[i] = (int)resource.ammount;
 				r.rProgress[i] += (int)resource.ammount;
 				ResourceSystem.ConsumeResource(resource);
-				return true;
 			}
 			else
 				return false;
@@ -105,6 +113,8 @@ public class ResearchSystem : ComponentSystem
 		if(isComplete)
 		{
 			r.isCompleted = true;
+			Debug.Log($"{r.identifier.category} {r.identifier.researchId} Completed");
+			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
 		}
 		return true;
@@ -112,7 +122,7 @@ public class ResearchSystem : ComponentSystem
 
 	public static void SetActiveResearch(ResearchIdentifier identifier)
 	{
-		Debug.Log($"{identifier.category} {identifier.researchId}");
+		Debug.Log($"{identifier.category} {identifier.researchId} {identifier.GetHashCode()} ");
 		if(!_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
 		{
 			var cost = _INST.rDatabase[identifier].resourceCost;
@@ -128,6 +138,8 @@ public class ResearchSystem : ComponentSystem
 			_INST.activeResearch[identifier.category] = identifier.GetHashCode();
 		else
 			_INST.activeResearch.Add(identifier.category, identifier.GetHashCode());
+		Debug.Log($"{_INST.researchProgress.Count} {_INST.activeResearch[identifier.category]}");
+
 	}
 
 	public static ResearchProgress GetActiveResearchProgress(BuildingCategory category)
@@ -137,6 +149,10 @@ public class ResearchSystem : ComponentSystem
 		if (_INST.activeResearch[category] == -1)
 			return null;
 		return _INST.researchProgress[_INST.activeResearch[category]];
+	}
+
+	protected override void OnUpdate()
+	{
 	}
 }
 

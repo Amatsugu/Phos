@@ -23,13 +23,13 @@ public class ResearchReward : ScriptableObject
 		switch(type)
 		{
 			case RewardType.Building:
-				GameRegistry.BuildingDatabase.buildings[building.id].isUnlocked = true;
+				GameRegistry.UnlockBuilding(building);
 				break;
 			case RewardType.Unit:
 				//TODO: Implement unlocking unit
 				break;
 			case RewardType.BuildingUpgrade:
-				GameRegistry.BuildingDatabase.buildings[building.id].isUnlocked = true;
+				GameRegistry.UnlockBuilding(building);
 				break;
 			case RewardType.Custom:
 				custom.Execute();

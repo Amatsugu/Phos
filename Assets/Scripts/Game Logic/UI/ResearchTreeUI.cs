@@ -157,7 +157,7 @@ public class ResearchTreeUI : MonoBehaviour
 	public void Show(ResearchBuildingTile tile)
 	{
 		_thisPanel.Show();
-		ShowTree(BuildingCategory.Hidden);
+		ShowTree(BuildingCategory.Tech);
 	}
 
 	void ClearTree()

@@ -140,10 +140,18 @@ public class ResearchTreeEditorWindow : EditorWindow
 			var costSP = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].resourceCost");
 			if(costSP != null)
 			{
-				//EditorGUI.BeginChangeCheck();
 				EditorGUI.PropertyField(itemRect, costSP, new GUIContent("Resource Cost"), true);
-				//if(EditorGUI.EndChangeCheck())
-					SaveObjectState();
+				var res = new ResourceIndentifier[costSP.arraySize];
+				for (int i = 0; i < res.Length; i++)
+				{
+					var r = costSP.GetArrayElementAtIndex(i);
+					res[i] = new ResourceIndentifier
+					{
+						id = r.FindPropertyRelative("id").intValue,
+						ammount = r.FindPropertyRelative("ammount").floatValue
+					};
+				}
+				_selectedNode.resourceCost = res;
 			}else
 				_selectedNode = target.tree.BaseNode;
 		}

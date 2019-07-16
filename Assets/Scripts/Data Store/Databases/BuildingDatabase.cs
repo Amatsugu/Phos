@@ -29,7 +29,6 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 		public int id;
 		public BuildingTileInfo info;
 		public BuildingCategory category;
-		public bool isUnlocked;
 
 		public override int GetHashCode()
 		{

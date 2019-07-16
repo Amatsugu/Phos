@@ -79,7 +79,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	void Awake()
 	{
 		GameRegistry.INST.buildUI = this;
-		GameRegistry.INST.buildingDatabase = buildings;
+		GameRegistry.SetBuildingDatabase(buildings);
 	}
 
 	void Start()
@@ -505,7 +505,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		var activeCount = 0;
 		for (int i = 0; i < buildings.Length; i++)
 		{
-			if (!buildings[i].isUnlocked)
+			if (!GameRegistry.IsBuildingUnlocked(buildings[i].id))
 			{
 				_activeUnits[i].gameObject.SetActive(false);
 				continue;

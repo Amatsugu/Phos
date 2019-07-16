@@ -13,11 +13,5 @@ MonoBehaviour:
   m_Name: Research Database
   m_EditorClassIdentifier: 
   treeValues:
-  - {fileID: 11400000, guid: 8169f6193e761634f9f4c4bf53bb26af, type: 2}
-  - {fileID: 11400000, guid: 18aff84a53e4afa4fa7f1825913cc040, type: 2}
-  - {fileID: 11400000, guid: 5ead6305931b37141a992e72739e63e4, type: 2}
-  - {fileID: 11400000, guid: ed975c98cc110e740b8d3b8dc3741f21, type: 2}
-  - {fileID: 11400000, guid: 7261529c66f574141bfaca734360c814, type: 2}
-  - {fileID: 11400000, guid: 5f7048f1ddf2ab44aae149aad8bb3dfe, type: 2}
   - {fileID: 11400000, guid: 7cda3e20c03609e4a8913358004f9b2b, type: 2}
-  treeKeys: 00000000060000000300000005000000020000000400000001000000
+  treeKeys: 01000000

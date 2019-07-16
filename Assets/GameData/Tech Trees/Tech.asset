@@ -23,12 +23,17 @@ MonoBehaviour:
       isResearched: 1
       resourceCost: []
       reward: {fileID: 0}
-      childrenIDs: 010000000200000003000000
-      Count: 3
-    - id: 1
-      icon: {fileID: 0}
+      childrenIDs: 020000000300000003000000
+      Count: 2
+    - id: 7
+      icon: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840,
+        type: 3}
       name: Node 0
-      description: 
+      description: 'This is a test
+
+        2
+
+'
       isResearched: 0
       resourceCost: []
       reward: {fileID: 0}
@@ -50,14 +55,16 @@ MonoBehaviour:
       isResearched: 0
       resourceCost: []
       reward: {fileID: 0}
-      childrenIDs: 000000000000000000000000
-      Count: 0
+      childrenIDs: 070000000000000000000000
+      Count: 1
     - id: 4
       icon: {fileID: 0}
       name: Node 0
       description: 
       isResearched: 0
-      resourceCost: []
+      resourceCost:
+      - id: 0
+        ammount: 0
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0
@@ -79,4 +86,22 @@ MonoBehaviour:
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0
-    Count: 7
+    - id: 7
+      icon: {fileID: 2122501309460574069, guid: 010e16e474393c44cace5a0040035840,
+        type: 3}
+      name: Node 0
+      description: 'This is a test
+
+        2
+
+'
+      isResearched: 0
+      resourceCost:
+      - id: 0
+        ammount: 10
+      - id: 1
+        ammount: 100
+      reward: {fileID: 11400000, guid: efda85fe96b49fa46872e919968814f7, type: 2}
+      childrenIDs: 040000000500000006000000
+      Count: 3
+    Count: 8

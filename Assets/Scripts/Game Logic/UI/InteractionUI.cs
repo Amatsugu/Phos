@@ -163,6 +163,8 @@ public class InteractionUI : MonoBehaviour
 
 	void InstructUnitMovement(Tile tile)
 	{
+		if (_selectedUnits.Count == 0)
+			return;
 		var unitGroups = _selectedUnits.GroupBy(u => Map.ActiveMap.units[u].occupiedTile);
 		var groupCount = unitGroups.Count();
 
