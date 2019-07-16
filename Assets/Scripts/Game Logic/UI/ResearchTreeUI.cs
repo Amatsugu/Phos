@@ -65,9 +65,17 @@ public class ResearchTreeUI : MonoBehaviour
 		{
 			if (!_thisPanel.IsOpen)
 				return;
-			for (int i = 0; i < _resources.Count; i++)
+			var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
+			if (active == null)
+				return;
+			for (int i = 0; i < active.resources.Length; i++)
 			{
-				_resources[i].UpdateData(0, 0, 0);
+				if(_resources.Count == i)
+				{
+					var uiRes = Instantiate(UIresource, activeCostParent, false).GetComponent<UIResearchResource>();
+					_resources.Add(uiRes);
+				}
+				_resources[i].UpdateData(active.rProgress[i], (int)active.resources[i].ammount, active.lastTickProgress[i]);
 			}
 		});
 	}
@@ -100,7 +108,11 @@ public class ResearchTreeUI : MonoBehaviour
 		uiNode.button.onClick.RemoveAllListeners();
 		uiNode.button.onClick.AddListener(() =>
 		{
-
+			ResearchSystem.SetActiveResearch(new ResearchIdentifier
+			{
+				category = _selectedCategory,
+				researchId = curTech.id
+			});
 		});
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, nodeSize.x);
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, nodeSize.y);
@@ -129,7 +141,6 @@ public class ResearchTreeUI : MonoBehaviour
 			if(curTech.Count > 1 && i == curTech.Count-1)
 			{
 				var hPos = cPos;
-				//hPos.y -= 25;
 				hPos.y = pos.y - (nodeSize.y/2);
 				var hConnector = Instantiate(vertConnector, hPos, Quaternion.identity, nodeParent);
 				hConnector.gameObject.SetActive(true);

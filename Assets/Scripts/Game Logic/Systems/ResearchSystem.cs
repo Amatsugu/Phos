@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Entities;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class ResearchSystem : ComponentSystem
 		public int[] lastTickProgress;
 		public ResourceIndentifier[] resources;
 		public int[] rProgress;
+		public bool isCompleted;
 	}
 
 
@@ -25,7 +27,28 @@ public class ResearchSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
+
+		LoadResearchProgress();
+		EventManager.AddEventListener("OnGameSaving", SaveResearchProgress);
+
 		_INST = this;
+	}
+
+	void LoadResearchProgress()
+	{
+		activeResearch = new Dictionary<BuildingCategory, int>();
+		researchProgress = new Dictionary<int, ResearchProgress>();
+		var prog = researchProgress.Values.ToArray();
+		for (int i = 0; i < prog.Length; i++)
+		{
+			//TODO: Apply loaded info
+			//rDatabase[prog[i].identifier].isResearched = prog[i].isCompleted;
+		}
+	}
+
+	void SaveResearchProgress()
+	{
+		//TODO: Save info
 	}
 
 	protected override void OnStartRunning()
@@ -58,10 +81,12 @@ public class ResearchSystem : ComponentSystem
 		if (activeResearch[category] == -1)
 			return true;
 		var r = researchProgress[activeResearch[category]];
+		var isComplete = true;
 		for (int i = 0; i < r.resources.Length; i++)
 		{
 			if (r.rProgress[i] == r.resources[i].ammount)
 				continue;
+			isComplete = false;
 			var resource = new ResourceIndentifier
 			{
 				id = r.resources[i].id,
@@ -77,29 +102,41 @@ public class ResearchSystem : ComponentSystem
 			else
 				return false;
 		}
+		if(isComplete)
+		{
+			r.isCompleted = true;
+			activeResearch[category] = -1;
+		}
 		return true;
 	}
 
-	public void SetActiveResearch(ResearchIdentifier identifier)
+	public static void SetActiveResearch(ResearchIdentifier identifier)
 	{
-		var cost = rDatabase[identifier].resourceCost;
-		researchProgress.Add(identifier.GetHashCode(), new ResearchProgress
+		Debug.Log($"{identifier.category} {identifier.researchId}");
+		if(!_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
 		{
-			identifier = identifier,
-			resources = cost,
-			rProgress = new int[cost.Length],
-			lastTickProgress = new int[cost.Length]
-		});
+			var cost = _INST.rDatabase[identifier].resourceCost;
+			_INST.researchProgress.Add(identifier.GetHashCode(), new ResearchProgress
+			{
+				identifier = identifier,
+				resources = cost,
+				rProgress = new int[cost.Length],
+				lastTickProgress = new int[cost.Length]
+			});
+		}
+		if (_INST.activeResearch.ContainsKey(identifier.category))
+			_INST.activeResearch[identifier.category] = identifier.GetHashCode();
+		else
+			_INST.activeResearch.Add(identifier.category, identifier.GetHashCode());
 	}
 
 	public static ResearchProgress GetActiveResearchProgress(BuildingCategory category)
 	{
+		if (!_INST.activeResearch.ContainsKey(category))
+			return null;
+		if (_INST.activeResearch[category] == -1)
+			return null;
 		return _INST.researchProgress[_INST.activeResearch[category]];
-	}
-
-	public void ProgressResearch(ResearchIdentifier research, ResourceIndentifier resources)
-	{
-
 	}
 }
 

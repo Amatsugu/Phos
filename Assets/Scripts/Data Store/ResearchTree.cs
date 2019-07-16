@@ -38,12 +38,17 @@ public class ResearchTree
 		return child;
 	}
 
+	public ResearchTech AddChild(ResearchTech parent, string name)
+	{
+		var newNode = new ResearchTech(name);
+		return AddChild(parent, newNode);
+	}
+
 	public void Reset()
 	{
-		nodes = new List<ResearchTech>
-		{
-			new ResearchTech(name, isResearched: true)
-		};
+		nodes = new List<ResearchTech>();
+		var bNode = new ResearchTech(name, isResearched: true);
+		nodes.Add(bNode);
 		Count = 1;
 	}
 
@@ -135,8 +140,8 @@ public class ResearchTree
 	public class ResearchTech
 	{
 		public int id;
-		public string name;
 		public Sprite icon;
+		public string name;
 		public string description;
 		public bool isResearched;
 		public ResourceIndentifier[] resourceCost;

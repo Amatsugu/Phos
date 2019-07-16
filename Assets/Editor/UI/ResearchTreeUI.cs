@@ -137,10 +137,13 @@ public class ResearchTreeEditorWindow : EditorWindow
 			itemRect.y += itemRect.height;
 			itemRect.x = 10;
 			itemRect.width = 400;
-			var costSP = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].resourceCost.Array");
+			var costSP = serializedTarget.FindProperty($"tree.nodes.Array.data[{_selectedNode.id}].resourceCost");
 			if(costSP != null)
 			{
+				//EditorGUI.BeginChangeCheck();
 				EditorGUI.PropertyField(itemRect, costSP, new GUIContent("Resource Cost"), true);
+				//if(EditorGUI.EndChangeCheck())
+					SaveObjectState();
 			}else
 				_selectedNode = target.tree.BaseNode;
 		}
@@ -202,7 +205,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 		{
 			if(GUI.Button(new Rect(pos.x + _nodeSize.x, pos.y + (_nodeSize.y/2) - 10, 20, 20), "+"))
 			{
-				_selectedNode = target.tree.AddChild(curTech, new ResearchTech($"Node {curTech.Count}"));
+				_selectedNode = target.tree.AddChild(curTech, $"Node {curTech.Count}");
 				SaveObjectState();
 			}
 		}

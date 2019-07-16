@@ -2318,7 +2318,7 @@ GameObject:
   - component: {fileID: 262814026}
   - component: {fileID: 262814025}
   m_Layer: 5
-  m_Name: Button (5)
+  m_Name: Defense
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2596,7 +2596,6 @@ GameObject:
   - component: {fileID: 349683576}
   - component: {fileID: 349683578}
   - component: {fileID: 349683577}
-  - component: {fileID: 349683579}
   - component: {fileID: 349683580}
   m_Layer: 5
   m_Name: Active ResearchPanel
@@ -2666,20 +2665,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 349683575}
   m_CullTransparentMesh: 0
---- !u!114 &349683579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 349683575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 212a90aafb25fe74c970283862c31923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  axis: 0
-  padding: 0
 --- !u!114 &349683580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2699,7 +2684,7 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 0
   m_Spacing: 0
-  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
@@ -4890,7 +4875,7 @@ GameObject:
   - component: {fileID: 609493722}
   - component: {fileID: 609493721}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Tech
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4958,7 +4943,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 609493722}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1957186802}
+        m_MethodName: ShowTechTree
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &609493722
@@ -5363,7 +5359,7 @@ GameObject:
   - component: {fileID: 646482983}
   - component: {fileID: 646482982}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Resources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9108,7 +9104,7 @@ GameObject:
   - component: {fileID: 1281024364}
   - component: {fileID: 1281024363}
   m_Layer: 5
-  m_Name: Button (4)
+  m_Name: Military
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12184,7 +12180,7 @@ GameObject:
   - component: {fileID: 1609701205}
   - component: {fileID: 1609701204}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Economy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12462,7 +12458,7 @@ GameObject:
   - component: {fileID: 1632956216}
   - component: {fileID: 1632956215}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Structure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

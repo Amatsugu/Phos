@@ -28,7 +28,6 @@ public class ResearchDatabase : ScriptableObject, ISerializationCallbackReceiver
 		}
 	}
 
-
 	public ResearchTree this[BuildingCategory category] => trees[category].tree;
 
 	public ResearchTree.ResearchTech this[ResearchIdentifier identifier] => trees[identifier.category].tree.GetChild(identifier.researchId);
