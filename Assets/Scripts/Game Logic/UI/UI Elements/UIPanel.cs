@@ -23,7 +23,7 @@ public class UIPanel : UIHover
 		}
 	}
 
-	void Start()
+	protected override void Start()
 	{
 		PanelBase = GetComponent<RectTransform>();
 		if (hideOnStart)
@@ -38,7 +38,7 @@ public class UIPanel : UIHover
 		}
 	}
 
-	private void Update()
+	protected override void Update()
 	{
 		if (!hideOnBlur)
 			return;

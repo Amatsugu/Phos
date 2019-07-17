@@ -34,7 +34,7 @@ public class UIInteractionPanel : UIHover
 
 	public RectTransform rectTransform;
 	private GameObject _gameObject;
-    void Awake()
+    protected override void Awake()
     {
 		rectTransform = GetComponent<RectTransform>();
 		_gameObject = gameObject;

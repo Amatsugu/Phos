@@ -75,7 +75,7 @@ public class PoweredBuildingTile : BuildingTile
 	public override string GetDescription()
 	{
 		return base.GetDescription() + "\n" +
-			$"Has HQ Connection: {HasHQConnection}";
+			$"Has HQ Connection: {HasHQConnection} {Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity)}";
 	}
 
 	public override void OnPlaced()
@@ -95,8 +95,10 @@ public class PoweredBuildingTile : BuildingTile
 			var conduit = (Map.ActiveMap[closestConduit.conduitPos] as ResourceConduitTile);
 			if (conduit == null || !conduit.HasHQConnection)
 				OnHQDisconnected();
-			else if (conduit.IsInRange(Coords))
+			else if (conduit.IsInPoweredRange(Coords))
 				OnHQConnected();
+			else
+				OnHQDisconnected();
 		}
 		_connectionInit = true;
 	}
@@ -117,6 +119,7 @@ public class PoweredBuildingTile : BuildingTile
 	{
 		if(_connectionInit)
 		{
+			Debug.Log("Disconnect, Finding new Connection...");
 			if (HasHQConnection)
 			{
 				HasHQConnection = false;
@@ -127,6 +130,7 @@ public class PoweredBuildingTile : BuildingTile
 			else
 				return;
 		}
+		Debug.Log("Disconnect, No Connections");
 		Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
 		HasHQConnection = false;
 	}

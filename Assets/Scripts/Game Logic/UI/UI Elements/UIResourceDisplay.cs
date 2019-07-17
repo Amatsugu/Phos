@@ -31,7 +31,7 @@ public class UIResourceDisplay : UIHover
 	private float _inOutWidth;
 	private float _logisticsWidth;
 
-    void Awake()
+    protected override void Awake()
 	{
 		_thisTransform = GetComponent<RectTransform>();
 		SetInfo(0, 0, 0, 0, false);
@@ -54,7 +54,7 @@ public class UIResourceDisplay : UIHover
 	}
 
 
-	public void Update()
+	protected override void Update()
 	{
 		if(_expanded)
 		{

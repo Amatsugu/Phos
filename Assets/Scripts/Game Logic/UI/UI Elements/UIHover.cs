@@ -10,6 +10,8 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	public event Action OnBlur;
 	public bool isHovered;
 
+	public bool isActive;
+
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		OnHover?.Invoke();
@@ -35,5 +37,29 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	public void OnDisable()
 	{
 		OnBlur?.Invoke();
+	}
+
+	protected virtual void Awake()
+	{
+
+	}
+
+	protected virtual void Start()
+	{
+
+	}
+
+	protected virtual void Update()
+	{
+
+	}
+
+	public virtual void SetActive(bool active)
+	{
+		if (isActive == active)
+			return;
+		gameObject.SetActive(isActive = active);
+		if(!active)
+			isHovered = false;
 	}
 }

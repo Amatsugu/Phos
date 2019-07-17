@@ -382,20 +382,6 @@ public class Map : IDisposable
 		IsRendered = true;
 		if (EM == null)
 			EM = entityManager;
-		/*
-		foreach (var unit in units)
-		{
-			if (!unit.Value.IsRendered)
-				unit.Value.Render();
-		}
-		var start = DateTime.Now;
-		for (int i = 0; i < Chunks.Length; i++)
-		{
-			Chunks[i].Render();
-			Chunks[i].Show(false);
-		}
-		Debug.Log($"Render... {(DateTime.Now - start).TotalMilliseconds}ms");
-		*/
 	}
 
 	/// <summary>
@@ -497,6 +483,38 @@ public class Map : IDisposable
 				if (excludeCenter && t.Coords == center)
 					continue;
 				action(t);
+			}
+		}
+	}
+
+	public void HexSelectForEach(HexCoords center, int radius, Func<Tile, bool> action, bool excludeCenter = false)
+	{
+		radius = Mathf.Abs(radius);
+		if (radius == 0)
+			return;
+		bool isDone = false;
+		for (int y = -radius; y <= radius; y++)
+		{
+			if (isDone)
+				break;
+			int xMin = -radius, xMax = radius;
+			if (y < 0)
+				xMin = -radius - y;
+			if (y > 0)
+				xMax = radius - y;
+			for (int x = xMin; x <= xMax; x++)
+			{
+				int z = -x - y;
+				var t = this[center.x + x, center.y + y, center.z + z];
+				if (t == null)
+					continue;
+				if (excludeCenter && t.Coords == center)
+					continue;
+				if(!action(t))
+				{
+					isDone = true;
+					break;
+				}
 			}
 		}
 	}
@@ -779,7 +797,7 @@ public class Map : IDisposable
 		}
 
 
-		public float CalculateF(global::Tile b)
+		public float CalculateF(Tile b)
 		{
 			var d = tile.SurfacePoint - b.SurfacePoint;
 			return G + (Mathf.Abs(d.x) + Mathf.Abs(d.y) + Mathf.Abs(d.z));

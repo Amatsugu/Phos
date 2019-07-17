@@ -70,8 +70,8 @@ MonoBehaviour:
       - id: 6
         ammount: 300
       reward: {fileID: 11400000, guid: 7a8d9aa2a7d87f848954ed1da5b1f9a0, type: 2}
-      childrenIDs: 000000000000000000000000
-      Count: 0
+      childrenIDs: 080000000900000000000000
+      Count: 2
     - id: 4
       icon: {fileID: -4024748925766376699, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
@@ -118,7 +118,8 @@ MonoBehaviour:
       childrenIDs: 000000000000000000000000
       Count: 0
     - id: 7
-      icon: {fileID: 0}
+      icon: {fileID: -910342561807809153, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
       name: Super Conductor
       description: Unlock the production of super conductors
       resourceCost:
@@ -137,4 +138,22 @@ MonoBehaviour:
       reward: {fileID: 11400000, guid: 5833c5e1f92726b4d89c7e0fd574b85d, type: 2}
       childrenIDs: 000000000000000000000000
       Count: 0
-    Count: 8
+    - id: 8
+      icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Node 0
+      description: 
+      resourceCost: []
+      reward: {fileID: 0}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    - id: 9
+      icon: {fileID: -7947723104890870202, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Node 1
+      description: 
+      resourceCost: []
+      reward: {fileID: 0}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    Count: 10

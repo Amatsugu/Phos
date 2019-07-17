@@ -15,6 +15,8 @@ public class MapGeneratorUI : Editor
 
 	private void OnEnable()
 	{
+		UnityEditor.EditorPrefs.SetBool("DeveloperMode", false);
+
 		creator = target as RandomGenerator;
 		_previewTex = new Texture2D(256, 256);
 		_previewTex.filterMode = FilterMode.Point;

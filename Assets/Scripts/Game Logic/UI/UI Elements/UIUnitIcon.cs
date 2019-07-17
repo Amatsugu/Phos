@@ -20,7 +20,7 @@ public class UIUnitIcon : UIHover, IPointerClickHandler
 
 	private RectTransform _rTransform;
 
-	void Awake()
+	protected override void Awake()
 	{
 		_rTransform = GetComponent<RectTransform>();
 	}

@@ -3,6 +3,7 @@
 [CreateAssetMenu(menuName = "Map Asset/Tile/Resource Conduit")]
 public class ResourceConduitTileInfo : BuildingTileInfo
 {
+	public int poweredRange;
 	public int connectionRange;
 	public MeshEntityRotatable lineEntity;
 	public MeshEntityRotatable lineEntityInactive;

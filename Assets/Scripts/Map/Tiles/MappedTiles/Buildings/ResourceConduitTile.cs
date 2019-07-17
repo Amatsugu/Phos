@@ -11,16 +11,18 @@ using UnityEngine;
 public class ResourceConduitTile : PoweredBuildingTile
 {
 	public ResourceConduitTileInfo conduitInfo;
-
-	private float _rangeSqr;
-	private Dictionary<HexCoords, Entity> _conduitLines;
+	private readonly float _poweredRangeSq;
+	private readonly float _connectRangeSq;
+	private readonly Dictionary<HexCoords, Entity> _conduitLines;
 	private bool _switchLines;
 
 	public ResourceConduitTile(HexCoords coords, float height, ResourceConduitTileInfo tInfo) : base(coords, height, tInfo)
 	{
 		conduitInfo = tInfo;
-		_rangeSqr = conduitInfo.connectionRange * (2 * Map.ActiveMap.innerRadius) * 2;
-		_rangeSqr *= _rangeSqr;
+		_poweredRangeSq = HexCoords.TileToWorldDist(conduitInfo.poweredRange, Map.ActiveMap.innerRadius);
+		_poweredRangeSq *= _poweredRangeSq;
+		_connectRangeSq = HexCoords.TileToWorldDist(conduitInfo.connectionRange + 1, Map.ActiveMap.innerRadius);
+		_connectRangeSq *= _connectRangeSq;
 		_conduitLines = new Dictionary<HexCoords, Entity>();
 	}
 
@@ -77,7 +79,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 	public override void FindConduitConnections()
 	{
 		var disconnectedNodesStart = Map.ActiveMap.conduitGraph.GetDisconectedNodes();
-		var closest = Map.ActiveMap.conduitGraph.GetNodesInRange(Coords, _rangeSqr);
+		var closest = Map.ActiveMap.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
 		var nodeCreated = false;
 		var gotConnectedNode = closest.Any(n => n != null && (Map.ActiveMap[n.conduitPos] is HQTile || (Map.ActiveMap[n.conduitPos] as ResourceConduitTile).HasHQConnection));
 
@@ -136,7 +138,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 		var curNode = Map.ActiveMap.conduitGraph.GetNode(Coords);
 		if (curNode.IsFull)
 			return;
-		var closest = Map.ActiveMap.conduitGraph.GetNodesInRange(Coords, _rangeSqr);
+		var closest = Map.ActiveMap.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
 		for (int i = 0; i < closest.Count; i++)
 		{
 			if (closest[i] == curNode)
@@ -198,7 +200,21 @@ public class ResourceConduitTile : PoweredBuildingTile
 		}, true);
 	}
 
-	public bool IsInRange(HexCoords tile) => Coords.DistanceToSq(tile) <= _rangeSqr;
+	public bool IsInPoweredRange(HexCoords tile)
+	{
+		bool inRange = false;
+		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
+		{
+			if (t.Coords == tile)
+			{
+				inRange = true;
+				return false;
+			}
+			return true;
+		}, true);
+		return inRange;
+	}
+	public bool IsInConnectionRange(HexCoords tile) => Coords.DistanceToSq(tile) <= _connectRangeSq;
 
 	public override void TileUpdated(Tile src, TileUpdateType updateType)
 	{
@@ -211,6 +227,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 	public void UpdateConnections(ConduitNode[] connections, TileUpdateType updateType)
 	{
+		if (connections == null)
+			return;
 		for (int i = 0; i < connections.Length; i++)
 		{
 			if (connections[i] == null)
@@ -222,11 +240,13 @@ public class ResourceConduitTile : PoweredBuildingTile
 	public override string GetDescription()
 	{
 		return base.GetDescription() + $"\nConnections Lines: {_conduitLines.Count}" +
-			$"\nConnected Nodes: {Map.ActiveMap.conduitGraph.GetNode(Coords).ConnectionCount}/{Map.ActiveMap.conduitGraph.maxConnections}";
+			$"\nConnected Nodes: {Map.ActiveMap.conduitGraph.GetNode(Coords).ConnectionCount}/{Map.ActiveMap.conduitGraph.maxConnections}" +
+			$"\nRange {_poweredRangeSq} {HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius)}";
 	}
 
 	public override void Destroy()
 	{
+		base.Destroy();
 		try
 		{
 			var lines = _conduitLines.Values.ToArray();
@@ -237,10 +257,6 @@ public class ResourceConduitTile : PoweredBuildingTile
 		}
 		catch
 		{
-		}
-		finally
-		{
-			base.Destroy();
 		}
 	}
 }

@@ -78,14 +78,14 @@ public class ResearchSystem : ComponentSystem
 			researchProgress[rId].lastTickProgress = new int[researchProgress[rId].resources.Length];
 		}
 
-		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
+		Entities.WithNone<ConsumptionDebuff, InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
 			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
 		{
 			if (!ProcessResearch(c.Value, m.Value))
 				PostUpdateCommands.AddComponent(e, new InactiveBuildingTag { });
 		});
 
-		Entities.WithAll<InactiveBuildingTag>().WithNone<BuildingOffTag, FirstTickTag>()
+		Entities.WithAll<InactiveBuildingTag>().WithNone<ConsumptionDebuff, BuildingOffTag, FirstTickTag>()
 			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
 		{
 			if (ProcessResearch(c.Value, m.Value))
@@ -119,7 +119,6 @@ public class ResearchSystem : ComponentSystem
 				r.lastTickProgress[i] += (int)resource.ammount;
 				r.rProgress[i] += (int)resource.ammount;
 				ResourceSystem.ConsumeResource(resource);
-				break;
 			}
 			else
 				return false;
@@ -197,6 +196,14 @@ public class ResearchSystem : ComponentSystem
 			identifier = id,
 			isCompleted = true
 		});
+	}
+
+	public static ResearchProgress GetResearchProgress(ResearchIdentifier identifier)
+	{
+		if (_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
+			return _INST.researchProgress[identifier.GetHashCode()];
+		else
+			return null;
 	}
 }
 

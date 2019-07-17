@@ -69,7 +69,7 @@ TextureImporter:
   serializedVersion: 10
   mipmaps:
     mipMapMode: 1
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -96,7 +96,7 @@ TextureImporter:
     serializedVersion: 2
     filterMode: 2
     aniso: 16
-    mipBias: -100
+    mipBias: -0.75
     wrapU: 1
     wrapV: 1
     wrapW: -1

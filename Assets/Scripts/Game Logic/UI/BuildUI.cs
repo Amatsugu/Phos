@@ -256,9 +256,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			if (conduit == null)
 				continue;
 			if (conduit.HasHQConnection)
-				poweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.connectionRange));
+				poweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
 			else
-				unPoweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.connectionRange));
+				unPoweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
 		}
 		if (poweredTiles.Count > 0)
 			ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
@@ -272,7 +272,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)
 	{
-		var range = conduitInfo.connectionRange * (2 * Map.ActiveMap.innerRadius) * 2;
+		var range = HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius);
 		if (_validPlacement)
 		{
 			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, range * range);
@@ -286,7 +286,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 		else
 			HideIndicator(resourceConduitPreviewLine);
-		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.connectionRange, true));
+		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.poweredRange, true));
 	}
 
 	void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f, Vector3 offset = default)
@@ -552,7 +552,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void ShowTechWindow() => ShowBuildWindow(buildings[BuildingCategory.Tech]);
 	public void ShowResourcesWindow() => ShowBuildWindow(buildings[BuildingCategory.Resources]);
-	public void ShowEcoWindow() => ShowBuildWindow(buildings[BuildingCategory.Production]);
+	public void ShowProdcutionWindow() => ShowBuildWindow(buildings[BuildingCategory.Production]);
 	public void ShowStructureWindow() => ShowBuildWindow(buildings[BuildingCategory.Structure]);
 	public void ShowMilitaryWindow() => ShowBuildWindow(buildings[BuildingCategory.Military]);
 	public void ShowDefenseWindow() => ShowBuildWindow(buildings[BuildingCategory.Defense]);
