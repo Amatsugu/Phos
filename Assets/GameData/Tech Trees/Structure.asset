@@ -10,17 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e10f03f5e7b45dd4483d709ac624464e, type: 3}
-  m_Name: Tech
+  m_Name: Structure
   m_EditorClassIdentifier: 
   tree:
-    category: 1
+    category: 4
     name: 
     nodes:
     - id: 0
       icon: {fileID: 0}
-      name: Tech
+      name: Structure
       description: 
       isResearched: 1
+      resourceCost: []
+      reward: {fileID: 0}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    - id: -1
+      icon: {fileID: 0}
+      name: Node 0
+      description: 
+      isResearched: 0
       resourceCost: []
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000

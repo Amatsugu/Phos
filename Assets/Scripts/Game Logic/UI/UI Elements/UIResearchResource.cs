@@ -13,7 +13,7 @@ public class UIResearchResource : MonoBehaviour
 
 	private int _rId;
 
-	public void Init(int rId)
+	public void SetResource(int rId)
 	{
 		_rId = rId;
 		resourceName.text = ResourceDatabase.GetResourceName(rId);
@@ -25,6 +25,9 @@ public class UIResearchResource : MonoBehaviour
 		var progress = (float)curProgress / total;
 		progressBar.anchorMax = new Vector2(progress, 1);
 		resourceProgress.text = $"{curProgress}/{total}";
-		resourceName.text = $"{ResourceDatabase.GetResourceName(_rId)} [{(lastTickDelta > 0 ? "+" : "")}{lastTickDelta}]";
+		var deltaText = "";
+		if(lastTickDelta != 0)
+			deltaText = $"[{ (lastTickDelta > 0 ? "+" : "")}{ lastTickDelta}]";
+		resourceName.text = $"{ResourceDatabase.GetResourceName(_rId)} {deltaText}";
 	}
 }

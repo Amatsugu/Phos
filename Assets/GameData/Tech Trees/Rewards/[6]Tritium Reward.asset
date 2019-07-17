@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3872427534384414d921a91fd0a7f392, type: 3}
-  m_Name: '[8]Test Node Reward'
+  m_Name: '[6]Tritium Reward'
   m_EditorClassIdentifier: 
   type: 0
   building:
-    id: 13
+    id: 7
   unit:
     unit: {fileID: 0}
   custom: {fileID: 0}

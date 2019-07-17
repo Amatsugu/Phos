@@ -223,15 +223,14 @@ public class InteractionUI : MonoBehaviour
 		switch (tile)
 		{
 			case HQTile _:
-				GameRegistry.ResearchTreeUI.Show(null);
-				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case SubHQTile _:
-				GameRegistry.ResearchTreeUI.Show(null);
-				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case ResearchBuildingTile rb:
-				GameRegistry.ResearchTreeUI.Show(rb);
+				if(rb.HasHQConnection)
+					GameRegistry.ResearchTreeUI.Show(rb);
 				break;
 			case BuildingTile _:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());

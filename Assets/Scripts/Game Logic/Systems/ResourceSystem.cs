@@ -32,13 +32,15 @@ public class ResourceSystem : ComponentSystem
 	{
 		if (DateTime.Now < nextTic)
 			return;
+		//Init Tick
 		nextTic = nextTic.AddSeconds(1 / ticRate);
 		totalDemand = new int[ResourceDatabase.ResourceCount];
 		totalProduction = new int[ResourceDatabase.ResourceCount];
+		EventManager.InvokeEvent("OnTick");
 
-        
+
 		//Consumption
-        Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach<ConsumptionData>((e, c) =>
+		Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach<ConsumptionData>((e, c) =>
 		{
 			if (HasAllResources(c.resourceIds, c.rates))
 			{
@@ -91,7 +93,6 @@ public class ResourceSystem : ComponentSystem
 			if (EntityManager.Exists(e))
 				PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
 		});
-		EventManager.InvokeEvent("OnTick");
 	}
 
 	void ProduceResource()

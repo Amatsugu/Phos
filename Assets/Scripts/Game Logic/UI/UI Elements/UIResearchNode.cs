@@ -10,4 +10,5 @@ public class UIResearchNode : UIHover
 	public Image icon;
 	public RectTransform costDisplay;
 	public Button button;
+	public Outline outline;
 }

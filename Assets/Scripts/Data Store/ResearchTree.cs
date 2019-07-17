@@ -47,7 +47,7 @@ public class ResearchTree
 	public void Reset()
 	{
 		nodes = new List<ResearchTech>();
-		var bNode = new ResearchTech(name, isResearched: true);
+		var bNode = new ResearchTech(name);
 		nodes.Add(bNode);
 		Count = 1;
 	}
@@ -143,7 +143,6 @@ public class ResearchTree
 		public Sprite icon;
 		public string name;
 		public string description;
-		public bool isResearched;
 		public ResourceIndentifier[] resourceCost;
 		public ResearchReward reward;
 		public bool IsValid => id >= 0;
@@ -155,11 +154,10 @@ public class ResearchTree
 		public const int MAX_CHILDREN = 3;
 
 
-		public ResearchTech(string name, string description = "", int id = 0, bool isResearched = false)
+		public ResearchTech(string name, string description = "", int id = 0)
 		{
 			this.name = name;
 			this.description = description;
-			this.isResearched = isResearched;
 			this.id = id;
 			childrenIDs = new int[MAX_CHILDREN];
 			resourceCost = new ResourceIndentifier[0];

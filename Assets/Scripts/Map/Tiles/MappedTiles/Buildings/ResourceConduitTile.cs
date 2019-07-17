@@ -167,11 +167,6 @@ public class ResourceConduitTile : PoweredBuildingTile
 		base.OnRemoved();
 	}
 
-	public override Entity Render()
-	{
-		return base.Render();
-	}
-
 	public override void OnHQConnected()
 	{
 		if (_connectionInit && HasHQConnection)
@@ -232,13 +227,20 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 	public override void Destroy()
 	{
-		base.Destroy();
-		if (!Map.ActiveMap.IsRendered)
-			return;
-		var lines = _conduitLines.Values.ToArray();
-		for (int i = 0; i < lines.Length; i++)
+		try
 		{
-			Map.EM.DestroyEntity(lines[i]);
+			var lines = _conduitLines.Values.ToArray();
+			for (int i = 0; i < lines.Length; i++)
+			{
+				Map.EM.DestroyEntity(lines[i]);
+			}
+		}
+		catch
+		{
+		}
+		finally
+		{
+			base.Destroy();
 		}
 	}
 }

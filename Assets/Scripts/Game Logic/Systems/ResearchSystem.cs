@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Entities;
 using UnityEngine;
 
+[UpdateAfter(typeof(ResourceSystem))]
 public class ResearchSystem : ComponentSystem
 {
 	public class ResearchProgress
@@ -23,6 +24,8 @@ public class ResearchSystem : ComponentSystem
 	public ResearchDatabase rDatabase;
 
 	private static  ResearchSystem _INST;
+
+	private bool isTick;
 
 	protected override void OnCreate()
 	{
@@ -55,26 +58,34 @@ public class ResearchSystem : ComponentSystem
 	{
 		base.OnStartRunning();
 		rDatabase = GameRegistry.ResearchDatabase;
-		EventManager.AddEventListener("OnTick", OnTick);
+		EventManager.AddEventListener("OnTick", () => isTick = true);
 	}
 
-	protected void OnTick()
+	protected override void OnUpdate()
 	{
-#if DEBUG
-		Entities.WithAll<ProductionData>().ForEach(e =>
+		if (!isTick)
+			return;
+		isTick = false;
+		//Reset last tick count
+		for (int i = 0; i < 7; i++)
 		{
-			ProcessResearch(BuildingCategory.Tech, 10);
-		});
-#endif
+			var c = (BuildingCategory)i;
+			if (!activeResearch.ContainsKey(c))
+				continue;
+			var rId = activeResearch[c];
+			if (rId == -1)
+				continue;
+			researchProgress[rId].lastTickProgress = new int[researchProgress[rId].resources.Length];
+		}
 
-		Entities.WithAll<ResearchBuildingTag>().WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
+		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
 			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
 		{
 			if (!ProcessResearch(c.Value, m.Value))
 				PostUpdateCommands.AddComponent(e, new InactiveBuildingTag { });
 		});
 
-		Entities.WithAll<ResearchBuildingTag, InactiveBuildingTag>().WithNone<BuildingOffTag, FirstTickTag>()
+		Entities.WithAll<InactiveBuildingTag>().WithNone<BuildingOffTag, FirstTickTag>()
 			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
 		{
 			if (ProcessResearch(c.Value, m.Value))
@@ -92,6 +103,8 @@ public class ResearchSystem : ComponentSystem
 		var isComplete = true;
 		for (int i = 0; i < r.resources.Length; i++)
 		{
+			if (r.isCompleted)
+				break;
 			if (r.rProgress[i] == r.resources[i].ammount)
 				continue;
 			isComplete = false;
@@ -103,17 +116,19 @@ public class ResearchSystem : ComponentSystem
 			ResourceSystem.LogDemand(resource);
 			if (ResourceSystem.HasResource(resource))
 			{
-				r.lastTickProgress[i] = (int)resource.ammount;
+				r.lastTickProgress[i] += (int)resource.ammount;
 				r.rProgress[i] += (int)resource.ammount;
 				ResourceSystem.ConsumeResource(resource);
+				break;
 			}
 			else
 				return false;
 		}
+
 		if(isComplete)
 		{
 			r.isCompleted = true;
-			Debug.Log($"{r.identifier.category} {r.identifier.researchId} Completed");
+			Debug.Log($"{rDatabase[r.identifier].name} Completed"); 
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
 		}
@@ -122,7 +137,7 @@ public class ResearchSystem : ComponentSystem
 
 	public static void SetActiveResearch(ResearchIdentifier identifier)
 	{
-		Debug.Log($"{identifier.category} {identifier.researchId} {identifier.GetHashCode()} ");
+		Debug.Log($"{_INST.rDatabase[identifier].name} Started");
 		if(!_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
 		{
 			var cost = _INST.rDatabase[identifier].resourceCost;
@@ -138,7 +153,6 @@ public class ResearchSystem : ComponentSystem
 			_INST.activeResearch[identifier.category] = identifier.GetHashCode();
 		else
 			_INST.activeResearch.Add(identifier.category, identifier.GetHashCode());
-		Debug.Log($"{_INST.researchProgress.Count} {_INST.activeResearch[identifier.category]}");
 
 	}
 
@@ -151,8 +165,38 @@ public class ResearchSystem : ComponentSystem
 		return _INST.researchProgress[_INST.activeResearch[category]];
 	}
 
-	protected override void OnUpdate()
+	public static bool IsResearchUnlocked(ResearchIdentifier research)
 	{
+		if (_INST.researchProgress.ContainsKey(research.GetHashCode()))
+			return _INST.researchProgress[research.GetHashCode()].isCompleted;
+		return false;
+	}
+
+	public static bool IsCategoryUnlocked(BuildingCategory category)
+	{
+		var id = new ResearchIdentifier
+		{
+			researchId = _INST.rDatabase[category].BaseNode.id,
+			category = category
+		}.GetHashCode();
+		return _INST.researchProgress.ContainsKey(id);
+	}
+
+	public static void UnlockCategory(BuildingCategory category)
+	{
+		var id = new ResearchIdentifier
+		{
+			researchId = _INST.rDatabase[category].BaseNode.id,
+			category = category
+		};
+
+		if (_INST.researchProgress.ContainsKey(id.GetHashCode()))
+			return;
+		_INST.researchProgress.Add(id.GetHashCode(), new ResearchProgress
+		{
+			identifier = id,
+			isCompleted = true
+		});
 	}
 }
 

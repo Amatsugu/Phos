@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e10f03f5e7b45dd4483d709ac624464e, type: 3}
+  m_Name: Production
+  m_EditorClassIdentifier: 
+  tree:
+    category: 3
+    name: 
+    nodes:
+    - id: 0
+      icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Production
+      description: 
+      resourceCost: []
+      reward: {fileID: 0}
+      childrenIDs: 010000000200000000000000
+      Count: 2
+    - id: 1
+      icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Steel
+      description: Unlock the production of Steel
+      resourceCost:
+      - id: 0
+        ammount: 200
+      - id: 1
+        ammount: 200
+      - id: 2
+        ammount: 100
+      reward: {fileID: 11400000, guid: a4e0c684b91684949ae9d5698c8c2819, type: 2}
+      childrenIDs: 030000000000000000000000
+      Count: 1
+    - id: 2
+      icon: {fileID: -4264389267444819633, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Fuel
+      description: Unlock the production of fuel
+      resourceCost:
+      - id: 0
+        ammount: 400
+      - id: 3
+        ammount: 200
+      - id: 3
+        ammount: 100
+      reward: {fileID: 11400000, guid: 359d33928d9b6024abc62ea8dc761c78, type: 2}
+      childrenIDs: 040000000500000000000000
+      Count: 2
+    - id: 3
+      icon: {fileID: -550988092767783048, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Electrum
+      description: Unlock the production of electrum
+      resourceCost:
+      - id: 0
+        ammount: 300
+      - id: 1
+        ammount: 100
+      - id: 7
+        ammount: 100
+      - id: 6
+        ammount: 300
+      reward: {fileID: 11400000, guid: 7a8d9aa2a7d87f848954ed1da5b1f9a0, type: 2}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    - id: 4
+      icon: {fileID: -4024748925766376699, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Carbon Nanotubes
+      description: Unlock the production of Carbon nanotubes
+      resourceCost:
+      - id: 0
+        ammount: 600
+      - id: 2
+        ammount: 100
+      - id: 5
+        ammount: 300
+      reward: {fileID: 11400000, guid: 3a80d9ba161a3044998cfb7dc44bc0dd, type: 2}
+      childrenIDs: 070000000000000000000000
+      Count: 1
+    - id: 5
+      icon: {fileID: -8010261840859185662, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Deuterium Extraction
+      description: Unlock the extraction of deuterium from water
+      resourceCost:
+      - id: 0
+        ammount: 500
+      - id: 3
+        ammount: 1000
+      reward: {fileID: 11400000, guid: 8590458f227b3764bb56a8813357545c, type: 2}
+      childrenIDs: 060000000000000000000000
+      Count: 1
+    - id: 6
+      icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Tritium
+      description: Unlock the breeding of Tritium
+      resourceCost:
+      - id: 0
+        ammount: 6000
+      - id: 9
+        ammount: 600
+      - id: 16
+        ammount: 600
+      - id: 3
+        ammount: 1000
+      reward: {fileID: 11400000, guid: e57afc28e3b08a64382273d7cec6f3aa, type: 2}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    - id: 7
+      icon: {fileID: 0}
+      name: Super Conductor
+      description: Unlock the production of super conductors
+      resourceCost:
+      - id: 0
+        ammount: 6000
+      - id: 11
+        ammount: 100
+      - id: 2
+        ammount: 600
+      - id: 1
+        ammount: 200
+      - id: 8
+        ammount: 400
+      - id: 4
+        ammount: 300
+      reward: {fileID: 11400000, guid: 5833c5e1f92726b4d89c7e0fd574b85d, type: 2}
+      childrenIDs: 000000000000000000000000
+      Count: 0
+    Count: 8

@@ -79,6 +79,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 		GUI.Box(new Rect(0,0, 400, boxRect.height), GUIContent.none);
 		if(_selectedNode != null)
 		{
+			serializedTarget.UpdateIfRequiredOrScript();
 			var itemRect = new Rect(10,0, 400, EditorGUIUtility.singleLineHeight);
 			GUI.Label(itemRect, $"Move To ");
 			if (_selectedNode.id == 0)
@@ -222,7 +223,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 
 	void SaveObjectState()
 	{
-		//serializedTarget.ApplyModifiedProperties();
+		serializedTarget.ApplyModifiedProperties();
 		EditorUtility.SetDirty(target);
 		Undo.RecordObject(target, $"Research Tree {target.tree.name}");
 	}

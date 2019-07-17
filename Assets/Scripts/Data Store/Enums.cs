@@ -8,7 +8,7 @@ public enum BuildingCategory
 	Hidden = 0,
 	Tech,
 	Resources,
-	Economy,
+	Production,
 	Structure,
 	Military,
 	Defense,

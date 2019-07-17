@@ -552,7 +552,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void ShowTechWindow() => ShowBuildWindow(buildings[BuildingCategory.Tech]);
 	public void ShowResourcesWindow() => ShowBuildWindow(buildings[BuildingCategory.Resources]);
-	public void ShowEcoWindow() => ShowBuildWindow(buildings[BuildingCategory.Economy]);
+	public void ShowEcoWindow() => ShowBuildWindow(buildings[BuildingCategory.Production]);
 	public void ShowStructureWindow() => ShowBuildWindow(buildings[BuildingCategory.Structure]);
 	public void ShowMilitaryWindow() => ShowBuildWindow(buildings[BuildingCategory.Military]);
 	public void ShowDefenseWindow() => ShowBuildWindow(buildings[BuildingCategory.Defense]);

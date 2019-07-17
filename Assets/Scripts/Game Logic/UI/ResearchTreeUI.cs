@@ -68,19 +68,22 @@ public class ResearchTreeUI : MonoBehaviour
 			var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
 			if (active == null)
 				return;
+			ShowActiveInfo();
 			for (int i = 0; i < active.resources.Length; i++)
 			{
 				if(_resources.Count == i)
 				{
 					var uiRes = Instantiate(UIresource, activeCostParent, false).GetComponent<UIResearchResource>();
+					uiRes.gameObject.SetActive(true);
 					_resources.Add(uiRes);
 				}
+				_resources[i].SetResource(active.resources[i].id);
 				_resources[i].UpdateData(active.rProgress[i], (int)active.resources[i].ammount, active.lastTickProgress[i]);
 			}
 		});
 	}
 
-	public void ShowEconomyTree() => ShowTree(BuildingCategory.Economy);
+	public void ShowEconomyTree() => ShowTree(BuildingCategory.Production);
 	public void ShowDefenseTree() => ShowTree(BuildingCategory.Defense);
 	public void ShowMilitaryTree() => ShowTree(BuildingCategory.Military);
 	public void ShowResourcesTree() => ShowTree(BuildingCategory.Resources);
@@ -116,13 +119,24 @@ public class ResearchTreeUI : MonoBehaviour
 		});
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, nodeSize.x);
 		curNode.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, nodeSize.y);
-		
-		if (!curTech.isResearched)
+		bool isResearched = ResearchSystem.IsResearchUnlocked(new ResearchIdentifier
 		{
-			if (parentResearched)
-				uiNode.icon.color = new Color(.5f, .5f, .5f);
+			category = _selectedCategory,
+			researchId = curTech.id
+		});
+
+		if (!isResearched)
+		{
+			var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
+			if (active != null && active.identifier.researchId == curTech.id)
+				uiNode.outline.effectColor = Color.cyan;
+			else if (parentResearched)
+				uiNode.outline.effectColor = Color.magenta;
 			else
-				uiNode.icon.color = new Color(.2f, .2f, .2f);
+				uiNode.outline.effectColor = new Color(.2f, .2f, .2f);
+		}else
+		{
+			uiNode.outline.effectColor = Color.clear;
 		}
 		_uiElements.Add(curNode);
 		var lastC = c;
@@ -149,7 +163,7 @@ public class ResearchTreeUI : MonoBehaviour
 				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,  pos.y - cPos.y - (nodeSize.y/2));
 				_uiElements.Add(hConnector);
 			}
-			lastC = DrawTree(_curTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, curTech.isResearched);
+			lastC = DrawTree(_curTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, isResearched);
 		}
 		return lastC;
 	}
@@ -157,7 +171,18 @@ public class ResearchTreeUI : MonoBehaviour
 	public void Show(ResearchBuildingTile tile)
 	{
 		_thisPanel.Show();
-		ShowTree(BuildingCategory.Tech);
+		ShowTree(tile.researchInfo.researchCategory);
+		ShowActiveInfo();
+	}
+
+	public void ShowActiveInfo()
+	{
+		var curRes = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
+		if (curRes == null)
+			return;
+		activeTitle.text = GameRegistry.ResearchDatabase[curRes.identifier].name;
+		activeDesc.text = GameRegistry.ResearchDatabase[curRes.identifier].description;
+		activeDesc.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, activeDesc.preferredHeight);
 	}
 
 	void ClearTree()
