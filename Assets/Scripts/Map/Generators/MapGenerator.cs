@@ -24,7 +24,7 @@ public abstract class MapGenerator : ScriptableObject
 			return;
 		foreach (var fg in featureGenerators)
 		{
-			Debug.Log("Running Feature Generator: " + fg.GeneratorName);
+			Debug.Log("<b>Running Feature Generator:</b> " + fg.GeneratorName);
 			fg.Generate(map);
 		}
 	}

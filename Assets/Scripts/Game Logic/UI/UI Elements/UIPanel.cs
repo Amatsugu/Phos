@@ -51,14 +51,14 @@ public class UIPanel : UIHover
 
 	public virtual void Show()
 	{
+		SetActive(true);
 		OnShow?.Invoke();
-		gameObject.SetActive(true);
 	}
 
 	public virtual void Hide()
 	{
+		SetActive(false);
 		OnHide?.Invoke();
-		gameObject.SetActive(false);
 	}
 
 	public static void DestroyChildren(Transform transform)
