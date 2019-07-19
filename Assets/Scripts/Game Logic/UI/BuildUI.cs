@@ -104,7 +104,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		if(selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
 			Debug.LogError("Null");
 
-		EventManager.AddEventListener("buildingUnlocked", () =>
+		EventManager.AddEventListener("OnBuildingUnlocked", () =>
 		{
 			if(_lastBuildingList != null)
 				ShowBuildWindow(_lastBuildingList);
@@ -272,10 +272,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)
 	{
-		var range = HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius);
+		var rangeSqr = HexCoords.TileToWorldDist(conduitInfo.connectionRange + 1, Map.ActiveMap.innerRadius);
+		rangeSqr *= rangeSqr;
 		if (_validPlacement)
 		{
-			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, range * range);
+			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, rangeSqr);
 			ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
 #if DEBUG
 			for (int i = 0; i < nodes.Count; i++)

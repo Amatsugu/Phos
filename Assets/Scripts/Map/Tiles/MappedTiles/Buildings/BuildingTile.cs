@@ -119,7 +119,6 @@ public class PoweredBuildingTile : BuildingTile
 	{
 		if(_connectionInit)
 		{
-			Debug.Log("Disconnect, Finding new Connection...");
 			if (HasHQConnection)
 			{
 				HasHQConnection = false;
@@ -130,7 +129,6 @@ public class PoweredBuildingTile : BuildingTile
 			else
 				return;
 		}
-		Debug.Log("Disconnect, No Connections");
 		Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
 		HasHQConnection = false;
 	}

@@ -8,21 +8,41 @@ using UnityEngine.UI;
 public class UIResearchNode : UIHover
 {
 	public TMP_Text titleText;
+	public TMP_Text descText;
 	public Image icon;
 	public RectTransform costDisplay;
 	public Button button;
 	public Outline outline;
 	public RectTransform resourceCostPrefab;
+	[HideInInspector]
 	public int nodeId;
+
+	[Header("Sections")]
+	public RectTransform info;
+	public RectTransform extraInfo;
 
 
 	private RectTransform _thisRect;
 	private UIResearchResource[] _uIResearchResources;
+	private Vector2 _curSize;
 
 	protected override void Awake()
 	{
 		base.Awake();
 		_thisRect = GetComponent<RectTransform>();
+		_curSize = _thisRect.rect.size;
+		descText.enabled = false;
+		OnHover += () =>
+		{
+			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y + descText.preferredHeight);
+			_thisRect.SetAsLastSibling();
+			descText.enabled = true;
+		};
+		OnBlur += () =>
+		{
+			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y);
+			descText.enabled = false;
+		};
 	}
 
 	public void SetAnchoredPos(Vector3 pos)
@@ -32,8 +52,16 @@ public class UIResearchNode : UIHover
 
 	public void SetSize(Vector2 size)
 	{
+		_curSize = size;
 		_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
-		_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+		if(isHovered)
+			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y + descText.preferredHeight);
+		else
+			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+		icon.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.y);
+		icon.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+		info.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+		info.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x - size.y);
 	}
 
 	public void InitResources(ResourceIndentifier[] resources)

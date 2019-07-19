@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3872427534384414d921a91fd0a7f392, type: 3}
+  m_Name: '[8]Advanced Power Station Reward'
+  m_EditorClassIdentifier: 
+  type: 0
+  building:
+    id: 1
+  unit:
+    unit: {fileID: 0}
+  custom: {fileID: 0}

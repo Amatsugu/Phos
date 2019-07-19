@@ -47,14 +47,14 @@ MonoBehaviour:
       description: Unlock the production of fuel
       resourceCost:
       - id: 0
-        ammount: 400
+        ammount: 100
       - id: 3
         ammount: 200
-      - id: 3
+      - id: 2
         ammount: 100
       reward: {fileID: 11400000, guid: 359d33928d9b6024abc62ea8dc761c78, type: 2}
-      childrenIDs: 040000000500000000000000
-      Count: 2
+      childrenIDs: 040000000500000008000000
+      Count: 3
     - id: 3
       icon: {fileID: -550988092767783048, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
@@ -70,8 +70,8 @@ MonoBehaviour:
       - id: 6
         ammount: 300
       reward: {fileID: 11400000, guid: 7a8d9aa2a7d87f848954ed1da5b1f9a0, type: 2}
-      childrenIDs: 080000000900000000000000
-      Count: 2
+      childrenIDs: 000000000000000000000000
+      Count: 0
     - id: 4
       icon: {fileID: -4024748925766376699, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
@@ -139,15 +139,21 @@ MonoBehaviour:
       childrenIDs: 000000000000000000000000
       Count: 0
     - id: 8
-      icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329,
+      icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
-      name: Node 0
-      description: 
-      resourceCost: []
-      reward: {fileID: 0}
+      name: Advanced Power Station
+      description: Burn fuel to generate power
+      resourceCost:
+      - id: 0
+        ammount: 300
+      - id: 2
+        ammount: 150
+      - id: 1
+        ammount: 100
+      reward: {fileID: 11400000, guid: 56e98e3f31d742f4ca2b3c5f45553da8, type: 2}
       childrenIDs: 000000000000000000000000
       Count: 0
-    - id: 9
+    - id: -1
       icon: {fileID: -7947723104890870202, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
       name: Node 1
@@ -156,4 +162,4 @@ MonoBehaviour:
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0
-    Count: 10
+    Count: 9

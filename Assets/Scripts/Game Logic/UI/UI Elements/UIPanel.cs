@@ -12,6 +12,7 @@ public class UIPanel : UIHover
 	public TMP_Text titleText;
 	public bool hideOnStart = true;
 	public bool hideOnBlur = true;
+	public bool hideInEditor = false;
 	public event System.Action OnShow;
 	public event System.Action OnHide;
 
@@ -26,7 +27,7 @@ public class UIPanel : UIHover
 	protected override void Start()
 	{
 		PanelBase = GetComponent<RectTransform>();
-		if (hideOnStart)
+		if (hideOnStart || (hideInEditor && Application.isEditor))
 			Hide();
 		else
 			OnShow?.Invoke();
@@ -50,14 +51,14 @@ public class UIPanel : UIHover
 
 	public virtual void Show()
 	{
-		gameObject.SetActive(true);
 		OnShow?.Invoke();
+		gameObject.SetActive(true);
 	}
 
 	public virtual void Hide()
 	{
-		gameObject.SetActive(false);
 		OnHide?.Invoke();
+		gameObject.SetActive(false);
 	}
 
 	public static void DestroyChildren(Transform transform)

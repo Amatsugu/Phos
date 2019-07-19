@@ -66,6 +66,11 @@ public class ResearchTreeUI : MonoBehaviour
 	void Start()
 	{
 		_resources = new UIResearchResource[0];
+		EventManager.AddEventListener("OnResearchComplete", () =>
+		{
+			_curNodeElement = 0;
+			DrawTree(_curTree.BaseNode, redraw: false);
+		});
 		EventManager.AddEventListener("OnTick", () =>
 		{
 			if (!_thisPanel.IsOpen)
@@ -75,8 +80,7 @@ public class ResearchTreeUI : MonoBehaviour
 				return;
 			ShowActiveInfo();
 			_curNodeElement = 0;
-			_curConnectorElem = 0;
-			DrawTree(_curTree.BaseNode);
+			DrawTree(_curTree.BaseNode, redraw: false);
 			if (_resources.Length < active.resources.Length)
 				Array.Resize(ref _resources, active.resources.Length);
 			for (int i = 0; i < _resources.Length; i++)
@@ -118,7 +122,7 @@ public class ResearchTreeUI : MonoBehaviour
 		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, c * _totalOffset.y);
 	}
 
-	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true)
+	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true, bool redraw = true)
 	{
 		var pos = new Vector3((depth * _totalOffset.x) + offset.x, (-c * _totalOffset.y) - offset.y);
 
@@ -128,31 +132,28 @@ public class ResearchTreeUI : MonoBehaviour
 		else
 			uiNode = _uiNodes[_curNodeElement];
 		_curNodeElement++;
-		uiNode.nodeId = curTech.id;
-		uiNode.gameObject.name = $"{curTech.name} [d: {depth} c:{c}]";
-		uiNode.SetActive(true);
-		uiNode.SetAnchoredPos(pos);
-		uiNode.icon.sprite = curTech.icon;
-		uiNode.titleText.SetText(curTech.name);
-		uiNode.button.onClick.RemoveAllListeners();
-		if (curTech != _curTree.BaseNode)
+		if (redraw)
 		{
-			uiNode.button.onClick.AddListener(() =>
-			{
-				ResearchSystem.SetActiveResearch(new ResearchIdentifier
-				{
-					category = _selectedCategory,
-					researchId = curTech.id
-				});
-			});
+			uiNode.nodeId = curTech.id;
+			uiNode.gameObject.name = $"{curTech.name} [d: {depth} c:{c}]";
+			uiNode.SetActive(true);
+			uiNode.SetAnchoredPos(pos);
+			uiNode.icon.sprite = curTech.icon;
+			uiNode.titleText.SetText(curTech.name);
+			uiNode.descText.SetText(curTech.description);
 		}
+		uiNode.button.onClick.RemoveAllListeners();
+		
 		var prog = ResearchSystem.GetResearchProgress(new ResearchIdentifier
 		{
 			category = _selectedCategory,
 			researchId = curTech.id
 		});
-		uiNode.SetSize(_nodeSize);
-		uiNode.InitResources(curTech.resourceCost);
+		if (redraw)
+		{
+			uiNode.SetSize(_nodeSize);
+			uiNode.InitResources(curTech.resourceCost);
+		}
 		uiNode.UpdateProgress(curTech.resourceCost, prog?.rProgress ?? new int[curTech.resourceCost.Length]);
 		bool isResearched = ResearchSystem.IsResearchUnlocked(new ResearchIdentifier
 		{
@@ -164,52 +165,79 @@ public class ResearchTreeUI : MonoBehaviour
 		{
 			var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
 			if (active != null && active.identifier.researchId == curTech.id)
+			{
+				uiNode.button.interactable = true;
+				uiNode.icon.color = Color.white;
 				uiNode.outline.effectColor = Color.cyan;
+			}
 			else if (parentResearched)
+			{
+				if (curTech != _curTree.BaseNode)
+				{
+					uiNode.button.interactable = true;
+					uiNode.button.onClick.AddListener(() =>
+					{
+						ResearchSystem.SetActiveResearch(new ResearchIdentifier
+						{
+							category = _selectedCategory,
+							researchId = curTech.id
+						});
+					});
+				}
 				uiNode.outline.effectColor = Color.magenta;
+				uiNode.icon.color = Color.white;
+			}
 			else
-				uiNode.outline.effectColor = new Color(.2f, .2f, .2f);
+			{
+				uiNode.icon.color = uiNode.outline.effectColor = new Color(.2f, .2f, .2f);
+				uiNode.button.interactable = false;
+			}
 		}else
 		{
+			uiNode.button.interactable = true;
+			uiNode.icon.color = Color.white;
 			uiNode.outline.effectColor = Color.clear;
 		}
 		var lastC = c;
 		var expectedConnectorCount = curTech.Count + (curTech.Count > 1 ? 1 : 0);
 		//TODO: Sort out this calculation
-		if (_curConnectorElem + expectedConnectorCount >= _uiNodeConnectors.Length)
+		if (_curConnectorElem + expectedConnectorCount + 1 >= _uiNodeConnectors.Length)
 			Array.Resize(ref _uiNodeConnectors, _uiNodeConnectors.Length + expectedConnectorCount +1);
 		for (int i = 0; i < curTech.Count; i++)
 		{
-			var cPos = pos;
-			cPos.x += (i == 0) ? _nodeSize.x : (_nodeSize.x + (nodeSpacing.x/2));
-			cPos.y = ((i == 0 ? lastC : lastC + 1) * -_totalOffset.y) - (_nodeSize.y/2);
-			cPos.y -= offset.y;
-
-			RectTransform vConnector = null;
-			if (_uiNodeConnectors[_curConnectorElem] == null)
-				vConnector = _uiNodeConnectors[_curConnectorElem] = Instantiate(connector, cPos, Quaternion.identity, nodeParent);
-			else
-				vConnector = _uiNodeConnectors[_curConnectorElem];
-			_curConnectorElem++;
-			vConnector.gameObject.SetActive(true);
-			vConnector.anchoredPosition = cPos;
-			vConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, i == 0 ? nodeSpacing.x : nodeSpacing.x/2);
-			vConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 1);
-			if (curTech.Count > 1 && i == curTech.Count-1)
+			if (redraw)
 			{
-				var hPos = cPos;
-				hPos.y = pos.y - (_nodeSize.y/2);
+				var cPos = pos;
+				cPos.x += (i == 0) ? _nodeSize.x : (_nodeSize.x + (nodeSpacing.x / 2));
+				cPos.y = ((i == 0 ? lastC : lastC + 1) * -_totalOffset.y) - (_nodeSize.y / 2);
+				cPos.y -= offset.y;
 
-				RectTransform hConnector = null;
+				RectTransform vConnector = null;
 				if (_uiNodeConnectors[_curConnectorElem] == null)
-					hConnector = _uiNodeConnectors[_curConnectorElem] = Instantiate(connector, hPos, Quaternion.identity, nodeParent);
+					vConnector = _uiNodeConnectors[_curConnectorElem] = Instantiate(connector, cPos, Quaternion.identity, nodeParent);
 				else
-					hConnector = _uiNodeConnectors[_curConnectorElem];
+					vConnector = _uiNodeConnectors[_curConnectorElem];
 				_curConnectorElem++;
-				hConnector.gameObject.SetActive(true);
-				hConnector.anchoredPosition = hPos;
-				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,  pos.y - cPos.y - (_nodeSize.y/2));
-				hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1);
+				vConnector.gameObject.SetActive(true);
+				vConnector.anchoredPosition = cPos;
+				vConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, i == 0 ? nodeSpacing.x : nodeSpacing.x / 2);
+				vConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 1);
+				if (curTech.Count > 1 && i == curTech.Count - 1)
+				{
+					var hPos = cPos;
+					hPos.y = pos.y - (_nodeSize.y / 2);
+
+					RectTransform hConnector = null;
+					if (_uiNodeConnectors[_curConnectorElem] == null)
+						hConnector = _uiNodeConnectors[_curConnectorElem] = Instantiate(connector, hPos, Quaternion.identity, nodeParent);
+					else
+						hConnector = _uiNodeConnectors[_curConnectorElem];
+					_curConnectorElem++;
+					hConnector.gameObject.SetActive(true);
+					hConnector.anchoredPosition = hPos;
+					hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, pos.y - cPos.y - (_nodeSize.y / 2));
+					hConnector.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1);
+				}
 			}
 			lastC = DrawTree(_curTree.GetChild(curTech.childrenIDs[i]), depth + 1, i == 0 ? lastC : lastC + 1, isResearched);
 		}

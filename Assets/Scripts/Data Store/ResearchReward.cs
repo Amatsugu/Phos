@@ -36,11 +36,31 @@ public class ResearchReward : ScriptableObject
 				break;
 		}
 	}
+
+	public string GetRewardMessage()
+	{
+		switch (type)
+		{
+			case RewardType.Building:
+				return $"Unlocks Building: {GameRegistry.BuildingDatabase[building].id}";
+			case RewardType.Unit:
+				//TODO: Implement unlocking unit
+				return "";
+			case RewardType.BuildingUpgrade:
+				return $"";
+			case RewardType.Custom:
+				return custom.GetRewardMessage();
+			default:
+				return null;
+		}
+	}
 }
 
 public abstract class CustomResearchAction : ScriptableObject
 {
 	public abstract void Execute();
+
+	public abstract string GetRewardMessage();
 }
 
 

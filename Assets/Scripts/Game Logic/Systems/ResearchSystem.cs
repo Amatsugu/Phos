@@ -81,24 +81,16 @@ public class ResearchSystem : ComponentSystem
 		Entities.WithNone<ConsumptionDebuff, InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
 			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
 		{
-			if (!ProcessResearch(c.Value, m.Value))
-				PostUpdateCommands.AddComponent(e, new InactiveBuildingTag { });
-		});
-
-		Entities.WithAll<InactiveBuildingTag>().WithNone<ConsumptionDebuff, BuildingOffTag, FirstTickTag>()
-			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
-		{
-			if (ProcessResearch(c.Value, m.Value))
-				PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
+			ProcessResearch(c.Value, m.Value);
 		});
 	}
 
-	bool ProcessResearch(BuildingCategory category, float multi)
+	void ProcessResearch(BuildingCategory category, float multi)
 	{
 		if (!activeResearch.ContainsKey(category))
-			return true;
+			return;
 		if (activeResearch[category] == -1)
-			return true;
+			return;
 		var r = researchProgress[activeResearch[category]];
 		var isComplete = true;
 		for (int i = 0; i < r.resources.Length; i++)
@@ -120,8 +112,6 @@ public class ResearchSystem : ComponentSystem
 				r.rProgress[i] += (int)resource.ammount;
 				ResourceSystem.ConsumeResource(resource);
 			}
-			else
-				return false;
 		}
 
 		if(isComplete)
@@ -130,8 +120,8 @@ public class ResearchSystem : ComponentSystem
 			Debug.Log($"{rDatabase[r.identifier].name} Completed"); 
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
+			EventManager.InvokeEvent("OnResearchComplete");
 		}
-		return true;
 	}
 
 	public static void SetActiveResearch(ResearchIdentifier identifier)

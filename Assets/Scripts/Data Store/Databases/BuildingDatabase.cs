@@ -103,4 +103,12 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 				return new BuildingDefination[0];
 		}
 	}
+
+	public BuildingDefination this[BuildingIdentifier identifier]
+	{
+		get
+		{
+			return buildings[identifier.id];
+		}
+	}
 }
