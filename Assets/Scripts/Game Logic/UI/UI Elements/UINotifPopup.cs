@@ -9,16 +9,69 @@ public class UINotifPopup : MonoBehaviour
 	public TMP_Text title;
 	public TMP_Text message;
 	public Image icon;
+	public float endTime;
 
-	public void Init(Sprite icon, string title)
+	[HideInInspector]
+	public float opacity = 0f;
+
+	public bool isShown = true;
+
+	public GameObject GameObject { get; private set; }
+	public RectTransform rectTransform;
+
+	private Image _bg;
+
+	private Color _iC, _bC, _tC, _mC;
+
+	void Start()
 	{
-		this.title.SetText(title);
-		this.icon.sprite = icon;
+		GameObject = gameObject;
+		Show(false);
+		rectTransform = GetComponent<RectTransform>();
+		_bg = GetComponent<Image>();
+		_iC = icon.color;
+		_bC = _bg.color;
+		_tC = title.color;
+		if(message != null)
+			_mC = message.color;
 	}
 
-	public void Init(Sprite icon, string title, string message)
+	public void Init(NotificationsUI.PendingNotification notification, float notifTime)
 	{
-		Init(icon, title);
-		this.message.SetText(message);
+		Show(true);
+		SetOpacity(0);
+		icon.sprite = notification.sprite;
+		title.SetText(notification.title);
+		endTime = Time.time + notifTime;
+		message?.SetText(notification.message);
+	}
+
+	public void Show(bool isShown)
+	{
+		if (this.isShown != isShown)
+			GameObject.SetActive(this.isShown = isShown);
+	}
+
+	public void SetOpacity(float opacity)
+	{
+		//Icon
+		var col = _iC;
+		col.a *= this.opacity = opacity;
+		icon.color = col;
+		//BG
+		col = _bC;
+		col.a *= opacity;
+		_bg.color = col;
+		//Title
+		col = _tC;
+		col.a *= opacity;
+		title.color = col;
+		//Message
+		if (message == null)
+			return;
+		col = _mC;
+		col.a *= opacity;
+		message.color = col;
+
 	}
 }

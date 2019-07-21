@@ -4810,9 +4810,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b340878407def3e41978f9bbc1d7f961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notifBig: {fileID: 4972962592456324258, guid: 3b50ab2c4a2291c4ead7e0c4caadb079,
+  notifBig: {fileID: 4972962592456324257, guid: 3b50ab2c4a2291c4ead7e0c4caadb079,
     type: 3}
-  notifMin: {fileID: 4949827893898512862, guid: 60bc044d3e7105344a487a4da487a59f,
+  notifMin: {fileID: 4949827893898512859, guid: 60bc044d3e7105344a487a4da487a59f,
     type: 3}
   infoIcon: {fileID: -8228208405204313906, guid: 8df9403ac353d2f4db5b3953202d5581,
     type: 3}
@@ -4821,7 +4821,10 @@ MonoBehaviour:
   errorIcon: {fileID: -551644566036652198, guid: 8df9403ac353d2f4db5b3953202d5581,
     type: 3}
   notifTime: 2
+  animSpeed: 2
   maxNotifs: 6
+  spacing: 10
+  basePos: {x: 10, y: 100}
 --- !u!1 &504705647
 GameObject:
   m_ObjectHideFlags: 0
