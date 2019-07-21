@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum NotifType
+{
+	Info,
+	Warning,
+	Error
+}
+
 public class NotificationsUI : MonoBehaviour
 {
 	[Header("Prefabs")]
@@ -28,12 +35,6 @@ public class NotificationsUI : MonoBehaviour
 		}
 	}
 
-	public enum NotifType
-	{
-		Info,
-		Warning,
-		Error
-	}
 
 	private Transform _thisTransform;
 	private int[] _activeNotifs;

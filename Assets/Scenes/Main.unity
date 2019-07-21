@@ -4820,7 +4820,7 @@ MonoBehaviour:
     type: 3}
   errorIcon: {fileID: -551644566036652198, guid: 8df9403ac353d2f4db5b3953202d5581,
     type: 3}
-  notifTime: 2
+  notifTime: 5
   animSpeed: 2
   maxNotifs: 6
   spacing: 10

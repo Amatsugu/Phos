@@ -234,6 +234,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 								}
 								GameRegistry.BaseNameUI.panel.OnHide += onHide;
 							}
+						}else
+						{
+							//TODO: Add more detailed error
+							NotificationsUI.Notify(NotifType.Error, "Cannot place building here");
 						}
 					}
 				}

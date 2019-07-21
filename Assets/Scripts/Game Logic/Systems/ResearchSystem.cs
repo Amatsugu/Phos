@@ -118,6 +118,7 @@ public class ResearchSystem : ComponentSystem
 		{
 			r.isCompleted = true;
 			Debug.Log($"{rDatabase[r.identifier].name} Completed"); 
+			NotificationsUI.Notify(NotifType.Info, $"Research Complete: {rDatabase[r.identifier].name}");
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
 			EventManager.InvokeEvent("OnResearchComplete");
@@ -142,6 +143,7 @@ public class ResearchSystem : ComponentSystem
 			_INST.activeResearch[identifier.category] = identifier.GetHashCode();
 		else
 			_INST.activeResearch.Add(identifier.category, identifier.GetHashCode());
+		NotificationsUI.Notify(NotifType.Info, $"Research Started: {_INST.rDatabase[identifier].name}");
 
 	}
 
@@ -186,6 +188,7 @@ public class ResearchSystem : ComponentSystem
 			identifier = id,
 			isCompleted = true
 		});
+		NotificationsUI.Notify(NotifType.Info, $"Research Tree Unlocked: {_INST.rDatabase[id].name}");
 	}
 
 	public static void UnlockResearch(ResearchIdentifier identifier)
