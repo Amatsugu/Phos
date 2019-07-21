@@ -77,7 +77,10 @@ public class ResearchTreeUI : MonoBehaviour
 				return;
 			var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
 			if (active == null)
+			{
+				ResetActiveInfo();
 				return;
+			}
 			ShowActiveInfo();
 			_curNodeElement = 0;
 			DrawTree(_curTree.BaseNode, redraw: false);
@@ -252,6 +255,16 @@ public class ResearchTreeUI : MonoBehaviour
 		else
 			ShowTree(tile.researchInfo.researchCategory);
 		ShowActiveInfo();
+	}
+
+	void ResetActiveInfo()
+	{
+		activeTitle.text = "Active Research";
+		activeDesc.text = "No active Research";
+		activeDesc.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, activeDesc.preferredHeight);
+
+		for (int i = 0; i < _resources.Length; i++)
+			_resources[i].gameObject.SetActive(false);
 	}
 
 	public void ShowActiveInfo()

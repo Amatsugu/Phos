@@ -117,7 +117,7 @@ public class ResearchSystem : ComponentSystem
 		if(isComplete)
 		{
 			r.isCompleted = true;
-			Debug.Log($"{rDatabase[r.identifier].name} Completed"); 
+			Debug.Log($"Research: {rDatabase[r.identifier].name} Completed"); 
 			NotificationsUI.Notify(NotifType.Info, $"Research Complete: {rDatabase[r.identifier].name}");
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
@@ -127,7 +127,7 @@ public class ResearchSystem : ComponentSystem
 
 	public static void SetActiveResearch(ResearchIdentifier identifier)
 	{
-		Debug.Log($"{_INST.rDatabase[identifier].name} Started");
+		Debug.Log($"Research: {_INST.rDatabase[identifier].name} Started");
 		if(!_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
 		{
 			var cost = _INST.rDatabase[identifier].resourceCost;

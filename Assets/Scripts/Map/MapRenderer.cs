@@ -51,15 +51,7 @@ public class MapRenderer : MonoBehaviour
 		map = generator.GenerateMap(transform);
 		generator.GenerateFeatures(map);
 		map.Render(_entityManager);
-		/*if (batched)
-		{
-			for (int i = 0; i < map.length; i++)
-			{
-				map.Chunks[i].RenderTerrain();
-				map.Chunks[i].RenderDecorators();
-			}
-		}*/
-		
+
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
 		pos.y = map.seaLevel;
@@ -69,14 +61,6 @@ public class MapRenderer : MonoBehaviour
 	
 	private void LateUpdate()
 	{
-		//TODO: Remove this when testing complete
-		if (Input.GetKey(KeyCode.R))
-		{
-			map.Destroy();
-			SceneManager.LoadScene(0);
-			return;
-		}
-
 		var camPos = _cam.transform.position;
 		if (_lastCamPos != camPos)
 		{
@@ -94,6 +78,12 @@ public class MapRenderer : MonoBehaviour
 			Destroy(_ocean.gameObject);
 			Init();
 		}
+	}
+
+	public void Regenerate()
+	{
+		map.Destroy();
+		SceneManager.LoadScene(0);
 	}
 }
 

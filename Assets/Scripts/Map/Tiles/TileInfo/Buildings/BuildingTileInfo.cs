@@ -88,7 +88,7 @@ public class BuildingTileInfo : TileInfo
 			return new BuildingTile(pos, height, this);
 	}
 
-	public string GetProductionString()
+	public virtual string GetProductionString()
 	{
 		var costString = "";
 		for (int i = 0; i < production.Length; i++)
@@ -100,7 +100,7 @@ public class BuildingTileInfo : TileInfo
 		return costString;
 	}
 
-	public string GetCostString()
+	public virtual string GetCostString()
 	{
 		var costString = "";
 		for (int i = 0; i < cost.Length; i++)

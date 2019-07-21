@@ -14,4 +14,20 @@ public class ResourceGatheringBuildingInfo : BuildingTileInfo
 	{
 		return new GatheringBuildingTile(pos, height, this);
 	}
+
+	public override string GetProductionString()
+	{
+		var gatherString = "";
+		for (int i = 0; i < resourcesToGather.Length; i++)
+		{
+			var curRes = resourcesToGather[i];
+			gatherString += $"+{ResourceDatabase.GetResourceString(curRes.id)} {curRes.ammount}/tile";
+			if (i != resourcesToGather.Length - 1)
+				gatherString += "\n";
+		}
+		var b = base.GetProductionString();
+		if (b.Length > 0)
+			b += "\n";
+		return b + gatherString;
+	}
 }

@@ -28,4 +28,13 @@ public class ResearchBuildingInfo : BuildingTileInfo
 		return new ResearchBuildingTile(pos, height, this);
 	}
 
+	public override string GetProductionString()
+	{
+		var b = base.GetProductionString();
+		if (b.Length > 0)
+			b += "\n";
+		b += $"Unlocks {researchCategory} Research";
+		return b;
+	}
+
 }

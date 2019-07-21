@@ -38,7 +38,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public MeshEntityRotatable resourceConduitPreviewLine;
 	//Tooltip
 	[Header("Tooltip")]
-	public UITooltip toolTip;
+	public UIBuildingTooltip toolTip;
 	public TMP_Text floatingText;
 
 	[Header("Config")]
@@ -94,7 +94,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
         HideBuildWindow();
 		placeMode = hqMode = true;
 		_selectedBuilding = HQTile;
-		toolTip.HideToolTip();
 		infoBanner.SetText("Place HQ Building");
 		invalidTileSelector = t =>
 			_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||
@@ -520,6 +519,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			return;
 		_lastBuildingList = buildings;
 		buildWindow.SetActive(true);
+		placeMode = false;
+		_selectedBuilding = null;
 		if(_activeUnits.Count < buildings.Length)
 		{
 			GrowUnitsUI(buildings.Length);
@@ -551,8 +552,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					placeMode = true;
 				}
 			};
-			_activeUnits[i].OnHover += () => toolTip.ShowToolTip(building.name, building.description, building.GetCostString(), building.GetProductionString());
-			_activeUnits[i].OnBlur += () => toolTip.HideToolTip();
+			_activeUnits[i].OnHover += () => 
+				toolTip.ShowToolTip(building.icon, 
+									building.name, 
+									building.description, 
+									building.GetCostString(), 
+									building.GetProductionString());
+			_activeUnits[i].OnBlur += () => toolTip.Hide();
 			_activeUnits[i].icon.sprite = building.icon;
 		}
 		for (int i = buildings.Length; i < _activeUnits.Count; i++)
