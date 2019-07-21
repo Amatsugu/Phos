@@ -67,4 +67,11 @@ public class GameRegistry : MonoBehaviour
 	{
 		return _inst._unlockedBuildings.Contains(id);
 	}
+
+	public static class Cheats
+	{
+		public static bool INSTANT_RESEARCH;
+		public static bool INSTANT_BUILD;
+		public static bool NO_RESOURCE_COST;
+	}
 }

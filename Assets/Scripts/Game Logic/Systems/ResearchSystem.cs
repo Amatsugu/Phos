@@ -95,7 +95,7 @@ public class ResearchSystem : ComponentSystem
 		var isComplete = true;
 		for (int i = 0; i < r.resources.Length; i++)
 		{
-			if (r.isCompleted)
+			if (r.isCompleted || GameRegistry.Cheats.INSTANT_RESEARCH)
 				break;
 			if (r.rProgress[i] == r.resources[i].ammount)
 				continue;
@@ -186,6 +186,22 @@ public class ResearchSystem : ComponentSystem
 			identifier = id,
 			isCompleted = true
 		});
+	}
+
+	public static void UnlockResearch(ResearchIdentifier identifier)
+	{
+		var id = identifier.GetHashCode();
+		if (_INST.researchProgress.ContainsKey(id))
+		{
+			_INST.researchProgress[id].isCompleted = true;
+		}else
+		{
+			_INST.researchProgress.Add(id, new ResearchProgress
+			{
+				identifier = identifier,
+				isCompleted = true
+			});
+		}
 	}
 
 	public static ResearchProgress GetResearchProgress(ResearchIdentifier identifier)

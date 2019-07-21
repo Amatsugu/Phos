@@ -102,6 +102,8 @@ public class ResourceSystem : ComponentSystem
 
 	bool HasAllResources(int[] ids, int[] rates, float multi = 1, bool recordDemand = true)
 	{
+		if (GameRegistry.Cheats.NO_RESOURCE_COST)
+			return true;
 		for (int i = 0; i < ids.Length; i++)
 		{
 			var totalRate = multi == 1 ? rates[i] : (int)(rates[i] * multi);
@@ -118,6 +120,8 @@ public class ResourceSystem : ComponentSystem
 
 	bool HasAllResources(ResourceIndentifier[] resources, float multi = 1, bool recordDemand = false)
 	{
+		if (GameRegistry.Cheats.NO_RESOURCE_COST)
+			return true;
 		for (int i = 0; i < resources.Length; i++)
 		{
 			var totalRate = multi == 1 ? (int)resources[i].ammount : (int)(resources[i].ammount * multi);
@@ -132,6 +136,8 @@ public class ResourceSystem : ComponentSystem
 
 	void ConsumeResourses(int[] ids, int[] rates, float multi = 1)
 	{
+		if (GameRegistry.Cheats.NO_RESOURCE_COST)
+			return;
 		for (int i = 0; i < ids.Length; i++)
 		{
 			var totalRate = multi == 1 ? rates[i] : (int)(rates[i] * multi);
@@ -151,6 +157,8 @@ public class ResourceSystem : ComponentSystem
 
 	public static void ConsumeResource(ResourceIndentifier resource, float multi = 1)
 	{
+		if (GameRegistry.Cheats.NO_RESOURCE_COST)
+			return;
 		var ammount = Mathf.FloorToInt(resource.ammount * multi);
 		resCount[resource.id] -= ammount;
 	}

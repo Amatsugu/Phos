@@ -19,8 +19,7 @@ MonoBehaviour:
     - id: 0
       icon: {fileID: 0}
       name: Defense
-      description: 
-      isResearched: 1
+      description: Coming Soon!
       resourceCost: []
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
@@ -29,7 +28,6 @@ MonoBehaviour:
       icon: {fileID: 0}
       name: Node 0
       description: 
-      isResearched: 0
       resourceCost: []
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000

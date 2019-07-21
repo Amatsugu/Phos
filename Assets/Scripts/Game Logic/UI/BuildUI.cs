@@ -272,7 +272,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)
 	{
-		var rangeSqr = HexCoords.TileToWorldDist(conduitInfo.connectionRange + 1, Map.ActiveMap.innerRadius);
+		var rangeSqr = HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius);
 		rangeSqr *= rangeSqr;
 		if (_validPlacement)
 		{
@@ -364,44 +364,61 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void QueueBuilding(Tile tile)
 	{
-		var pos = tile.SurfacePoint;
-		pos.y = Random.Range(90, 100);
-		var e = landingMesh.Instantiate(pos);
-		_EM.AddComponentData(e, new FallAnim
-		{
-			startSpeed = new float3(0,Random.Range(-100, -90),0)
-		}) ; 
-		_EM.AddComponentData(e, new Floor
-		{
-			Value = tile.Height
-		});
+		
 		var callback = tile.Coords.GetHashCode();
 		_pendingBuildOrders.Add(callback, new BuildOrder
 		{
 			building = _selectedBuilding,
 			dstTile = tile
 		});
-		if (hqMode)
+		if (GameRegistry.Cheats.INSTANT_BUILD)
 		{
-			HideAllIndicators();
-			EventManager.AddEventListener(callback.ToString(), () =>
+			_readyToBuildOrders.Add(callback);
+			if(hqMode)
 			{
-				_readyToBuildOrders.Add(callback);
+				HideAllIndicators();
 				GameRegistry.BaseNameUI.panel.Show();
-			});
+			}
 		}
 		else
 		{
-			EventManager.AddEventListener(callback.ToString(), () =>
+
+			if (hqMode)
 			{
-				_readyToBuildOrders.Add(callback);
-			});
+				HideAllIndicators();
+				EventManager.AddEventListener(callback.ToString(), () =>
+				{
+					_readyToBuildOrders.Add(callback);
+					GameRegistry.BaseNameUI.panel.Show();
+				});
+			}
+			else
+			{
+				EventManager.AddEventListener(callback.ToString(), () =>
+				{
+					_readyToBuildOrders.Add(callback);
+				});
+			}
 		}
-		_EM.AddComponentData(e, new HitFloorCallback
+		if (!GameRegistry.Cheats.INSTANT_BUILD)
 		{
-			eventId = callback
-		});
-		_EM.AddComponentData(e, new Gravity { Value = 9.8f });
+			var pos = tile.SurfacePoint;
+			pos.y = Random.Range(90, 100);
+			var e = landingMesh.Instantiate(pos);
+			_EM.AddComponentData(e, new FallAnim
+			{
+				startSpeed = new float3(0, Random.Range(-100, -90), 0)
+			});
+			_EM.AddComponentData(e, new Floor
+			{
+				Value = tile.Height
+			});
+			_EM.AddComponentData(e, new HitFloorCallback
+			{
+				eventId = callback
+			});
+			_EM.AddComponentData(e, new Gravity { Value = 9.8f });
+		}
 	}
 
 	void BuildReadyBuildings()

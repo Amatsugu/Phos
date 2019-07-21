@@ -31,9 +31,24 @@ public class UIDevConsole : MonoBehaviour
 
 	void AddDefaultCommands()
 	{
-		AddCommand(new Command("close", () => consolePanel.Hide(), "closes the console"));
+		AddCommand(new Command("close", () => consolePanel.Hide(), "Closes the console"));
 		AddCommand(new HelpCommand());
-		AddCommand(new Command("seed", () => AddConsoleMessage(Map.ActiveMap.Seed.ToString()), "displays the current map seed"));
+		AddCommand(new Command("seed", () => AddConsoleMessage(Map.ActiveMap.Seed.ToString()), "Displays the current map seed"));
+		AddCommand(new Command("instantBuild", () =>
+		{
+			GameRegistry.Cheats.INSTANT_BUILD = !GameRegistry.Cheats.INSTANT_BUILD;
+			AddConsoleMessage($"instantBuild: <b>{GameRegistry.Cheats.INSTANT_BUILD}</b>");
+		}, "Toggles instant build"));
+		AddCommand(new Command("instantResearch", () =>
+		{
+			GameRegistry.Cheats.INSTANT_RESEARCH = !GameRegistry.Cheats.INSTANT_RESEARCH;
+			AddConsoleMessage($"instantResearch: <b>{GameRegistry.Cheats.INSTANT_RESEARCH}</b>");
+		}, "Toggles instant research"));
+		AddCommand(new Command("noResourceCost", () =>
+		{
+			GameRegistry.Cheats.NO_RESOURCE_COST = !GameRegistry.Cheats.NO_RESOURCE_COST;
+			AddConsoleMessage($"noResourceCost: <b>{GameRegistry.Cheats.NO_RESOURCE_COST}</b>");
+		}, "Toggles resource cost"));
 	}
 
     // Start is called before the first frame update
@@ -56,6 +71,14 @@ public class UIDevConsole : MonoBehaviour
 			UpdateConsoleText();
 		};
 
+		inputBox.onSubmit.AddListener(s => {
+			if (s.Length == 0 || string.IsNullOrWhiteSpace(s))
+				return;
+			ParseCommand(inputBox.text);
+			inputBox.text = "";
+			inputBox.ActivateInputField();
+		});
+
     }
 
 	private void DebugLogMessage(string condition, string stackTrace, LogType type)
@@ -77,7 +100,7 @@ public class UIDevConsole : MonoBehaviour
 				break;
 		}
 		_sb.AppendLine($"<color={color}><b>[{type}]</b> {condition}</color>");
-		if(consolePanel.IsActive)
+		if(consolePanel.IsOpen)
 			UpdateConsoleText();
 	}
 
@@ -92,34 +115,32 @@ public class UIDevConsole : MonoBehaviour
     {
         if(Input.GetKeyUp(KeyCode.BackQuote) && !inputBox.isFocused)
 		{
-			if (consolePanel.IsActive)
+			if (consolePanel.IsOpen)
 				consolePanel.Hide();
 			else
 				consolePanel.Show();
 		}
-
-		if((Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.KeypadEnter)) && inputBox.isFocused)
-		{
-			ParseCommand(inputBox.text);
-			inputBox.text = "";
-			inputBox.ActivateInputField();
-		}
     }
 
-	public static void AddConsoleMessage(string message)
+	public static void AddConsoleMessage(string message, bool indent = true)
 	{
+		if (indent)
+			INST._sb.Append('\t');
 		INST._sb.AppendLine(message);
-		if(INST.consolePanel.IsActive)
+		if(INST.consolePanel.IsOpen)
 			INST.UpdateConsoleText();
 	}
 
 	void ParseCommand(string commandString)
 	{
 		var commandSplit = commandString.Split(' ');
+		AddConsoleMessage($"> {commandString}", false);
 		if (_commands.ContainsKey(commandSplit[0]))
 		{
-			AddConsoleMessage(commandSplit[0]);
 			_commands[commandSplit[0]].Execute(commandSplit);
+		}else
+		{
+			AddConsoleMessage($"No such command '{commandSplit[0]}'");
 		}
 	}
 

@@ -161,6 +161,7 @@ public class ResearchTreeEditorWindow : EditorWindow
 			_selectedNode = target.tree.BaseNode;
 		}
 		GUI.EndGroup();
+		SaveObjectState();
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0)

@@ -21,7 +21,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 		conduitInfo = tInfo;
 		_poweredRangeSq = HexCoords.TileToWorldDist(conduitInfo.poweredRange, Map.ActiveMap.innerRadius);
 		_poweredRangeSq *= _poweredRangeSq;
-		_connectRangeSq = HexCoords.TileToWorldDist(conduitInfo.connectionRange + 1, Map.ActiveMap.innerRadius);
+		_connectRangeSq = HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius);
 		_connectRangeSq *= _connectRangeSq;
 		_conduitLines = new Dictionary<HexCoords, Entity>();
 	}

@@ -20,7 +20,9 @@ MonoBehaviour:
       icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
       name: Production
-      description: 
+      description: 'Place a Production Resource Building
+
+        WIP'
       resourceCost: []
       reward: {fileID: 0}
       childrenIDs: 010000000200000000000000
