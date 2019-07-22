@@ -103,7 +103,7 @@ public class ResearchSystem : ComponentSystem
 			var resource = new ResourceIndentifier
 			{
 				id = r.resources[i].id,
-				ammount = Mathf.Floor(Mathf.Min((1 * multi), r.resources[i].ammount))
+				ammount = Mathf.Floor(Mathf.Min((.01f * multi * r.resources[i].ammount), r.resources[i].ammount))
 			};
 			ResourceSystem.LogDemand(resource);
 			if (ResourceSystem.HasResource(resource))

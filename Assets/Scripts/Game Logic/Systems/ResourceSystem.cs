@@ -173,6 +173,8 @@ public class ResourceSystem : ComponentSystem
 
 	public static bool HasResourses(ResourceIndentifier[] resources, float multi = 1)
 	{
+		if (GameRegistry.Cheats.NO_RESOURCE_COST)
+			return true;
 		for (int i = 0; i < resources.Length; i++)
 		{
 			var id = resources[i].id;
@@ -184,6 +186,8 @@ public class ResourceSystem : ComponentSystem
 
 	public static bool HasResource(ResourceIndentifier resource, float multi = 1)
 	{
+		if (GameRegistry.Cheats.NO_RESOURCE_COST)
+			return true;
 		return resCount[resource.id] >= Mathf.FloorToInt(resource.ammount * multi);
 	}
 

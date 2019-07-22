@@ -22,14 +22,27 @@ MonoBehaviour:
       description: Coming Soon!
       resourceCost: []
       reward: {fileID: 0}
+      childrenIDs: 010000000000000000000000
+      Count: 1
+    - id: 1
+      icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329,
+        type: 3}
+      name: Offshore Conduit
+      description: 
+      resourceCost:
+      - id: 0
+        ammount: 200
+      - id: 1
+        ammount: 100
+      reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0
     - id: -1
       icon: {fileID: 0}
-      name: Node 0
+      name: Off
       description: 
       resourceCost: []
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0
-    Count: 1
+    Count: 2

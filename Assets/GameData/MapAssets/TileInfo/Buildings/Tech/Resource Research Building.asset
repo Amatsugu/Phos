@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ef76c1436dae814e9d2a0abdd36d62d, type: 3}
   m_Name: Resource Research Building
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
+  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
+  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
