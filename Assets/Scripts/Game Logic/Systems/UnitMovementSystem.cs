@@ -10,11 +10,17 @@ public class UnitMovementSystem : ComponentSystem
 {
 
 	private Dictionary<int, Path> paths;
+	private float _tileEdgeLength;
+	private Camera _cam;
+	private int _mapWidth;
 
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
 		paths = new Dictionary<int, Path>();
+		_tileEdgeLength = Map.ActiveMap.tileEdgeLength;
+		_cam = GameRegistry.Camera;
+		_mapWidth = Map.ActiveMap.width;
 	}
 
 	protected override void OnUpdate()
@@ -27,14 +33,14 @@ public class UnitMovementSystem : ComponentSystem
 				return;
 			}
 			var unit = Map.ActiveMap.units[id.Value];
-			var curCoord = unit.occupiedTile;
+			var curCoord = HexCoords.FromPosition(t.Value, _tileEdgeLength);
 			Path path;
 			if (paths.ContainsKey(pg.Value))
 				path = paths[pg.Value];
 			else
 			{
 				var dst = HexCoords.FromPosition(d.Value, Map.ActiveMap.tileEdgeLength);
-				if (curCoord == dst || Map.ActiveMap[dst].IsFullyOccupied)
+				if (curCoord == dst)
 				{
 					PostUpdateCommands.RemoveComponent<PathGroup>(e);
 					PostUpdateCommands.RemoveComponent<Destination>(e);
@@ -43,7 +49,7 @@ public class UnitMovementSystem : ComponentSystem
 				path = new Path
 				{
 					Value = Map.ActiveMap.GetPath(curCoord, dst,
-					filter: ti => ti.Height > Map.ActiveMap.seaLevel && !ti.IsFullyOccupied && !(ti is BuildingTile))
+					filter: ti => ti.Height > Map.ActiveMap.seaLevel && !(ti is BuildingTile))
 				};
 				if(path.Value == null)
 				{
@@ -68,56 +74,21 @@ public class UnitMovementSystem : ComponentSystem
 		});
 
 
-		Entities.WithAll<Rotation>().ForEach((Entity e, Path p, ref PathGroup pg, ref Translation t, ref Heading h, ref MoveSpeed m, ref UnitId id) =>
+		Entities.WithAll<Rotation>().ForEach((Entity e, ref UnitId id) =>
 		{
-			pg.Progress = Mathf.Min(p.Value.Count - 1, pg.Progress);
-			var nextTile = p.Value[pg.Progress+1];
-			if(nextTile.IsFullyOccupied && !nextTile.Equals(p.Value.Last()))
-			{
-				pg.Delay++;
-				if(pg.Delay > 3)
-				{
-					PostUpdateCommands.RemoveComponent<Path>(e);
-					paths.Remove(pg.Value);
-				}
+			if (!Map.ActiveMap.units.ContainsKey(id.Value))
 				return;
-			}
+			if (!Input.GetKey(KeyCode.LeftShift))
+				return;
 			var unit = Map.ActiveMap.units[id.Value];
-			var curCoord = HexCoords.FromPosition(t.Value, Map.ActiveMap.tileEdgeLength);
-			var curTile = Map.ActiveMap[curCoord];
-
-			if (!unit.OccupyTile(curTile))
-			{
-				pg.Delay++;
-				if (pg.Delay > 3)
-				{
-					PostUpdateCommands.RemoveComponent<Path>(e);
-					paths.Remove(pg.Value);
-				}
-				return;
-			}
-
-
-			pg.Delay = 0;
-			var tOffset = curTile.GetOccipancyPos(id.Value);
-			var ntPos = (float3)nextTile.SurfacePoint + tOffset;
-			h.Value = math.normalize((ntPos) - t.Value);
-			t.Value += h.Value * m.Value * Time.deltaTime;
-			t.Value.y = curTile.Height;
-			PostUpdateCommands.SetComponent(e, new Rotation { Value = Quaternion.LookRotation(h.Value, Vector3.up) });
-			if (math.distancesq(t.Value, ntPos) < .005f)
-			{
-				pg.Progress++;
-				if (pg.Progress + 1 >= p.Value.Count)
-				{
-					PostUpdateCommands.RemoveComponent<Path>(e);
-					PostUpdateCommands.RemoveComponent<PathGroup>(e);
-					PostUpdateCommands.RemoveComponent<Destination>(e);
-					paths.Remove(pg.Value);
-
-				}
-				return;
-			}
+			var target = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(Input.mousePosition)).SurfacePoint;
+			var dir = (target - unit.Position).normalized;
+			var newPos = unit.Position += dir * Time.deltaTime * unit.info.moveSpeed;
+			newPos.y = Map.ActiveMap[HexCoords.FromPosition(newPos)].Height;
+			target.y = unit.Position.y;
+			dir = (target - unit.Position);
+			unit.Position = newPos;
+			EntityManager.SetComponentData(e, new Rotation { Value = Quaternion.LookRotation(dir) });
 		});
 
 	}

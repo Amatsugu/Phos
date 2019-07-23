@@ -14,8 +14,6 @@ public class Tile
 	public HexCoords Coords { get; protected set; }
 	public Vector3 SurfacePoint { get; protected set; }
 	public float Height { get; protected set; }
-	public bool IsOccupied { get => _occupancyCount > 0; }
-	public bool IsFullyOccupied { get => _occupancyCount == MAX_OCCUPANCY; }
 
 	public readonly TileInfo info;
 
@@ -27,10 +25,6 @@ public class Tile
 
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
-
-	public const int MAX_OCCUPANCY = 4;
-	private int[] _occupyingUnits = new int[MAX_OCCUPANCY];
-	private int _occupancyCount = 0;
 
 	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
 	{
@@ -48,35 +42,6 @@ public class Tile
 		return this;
 	}
 
-	public bool OccupyTile(int unitId)
-	{
-		if (_occupancyCount == MAX_OCCUPANCY)
-			return false;
-		for (int i = 0; i < MAX_OCCUPANCY; i++)
-		{
-			if (_occupyingUnits[i] == 0)
-			{
-				_occupyingUnits[i] = unitId;
-				_occupancyCount++;
-				break;
-			}
-		}
-		return true;
-	}
-
-	public void DeOccupyTile(int unitId)
-	{
-		for (int i = 0; i < MAX_OCCUPANCY; i++)
-		{
-			if(_occupyingUnits[i] == unitId)
-			{
-				_occupyingUnits[i] = 0;
-				_occupancyCount--;
-				return;
-			}
-		}
-	}
-
 	public virtual string GetName()
 	{
 		return $"{info.name} {Coords}";
@@ -84,47 +49,7 @@ public class Tile
 
 	public virtual string GetDescription()
 	{
-		var unitStr = "";
-		for (int i = 0; i < MAX_OCCUPANCY; i++)
-		{
-			if (_occupyingUnits[i] == 0)
-				continue;
-			var e = Map.ActiveMap.units[_occupyingUnits[i]].Entity;
-			unitStr += $"Unit[{_occupyingUnits[i]}]";
-			if (Map.EM.HasComponent<Path>(e))
-			{
-				var pg = Map.EM.GetComponentData<PathGroup>(e);
-				unitStr += $"Progress:{pg.Progress} Group:{pg.Value}";
-			}
-			unitStr += "\n";
-		}
-		return $"{info.description}\n" +
-			$"Occupancy: {_occupancyCount}/{MAX_OCCUPANCY}\n" +
-			unitStr;
-	}
-
-	public int GetOccupancyId(int unitId)
-	{
-		if (_occupancyCount == 0)
-			throw new Exception("There are no units occupying this tile");
-		for (int i = 0; i < MAX_OCCUPANCY; i++)
-		{
-			if (_occupyingUnits[i] == unitId)
-				return i;
-		}
-		throw new Exception($"Unit [{unitId}] is not occupying this tile. Occupants [{string.Join(", ",_occupyingUnits)}]");
-	}
-
-	public float3 GetOccipancyPos(int unitId)
-	{
-		var oId = GetOccupancyId(unitId);
-		var a = (360f / (MAX_OCCUPANCY-1)) * oId * Mathf.Deg2Rad;
-		return new float3(Mathf.Cos(a), 0, Mathf.Sin(a)) * .5f;
-	}
-
-	public int[] GetUnits()
-	{
-		return _occupyingUnits;
+		return info.description;
 	}
 
 	// override object.Equals

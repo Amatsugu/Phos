@@ -93,6 +93,8 @@ public struct HexCoords
 		return cx + cz * width;
 	}
 
+	public static int GetChunkIndex(int chunkX, int chunkZ, int width) => chunkX + chunkZ * width;
+
 	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
 
 	public float DistanceToSq(HexCoords b) => (worldXZ - b.worldXZ).sqrMagnitude;

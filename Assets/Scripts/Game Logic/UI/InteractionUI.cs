@@ -93,7 +93,10 @@ public class InteractionUI : MonoBehaviour
 						if (_start == _end)
 							ShowPanel(_end);
 						else
+						{
 							_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
+							Debug.Log($"Units found: {Map.ActiveMap.SelectUnitsInRange(_start, 5).Count}");
+						}
 					}
 				}
 			}
@@ -110,6 +113,12 @@ public class InteractionUI : MonoBehaviour
 		}
 		else
 			HidePanel();
+
+		for (int i = 0; i < _selectedUnits.Count; i++)
+		{
+			var unit = Map.ActiveMap.units[_selectedUnits[i]];
+			Debug.DrawRay(unit.Position, Vector3.up, Color.white);
+		}
 	}
 
 	void LateUpdate()
@@ -163,43 +172,7 @@ public class InteractionUI : MonoBehaviour
 
 	void InstructUnitMovement(Tile tile)
 	{
-		if (_selectedUnits.Count == 0)
-			return;
-		var unitGroups = _selectedUnits.GroupBy(u => Map.ActiveMap.units[u].occupiedTile);
-		var groupCount = unitGroups.Count();
-
-		var dstTileCount = _selectedUnits.Count / (Tile.MAX_OCCUPANCY - 1);
-		var r = CalculateR(dstTileCount);
-		var dstSelection = Map.ActiveMap.HexSelect(tile.Coords, r).Where(t => !(t is BuildingTile));
-		while (dstSelection.Count() < dstTileCount)
-			dstSelection = Map.ActiveMap.HexSelect(tile.Coords, ++r).Where(t => !(t is BuildingTile));
-		var dstTiles = dstSelection/*.OrderBy(t => Vector3.SqrMagnitude(tile.SurfacePoint - t.SurfacePoint))*/.ToArray();
-
-		var curGroupSize = 0;
-		var curGroup = 0;
-
-		foreach (var unitGroup in unitGroups)
-		{
-			foreach (var unitId in unitGroup)
-			{
-				Map.ActiveMap.units[unitId].MoveTo(dstTiles[curGroup].SurfacePoint, groupId);
-
-				curGroupSize++;
-				if (curGroupSize == Tile.MAX_OCCUPANCY - 1)
-				{
-					curGroupSize = 0;
-					curGroup++;
-					unchecked
-					{
-						groupId++;
-					}
-				}
-			}
-			unchecked
-			{
-				groupId++;
-			}
-		}
+		
 	}
 
 	int CalculateR(int units)

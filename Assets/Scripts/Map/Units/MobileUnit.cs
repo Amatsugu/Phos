@@ -7,14 +7,24 @@ using UnityEngine;
 public class MobileUnit
 {
 	public int id;
-	public HexCoords occupiedTile;
 	public MobileUnitInfo info;
+
+
+	public HexCoords Coords { get; protected set; }
 	public Vector3 Position
 	{
 		get => _position;
 		set
 		{
 			_position = value;
+			var newCoords = HexCoords.FromPosition(value, Map.ActiveMap.tileEdgeLength);
+			if(newCoords != Coords)
+			{
+				var newChunk = newCoords.GetChunkIndex(Map.ActiveMap.width);
+				Coords = newCoords;
+				Map.ActiveMap.MoveUnit(id, _chunk, newChunk);
+				_chunk = newChunk;
+			}
 			if (IsRendered)
 				Map.EM.SetComponentData(Entity, new Translation { Value = value });
 		}
@@ -23,16 +33,18 @@ public class MobileUnit
 	public Entity Entity { get; protected set; }
 	public bool IsRendered { get; protected set; }
 
+	protected int _chunk;
 	private bool _isShown;
 	public Vector3 _position;
 
 
-	public MobileUnit(int id, MobileUnitInfo info, Tile t)
+	public MobileUnit(int id, MobileUnitInfo info, Tile tile, int chunkId)
 	{
 		this.id = id;
 		this.info = info;
-		Position = t.SurfacePoint;
-		OccupyTile(t);
+		_position = tile.SurfacePoint;
+		Coords = tile.Coords;
+		_chunk = chunkId;
 	}
 
 	public Entity Render()
@@ -40,7 +52,7 @@ public class MobileUnit
 		if (IsRendered)
 			return Entity;
 		IsRendered  = _isShown = true;
-		return Entity =  info.Instantiate(Position, Quaternion.identity, id);
+		return Entity =  info.Instantiate(_position, Quaternion.identity, id);
 	}
 
 	public void Show(bool isShown)
@@ -70,37 +82,6 @@ public class MobileUnit
 	{
 		//TODO: Death Effect
 		//Map.ActiveMap[occupiedTile].DeOccupyTile(id);
-		Destroy();
-	}
-
-	public void Destroy()
-	{
-		Map.EM.DestroyEntity(Entity);
-	}
-
-	public bool OccupyTile(Tile tile)
-	{
-		if (occupiedTile == tile.Coords)
-			return true;
-		if (tile.OccupyTile(id))
-		{
-			var w = Map.ActiveMap.width;
-			if(occupiedTile.isCreated)
-			{
-				var curChunk = occupiedTile.GetChunkIndex(w);
-				var newChunk = tile.Coords.GetChunkIndex(w);
-				if (newChunk != curChunk)
-				{
-					Map.ActiveMap.MoveUnit(id, curChunk, newChunk);
-				}
-			}
-			Map.ActiveMap[occupiedTile].DeOccupyTile(id);
-			occupiedTile = tile.Coords;
-			if(IsRendered)
-				_position = Map.EM.GetComponentData<Translation>(Entity).Value;
-			return true;
-		}
-		return false;
 	}
 
 	public override int GetHashCode()

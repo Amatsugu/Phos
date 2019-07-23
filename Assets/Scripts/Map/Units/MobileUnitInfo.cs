@@ -8,6 +8,7 @@ using UnityEngine;
 public class MobileUnitInfo : MeshEntityRotatable
 {
 	public float moveSpeed = 1;
+	public int size;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{

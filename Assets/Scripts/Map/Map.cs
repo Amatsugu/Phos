@@ -68,6 +68,8 @@ public class Map : IDisposable
 		public bool isCreated;
 		public bool isRendered;
 
+		internal Bounds Bounds => _bounds;
+
 		private Bounds _bounds;
 		private NativeArray<Entity> _chunkTiles;
 
@@ -276,10 +278,10 @@ public class Map : IDisposable
 	public MobileUnit AddUnit(MobileUnitInfo unitInfo, Tile tile)
 	{
 		var id = _nextId++;
-		var unit = new MobileUnit(id, unitInfo, tile);
 		var chunkIndex = tile.Coords.GetChunkIndex(width);
 		if(unitLocations[chunkIndex] == null)
 			unitLocations[chunkIndex] = new List<int>();
+		var unit = new MobileUnit(id, unitInfo, tile, chunkIndex);
 		unitLocations[chunkIndex].Add(id);
 		units.Add(id, unit);
 		if (IsRendered)
@@ -299,12 +301,14 @@ public class Map : IDisposable
 
 	public List<int> SelectUnits(HexCoords left, HexCoords right)
 	{
+		//Transform to chunk space
 		var cLeft = left.GetChunkPos();
 		var cRight = right.GetChunkPos();
 		int cZMin, cZMax;
 		int cXMin, cXMax;
 		Vector3 worldLeft, worldRight;
 		worldLeft = worldRight = Vector3.zero;
+		//Normalize positions
 		if(left.offsetZ < right.offsetZ)
 		{
 			cZMin = cLeft.chunkZ;
@@ -333,10 +337,16 @@ public class Map : IDisposable
 			worldLeft.x = right.worldX;
 			worldRight.x = left.worldX;
 		}
+		//Fix ensure coords are within bounds
 		cXMin = Math.Max(0, cXMin);
 		cZMin = Math.Max(0, cZMin);
 		cXMax = Math.Min(width, cXMax);
 		cZMax = Math.Min(height, cZMax);
+
+		Debug.DrawRay(worldLeft, Vector3.up, Color.magenta, 5);
+		Debug.DrawLine(worldLeft, worldRight, Color.green, 5);
+		Debug.DrawRay(worldRight, Vector3.up, Color.magenta, 5);
+
 		var selectedUnits = new List<int>();
 		for (int cZ = cZMin; cZ <= cZMax; cZ++)
 		{
@@ -355,6 +365,69 @@ public class Map : IDisposable
 			}
 		}
 		return selectedUnits;
+	}
+
+	public List<int> SelectUnitsInRange(Tile center, int radius)
+	{
+		var worldRadius = HexCoords.TileToWorldDist(radius, innerRadius);
+		var worldRadiusSq = worldRadius * worldRadius;
+		List<int> candidateChunks = new List<int>();
+		candidateChunks.Add(center.Coords.GetChunkIndex(width));
+		var (chunkX, chunkZ) = center.Coords.GetChunkPos();
+		var centerPos = center.Coords.worldXZ;
+		var chunkSize = HexCoords.TileToWorldDist(Chunk.SIZE, innerRadius);
+		var chunkBounds = Chunks[candidateChunks[0]].Bounds;
+		bool left, right, up, down;
+		left = right = up = down = false;
+		if(centerPos.x - worldRadius < chunkBounds.min.x)
+		{
+			var nX = chunkX - 1;
+			if(left = nX >=0)
+				candidateChunks.Add(HexCoords.GetChunkIndex(nX, chunkZ, width));
+		}
+		if(centerPos.x + worldRadius > chunkBounds.max.x)
+		{
+			var nX = chunkX + 1;
+			if (right = nX <= width)
+				candidateChunks.Add(HexCoords.GetChunkIndex(nX, chunkZ, width));
+		}
+
+		if (centerPos.z - worldRadius < chunkBounds.min.z)
+		{
+			var nZ = chunkZ - 1;
+			if (down = nZ >= 0)
+				candidateChunks.Add(HexCoords.GetChunkIndex(chunkX, nZ, width));
+		}
+		if (centerPos.z + worldRadius > chunkBounds.max.z)
+		{
+			var nZ = chunkZ + 1;
+			if (up = nZ <= height)
+				candidateChunks.Add(HexCoords.GetChunkIndex(chunkX, nZ, width));
+		}
+		if(up && right)
+			candidateChunks.Add(HexCoords.GetChunkIndex(chunkX + 1, chunkZ + 1, width));
+		if (down && right)
+			candidateChunks.Add(HexCoords.GetChunkIndex(chunkX + 1, chunkZ - 1, width));
+		if (up && left)
+			candidateChunks.Add(HexCoords.GetChunkIndex(chunkX - 1, chunkZ + 1, width));
+		if (down && left)
+			candidateChunks.Add(HexCoords.GetChunkIndex(chunkX - 1, chunkZ - 1, width));
+
+		var unitsInRange = new List<int>();
+		for (int i = 0; i < candidateChunks.Count; i++)
+		{
+			var candidateUnits = unitLocations[candidateChunks[i]];
+			if (candidateUnits == null)
+				continue;
+			for (int j = 0; j < candidateUnits.Count; j++)
+			{
+				var unit = units[candidateUnits[j]];
+				var unitPos = new Vector3(unit._position.x, 0, unit._position.z);
+				if ((centerPos - unitPos).sqrMagnitude <= worldRadiusSq)
+					unitsInRange.Add(unit.id);
+			}
+		}
+		return unitsInRange;
 	}
 
 	public TileInfo[] GetTileTyes()

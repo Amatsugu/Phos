@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Test Unit
   m_EditorClassIdentifier: 
   mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: c5bd27640a28cbf40bc7a31293db797e, type: 2}
+  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1
-  moveSpeed: 3
+  isStatic: 0
+  moveSpeed: 10
+  size: 0
