@@ -20,10 +20,12 @@ MonoBehaviour:
   decorators: []
   description: 
   buildingMesh: {fileID: 11400000, guid: 08df32c5fb76d624cab4d82ba537c212, type: 2}
-  tier: 0
+  constructionMesh: {fileID: 0}
+  constructionTime: 0
+  tier: 1
   category: 0
   size: 1
-  flattenOuterRange: 3
+  flattenOuterRange: 6
   resourceTransferRange: 0
   cost: []
   icon: {fileID: 0}

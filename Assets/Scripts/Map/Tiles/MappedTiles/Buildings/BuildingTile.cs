@@ -12,19 +12,29 @@ public class BuildingTile : Tile
 	public readonly BuildingTileInfo buildingInfo;
 	public int distanceToHQ;
 	public int upgradeLevel = 0;
-
+	public bool IsBuilt => _isBuilt;
 
 	private Entity _building;
+	private bool _isBuilt;
 
 	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
 	{
 		buildingInfo = tInfo;
+		if (GameRegistry.Cheats.INSTANT_BUILD)
+			_isBuilt = true;
 	}
 
 	public override Entity Render()
 	{
-		if(buildingInfo.buildingMesh != null)
-			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
+		if(_isBuilt)
+		{
+			if(buildingInfo.buildingMesh != null)
+				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
+		}else
+		{
+			if (buildingInfo.constructionMesh != null)
+				_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
+		}
 		return base.Render();
 	}
 
@@ -53,12 +63,72 @@ public class BuildingTile : Tile
 	public override void Show(bool isShown)
 	{
 		base.Show(isShown);
-		if (buildingInfo.buildingMesh == null)
+		if (!Map.EM.Exists(_building))
 			return;
 		if (isShown)
 			Map.EM.RemoveComponent(_building, typeof(Frozen));
 		else
 			Map.EM.AddComponent(_building, typeof(Frozen));
+	}
+
+	public void Build()
+	{
+		if (_isBuilt)
+			return;
+		_isBuilt = true;
+		if (buildingInfo.constructionMesh != null)
+			Map.EM.DestroyEntity(_building);
+		_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
+		PrepareEntity();
+		OnBuilt();
+	}
+
+	protected virtual void PrepareEntity()
+	{
+		var production = buildingInfo.production;
+		var consumption = buildingInfo.consumption;
+		if (production.Length > 0)
+		{
+			var pData = new ProductionData
+			{
+				resourceIds = new int[production.Length],
+				rates = new int[production.Length]
+			};
+			for (int i = 0; i < production.Length; i++)
+			{
+				var rId = production[i].id;
+				pData.resourceIds[i] = rId;
+				pData.rates[i] = (int)production[i].ammount;
+			}
+
+			Map.EM.AddSharedComponentData(_tileEntity, pData);
+		}
+		if (consumption.Length > 0)
+		{
+
+			var cData = new ConsumptionData
+			{
+				resourceIds = new int[consumption.Length],
+				rates = new int[consumption.Length]
+			};
+			for (int i = 0; i < consumption.Length; i++)
+			{
+				var rId = consumption[i].id;
+				cData.resourceIds[i] = rId;
+				cData.rates[i] = (int)consumption[i].ammount;
+			}
+
+			Map.EM.AddSharedComponentData(_tileEntity, cData);
+		}
+		Map.EM.RemoveComponent<BuildingOffTag>(_tileEntity);
+		Map.EM.AddComponent(_tileEntity, typeof(FirstTickTag));
+	}
+		 
+
+	protected virtual void OnBuilt()
+	{
+		NotificationsUI.Notify(NotifType.Info, $"Construction Complete: {buildingInfo.name}");
+		
 	}
 }
 
@@ -81,8 +151,13 @@ public class PoweredBuildingTile : BuildingTile
 	public override void OnPlaced()
 	{
 		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
-		FindConduitConnections();
 		base.OnPlaced();
+	}
+
+	protected override void OnBuilt()
+	{
+		base.OnBuilt();
+		FindConduitConnections();
 	}
 
 	public virtual void FindConduitConnections()
@@ -129,7 +204,8 @@ public class PoweredBuildingTile : BuildingTile
 			else
 				return;
 		}
-		Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
+		if(!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
+			Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
 		HasHQConnection = false;
 	}
 

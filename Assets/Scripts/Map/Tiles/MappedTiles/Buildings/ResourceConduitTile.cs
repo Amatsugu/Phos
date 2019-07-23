@@ -76,39 +76,49 @@ public class ResourceConduitTile : PoweredBuildingTile
 		}
 	}
 
+	public override void OnPlaced()
+	{
+		base.OnPlaced();
+		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords);
+	}
+
 	public override void FindConduitConnections()
 	{
 		var disconnectedNodesStart = Map.ActiveMap.conduitGraph.GetDisconectedNodes();
 		var closest = Map.ActiveMap.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
-		var nodeCreated = false;
-		var gotConnectedNode = closest.Any(n => n != null && (Map.ActiveMap[n.conduitPos] is HQTile || (Map.ActiveMap[n.conduitPos] as ResourceConduitTile).HasHQConnection));
+		var gotConnectedNode = closest.Any(n => (Map.ActiveMap[n.conduitPos] is HQTile || (Map.ActiveMap[n.conduitPos] as ResourceConduitTile).HasHQConnection));
 
+		var thisNode = Map.ActiveMap.conduitGraph.GetNode(Coords);
 
 		//Find connections
 		var connectionsMade = 0;
 		for (int i = 0; i < closest.Count; i++)
 		{
-			if (connectionsMade >= Map.ActiveMap.conduitGraph.maxConnections)
-				break;
+			if (closest[i] == thisNode)
+				continue;
+			if (closest[i].IsFull)
+				continue;
+			if (closest[i].IsConnectedTo(thisNode))
+				continue;
+			if (!(Map.ActiveMap[closest[i].conduitPos] as BuildingTile).IsBuilt)
+				continue;
+
 			connectionsMade++;
-			if (!nodeCreated)
-			{
-				Map.ActiveMap.conduitGraph.AddNode(Coords, closest[i]);
-				nodeCreated = true;
-			}
-			else
-			{
-				Map.ActiveMap.conduitGraph.ConnectNode(Coords, closest[i]);
-			}
+
+
+			thisNode.ConnectTo(closest[i]);
+
+
 			var tile = Map.ActiveMap[closest[i].conduitPos];
 			var a = tile.SurfacePoint + conduitInfo.powerLineOffset;
 			var b = SurfacePoint + conduitInfo.powerLineOffset;
 			var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
 			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
+			if (thisNode.IsFull)
+				break;
 		}
-		if (!nodeCreated)
+		if (connectionsMade == 0)
 		{
-			Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords);
 			OnHQDisconnected();
 		}
 		else
@@ -145,6 +155,9 @@ public class ResourceConduitTile : PoweredBuildingTile
 				continue;
 			if (curNode.IsConnectedTo(closest[i]))
 				continue;
+			if (!(Map.ActiveMap[closest[i].conduitPos] as BuildingTile).IsBuilt)
+				continue;
+
 			curNode.ConnectTo(closest[i]);
 			var tile = Map.ActiveMap[closest[i].conduitPos];
 			if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)

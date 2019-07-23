@@ -12,39 +12,56 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		gatherInfo = tInfo;
 	}
 
-	public override void OnPlaced()
+	protected override void PrepareEntity()
 	{
-		base.OnPlaced();
+		base.PrepareEntity();
 		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
-		var tilesInRange = Map.ActiveMap.HexSelect(Coords, fullRange);
-		var gatherTileInfo = gatherInfo.resourcesToGather.Select(r => ResourceDatabase.GetResourceTile(r.id)).ToArray();
-		var prodData = new ProductionData
+		var resInRange = new Dictionary<int, int>();
+		var resTiles = new Dictionary<int, List<ResourceTile>>();
+		Map.ActiveMap.HexSelectForEach(Coords, fullRange, t =>
 		{
-			resourceIds = new int[gatherInfo.resourcesToGather.Length]
-		};
-
-		var approxRates = new float[gatherInfo.resourcesToGather.Length];
-		foreach (var tile in tilesInRange)
-		{
-			if (tile is ResourceTile rt)
+			if (t is ResourceTile rt && !rt.gatherer.isCreated)
 			{
-				for (int i = 0; i < gatherInfo.resourcesToGather.Length; i++)
+				var yeild = rt.resInfo.resourceYields;
+				for (int i = 0; i < yeild.Length; i++)
 				{
-					if (gatherTileInfo[i] == rt.info && !rt.gatherer.isCreated)
+					var yID = yeild[i].id;
+					if (resInRange.ContainsKey(yID))
 					{
-						rt.gatherer = Coords;
-						approxRates[i] += gatherInfo.resourcesToGather[i].ammount;
-						break;
+						resInRange[yID]++;
+						resTiles[yID].Add(rt);
+					}
+					else
+					{
+						resInRange.Add(yID, 1);
+						resTiles.Add(yID, new List<ResourceTile> { rt });
 					}
 				}
 			}
-		}
-		prodData.rates = approxRates.Select(r => Mathf.FloorToInt(r)).ToArray();
+		}, true);
 
+		var prodData = new ProductionData
+		{
+			resourceIds = new int[gatherInfo.resourcesToGather.Length],
+			rates = new int[gatherInfo.resourcesToGather.Length]
+		};
+
+		var approxRates = new int[gatherInfo.resourcesToGather.Length];
 		for (int i = 0; i < gatherInfo.resourcesToGather.Length; i++)
 		{
-			prodData.resourceIds[i] = gatherInfo.resourcesToGather[i].id;
+			var res = gatherInfo.resourcesToGather[i];
+			if (resInRange.ContainsKey(res.id))
+			{
+				prodData.resourceIds[i] = res.id;
+				prodData.rates[i] = Mathf.FloorToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
+				var gatheredTiles = resTiles[res.id];
+				for (int j = 0; j < gatheredTiles.Count; j++)
+				{
+					gatheredTiles[j].gatherer = Coords;
+				}
+			}
 		}
+		
 		if (Map.EM.HasComponent<ProductionData>(_tileEntity))
 		{
 			var exisitingProdData = Map.EM.GetSharedComponentData<ProductionData>(_tileEntity);

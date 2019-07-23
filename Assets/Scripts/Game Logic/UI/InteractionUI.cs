@@ -224,11 +224,11 @@ public class InteractionUI : MonoBehaviour
 		{
 			case HQTile _:
 				GameRegistry.ResearchTreeUI.Show(null);
-				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case SubHQTile _:
 				GameRegistry.ResearchTreeUI.Show(null);
-				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case ResearchBuildingTile rb:
 				if(rb.HasHQConnection)

@@ -17,6 +17,8 @@ public class BuildingTileInfo : TileInfo
 {
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable buildingMesh;
+	public MeshEntityRotatable constructionMesh;
+	public float constructionTime = 2;
 	[Range(1, 6)]
 	public int tier = 1;
 	public BuildingCategory category;
@@ -32,52 +34,9 @@ public class BuildingTileInfo : TileInfo
 	public ResourceIndentifier[] production;
 	public ResourceIndentifier[] consumption;
 
-
-	/*public override IEnumerable<ComponentType> GetComponents()
+	public override IEnumerable<ComponentType> GetComponents()
 	{
-		return base.GetComponents().Concat(new ComponentType[]{
-			typeof(FirstTickTag)
-		});
-	}*/
-
-	public override Entity Instantiate(HexCoords pos, Vector3 scale)
-	{
-		var e = base.Instantiate(pos, scale);
-		if (production.Length > 0)
-		{
-			var pData = new ProductionData
-			{
-				resourceIds = new int[production.Length],
-				rates = new int[production.Length]
-			};
-			for (int i = 0; i < production.Length; i++)
-			{
-				var rId = production[i].id;
-				pData.resourceIds[i] = rId;
-				pData.rates[i] = (int)production[i].ammount;
-			}
-
-			Map.EM.AddSharedComponentData(e, pData);
-		}
-		if (consumption.Length > 0)
-		{
-
-			var cData = new ConsumptionData
-			{
-				resourceIds = new int[consumption.Length],
-				rates = new int[consumption.Length]
-			};
-			for (int i = 0; i < consumption.Length; i++)
-			{
-				var rId = consumption[i].id;
-				cData.resourceIds[i] = rId;
-				cData.rates[i] = (int)consumption[i].ammount;
-			}
-
-			Map.EM.AddSharedComponentData(e, cData);
-		}
-		Map.EM.AddComponent(e, typeof(FirstTickTag));
-		return e;
+		return base.GetComponents().Append(typeof(BuildingOffTag));
 	}
 
 	public override Tile CreateTile(HexCoords pos, float height)

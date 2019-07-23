@@ -9,12 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b66f37c7c782e954a81d7818bfefc6b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 349cd418e960646429bb24fb8abb8192, type: 3}
   m_Name: Ice
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0e66970b266f32e4ea82137046fdf1da, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
   decorators: []
   description: 
+  resourceYields:
+  - id: 3
+    ammount: 0

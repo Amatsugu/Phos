@@ -65,16 +65,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private List<Tile> _buildPath;
 	private System.Func<Tile, bool> invalidTileSelector;
 	private bool _validPlacement;
-	private BuildingDatabase.BuildingDefination[] _lastBuildingList;
-	private Dictionary<int, BuildOrder> _pendingBuildOrders;
-	private List<int> _readyToBuildOrders;
+	private BuildingCategory? _lastBuildingCategory;
+
 	private float _poweredTileRangeSq;
 
-	struct BuildOrder
-	{
-		public Tile dstTile;
-		public BuildingTileInfo building;
-	}
+	
 
 	void Awake()
 	{
@@ -84,8 +79,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void Start()
 	{
-		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
-		_readyToBuildOrders = new List<int>();
+		
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
 		_activeUnits = new List<UIUnitIcon>();
@@ -96,7 +90,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_selectedBuilding = HQTile;
 		infoBanner.SetText("Place HQ Building");
 		invalidTileSelector = t =>
-			_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||
+			/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
 			t.Height <= Map.ActiveMap.seaLevel ||
 			t is BuildingTile ||
 			t is ResourceTile;
@@ -105,8 +99,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 		EventManager.AddEventListener("OnBuildingUnlocked", () =>
 		{
-			if(_lastBuildingList != null)
-				ShowBuildWindow(_lastBuildingList);
+			if(_lastBuildingCategory != null)
+				ShowBuildWindow(buildings[(BuildingCategory)_lastBuildingCategory]);
 		});
 		_poweredTileRangeSq = HexCoords.TileToWorldDist(poweredTileDisplayRange, Map.ActiveMap.innerRadius);
 		_poweredTileRangeSq *= _poweredTileRangeSq;
@@ -115,7 +109,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	// Update is called once per frame
 	void Update()
 	{
-		BuildReadyBuildings();
 		if (Input.GetKey(KeyCode.Escape) && !hqMode)
 		{
 			if (placeMode)
@@ -210,7 +203,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 								ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
 							if (_buildPath == null)
 							{
-								QueueBuilding(selectedTile);
+								BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, landingMesh);
 							}
 							else
 							{
@@ -218,12 +211,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 								{
 									if (invalidTileSelector(_buildPath[i]))
 										continue;
-									QueueBuilding(_buildPath[i]);
+									BuildQueueSystem.QueueBuilding(_selectedBuilding, _buildPath[i], landingMesh);
 								}
 								_buildPath = null;
 							}
 							if (hqMode)
 							{
+								HideAllIndicators();
 								placeMode = false;
 								infoBanner.SetActive(false);
 								void onHide()
@@ -280,6 +274,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		if (_validPlacement)
 		{
 			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, rangeSqr);
+			while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
+				nodes.RemoveAt(nodes.Count - 1);
 			ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
 #if DEBUG
 			for (int i = 0; i < nodes.Count; i++)
@@ -321,37 +317,49 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void ValidateResourceGatheringBuilding(Tile selectedTile, List<Tile> tilesToOccupy, ResourceGatheringBuildingInfo buildingInfo)
 	{
-		var res = Map.ActiveMap.HexSelect(selectedTile.Coords, buildingInfo.gatherRange, true) //Select Tiles
-								.Where(t => t is ResourceTile rt && !rt.gatherer.isCreated) //Exclude Tiles that are not resource tiles or being gathered already
-								.Where(rt => buildingInfo.resourcesToGather.Any(rG => ResourceDatabase.GetResourceTile(rG.id) == rt.info)).ToList();
-		if (res.Count > 0)
+		var resInRange = new Dictionary<int, int>();
+		var resTiles = new Dictionary<int, List<Tile>>();
+		Map.ActiveMap.HexSelectForEach(selectedTile.Coords, buildingInfo.size + buildingInfo.gatherRange, t =>
 		{
-			var resCount = new Dictionary<int, int>();
-			for (int i = 0; i < res.Count; i++)
+			if(t is ResourceTile rt && !rt.gatherer.isCreated)
 			{
-				var id = ResourceDatabase.GetResourceId(res[i].info as ResourceTileInfo);
-				if (resCount.ContainsKey(id))
-					resCount[id]++;
-				else
-					resCount.Add(id, 1);
+				var yeild = rt.resInfo.resourceYields;
+				for (int i = 0; i < yeild.Length; i++)
+				{
+					var yID = yeild[i].id;
+					if (resInRange.ContainsKey(yID))
+					{
+						resInRange[yID]++;
+						resTiles[yID].Add(t);
+					}
+					else
+					{
+						resInRange.Add(yID, 1);
+						resTiles.Add(yID, new List<Tile> { t });
+					}
+				}
 			}
+		}, true);
+
+		if (resInRange.Count > 0)
+		{
 			var sb = new System.Text.StringBuilder();
+			var gatheredTiles = new List<Tile>();
 			for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
 			{
-				var rG = buildingInfo.resourcesToGather[i];
-				if (resCount.ContainsKey(rG.id))
-				{
-					var gatherAmmount = (int)(resCount[rG.id] * rG.ammount);
-					if (gatherAmmount > 0)
-						sb.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(rG.id)}");
-				}
+				var res = buildingInfo.resourcesToGather[i];
+				if (!resInRange.ContainsKey(res.id))
+					continue;
+				var gatherAmmount = Mathf.FloorToInt(resInRange[res.id] * res.ammount);
+				gatheredTiles.AddRange(resTiles[res.id]);
+				sb.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(res.id)}");
 			}
 			floatingText.SetText(sb);
 			var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
 			pos.y += 20;
 			floatingText.rectTransform.position = pos;
 			floatingText.gameObject.SetActive(true);
-			ShowIndicators(gatheringIndicatorEntity, res);
+			ShowIndicators(gatheringIndicatorEntity, gatheredTiles);
 			if (!invalidTileSelector(selectedTile))
 				HideIndicator(errorIndicatorEntity);
 		}
@@ -363,83 +371,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 			floatingText.gameObject.SetActive(false);
 		}
-	}
-
-	void QueueBuilding(Tile tile)
-	{
-		
-		var callback = tile.Coords.GetHashCode();
-		_pendingBuildOrders.Add(callback, new BuildOrder
-		{
-			building = _selectedBuilding,
-			dstTile = tile
-		});
-		if (GameRegistry.Cheats.INSTANT_BUILD)
-		{
-			_readyToBuildOrders.Add(callback);
-			if(hqMode)
-			{
-				HideAllIndicators();
-				GameRegistry.BaseNameUI.panel.Show();
-			}
-		}
-		else
-		{
-
-			if (hqMode)
-			{
-				HideAllIndicators();
-				EventManager.AddEventListener(callback.ToString(), () =>
-				{
-					_readyToBuildOrders.Add(callback);
-					GameRegistry.BaseNameUI.panel.Show();
-				});
-			}
-			else
-			{
-				EventManager.AddEventListener(callback.ToString(), () =>
-				{
-					_readyToBuildOrders.Add(callback);
-				});
-			}
-		}
-		if (!GameRegistry.Cheats.INSTANT_BUILD)
-		{
-			var pos = tile.SurfacePoint;
-			pos.y = Random.Range(90, 100);
-			var e = landingMesh.Instantiate(pos);
-			_EM.AddComponentData(e, new FallAnim
-			{
-				startSpeed = new float3(0, Random.Range(-100, -90), 0)
-			});
-			_EM.AddComponentData(e, new Floor
-			{
-				Value = tile.Height
-			});
-			_EM.AddComponentData(e, new HitFloorCallback
-			{
-				eventId = callback
-			});
-			_EM.AddComponentData(e, new Gravity { Value = 9.8f });
-		}
-	}
-
-	void BuildReadyBuildings()
-	{
-		for (int i = 0; i < _readyToBuildOrders.Count; i++)
-		{
-			var orderId = _readyToBuildOrders[i];
-			EventManager.RemoveAllEventListeners(orderId.ToString());
-			PlaceBuilding(_pendingBuildOrders[orderId]);
-			_pendingBuildOrders.Remove(orderId);
-		}
-		_readyToBuildOrders.Clear();
-	}
-
-	void PlaceBuilding(BuildOrder order)
-	{
-		Map.ActiveMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average);
-		Map.ActiveMap.ReplaceTile(order.dstTile, order.building);
 	}
 
 	void HideIndicator(MeshEntity indicator)
@@ -517,7 +448,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		if (hqMode)
 			return;
-		_lastBuildingList = buildings;
 		buildWindow.SetActive(true);
 		placeMode = false;
 		_selectedBuilding = null;
@@ -578,18 +508,18 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	public void ShowTechWindow() => ShowBuildWindow(buildings[BuildingCategory.Tech]);
-	public void ShowResourcesWindow() => ShowBuildWindow(buildings[BuildingCategory.Resources]);
-	public void ShowProdcutionWindow() => ShowBuildWindow(buildings[BuildingCategory.Production]);
-	public void ShowStructureWindow() => ShowBuildWindow(buildings[BuildingCategory.Structure]);
-	public void ShowMilitaryWindow() => ShowBuildWindow(buildings[BuildingCategory.Military]);
-	public void ShowDefenseWindow() => ShowBuildWindow(buildings[BuildingCategory.Defense]);
+	public void ShowTechWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Tech)]);
+	public void ShowResourcesWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Resources)]);
+	public void ShowProdcutionWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Production)]);
+	public void ShowStructureWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Structure)]);
+	public void ShowMilitaryWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Military)]);
+	public void ShowDefenseWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Defense)]);
 
 	public void HideBuildWindow()
 	{
 		HideAllIndicators();
 		placeMode = false;
-		_lastBuildingList = null;
+		_lastBuildingCategory = null;
 		_selectedBuilding = null;
 		buildWindow.SetActive(false);
 		for (int i = 0; i < _activeUnits.Count; i++)

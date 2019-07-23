@@ -33,24 +33,9 @@ public class ResourceDatabase : MonoBehaviour
 		throw new System.Exception($"Resource '{name}' does not exits");
 	}
 
-	public static int GetResourceId(ResourceTileInfo tileInfo)
-	{
-		for (int i = 0; i < INST.resourceList.resourceDefinations.Length; i++)
-		{
-			if (INST.resourceList.resourceDefinations[i].resourceTile == tileInfo)
-				return i;
-		}
-		throw new System.Exception($"Resource '{tileInfo.name}' does not exits");
-	}
-
 	public static string GetResourceName(int id, string locale = "en")
 	{
 		return INST.resourceList.resourceDefinations[id].name;
-	}
-
-	public static TileInfo GetResourceTile(int id)
-	{
-		return INST.resourceList.resourceDefinations[id].resourceTile;
 	}
 
 	public static int GetSpriteId(int id)

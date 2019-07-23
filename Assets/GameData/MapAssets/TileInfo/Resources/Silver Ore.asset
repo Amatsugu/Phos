@@ -16,6 +16,10 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: f5d9e41e16a38274d9ca24e304f85fee, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
   decorators:
   - {fileID: 11400000, guid: b45ac7d4323be654fb507646e05cd4de, type: 2}
   description: Silver Ore
+  resourceYields:
+  - id: 6
+    ammount: 0

@@ -28,10 +28,15 @@ public class HQTile : BuildingTile
 		{
 			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTile);
 		}
+		GameRegistry.BaseNameUI.panel.Show();
+	}
+
+	protected override void OnBuilt()
+	{
 		var spawnTiles = Map.ActiveMap.HexSelect(Coords, 2);
 		for (int i = 0; i < spawnTiles.Count; i++)
 		{
-			if(!(spawnTiles[i] is BuildingTile))
+			if (!(spawnTiles[i] is BuildingTile))
 				Map.ActiveMap.AddUnit(hqInfo.unitInfo, spawnTiles[i]);
 		}
 		ResourceSystem.AddResources(hqInfo.startingResources);

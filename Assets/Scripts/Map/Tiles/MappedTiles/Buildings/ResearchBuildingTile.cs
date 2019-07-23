@@ -11,9 +11,9 @@ public class ResearchBuildingTile : PoweredBuildingTile
 		researchInfo = tInfo;
 	}
 
-	public override void OnPlaced()
+	protected override void OnBuilt()
 	{
-		base.OnPlaced();
+		base.OnBuilt();
 		ResearchSystem.UnlockCategory(researchInfo.researchCategory);
 	}
 }

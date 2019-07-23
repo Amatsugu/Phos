@@ -16,6 +16,10 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: d8388615351f24b408545abeb9a7b40b, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
   decorators:
   - {fileID: 11400000, guid: c97c11239779fcf479c352de4d9bf71a, type: 2}
   description: Gold Ore
+  resourceYields:
+  - id: 7
+    ammount: 0
