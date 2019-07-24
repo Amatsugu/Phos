@@ -150,10 +150,12 @@ public class CloudSystem : JobComponentSystem
 			disolveUpper = _disolveUpper
 		};
 #if DEBUG
+		/*
 		Debug.DrawRay(job.rawCamPos, Vector3.right, Color.blue);
 		Debug.DrawRay(job.rawCamPos, Vector3.up * _disolveUpper, Color.green);
 		Debug.DrawRay(job.rawCamPos, Vector3.up * -_disolveLower, Color.yellow);
 		Debug.DrawRay(job.rawCamPos, _windDir * _windSpeed * -4, Color.cyan);
+		*/
 #endif
 		return job.Schedule(this, inputDeps);
 	}

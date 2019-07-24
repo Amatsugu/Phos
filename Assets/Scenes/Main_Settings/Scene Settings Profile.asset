@@ -567,13 +567,13 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0.5
     min: 0
-  maxVelocity:
-    m_OverrideState: 1
-    m_Value: 250
+  maximumVelocity:
+    m_OverrideState: 0
+    m_Value: 200
     min: 0
     max: 1500
-  minVel:
-    m_OverrideState: 1
+  minimumVelocity:
+    m_OverrideState: 0
     m_Value: 2
     min: 0
     max: 64
@@ -582,6 +582,11 @@ MonoBehaviour:
     m_Value: 0.03
     min: 0
     max: 0.2
+  depthComparisonExtent:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 20
 --- !u!114 &-623145698969706735
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -761,31 +766,50 @@ MonoBehaviour:
     m_Value: 0
     min: 0
     max: 4
-  thicknessModifier:
+  stepCount:
     m_OverrideState: 0
-    m_Value: 1
-    min: 1
-    max: 10
+    m_Value: 6
+    min: 2
+    max: 32
+  radius:
+    m_OverrideState: 0
+    m_Value: 2
+    min: 0.25
+    max: 5
+  fullResolution:
+    m_OverrideState: 0
+    m_Value: 0
+  maximumRadiusInPixels:
+    m_OverrideState: 0
+    m_Value: 40
+    min: 16
+    max: 256
   directLightingStrength:
     m_OverrideState: 0
     m_Value: 0
     min: 0
     max: 1
-  noiseFilterTolerance:
+  enableRaytracing:
     m_OverrideState: 0
     m_Value: 0
-    min: -8
-    max: 0
-  blurTolerance:
+  rayLength:
     m_OverrideState: 0
-    m_Value: -4.6
-    min: -8
-    max: 1
-  upsampleTolerance:
+    m_Value: 0.5
+    min: 0
+    max: 50
+  enableFilter:
     m_OverrideState: 0
-    m_Value: -12
-    min: -12
-    max: -1
+    m_Value: 0
+  numSamples:
+    m_OverrideState: 0
+    m_Value: 4
+    min: 1
+    max: 64
+  filterRadius:
+    m_OverrideState: 0
+    m_Value: 16
+    min: 1
+    max: 32
 --- !u!114 &114117599739317384
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1118,31 +1142,50 @@ MonoBehaviour:
     m_Value: 1.5
     min: 0
     max: 4
-  thicknessModifier:
-    m_OverrideState: 1
-    m_Value: 1
-    min: 1
-    max: 10
+  stepCount:
+    m_OverrideState: 0
+    m_Value: 6
+    min: 2
+    max: 32
+  radius:
+    m_OverrideState: 0
+    m_Value: 2
+    min: 0.25
+    max: 5
+  fullResolution:
+    m_OverrideState: 0
+    m_Value: 0
+  maximumRadiusInPixels:
+    m_OverrideState: 0
+    m_Value: 40
+    min: 16
+    max: 256
   directLightingStrength:
     m_OverrideState: 1
     m_Value: 0.272
     min: 0
     max: 1
-  noiseFilterTolerance:
+  enableRaytracing:
     m_OverrideState: 0
     m_Value: 0
-    min: -8
-    max: 0
-  blurTolerance:
+  rayLength:
     m_OverrideState: 0
-    m_Value: -4.6
-    min: -8
-    max: 1
-  upsampleTolerance:
+    m_Value: 0.5
+    min: 0
+    max: 50
+  enableFilter:
     m_OverrideState: 0
-    m_Value: -12
-    min: -12
-    max: -1
+    m_Value: 0
+  numSamples:
+    m_OverrideState: 0
+    m_Value: 4
+    min: 1
+    max: 64
+  filterRadius:
+    m_OverrideState: 0
+    m_Value: 16
+    min: 1
+    max: 32
 --- !u!114 &2035282718947859468
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1165,12 +1208,12 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
     min: 0
-  maxVelocity:
+  maximumVelocity:
     m_OverrideState: 0
-    m_Value: 250
+    m_Value: 200
     min: 0
     max: 1500
-  minVel:
+  minimumVelocity:
     m_OverrideState: 0
     m_Value: 2
     min: 0
@@ -1180,6 +1223,11 @@ MonoBehaviour:
     m_Value: 0.03
     min: 0
     max: 0.2
+  depthComparisonExtent:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 20
 --- !u!114 &2521325931416132518
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1347,31 +1395,50 @@ MonoBehaviour:
     m_Value: 1.28
     min: 0
     max: 4
-  thicknessModifier:
+  stepCount:
     m_OverrideState: 0
-    m_Value: 1
-    min: 1
-    max: 10
+    m_Value: 6
+    min: 2
+    max: 32
+  radius:
+    m_OverrideState: 0
+    m_Value: 2
+    min: 0.25
+    max: 5
+  fullResolution:
+    m_OverrideState: 0
+    m_Value: 0
+  maximumRadiusInPixels:
+    m_OverrideState: 0
+    m_Value: 40
+    min: 16
+    max: 256
   directLightingStrength:
     m_OverrideState: 0
     m_Value: 0
     min: 0
     max: 1
-  noiseFilterTolerance:
+  enableRaytracing:
     m_OverrideState: 0
     m_Value: 0
-    min: -8
-    max: 0
-  blurTolerance:
+  rayLength:
     m_OverrideState: 0
-    m_Value: -4.6
-    min: -8
-    max: 1
-  upsampleTolerance:
+    m_Value: 0.5
+    min: 0
+    max: 50
+  enableFilter:
     m_OverrideState: 0
-    m_Value: -12
-    min: -12
-    max: -1
+    m_Value: 0
+  numSamples:
+    m_OverrideState: 0
+    m_Value: 4
+    min: 1
+    max: 64
+  filterRadius:
+    m_OverrideState: 0
+    m_Value: 16
+    min: 1
+    max: 32
 --- !u!114 &3987789495178957945
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1602,6 +1669,40 @@ MonoBehaviour:
   rayMaxIterations:
     m_OverrideState: 1
     m_Value: 32
+  enableRaytracing:
+    m_OverrideState: 0
+    m_Value: 0
+  rayLength:
+    m_OverrideState: 0
+    m_Value: 10
+    min: 0.001
+    max: 50
+  clampValue:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0.001
+    max: 10
+  temporalAccumulationWeight:
+    m_OverrideState: 0
+    m_Value: 0.1
+    min: 0.001
+    max: 1
+  spatialFilterRadius:
+    m_OverrideState: 0
+    m_Value: 4
+  numSamples:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 1
+    max: 32
+  enableFilter:
+    m_OverrideState: 0
+    m_Value: 0
+  filterRadius:
+    m_OverrideState: 0
+    m_Value: 16
+    min: 1
+    max: 32
 --- !u!114 &5460159405741296130
 MonoBehaviour:
   m_ObjectHideFlags: 3
