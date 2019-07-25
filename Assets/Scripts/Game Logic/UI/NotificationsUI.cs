@@ -80,10 +80,6 @@ public class NotificationsUI : MonoBehaviour
 
 	public void Update()
 	{
-		if (Input.GetKeyUp(KeyCode.Mouse2))
-			CreateNotification(NotifType.Info, "This is a small notification");
-		else if(Input.GetKeyUp(KeyCode.B))
-			CreateNotification(NotifType.Warning, "Bigger", "This is a big notification");
 
 		for (int i = 0; i < _activeNotifs.Length; i++)
 		{

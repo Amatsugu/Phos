@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public struct HexCoords
@@ -120,9 +121,50 @@ public struct HexCoords
 
 	public override string ToString() => $"({x}, {y}, {z})";
 
+	public static int GetTileCount(int r) => (1 + 3 * (r + 1) * (r));
+
+	public static int CalculateRadius(int tileCount)
+	{
+		var sqrt = math.sqrt(3 * ((4 * tileCount) - 1));
+		var a = -(3 + sqrt) / 6f;
+		var b = -(3 - sqrt) / 6f;
+		if (a < 0)
+			return Mathf.CeilToInt(b);
+		else
+			return Mathf.CeilToInt(a);
+	}
+
 	public static bool operator ==(HexCoords a, HexCoords b) => a.Equals(b);
 
 	public static bool operator !=(HexCoords a, HexCoords b) => !a.Equals(b);
+
+	public static HexCoords[] HexSelect(HexCoords center, int radius, bool excludeCenter = false)
+	{
+		radius = Mathf.Abs(radius);
+		var i = 0;
+		if (radius == 0)
+		{
+			return new HexCoords[] { center };
+		}
+		var selection = new HexCoords[GetTileCount(radius)];
+		for (int y = -radius; y <= radius; y++)
+		{
+			int xMin = -radius, xMax = radius;
+			if (y < 0)
+				xMin = -radius - y;
+			if (y > 0)
+				xMax = radius - y;
+			for (int x = xMin; x <= xMax; x++)
+			{
+				int z = -x - y;
+				var coord = new HexCoords(center.x + x, center.y + y, center.edgeLength);
+				if (excludeCenter && coord == center)
+					continue;
+				selection[i++] = coord;
+			}
+		}
+		return selection;
+	}
 
 	// override object.Equals
 	public override bool Equals(object obj)

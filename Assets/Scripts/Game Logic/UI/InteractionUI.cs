@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class InteractionUI : MonoBehaviour
 {
@@ -43,6 +45,7 @@ public class InteractionUI : MonoBehaviour
 		{
 			enabled = true;
 		});
+		
 	}
 
 	void DestroyTile()
@@ -172,15 +175,34 @@ public class InteractionUI : MonoBehaviour
 
 	void InstructUnitMovement(Tile tile)
 	{
-		
-	}
+		var tilesNeeded = 0;
+		for (int i = 0; i < _selectedUnits.Count; i++)
+			tilesNeeded += HexCoords.GetTileCount(Map.ActiveMap.units[_selectedUnits[i]].info.size);
+		var r = HexCoords.CalculateRadius(tilesNeeded)+1;
+		var orderedUnits = _selectedUnits.Select(uId => Map.ActiveMap.units[uId]).OrderBy(u => u.info.size).Reverse().ToArray();
 
-	int CalculateR(int units)
-	{
-		var r = 0;
-		while ((1 + 3 * (r + 1) * (r)) < units)
-			r++;
-		return r;
+		var occupiedSet = new HashSet<HexCoords>();
+		var openSet = new HashSet<HexCoords>();
+
+		var openTiles = HexCoords.HexSelect(tile.Coords, r);
+		for (int i = 0; i < openTiles.Length; i++)
+			openSet.Add(openTiles[i]);
+		var g = 0;
+		for (int i = 0; i < orderedUnits.Length; i++)
+		{
+			for (int j = 0; j < openTiles.Length; j++)
+			{
+				var footprint = HexCoords.HexSelect(openTiles[j], orderedUnits[i].info.size);
+				if(footprint.All(f => openSet.Contains(f)) && !footprint.Any(f => occupiedSet.Contains(f)))
+				{
+					for (int x = 0; x < footprint.Length; x++)
+						occupiedSet.Add(footprint[x]);
+					orderedUnits[i].MoveTo(Map.ActiveMap[openTiles[j]].SurfacePoint, g++);
+					break;
+				}
+			}
+		}
+		Debug.Log($"Paths Formed {g}/{orderedUnits.Length}");
 	}
 
 	void HidePanel()
