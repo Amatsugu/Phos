@@ -70,14 +70,16 @@ MonoBehaviour:
       name: Solar Power
       description: 'Unlock the use of solar panels to generate power.
 
-        Not Yet Implemented'
+        <b>Not Yet Implemented</b>'
       resourceCost:
       - id: 0
         ammount: 300
-      - id: 4
+      - id: 1
         ammount: 100
-      - id: 2
-        ammount: 10
+      - id: 7
+        ammount: 100
+      - id: 6
+        ammount: 300
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0
@@ -87,12 +89,14 @@ MonoBehaviour:
       name: Wind Turbine
       description: 'Unlock the use of wind turbines to generate power.
 
-        Not Yet Implemented'
+        <b>Not Yet Implemented</b>'
       resourceCost:
       - id: 0
-        ammount: 50
-      - id: 1
-        ammount: 20
+        ammount: 600
+      - id: 2
+        ammount: 100
+      - id: 5
+        ammount: 300
       reward: {fileID: 0}
       childrenIDs: 000000000000000000000000
       Count: 0

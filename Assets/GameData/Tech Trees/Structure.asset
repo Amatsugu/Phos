@@ -28,7 +28,7 @@ MonoBehaviour:
       icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329,
         type: 3}
       name: Offshore Conduit
-      description: 
+      description: <b>Not Yet Implemented</b>
       resourceCost:
       - id: 0
         ammount: 200

@@ -18,8 +18,10 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   decorators: []
-  description: 
-  buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  description: Unlocks research relating to technology and improvements
+  buildingMesh: {fileID: 11400000, guid: 396bb86d2dfd29140b0d4ed8115681dc, type: 2}
+  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  constructionTime: 2
   tier: 1
   category: 1
   size: 0

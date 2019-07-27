@@ -45,7 +45,7 @@ public struct Path : ISharedComponentData, IEquatable<Path>
 	}
 }
 
-public struct PathGroup : IComponentData
+public struct PathId : IComponentData
 {
 	public int Value;
 	public int Delay;

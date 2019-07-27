@@ -788,7 +788,7 @@ public class Map : IDisposable
 			PathNode best = nodes.First();
 			foreach (var node in nodes)
 			{
-				if (best.CalculateF(dst) > node.CalculateF(dst))
+				if (best.CalculateF(dst.SurfacePoint) > node.CalculateF(dst.SurfacePoint))
 					best = node;
 			}
 			return best;
@@ -810,13 +810,15 @@ public class Map : IDisposable
 			open.Remove(curTileNode);
 			closed.Add(curTileNode);
 			last = curTileNode;
-			foreach (Tile neighbor in GetNeighbors(curTileNode.tile))
+			foreach (Tile neighbor in GetNeighbors(curTileNode.coords))
 			{
 				if (neighbor == null)
 					continue;
-				if (Mathf.Abs(neighbor.Height - curTileNode.tile.Height) > maxIncline)
+				if (Mathf.Abs(neighbor.Height - curTileNode.surfacePoint.y) > maxIncline)
 					continue;
-				if(filter != null && !filter(neighbor) && !neighbor.Equals(dst) && !neighbor.Equals(src))
+				//if ()
+				//	continue;
+				if(filter != null && !neighbor.Equals(dst) && !neighbor.Equals(src) && !filter(neighbor))
 				{
 					continue;
 				}
@@ -828,14 +830,14 @@ public class Map : IDisposable
 				else
 				{
 					var o = open.First(oAdj => oAdj.Equals(adj));
-					if (adj.CalculateF(dst) < o.CalculateF(dst))
+					if (adj.CalculateF(dst.SurfacePoint) < o.CalculateF(dst.SurfacePoint))
 					{
 						open.Remove(o);
 						open.Add(adj);
 					}
 				}
 			}
-			if (open.Count > 1000)
+			if (open.Count > 512)
 			{
 				Debug.LogWarning("Big Path");
 				return null;
@@ -849,7 +851,7 @@ public class Map : IDisposable
 		List<Tile> path = new List<Tile>();
 		do
 		{
-			path.Add(curNode.tile);
+			path.Add(this[curNode.coords]);
 			curNode = curNode.src;
 		} while (curNode != null);
 		path.Reverse();
@@ -858,21 +860,23 @@ public class Map : IDisposable
 
 	private class PathNode
 	{
-		public Tile tile;
+		public HexCoords coords;
+		public Vector3 surfacePoint;
 		public int G;
 		public PathNode src;
 
 		public PathNode(Tile tile, int g, PathNode src = null)
 		{
-			this.tile = tile;
+			coords = tile.Coords;
+			surfacePoint = tile.SurfacePoint;
 			G = g;
 			this.src = src;
 		}
 
 
-		public float CalculateF(Tile b)
+		public float CalculateF(Vector3 b)
 		{
-			var d = tile.SurfacePoint - b.SurfacePoint;
+			var d = surfacePoint - b;
 			return G + (Mathf.Abs(d.x) + Mathf.Abs(d.y) + Mathf.Abs(d.z));
 		}
 
@@ -880,14 +884,14 @@ public class Map : IDisposable
 		{
 			if (obj is PathNode n)
 			{
-				return n.tile.Equals(tile);
+				return n.coords.Equals(n.coords);
 			}
 			return false;
 		}
 
 		public override int GetHashCode()
 		{
-			return tile.GetHashCode();
+			return coords.GetHashCode();
 		}
 	}
 

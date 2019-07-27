@@ -98,7 +98,6 @@ public class InteractionUI : MonoBehaviour
 						else
 						{
 							_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
-							Debug.Log($"Units found: {Map.ActiveMap.SelectUnitsInRange(_start, 5).Count}");
 						}
 					}
 				}
@@ -109,7 +108,6 @@ public class InteractionUI : MonoBehaviour
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
 				if (tile != null)
 				{
-
 					InstructUnitMovement(tile);
 				}
 			}
@@ -193,7 +191,7 @@ public class InteractionUI : MonoBehaviour
 			for (int j = 0; j < openTiles.Length; j++)
 			{
 				var footprint = HexCoords.HexSelect(openTiles[j], orderedUnits[i].info.size);
-				if(footprint.All(f => openSet.Contains(f)) && !footprint.Any(f => occupiedSet.Contains(f)))
+				if(IsValidFootPrint(footprint, openSet, occupiedSet))
 				{
 					for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
@@ -203,6 +201,32 @@ public class InteractionUI : MonoBehaviour
 			}
 		}
 		Debug.Log($"Paths Formed {g}/{orderedUnits.Length}");
+	}
+
+	bool IsValidFootPrint(HexCoords[] footprint, HashSet<HexCoords> open, HashSet<HexCoords> occupied)
+	{
+		bool isValid = true;
+		for (int i = 0; i < footprint.Length; i++)
+		{
+			var coord = footprint[i];
+			if(Map.ActiveMap[coord].Height < Map.ActiveMap.seaLevel)
+			{
+				isValid = false;
+				break;
+			}
+			if (!open.Contains(coord))
+			{
+				isValid = false;
+				break;
+			}
+			if(occupied.Contains(coord))
+			{
+				isValid = false;
+				break;
+			}
+		}
+
+		return isValid;
 	}
 
 	void HidePanel()

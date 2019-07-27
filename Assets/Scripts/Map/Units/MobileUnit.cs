@@ -16,17 +16,7 @@ public class MobileUnit
 		get => _position;
 		set
 		{
-			_position = value;
-			var newCoords = HexCoords.FromPosition(value, Map.ActiveMap.tileEdgeLength);
-			if(newCoords != Coords)
-			{
-				var newChunk = newCoords.GetChunkIndex(Map.ActiveMap.width);
-				Coords = newCoords;
-				Map.ActiveMap.MoveUnit(id, _chunk, newChunk);
-				_chunk = newChunk;
-			}
-			if (IsRendered)
-				Map.EM.SetComponentData(Entity, new Translation { Value = value });
+			UpdatePos(value);
 		}
 	}
 
@@ -55,6 +45,19 @@ public class MobileUnit
 		return Entity =  info.Instantiate(_position, Quaternion.identity, id);
 	}
 
+	public void UpdatePos(Vector3 pos)
+	{
+		_position = pos;
+		var newCoords = HexCoords.FromPosition(pos, Map.ActiveMap.tileEdgeLength);
+		if (newCoords != Coords)
+		{
+			var newChunk = newCoords.GetChunkIndex(Map.ActiveMap.width);
+			Coords = newCoords;
+			Map.ActiveMap.MoveUnit(id, _chunk, newChunk);
+			_chunk = newChunk;
+		}
+	}
+
 	public void Show(bool isShown)
 	{
 		if (isShown == _isShown)
@@ -65,17 +68,17 @@ public class MobileUnit
 			Map.EM.AddComponent(Entity, typeof(Frozen));
 	}
 
-	public void MoveTo(Vector3 pos, int groupId)
+	public void MoveTo(Vector3 pos, int id)
 	{
 		if(!Map.EM.HasComponent<Destination>(Entity))
 		{
 			Map.EM.AddComponent(Entity, typeof(Destination));
-			Map.EM.AddComponent(Entity, typeof(PathGroup));
+			Map.EM.AddComponent(Entity, typeof(PathId));
 		}
 		if (Map.EM.HasComponent<Path>(Entity))
 			Map.EM.RemoveComponent<Path>(Entity);
 		Map.EM.SetComponentData(Entity, new Destination { Value = pos });
-		Map.EM.SetComponentData(Entity, new PathGroup { Value = groupId, Progress = 0, Delay = 0 });
+		Map.EM.SetComponentData(Entity, new PathId { Value = id, Progress = 0, Delay = 0 });
 	}
 
 	public virtual void Die()

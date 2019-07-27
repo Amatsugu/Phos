@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -10,39 +12,41 @@ using UnityEngine;
 public class UnitMovementSystem : JobComponentSystem
 {
 
-	private Dictionary<int, Path> paths;
 	private float _tileEdgeLength;
 	private Camera _cam;
 	private int _mapWidth;
 	private EntityQuery EntityQuery;
+	public static ConcurrentDictionary<int, Path> paths;
+	private EntityCommandBuffer buffer;
 
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
-		paths = new Dictionary<int, Path>();
+		//paths = new Dictionary<int, Path>();
+		paths = new ConcurrentDictionary<int, Path>();
 		_tileEdgeLength = Map.ActiveMap.tileEdgeLength;
 		_cam = GameRegistry.Camera;
 		_mapWidth = Map.ActiveMap.width;
 	}
 
-	public struct PathFinderJob : IJobForEachWithEntity<PathGroup, Translation, Destination, UnitId>
+	public struct PathFinderJob : IJobForEachWithEntity<PathId, Translation, Destination, UnitId>
 	{
-
-
-		public readonly EntityCommandBuffer.Concurrent PostUpdateCommands;
+		public readonly EntityCommandBuffer PostUpdateCommands;
 		public readonly float edgeLength;
 
-		public PathFinderJob(float edgeLength, EntityCommandBuffer.Concurrent entityCommand)
+		public PathFinderJob(float edgeLength, EntityCommandBuffer entityCommand)
 		{
 			this.edgeLength = edgeLength;
 			PostUpdateCommands = entityCommand;
 		}
 
-		public void Execute(Entity e, int index, ref PathGroup pg, ref Translation t, ref Destination d, ref UnitId id)
+		public void Execute(Entity e, int index, ref PathId pg, ref Translation t, ref Destination d, ref UnitId id)
 		{
+			if (paths.ContainsKey(id.Value))
+				return;
 			if (math.distancesq(t.Value, d.Value) < 0.005f)
 			{
-				PostUpdateCommands.RemoveComponent<Destination>(index, e);
+				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
 			var unit = Map.ActiveMap.units[id.Value];
@@ -51,8 +55,8 @@ public class UnitMovementSystem : JobComponentSystem
 			var dst = HexCoords.FromPosition(d.Value, Map.ActiveMap.tileEdgeLength);
 			if (curCoord == dst)
 			{
-				PostUpdateCommands.RemoveComponent<PathGroup>(index, e);
-				PostUpdateCommands.RemoveComponent<Destination>(index, e);
+				PostUpdateCommands.RemoveComponent<PathId>(e);
+				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
 			path = new Path
@@ -63,32 +67,42 @@ public class UnitMovementSystem : JobComponentSystem
 			if (path.Value == null)
 			{
 				Debug.LogWarning($"Null Path From: {curCoord} To: {dst}");
-				PostUpdateCommands.RemoveComponent<PathGroup>(index, e);
-				PostUpdateCommands.RemoveComponent<Destination>(index, e);
+				PostUpdateCommands.RemoveComponent<PathId>(e);
+				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
-#if DEBUG
-			/*var c = MathUtils.Remap((pg.Value * 10) % 360, 0, 360, 0, 1);
-			var off = new Vector3(0, c, 0);
-			for (int i = 0; i < path.Value.Count - 1; i++)
+
+			//PostUpdateCommands.AddSharedComponent(index, e, path);
+			paths.TryAdd(id.Value, path);
+		}
+	}
+
+	public struct PathFollowJob : IJobForEachWithEntity<PathId, UnitId, Translation, Rotation>
+	{
+		public void Execute(Entity entity, int index, ref PathId pathId, ref UnitId id, ref Translation t, ref Rotation r)
+		{
+			if (!paths.ContainsKey(id.Value))
+				return;
+			var path = paths[id.Value];
+			if (pathId.Progress >= path.Value.Count)
 			{
-				Debug.DrawLine(path.Value[i].SurfacePoint + off, path.Value[i + 1].SurfacePoint + off, Color.HSVToRGB(c, 1, 1), 5);
-				if (i == path.Value.Count - 2)
-					Debug.DrawRay(path.Value[i + 1].SurfacePoint + off, Vector3.up, Color.HSVToRGB(c, 1, 1), 5);
-			}*/
-#endif
-			PostUpdateCommands.AddSharedComponent(index, e, path);
-			pg.Progress = pg.Delay = 0;
+				paths.TryRemove(id.Value, out path);
+				return;
+			}
+			t.Value = path.Value[pathId.Progress].SurfacePoint;
+			Map.ActiveMap.units[id.Value].UpdatePos(t.Value);
+			pathId.Progress++;
 		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		
-		var job = new PathFinderJob(_tileEdgeLength, new EntityCommandBuffer.Concurrent());
+		buffer = World.GetExistingSystem<EntityCommandBufferSystem>().CreateCommandBuffer();
+		var job = new PathFinderJob(_tileEdgeLength, buffer);
 		var handle = job.Schedule(this, inputDeps);
 		handle.Complete();
-		
+		var moveJob = new PathFollowJob();
+		handle = moveJob.Schedule(this, handle);
 		return handle;
 	}
 }

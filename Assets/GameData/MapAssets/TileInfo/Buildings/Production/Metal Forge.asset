@@ -20,6 +20,8 @@ MonoBehaviour:
   decorators: []
   description: Produces Steel
   buildingMesh: {fileID: 11400000, guid: e62d3f653db9df84fbc5fd56f75ae0fe, type: 2}
+  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  constructionTime: 2
   tier: 2
   category: 3
   size: 0
