@@ -25,18 +25,18 @@ public struct HexCoords
 	public readonly int offsetZ;
 	public readonly bool isCreated;
 
-	public HexCoords(int x, int y, float edgeLength)
+	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = -x - y;
 		this.edgeLength = edgeLength;
-		var innerRadius = Mathf.Sqrt(3f) / 2f * this.edgeLength;
+		var innerR = (innerRadius ?? Mathf.Sqrt(3f) / 2f * this.edgeLength);
 		offsetX = x + y / 2;
 		offsetZ = y;
 		//worldX = (offsetX + offsetZ * .5f - offsetZ / 2) * (innerRadius * 2f);
 		//worldZ = offsetZ * (this.edgeLength * 1.5f);
-		(worldX, worldZ) = OffsetToWorldPos(offsetX, offsetZ, innerRadius, edgeLength);
+		(worldX, worldZ) = OffsetToWorldPos(offsetX, offsetZ, innerR, edgeLength);
 
 		worldXZ = new Vector3(worldX, 0, worldZ);
 		worldXY = new Vector2(worldX, worldZ);
@@ -61,11 +61,11 @@ public struct HexCoords
 
 	public static float CalculateShortDiagonal(float edgeLength) => Mathf.Sqrt(3f) * edgeLength;
 
-	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength) => new HexCoords(x - (Z / 2), Z, edgeLength);
+	public static HexCoords FromOffsetCoords(int x, int Z, float edgeLength = 1) => new HexCoords(x - (Z / 2), Z, edgeLength);
 
 	public static HexCoords FromPosition(Vector3 position, float edgeLength = 1)
 	{
-		float innerRadius = Mathf.Sqrt(3f) / 2f * edgeLength;
+		float innerRadius = CalculateInnerRadius(edgeLength);
 		float x = position.x / (innerRadius * 2f);
 		float z = -x;
 		float offset = position.z / (edgeLength * 3f);
@@ -73,7 +73,7 @@ public struct HexCoords
 		x -= offset;
 		int iX = Mathf.RoundToInt(x);
 		int iY = Mathf.RoundToInt(-x -z);
-		return new HexCoords(iX, iY, edgeLength);
+		return new HexCoords(iX, iY, edgeLength, innerRadius);
 	}
 
 	public HexCoords ToChunkLocalCoord()
@@ -164,6 +164,27 @@ public struct HexCoords
 			}
 		}
 		return selection;
+	}
+
+	public static HexCoords[] GetNeighbors(HexCoords center, float? innerRadius = null)
+	{
+		HexCoords[] neighbors = new HexCoords[6];
+		neighbors[0] = new HexCoords(center.x - 1, center.y    , center.edgeLength, innerRadius);
+		neighbors[1] = new HexCoords(center.x - 1, center.y + 1, center.edgeLength, innerRadius);
+		neighbors[2] = new HexCoords(center.x    , center.y + 1, center.edgeLength, innerRadius);
+		neighbors[3] = new HexCoords(center.x + 1, center.y    , center.edgeLength, innerRadius);
+		neighbors[4] = new HexCoords(center.x + 1, center.y - 1, center.edgeLength, innerRadius);
+		neighbors[5] = new HexCoords(center.x    , center.y - 1, center.edgeLength, innerRadius);
+		return neighbors;
+	}
+
+	public bool IsInBounds(int height, int widht)
+	{
+		if (0 > offsetZ || height <= offsetZ)
+			return false;
+		if (0 > offsetX || widht <= offsetX)
+			return false;
+		return true;
 	}
 
 	// override object.Equals

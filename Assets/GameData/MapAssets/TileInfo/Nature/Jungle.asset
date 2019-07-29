@@ -16,6 +16,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 36f7502459f60294c87e4296655ca6a5, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
   decorators:
   - {fileID: 11400000, guid: d5b2d61e5a7fc2649a6fe014c1ae7a42, type: 2}
   description: 
+  isTraverseable: 1

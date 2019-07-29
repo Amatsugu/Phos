@@ -20,6 +20,7 @@ MonoBehaviour:
   decorators:
   - {fileID: 11400000, guid: 73a842b313405304fbbd3068479fc460, type: 2}
   description: Iron Ore
+  isTraverseable: 1
   resourceYields:
   - id: 1
     ammount: 0

@@ -45,9 +45,8 @@ public struct Path : ISharedComponentData, IEquatable<Path>
 	}
 }
 
-public struct PathId : IComponentData
+public struct PathProgress : IComponentData
 {
-	public int Value;
 	public int Delay;
 	public int Progress;
 }

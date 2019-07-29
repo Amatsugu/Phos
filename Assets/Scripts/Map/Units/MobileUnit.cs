@@ -48,14 +48,14 @@ public class MobileUnit
 	public void UpdatePos(Vector3 pos)
 	{
 		_position = pos;
-		var newCoords = HexCoords.FromPosition(pos, Map.ActiveMap.tileEdgeLength);
-		if (newCoords != Coords)
-		{
-			var newChunk = newCoords.GetChunkIndex(Map.ActiveMap.width);
-			Coords = newCoords;
-			Map.ActiveMap.MoveUnit(id, _chunk, newChunk);
-			_chunk = newChunk;
-		}
+		Coords = HexCoords.FromPosition(pos, Map.ActiveMap.tileEdgeLength);
+	}
+
+	public void UpdateChunk()
+	{
+		var newChunk = Coords.GetChunkIndex(Map.ActiveMap.width);
+		Map.ActiveMap.MoveUnit(id, _chunk, newChunk);
+		_chunk = newChunk;
 	}
 
 	public void Show(bool isShown)
@@ -68,17 +68,15 @@ public class MobileUnit
 			Map.EM.AddComponent(Entity, typeof(Frozen));
 	}
 
-	public void MoveTo(Vector3 pos, int id)
+	public void MoveTo(Vector3 pos)
 	{
 		if(!Map.EM.HasComponent<Destination>(Entity))
 		{
 			Map.EM.AddComponent(Entity, typeof(Destination));
-			Map.EM.AddComponent(Entity, typeof(PathId));
 		}
-		if (Map.EM.HasComponent<Path>(Entity))
-			Map.EM.RemoveComponent<Path>(Entity);
+		Map.EM.RemoveComponent<PathProgress>(Entity);
+		//Map.EM.RemoveComponent<Path>(Entity);
 		Map.EM.SetComponentData(Entity, new Destination { Value = pos });
-		Map.EM.SetComponentData(Entity, new PathId { Value = id, Progress = 0, Delay = 0 });
 	}
 
 	public virtual void Die()

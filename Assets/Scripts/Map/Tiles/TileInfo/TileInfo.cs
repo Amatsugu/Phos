@@ -11,6 +11,7 @@ public class TileInfo : MeshEntity
 {
     public TileDecorator[] decorators;
 	public string description;
+	public bool isTraverseable = true;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{

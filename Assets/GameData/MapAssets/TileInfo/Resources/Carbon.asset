@@ -20,6 +20,7 @@ MonoBehaviour:
   decorators:
   - {fileID: 11400000, guid: 94b511a7c24baa146b96da3344e7b478, type: 2}
   description: Coal
+  isTraverseable: 1
   resourceYields:
   - id: 2
     ammount: 0

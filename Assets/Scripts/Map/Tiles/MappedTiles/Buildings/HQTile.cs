@@ -33,7 +33,7 @@ public class HQTile : BuildingTile
 
 	protected override void OnBuilt()
 	{
-		var spawnTiles = Map.ActiveMap.HexSelect(Coords, 2);
+		var spawnTiles = Map.ActiveMap.HexSelect(Coords, 5);
 		for (int i = 0; i < spawnTiles.Count; i++)
 		{
 			if (!(spawnTiles[i] is BuildingTile))

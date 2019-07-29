@@ -19,6 +19,7 @@ MonoBehaviour:
   isStatic: 1
   decorators: []
   description: Unlocks research relating to resource gathering
+  isTraverseable: 0
   buildingMesh: {fileID: 11400000, guid: 396bb86d2dfd29140b0d4ed8115681dc, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2

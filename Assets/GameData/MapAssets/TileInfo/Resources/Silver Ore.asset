@@ -20,6 +20,7 @@ MonoBehaviour:
   decorators:
   - {fileID: 11400000, guid: b45ac7d4323be654fb507646e05cd4de, type: 2}
   description: Silver Ore
+  isTraverseable: 1
   resourceYields:
   - id: 6
     ammount: 0

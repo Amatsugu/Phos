@@ -63,7 +63,6 @@ public class Map : IDisposable
 	{
 		public const int SIZE = 32;
 		public Tile[] Tiles;
-		public HexCoords chunkCoord;
 		public bool isShown;
 		public bool isCreated;
 		public bool isRendered;
@@ -74,14 +73,13 @@ public class Map : IDisposable
 		private NativeArray<Entity> _chunkTiles;
 
 
-		public Chunk(HexCoords coord)
+		public Chunk(int offsetX, int offsetZ)
 		{
 			isShown = false;
 			isRendered = false;
 			isCreated = true;
-			chunkCoord = coord;
 			Tiles = new Tile[SIZE * SIZE];
-			var worldCoord = HexCoords.FromOffsetCoords(coord.offsetX * SIZE, coord.offsetZ * SIZE, coord.edgeLength);
+			var worldCoord = HexCoords.FromOffsetCoords(offsetX * SIZE, offsetZ * SIZE, ActiveMap.tileEdgeLength);
 			_bounds = new Bounds
 			{
 				min = worldCoord.worldXZ,
@@ -169,42 +167,6 @@ public class Map : IDisposable
 			}
 		}
 
-		/*internal void RenderTerrain()
-		{
-			isShown = true;
-			isRendered = true;
-			var tileGroups = Tiles.GroupBy(t => t.GetMeshEntity());
-			if (!_chunkBatches.IsCreated)
-				_chunkBatches = new NativeArray<Entity>(tileGroups.Count(), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-			int c = 0;
-			var arch = EM.CreateArchetype(typeof(LocalToWorld), typeof(Scale), typeof(PerInstanceCullingTag), typeof(RenderMesh), typeof(Static));
-			foreach (var group in tileGroups)
-			{
-				var count = group.Count();
-				var combine = new CombineInstance[count];
-				var i = 0;
-				foreach (var tile in group)
-				{
-					combine[i].mesh = group.Key.mesh;
-					combine[i].transform = Matrix4x4.TRS(tile.Coords.worldXZ, Quaternion.identity, new Vector3(1, tile.Height, 1));
-					i++;
-				}
-				var mesh = new Mesh();
-				mesh.CombineMeshes(combine, true, true, false);
-				var e = EM.CreateEntity(arch);
-				EM.SetSharedComponentData(e, new RenderMesh
-				{
-					mesh = mesh,
-					material = group.Key.material,
-					subMesh = 0,
-					castShadows = group.Key.castShadows,
-					receiveShadows = group.Key.receiveShadows
-				});
-				EM.SetComponentData(e, new Scale { Value = 1 });
-				_chunkBatches[c++] = e;
-			}
-		}*/
-
 		internal void RenderDecorators()
 		{
 			for (int i = 0; i < Tiles.Length; i++)
@@ -252,7 +214,7 @@ public class Map : IDisposable
 			var (chunkX, chunkZ) = coord.GetChunkPos();
 			var chunk = Chunks[chunkX + chunkZ * width];
 			if (!chunk.isCreated)
-				chunk = new Chunk(HexCoords.FromOffsetCoords(chunkX, chunkZ, tileEdgeLength));
+				chunk = new Chunk(chunkX, chunkZ);
 			chunk[coord.ToChunkLocalCoord(chunkX, chunkZ)] = value;
 			Chunks[chunkX + chunkZ * width] = chunk;
 		}
@@ -266,11 +228,11 @@ public class Map : IDisposable
 	/// <param name="y">Y component</param>
 	/// <param name="z">Z component</param>
 	/// <returns>Tile at position</returns>
-	public Tile this[int x, int y, int z]
+	public Tile this[int x, int y]
 	{
 		get
 		{
-			return this[new HexCoords(x, y, tileEdgeLength)];
+			return this[new HexCoords(x, y, tileEdgeLength, innerRadius)];
 		}
 
 	}
@@ -291,11 +253,21 @@ public class Map : IDisposable
 
 	public void MoveUnit(int unitId, int srcChunk, int dstChunk)
 	{
+		if (srcChunk == dstChunk)
+			return;
 		if (unitLocations[srcChunk].Remove(unitId))
 		{
 			if (unitLocations[dstChunk] == null)
 				unitLocations[dstChunk] = new List<int>();
 			unitLocations[dstChunk].Add(unitId);
+		}
+	}
+
+	public void UpdateUnitChunks()
+	{
+		foreach (var unit in units)
+		{
+			unit.Value.UpdateChunk();
 		}
 	}
 
@@ -343,9 +315,11 @@ public class Map : IDisposable
 		cXMax = Math.Min(width, cXMax);
 		cZMax = Math.Min(height, cZMax);
 
+#if DEBUG
 		Debug.DrawRay(worldLeft, Vector3.up, Color.magenta, 5);
 		Debug.DrawLine(worldLeft, worldRight, Color.green, 5);
 		Debug.DrawRay(worldRight, Vector3.up, Color.magenta, 5);
+#endif
 
 		var selectedUnits = new List<int>();
 		for (int cZ = cZMin; cZ <= cZMax; cZ++)
@@ -367,14 +341,14 @@ public class Map : IDisposable
 		return selectedUnits;
 	}
 
-	public List<int> SelectUnitsInRange(Tile center, int radius)
+	public List<int> SelectUnitsInRange(HexCoords center, int radius)
 	{
 		var worldRadius = HexCoords.TileToWorldDist(radius, innerRadius);
 		var worldRadiusSq = worldRadius * worldRadius;
 		List<int> candidateChunks = new List<int>();
-		candidateChunks.Add(center.Coords.GetChunkIndex(width));
-		var (chunkX, chunkZ) = center.Coords.GetChunkPos();
-		var centerPos = center.Coords.worldXZ;
+		candidateChunks.Add(center.GetChunkIndex(width));
+		var (chunkX, chunkZ) = center.GetChunkPos();
+		var centerPos = center.worldXZ;
 		var chunkSize = HexCoords.TileToWorldDist(Chunk.SIZE, innerRadius);
 		var chunkBounds = Chunks[candidateChunks[0]].Bounds;
 		bool left, right, up, down;
@@ -465,12 +439,12 @@ public class Map : IDisposable
 	public Tile[] GetNeighbors(HexCoords coords)
 	{
 		Tile[] neighbors = new Tile[6];
-		neighbors[0] = this[coords.x - 1, coords.y, coords.z + 1]; //Left
-		neighbors[1] = this[coords.x - 1, coords.y + 1, coords.z]; //Top Left
-		neighbors[2] = this[coords.x, coords.y + 1, coords.z - 1]; //Top Right
-		neighbors[3] = this[coords.x + 1, coords.y, coords.z - 1]; //Right
-		neighbors[4] = this[coords.x + 1, coords.y - 1, coords.z]; //Bottom Right
-		neighbors[5] = this[coords.x, coords.y - 1, coords.z + 1]; //Bottom Left
+		neighbors[0] = this[coords.x - 1, coords.y    ]; //Left
+		neighbors[1] = this[coords.x - 1, coords.y + 1]; //Top Left
+		neighbors[2] = this[coords.x    , coords.y + 1]; //Top Right
+		neighbors[3] = this[coords.x + 1, coords.y    ]; //Right
+		neighbors[4] = this[coords.x + 1, coords.y - 1]; //Bottom Right
+		neighbors[5] = this[coords.x    , coords.y - 1]; //Bottom Left
 		return neighbors;
 	}
 
@@ -523,8 +497,7 @@ public class Map : IDisposable
 				xMax = radius - y;
 			for (int x = xMin; x <= xMax; x++)
 			{
-				int z = -x - y;
-				var t = this[center.x + x, center.y + y, center.z + z];
+				var t = this[center.x + x, center.y + y];
 				if (t == null)
 					continue;
 				if (excludeCenter && t.Coords == center)
@@ -549,8 +522,7 @@ public class Map : IDisposable
 				xMax = radius - y;
 			for (int x = xMin; x <= xMax; x++)
 			{
-				int z = -x - y;
-				var t = this[center.x + x, center.y + y, center.z + z];
+				var t = this[center.x + x, center.y + y];
 				if (t == null)
 					continue;
 				if (excludeCenter && t.Coords == center)
@@ -577,8 +549,7 @@ public class Map : IDisposable
 				xMax = radius - y;
 			for (int x = xMin; x <= xMax; x++)
 			{
-				int z = -x - y;
-				var t = this[center.x + x, center.y + y, center.z + z];
+				var t = this[center.x + x, center.y + y];
 				if (t == null)
 					continue;
 				if (excludeCenter && t.Coords == center)
@@ -610,8 +581,7 @@ public class Map : IDisposable
 				xMax = radius - y;
 			for (int x = xMin; x <= xMax; x++)
 			{
-				int z = -x - y;
-				var t = this[center.x + x, center.y + y, center.z + z];
+				var t = this[center.x + x, center.y + y];
 				if (t == null)
 					continue;
 				if (excludeCenter && t.Coords == center)
@@ -775,7 +745,7 @@ public class Map : IDisposable
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
 
-	public List<Tile> GetPath(HexCoords src, HexCoords dst, float maxIncline = float.MaxValue, Func<Tile, bool> filter = null) => GetPath(this[src], this[dst], maxIncline, filter);
+	public List<Tile> GetPath(HexCoords src, HexCoords dst, float maxIncline = float.MaxValue, Func<Tile, bool> include = null) => GetPath(this[src], this[dst], maxIncline, include);
 
 	public List<Tile> GetPath(Tile src, Tile dst, float maxIncline = float.MaxValue, Func<Tile, bool> filter = null)
 	{
@@ -788,7 +758,7 @@ public class Map : IDisposable
 			PathNode best = nodes.First();
 			foreach (var node in nodes)
 			{
-				if (best.CalculateF(dst.SurfacePoint) > node.CalculateF(dst.SurfacePoint))
+				if (best.F > node.F)
 					best = node;
 			}
 			return best;
@@ -810,14 +780,16 @@ public class Map : IDisposable
 			open.Remove(curTileNode);
 			closed.Add(curTileNode);
 			last = curTileNode;
-			foreach (Tile neighbor in GetNeighbors(curTileNode.coords))
+			var neighbors = GetNeighbors(curTileNode.coords);
+			for(int i = 0; i < neighbors.Length; i++)
 			{
-				if (neighbor == null)
+				if (neighbors[i] == null)
 					continue;
+				/*if (neighbors[i].IsInBounds(totalHeight, totalWidth))
+					continue;*/
+				var neighbor = neighbors[i];
 				if (Mathf.Abs(neighbor.Height - curTileNode.surfacePoint.y) > maxIncline)
 					continue;
-				//if ()
-				//	continue;
 				if(filter != null && !neighbor.Equals(dst) && !neighbor.Equals(src) && !filter(neighbor))
 				{
 					continue;
@@ -825,12 +797,13 @@ public class Map : IDisposable
 				var adj = new PathNode(neighbor, curTileNode.G + 1, curTileNode);
 				if (closed.Contains(adj))
 					continue;
+				adj.CacheF(dst.SurfacePoint);
 				if (!open.Contains(adj))
 					open.Add(adj);
 				else
 				{
 					var o = open.First(oAdj => oAdj.Equals(adj));
-					if (adj.CalculateF(dst.SurfacePoint) < o.CalculateF(dst.SurfacePoint))
+					if (adj.F < o.F)
 					{
 						open.Remove(o);
 						open.Add(adj);
@@ -864,6 +837,7 @@ public class Map : IDisposable
 		public Vector3 surfacePoint;
 		public int G;
 		public PathNode src;
+		public float F;
 
 		public PathNode(Tile tile, int g, PathNode src = null)
 		{
@@ -874,10 +848,15 @@ public class Map : IDisposable
 		}
 
 
+		public void CacheF(Vector3 b)
+		{
+			F = CalculateF(b);
+		}
+
 		public float CalculateF(Vector3 b)
 		{
 			var d = surfacePoint - b;
-			return G + (Mathf.Abs(d.x) + Mathf.Abs(d.y) + Mathf.Abs(d.z));
+			return G + (d.sqrMagnitude);
 		}
 
 		public override bool Equals(object obj)

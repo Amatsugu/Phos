@@ -20,6 +20,7 @@ MonoBehaviour:
   decorators:
   - {fileID: 11400000, guid: c97c11239779fcf479c352de4d9bf71a, type: 2}
   description: Gold Ore
+  isTraverseable: 1
   resourceYields:
   - id: 7
     ammount: 0

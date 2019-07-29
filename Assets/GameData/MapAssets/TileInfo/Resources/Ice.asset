@@ -19,6 +19,7 @@ MonoBehaviour:
   isStatic: 1
   decorators: []
   description: 
+  isTraverseable: 1
   resourceYields:
   - id: 3
     ammount: 0

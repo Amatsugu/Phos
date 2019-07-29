@@ -61,6 +61,8 @@ public class InteractionUI : MonoBehaviour
 
 	}
 
+	private Tile A, B;
+
 	void Update()
 	{
 		if (GameRegistry.BuildUI.hqMode)
@@ -68,6 +70,22 @@ public class InteractionUI : MonoBehaviour
 		var mPos = Input.mousePosition;
 		if (Input.GetKeyUp(KeyCode.Escape))
 			interactionPanel.HidePanel();
+		if (Input.GetKeyUp(KeyCode.A))
+			A = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos));
+		if (Input.GetKeyUp(KeyCode.B))
+			B = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos));
+		if(Input.GetKeyUp(KeyCode.Space))
+		{
+			List<Tile> path = null;
+			for (int i = 0; i < 100; i++)
+			{
+				path = Map.ActiveMap.GetPath(A, B);
+			}
+			for (int i = 1; i < path.Count-1; i++)
+			{
+				Debug.DrawLine(path[i - 1].SurfacePoint, path[i].SurfacePoint, Color.white, 5);
+			}
+		}
 		if (!GameRegistry.BuildUI.placeMode)
 		{
 			if (!_uiBlocked && !GameRegistry.BuildUI.uiBlock)
@@ -115,15 +133,17 @@ public class InteractionUI : MonoBehaviour
 		else
 			HidePanel();
 
+	}
+
+
+	void LateUpdate()
+	{
 		for (int i = 0; i < _selectedUnits.Count; i++)
 		{
 			var unit = Map.ActiveMap.units[_selectedUnits[i]];
 			Debug.DrawRay(unit.Position, Vector3.up, Color.white);
 		}
-	}
 
-	void LateUpdate()
-	{
 		if(interactionPanel.PanelVisible)
 		{
 			var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
@@ -185,7 +205,6 @@ public class InteractionUI : MonoBehaviour
 		var openTiles = HexCoords.HexSelect(tile.Coords, r);
 		for (int i = 0; i < openTiles.Length; i++)
 			openSet.Add(openTiles[i]);
-		var g = 0;
 		for (int i = 0; i < orderedUnits.Length; i++)
 		{
 			for (int j = 0; j < openTiles.Length; j++)
@@ -195,12 +214,11 @@ public class InteractionUI : MonoBehaviour
 				{
 					for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
-					orderedUnits[i].MoveTo(Map.ActiveMap[openTiles[j]].SurfacePoint, g++);
+					orderedUnits[i].MoveTo(Map.ActiveMap[openTiles[j]].SurfacePoint);
 					break;
 				}
 			}
 		}
-		Debug.Log($"Paths Formed {g}/{orderedUnits.Length}");
 	}
 
 	bool IsValidFootPrint(HexCoords[] footprint, HashSet<HexCoords> open, HashSet<HexCoords> occupied)
