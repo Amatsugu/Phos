@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.042257696, g: 0.37422684, b: 0.85198635, a: 1}
+  m_IndirectSpecularColor: {r: 0.030085124, g: 0.26199386, b: 0.5956924, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 6189752}
   - component: {fileID: 6189754}
   - component: {fileID: 6189753}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Benifits Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -576,7 +576,7 @@ GameObject:
   - component: {fileID: 38970535}
   - component: {fileID: 38970534}
   - component: {fileID: 38970537}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ButtonProduction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1054,7 +1054,7 @@ GameObject:
   - component: {fileID: 75981180}
   - component: {fileID: 75981181}
   - component: {fileID: 75981182}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BuildInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1179,7 +1179,7 @@ GameObject:
   - component: {fileID: 96794669}
   - component: {fileID: 96794671}
   - component: {fileID: 96794670}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TMP SubMeshUI [TextMeshPro/Sprite]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1414,7 +1414,7 @@ GameObject:
   - component: {fileID: 121225360}
   - component: {fileID: 121225359}
   - component: {fileID: 121225362}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ButtonDef
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2681,7 +2681,7 @@ GameObject:
   - component: {fileID: 224771676}
   - component: {fileID: 224771678}
   - component: {fileID: 224771677}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2754,7 +2754,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 230460297}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2792,7 +2792,7 @@ GameObject:
   - component: {fileID: 244709112}
   - component: {fileID: 244709114}
   - component: {fileID: 244709113}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3732,7 +3732,7 @@ GameObject:
   - component: {fileID: 399946380}
   - component: {fileID: 399946382}
   - component: {fileID: 399946381}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3795,81 +3795,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399946379}
-  m_CullTransparentMesh: 0
---- !u!1 &405321557
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 405321558}
-  - component: {fileID: 405321560}
-  - component: {fileID: 405321559}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &405321558
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405321557}
-  m_LocalRotation: {x: -0, y: -0.2757355, z: -0, w: 0.96123356}
-  m_LocalPosition: {x: 0, y: 0, z: 149}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 538560005}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: -32.012, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -526, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &405321559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405321557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &405321560
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405321557}
   m_CullTransparentMesh: 0
 --- !u!1 &439342159
 GameObject:
@@ -4450,7 +4375,7 @@ GameObject:
   - component: {fileID: 454443391}
   - component: {fileID: 454443393}
   - component: {fileID: 454443392}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cost Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5714,7 +5639,6 @@ RectTransform:
   - {fileID: 628623408}
   - {fileID: 1957186801}
   - {fileID: 491449966}
-  - {fileID: 405321558}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5734,7 +5658,7 @@ GameObject:
   - component: {fileID: 553221650}
   - component: {fileID: 553221652}
   - component: {fileID: 553221651}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Benifits Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6181,7 +6105,7 @@ GameObject:
   - component: {fileID: 581761568}
   - component: {fileID: 581761570}
   - component: {fileID: 581761569}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6259,7 +6183,7 @@ GameObject:
   - component: {fileID: 586751944}
   - component: {fileID: 586751943}
   - component: {fileID: 586751946}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ButtonStruct
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7763,7 +7687,7 @@ GameObject:
   m_Component:
   - component: {fileID: 817437305}
   - component: {fileID: 817437306}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8114,7 +8038,7 @@ GameObject:
   - component: {fileID: 867663154}
   - component: {fileID: 867663155}
   - component: {fileID: 867663156}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Build Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8221,7 +8145,7 @@ GameObject:
   - component: {fileID: 931402296}
   - component: {fileID: 931402298}
   - component: {fileID: 931402297}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8456,7 +8380,7 @@ GameObject:
   - component: {fileID: 960731645}
   - component: {fileID: 960731647}
   - component: {fileID: 960731646}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8531,7 +8455,7 @@ GameObject:
   - component: {fileID: 982202509}
   - component: {fileID: 982202511}
   - component: {fileID: 982202510}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8920,7 +8844,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1043789436}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Benifits Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9402,7 +9326,7 @@ GameObject:
   - component: {fileID: 1121457503}
   - component: {fileID: 1121457505}
   - component: {fileID: 1121457504}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9701,7 +9625,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1140854290}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Description Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9740,7 +9664,7 @@ GameObject:
   - component: {fileID: 1187620853}
   - component: {fileID: 1187620855}
   - component: {fileID: 1187620854}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Scroll View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11006,7 +10930,7 @@ GameObject:
   - component: {fileID: 1310997280}
   - component: {fileID: 1310997282}
   - component: {fileID: 1310997281}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11164,7 +11088,7 @@ GameObject:
   - component: {fileID: 1341029318}
   - component: {fileID: 1341029320}
   - component: {fileID: 1341029319}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11542,7 +11466,7 @@ GameObject:
   - component: {fileID: 1383650452}
   - component: {fileID: 1383650451}
   - component: {fileID: 1383650454}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ButtonTech
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11906,7 +11830,7 @@ GameObject:
   - component: {fileID: 1409399551}
   - component: {fileID: 1409399553}
   - component: {fileID: 1409399552}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Icon Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12414,7 +12338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1499438877}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Info Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12453,7 +12377,7 @@ GameObject:
   - component: {fileID: 1517591247}
   - component: {fileID: 1517591249}
   - component: {fileID: 1517591248}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12806,7 +12730,7 @@ GameObject:
   - component: {fileID: 1541209177}
   - component: {fileID: 1541209176}
   - component: {fileID: 1541209175}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13007,7 +12931,7 @@ GameObject:
   - component: {fileID: 1555565677}
   - component: {fileID: 1555565679}
   - component: {fileID: 1555565678}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13312,7 +13236,7 @@ GameObject:
   - component: {fileID: 1568366965}
   - component: {fileID: 1568366967}
   - component: {fileID: 1568366966}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13472,7 +13396,7 @@ GameObject:
   - component: {fileID: 1593467931}
   - component: {fileID: 1593467930}
   - component: {fileID: 1593467933}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ButtonResources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13693,7 +13617,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1596692625}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13864,7 +13788,7 @@ GameObject:
   - component: {fileID: 1620701536}
   - component: {fileID: 1620701538}
   - component: {fileID: 1620701537}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BuildPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14228,7 +14152,7 @@ GameObject:
   - component: {fileID: 1635046458}
   - component: {fileID: 1635046457}
   - component: {fileID: 1635046459}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Build Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14350,7 +14274,7 @@ GameObject:
   - component: {fileID: 1664156942}
   - component: {fileID: 1664156944}
   - component: {fileID: 1664156943}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14508,7 +14432,7 @@ GameObject:
   - component: {fileID: 1680835968}
   - component: {fileID: 1680835970}
   - component: {fileID: 1680835969}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15006,7 +14930,7 @@ GameObject:
   - component: {fileID: 1737587221}
   - component: {fileID: 1737587223}
   - component: {fileID: 1737587222}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TMP SubMeshUI [TextMeshPro/Sprite]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15130,7 +15054,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1747986167}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cost/Benifit Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15167,7 +15091,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1759035988}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Costs Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15462,7 +15386,7 @@ GameObject:
   - component: {fileID: 1770324183}
   - component: {fileID: 1770324185}
   - component: {fileID: 1770324184}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Scrollbar Horizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16167,7 +16091,7 @@ GameObject:
   - component: {fileID: 1839260552}
   - component: {fileID: 1839260551}
   - component: {fileID: 1839260553}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CloseBTN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16412,7 +16336,7 @@ GameObject:
   - component: {fileID: 1850714812}
   - component: {fileID: 1850714811}
   - component: {fileID: 1850714814}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ButtonMil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16717,7 +16641,7 @@ GameObject:
   - component: {fileID: 1908499854}
   - component: {fileID: 1908499856}
   - component: {fileID: 1908499855}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TMP SubMeshUI [TextMeshPro/Sprite]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17601,7 +17525,7 @@ GameObject:
   - component: {fileID: 2009268082}
   - component: {fileID: 2009268084}
   - component: {fileID: 2009268083}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cost Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17836,7 +17760,7 @@ GameObject:
   - component: {fileID: 2021232458}
   - component: {fileID: 2021232460}
   - component: {fileID: 2021232459}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TextMeshPro Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18089,7 +18013,7 @@ GameObject:
   - component: {fileID: 2086480795}
   - component: {fileID: 2086480798}
   - component: {fileID: 2086480796}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18147,7 +18071,7 @@ GameObject:
   - component: {fileID: 2093641594}
   - component: {fileID: 2093641596}
   - component: {fileID: 2093641595}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
