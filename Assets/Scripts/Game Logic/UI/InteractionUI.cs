@@ -12,6 +12,7 @@ public class InteractionUI : MonoBehaviour
 
 	public RectTransform button1;
 	public RectTransform button2;
+	public float maxMoveCostPerFrame = 100;
 
 	private Camera _cam;
 
@@ -19,7 +20,19 @@ public class InteractionUI : MonoBehaviour
 	private bool _uiBlocked;
 	private List<int> _selectedUnits;
 	private Tile _start, _end;
-	private int groupId;
+	private Queue<MoveOrder> _moveOrderQueue;
+
+	public struct MoveOrder
+	{
+		public Vector3 dst;
+		public MobileUnit unit;
+		public float cost;
+
+		public void Complete()
+		{
+			unit.MoveTo(dst);
+		}
+	}
 
 	void Awake()
 	{
@@ -29,6 +42,7 @@ public class InteractionUI : MonoBehaviour
 	void Start()
 	{
 		_cam = GameRegistry.Camera;
+		_moveOrderQueue = new Queue<MoveOrder>();
 		_selectedUnits = new List<int>();
 		interactionPanel.HidePanel();
 		interactionPanel.OnBlur += () => _uiBlocked = false;
@@ -61,8 +75,6 @@ public class InteractionUI : MonoBehaviour
 
 	}
 
-	private Tile A, B;
-
 	void Update()
 	{
 		if (GameRegistry.BuildUI.hqMode)
@@ -70,22 +82,7 @@ public class InteractionUI : MonoBehaviour
 		var mPos = Input.mousePosition;
 		if (Input.GetKeyUp(KeyCode.Escape))
 			interactionPanel.HidePanel();
-		if (Input.GetKeyUp(KeyCode.A))
-			A = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos));
-		if (Input.GetKeyUp(KeyCode.B))
-			B = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos));
-		if(Input.GetKeyUp(KeyCode.Space))
-		{
-			List<Tile> path = null;
-			for (int i = 0; i < 100; i++)
-			{
-				path = Map.ActiveMap.GetPath(A, B);
-			}
-			for (int i = 1; i < path.Count-1; i++)
-			{
-				Debug.DrawLine(path[i - 1].SurfacePoint, path[i].SurfacePoint, Color.white, 5);
-			}
-		}
+
 		if (!GameRegistry.BuildUI.placeMode)
 		{
 			if (!_uiBlocked && !GameRegistry.BuildUI.uiBlock)
@@ -126,7 +123,7 @@ public class InteractionUI : MonoBehaviour
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
 				if (tile != null)
 				{
-					InstructUnitMovement(tile);
+					//InstructUnitMovement(tile);
 				}
 			}
 		}
@@ -138,11 +135,13 @@ public class InteractionUI : MonoBehaviour
 
 	void LateUpdate()
 	{
+#if DEBUG
 		for (int i = 0; i < _selectedUnits.Count; i++)
 		{
 			var unit = Map.ActiveMap.units[_selectedUnits[i]];
 			Debug.DrawRay(unit.Position, Vector3.up, Color.white);
 		}
+#endif
 
 		if(interactionPanel.PanelVisible)
 		{
@@ -166,6 +165,13 @@ public class InteractionUI : MonoBehaviour
 				uiPos.y = Screen.height;
 
 			interactionPanel.AnchoredPosition = uiPos;
+		}
+		var curCost = 0f;
+		while(curCost < maxMoveCostPerFrame && _moveOrderQueue.Count > 0)
+		{
+			var order = _moveOrderQueue.Dequeue();
+			curCost += order.cost;
+			order.Complete();
 		}
 
 	}
@@ -214,7 +220,14 @@ public class InteractionUI : MonoBehaviour
 				{
 					for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
-					orderedUnits[i].MoveTo(Map.ActiveMap[openTiles[j]].SurfacePoint);
+					var order = new MoveOrder
+					{
+						unit = orderedUnits[i],
+						dst = Map.ActiveMap[openTiles[j]].SurfacePoint
+					};
+					order.cost = (order.dst - order.unit.Position).sqrMagnitude;
+					_moveOrderQueue.Enqueue(order);
+
 					break;
 				}
 			}

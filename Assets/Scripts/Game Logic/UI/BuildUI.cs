@@ -495,7 +495,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			_activeUnits[i].gameObject.SetActive(false);
 		}
-		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (activeCount * 170));
+		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (buildings.Length * 170));
 	}
 
 	public void GrowUnitsUI(int count)
@@ -503,7 +503,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		for (int i = _activeUnits.Count; i < count; i++)
 		{
 			var unit = Instantiate(unitUIPrefab, scrollContent).GetComponent<UIUnitIcon>();
-			unit.anchoredPosition = new Vector2(5 + (i * 170), 5);
+			unit.anchoredPosition = new Vector2(10 + (i * 170), 5);
 			_activeUnits.Add(unit);
 		}
 	}

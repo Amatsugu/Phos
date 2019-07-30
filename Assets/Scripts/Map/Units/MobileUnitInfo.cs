@@ -7,8 +7,17 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
 public class MobileUnitInfo : MeshEntityRotatable
 {
+
+	public enum UnitType
+	{
+		Land,
+		Air,
+		Naval
+	}
+
 	public float moveSpeed = 1;
 	public int size;
+	public UnitType type;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
