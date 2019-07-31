@@ -20,10 +20,13 @@ public class CameraController : MonoBehaviour
 	private Camera _cam;
 
 	private Vector3 _lastClickPos;
+	private Transform _thisTransform;
+
 	void Awake()
 	{
 		GameRegistry.INST.cameraController = this;
 		GameRegistry.INST.mainCamera = _cam = GetComponent<Camera>();
+		_thisTransform = transform;
 	}
 
     void Start()
@@ -50,7 +53,7 @@ public class CameraController : MonoBehaviour
 			GetComponent<Orbit>().enabled = true;
 		}
 		//Panning
-		var pos = transform.position;
+		var pos = _thisTransform.position;
 		var moveVector = Vector3.zero;
 		var mPos = Input.mousePosition;
 
@@ -91,7 +94,7 @@ public class CameraController : MonoBehaviour
 			Vector3 curPos;
 			var ray = _cam.ScreenPointToRay(mPos);
 			var height = pos.y - mapRenderer.map.seaLevel;
-			var d = height / Mathf.Sin(_cam.transform.eulerAngles.x * Mathf.Deg2Rad);
+			var d = height / Mathf.Sin(_cam.transform.localEulerAngles.x * Mathf.Deg2Rad);
 			if (Input.GetKeyDown(KeyCode.Mouse1))
 				_lastClickPos = ray.GetPoint(d);
 			if (Input.GetKey(KeyCode.Mouse1))
@@ -127,9 +130,23 @@ public class CameraController : MonoBehaviour
 		}
 		pos.x = Mathf.Clamp(pos.x, mapRenderer.min.x, mapRenderer.max.x);
 		pos.z = Mathf.Clamp(pos.z, mapRenderer.min.z, mapRenderer.max.z);
-		transform.position = pos;
+		_thisTransform.position = pos;
 
 
 
 	}
+
+	public void FocusTile(Tile tile)
+	{
+		Vector3 targetPos = tile.SurfacePoint;
+		var height = _targetHeight - targetPos.y;
+		var d = height / Mathf.Sin(_thisTransform.localEulerAngles.x * Mathf.Deg2Rad);
+		var ray = new Ray(targetPos, _thisTransform.forward);
+
+		targetPos = ray.GetPoint(-d);
+		_thisTransform.position = targetPos;
+	}
+
+
+	public static void FocusOnTile(Tile tile) => GameRegistry.CameraController.FocusTile(tile);
 }

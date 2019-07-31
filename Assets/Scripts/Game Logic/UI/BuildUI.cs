@@ -472,6 +472,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			}
 #endif
 			_activeUnits[i].gameObject.SetActive(true);
+			activeCount++;
 			_activeUnits[i].text.SetText(building.name);
 			_activeUnits[i].ClearAllEvents();
 			_activeUnits[i].OnClick += () =>
@@ -495,7 +496,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			_activeUnits[i].gameObject.SetActive(false);
 		}
-		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (buildings.Length * 170));
+		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (activeCount * 170));
 	}
 
 	public void GrowUnitsUI(int count)

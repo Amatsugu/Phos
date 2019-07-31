@@ -9,6 +9,12 @@ public enum NotifType
 	Error
 }
 
+public enum NotifTargetType
+{
+	Tile,
+	UI
+}
+
 public class NotificationsUI : MonoBehaviour
 {
 	[Header("Prefabs")]
@@ -45,17 +51,33 @@ public class NotificationsUI : MonoBehaviour
 	private Queue<PendingNotification> _notificationQueue;
 	private float _animTime = 1;
 
+
 	public class PendingNotification
 	{
 		public Sprite sprite;
 		public string title;
 		public string message;
+		public NotifTargetType type;
+		public UIPanel panel;
+		public Tile tile;
 
 		public PendingNotification(Sprite sprite, string title, string message)
 		{
 			this.sprite = sprite;
 			this.title = title;
 			this.message = message;
+		}
+
+		public PendingNotification(Sprite sprite, string title, string message, Tile tile) : this(sprite, title, message)
+		{
+			type = NotifTargetType.Tile;
+			this.tile = tile;
+		}
+
+		public PendingNotification(Sprite sprite, string title, string message, UIPanel panel) : this(sprite, title, message)
+		{
+			type = NotifTargetType.UI;
+			this.panel = panel;
 		}
 	}
 
@@ -201,13 +223,13 @@ public class NotificationsUI : MonoBehaviour
 		}
 	}
 
-	private void CreateNotification(Sprite icon, string title, string message = null)
-	{
-		_notificationQueue.Enqueue(new PendingNotification(icon, title, message));
-	}
+	private void CreateNotification(Sprite icon, string title, string message) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message));
 
+	private void CreateNotification(Sprite icon, string title, string message, Tile tile) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message, tile));
 
-	private void CreateNotification(NotifType type, string title, string message = null)
+	private void CreateNotification(Sprite icon, string title, string message, UIPanel panel) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message, panel));
+
+	private void CreateNotification(NotifType type, string title, string message)
 	{
 		switch(type)
 		{
@@ -223,7 +245,47 @@ public class NotificationsUI : MonoBehaviour
 		}
 	}
 
+	private void CreateNotification(NotifType type, string title, string message, Tile tile)
+	{
+		switch (type)
+		{
+			case NotifType.Info:
+				CreateNotification(infoIcon, title, message, tile);
+				break;
+			case NotifType.Warning:
+				CreateNotification(warningIcon, title, message, tile);
+				break;
+			case NotifType.Error:
+				CreateNotification(errorIcon, title, message, tile);
+				break;
+		}
+	}
+
+	private void CreateNotification(NotifType type, string title, string message, UIPanel panel)
+	{
+		switch (type)
+		{
+			case NotifType.Info:
+				CreateNotification(infoIcon, title, message, panel);
+				break;
+			case NotifType.Warning:
+				CreateNotification(warningIcon, title, message, panel);
+				break;
+			case NotifType.Error:
+				CreateNotification(errorIcon, title, message, panel);
+				break;
+		}
+	}
+
 	public static void Notify(Sprite icon, string title, string message = null) => INST.CreateNotification(icon, title, message);
 
 	public static void Notify(NotifType type, string title, string message = null) => INST.CreateNotification(type, title, message);
+
+	public static void NotifyWithTarget(NotifType type, string title, Tile tile, string message = null) => INST.CreateNotification(type, title, message, tile);
+
+	public static void NotifyWithTarget(NotifType type, string title, UIPanel panel, string message = null) => INST.CreateNotification(type, title, message, panel);
+
+	public static void NotifyWithTarget(Sprite icon, string title, Tile tile, string message = null) => INST.CreateNotification(icon, title, message, tile);
+
+	public static void NotifyWithTarget(Sprite icon, string title, UIPanel panel, string message = null) => INST.CreateNotification(icon, title, message, panel);
 }
