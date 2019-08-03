@@ -292,7 +292,6 @@ public class InteractionUI : MonoBehaviour
 				break;
 			default:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), false, false);
-				CameraController.FocusOnTile(tile);
 				break;
 		}
 	}

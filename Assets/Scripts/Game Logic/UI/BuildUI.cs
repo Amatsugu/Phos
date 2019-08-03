@@ -164,7 +164,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						}
 					}
 					//Validation
-					if (!ResourceSystem.HasResourses(_selectedBuilding.cost)) //Has Resources
+					if (!GameRegistry.ResourceSystem.HasAllResources(_selectedBuilding.cost)) //Has Resources
 					{
 						HideIndicator(selectIndicatorEntity);
 						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
@@ -477,7 +477,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			_activeUnits[i].ClearAllEvents();
 			_activeUnits[i].OnClick += () =>
 			{
-				if(ResourceSystem.HasResourses(building.cost))
+				if(GameRegistry.ResourceSystem.HasAllResources(building.cost))
 				{
 					_selectedBuilding = building;
 					placeMode = true;

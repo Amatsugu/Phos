@@ -25,4 +25,42 @@ public static class MathUtils
 	{
 		return r.Next(1000) / 1000f;
 	}
+
+	public static float EaseOut(this float value)
+	{
+		value = 1 - value;
+		value *= value;
+		value = 1 - value;
+		return value;
+	}
+
+	public static float EaseIn(this float value)
+	{
+		value *= value;
+		return value;
+	}
+
+	public static float Ease(this float value)
+	{
+		return value.EaseIn() * value.EaseOut();
+	}
+
+	public static float EaseOut(this float value, int power)
+	{
+		value = 1 - value;
+		value = math.pow(value, power);
+		value = 1 - value;
+		return value;
+	}
+
+	public static float EaseIn(this float value, int power)
+	{
+		value = math.pow(value, power);
+		return value;
+	}
+
+	public static float Ease(this float value, int power)
+	{
+		return value.EaseIn(power) * value.EaseOut(power);
+	}
 }

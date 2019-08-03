@@ -27,6 +27,7 @@ public class GameRegistry : MonoBehaviour
 	public static CameraController CameraController => INST.cameraController;
 	public static BuildingDatabase BuildingDatabase => INST._buildingDatabase;
 	public static ResearchDatabase ResearchDatabase => INST.researchDatabase;
+	public static ResourceSystem ResourceSystem => INST.resourceSystem;
 
 
 	public BuildUI buildUI;
@@ -37,6 +38,7 @@ public class GameRegistry : MonoBehaviour
 	public Camera mainCamera;
 	public CameraController cameraController;
 	public ResearchDatabase researchDatabase;
+	public ResourceSystem resourceSystem;
 
 	private BuildingDatabase _buildingDatabase;
 

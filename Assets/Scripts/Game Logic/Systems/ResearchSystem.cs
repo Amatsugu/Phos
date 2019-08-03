@@ -79,13 +79,13 @@ public class ResearchSystem : ComponentSystem
 		}
 
 		Entities.WithNone<ConsumptionDebuff, InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
-			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m) =>
+			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m, ref BuildingId id) =>
 		{
-			ProcessResearch(c.Value, m.Value);
+			ProcessResearch(c.Value, m.Value, id.Value);
 		});
 	}
 
-	void ProcessResearch(BuildingCategory category, float multi)
+	void ProcessResearch(BuildingCategory category, float multi, int buildingSrc)
 	{
 		if (!activeResearch.ContainsKey(category))
 			return;
@@ -105,7 +105,7 @@ public class ResearchSystem : ComponentSystem
 				id = r.resources[i].id,
 				ammount = Mathf.Floor(Mathf.Min((.01f * multi * r.resources[i].ammount), r.resources[i].ammount))
 			};
-			ResourceSystem.LogDemand(resource);
+			GameRegistry.ResourceSystem.LogDemand(resource.id, (int)resource.ammount, buildingSrc);
 			if (ResourceSystem.HasResource(resource))
 			{
 				r.lastTickProgress[i] += (int)resource.ammount;

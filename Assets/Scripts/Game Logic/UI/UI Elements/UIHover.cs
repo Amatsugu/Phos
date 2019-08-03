@@ -6,9 +6,11 @@ using UnityEngine.EventSystems;
 
 public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+	[HideInInspector]
+	public bool isHovered;
+
 	public event Action OnHover;
 	public event Action OnBlur;
-	public bool isHovered;
 
 	public bool IsActive => gameObject.activeInHierarchy;
 

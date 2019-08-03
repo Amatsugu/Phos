@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class UIStack : MonoBehaviour
 {
 	public RectTransform.Axis axis;
 	public float padding = 0;
+	public bool invertDirection;
 
 	private RectTransform[] _children;
 
@@ -30,12 +32,14 @@ public class UIStack : MonoBehaviour
 				continue;
 			if (axis == RectTransform.Axis.Horizontal)
 			{
-				_children[i].anchoredPosition = new Vector2(curOffset, 0);
+				curOffset += _children[i].rect.width + padding;
+				_children[i].anchoredPosition = new Vector2(invertDirection ? -curOffset : curOffset, 0);
 			}else
 			{
-				_children[i].anchoredPosition = new Vector2(0, curOffset);
+				_children[i].anchoredPosition = new Vector2(0, invertDirection ? -curOffset : curOffset);
+				curOffset += _children[i].rect.height + padding;
 			}
-			curOffset += _children[i].rect.width + padding;
+
 		}
-    }
+	}
 }

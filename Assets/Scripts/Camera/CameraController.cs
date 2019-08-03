@@ -21,6 +21,9 @@ public class CameraController : MonoBehaviour
 
 	private Vector3 _lastClickPos;
 	private Transform _thisTransform;
+	private bool _isFocusing;
+	private float _focusTime;
+	private Vector3 _focusPos;
 
 	void Awake()
 	{
@@ -70,6 +73,8 @@ public class CameraController : MonoBehaviour
 			else if (Input.GetKey(KeyCode.S))
 				moveVector.z = -1;
 
+
+
 			if (edgePan)
 			{
 				//Edge Panning
@@ -82,6 +87,9 @@ public class CameraController : MonoBehaviour
 				else if (mPos.y > Screen.height - edgePanSize)
 					moveVector.z = 1;
 			}
+
+			if (moveVector.sqrMagnitude != 0)
+				_isFocusing = false;
 
 			if (Input.GetKey(KeyCode.LeftShift))
 				moveVector *= 2;
@@ -99,6 +107,7 @@ public class CameraController : MonoBehaviour
 				_lastClickPos = ray.GetPoint(d);
 			if (Input.GetKey(KeyCode.Mouse1))
 			{
+				_isFocusing = false;
 				curPos = ray.GetPoint(d);
 				var delta = _lastClickPos - curPos;
 				delta.y = 0;
@@ -107,6 +116,8 @@ public class CameraController : MonoBehaviour
 
 			//Zooming
 			var scroll = Input.mouseScrollDelta.y * zoomAmmount;
+			if (scroll != 0)
+				_isFocusing = false;
 
 			_targetHeight -= scroll;
 			if (_targetHeight > maxHeight)
@@ -128,6 +139,13 @@ public class CameraController : MonoBehaviour
 			var desHeight = (_targetHeight < minHeight) ? minHeight : _targetHeight;
 			pos.y = Mathf.Lerp(pos.y, desHeight, _anim += Time.deltaTime * zoomSpeed);
 		}
+		if(_isFocusing)
+		{
+			_focusTime += Time.deltaTime;
+			pos = Vector3.Lerp(pos, _focusPos, _focusTime);
+			if (_focusTime >= 1)
+				_isFocusing = false;
+		}
 		pos.x = Mathf.Clamp(pos.x, mapRenderer.min.x, mapRenderer.max.x);
 		pos.z = Mathf.Clamp(pos.z, mapRenderer.min.z, mapRenderer.max.z);
 		_thisTransform.position = pos;
@@ -144,7 +162,9 @@ public class CameraController : MonoBehaviour
 		var ray = new Ray(targetPos, _thisTransform.forward);
 
 		targetPos = ray.GetPoint(-d);
-		_thisTransform.position = targetPos;
+		_focusPos = targetPos;
+		_isFocusing = true;
+		_focusTime = 0;
 	}
 
 

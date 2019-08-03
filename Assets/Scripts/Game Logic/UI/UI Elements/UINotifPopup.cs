@@ -20,14 +20,17 @@ public class UINotifPopup : MonoBehaviour
 	public RectTransform rectTransform;
 
 	private Image _bg;
+	private Button _button;
 
 	private Color _iC, _bC, _tC, _mC;
+
 
 	void Start()
 	{
 		GameObject = gameObject;
 		Show(false);
 		rectTransform = GetComponent<RectTransform>();
+		_button = GetComponent<Button>();
 		_bg = GetComponent<Image>();
 		_iC = icon.color;
 		_bC = _bg.color;
@@ -43,6 +46,16 @@ public class UINotifPopup : MonoBehaviour
 		icon.sprite = notification.sprite;
 		title.SetText(notification.title);
 		endTime = Time.time + notifTime;
+		_button.onClick.RemoveAllListeners();
+		if(notification.type == NotifTargetType.Tile)
+		{
+			var tile = notification.tile;
+			_button.onClick.AddListener(() => CameraController.FocusOnTile(tile));
+		}else
+		{
+			var panel = notification.panel;
+			_button.onClick.AddListener(() => panel.Show());
+		}
 		message?.SetText(notification.message);
 	}
 

@@ -36,7 +36,17 @@ public class BuildingTileInfo : TileInfo
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
-		return base.GetComponents().Append(typeof(BuildingOffTag));
+		return base.GetComponents().Concat(new ComponentType[] { typeof(BuildingOffTag), typeof(BuildingId) });
+	}
+
+	public override Entity Instantiate(HexCoords pos, Vector3 scale)
+	{
+		var e = base.Instantiate(pos, scale);
+		Map.EM.SetComponentData(e, new BuildingId
+		{
+			Value = GameRegistry.BuildingDatabase.GetId(this)
+		});
+		return e;
 	}
 
 	public override Tile CreateTile(HexCoords pos, float height)

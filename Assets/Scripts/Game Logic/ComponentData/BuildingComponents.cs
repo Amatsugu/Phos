@@ -16,3 +16,8 @@ public struct FirstTickTag : IComponentData
 {
 
 }
+
+public struct BuildingId : IComponentData
+{
+	public int Value;
+}

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -7,19 +7,107 @@ using UnityEngine;
 public class ResourceSystem : ComponentSystem
 {
 	public static int[] resCount;
-	public static int[] totalDemand;
-	public static int[] totalProduction;
 	public static int maxStorage;
 
 	public DateTime nextTic;
 	public float ticRate = 1;
 
+	public ResourceTransactionRecord[] resourceRecords;
+	public struct ResourceTransactionRecord
+	{
+		public int resId;
+		public Dictionary<int, Transaction> transactions;
+
+		public int totalDemand;
+		public int totalSatisfaction;
+		public int totalProduction;
+		public int totalExcess;
+
+		public struct Transaction
+		{
+			public int buildingId;
+			public int demand;
+			public int satisfaction;
+			public int production;
+			public int excess;
+
+			public Transaction(int buildingId)
+			{
+				this.buildingId = buildingId;
+				demand = satisfaction = production = excess = 0;
+			}
+		}
+
+		public ResourceTransactionRecord(int id)
+		{
+			resId = id;
+			transactions = new Dictionary<int, Transaction>();
+			totalDemand = totalSatisfaction = totalProduction = totalExcess = 0;
+		}
+
+		public void Clear()
+		{
+			transactions = new Dictionary<int, Transaction>();
+			totalDemand = totalSatisfaction = totalProduction = totalExcess = 0;
+		}
+
+		public void LogDemand(int count, int buildingId)
+		{
+			Transaction transaction;
+			if (transactions.ContainsKey(buildingId))
+				transaction = transactions[buildingId];
+			else
+				transactions.Add(buildingId, transaction = new Transaction(buildingId));
+			transaction.demand += count;
+			transactions[buildingId] = transaction;
+			totalDemand += count;
+		}
+
+		public void LogSatisfaction(int count, int buildingId)
+		{
+			Transaction transaction;
+			if (transactions.ContainsKey(buildingId))
+				transaction = transactions[buildingId];
+			else
+				transactions.Add(buildingId, transaction = new Transaction(buildingId));
+			transaction.satisfaction += count;
+			transactions[buildingId] = transaction;
+			totalSatisfaction += count;
+		}
+
+		public void LogProduction(int count, int buildingId)
+		{
+			Transaction transaction;
+			if (transactions.ContainsKey(buildingId))
+				transaction = transactions[buildingId];
+			else
+				transactions.Add(buildingId, transaction = new Transaction(buildingId));
+			transaction.production += count;
+			transactions[buildingId] = transaction;
+			totalProduction += count;
+		}
+
+		public void LogExcess(int count, int buildingId)
+		{
+			Transaction transaction;
+			if (transactions.ContainsKey(buildingId))
+				transaction = transactions[buildingId];
+			else
+				transactions.Add(buildingId, transaction = new Transaction(buildingId));
+			transaction.excess += count;
+			transactions[buildingId] = transaction;
+			totalExcess += count;
+		}
+	}
+
 	protected override void OnCreate()
 	{
 		base.OnCreate();
+		GameRegistry.INST.resourceSystem = this;
+		resourceRecords = new ResourceTransactionRecord[ResourceDatabase.ResourceCount];
+		for (int i = 0; i < resourceRecords.Length; i++)
+			resourceRecords[i] = new ResourceTransactionRecord(i);
 		resCount = new int[ResourceDatabase.ResourceCount];
-		totalDemand = new int[ResourceDatabase.ResourceCount];
-		totalProduction = new int[ResourceDatabase.ResourceCount];
 		maxStorage = 1000;
 	}
 
@@ -34,17 +122,17 @@ public class ResourceSystem : ComponentSystem
 			return;
 		//Init Tick
 		nextTic = nextTic.AddSeconds(1 / ticRate);
-		totalDemand = new int[ResourceDatabase.ResourceCount];
-		totalProduction = new int[ResourceDatabase.ResourceCount];
+		for (int i = 0; i < resourceRecords.Length; i++)
+			resourceRecords[i].Clear();
 		EventManager.InvokeEvent("OnTick");
 
 
 		//Consumption
-		Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach<ConsumptionData>((e, c) =>
+		Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>
 		{
-			if (HasAllResources(c.resourceIds, c.rates))
+			if (HasAllResources(c.resourceIds, c.rates, demandSrc: id.Value))
 			{
-				ConsumeResourses(c.resourceIds, c.rates);
+				ConsumeResourses(c.resourceIds, c.rates, demandSrc: id.Value);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
 			}else
@@ -57,11 +145,11 @@ public class ResourceSystem : ComponentSystem
 		});
 
 		//Debuffed Consumption
-		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ConsumptionData c, ref ConsumptionDebuff d) =>
+		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ConsumptionData c, ref ConsumptionDebuff d, ref BuildingId id) =>
 		{
-			if (HasAllResources(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi))
+			if (HasAllResources(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi, id.Value))
 			{
-				ConsumeResourses(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi);
+				ConsumeResourses(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi, id.Value);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
 			}
@@ -73,14 +161,17 @@ public class ResourceSystem : ComponentSystem
 		});
 
 		//Production
-		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach<ProductionData>((e, p) =>
+		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach((Entity e, ProductionData p, ref BuildingId id) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{
 				int res = p.resourceIds[i];
-				totalProduction[res] += p.rates[i];
 				if (resCount[res] == maxStorage)
+				{
+					LogExcess(res, p.rates[i], id.Value);
 					continue;
+				}
+				LogProduction(res, p.rates[i], id.Value);
 				resCount[res] += p.rates[i];
 				if (resCount[res] > maxStorage)
 					resCount[res] = maxStorage;
@@ -95,46 +186,48 @@ public class ResourceSystem : ComponentSystem
 		});
 	}
 
-	void ProduceResource()
-	{
+	public void LogDemand(int rId, int rate, int srcBuilding) => resourceRecords[rId].LogDemand(rate, srcBuilding);
 
-	}
+	public void LogSatisfaction(int rId, int rate, int srcBuilding) => resourceRecords[rId].LogSatisfaction(rate, srcBuilding);
 
-	bool HasAllResources(int[] ids, int[] rates, float multi = 1, bool recordDemand = true)
+	public void LogProduction(int rId, int rate, int srcBuilding) => resourceRecords[rId].LogProduction(rate, srcBuilding);
+
+	public void LogExcess(int rId, int rate, int srcBuilding) => resourceRecords[rId].LogExcess(rate, srcBuilding);
+
+
+	public bool HasAllResources(int[] ids, int[] rates, float multi = 1, int demandSrc = -1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
 			return true;
+		bool hasRes = true;
 		for (int i = 0; i < ids.Length; i++)
 		{
 			var totalRate = multi == 1 ? rates[i] : (int)(rates[i] * multi);
-			if(recordDemand)
-				totalDemand[ids[i]] -= totalRate;
+			if(demandSrc != -1)
+				LogDemand(ids[i], totalRate, demandSrc);
 			if (resCount[ids[i]] < totalRate)
-			{
-				return false;
-			}
+				hasRes = false;
 		}
-
-		return true;
+		return hasRes;
 	}
 
-	bool HasAllResources(ResourceIndentifier[] resources, float multi = 1, bool recordDemand = false)
+	public bool HasAllResources(ResourceIndentifier[] resources, float multi = 1, int demandSrc = -1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
 			return true;
+		bool hasRes = true;
 		for (int i = 0; i < resources.Length; i++)
 		{
 			var totalRate = multi == 1 ? (int)resources[i].ammount : (int)(resources[i].ammount * multi);
-			if (recordDemand)
-				totalDemand[resources[i].id] -= totalRate;
+			if (demandSrc != -1)
+				LogDemand(resources[i].id, totalRate, demandSrc);
 			if (resCount[resources[i].id] < totalRate)
-				return false;
+				hasRes = false;
 		}
-
-		return true;
+		return hasRes;
 	}
 
-	void ConsumeResourses(int[] ids, int[] rates, float multi = 1)
+	void ConsumeResourses(int[] ids, int[] rates, float multi = 1, int demandSrc = -1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
 			return;
@@ -142,25 +235,25 @@ public class ResourceSystem : ComponentSystem
 		{
 			var totalRate = multi == 1 ? rates[i] : (int)(rates[i] * multi);
 			resCount[ids[i]] -= totalRate;
+			if (demandSrc != -1)
+				LogSatisfaction(ids[i], totalRate, demandSrc);
 		}
 	}
 
-	protected override void OnStopRunning()
-	{
-	}
-
-	public static void ConsumeResourses(ResourceIndentifier[] resources, float multi = 1)
+	public static void ConsumeResourses(ResourceIndentifier[] resources, float multi = 1, int demandSrc = -1)
 	{
 		for (int i = 0; i < resources.Length; i++)
-			ConsumeResource(resources[i], multi);
+			ConsumeResource(resources[i], multi, demandSrc);
 	}
 
-	public static void ConsumeResource(ResourceIndentifier resource, float multi = 1)
+	public static void ConsumeResource(ResourceIndentifier resource, float multi = 1, int demandSrc = -1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
 			return;
 		var ammount = Mathf.FloorToInt(resource.ammount * multi);
 		resCount[resource.id] -= ammount;
+		if (demandSrc != -1)
+			GameRegistry.ResourceSystem.LogSatisfaction(resource.id, ammount, demandSrc);
 	}
 
 	public static void AddResources(ResourceIndentifier[] resources, float multi = 1)
@@ -169,9 +262,12 @@ public class ResourceSystem : ComponentSystem
 			AddResource(resources[i]);
 	}
 
-	public static void AddResource(ResourceIndentifier resource, float multi = 1) => resCount[resource.id] += Mathf.FloorToInt(resource.ammount * multi);
+	public static void AddResource(ResourceIndentifier resource, float multi = 1)
+	{
+		resCount[resource.id] += Mathf.FloorToInt(resource.ammount * multi);
+	}
 
-	public static bool HasResourses(ResourceIndentifier[] resources, float multi = 1)
+	/*public static bool HasResourses(ResourceIndentifier[] resources, float multi = 1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
 			return true;
@@ -182,18 +278,12 @@ public class ResourceSystem : ComponentSystem
 				return false;
 		}
 		return true;
-	}
+	}*/
 
 	public static bool HasResource(ResourceIndentifier resource, float multi = 1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
 			return true;
 		return resCount[resource.id] >= Mathf.FloorToInt(resource.ammount * multi);
-	}
-
-	public static void LogDemand(ResourceIndentifier resource, float multi = 1)
-	{
-		var totalRate = multi == 1 ? (int)resource.ammount : (int)(resource.ammount * multi);
-		totalDemand[resource.id] -= totalRate;
 	}
 }

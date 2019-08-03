@@ -127,7 +127,7 @@ public class BuildingTile : Tile
 
 	protected virtual void OnBuilt()
 	{
-		NotificationsUI.Notify(NotifType.Info, $"Construction Complete: {buildingInfo.name}");
+		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.name}", this);
 		
 	}
 }

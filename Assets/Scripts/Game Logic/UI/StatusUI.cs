@@ -39,10 +39,12 @@ public class StatusUI : MonoBehaviour
 			{
 				_displays[i].gameObject.SetActive(true);
 			}
+			var transactions = GameRegistry.ResourceSystem.resourceRecords[i];
+
 			_displays[i].SetInfo(ResourceSystem.resCount[i],
-								ResourceSystem.totalProduction[i],
-								Mathf.Abs(ResourceSystem.totalDemand[i]),
-								ResourceSystem.totalProduction[i] + ResourceSystem.totalDemand[i],
+								transactions.totalProduction,
+								Mathf.Abs(transactions.totalDemand),
+								transactions.totalProduction - transactions.totalSatisfaction,
 								ResourceSystem.resCount[i] == ResourceSystem.maxStorage);
 		}
 	}
