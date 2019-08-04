@@ -27,14 +27,19 @@ public class ResourceSystem : ComponentSystem
 		{
 			public int buildingId;
 			public int demand;
+			public int demandCount;
 			public int satisfaction;
+			public int satisfactionCount;
 			public int production;
+			public int productionCount;
 			public int excess;
+			public int excessCount;
 
 			public Transaction(int buildingId)
 			{
 				this.buildingId = buildingId;
 				demand = satisfaction = production = excess = 0;
+				demandCount = satisfactionCount = productionCount = excessCount = 0;
 			}
 		}
 
@@ -59,6 +64,7 @@ public class ResourceSystem : ComponentSystem
 			else
 				transactions.Add(buildingId, transaction = new Transaction(buildingId));
 			transaction.demand += count;
+			transaction.demandCount++;
 			transactions[buildingId] = transaction;
 			totalDemand += count;
 		}
@@ -71,6 +77,7 @@ public class ResourceSystem : ComponentSystem
 			else
 				transactions.Add(buildingId, transaction = new Transaction(buildingId));
 			transaction.satisfaction += count;
+			transaction.satisfactionCount++;
 			transactions[buildingId] = transaction;
 			totalSatisfaction += count;
 		}
@@ -83,6 +90,7 @@ public class ResourceSystem : ComponentSystem
 			else
 				transactions.Add(buildingId, transaction = new Transaction(buildingId));
 			transaction.production += count;
+			transaction.productionCount++;
 			transactions[buildingId] = transaction;
 			totalProduction += count;
 		}
@@ -95,6 +103,7 @@ public class ResourceSystem : ComponentSystem
 			else
 				transactions.Add(buildingId, transaction = new Transaction(buildingId));
 			transaction.excess += count;
+			transaction.excessCount++;
 			transactions[buildingId] = transaction;
 			totalExcess += count;
 		}

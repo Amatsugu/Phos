@@ -9,6 +9,7 @@ public class StatusUI : MonoBehaviour
 {
 	public RectTransform resourcePanel;
 	public GameObject resourceDisplayPrefab;
+	public ResourceBreakdownUI resourceBreakdown;
 
 	private UIResourceDisplay[] _displays;
 
@@ -28,6 +29,19 @@ public class StatusUI : MonoBehaviour
 			_displays[i] = rDisp.GetComponent<UIResourceDisplay>();
 			_displays[i].SetIcon(ResourceDatabase.GetSprite(i));
 			rDisp.gameObject.SetActive(false);
+			var id = i;
+			_displays[i].OnHover += () =>
+			{
+				resourceBreakdown.gameObject.SetActive(true);
+				resourceBreakdown.SetResource(id);
+				var pos = resourceBreakdown.rTransform.anchoredPosition;
+				pos.x = _displays[id].GetComponent<RectTransform>().position.x;
+				resourceBreakdown.rTransform.anchoredPosition = pos;
+			};
+			_displays[i].OnBlur += () =>
+			{
+				resourceBreakdown.gameObject.SetActive(false);
+			};
 		}
 	}
 

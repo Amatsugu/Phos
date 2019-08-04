@@ -110,7 +110,7 @@ public class ResearchSystem : ComponentSystem
 			{
 				r.lastTickProgress[i] += (int)resource.ammount;
 				r.rProgress[i] += (int)resource.ammount;
-				ResourceSystem.ConsumeResource(resource);
+				ResourceSystem.ConsumeResource(resource, demandSrc: buildingSrc);
 			}
 		}
 

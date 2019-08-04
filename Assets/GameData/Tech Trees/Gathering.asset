@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e10f03f5e7b45dd4483d709ac624464e, type: 3}
-  m_Name: Resources
+  m_Name: Gathering
   m_EditorClassIdentifier: 
   tree:
     category: 2

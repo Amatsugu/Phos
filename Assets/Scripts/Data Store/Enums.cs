@@ -7,7 +7,7 @@ public enum BuildingCategory
 {
 	Hidden = 0,
 	Tech,
-	Resources,
+	Gathering,
 	Production,
 	Structure,
 	Military,

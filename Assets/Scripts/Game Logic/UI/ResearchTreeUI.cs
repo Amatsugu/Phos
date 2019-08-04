@@ -109,7 +109,7 @@ public class ResearchTreeUI : MonoBehaviour
 	public void ShowProductionTree() => ShowTree(BuildingCategory.Production);
 	public void ShowDefenseTree() => ShowTree(BuildingCategory.Defense);
 	public void ShowMilitaryTree() => ShowTree(BuildingCategory.Military);
-	public void ShowResourcesTree() => ShowTree(BuildingCategory.Resources);
+	public void ShowResourcesTree() => ShowTree(BuildingCategory.Gathering);
 	public void ShowStructureTree() => ShowTree(BuildingCategory.Structure);
 	public void ShowTechTree() => ShowTree(BuildingCategory.Tech);
 
