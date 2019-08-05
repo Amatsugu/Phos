@@ -9,12 +9,10 @@ public class UIButtonHover : UIHover
 	public float speed = 1;
 
 	private float _curTime;
-	protected RectTransform _rectTransform;
 
 	protected override void Awake()
 	{
 		base.Awake();
-		_rectTransform = GetComponent<RectTransform>();
 	}
 
 	protected override void Update()
@@ -25,12 +23,12 @@ public class UIButtonHover : UIHover
 		else
 			_curTime -= Time.deltaTime * speed;
 		_curTime = math.clamp(_curTime, 0, 1);
-		var pos = _rectTransform.localPosition;
+		var pos = rTransform.localPosition;
 		var t = 1 - _curTime;
 		t *= t;
 		t = 1 - t;
 		pos.z = math.lerp(0, floatDist, t);
-		_rectTransform.localPosition = pos;
+		rTransform.localPosition = pos;
 	}
 
 }

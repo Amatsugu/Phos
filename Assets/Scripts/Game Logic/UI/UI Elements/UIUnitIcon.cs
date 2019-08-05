@@ -13,8 +13,8 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 	public Image icon;
 	public Vector3 anchoredPosition
 	{
-		get => _rectTransform.anchoredPosition;
-		set => _rectTransform.anchoredPosition = value;
+		get => rTransform.anchoredPosition;
+		set => rTransform.anchoredPosition = value;
 	}
 
 	public void OnPointerClick(PointerEventData eventData)

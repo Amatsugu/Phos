@@ -9,12 +9,12 @@ public class UIInteractionPanel : UIHover
 {
 	public Vector3 AnchoredPosition
 	{
-		get => rectTransform.anchoredPosition;
-		set => rectTransform.anchoredPosition = value;
+		get => rTransform.anchoredPosition;
+		set => rTransform.anchoredPosition = value;
 	}
 	public bool PanelVisible { get; private set; }
-	public float Width => rectTransform.rect.width;
-	public float Height => rectTransform.rect.height;
+	public float Width => rTransform.rect.width;
+	public float Height => rTransform.rect.height;
 	public TMP_Text titleText;
 	public TMP_Text descText;
 	public TMP_Text upgradeBtnText;
@@ -32,11 +32,10 @@ public class UIInteractionPanel : UIHover
 	public event Action OnDestroyClick;
 
 
-	public RectTransform rectTransform;
 	private GameObject _gameObject;
     protected override void Awake()
     {
-		rectTransform = GetComponent<RectTransform>();
+		base.Awake();
 		_gameObject = gameObject;
 
 		upgradeBtn.onClick.AddListener(() => OnUpgradeClick?.Invoke());

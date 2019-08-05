@@ -268,17 +268,17 @@ public class InteractionUI : MonoBehaviour
 	void ShowPanel(Tile tile)
 	{
 		_selectedTile = tile;
-		interactionPanel.rectTransform.position = tile.SurfacePoint;
+		interactionPanel.rTransform.position = tile.SurfacePoint;
 		
 		switch (tile)
 		{
 			case HQTile _:
-				GameRegistry.ResearchTreeUI.Show(null);
-				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				//GameRegistry.ResearchTreeUI.Show(null);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case SubHQTile _:
-				GameRegistry.ResearchTreeUI.Show(null);
-				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
+				//GameRegistry.ResearchTreeUI.Show(null);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
 			case ResearchBuildingTile rb:
 				if(rb.HasHQConnection)

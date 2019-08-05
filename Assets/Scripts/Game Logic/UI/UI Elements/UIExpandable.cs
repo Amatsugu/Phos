@@ -19,14 +19,12 @@ public class UIExpandable : UIHover
 	public event Action OnExpand;
 	public event Action OnContract;
 
-	protected RectTransform _rTransform;
 	private float _animTime;
 
 	protected override void Start()
 	{
 		base.Start();
-		_rTransform = GetComponent<RectTransform>();
-		expandTarget = expandTarget ?? _rTransform;
+		expandTarget = expandTarget ?? rTransform;
 		if(!overrideBaseSize)
 			baseSize = expandTarget.rect.size;
 		if (expandOnHover)

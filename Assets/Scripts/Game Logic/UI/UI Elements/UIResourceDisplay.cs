@@ -24,7 +24,6 @@ public class UIResourceDisplay : UIHover
 
 	private bool _atMax = false;
 	private float _animProgress;
-	private RectTransform _thisTransform;
 	private bool _expanded = true;
 	private float _expandProgress;
 	private float _baseWidth;
@@ -33,12 +32,12 @@ public class UIResourceDisplay : UIHover
 
     protected override void Awake()
 	{
-		_thisTransform = GetComponent<RectTransform>();
+		base.Awake();
 		SetInfo(0, 0, 0, 0, false);
 
 		_inOutWidth = inOutRect.rect.width;
 		_logisticsWidth = logisticsRect.rect.width;
-		_baseWidth = _thisTransform.rect.width;
+		_baseWidth = rTransform.rect.width;
 		Close();
 
 		OnHover += Open;
@@ -63,7 +62,7 @@ public class UIResourceDisplay : UIHover
 			_expandProgress -= Time.deltaTime * expandSpeed;
 		_expandProgress = Mathf.Clamp(_expandProgress, 0, 1);
 		var t = _expandProgress * _expandProgress * _expandProgress;
-		_thisTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_baseWidth - _inOutWidth, _baseWidth, t));
+		rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_baseWidth - _inOutWidth, _baseWidth, t));
 		logisticsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_logisticsWidth - _inOutWidth, _logisticsWidth, t));
 
 	}

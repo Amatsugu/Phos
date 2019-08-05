@@ -3,30 +3,60 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ResourceBreakdownUI : MonoBehaviour
+public class ResourceBreakdownUI : UIHover
 {
+	[Header("Title Text")]
+	public RectTransform productionTitle;
+	public RectTransform demandTitle;
+	public RectTransform satisfactionTitle;
+	public RectTransform excessTitle;
+	[Header("Body Text")]
 	public TMP_Text productionText;
 	public TMP_Text demandText;
 	public TMP_Text satisfactionText;
 	public TMP_Text excessText;
 
-	public RectTransform rTransform;
 
 	private int _resId;
+	private float _targetHeight;
+	private float _animTime;
 
-	void Awake()
+	protected override void Awake()
 	{
-		rTransform = GetComponent<RectTransform>();
+		base.Awake();
 		gameObject.SetActive(false);
 	}
 
 
-    void LateUpdate()
-    {
+	protected override void LateUpdate()
+	{
+		base.LateUpdate();
 		productionText.SetText(GetProductionText(_resId));
 		demandText.SetText(GetDemandText(_resId));
 		satisfactionText.SetText(GetSatisfactionText(_resId));
 		excessText.SetText(GetExcessText(_resId));
+		var prefHeight = 0f;
+		prefHeight += productionTitle.rect.height;
+		prefHeight += demandTitle.rect.height;
+		prefHeight += satisfactionTitle.rect.height;
+		prefHeight += excessTitle.rect.height;
+
+		prefHeight += productionText.preferredHeight;
+		prefHeight += demandText.preferredHeight;
+		prefHeight += satisfactionText.preferredHeight;
+		prefHeight += excessText.preferredHeight;
+
+		prefHeight += 5 * 8;
+		
+		if(_targetHeight != prefHeight && prefHeight != rTransform.rect.height)
+		{
+			_animTime = 0;
+			_targetHeight = prefHeight;
+		}
+		_animTime += Time.deltaTime * 2;
+
+		rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Lerp(rTransform.rect.height, _targetHeight, _animTime));
+
 	}
 
 	public void SetResource(int resId)

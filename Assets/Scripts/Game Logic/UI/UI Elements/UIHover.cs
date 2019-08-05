@@ -11,6 +11,8 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	public event Action OnHover;
 	public event Action OnBlur;
+	[HideInInspector]
+	public RectTransform rTransform;
 
 	public bool IsActive => gameObject.activeInHierarchy;
 
@@ -43,7 +45,7 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	protected virtual void Awake()
 	{
-
+		rTransform = GetComponent<RectTransform>();
 	}
 
 	protected virtual void Start()
@@ -52,6 +54,11 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	}
 
 	protected virtual void Update()
+	{
+
+	}
+
+	protected virtual void LateUpdate()
 	{
 
 	}

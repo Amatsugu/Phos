@@ -22,42 +22,40 @@ public class UIResearchNode : UIHover
 	public RectTransform extraInfo;
 
 
-	private RectTransform _thisRect;
 	private UIResearchResource[] _uIResearchResources;
 	private Vector2 _curSize;
 
 	protected override void Awake()
 	{
 		base.Awake();
-		_thisRect = GetComponent<RectTransform>();
-		_curSize = _thisRect.rect.size;
+		_curSize = rTransform.rect.size;
 		descText.enabled = false;
 		OnHover += () =>
 		{
-			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y + descText.preferredHeight);
-			_thisRect.SetAsLastSibling();
+			rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y + descText.preferredHeight);
+			rTransform.SetAsLastSibling();
 			descText.enabled = true;
 		};
 		OnBlur += () =>
 		{
-			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y);
+			rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y);
 			descText.enabled = false;
 		};
 	}
 
 	public void SetAnchoredPos(Vector3 pos)
 	{
-		_thisRect.anchoredPosition = pos;
+		rTransform.anchoredPosition = pos;
 	}
 
 	public void SetSize(Vector2 size)
 	{
 		_curSize = size;
-		_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+		rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
 		if(isHovered)
-			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y + descText.preferredHeight);
+			rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y + descText.preferredHeight);
 		else
-			_thisRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+			rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
 		icon.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.y);
 		icon.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
 		info.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);

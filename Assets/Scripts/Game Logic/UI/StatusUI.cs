@@ -5,21 +5,26 @@ using TMPro;
 using UnityEngine.UI;
 using System.Text;
 
-public class StatusUI : MonoBehaviour
+public class StatusUI : UIHover
 {
 	public RectTransform resourcePanel;
 	public GameObject resourceDisplayPrefab;
 	public ResourceBreakdownUI resourceBreakdown;
+	public float animSpeed = 2;
 
 	private UIResourceDisplay[] _displays;
+	private int _selectedDisplay = -1;
+	private float _animTime = 0;
 
-	void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
 		GameRegistry.INST.statusUI = this;
 	}
 
-	void Start()
+	protected override void Start()
 	{
+		base.Start();
 		_displays = new UIResourceDisplay[ResourceDatabase.ResourceCount];
 		var w = resourceDisplayPrefab.GetComponent<RectTransform>().rect.width;
 		for (int i = 0; i < _displays.Length; i++)
@@ -32,21 +37,23 @@ public class StatusUI : MonoBehaviour
 			var id = i;
 			_displays[i].OnHover += () =>
 			{
-				resourceBreakdown.gameObject.SetActive(true);
+				_selectedDisplay = id;
+				resourceBreakdown.SetActive(true);
 				resourceBreakdown.SetResource(id);
-				var pos = resourceBreakdown.rTransform.anchoredPosition;
-				pos.x = _displays[id].GetComponent<RectTransform>().position.x;
-				resourceBreakdown.rTransform.anchoredPosition = pos;
-			};
-			_displays[i].OnBlur += () =>
-			{
-				resourceBreakdown.gameObject.SetActive(false);
+				_animTime = 0;
 			};
 		}
+		OnBlur += () =>
+		{
+			_selectedDisplay = -1;
+			resourceBreakdown.SetActive(false);
+		};
+		resourceBreakdown.SetActive(false);
 	}
 
-	void Update()
+	protected override void Update()
 	{
+		base.Update();
 		for (int i = 0; i < _displays.Length; i++)
 		{
 			if(ResourceSystem.resCount[i] != 0)
@@ -60,6 +67,19 @@ public class StatusUI : MonoBehaviour
 								Mathf.Abs(transactions.totalDemand),
 								transactions.totalProduction - transactions.totalSatisfaction,
 								ResourceSystem.resCount[i] == ResourceSystem.maxStorage);
+		}
+	}
+
+	protected override void LateUpdate()
+	{
+		base.LateUpdate();
+		if(_selectedDisplay != -1)
+		{
+			_animTime += Time.deltaTime * animSpeed;
+			var targetX = _displays[_selectedDisplay].rTransform.position.x;
+			var pos = resourceBreakdown.rTransform.anchoredPosition;
+			pos.x = Mathf.Lerp(pos.x, targetX, _animTime);
+			resourceBreakdown.rTransform.anchoredPosition = pos;
 		}
 	}
 

@@ -868,6 +868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   floatDist: -5
   speed: 10
 --- !u!1 &45125134
@@ -1119,10 +1120,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 237623f138f47814b9c009abe508f2ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHovered: 0
+  rTransform: {fileID: 0}
   resourcePanel: {fileID: 849044139}
   resourceDisplayPrefab: {fileID: 2162334617834054866, guid: a97d900c5d19ee448943de8173ed7983,
     type: 3}
   resourceBreakdown: {fileID: 307909932}
+  animSpeed: 2
 --- !u!1 &59318049
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,6 +1270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   closeButton: {fileID: 0}
   titleText: {fileID: 0}
   hideOnStart: 1
@@ -2036,6 +2041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   floatDist: -5
   speed: 10
 --- !u!1 &129706184
@@ -3406,7 +3412,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.7075472, g: 0, b: 0.2774693, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -3589,11 +3595,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f34b218fb579b354ba465b43bab84f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHovered: 0
+  rTransform: {fileID: 0}
+  productionTitle: {fileID: 725275830}
+  demandTitle: {fileID: 2046219668}
+  satisfactionTitle: {fileID: 1457047746}
+  excessTitle: {fileID: 1448092086}
   productionText: {fileID: 1386653668}
   demandText: {fileID: 118888892}
   satisfactionText: {fileID: 2103432586}
   excessText: {fileID: 2067010777}
-  rTransform: {fileID: 0}
 --- !u!1 &323493876
 GameObject:
   m_ObjectHideFlags: 0
@@ -4315,6 +4326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   titleText: {fileID: 987453433}
   descText: {fileID: 439342161}
   icon: {fileID: 1628499864}
@@ -5783,6 +5795,82 @@ MonoBehaviour:
   maxNotifs: 6
   spacing: 10
   basePos: {x: 10, y: 100}
+--- !u!114 &515627637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3df29e7cc05fbec4aa43e06ea875565d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  rotation:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 360
+  skyIntensityMode:
+    m_OverrideState: 0
+    m_Value: 0
+  exposure:
+    m_OverrideState: 0
+    m_Value: 1.87
+  multiplier:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  upperHemisphereLuxValue:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  desiredLuxValue:
+    m_OverrideState: 0
+    m_Value: 20000
+  updateMode:
+    m_OverrideState: 0
+    m_Value: 0
+  updatePeriod:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+  includeSunInBaking:
+    m_OverrideState: 0
+    m_Value: 0
+  sunSize:
+    m_OverrideState: 0
+    m_Value: 0.19
+    min: 0
+    max: 1
+  sunSizeConvergence:
+    m_OverrideState: 0
+    m_Value: 4.57
+    min: 1
+    max: 10
+  atmosphereThickness:
+    m_OverrideState: 0
+    m_Value: 0.56
+    min: 0
+    max: 5
+  skyTint:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0.9672265, b: 1, a: 1}
+    hdr: 0
+    showAlpha: 1
+    showEyeDropper: 1
+  groundColor:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0.2805717, b: 0.3018868, a: 1}
+    hdr: 0
+    showAlpha: 1
+    showEyeDropper: 1
+  enableSunDisk:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!1 &523219446
 GameObject:
   m_ObjectHideFlags: 0
@@ -6257,7 +6345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Profile: {fileID: 11400000, guid: 45d37ff46ba4fc847aeae7a4564a2d66, type: 2}
   m_StaticLightingSkyUniqueID: 2
-  m_SkySettings: {fileID: 1116440544}
+  m_SkySettings: {fileID: 515627637}
   m_SkySettingsFromProfile: {fileID: -5733366833357820244, guid: 45d37ff46ba4fc847aeae7a4564a2d66,
     type: 2}
 --- !u!114 &536096455
@@ -6766,6 +6854,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
 --- !u!1 &574622350
 GameObject:
   m_ObjectHideFlags: 0
@@ -7067,6 +7156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   floatDist: -5
   speed: 10
 --- !u!1 &601643219
@@ -7258,7 +7348,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.7075472, g: 0, b: 0.2774693, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -7691,6 +7781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   closeButton: {fileID: 1361566512}
   titleText: {fileID: 1295917381}
   hideOnStart: 1
@@ -7833,7 +7924,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.7075472, g: 0, b: 0.2774693, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -8208,6 +8299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   closeButton: {fileID: 171225370}
   titleText: {fileID: 1080744246}
   hideOnStart: 0
@@ -8307,13 +8399,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   titleText: {fileID: 152280928}
   descText: {fileID: 205018794}
   upgradeBtnText: {fileID: 1257835262}
   upgradeBtn: {fileID: 1704791244}
   destroyBtnText: {fileID: 1805093807}
   destroyBtn: {fileID: 561645434}
-  rectTransform: {fileID: 0}
 --- !u!114 &719620473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10299,82 +10391,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d52b85ef21fcb4244bf3d283a35a5999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1116440544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3df29e7cc05fbec4aa43e06ea875565d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  rotation:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-    max: 360
-  skyIntensityMode:
-    m_OverrideState: 0
-    m_Value: 0
-  exposure:
-    m_OverrideState: 0
-    m_Value: 1.87
-  multiplier:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  upperHemisphereLuxValue:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  desiredLuxValue:
-    m_OverrideState: 0
-    m_Value: 20000
-  updateMode:
-    m_OverrideState: 0
-    m_Value: 0
-  updatePeriod:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-  includeSunInBaking:
-    m_OverrideState: 0
-    m_Value: 0
-  sunSize:
-    m_OverrideState: 0
-    m_Value: 0.19
-    min: 0
-    max: 1
-  sunSizeConvergence:
-    m_OverrideState: 0
-    m_Value: 4.57
-    min: 1
-    max: 10
-  atmosphereThickness:
-    m_OverrideState: 0
-    m_Value: 0.56
-    min: 0
-    max: 5
-  skyTint:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0.9672265, b: 1, a: 1}
-    hdr: 0
-    showAlpha: 1
-    showEyeDropper: 1
-  groundColor:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0.2805717, b: 0.3018868, a: 1}
-    hdr: 0
-    showAlpha: 1
-    showEyeDropper: 1
-  enableSunDisk:
-    m_OverrideState: 0
-    m_Value: 1
 --- !u!1 &1121457502
 GameObject:
   m_ObjectHideFlags: 0
@@ -11433,7 +11449,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.7075472, g: 0, b: 0.2774693, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -12818,6 +12834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   floatDist: -5
   speed: 10
 --- !u!1 &1386623277
@@ -15076,6 +15093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   floatDist: -5
   speed: 10
 --- !u!1 &1595454243
@@ -15252,7 +15270,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.7075472, g: 0, b: 0.2774693, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -15615,7 +15633,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.7075472, g: 0, b: 0.2774693, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -16264,6 +16282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
 --- !u!1 &1723077715
 GameObject:
   m_ObjectHideFlags: 0
@@ -16589,6 +16608,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78c1999885a1bc6488e15d6a7487b00e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  popupPrefab: {fileID: 3019423995667050886, guid: 798f626165bf669449976d85ee00bc78,
+    type: 3}
 --- !u!1 &1741129555
 GameObject:
   m_ObjectHideFlags: 0
@@ -18140,6 +18161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   floatDist: -5
   speed: 10
 --- !u!1 &1898018831
@@ -18800,6 +18822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   closeButton: {fileID: 443560840}
   titleText: {fileID: 1898018833}
   hideOnStart: 1
@@ -19743,6 +19766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHovered: 0
+  rTransform: {fileID: 0}
   closeButton: {fileID: 0}
   titleText: {fileID: 0}
   hideOnStart: 1
