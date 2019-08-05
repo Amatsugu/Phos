@@ -80,6 +80,32 @@ namespace DataStore.ConduitGraph
 			return closest.IsFull ? default : closest;
 		}
 
+
+		/// <summary>
+		/// Gets the closest node and excludes the base node
+		/// </summary>
+		/// <param name="nodePos">Coord to compare distance to</param>
+		/// <returns>Closest non base node</returns>
+		public ConduitNode GetClosestConduitNode(HexCoords nodePos)
+		{
+			ConduitNode closest = null;
+			var bestDist = float.MaxValue;
+			var pos = _coordMap.Keys.ToArray();
+			for (int i = 0; i < _coordMap.Count; i++)
+			{
+				var n = nodes[_coordMap[pos[i]]];
+				if (n.Equals(_baseNode))
+					continue;
+				var dist = nodePos.DistanceToSq(pos[i]);
+				if (dist < bestDist)
+				{
+					bestDist = dist;
+					closest = n;
+				}
+			}
+			return closest;
+		}
+
 		public ConduitNode[] GetDisconectedNodes()
 		{
 			var visited = new HashSet<ConduitNode>();

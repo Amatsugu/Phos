@@ -9,7 +9,6 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-[UpdateBefore(typeof(EntityCommandBufferSystem))]
 public class UnitMovementSystem : JobComponentSystem
 {
 

@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using Effects.Lines;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,23 +12,35 @@ public class UIInfoPopup : UIExpandable
 	public TMP_Text title;
 	public TMP_Text desc;
 	public Image image;
+	public Vector3 offset = new Vector3(0, 1, 0);
+	public MeshEntityRotatable line;
 
 	private Vector3 _notifPos;
+	private Entity _line;
 
 	public void Init(HexCoords coords, Sprite icon, string title, string message)
 	{
 		this.title.SetText(title);
-		_notifPos = Map.ActiveMap[coords].SurfacePoint;
+		_notifPos = Map.ActiveMap[coords].SurfacePoint + offset;
 		desc.SetText(message);
 		if(icon != null)
 			image.sprite = icon;
 		SetActive(true);
+		//LateUpdate();
+		rTransform.position = _notifPos;
+		LineFactory.CreateStaticLine(line, Map.ActiveMap[coords].SurfacePoint, _notifPos);
 	}
 
-	protected override void LateUpdate()
+	public override void OnDisable()
+	{
+		base.OnDisable();
+		Map.EM.DestroyEntity(_line);
+	}
+
+	/*protected override void LateUpdate()
 	{
 		base.LateUpdate();
 		var pos = GameRegistry.Camera.WorldToScreenPoint(_notifPos);
 		rTransform.anchoredPosition = new Vector2(pos.x, pos.y);
-	}
+	}*/
 }

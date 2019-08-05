@@ -38,9 +38,14 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		ClearHoverEvents();
 	}
 
-	public void OnDisable()
+	public virtual void OnDisable()
 	{
 		OnBlur?.Invoke();
+	}
+
+	public virtual void OnEnable()
+	{
+
 	}
 
 	protected virtual void Awake()

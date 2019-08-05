@@ -283,6 +283,7 @@ public class InteractionUI : MonoBehaviour
 			case ResearchBuildingTile rb:
 				if(rb.HasHQConnection)
 					GameRegistry.ResearchTreeUI.Show(rb);
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());
 				break;
 			case BuildingTile _:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());

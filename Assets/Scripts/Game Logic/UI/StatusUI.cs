@@ -38,6 +38,13 @@ public class StatusUI : UIHover
 			_displays[i].OnHover += () =>
 			{
 				_selectedDisplay = id;
+				if(!resourceBreakdown.IsActive)
+				{
+					var targetX = _displays[_selectedDisplay].rTransform.position.x;
+					var pos = resourceBreakdown.rTransform.anchoredPosition;
+					pos.x = targetX;
+					resourceBreakdown.rTransform.anchoredPosition = pos;
+				}
 				resourceBreakdown.SetActive(true);
 				resourceBreakdown.SetResource(id);
 				_animTime = 0;

@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Unity.Entities;
-using Unity.Rendering;
+﻿using Unity.Entities;
 using Unity.Transforms;
+
 using UnityEngine;
 
 public class BuildingTile : Tile
@@ -162,13 +158,13 @@ public class PoweredBuildingTile : BuildingTile
 
 	public virtual void FindConduitConnections()
 	{
-		var closestConduit = Map.ActiveMap.conduitGraph.GetClosestNode(Coords);
+		var closestConduit = Map.ActiveMap.conduitGraph.GetClosestConduitNode(Coords);
 		if (closestConduit == null)
 			OnHQDisconnected();
 		else
 		{
 			var conduit = (Map.ActiveMap[closestConduit.conduitPos] as ResourceConduitTile);
-			if (conduit == null || !conduit.HasHQConnection)
+			if (!conduit.HasHQConnection)
 				OnHQDisconnected();
 			else if (conduit.IsInPoweredRange(Coords))
 				OnHQConnected();

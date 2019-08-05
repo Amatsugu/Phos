@@ -188,7 +188,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 			return;
 		_switchLines = HasHQConnection = true;
 		UpdateLines();
-		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.connectionRange, t =>
+		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
 		{
 			if (t is ResourceConduitTile)
 				return;
@@ -204,7 +204,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 		HasHQConnection = false;
 		_switchLines = true;
 		UpdateLines();
-		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.connectionRange, t =>
+		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
 		{
 			if (t is ResourceConduitTile)
 				return;
@@ -224,9 +224,10 @@ public class ResourceConduitTile : PoweredBuildingTile
 				return false;
 			}
 			return true;
-		}, true);
+		});
 		return inRange;
 	}
+
 	public bool IsInConnectionRange(HexCoords tile) => Coords.DistanceToSq(tile) <= _connectRangeSq;
 
 	public override void TileUpdated(Tile src, TileUpdateType updateType)
