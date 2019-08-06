@@ -10,6 +10,9 @@ public class CameraController : MonoBehaviour
 	public float zoomAmmount = 1;
 	public float zoomSpeed = 2;
 	public float edgePanSize = 100;
+	public float highAngle = 60;
+	public float lowAngle = 80;
+	public AnimationCurve angleCurve;
 	public bool edgePan = false;
 	public MapRenderer mapRenderer;
 
@@ -35,8 +38,8 @@ public class CameraController : MonoBehaviour
     void Start()
     {
 		_targetHeight = maxHeight;
-		if (Application.isEditor)
-			maxHeight = 500;
+		/*if (Application.isEditor)
+			maxHeight = 500;*/
 		EventManager.AddEventListener("nameWindowOpen", () =>
 		{
 			enabled = false;
@@ -57,6 +60,7 @@ public class CameraController : MonoBehaviour
 		}
 		//Panning
 		var pos = _thisTransform.position;
+		var rot = _thisTransform.eulerAngles;
 		var moveVector = Vector3.zero;
 		var mPos = Input.mousePosition;
 
@@ -138,6 +142,9 @@ public class CameraController : MonoBehaviour
 			}
 			var desHeight = (_targetHeight < minHeight) ? minHeight : _targetHeight;
 			pos.y = Mathf.Lerp(pos.y, desHeight, _anim += Time.deltaTime * zoomSpeed);
+			var t = pos.y.Remap(minHeight, maxHeight, 0, 1);
+			var angle = lowAngle.Lerp(highAngle, angleCurve.Evaluate(t));
+			rot.x = angle;
 		}
 		if(_isFocusing)
 		{
@@ -149,7 +156,7 @@ public class CameraController : MonoBehaviour
 		pos.x = Mathf.Clamp(pos.x, mapRenderer.min.x, mapRenderer.max.x);
 		pos.z = Mathf.Clamp(pos.z, mapRenderer.min.z, mapRenderer.max.z);
 		_thisTransform.position = pos;
-
+		_thisTransform.rotation = Quaternion.Euler(rot);
 
 
 	}

@@ -28,7 +28,8 @@ public class UIInfoPopup : UIExpandable
 		SetActive(true);
 		//LateUpdate();
 		rTransform.position = _notifPos;
-		LineFactory.CreateStaticLine(line, Map.ActiveMap[coords].SurfacePoint, _notifPos);
+		rTransform.rotation = GameRegistry.Camera.transform.rotation;
+		_line = LineFactory.CreateStaticLine(line, Map.ActiveMap[coords].SurfacePoint, _notifPos);
 	}
 
 	public override void OnDisable()
@@ -37,10 +38,9 @@ public class UIInfoPopup : UIExpandable
 		Map.EM.DestroyEntity(_line);
 	}
 
-	/*protected override void LateUpdate()
+	protected override void LateUpdate()
 	{
 		base.LateUpdate();
-		var pos = GameRegistry.Camera.WorldToScreenPoint(_notifPos);
-		rTransform.anchoredPosition = new Vector2(pos.x, pos.y);
-	}*/
+		rTransform.rotation = GameRegistry.Camera.transform.rotation;
+	}
 }

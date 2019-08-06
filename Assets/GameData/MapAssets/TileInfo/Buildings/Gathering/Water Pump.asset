@@ -31,7 +31,7 @@ MonoBehaviour:
   cost:
   - id: 1
     ammount: 60
-  - id: 1
+  - id: 0
     ammount: 20
   icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0

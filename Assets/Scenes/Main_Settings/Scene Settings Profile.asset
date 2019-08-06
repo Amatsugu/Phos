@@ -1392,29 +1392,29 @@ MonoBehaviour:
   m_AdvancedMode: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 1.28
+    m_Value: 1
     min: 0
     max: 4
   stepCount:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 6
     min: 2
     max: 32
   radius:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 2
     min: 0.25
     max: 5
   fullResolution:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   maximumRadiusInPixels:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 40
     min: 16
     max: 256
   directLightingStrength:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
     min: 0
     max: 1

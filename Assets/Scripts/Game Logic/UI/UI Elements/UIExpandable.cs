@@ -32,6 +32,8 @@ public class UIExpandable : UIHover
 			OnHover += Expand;
 			OnBlur += Contract;
 		}
+		expandTarget.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(baseSize.x, expandSize.x, 0));
+		expandTarget.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Lerp(baseSize.y, expandSize.y, 0));
 	}
 
 	protected override void Update()

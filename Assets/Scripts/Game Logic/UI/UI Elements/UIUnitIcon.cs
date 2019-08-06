@@ -11,6 +11,17 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 
 	public TMP_Text text;
 	public Image icon;
+
+	protected override void Awake()
+	{
+		base.Awake();
+		EventManager.AddEventListener("OnTick", () =>
+		{
+			if (IsActive && isHovered)
+				Hover();
+		});
+	}
+
 	public Vector3 anchoredPosition
 	{
 		get => rTransform.anchoredPosition;

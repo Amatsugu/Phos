@@ -19,6 +19,7 @@ MonoBehaviour:
   isStatic: 1
   decorators: []
   description: Produces electrum
+  isTraverseable: 1
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2
@@ -30,7 +31,7 @@ MonoBehaviour:
   cost:
   - id: 1
     ammount: 2
-  icon: {fileID: -7947723104890870202, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  icon: {fileID: -550988092767783048, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0
   upgradeTarget:
     id: -1

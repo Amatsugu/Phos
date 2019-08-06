@@ -16,6 +16,16 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	public bool IsActive => gameObject.activeInHierarchy;
 
+	public void Blur()
+	{
+		OnBlur?.Invoke();
+	}
+
+	public void Hover()
+	{
+		OnHover?.Invoke();
+	}
+
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		OnHover?.Invoke();

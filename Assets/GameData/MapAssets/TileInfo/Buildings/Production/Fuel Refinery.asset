@@ -35,7 +35,7 @@ MonoBehaviour:
     ammount: 10
   - id: 4
     ammount: 75
-  icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  icon: {fileID: -4264389267444819633, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0
   upgradeTarget:
     id: -1
