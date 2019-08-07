@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ef76c1436dae814e9d2a0abdd36d62d, type: 3}
-  m_Name: Prodcution Research Building
+  m_Name: Material Science Lab
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
@@ -19,7 +19,8 @@ MonoBehaviour:
   isStatic: 1
   decorators: []
   description: Unlocks research relating to resoruce production and refinement
-  buildingMesh: {fileID: 11400000, guid: 396bb86d2dfd29140b0d4ed8115681dc, type: 2}
+  isTraverseable: 0
+  buildingMesh: {fileID: 11400000, guid: 97ae1174d81cecb4f906ad1824be9cfb, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2
   tier: 1
@@ -27,7 +28,11 @@ MonoBehaviour:
   size: 0
   flattenOuterRange: 0
   resourceTransferRange: 0
-  cost: []
+  cost:
+  - id: 1
+    ammount: 16
+  - id: 2
+    ammount: 8
   icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0
   upgradeTarget:

@@ -496,7 +496,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			_activeUnits[i].gameObject.SetActive(false);
 		}
-		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (activeCount * 170));
+		scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5 + (activeCount * (_activeUnits[0].rTransform.rect.width + 10)));
 	}
 
 	public void GrowUnitsUI(int count)

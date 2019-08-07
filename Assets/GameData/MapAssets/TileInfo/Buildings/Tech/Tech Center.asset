@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
-  m_Name: Phos Lab
+  m_Script: {fileID: 11500000, guid: 9ef76c1436dae814e9d2a0abdd36d62d, type: 3}
+  m_Name: Tech Center
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
@@ -18,34 +18,26 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   decorators: []
-  description: Produces power
+  description: Unlocks research relating to technology and improvements
   isTraverseable: 0
-  buildingMesh: {fileID: 11400000, guid: e62d3f653db9df84fbc5fd56f75ae0fe, type: 2}
-  constructionMesh: {fileID: 0}
+  buildingMesh: {fileID: 11400000, guid: bb3ccf0394717c545ba0d3942efb41b1, type: 2}
+  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2
-  tier: 6
+  tier: 1
   category: 1
   size: 0
   flattenOuterRange: 0
   resourceTransferRange: 0
   cost:
   - id: 1
-    ammount: 2
-  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+    ammount: 16
+  - id: 2
+    ammount: 8
+  icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   placementMode: 0
   upgradeTarget:
     id: -1
-  production:
-  - id: 14
-    ammount: 5
-  consumption:
-  - id: 0
-    ammount: 100
-  - id: 15
-    ammount: 3
-  - id: 4
-    ammount: 5
-  - id: 13
-    ammount: 1
-  - id: 11
-    ammount: 5
+  production: []
+  consumption: []
+  researchCategory: 1
+  consumptionMuli: 2

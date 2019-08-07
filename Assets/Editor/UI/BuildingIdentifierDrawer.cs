@@ -14,7 +14,7 @@ public class BuildingIdentifierDrawer : PropertyDrawer
 		var asset = AssetDatabase.FindAssets("t:BuildingDatabase").First();
 		var assetPath = AssetDatabase.GUIDToAssetPath(asset);
 		var db = AssetDatabase.LoadAssetAtPath<BuildingDatabase>(assetPath);
-		var buildings = db.buildings.Values.Select(b => b);
+		var buildings = db.buildings.Values.Where(b => b != null);
 		var names = buildings.Select(b => $" [{b.info.category}] T{b.info.tier} {b.info.name}").Prepend("--Select Building--").ToArray();
 		var ids = buildings.Select(b => b.id + 1).Prepend(0).ToArray();
 		EditorGUI.BeginProperty(position, label, property);

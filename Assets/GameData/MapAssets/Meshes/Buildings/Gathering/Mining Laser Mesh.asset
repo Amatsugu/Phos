@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Resource Conduit Preview Line
+  m_Name: Mining Laser Mesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: -7859401362885015629, guid: 2632746049f52834099932ed311a813e, type: 3}
-  material: {fileID: 2100000, guid: b13d9fad2a7253f4baf9d9bdda2f21b2, type: 2}
-  castShadows: 0
-  receiveShadows: 0
+  mesh: {fileID: -2432090755550338912, guid: cbb73a31a297f4049b46600c59f83d99, type: 3}
+  material: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
+  castShadows: 1
+  receiveShadows: 1
   isStatic: 1

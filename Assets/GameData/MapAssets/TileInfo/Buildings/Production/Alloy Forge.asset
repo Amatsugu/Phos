@@ -20,7 +20,7 @@ MonoBehaviour:
   decorators: []
   description: Produces electrum
   isTraverseable: 1
-  buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  buildingMesh: {fileID: 11400000, guid: bb526751acb0ed94ca342bebcb471cb7, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2
   tier: 2

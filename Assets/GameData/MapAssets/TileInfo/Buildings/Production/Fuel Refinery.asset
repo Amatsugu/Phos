@@ -20,7 +20,7 @@ MonoBehaviour:
   decorators: []
   description: Refines raw carbon to provide a much more concentrated fuel.
   isTraverseable: 1
-  buildingMesh: {fileID: 11400000, guid: fdad5a311b68bd5448df43a04167253f, type: 2}
+  buildingMesh: {fileID: 11400000, guid: 730ccf125d45816468a97981c139262c, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2
   tier: 2
