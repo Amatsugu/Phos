@@ -123,6 +123,7 @@ public class ResearchTreeUI : MonoBehaviour
 
 		var c = DrawTree(_curTree.BaseNode) + 1;
 		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, c * _totalOffset.y);
+		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _curTree.GetDepth() * _totalOffset.x);
 	}
 
 	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true, bool redraw = true)

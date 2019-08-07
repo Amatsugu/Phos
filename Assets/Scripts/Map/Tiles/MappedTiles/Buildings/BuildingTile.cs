@@ -204,7 +204,7 @@ public class PoweredBuildingTile : BuildingTile
 		if(!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 			Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
 		HasHQConnection = false;
-		InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being directly powered and results in a consumtion penalty.");
+		InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and results in a consumtion penalty.");
 	}
 
 	public override void OnRemoved()

@@ -45,7 +45,8 @@ public class InfoPopupUI : MonoBehaviour
 			popup = _availablePopups.Last();
 			_availablePopups.RemoveAt(_availablePopups.Count - 1);
 		}
-		popup.Init(coords, icon, title, message);
+		popup.Init(coords);
+		popup.AddNotif(icon, title, message);
 		_activePopups.Add(coords, popup);
 	}
 

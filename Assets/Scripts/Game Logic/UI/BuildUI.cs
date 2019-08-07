@@ -448,6 +448,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		if (hqMode)
 			return;
+		GameRegistry.InteractionUI.interactionPanel.HidePanel();
 		buildWindow.SetActive(true);
 		placeMode = false;
 		_selectedBuilding = null;
