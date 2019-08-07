@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using TMPro;
@@ -20,11 +21,14 @@ public class UIDevConsole : MonoBehaviour
 	private StringBuilder _sb;
 	private Dictionary<string, Command> _commands;
 
+	private List<string> _logs;
+
 	void Awake()
 	{
 		_sb = new StringBuilder();
 		Application.logMessageReceived += DebugLogMessage;
 		_commands = new Dictionary<string, Command>();
+		_logs = new List<string>();
 		INST = this;
 		AddDefaultCommands();
 	}
@@ -100,6 +104,7 @@ public class UIDevConsole : MonoBehaviour
 				break;
 		}
 		_sb.AppendLine($"<color={color}><b>[{type}]</b> {condition}</color>");
+		_logs.Add($"[{type}] {condition}\n\t{stackTrace.Replace("\n", "\n\t")}");
 		if(consolePanel.IsOpen)
 			UpdateConsoleText();
 	}
@@ -206,5 +211,10 @@ public class UIDevConsole : MonoBehaviour
 		{
 			return "Shows the help message for the given command or lists all commands";
 		}
+	}
+
+	void OnDisable()
+	{
+		File.WriteAllLines("output.log", _logs);
 	}
 }

@@ -33,5 +33,6 @@ I would like to do some tutorials, but it is unlikely that I will have the time 
 **Can I share anything you post about the game?**
 Yes, you can share anything I post in this server! Just don't try to take credit for my work :GWmiyanoPeek: 
 
-**How can I support the development of Phos?**
-Right now the game is not in a state where I feel comfortable accepting monetary help with development. You can share this discord and spread the word about Phos. If you really want to help then you can use my Robinhood referall link: http://share.robinhood.com/khamrar
+
+**What are the minimum system requirements for Phos?**
+Phos uses Unity's HD Render Pipeline(HDRP) which requires a GPU that supports DirectX 11+ and Compute Shaders.
