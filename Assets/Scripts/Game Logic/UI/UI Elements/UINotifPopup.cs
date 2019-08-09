@@ -50,7 +50,8 @@ public class UINotifPopup : MonoBehaviour
 		if(notification.type == NotifTargetType.Tile)
 		{
 			var tile = notification.tile;
-			_button.onClick.AddListener(() => CameraController.FocusOnTile(tile));
+			if(tile != null)
+				_button.onClick.AddListener(() => CameraController.FocusOnTile(tile));
 		}else
 		{
 			var panel = notification.panel;

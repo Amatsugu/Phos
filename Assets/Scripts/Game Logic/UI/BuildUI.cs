@@ -64,10 +64,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private Tile _startPoint;
 	private List<Tile> _buildPath;
 	private System.Func<Tile, bool> invalidTileSelector;
+	private bool _suffientFunds;
 	private bool _validPlacement;
 	private BuildingCategory? _lastBuildingCategory;
 
 	private float _poweredTileRangeSq;
+	private List<string> _errors;
 
 	
 
@@ -79,7 +81,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void Start()
 	{
-		
+		_errors = new List<string>();
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
 		_activeUnits = new List<UIUnitIcon>();
@@ -128,7 +130,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if (selectedTile != null)
 				{
 					_validPlacement = true;
-
+					_suffientFunds = true;
+					_errors.Clear();
 					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
 					//Path Placement
 					if (_selectedBuilding.placementMode == PlacementMode.Path && Input.GetKeyDown(KeyCode.Mouse0))
@@ -137,6 +140,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					}
 					if (_selectedBuilding.placementMode == PlacementMode.Path && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
 					{
+						//Target tile is valid?
 						if (invalidTileSelector(selectedTile))
 						{
 							HideIndicator(placementPathIndicatorEntity);
@@ -169,6 +173,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						HideIndicator(selectIndicatorEntity);
 						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 						_validPlacement = false;
+						_suffientFunds = false;
+						_errors.Add("Insuffient Resources");
 					}
 					else if (tilesToOccupy.Any(invalidTileSelector)) //Valid Placement
 					{
@@ -176,6 +182,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 						ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
 						_validPlacement = false;
+						_errors.Add("Cannot place on these tiles.");
 					}
 					else
 					{
@@ -230,7 +237,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						}else
 						{
 							//TODO: Add more detailed error
-							NotificationsUI.Notify(NotifType.Error, "Cannot place building here");
+							for (int i = 0; i < _errors.Count; i++)
+							{
+								NotificationsUI.Notify(NotifType.Error, _errors[i]);
+							}
 						}
 					}
 				}
@@ -360,12 +370,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			floatingText.rectTransform.position = pos;
 			floatingText.gameObject.SetActive(true);
 			ShowIndicators(gatheringIndicatorEntity, gatheredTiles);
-			if (!invalidTileSelector(selectedTile))
+			if (!invalidTileSelector(selectedTile) && _suffientFunds)
 				HideIndicator(errorIndicatorEntity);
 		}
 		else
 		{
 			_validPlacement = false;
+			_errors.Add("No resources to gather");
 			HideIndicator(gatheringIndicatorEntity);
 			HideIndicator(selectIndicatorEntity);
 			ShowIndicators(errorIndicatorEntity, tilesToOccupy);

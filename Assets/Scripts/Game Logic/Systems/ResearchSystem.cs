@@ -118,7 +118,7 @@ public class ResearchSystem : ComponentSystem
 		{
 			r.isCompleted = true;
 			Debug.Log($"Research: {rDatabase[r.identifier].name} Completed"); 
-			NotificationsUI.Notify(NotifType.Info, $"Research Complete: {rDatabase[r.identifier].name}");
+			NotificationsUI.NotifyWithTarget(NotifType.Info,  $"Research Complete: {rDatabase[r.identifier].name}", GameRegistry.ResearchTreeUI);
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
 			EventManager.InvokeEvent("OnResearchComplete");

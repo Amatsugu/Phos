@@ -10,8 +10,6 @@ public class InteractionUI : MonoBehaviour
 	public UIInteractionPanel interactionPanel;
 	public Transform selectionBox;
 
-	public RectTransform button1;
-	public RectTransform button2;
 	public float maxMoveCostPerFrame = 100;
 
 	private Camera _cam;
@@ -85,7 +83,7 @@ public class InteractionUI : MonoBehaviour
 
 		if (!GameRegistry.BuildUI.placeMode)
 		{
-			if (!_uiBlocked && !GameRegistry.BuildUI.uiBlock)
+			if (!_uiBlocked && !GameRegistry.BuildUI.uiBlock && !NotificationsUI.INST.isHovered)
 			{
 				if (Input.GetKeyDown(KeyCode.Mouse0))
 				{
@@ -131,7 +129,6 @@ public class InteractionUI : MonoBehaviour
 			HidePanel();
 
 	}
-
 
 	void LateUpdate()
 	{

@@ -15,7 +15,7 @@ public enum NotifTargetType
 	UI
 }
 
-public class NotificationsUI : MonoBehaviour
+public class NotificationsUI : UIHover
 {
 	[Header("Prefabs")]
 	public UINotifPopup notifBig;
@@ -42,7 +42,6 @@ public class NotificationsUI : MonoBehaviour
 	}
 
 
-	private Transform _thisTransform;
 	private int[] _activeNotifs;
 	private int _activeCount;
 	private UINotifPopup[] _notifsMin;
@@ -81,9 +80,9 @@ public class NotificationsUI : MonoBehaviour
 		}
 	}
 
-	void Awake()
+	protected override void Awake()
 	{
-		_thisTransform = transform;
+		base.Awake();
 		_notificationQueue = new Queue<PendingNotification>();
 		_activeNotifs = new int[2 * maxNotifs];
 		for (int i = 0; i < _activeNotifs.Length; i++)
@@ -94,14 +93,15 @@ public class NotificationsUI : MonoBehaviour
 		_notifsMin = new UINotifPopup[2 * maxNotifs];
 		for (int i = 0; i < _notifsMin.Length; i++)
 		{
-			_notifsBig[i] = Instantiate(notifBig, _thisTransform);
-			_notifsMin[i] = Instantiate(notifMin, _thisTransform);
+			_notifsBig[i] = Instantiate(notifBig, rTransform);
+			_notifsMin[i] = Instantiate(notifMin, rTransform);
 		}
 
 	}
 
-	public void Update()
+	protected override void Update()
 	{
+		base.Update();
 
 		for (int i = 0; i < _activeNotifs.Length; i++)
 		{

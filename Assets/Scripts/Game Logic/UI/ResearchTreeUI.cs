@@ -6,8 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static ResearchTree;
 
-[RequireComponent(typeof(UIPanel))]
-public class ResearchTreeUI : MonoBehaviour
+public class ResearchTreeUI : UIPanel
 {
 	public ResearchDatabase researchDatabase;
 	public RectTransform nodeParent;
@@ -36,25 +35,24 @@ public class ResearchTreeUI : MonoBehaviour
 
 	private Vector2 _totalOffset;
 	private ResearchTree _curTree;
-	private UIPanel _thisPanel;
 	private BuildingCategory _selectedCategory;
 
-	void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
 		GameRegistry.INST.researchTreeUI = this;
 		GameRegistry.INST.researchDatabase = researchDatabase;
-		_thisPanel = GetComponent<UIPanel>();
 		_uiNodes = new UIResearchNode[0];
 		_uiNodeConnectors = new RectTransform[0];
 		_nodeSize = nodeOriginal.rect.size;
 		_totalOffset = _nodeSize + nodeSpacing;
-		_thisPanel.OnShow += () =>
+		OnShow += () =>
 		{
 			GameRegistry.BuildUI.gameObject.SetActive(false);
 			GameRegistry.InteractionUI.enabled = false;
 			GameRegistry.CameraController.enabled = false;
 		};
-		_thisPanel.OnHide += () =>
+		OnHide += () =>
 		{
 			GameRegistry.BuildUI.gameObject.SetActive(true);
 			GameRegistry.InteractionUI.enabled = true;
@@ -63,8 +61,9 @@ public class ResearchTreeUI : MonoBehaviour
 		
 	}
 
-	void Start()
+	protected override void Start()
 	{
+		base.Start();
 		_resources = new UIResearchResource[0];
 		EventManager.AddEventListener("OnResearchComplete", () =>
 		{
@@ -73,7 +72,7 @@ public class ResearchTreeUI : MonoBehaviour
 		});
 		EventManager.AddEventListener("OnTick", () =>
 		{
-			if (!_thisPanel.IsOpen)
+			if (!IsOpen)
 				return;
 			var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
 			if (active == null)
@@ -250,11 +249,15 @@ public class ResearchTreeUI : MonoBehaviour
 
 	public void Show(ResearchBuildingTile tile)
 	{
-		_thisPanel.Show();
 		if (tile == null)
 			ShowTree(BuildingCategory.Production);
 		else
 			ShowTree(tile.researchInfo.researchCategory);
+	}
+
+	public override void Show()
+	{
+		base.Show();
 		ShowActiveInfo();
 	}
 
@@ -287,11 +290,5 @@ public class ResearchTreeUI : MonoBehaviour
 		for (int i = 0; i < _curConnectorElem; i++)
 			_uiNodeConnectors[i].gameObject.SetActive(false);
 		_curConnectorElem = 0;
-	}
-
-
-	public void Hide()
-	{
-		_thisPanel.Hide();
 	}
 }
