@@ -28,7 +28,8 @@ public class UIInfoPopup : UIExpandable
 	private int _curNotifCount = 0;
 	private string[] _titles;
 	private string[] _messages;
-
+	private int[] _ids;
+	private int _nextId = 0;
 
 	void OnValidate()
 	{
@@ -41,8 +42,7 @@ public class UIInfoPopup : UIExpandable
 	protected override void Awake()
 	{
 		base.Awake();
-		_titles = new string[MAX_NOTIFS];
-		_messages = new string[MAX_NOTIFS];
+		Clear();
 		for (int i = 0; i < MAX_NOTIFS; i++)
 		{
 			var index = i;
@@ -53,6 +53,14 @@ public class UIInfoPopup : UIExpandable
 				desc.SetText(_messages[index]);
 			};
 		}
+	}
+
+	void Clear()
+	{
+		_titles = new string[MAX_NOTIFS];
+		_messages = new string[MAX_NOTIFS];
+		_ids = new int[MAX_NOTIFS];
+		_nextId = 0;
 	}
 
 	protected override void Start()
@@ -76,18 +84,37 @@ public class UIInfoPopup : UIExpandable
 		iconRects[index].SetActive(true);
 		_titles[index] = title;
 		_messages[index] = message;
-		return index;
+		var curId = _nextId;
+		_ids[index] = _nextId++;
+		return curId;
 	}
 
 	public void RemoveNotif(int id)
 	{
-		for (int i = id; i < MAX_NOTIFS; i++)
+		var idIndex = 0;
+		for (int i = 0; i < MAX_NOTIFS; i++)
+		{
+			if (_ids[i] == id)
+			{
+				idIndex = _ids[i];
+				break;
+			}
+		}
+		for (int i = idIndex; i < MAX_NOTIFS; i++)
 		{
 			_titles[i] = i == MAX_NOTIFS - 1 ? null : _titles[i + 1];
 			_messages[i] = i == MAX_NOTIFS - 1 ? null : _messages[i + 1];
+			_ids[i] = i == MAX_NOTIFS - 1 ? -1 : _ids[i + 1];
 		}
 		iconRects[MAX_NOTIFS-1].SetActive(false);
+		iconRects[MAX_NOTIFS-1].rTransform.anchoredPosition = Vector2.zero;
 		_curNotifCount--;
+	}
+
+	public void RemoveAll()
+	{
+		Clear();
+		_curNotifCount = 0;
 	}
 
 	protected override void Update()

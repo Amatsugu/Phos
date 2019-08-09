@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: c2a15a0aea8233643806c76f9df6152c, type: 2}
   densityMulti: 1
-  rotation: {x: 45, y: 0, z: 45}
-  offset: {x: 0, y: -0.4, z: 0}
+  rotation: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}

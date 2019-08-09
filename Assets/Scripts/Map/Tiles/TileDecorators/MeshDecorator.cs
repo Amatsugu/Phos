@@ -10,6 +10,8 @@ public class MeshDecorator : TileDecorator
 {
 	public Vector3 rotation;
 	public Vector3 offset;
+	public float randomRotMin = 0;
+	public float randomRotMax = 180;
 
 	
 
@@ -21,7 +23,7 @@ public class MeshDecorator : TileDecorator
 	public override Matrix4x4[] GetTransformMatricies(Tile tile)
 	{
 		var rot = rotation;
-		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f) * 360f;
+		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f).Remap(0,1, randomRotMin, randomRotMax);
 		var qRot = Quaternion.Euler(rot);
 		var transforms = new Matrix4x4[GetDecorEntityCount(tile)];
 		for (int i = 0; i < transforms.Length; i++)
@@ -34,7 +36,7 @@ public class MeshDecorator : TileDecorator
 	public override Entity[] Render(Tile tile)
 	{
 		var rot = rotation;
-		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f) * 360f;
+		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f).Remap(0, 1, randomRotMin, randomRotMax);
 		var e = meshEntity.Instantiate(tile.SurfacePoint + offset, Vector3.one, Quaternion.Euler(rot));
 		return new Entity[] { e };
 	}

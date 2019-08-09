@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: Silver Mesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  mesh: {fileID: 373172561612030820, guid: 87a102e0471266947b30af7607976d4b, type: 3}
   material: {fileID: 2100000, guid: f5d9e41e16a38274d9ca24e304f85fee, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
