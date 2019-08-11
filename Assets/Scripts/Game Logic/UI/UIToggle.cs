@@ -5,11 +5,18 @@ using UnityEngine;
 public class UIToggle : MonoBehaviour
 {
 	public KeyCode key = KeyCode.F1;
-	public GameObject uiBase;
+
+	public GameObject[] ui;
+
+	private bool _active = true;
 
     void LateUpdate()
     {
 		if (Input.GetKeyUp(key))
-			uiBase.SetActive(!uiBase.activeInHierarchy);
+		{
+			_active = !_active;
+			for (int i = 0; i < ui.Length; i++)
+				ui[i].SetActive(_active);
+		}
     }
 }

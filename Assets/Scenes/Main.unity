@@ -4622,8 +4622,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionPanel: {fileID: 719620472}
   selectionBox: {fileID: 156281963}
-  button1: {fileID: 0}
-  button2: {fileID: 0}
   maxMoveCostPerFrame: 100
 --- !u!1 &443560838
 GameObject:
@@ -5780,6 +5778,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b340878407def3e41978f9bbc1d7f961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHovered: 0
+  rTransform: {fileID: 0}
   notifBig: {fileID: 4972962592456324257, guid: 3b50ab2c4a2291c4ead7e0c4caadb079,
     type: 3}
   notifMin: {fileID: 4949827893898512859, guid: 60bc044d3e7105344a487a4da487a59f,
@@ -6295,7 +6295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Profile: {fileID: 11400000, guid: 45d37ff46ba4fc847aeae7a4564a2d66, type: 2}
   m_StaticLightingSkyUniqueID: 2
-  m_SkySettings: {fileID: 570240112}
+  m_SkySettings: {fileID: 676751724}
   m_SkySettingsFromProfile: {fileID: -5733366833357820244, guid: 45d37ff46ba4fc847aeae7a4564a2d66,
     type: 2}
 --- !u!114 &536096455
@@ -6804,82 +6804,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHovered: 0
   rTransform: {fileID: 0}
---- !u!114 &570240112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3df29e7cc05fbec4aa43e06ea875565d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  rotation:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-    max: 360
-  skyIntensityMode:
-    m_OverrideState: 0
-    m_Value: 0
-  exposure:
-    m_OverrideState: 0
-    m_Value: 1.87
-  multiplier:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  upperHemisphereLuxValue:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  desiredLuxValue:
-    m_OverrideState: 0
-    m_Value: 20000
-  updateMode:
-    m_OverrideState: 0
-    m_Value: 0
-  updatePeriod:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-  includeSunInBaking:
-    m_OverrideState: 0
-    m_Value: 0
-  sunSize:
-    m_OverrideState: 0
-    m_Value: 0.19
-    min: 0
-    max: 1
-  sunSizeConvergence:
-    m_OverrideState: 0
-    m_Value: 4.57
-    min: 1
-    max: 10
-  atmosphereThickness:
-    m_OverrideState: 0
-    m_Value: 0.56
-    min: 0
-    max: 5
-  skyTint:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0.9672265, b: 1, a: 1}
-    hdr: 0
-    showAlpha: 1
-    showEyeDropper: 1
-  groundColor:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0.2805717, b: 0.3018868, a: 1}
-    hdr: 0
-    showAlpha: 1
-    showEyeDropper: 1
-  enableSunDisk:
-    m_OverrideState: 0
-    m_Value: 1
 --- !u!1 &574622350
 GameObject:
   m_ObjectHideFlags: 0
@@ -8020,6 +7944,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 646482980}
   m_CullTransparentMesh: 0
+--- !u!114 &676751724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3df29e7cc05fbec4aa43e06ea875565d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  rotation:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 360
+  skyIntensityMode:
+    m_OverrideState: 0
+    m_Value: 0
+  exposure:
+    m_OverrideState: 0
+    m_Value: 1.87
+  multiplier:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  upperHemisphereLuxValue:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  desiredLuxValue:
+    m_OverrideState: 0
+    m_Value: 20000
+  updateMode:
+    m_OverrideState: 0
+    m_Value: 0
+  updatePeriod:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+  includeSunInBaking:
+    m_OverrideState: 0
+    m_Value: 0
+  sunSize:
+    m_OverrideState: 0
+    m_Value: 0.19
+    min: 0
+    max: 1
+  sunSizeConvergence:
+    m_OverrideState: 0
+    m_Value: 4.57
+    min: 1
+    max: 10
+  atmosphereThickness:
+    m_OverrideState: 0
+    m_Value: 0.56
+    min: 0
+    max: 5
+  skyTint:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0.9672265, b: 1, a: 1}
+    hdr: 0
+    showAlpha: 1
+    showEyeDropper: 1
+  groundColor:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0.2805717, b: 0.3018868, a: 1}
+    hdr: 0
+    showAlpha: 1
+    showEyeDropper: 1
+  enableSunDisk:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!1 &685497925
 GameObject:
   m_ObjectHideFlags: 0
@@ -12666,7 +12666,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: 282
-  uiBase: {fileID: 538560001}
+  ui:
+  - {fileID: 538560001}
+  - {fileID: 1482104680}
+  - {fileID: 2048813317}
 --- !u!114 &1369379225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18785,6 +18788,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f3ff8dfcdb11f348a08ea00838f947c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHovered: 0
+  rTransform: {fileID: 0}
+  closeButton: {fileID: 0}
+  titleText: {fileID: 0}
+  hideOnStart: 1
+  hideOnBlur: 1
+  hideInEditor: 0
   researchDatabase: {fileID: 11400000, guid: 5c8a61b6ab99ab543b88aec681680692, type: 2}
   nodeParent: {fileID: 1531053997}
   nodeOriginal: {fileID: 385511252}

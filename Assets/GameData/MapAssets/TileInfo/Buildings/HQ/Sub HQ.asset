@@ -19,7 +19,10 @@ MonoBehaviour:
   isStatic: 1
   decorators: []
   description: 
+  isTraverseable: 0
   buildingMesh: {fileID: 11400000, guid: 4807fae3b4dde5a4bab4426ff6291c9e, type: 2}
+  constructionMesh: {fileID: 0}
+  constructionTime: 0
   tier: 0
   category: 0
   size: 0

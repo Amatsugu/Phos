@@ -9,7 +9,7 @@ public class HQTile : BuildingTile
 {
 	public readonly HQTileInfo hqInfo;
 
-	public HQTile(HexCoords coords, float height, HQTileInfo tInfo = null) : base(coords, height, tInfo)
+	public HQTile(HexCoords coords, float height, HQTileInfo tInfo) : base(coords, height, tInfo)
 	{
 		hqInfo = tInfo;
 	}
@@ -58,8 +58,26 @@ public class HQTile : BuildingTile
 
 public class SubHQTile : PoweredBuildingTile
 {
-	public SubHQTile(HexCoords coords, float height, SubHQTileInfo tInfo = null) : base(coords, height, tInfo)
+	public SubHQTile(HexCoords coords, float height, SubHQTileInfo tInfo) : base(coords, height, tInfo)
 	{
-		
+		HasHQConnection = true;	
+	}
+
+	public override void OnPlaced()
+	{
+		base.OnPlaced();
+		Build();
+	}
+
+	protected override void OnBuilt()
+	{
+	}
+
+	public override void OnHQConnected()
+	{
+	}
+
+	public override void OnHQDisconnected()
+	{
 	}
 }

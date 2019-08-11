@@ -19,7 +19,7 @@ MonoBehaviour:
   isStatic: 1
   decorators: []
   description: Produces power
-  isTraverseable: 1
+  isTraverseable: 0
   buildingMesh: {fileID: 11400000, guid: 7f6f3993fc3063844b2980e8f75acee1, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2

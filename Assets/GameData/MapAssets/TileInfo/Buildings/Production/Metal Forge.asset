@@ -19,7 +19,7 @@ MonoBehaviour:
   isStatic: 1
   decorators: []
   description: Forges an alloy with iron and carbon to produce steel.
-  isTraverseable: 1
+  isTraverseable: 0
   buildingMesh: {fileID: 11400000, guid: 41cfa5a46899f3a42be761d72cc6125a, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   constructionTime: 2
