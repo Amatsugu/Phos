@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a71afc00c1593154c969aaba5600777d, type: 3}
+  m_Name: Tech Sub HQ
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
+  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  decorators: []
+  description: 
+  isTraverseable: 0
+  buildingMesh: {fileID: 11400000, guid: 1f8895393fbf86f4f9aa7d16ee0a2c9d, type: 2}
+  constructionMesh: {fileID: 0}
+  constructionTime: 0
+  tier: 0
+  category: 0
+  size: 0
+  flattenOuterRange: 0
+  resourceTransferRange: 0
+  cost: []
+  icon: {fileID: 0}
+  placementMode: 0
+  upgradeTarget:
+    id: -1
+  production: []
+  consumption: []

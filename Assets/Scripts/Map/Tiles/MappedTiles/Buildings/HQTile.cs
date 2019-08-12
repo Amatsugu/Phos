@@ -26,7 +26,7 @@ public class HQTile : BuildingTile
 		var tilesToReplace = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < tilesToReplace.Length; i++)
 		{
-			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTile);
+			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTiles[i]);
 		}
 		GameRegistry.BaseNameUI.panel.Show();
 	}

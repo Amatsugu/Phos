@@ -29,13 +29,13 @@ public class MeshEntityUI : Editor
 				CreateEditor(b.buildingMesh).OnInspectorGUI();
 			}
 		}
-		if (meshEntity is HQTileInfo hq)
+		/*if (meshEntity is HQTileInfo hq)
 		{
 			if (hq.subHQTile != null && hq.subHQTile != hq)
 			{
 				EditorGUILayout.InspectorTitlebar(true, hq.subHQTile);
 				CreateEditor(hq.subHQTile).OnInspectorGUI();
 			}
-		}
+		}*/
 	}
 }
