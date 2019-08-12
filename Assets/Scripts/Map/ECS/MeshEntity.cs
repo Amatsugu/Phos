@@ -37,7 +37,9 @@ public class MeshEntity : ScriptableObject
 
 			_entity = em.CreateEntity(architype);
 			em.SetSharedComponentData(_entity, sharedMesh);
+#if DEBUG
 			em.SetName(_entity, $"{this.GetType().Name}: {name}");
+#endif
 			return _entity;
 		}
 		return _entity;
