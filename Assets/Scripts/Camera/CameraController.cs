@@ -27,6 +27,8 @@ public class CameraController : MonoBehaviour
 	private bool _isFocusing;
 	private float _focusTime;
 	private Vector3 _focusPos;
+	private bool _canRotate = true;
+	private float _rotationTime = 0;
 
 	void Awake()
 	{
@@ -53,6 +55,7 @@ public class CameraController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
+		_canRotate = true;
 		if(Input.GetKeyDown(KeyCode.X))
 		{
 			this.enabled = false;
@@ -93,7 +96,10 @@ public class CameraController : MonoBehaviour
 			}
 
 			if (moveVector.sqrMagnitude != 0)
+			{
 				_isFocusing = false;
+				_canRotate = false;
+			}
 
 			if (Input.GetKey(KeyCode.LeftShift))
 				moveVector *= 2;
@@ -112,6 +118,7 @@ public class CameraController : MonoBehaviour
 			if (Input.GetKey(KeyCode.Mouse1))
 			{
 				_isFocusing = false;
+				_canRotate = false;
 				curPos = ray.GetPoint(d);
 				var delta = _lastClickPos - curPos;
 				delta.y = 0;
@@ -133,18 +140,25 @@ public class CameraController : MonoBehaviour
 			{
 				_lastHeight = minHeight;
 				_anim = 0;
+				_rotationTime = 0;
 			}
 			if (scroll != 0)
 			{
 				_anim = 0;
+				_rotationTime = 0;
 				if (_targetHeight < minHeight)
 					_targetHeight = Mathf.Clamp(_targetHeight, minHeight, maxHeight);
 			}
 			var desHeight = (_targetHeight < minHeight) ? minHeight : _targetHeight;
 			pos.y = Mathf.Lerp(pos.y, desHeight, _anim += Time.deltaTime * zoomSpeed);
 			var t = pos.y.Remap(minHeight, maxHeight, 0, 1);
-			var angle = lowAngle.Lerp(highAngle, angleCurve.Evaluate(t));
-			rot.x = angle;
+			if (_canRotate)
+			{
+				_rotationTime += Time.deltaTime * zoomSpeed;
+				_rotationTime = Mathf.Clamp(_rotationTime, 0, 1);
+				var angle = lowAngle.Lerp(highAngle, angleCurve.Evaluate(t));
+				rot.x = rot.x.Lerp(angle, _rotationTime);
+			}
 		}
 		if(_isFocusing)
 		{
@@ -157,8 +171,6 @@ public class CameraController : MonoBehaviour
 		pos.z = Mathf.Clamp(pos.z, mapRenderer.min.z, mapRenderer.max.z);
 		_thisTransform.position = pos;
 		_thisTransform.rotation = Quaternion.Euler(rot);
-
-
 	}
 
 	public void FocusTile(Tile tile)
