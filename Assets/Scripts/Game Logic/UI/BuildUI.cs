@@ -31,6 +31,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public MeshEntity selectIndicatorEntity;
 	public MeshEntity placementPathIndicatorEntity;
 	public MeshEntity gatheringIndicatorEntity;
+	public MeshEntity cannotGatheringIndicatorEntity;
 	public MeshEntity powerIndicatorEntity;
 	public MeshEntity poweredTileIndicatorEntity;
 	public MeshEntity unpoweredTileIndicatorEntity;
@@ -351,35 +352,48 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			}
 		}, true);
 
-		if (resInRange.Count > 0)
+		var cannotGatherTiles = new List<Tile>();
+		var gatheredTiles = new List<Tile>();
+		var gatherText = new System.Text.StringBuilder();
+		
+		for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
 		{
-			var sb = new System.Text.StringBuilder();
-			var gatheredTiles = new List<Tile>();
-			for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
+			var res = buildingInfo.resourcesToGather[i];
+			if (!resInRange.ContainsKey(res.id))
+				continue;
+			if (resInRange.Count > 0)
 			{
-				var res = buildingInfo.resourcesToGather[i];
-				if (!resInRange.ContainsKey(res.id))
-					continue;
 				var gatherAmmount = Mathf.FloorToInt(resInRange[res.id] * res.ammount);
 				gatheredTiles.AddRange(resTiles[res.id]);
-				sb.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(res.id)}");
+				gatherText.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(res.id)}");
 			}
-			floatingText.SetText(sb);
+			resTiles.Remove(res.id);
+		}
+		foreach(var tiles in resTiles)
+			cannotGatherTiles.AddRange(tiles.Value);
+		if (gatheredTiles.Count > 0)
+		{
+			floatingText.SetText(gatherText);
 			var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
 			pos.y += 20;
 			floatingText.rectTransform.position = pos;
 			floatingText.gameObject.SetActive(true);
 			ShowIndicators(gatheringIndicatorEntity, gatheredTiles);
+			ShowIndicators(cannotGatheringIndicatorEntity, cannotGatherTiles);
 			if (!invalidTileSelector(selectedTile) && _suffientFunds)
 				HideIndicator(errorIndicatorEntity);
 		}
 		else
 		{
 			_validPlacement = false;
-			_errors.Add("No resources to gather");
+			if (cannotGatherTiles.Count > 0)
+				_errors.Add("Building cannot gather these resources");
+			else
+				_errors.Add("No resources to gather");
 			HideIndicator(gatheringIndicatorEntity);
 			HideIndicator(selectIndicatorEntity);
 			ShowIndicators(errorIndicatorEntity, tilesToOccupy);
+			ShowIndicators(cannotGatheringIndicatorEntity, cannotGatherTiles);
 			floatingText.gameObject.SetActive(false);
 		}
 	}
