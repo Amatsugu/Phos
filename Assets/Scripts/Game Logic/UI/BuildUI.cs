@@ -64,7 +64,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	private Tile _startPoint;
 	private List<Tile> _buildPath;
-	private System.Func<Tile, bool> invalidTileSelector;
 	private bool _suffientFunds;
 	private bool _validPlacement;
 	private BuildingCategory? _lastBuildingCategory;
@@ -92,11 +91,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		placeMode = hqMode = true;
 		_selectedBuilding = HQTile;
 		infoBanner.SetText("Place HQ Building");
-		invalidTileSelector = t =>
 			/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
-			t.Height <= Map.ActiveMap.seaLevel ||
-			t is BuildingTile ||
-			t is ResourceTile;
+			
 		if(selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
 			Debug.LogError("Null");
 
@@ -108,6 +104,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_poweredTileRangeSq = HexCoords.TileToWorldDist(poweredTileDisplayRange, Map.ActiveMap.innerRadius);
 		_poweredTileRangeSq *= _poweredTileRangeSq;
 	}
+
+	bool InvalidPlacementSelector(Tile t) => (_selectedBuilding.offshoreOnly ? !t.IsUnderwater : (t.IsUnderwater && !_selectedBuilding.isOffshore)) || t is BuildingTile || (t is ResourceTile && !t.IsUnderwater);
 
 	// Update is called once per frame
 	void Update()
@@ -142,7 +140,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 					if (_selectedBuilding.placementMode == PlacementMode.Path && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
 					{
 						//Target tile is valid?
-						if (invalidTileSelector(selectedTile))
+						if (InvalidPlacementSelector(selectedTile))
 						{
 							HideIndicator(placementPathIndicatorEntity);
 							_buildPath = null;
@@ -153,9 +151,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 							_buildPath = null;
 						if (_buildPath != null)
 						{
-							if (_buildPath.Any(t => t.Height <= Map.ActiveMap.seaLevel))
+							if (_buildPath.Any(t => t.IsUnderwater))
 							{
-								var invalidTiles = _buildPath.Where(t => t.Height <= Map.ActiveMap.seaLevel);
+								var invalidTiles = _buildPath.Where(t => t.IsUnderwater);
 								ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 								ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
 								_validPlacement = false;
@@ -177,9 +175,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 						_suffientFunds = false;
 						_errors.Add("Insuffient Resources");
 					}
-					else if (tilesToOccupy.Any(invalidTileSelector)) //Valid Placement
+					else if (tilesToOccupy.Any(InvalidPlacementSelector)) //Valid Placement
 					{
-						var invalidTiles = tilesToOccupy.Where(invalidTileSelector);
+						var invalidTiles = tilesToOccupy.Where(InvalidPlacementSelector);
 						ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
 						ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
 						_validPlacement = false;
@@ -217,7 +215,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 							{
 								for (int i = 0; i < _buildPath.Count; i++)
 								{
-									if (invalidTileSelector(_buildPath[i]))
+									if (InvalidPlacementSelector(_buildPath[i]))
 										continue;
 									BuildQueueSystem.QueueBuilding(_selectedBuilding, _buildPath[i], landingMesh);
 								}
@@ -282,21 +280,18 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		var rangeSqr = HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius);
 		rangeSqr *= rangeSqr;
-		if (_validPlacement)
-		{
-			var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, rangeSqr);
-			while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
-				nodes.RemoveAt(nodes.Count - 1);
-			ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
+		var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, rangeSqr);
+		while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
+			nodes.RemoveAt(nodes.Count - 1);
+		ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
 #if DEBUG
-			for (int i = 0; i < nodes.Count; i++)
-			{
-				Debug.DrawLine(selectedTile.SurfacePoint, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
-			}
-#endif
+		for (int i = 0; i < nodes.Count; i++)
+		{
+			Debug.DrawLine(selectedTile.SurfacePoint, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
 		}
-		else
-			HideIndicator(resourceConduitPreviewLine);
+#endif
+		//else
+		//	HideIndicator(resourceConduitPreviewLine);
 		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.poweredRange, true));
 	}
 
@@ -380,7 +375,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			floatingText.gameObject.SetActive(true);
 			ShowIndicators(gatheringIndicatorEntity, gatheredTiles);
 			ShowIndicators(cannotGatheringIndicatorEntity, cannotGatherTiles);
-			if (!invalidTileSelector(selectedTile) && _suffientFunds)
+			if (!InvalidPlacementSelector(selectedTile) && _suffientFunds)
 				HideIndicator(errorIndicatorEntity);
 		}
 		else

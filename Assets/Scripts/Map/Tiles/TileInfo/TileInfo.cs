@@ -9,8 +9,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
 public class TileInfo : MeshEntity
 {
-    public TileDecorator[] decorators;
+	[Header("Tile Info")]
 	public string description;
+    public TileDecorator[] decorators;
 	public bool isTraverseable = true;
 
 	public override IEnumerable<ComponentType> GetComponents()

@@ -237,7 +237,7 @@ public class InteractionUI : MonoBehaviour
 		for (int i = 0; i < footprint.Length; i++)
 		{
 			var coord = footprint[i];
-			if(Map.ActiveMap[coord].Height < Map.ActiveMap.seaLevel)
+			if(Map.ActiveMap[coord].IsUnderwater)
 			{
 				isValid = false;
 				break;

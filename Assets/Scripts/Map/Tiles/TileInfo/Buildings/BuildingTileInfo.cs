@@ -15,22 +15,28 @@ public enum PlacementMode
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
 public class BuildingTileInfo : TileInfo
 {
+	[Header("Mesh")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable buildingMesh;
 	public MeshEntityRotatable constructionMesh;
-	public float constructionTime = 2;
+	[Header("Stats")]
 	[Range(1, 6)]
 	public int tier = 1;
+	public float constructionTime = 2;
 	public BuildingCategory category;
 	public int size = 0;
 	public int flattenOuterRange = 0;
 	public int resourceTransferRange = 0;
-	[SerializeField]
-	public ResourceIndentifier[] cost;
-	public Sprite icon;
+	public bool isOffshore;
+	[ConditionalHide("isOffshore")]
+	public bool offshoreOnly;
+	[Header("Building Info")]
 	public PlacementMode placementMode = PlacementMode.Single;
 	public BuildingIdentifier upgradeTarget;
-
+	public Sprite icon;
+	[Header("Resources")]
+	[SerializeField]
+	public ResourceIndentifier[] cost;
 	public ResourceIndentifier[] production;
 	public ResourceIndentifier[] consumption;
 

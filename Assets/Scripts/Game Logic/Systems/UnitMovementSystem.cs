@@ -59,7 +59,7 @@ public class UnitMovementSystem : JobComponentSystem
 			path = new Path
 			{
 				Value = Map.ActiveMap.GetPath(curCoord, dst,
-				include: ti => ti.Height > Map.ActiveMap.seaLevel && ti.info.isTraverseable)
+				include: ti => !ti.IsUnderwater && ti.info.isTraverseable)
 			};
 			if (path.Value == null)
 			{

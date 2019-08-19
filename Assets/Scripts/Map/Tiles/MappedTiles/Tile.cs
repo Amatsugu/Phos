@@ -14,6 +14,7 @@ public class Tile
 	public HexCoords Coords { get; protected set; }
 	public Vector3 SurfacePoint { get; protected set; }
 	public float Height { get; protected set; }
+	public bool IsUnderwater { get; protected set; }
 
 	public readonly TileInfo info;
 
@@ -31,7 +32,16 @@ public class Tile
 		Coords = coords;
 		Height = height;
 		info = tInfo;
-		SurfacePoint = new Vector3(coords.worldX, height, coords.worldZ);
+		if (height < Map.ActiveMap.seaLevel)
+		{
+			SurfacePoint = new Vector3(Coords.worldX, Map.ActiveMap.seaLevel, Coords.worldZ);
+			IsUnderwater = true;
+		}
+		else
+		{
+			IsUnderwater = false;
+			SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
+		}
 	}
 
 	public Tile SetBiome(int biome, float moisture, float temperature)
@@ -73,7 +83,16 @@ public class Tile
 	public void UpdateHeight(float height)
 	{
 		Height = height;
-		SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
+		if (height < Map.ActiveMap.seaLevel)
+		{
+			SurfacePoint = new Vector3(Coords.worldX, Map.ActiveMap.seaLevel, Coords.worldZ);
+			IsUnderwater = true;
+		}
+		else
+		{
+			IsUnderwater = false;
+			SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
+		}
 		OnHeightChanged();
 		UpdateDecorations();
 		SendTileUpdate(TileUpdateType.Height);

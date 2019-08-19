@@ -17,26 +17,28 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  decorators: []
   description: A beach based water pump that collects ocean water.
+  decorators: []
   isTraverseable: 1
   buildingMesh: {fileID: 11400000, guid: e62d3f653db9df84fbc5fd56f75ae0fe, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  constructionTime: 2
   tier: 1
+  constructionTime: 2
   category: 2
   size: 0
   flattenOuterRange: 0
   resourceTransferRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  placementMode: 0
+  upgradeTarget:
+    id: -1
+  icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   cost:
   - id: 1
     ammount: 60
   - id: 0
     ammount: 20
-  icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  placementMode: 0
-  upgradeTarget:
-    id: -1
   production: []
   consumption:
   - id: 0
