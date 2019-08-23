@@ -14,6 +14,9 @@ namespace DataStore.ConduitGraph
 		public Dictionary<HexCoords, int> _coordMap;
 		private ConduitNode _baseNode;
 
+		public event Action<ConduitNode> OnNodeRemoved;
+		public event Action<ConduitNode> OnNodeAdded;
+
 		private int _curId = 0;
 
 		public ConduitGraph(HexCoords baseNode, int maxConnections = 6)
@@ -39,6 +42,7 @@ namespace DataStore.ConduitGraph
 			}
 			nodes.Remove(node.id);
 			_coordMap.Remove(nodePos);
+			OnNodeRemoved?.Invoke(node);
 		}
 
 		public bool ContainsNode(HexCoords nodePos) => _coordMap.ContainsKey(nodePos);
@@ -47,6 +51,7 @@ namespace DataStore.ConduitGraph
 		{
 			var newNode = CreateNode(nodePos);
 			newNode.ConnectTo(connectTo);
+			OnNodeAdded?.Invoke(newNode);
 		}
 
 		ConduitNode CreateNode(HexCoords nodePos)
@@ -58,7 +63,10 @@ namespace DataStore.ConduitGraph
 			return newNode;
 		}
 
-		public void AddNodeDisconected(HexCoords nodePos) => CreateNode(nodePos);
+		public void AddNodeDisconected(HexCoords nodePos)
+		{
+			OnNodeAdded?.Invoke(CreateNode(nodePos));
+		}
 
 		public ConduitNode GetClosestNode(HexCoords nodePos, bool excludeFull = true)
 		{
@@ -188,6 +196,114 @@ namespace DataStore.ConduitGraph
 					connections[j++] = nodes[node._connections[i]];
 			}
 			return connections;
+		}
+
+		private class PathNode
+		{
+			public int G;
+			public ConduitNode node;
+			public PathNode src;
+			public float F;
+
+			public PathNode(ConduitNode node, int g, PathNode src = null)
+			{
+				this.node = node;
+				G = g;
+				this.src = src;
+			}
+
+			public void CacheF(HexCoords b)
+			{
+				F = CalculateF(b);
+			}
+
+			public float CalculateF(HexCoords b)
+			{
+				var d = node.conduitPos.DistanceToSq(b);
+				return G + d;
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (obj is PathNode n)
+				{
+					return n.node.Equals(n.node);
+				}
+				return false;
+			}
+
+			public override int GetHashCode()
+			{
+				return node.GetHashCode();
+			}
+		}
+
+		public List<Vector3> GetPath(ConduitNode dst)
+		{
+			PathNode BestFScore(HashSet<PathNode> nodes)
+			{
+				PathNode best = nodes.First();
+				foreach (var node in nodes)
+				{
+					if (best.F > node.F)
+						best = node;
+				}
+				return best;
+			}
+
+			var open = new HashSet<PathNode> { new PathNode(_baseNode, 1) };
+			var closed = new HashSet<PathNode>();
+			var dstNode = new PathNode(dst, 1);
+			PathNode last = null;
+			while(open.Count > 0)
+			{
+				if (closed.Contains(dstNode))
+					break;
+				PathNode curNode = BestFScore(open);
+				open.Remove(curNode);
+				closed.Add(curNode);
+				last = curNode;
+				var neighbors = GetConnections(curNode.node);
+				if (neighbors == null)
+					break;
+				for (int i = 0; i < neighbors.Length; i++)
+				{
+					var neighbor = neighbors[i];
+					var adj = new PathNode(neighbor, curNode.G + 1, curNode);
+					if (closed.Contains(adj))
+						continue;
+					adj.CacheF(dst.conduitPos);
+					if (!open.Contains(adj))
+						open.Add(adj);
+					else
+					{
+						var o = open.First(oAdj => oAdj.Equals(adj));
+						if(adj.F < o.F)
+						{
+							open.Remove(o);
+							open.Add(adj);
+						}
+					}
+				}
+				if(open.Count > 512)
+				{
+					Debug.LogWarning("Big Path");
+					break;
+				}
+			}
+			if (open.Count == 0)
+				return null;
+			var cur = last;
+			if (cur == null)
+				return null;
+			List<Vector3> path = new List<Vector3>();
+			do
+			{
+				path.Add(Map.ActiveMap[cur.node.conduitPos].SurfacePoint);
+				cur = cur.src;
+			} while (cur != null);
+			path.Reverse();
+			return path;
 		}
 	}
 

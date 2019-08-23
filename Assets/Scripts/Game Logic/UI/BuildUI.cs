@@ -283,6 +283,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, rangeSqr);
 		while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
 			nodes.RemoveAt(nodes.Count - 1);
+		nodes.RemoveAll(n => n.conduitPos == selectedTile.Coords);
 		ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
 #if DEBUG
 		for (int i = 0; i < nodes.Count; i++)

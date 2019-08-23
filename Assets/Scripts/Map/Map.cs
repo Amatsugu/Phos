@@ -813,7 +813,7 @@ public class Map : IDisposable
 			if (open.Count > 512)
 			{
 				Debug.LogWarning("Big Path");
-				return null;
+				break;
 			}
 		}
 		if (open.Count == 0)
