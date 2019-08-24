@@ -3,13 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 public class PowerTransferEffectSystem : ComponentSystem
 {
+	public MeshEntityRotatable energyPacket;
 	private ConduitGraph _conduitGraph;
 	private Dictionary<int, List<Vector3>> _effectPaths;
-	private int progress = 0;
+	private static PowerTransferEffectSystem _INST;
+
+	protected override void OnCreate()
+	{
+		base.OnCreate();
+		_INST = this;
+	}
 
 	protected override void OnStartRunning()
 	{
@@ -21,7 +29,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 	private void OnHQ()
 	{
 		_conduitGraph = Map.ActiveMap.conduitGraph;
-		_conduitGraph.OnNodeAdded += OnNodeAdded;
+		//_conduitGraph.OnNodeAdded += OnNodeAdded;
 		_conduitGraph.OnNodeRemoved += OnNodeRemoved;
 		EventManager.RemoveEventListener("OnHQPlaced", OnHQ);
 	}
@@ -31,30 +39,59 @@ public class PowerTransferEffectSystem : ComponentSystem
 		_effectPaths.Remove(node.id);
 	}
 
+	public static void AddNode(ConduitNode node)
+	{
+		_INST.OnNodeAdded(node);
+	}
+
 	private void OnNodeAdded(ConduitNode node)
 	{
-		_effectPaths.Add(node.id, _conduitGraph.GetPath(node));
+		var path = _conduitGraph.GetPath(node);
+		if (path == null)
+			return;
+		if (_effectPaths.ContainsKey(node.id))
+			return;
+		_effectPaths.Add(node.id, path);
+		for (int i = 1; i < path.Count; i++)
+		{
+			Debug.DrawLine(path[i-1], path[i], Color.magenta, 5);
+		}
 	}
 
 	protected override void OnUpdate()
 	{
-		bool needReset = true;
-		foreach (var path in _effectPaths)
+		Entities.ForEach((ref EnergyPacket ep, ref Translation t, ref Rotation r) =>
 		{
-			if (path.Value == null)
-				continue;
-			if(progress < path.Value.Count)
+			if (!_effectPaths.ContainsKey(ep.id))
+				return;
+			var path = _effectPaths[ep.id];
+			if(ep.progress == -1)
 			{
-				needReset = false;
-				Debug.DrawRay(path.Value[progress], Vector3.up * 5, Color.red);
-				progress++;
+				ep.progress = 0;
+				t.Value = path[0] + (Vector3)ep.offset;
 			}
-		}
-		if (needReset)
-			progress = 0;
-		Entities.ForEach((Entity e, ref HexPosition c) =>
-		{
-
+			t.Value = Vector3.MoveTowards(t.Value, path[ep.progress] + (Vector3)ep.offset, 10 * Time.deltaTime);
+			if (ep.progress < path.Count)
+			{
+				if((Vector3)t.Value == path[ep.progress] + (Vector3)ep.offset)
+				{
+					ep.progress++;
+					if(ep.progress < path.Count)
+						r.Value = Quaternion.LookRotation((Vector3)t.Value - path[ep.progress], Vector3.up);
+				}
+			}
+			if(ep.progress >= path.Count)
+			{
+				ep.progress = 0;
+				t.Value = path[0] + (Vector3)ep.offset;
+			}
 		});
 	}
+}
+
+public struct EnergyPacket : IComponentData
+{
+	public int id;
+	public int progress;
+	public float3 offset;
 }

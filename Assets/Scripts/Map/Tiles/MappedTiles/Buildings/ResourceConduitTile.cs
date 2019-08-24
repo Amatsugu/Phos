@@ -186,6 +186,15 @@ public class ResourceConduitTile : PoweredBuildingTile
 	{
 		if (_connectionInit && HasHQConnection)
 			return;
+		var e = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .5f);
+		var cNode = Map.ActiveMap.conduitGraph.GetNode(Coords);
+		Map.EM.AddComponentData(e, new EnergyPacket
+		{
+			id = cNode.id,
+			progress = -1,
+			offset = conduitInfo.powerLineOffset
+		});
+		PowerTransferEffectSystem.AddNode(cNode);
 		_switchLines = HasHQConnection = true;
 		UpdateLines();
 		Map.ActiveMap.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>

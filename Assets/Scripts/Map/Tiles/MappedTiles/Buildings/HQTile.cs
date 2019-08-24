@@ -40,6 +40,7 @@ public class HQTile : BuildingTile
 			if (!(spawnTiles[i] is BuildingTile))
 				Map.ActiveMap.AddUnit(hqInfo.unitInfo, spawnTiles[i]);
 		}
+		//PowerTransferEffectSystem.AddNode(Map.ActiveMap.conduitGraph.GetNode(Coords));
 		ResourceSystem.AddResources(hqInfo.startingResources);
 	}
 

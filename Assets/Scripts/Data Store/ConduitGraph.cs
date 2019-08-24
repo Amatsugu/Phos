@@ -12,7 +12,7 @@ namespace DataStore.ConduitGraph
 		public Dictionary<int, ConduitNode> nodes;
 		public int Count => nodes.Count;
 		public Dictionary<HexCoords, int> _coordMap;
-		private ConduitNode _baseNode;
+		private readonly ConduitNode _baseNode;
 
 		public event Action<ConduitNode> OnNodeRemoved;
 		public event Action<ConduitNode> OnNodeAdded;
@@ -65,7 +65,8 @@ namespace DataStore.ConduitGraph
 
 		public void AddNodeDisconected(HexCoords nodePos)
 		{
-			OnNodeAdded?.Invoke(CreateNode(nodePos));
+			var node = CreateNode(nodePos);
+			OnNodeAdded?.Invoke(node);
 		}
 
 		public ConduitNode GetClosestNode(HexCoords nodePos, bool excludeFull = true)
@@ -258,7 +259,10 @@ namespace DataStore.ConduitGraph
 			while(open.Count > 0)
 			{
 				if (closed.Contains(dstNode))
+				{
+					last = new PathNode(dst, 0, last);
 					break;
+				}
 				PathNode curNode = BestFScore(open);
 				open.Remove(curNode);
 				closed.Add(curNode);
@@ -291,7 +295,7 @@ namespace DataStore.ConduitGraph
 					break;
 				}
 			}
-			if (open.Count == 0)
+			if (last.node != dst)
 				return null;
 			var cur = last;
 			if (cur == null)
