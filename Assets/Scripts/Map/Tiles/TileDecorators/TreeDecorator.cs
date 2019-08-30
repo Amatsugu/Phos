@@ -53,7 +53,7 @@ public class TreeDecorator : TileDecorator
 
 	}
 
-	public override Matrix4x4[] GetTransformMatricies(Tile tile)
+	/*public override Matrix4x4[] GetTransformMatricies(Tile tile)
 	{
 		var transforms = new Matrix4x4[GetDecorEntityCount(tile)];
 		for (int i = 0; i < transforms.Length; i++)
@@ -64,5 +64,5 @@ public class TreeDecorator : TileDecorator
 			transforms[i] = Matrix4x4.TRS(tile.SurfacePoint + pos, Quaternion.Euler(0, _rand.Range(0, 360), 0), new Vector3(size, height, size));
 		}
 		return transforms;
-	}
+	}*/
 }

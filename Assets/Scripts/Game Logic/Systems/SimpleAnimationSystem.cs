@@ -62,6 +62,16 @@ namespace AnimationSystem
 			}
 		}
 
+		public struct RotateJob : IJobForEach<RotateAxis, RotateSpeed, Rotation>
+		{
+			public float dt;
+
+			public void Execute(ref RotateAxis axis, ref RotateSpeed speed, ref Rotation rot)
+			{
+				rot.Value = Quaternion.Euler(((Quaternion)rot.Value).eulerAngles + (axis.Value * speed.Value));
+			}
+		}
+
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
 			var gravityJob = new GravityJob
@@ -76,6 +86,9 @@ namespace AnimationSystem
 			dep = velocityJob.Schedule(this, dep);
 			var floorJob = new FloorJob();
 			dep = floorJob.Schedule(this, dep);
+
+			var rotJob = new RotateJob { dt = Time.deltaTime };
+			dep = rotJob.Schedule(this, dep);
 
 			return dep;
 		}
@@ -124,6 +137,16 @@ namespace AnimationSystem.Animations
 	public struct FallAnim : IComponentData
 	{
 		public float3 startSpeed;
+	}
+
+	public struct RotateAxis : IComponentData
+	{
+		public Vector3 Value;
+	}
+
+	public struct RotateSpeed : IComponentData
+	{
+		public float Value;
 	}
 }
 

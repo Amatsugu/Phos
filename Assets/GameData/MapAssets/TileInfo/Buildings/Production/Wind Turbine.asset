@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Name: Wind Turbine
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
+  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  description: Produces power
+  decorators:
+  - {fileID: 11400000, guid: 62629b03162655b4c9ff923676582936, type: 2}
+  isTraverseable: 0
+  buildingMesh: {fileID: 11400000, guid: a028dc4d6993c444ba02febd426ef8c1, type: 2}
+  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  tier: 1
+  constructionTime: 2
+  category: 3
+  size: 0
+  flattenOuterRange: 0
+  resourceTransferRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  placementMode: 0
+  upgradeTarget:
+    id: -1
+  icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  cost:
+  - id: 1
+    ammount: 60
+  production:
+  - id: 0
+    ammount: 5
+  consumption:
+  - id: 2
+    ammount: 2

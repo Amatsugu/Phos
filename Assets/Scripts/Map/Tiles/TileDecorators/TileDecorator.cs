@@ -25,6 +25,4 @@ public abstract class TileDecorator : ScriptableObject
 			Map.EM.SetComponentData(tileDecor, p);
 		}
 	}
-
-	public abstract Matrix4x4[] GetTransformMatricies(Tile tile);
 }

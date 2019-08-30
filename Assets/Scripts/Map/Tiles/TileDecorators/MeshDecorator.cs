@@ -20,7 +20,7 @@ public class MeshDecorator : TileDecorator
 		return 1;
 	}
 
-	public override Matrix4x4[] GetTransformMatricies(Tile tile)
+	/*public override Matrix4x4[] GetTransformMatricies(Tile tile)
 	{
 		var rot = rotation;
 		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f).Remap(0,1, randomRotMin, randomRotMax);
@@ -32,6 +32,7 @@ public class MeshDecorator : TileDecorator
 		}
 		return transforms;
 	}
+	*/
 
 	public override Entity[] Render(Tile tile)
 	{

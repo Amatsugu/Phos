@@ -77,6 +77,7 @@ public class BuildingTile : Tile
 		_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
 		PrepareEntity();
 		OnBuilt();
+		RenderDecorators();
 	}
 
 	protected virtual void PrepareEntity()

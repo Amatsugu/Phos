@@ -16,10 +16,6 @@ public class IceDecorator : TileDecorator
 		return 0;
 	}
 
-	public override Matrix4x4[] GetTransformMatricies(Tile tile)
-	{
-		throw new System.NotImplementedException();
-	}
 
 	public override Entity[] Render(Tile tile)
 	{
