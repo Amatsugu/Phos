@@ -61,11 +61,10 @@ public class ResourceConduitTile : PoweredBuildingTile
 		_switchLines = false;
 	}
 
-	public override void Show(bool isShown)
+	public override bool Show(bool isShown)
 	{
-		base.Show(isShown);
-		if (IsShown == isShown)
-			return;
+		if (!base.Show(isShown))
+			return false;
 		var lines = _conduitLines.Values.ToArray();
 		for (int i = 0; i < lines.Length; i++)
 		{
@@ -74,6 +73,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 			else
 				Map.EM.RemoveComponent<FrozenRenderSceneTag>(lines[i]);
 		}
+		return true;
 	}
 
 	public override void OnPlaced()

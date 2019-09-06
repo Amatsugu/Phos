@@ -56,15 +56,17 @@ public class BuildingTile : Tile
 		}
 	}
 
-	public override void Show(bool isShown)
+	public override bool Show(bool isShown)
 	{
-		base.Show(isShown);
+		if (!base.Show(isShown))
+			return false;
 		if (!Map.EM.Exists(_building))
-			return;
+			return true;
 		if (isShown)
 			Map.EM.RemoveComponent(_building, typeof(Frozen));
 		else
 			Map.EM.AddComponent(_building, typeof(Frozen));
+		return true;
 	}
 
 	public void Build()

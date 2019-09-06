@@ -26,6 +26,7 @@ public class Tile
 
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
+	protected bool _isRendered;
 
 	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
 	{
@@ -100,12 +101,17 @@ public class Tile
 
 	public virtual void OnHeightChanged()
 	{
-		Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
+		if (!_isRendered)
+			return;
+		if(info.mesh != null)
+			Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
 
 	}
 
 	private void UpdateDecorations()
 	{
+		if (!_isRendered)
+			return;
 		int lastIndex = 0;
 		for (int i = 0; i < info.decorators.Length; i++)
 		{
@@ -161,21 +167,23 @@ public class Tile
 		}
 	}
 
-	public virtual void Show(bool isShown)
+	public virtual bool Show(bool isShown)
 	{
 		if (IsShown == isShown)
-			return;
+			return false;
 		IsShown = isShown;
 		if(isShown)
 		{
 			//Map.EM.RemoveComponent(_decor, typeof(Frozen));
 			Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
+
 		}
 		else
 		{
 			//Map.EM.AddComponent(_decor, typeof(Frozen));
 			Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
 		}
+		return true;
 	}
 
 	public virtual TileInfo GetMeshEntity()
@@ -186,6 +194,7 @@ public class Tile
 	public virtual Entity Render()
 	{
 		IsShown = true;
+		_isRendered = true;
 		_tileEntity = GetMeshEntity().Instantiate(Coords, new Vector3(1, Height, 1));
 		return _tileEntity;
 	}
