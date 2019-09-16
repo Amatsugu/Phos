@@ -1,6 +1,7 @@
 ﻿using DataStore.ConduitGraph;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -11,6 +12,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 	public MeshEntityRotatable energyPacket;
 	private ConduitGraph _conduitGraph;
 	private Dictionary<int, List<Vector3>> _effectPaths;
+	private HashSet<int> _removalList;
 	private static PowerTransferEffectSystem _INST;
 
 	protected override void OnCreate()
@@ -24,6 +26,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 		base.OnStartRunning();
 		EventManager.AddEventListener("OnHQPlaced", OnHQ);
 		_effectPaths = new Dictionary<int, List<Vector3>>();
+		_removalList = new HashSet<int>();
 	}
 
 	private void OnHQ()
@@ -36,7 +39,16 @@ public class PowerTransferEffectSystem : ComponentSystem
 
 	private void OnNodeRemoved(ConduitNode node)
 	{
-		_effectPaths.Remove(node.id);
+		if (_effectPaths.ContainsKey(node.id))
+		{
+			_effectPaths.Remove(node.id);
+			_removalList.Add(node.id);
+		}
+		var keys = _effectPaths.Keys.ToArray();
+		for (int i = 0; i < keys.Length; i++)
+		{
+			OnNodeAdded(_conduitGraph.nodes[keys[i]]);
+		}
 	}
 
 	public static void AddNode(ConduitNode node)
@@ -50,8 +62,9 @@ public class PowerTransferEffectSystem : ComponentSystem
 		if (path == null)
 			return;
 		if (_effectPaths.ContainsKey(node.id))
-			return;
-		_effectPaths.Add(node.id, path);
+			_effectPaths[node.id] = path;
+		else
+			_effectPaths.Add(node.id, path);
 		for (int i = 1; i < path.Count; i++)
 		{
 			Debug.DrawLine(path[i-1], path[i], Color.magenta, 5);
@@ -60,12 +73,20 @@ public class PowerTransferEffectSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
-		Entities.ForEach((ref EnergyPacket ep, ref Translation t, ref Rotation r) =>
+		Entities.ForEach((Entity e, ref EnergyPacket ep, ref Translation t, ref Rotation r) =>
 		{
 			if (!_effectPaths.ContainsKey(ep.id))
+			{
+				if(_removalList.Contains(ep.id))
+				{
+					PostUpdateCommands.DestroyEntity(e);
+					_removalList.Remove(ep.id);
+				}
+
 				return;
+			}
 			var path = _effectPaths[ep.id];
-			if(ep.progress == -1)
+			if(ep.progress == -1 || ep.progress >= path.Count)
 			{
 				ep.progress = 0;
 				t.Value = path[0] + (Vector3)ep.offset;

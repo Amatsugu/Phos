@@ -25,3 +25,4 @@ MonoBehaviour:
     ammount: 1
   core: {fileID: 11400000, guid: a644826d57362e4468f1d436804f50cf, type: 2}
   shell: {fileID: 11400000, guid: 51419e750c506fd4d823a50c83fe134c, type: 2}
+  gyser: {fileID: 8184478105413168981, guid: 3cd1e8c89eb41244fb783004e7aa3794, type: 3}

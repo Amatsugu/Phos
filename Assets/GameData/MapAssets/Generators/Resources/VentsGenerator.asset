@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 794269edb9006cb4b8299a4561c7faec, type: 3}
   m_Name: VentsGenerator
   m_EditorClassIdentifier: 
-  rarity: 2000
+  rarity: 5000
   tileInfo: {fileID: 11400000, guid: 79d7ad44c4c042d4abe740c3a82df4dc, type: 2}
