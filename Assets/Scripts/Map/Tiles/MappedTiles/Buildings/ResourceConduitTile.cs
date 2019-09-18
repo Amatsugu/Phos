@@ -176,7 +176,10 @@ public class ResourceConduitTile : PoweredBuildingTile
 		Map.ActiveMap.conduitGraph.RemoveNode(Coords);
 		var disconnectedNodes = Map.ActiveMap.conduitGraph.GetDisconectedNodes();
 		for (int i = 0; i < disconnectedNodes.Length; i++)
+		{
 			(Map.ActiveMap[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).OnHQDisconnected();
+			PowerTransferEffectSystem.RemoveNode(disconnectedNodes[i]);
+		}
 		OnHQDisconnected();
 		UpdateConnections(connections, TileUpdateType.Removed);
 		base.OnRemoved();

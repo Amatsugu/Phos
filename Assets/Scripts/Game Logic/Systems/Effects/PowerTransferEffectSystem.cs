@@ -32,7 +32,6 @@ public class PowerTransferEffectSystem : ComponentSystem
 	private void OnHQ()
 	{
 		_conduitGraph = Map.ActiveMap.conduitGraph;
-		//_conduitGraph.OnNodeAdded += OnNodeAdded;
 		_conduitGraph.OnNodeRemoved += OnNodeRemoved;
 		EventManager.RemoveEventListener("OnHQPlaced", OnHQ);
 	}
@@ -54,6 +53,11 @@ public class PowerTransferEffectSystem : ComponentSystem
 	public static void AddNode(ConduitNode node)
 	{
 		_INST.OnNodeAdded(node);
+	}
+
+	public static void RemoveNode(ConduitNode node)
+	{
+		_INST.OnNodeRemoved(node);
 	}
 
 	private void OnNodeAdded(ConduitNode node)
@@ -82,7 +86,6 @@ public class PowerTransferEffectSystem : ComponentSystem
 					PostUpdateCommands.DestroyEntity(e);
 					_removalList.Remove(ep.id);
 				}
-
 				return;
 			}
 			var path = _effectPaths[ep.id];
