@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: Turbine Blade
   m_EditorClassIdentifier: 
-  mesh: {fileID: 7401353886334607404, guid: 9226256ecc419b645ade0645c8d04a53, type: 3}
+  mesh: {fileID: 94019651875730236, guid: 9226256ecc419b645ade0645c8d04a53, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
   castShadows: 1
   receiveShadows: 1

@@ -34,6 +34,11 @@ public class BuildingTile : Tile
 		return base.Render();
 	}
 
+	public override TileInfo GetMeshEntity()
+	{
+		return buildingInfo.preserveGroundTile ? originalTile : buildingInfo;
+	}
+
 	public override void OnHeightChanged()
 	{
 		base.OnHeightChanged();

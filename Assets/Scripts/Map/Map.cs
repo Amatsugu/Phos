@@ -182,10 +182,9 @@ public class Map : IDisposable
 			var tile = this[chunkCoord];
 			var n = newTile.CreateTile(tile.Coords, tile.Height);
 			n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
+			n.originalTile = tile.info;
 			this[chunkCoord] = n;
 			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
-			if (n is BuildingTile b)
-				b.originalTile = tile.info;
 			return n;
 		}
 	}

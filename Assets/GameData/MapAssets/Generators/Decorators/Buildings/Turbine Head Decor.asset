@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b545c6da26973b648afc9aa1f547c25f, type: 3}
   m_Name: Turbine Head Decor
   m_EditorClassIdentifier: 
-  meshEntity: {fileID: 11400000, guid: c4e637cafa0522d45ba44c2a20470200, type: 2}
+  meshEntity: {fileID: 11400000, guid: f5b5966ec5e089d478efabace0666799, type: 2}
   densityMulti: 1
-  turbineBlade: {fileID: 11400000, guid: f5b5966ec5e089d478efabace0666799, type: 2}
-  bladeOffset: {x: 0, y: 1.56, z: -0.286}
+  bladeOffset: {x: 0, y: 0, z: 0}

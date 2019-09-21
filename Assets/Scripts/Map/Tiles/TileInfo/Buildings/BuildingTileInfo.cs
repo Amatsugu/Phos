@@ -34,6 +34,7 @@ public class BuildingTileInfo : TileInfo
 	public PlacementMode placementMode = PlacementMode.Single;
 	public BuildingIdentifier upgradeTarget;
 	public Sprite icon;
+	public bool preserveGroundTile;
 	[Header("Resources")]
 	[SerializeField]
 	public ResourceIndentifier[] cost;
