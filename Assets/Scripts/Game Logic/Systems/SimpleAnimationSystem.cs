@@ -72,6 +72,27 @@ namespace AnimationSystem
 			}
 		}
 
+		public struct ThumperJob : IJobForEach<Thumper, Translation>
+		{
+			public readonly float time;
+			public readonly float dt;
+
+			public ThumperJob(float time, float dt)
+			{
+				this.time = time;
+				this.dt = dt;
+			}
+
+			public void Execute(ref Thumper th, ref Translation tr)
+			{
+				var t = (time + th.phase) % th.duration;
+				t /= th.duration;
+				var pos = tr.Value;
+				pos.y = th.basePos.Lerp(th.basePos + .5f, t.EaseOut());
+				tr.Value = pos;
+			}
+		}
+
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
 			var gravityJob = new GravityJob
@@ -89,6 +110,9 @@ namespace AnimationSystem
 
 			var rotJob = new RotateJob { dt = Time.deltaTime };
 			dep = rotJob.Schedule(this, dep);
+
+			var thumperJob = new ThumperJob(Time.time, Time.deltaTime);
+			dep = thumperJob.Schedule(this, dep);
 
 			return dep;
 		}
@@ -147,6 +171,14 @@ namespace AnimationSystem.Animations
 	public struct RotateSpeed : IComponentData
 	{
 		public float Value;
+	}
+
+	public struct Thumper : IComponentData
+	{
+		public float duration;
+		public float phase;
+		public float basePos;
+		public float maxPos;
 	}
 }
 

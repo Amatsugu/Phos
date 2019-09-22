@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f55b5ce707dd2d43a1edb5f981b02b5, type: 3}
+  m_Name: Mine Thumper Decorator
+  m_EditorClassIdentifier: 
+  meshEntity: {fileID: 11400000, guid: b74b8ff960ddfa741923f8e123701fee, type: 2}
+  densityMulti: 1
+  offsets:
+  - {x: 0.221, y: 0.515, z: 0}
+  - {x: -0.265, y: 0.376, z: 0}

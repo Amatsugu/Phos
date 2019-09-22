@@ -35,6 +35,7 @@ MonoBehaviour:
   upgradeTarget:
     id: -1
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  preserveGroundTile: 1
   cost:
   - id: 0
     ammount: 20
