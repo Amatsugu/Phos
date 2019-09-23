@@ -1,5 +1,6 @@
 ﻿using AnimationSystem.AnimationData;
 using AnimationSystem.Animations;
+using System;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -12,11 +13,22 @@ namespace AnimationSystem
 	{
 		protected override void OnUpdate()
 		{
-			//settup animations
+			//setup animations
 			Entities.ForEach((Entity e, ref FallAnim f) =>
 			{
 				PostUpdateCommands.AddComponent(e, new Velocity { Value = f.startSpeed });
 				PostUpdateCommands.RemoveComponent<FallAnim>(e);
+			});
+
+			var curTime = Time.time;
+			//Thumper
+			Entities.ForEach((Thumper th, ref Translation t) =>
+			{
+				var time = ((curTime + th.phase) % th.duration) / th.duration;
+				var p = th.animationCurve.Evaluate(time);
+				var pos = t.Value;
+				pos.y = th.basePos.Lerp(th.maxPos, p);
+				t.Value = pos;
 			});
 
 			//callbacks
@@ -72,27 +84,6 @@ namespace AnimationSystem
 			}
 		}
 
-		public struct ThumperJob : IJobForEach<Thumper, Translation>
-		{
-			public readonly float time;
-			public readonly float dt;
-
-			public ThumperJob(float time, float dt)
-			{
-				this.time = time;
-				this.dt = dt;
-			}
-
-			public void Execute(ref Thumper th, ref Translation tr)
-			{
-				var t = (time + th.phase) % th.duration;
-				t /= th.duration;
-				var pos = tr.Value;
-				pos.y = th.basePos.Lerp(th.basePos + .5f, t.EaseOut());
-				tr.Value = pos;
-			}
-		}
-
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
 			var gravityJob = new GravityJob
@@ -111,8 +102,6 @@ namespace AnimationSystem
 			var rotJob = new RotateJob { dt = Time.deltaTime };
 			dep = rotJob.Schedule(this, dep);
 
-			var thumperJob = new ThumperJob(Time.time, Time.deltaTime);
-			dep = thumperJob.Schedule(this, dep);
 
 			return dep;
 		}
@@ -173,12 +162,29 @@ namespace AnimationSystem.Animations
 		public float Value;
 	}
 
-	public struct Thumper : IComponentData
+	public struct Thumper : ISharedComponentData, IEquatable<Thumper>
 	{
 		public float duration;
 		public float phase;
+		public AnimationCurve animationCurve;
 		public float basePos;
 		public float maxPos;
+
+		public bool Equals(Thumper other)
+		{
+			return duration == other.duration && animationCurve.Equals(other.animationCurve) && basePos == other.basePos && maxPos == other.maxPos && phase == other.phase;
+		}
+
+		public override int GetHashCode()
+		{
+			int hash = 23;
+			hash = hash * 31 + duration.GetHashCode();
+			hash = hash * 31 + basePos.GetHashCode();
+			hash = hash * 31 + maxPos.GetHashCode();
+			hash = hash * 31 + phase.GetHashCode();
+			hash = hash * 31 + animationCurve.GetHashCode();
+			return hash;
+		}
 	}
 }
 

@@ -55,6 +55,11 @@ public class CameraController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
+#if DEBUG
+		if (mapRenderer == null)
+			mapRenderer = FindObjectOfType<MapRenderer>();
+#endif
+
 		_canRotate = true;
 		if(Input.GetKeyDown(KeyCode.X))
 		{

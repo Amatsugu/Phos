@@ -110,6 +110,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	// Update is called once per frame
 	void Update()
 	{
+#if DEBUG
+		if (_cam == null)
+			_cam = GameRegistry.Camera;
+#endif
 		if (Input.GetKey(KeyCode.Escape) && !hqMode)
 		{
 			if (placeMode)
