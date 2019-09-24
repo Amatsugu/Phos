@@ -139,7 +139,13 @@ public class UIInfoPopup : UIExpandable
 	public override void OnDisable()
 	{
 		base.OnDisable();
-		Map.EM.DestroyEntity(_line);
+		try
+		{
+			Map.EM.DestroyEntity(_line);
+		}catch
+		{
+
+		}
 	}
 
 }

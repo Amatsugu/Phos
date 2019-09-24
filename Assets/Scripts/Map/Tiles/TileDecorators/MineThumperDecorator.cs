@@ -33,7 +33,7 @@ public class MineThumperDecorator : TileDecorator
 				animationCurve = curves[i],
 				basePos = tile.Height + offsets[i].y,
 				maxPos = tile.Height + offsets[i].y + .5f,
-				phase = Time.time + (i * .1f)
+				phase = Time.time + ((1-i) * .1f)
 			});
 		}
 		return e;
