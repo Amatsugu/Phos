@@ -288,7 +288,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
 			nodes.RemoveAt(nodes.Count - 1);
 		nodes.RemoveAll(n => n.conduitPos == selectedTile.Coords);
-		ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + conduitInfo.powerLineOffset, nodes, offset: conduitInfo.powerLineOffset);
+		ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + new Vector3(0, conduitInfo.powerLineOffset, 0), nodes);
 #if DEBUG
 		for (int i = 0; i < nodes.Count; i++)
 		{
@@ -300,7 +300,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.poweredRange, true));
 	}
 
-	void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f, Vector3 offset = default)
+	void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f)
 	{
 		GrowIndicators(line, nodes.Count);
 		int c = 0;
@@ -311,7 +311,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if (i >= _renderedEntities[line])
 					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[line][i]);
 
-				var pos = Map.ActiveMap[nodes[j].conduitPos].SurfacePoint + offset;
+				var pos = nodes[j].conduitPos.worldXZ + new Vector3(0, nodes[j].height, 0);
 				LineFactory.UpdateStaticLine(_indicatorEntities[line][i], src, pos, thiccness);
 				c++;
 			}

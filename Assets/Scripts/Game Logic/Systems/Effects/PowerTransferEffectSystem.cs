@@ -92,12 +92,12 @@ public class PowerTransferEffectSystem : ComponentSystem
 			if(ep.progress == -1 || ep.progress >= path.Count)
 			{
 				ep.progress = 0;
-				t.Value = path[0] + (Vector3)ep.offset;
+				t.Value = path[0];
 			}
-			t.Value = Vector3.MoveTowards(t.Value, path[ep.progress] + (Vector3)ep.offset, 10 * Time.deltaTime);
+			t.Value = Vector3.MoveTowards(t.Value, path[ep.progress], 10 * Time.deltaTime);
 			if (ep.progress < path.Count)
 			{
-				if((Vector3)t.Value == path[ep.progress] + (Vector3)ep.offset)
+				if((Vector3)t.Value == path[ep.progress])
 				{
 					ep.progress++;
 					if(ep.progress < path.Count)
@@ -107,7 +107,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 			if(ep.progress >= path.Count)
 			{
 				ep.progress = 0;
-				t.Value = path[0] + (Vector3)ep.offset;
+				t.Value = path[0];
 			}
 		});
 	}
@@ -117,5 +117,4 @@ public struct EnergyPacket : IComponentData
 {
 	public int id;
 	public int progress;
-	public float3 offset;
 }

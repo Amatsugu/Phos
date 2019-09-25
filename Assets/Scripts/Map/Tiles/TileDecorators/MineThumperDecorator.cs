@@ -27,12 +27,12 @@ public class MineThumperDecorator : TileDecorator
 		for (int i = 0; i < e.Length; i++)
 		{
 			e[i] = meshEntity.Instantiate(tile.SurfacePoint + offsets[i]);
-			Map.EM.AddSharedComponentData(e[i], new Thumper
+			Map.EM.AddSharedComponentData(e[i], new Slider
 			{
 				duration = 2,
 				animationCurve = curves[i],
-				basePos = tile.Height + offsets[i].y,
-				maxPos = tile.Height + offsets[i].y + .5f,
+				basePos = tile.SurfacePoint + offsets[i],
+				maxPos = tile.SurfacePoint + offsets[i] + new Vector3(0,.5f,0),
 				phase = Time.time + ((1-i) * .1f)
 			});
 		}

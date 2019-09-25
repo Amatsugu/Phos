@@ -22,13 +22,11 @@ namespace AnimationSystem
 
 			var curTime = Time.time;
 			//Thumper
-			Entities.ForEach((Thumper th, ref Translation t) =>
+			Entities.ForEach((Slider th, ref Translation t) =>
 			{
 				var time = ((curTime + th.phase) % th.duration) / th.duration;
 				var p = th.animationCurve.Evaluate(time);
-				var pos = t.Value;
-				pos.y = th.basePos.Lerp(th.maxPos, p);
-				t.Value = pos;
+				t.Value = math.lerp(th.basePos, th.maxPos, p);
 			});
 
 			//callbacks
@@ -162,17 +160,21 @@ namespace AnimationSystem.Animations
 		public float Value;
 	}
 
-	public struct Thumper : ISharedComponentData, IEquatable<Thumper>
+	public struct Slider : ISharedComponentData, IEquatable<Slider>
 	{
 		public float duration;
 		public float phase;
 		public AnimationCurve animationCurve;
-		public float basePos;
-		public float maxPos;
+		public float3 basePos;
+		public float3 maxPos;
 
-		public bool Equals(Thumper other)
+		public bool Equals(Slider other)
 		{
-			return duration == other.duration && animationCurve.Equals(other.animationCurve) && basePos == other.basePos && maxPos == other.maxPos && phase == other.phase;
+			return duration == other.duration &&
+				animationCurve.Equals(other.animationCurve) &&
+				basePos.Equals(other.basePos) &&
+				maxPos.Equals(other.maxPos) &&
+				phase == other.phase;
 		}
 
 		public override int GetHashCode()

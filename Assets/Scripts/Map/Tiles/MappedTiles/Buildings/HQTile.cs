@@ -21,7 +21,7 @@ public class HQTile : BuildingTile
 			throw new Exception("Second HQ added");
 #endif
 		Map.ActiveMap.HQ = this;
-		Map.ActiveMap.conduitGraph = new ConduitGraph(Coords);
+		Map.ActiveMap.conduitGraph = new ConduitGraph(Coords, Height + 3);
 		var info = this.info as HQTileInfo;
 		var tilesToReplace = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < tilesToReplace.Length; i++)

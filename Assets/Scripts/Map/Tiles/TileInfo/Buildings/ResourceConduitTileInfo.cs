@@ -8,7 +8,7 @@ public class ResourceConduitTileInfo : BuildingTileInfo
 	public MeshEntityRotatable lineEntity;
 	public MeshEntityRotatable lineEntityInactive;
 	public MeshEntityRotatable energyPacket;
-	public Vector3 powerLineOffset;
+	public float powerLineOffset;
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{

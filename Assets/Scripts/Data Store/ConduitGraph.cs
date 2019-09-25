@@ -19,12 +19,12 @@ namespace DataStore.ConduitGraph
 
 		private int _curId = 0;
 
-		public ConduitGraph(HexCoords baseNode, int maxConnections = 6)
+		public ConduitGraph(HexCoords baseNode, float hqNodeHeight, int maxConnections = 6)
 		{
 			this.maxConnections = maxConnections;
 			nodes = new Dictionary<int, ConduitNode>();
 			_coordMap = new Dictionary<HexCoords, int>();
-			_baseNode = CreateNode(baseNode);
+			_baseNode = CreateNode(baseNode, hqNodeHeight);
 		}
 
 		public ConduitNode GetNode(HexCoords nodePos) => nodes[_coordMap[nodePos]];
@@ -47,25 +47,25 @@ namespace DataStore.ConduitGraph
 
 		public bool ContainsNode(HexCoords nodePos) => _coordMap.ContainsKey(nodePos);
 
-		public void AddNode(HexCoords nodePos, ConduitNode connectTo)
+		public void AddNode(HexCoords nodePos, float height, ConduitNode connectTo)
 		{
-			var newNode = CreateNode(nodePos);
+			var newNode = CreateNode(nodePos, height);
 			newNode.ConnectTo(connectTo);
 			OnNodeAdded?.Invoke(newNode);
 		}
 
-		ConduitNode CreateNode(HexCoords nodePos)
+		ConduitNode CreateNode(HexCoords nodePos, float height)
 		{
 			var id = _curId++;
-			var newNode = new ConduitNode(id, nodePos, maxConnections);
+			var newNode = new ConduitNode(id, nodePos, height, maxConnections);
 			nodes.Add(id, newNode);
 			_coordMap.Add(nodePos, id);
 			return newNode;
 		}
 
-		public void AddNodeDisconected(HexCoords nodePos)
+		public void AddNodeDisconected(HexCoords nodePos, float height)
 		{
-			var node = CreateNode(nodePos);
+			var node = CreateNode(nodePos, height);
 			OnNodeAdded?.Invoke(node);
 		}
 
@@ -303,7 +303,9 @@ namespace DataStore.ConduitGraph
 			List<Vector3> path = new List<Vector3>();
 			do
 			{
-				path.Add(Map.ActiveMap[cur.node.conduitPos].SurfacePoint);
+				var cPos = cur.node.conduitPos.worldXZ;
+				cPos.y = cur.node.height;
+				path.Add(cPos);
 				cur = cur.src;
 			} while (cur != null);
 			path.Reverse();
@@ -315,6 +317,7 @@ namespace DataStore.ConduitGraph
 	{
 		public readonly int maxConnections;
 		public readonly int id;
+		public float height;
 		public HexCoords conduitPos;
 
 		internal int[] _connections;
@@ -324,10 +327,11 @@ namespace DataStore.ConduitGraph
 		public bool IsFull => ConnectionCount == maxConnections;
 
 
-		public ConduitNode(int id, HexCoords pos, int maxConnections = 6)
+		public ConduitNode(int id, HexCoords pos, float height, int maxConnections = 6)
 		{
 			this.id = id;
 			conduitPos = pos;
+			this.height = height;
 			this.maxConnections = maxConnections;
 			_connections = new int[maxConnections];
 			for (int i = 0; i < maxConnections; i++)

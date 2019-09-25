@@ -36,13 +36,14 @@ public class ResourceConduitTile : PoweredBuildingTile
 	public void UpdateLines()
 	{
 		var lines = _conduitLines.Keys.ToArray();
+		var thisHeight = Coords.worldXZ + new Vector3(0, Map.ActiveMap.conduitGraph.GetNode(Coords).height, 0);
 		for (int i = 0; i < lines.Length; i++)
 		{
-			var tile = Map.ActiveMap[lines[i]];
-			var a = SurfacePoint + conduitInfo.powerLineOffset;
-			var b = tile.SurfacePoint + conduitInfo.powerLineOffset;
 			if (Map.ActiveMap.conduitGraph.ContainsNode(lines[i]))
 			{
+				var curNode = Map.ActiveMap.conduitGraph.GetNode(lines[i]);
+				var a = thisHeight;
+				var b = curNode.conduitPos.worldXZ + new Vector3(0, curNode.height, 0);
 				if(_switchLines)
 				{
 					Map.EM.DestroyEntity(_conduitLines[lines[i]]);
@@ -79,7 +80,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
-		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords);
+		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
 	}
 
 	public override void FindConduitConnections()
@@ -109,9 +110,9 @@ public class ResourceConduitTile : PoweredBuildingTile
 			thisNode.ConnectTo(closest[i]);
 
 
-			var tile = Map.ActiveMap[closest[i].conduitPos];
-			var a = tile.SurfacePoint + conduitInfo.powerLineOffset;
-			var b = SurfacePoint + conduitInfo.powerLineOffset;
+			//var tile = Map.ActiveMap[closest[i].conduitPos];
+			var a = closest[i].conduitPos.worldXZ + new Vector3(0, closest[i].height, 0);
+			var b = Coords.worldXZ + new Vector3(0, thisNode.height, 0);
 			var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
 			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			if (thisNode.IsFull)
@@ -162,8 +163,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 			var tile = Map.ActiveMap[closest[i].conduitPos];
 			if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
 				conduit.OnHQConnected();
-			var a = tile.SurfacePoint + conduitInfo.powerLineOffset;
-			var b = SurfacePoint + conduitInfo.powerLineOffset;
+			var a = closest[i].conduitPos.worldXZ + new Vector3(0, closest[i].height, 0);
+			var b = Coords.worldXZ + new Vector3(0, curNode.height, 0);
 			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
 			if (curNode.IsFull)
 				break;
@@ -195,7 +196,6 @@ public class ResourceConduitTile : PoweredBuildingTile
 		{
 			id = cNode.id,
 			progress = -1,
-			offset = conduitInfo.powerLineOffset
 		});
 		PowerTransferEffectSystem.AddNode(cNode);
 		_switchLines = HasHQConnection = true;
