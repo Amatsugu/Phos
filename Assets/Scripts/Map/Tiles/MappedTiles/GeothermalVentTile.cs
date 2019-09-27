@@ -28,17 +28,17 @@ public class GeothermalVentTile : ResourceTile
 		return base.Render();
 	}
 
-	public override bool Show(bool isShown)
+	public override void Show(bool isShown)
 	{
-		if (!base.Show(isShown))
-			return false;
-		if (isShown)
-			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_core);
-		else
-			Map.EM.AddComponent(_core, typeof(FrozenRenderSceneTag));
-		_gyser.SetActive(isShown);
-		return true;
-		
+		if (IsShown != isShown)
+		{
+			if (isShown)
+				Map.EM.RemoveComponent<FrozenRenderSceneTag>(_core);
+			else
+				Map.EM.AddComponent(_core, typeof(FrozenRenderSceneTag));
+			_gyser.SetActive(isShown);
+		}
+		base.Show(isShown);
 	}
 
 	public override void Destroy()
@@ -71,15 +71,12 @@ public class GeothermalVentShellTile : ResourceTile
 		return base.Render();
 	}
 
-	public override bool Show(bool isShown)
+	public override void Show(bool isShown)
 	{
-		if (!base.Show(isShown))
-			return false;
+		base.Show(isShown);
 		if (isShown)
 			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_shell);
 		else
 			Map.EM.AddComponent(_shell, typeof(FrozenRenderSceneTag));
-		return true;
-
 	}
 }

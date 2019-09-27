@@ -13,9 +13,10 @@ public struct SimpleNoiseFilter : INoiseFilter
 		this.settings = noiseSettings;
 	}
 
-	public float Evaluate(Vector3 point)
-	{
+	public float Evaluate(Vector3 point) => Evaluate(point, settings.minValue);
 
+	public float Evaluate(Vector3 point, float minValue)
+	{
 		float noiseValue = 0;
 		float freq = settings.baseRoughness;
 		float amp = 1;
@@ -26,7 +27,7 @@ public struct SimpleNoiseFilter : INoiseFilter
 			freq *= settings.roughness;
 			amp *= settings.persistence;
 		}
-		noiseValue -= settings.minValue;
+		noiseValue -= minValue;
 		return noiseValue * settings.strength;
 	}
 

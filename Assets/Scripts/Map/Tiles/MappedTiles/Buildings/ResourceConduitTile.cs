@@ -62,19 +62,20 @@ public class ResourceConduitTile : PoweredBuildingTile
 		_switchLines = false;
 	}
 
-	public override bool Show(bool isShown)
+	public override void Show(bool isShown)
 	{
-		if (!base.Show(isShown))
-			return false;
-		var lines = _conduitLines.Values.ToArray();
-		for (int i = 0; i < lines.Length; i++)
+		if (IsShown != isShown)
 		{
-			if (isShown)
-				Map.EM.AddComponent(lines[i], typeof(FrozenRenderSceneTag));
-			else
-				Map.EM.RemoveComponent<FrozenRenderSceneTag>(lines[i]);
+			var lines = _conduitLines.Values.ToArray();
+			for (int i = 0; i < lines.Length; i++)
+			{
+				if (!isShown)
+					Map.EM.AddComponent(lines[i], typeof(FrozenRenderSceneTag));
+				else
+					Map.EM.RemoveComponent<FrozenRenderSceneTag>(lines[i]);
+			}
 		}
-		return true;
+		base.Show(isShown);
 	}
 
 	public override void OnPlaced()

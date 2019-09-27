@@ -61,17 +61,21 @@ public class BuildingTile : Tile
 		}
 	}
 
-	public override bool Show(bool isShown)
+	public override void Show(bool isShown)
 	{
-		if (!base.Show(isShown))
-			return false;
-		if (!Map.EM.Exists(_building))
-			return true;
-		if (isShown)
-			Map.EM.RemoveComponent(_building, typeof(Frozen));
-		else
-			Map.EM.AddComponent(_building, typeof(Frozen));
-		return true;
+		if (IsShown != isShown)
+		{
+			if (!Map.EM.Exists(_building))
+			{
+				base.Show(isShown);
+				return;
+			}
+			if (isShown)
+				Map.EM.RemoveComponent(_building, typeof(Frozen));
+			else
+				Map.EM.AddComponent(_building, typeof(Frozen));
+		}
+		base.Show(isShown);
 	}
 
 	public void Build()
@@ -89,6 +93,16 @@ public class BuildingTile : Tile
 
 	protected virtual void PrepareEntity()
 	{
+		if(Map.EM.HasComponent<BuildingId>(_tileEntity))
+			Map.EM.SetComponentData(_tileEntity, new BuildingId
+			{
+				Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
+			});
+		else
+			Map.EM.AddComponentData(_tileEntity, new BuildingId
+			{
+				Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
+			});
 		var production = buildingInfo.production;
 		var consumption = buildingInfo.consumption;
 		if (production.Length > 0)
@@ -132,6 +146,7 @@ public class BuildingTile : Tile
 	protected virtual void OnBuilt()
 	{
 		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.name}", this);
+
 		
 	}
 }

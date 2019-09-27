@@ -167,10 +167,8 @@ public class Tile
 		}
 	}
 
-	public virtual bool Show(bool isShown)
+	public virtual void Show(bool isShown)
 	{
-		if (IsShown == isShown)
-			return false;
 		IsShown = isShown;
 		if(isShown)
 		{
@@ -183,7 +181,6 @@ public class Tile
 			//Map.EM.AddComponent(_decor, typeof(Frozen));
 			Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
 		}
-		return true;
 	}
 
 	public virtual TileInfo GetMeshEntity()

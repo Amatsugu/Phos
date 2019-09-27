@@ -7,4 +7,10 @@ using UnityEngine;
 public struct CloudData : IComponentData
 {
 	public float3 pos;
+	public int index;
+}
+
+public struct ShadowOnlyTag : IComponentData
+{
+
 }
