@@ -53,6 +53,7 @@ public class UIDevConsole : MonoBehaviour
 			GameRegistry.Cheats.NO_RESOURCE_COST = !GameRegistry.Cheats.NO_RESOURCE_COST;
 			AddConsoleMessage($"noResourceCost: <b>{GameRegistry.Cheats.NO_RESOURCE_COST}</b>");
 		}, "Toggles resource cost"));
+		AddCommand(new TimeScaleCommand());
 	}
 
     // Start is called before the first frame update
@@ -210,6 +211,26 @@ public class UIDevConsole : MonoBehaviour
 		public override string GetHelpMessage()
 		{
 			return "Shows the help message for the given command or lists all commands";
+		}
+	}
+
+	public class TimeScaleCommand : Command
+	{
+		public TimeScaleCommand() : base("timescale")
+		{
+		}
+
+		public override void Execute(string[] args)
+		{
+			if(args.Length == 2)
+			{
+				if (float.TryParse(args[1], out float t))
+					Time.timeScale = t;
+				else
+					AddConsoleMessage($"Invalid input \"{args[1]}\"");
+			}
+			AddConsoleMessage($"Timescale: {Time.timeScale}");
+
 		}
 	}
 

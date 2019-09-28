@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 799315c37b2d64541a9c7fa1dac3bb1c, type: 3}
-  m_Name: Overcast
+  m_Name: Clear
   m_EditorClassIdentifier: 
   state:
-    cloudDensity: 0.8
-    cloudColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+    cloudDensity: 0.05
+    cloudColor: {r: 1, g: 1, b: 1, a: 1}
     windSpeed:
       x: 0.08
       y: 0.1
@@ -29,8 +29,8 @@ MonoBehaviour:
     sunTemp: 6070
     ambientLightBrightness: 0
     ambientColor: {r: 0, g: 0, b: 0, a: 0}
-  chance: 500
-  transitionTime: 15
+  chance: 1000
+  transitionTime: 10
   duration:
-    x: 100
-    y: 150
+    x: 200
+    y: 300

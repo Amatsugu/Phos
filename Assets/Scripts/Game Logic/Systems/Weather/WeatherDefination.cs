@@ -8,5 +8,6 @@ public class WeatherDefination : ScriptableObject
 {
 	public WeatherState state;
 	public float chance;
+	public float transitionTime;
 	public float2 duration;
 }

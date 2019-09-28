@@ -29,7 +29,8 @@ MonoBehaviour:
     sunTemp: 6070
     ambientLightBrightness: 0
     ambientColor: {r: 0, g: 0, b: 0, a: 0}
-  chance: 500
+  chance: 1000
+  transitionTime: 10
   duration:
-    x: 5
-    y: 8
+    x: 200
+    y: 250

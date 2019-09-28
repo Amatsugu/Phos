@@ -1370,11 +1370,11 @@ MonoBehaviour:
   active: 0
   m_AdvancedMode: 0
   colorMode:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   color:
-    m_OverrideState: 0
-    m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 0.745283, g: 0, b: 0, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
@@ -1402,20 +1402,20 @@ MonoBehaviour:
     min: 0
   albedo:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 6.34
     min: 1
   baseHeight:
     m_OverrideState: 1
     m_Value: 0
   meanHeight:
     m_OverrideState: 1
-    m_Value: 17.1
+    m_Value: 0
   anisotropy:
     m_OverrideState: 1
     m_Value: 0
@@ -1844,7 +1844,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   fogType:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 3
 --- !u!114 &6822040729707119202
 MonoBehaviour:

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 799315c37b2d64541a9c7fa1dac3bb1c, type: 3}
-  m_Name: Overcast
+  m_Name: Gloom
   m_EditorClassIdentifier: 
   state:
-    cloudDensity: 0.8
-    cloudColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+    cloudDensity: 0.4
+    cloudColor: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
     windSpeed:
       x: 0.08
       y: 0.1
@@ -33,4 +33,4 @@ MonoBehaviour:
   transitionTime: 15
   duration:
     x: 100
-    y: 150
+    y: 200

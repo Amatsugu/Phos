@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -8,7 +9,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-public class CloudSystem : JobComponentSystem
+public class WeatherSystem : JobComponentSystem
 {
 	public MeshEntity cloudMesh;
 	public float cloudSize = 4;
@@ -17,7 +18,7 @@ public class CloudSystem : JobComponentSystem
 	public float noiseScale = 50;
 
 	public static INoiseFilter cloudFilter;
-	public static CloudSystem INST;
+	public static WeatherSystem INST;
 
 	private float _shortDiag;
 	private Vector3 _offset;
@@ -31,81 +32,16 @@ public class CloudSystem : JobComponentSystem
 	private NativeArray<float2> _cloudField;
 	private NativeArray<float3> _cloudPos;
 
-	private WeatherState _prevWeatherState;
+	private WeatherDefination _curWeather;
+	private WeatherDefination _nextWeather;
 	private WeatherState _curWeatherState;
-	private WeatherState _nextState;
+	private System.Random _rand;
+	private float _nextWeatherTime;
 	private float _transitionTime = 0;
+	private float _totalWeatherChance;
 	private int _dir = 1;
 
-	[ExcludeComponent(typeof(ShadowOnlyTag))]
-	struct CloudsJob : IJobForEach<CloudData, Translation, NonUniformScale>
-	{
-		public float size;
-		[ReadOnly]
-		public NativeArray<float2> field;
-		public float3 camPos;
-		public float3 rawCamPos;
-		public float disolveDist;
-		public float disolveUpper;
-		public float disolveLower;
-
-		public void Execute(ref CloudData c, ref Translation t, ref NonUniformScale s)
-		{
-			t.Value = c.pos + camPos;
-
-			var cloudSize = field[c.index].x;
-			var cloudHeight = field[c.index].y;
-
-			var vDist = t.Value.y - rawCamPos.y;
-			var disolve = Vector3.SqrMagnitude(new float3(t.Value.x, 0, t.Value.z) - new float3(rawCamPos.x, 0, rawCamPos.z)) / disolveDist;
-			if (disolve <= 1)
-			{
-				if (vDist > -disolveLower && vDist < 0)
-				{
-					vDist = -vDist;
-					var dT = vDist / disolveLower;
-					dT = math.pow(dT, 8);
-					disolve = math.lerp(disolve, 1, dT);
-				}
-				else if (vDist < disolveUpper && vDist >= 0)
-				{
-					var dT = (vDist / disolveUpper);
-					dT = dT.Pow(8);
-					disolve = math.lerp(disolve, 1, dT);
-				}
-				else
-					disolve = 1;
-				disolve -= .5f;
-				disolve = math.clamp(disolve, 0, 1);
-				disolve *= 2;
-				disolve = disolve * disolve * disolve;
-				cloudSize = math.lerp(0, cloudSize, disolve);
-				cloudHeight = math.lerp(0, cloudHeight, disolve);
-			}
-			s.Value = new float3(size * cloudSize, cloudHeight, size * cloudSize);
-		}
-
-	}
-
-	[RequireComponentTag(typeof(ShadowOnlyTag))]
-	struct CloudShadowsJob : IJobForEach<CloudData, Translation, NonUniformScale>
-	{
-		public float size;
-		[ReadOnly]
-		public NativeArray<float2> field;
-		public float3 camPos;
-
-		public void Execute(ref CloudData c, ref Translation t, ref NonUniformScale s)
-		{
-			t.Value = c.pos + camPos;
-
-			var cloudSize = field[c.index].x;
-			var cloudHeight = field[c.index].y;
-			s.Value = new float3(size * cloudSize, cloudHeight, size * cloudSize);
-		}
-	}
-
-	struct GenerateFieldJob : IJobParallelFor
+	public struct GenerateFieldJob : IJobParallelFor
 	{
 		public float3 camPos;
 		public int gridSize;
@@ -158,9 +94,12 @@ public class CloudSystem : JobComponentSystem
 		_maxNoiseValue = 1 - noiseSettings.minValue;
 		if (_cloudField.IsCreated)
 			_cloudField.Dispose();
-		_curWeatherState = _init.weatherDefinations[0].state;
-		_prevWeatherState = _init.weatherDefinations[0].state;
-		_nextState = _init.weatherDefinations[1].state;
+		_rand = new System.Random(Map.ActiveMap.Seed);
+		_curWeather = _init.weatherDefinations[0];
+		_curWeatherState = _curWeather.state;
+		_nextWeatherTime = _rand.Range(_curWeather.duration.x, _curWeather.duration.y);
+		_totalWeatherChance = _init.weatherDefinations.Sum(d => d.chance);
+
 		_cloudField = new NativeArray<float2>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudPos = new NativeArray<float3>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		for (int z = 0; z < _init.fieldHeight; z++)
@@ -201,20 +140,60 @@ public class CloudSystem : JobComponentSystem
 			field = _cloudField,
 			camPos = job.camPos
 		};
-
-		_transitionTime += Time.deltaTime * _dir * .5f;
-		_curWeatherState = WeatherState.Lerp(_prevWeatherState, _nextState, _transitionTime);
-
-
-		if (_transitionTime > 1f || _transitionTime < 0)
-		{
-			_transitionTime = math.clamp(_transitionTime, 0, 1);
-			_dir *= -1;
-		}
-
-		_init.cloudMesh.material.SetColor("_BaseColor", _curWeatherState.cloudColor);
+		SimulateWeather();
 
 		return cloudShadowJob.Schedule(this, dep);
+	}
+
+	public void SimulateWeather()
+	{
+		if (Time.time >= _nextWeatherTime && _nextWeather == null)
+		{
+			SelectNextWeather();
+			_transitionTime = 0;
+		}
+
+		if (_nextWeather != null)
+		{
+			_transitionTime += Time.deltaTime;
+			var t = _transitionTime / _nextWeather.transitionTime;
+			t = math.clamp(t, 0, 1);
+			ApplyWeather(t);
+			
+			if (_transitionTime >= _nextWeather.transitionTime)
+			{
+				_curWeather = _nextWeather;
+				ApplyWeather(1);
+				_nextWeather = null;
+			}
+		}
+	}
+
+	public void ApplyWeather(float t)
+	{
+		_curWeatherState = WeatherState.Lerp(_curWeather.state, _nextWeather.state, t);
+
+		_init.cloudMesh.material.SetColor("_BaseColor", _curWeatherState.cloudColor);
+	}
+
+	public void SelectNextWeather()
+	{
+		var chance = _totalWeatherChance - _curWeather.chance;
+		var selection = _rand.Range(0, chance);
+
+		for (int i = 0; i < _init.weatherDefinations.Length; i++)
+		{
+			if (_init.weatherDefinations[i] == _curWeather)
+				continue;
+			selection -= _init.weatherDefinations[i].chance;
+			if(selection <= 0)
+			{
+				_nextWeather = _init.weatherDefinations[i];
+				_nextWeatherTime = _rand.Range(_nextWeather.duration.x, _nextWeather.duration.y) + _nextWeather.transitionTime + Time.time;
+				Debug.Log($"Next Weather: {_nextWeather}, starting in {_nextWeatherTime}s");
+				break;
+			}
+		}
 	}
 
 	public void GenerateCloudField()
