@@ -54,6 +54,7 @@ public class UIDevConsole : MonoBehaviour
 			AddConsoleMessage($"noResourceCost: <b>{GameRegistry.Cheats.NO_RESOURCE_COST}</b>");
 		}, "Toggles resource cost"));
 		AddCommand(new TimeScaleCommand());
+		AddCommand(new Command("nextWeather", WeatherSystem.SkipWeather, "Skips the current weather"));
 	}
 
     // Start is called before the first frame update

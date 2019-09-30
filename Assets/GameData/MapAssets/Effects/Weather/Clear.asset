@@ -15,13 +15,11 @@ MonoBehaviour:
   state:
     cloudDensity: 0.05
     cloudColor: {r: 1, g: 1, b: 1, a: 1}
-    windSpeed:
-      x: 0.08
-      y: 0.1
+    windSpeed: 0.1
     percipitation: 0
     weatherType: 0
     isStorm: 0
-    fogDensity: 0
+    fogDensity: 9999
     fogHeight: 0
     fogColor: {r: 1, g: 1, b: 1, a: 1}
     sunBrightness: 2.98

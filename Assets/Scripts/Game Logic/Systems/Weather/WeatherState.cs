@@ -10,17 +10,19 @@ public struct WeatherState
 	public float cloudDensity;
 	public Color cloudColor;
 	[Header("Atmosphere")]
-	public float2 windSpeed;
+	public float windSpeed;
 	public float percipitation;
 	public ParticleType weatherType;
 	public bool isStorm;
 	[Header("Fog")]
 	public float fogDensity;
+	public float fogBaseHeight;
 	public float fogHeight;
 	public Color fogColor;
 	[Header("Lighting")]
 	public float sunBrightness;
 	public Color sunColor;
+	[Range(1000, 20000)]
 	public float sunTemp;
 	public float ambientLightBrightness;
 	public Color ambientColor;
@@ -43,6 +45,7 @@ public struct WeatherState
 			weatherType = t >= .5f ? a.weatherType : b.weatherType,
 			fogDensity = a.fogDensity.Lerp(b.fogDensity, t),
 			fogHeight = a.fogHeight.Lerp(b.fogHeight, t),
+			fogBaseHeight = a.fogBaseHeight.Lerp(b.fogBaseHeight, t),
 			fogColor = Color.Lerp(a.fogColor, b.fogColor, t),
 			isStorm = t >= .5f ? a.isStorm : b.isStorm,
 			sunBrightness = a.sunBrightness.Lerp(b.sunBrightness, t),

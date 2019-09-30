@@ -5,14 +5,16 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 public class InitializeClouds : MonoBehaviour
 {
 	public MeshEntity cloudMesh;
 	public MeshEntity cloudShadowMesh;
+	public Light sun;
+	public VolumeProfile volumeProfile;
 	public WeatherDefination[] weatherDefinations;
-	public float windSpeed = .5f;
 	public float clouldHeight;
 	public int fieldHeight = 200;
 	public int fieldWidth = 100;

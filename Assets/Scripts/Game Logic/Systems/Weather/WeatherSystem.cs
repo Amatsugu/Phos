@@ -8,6 +8,8 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.HDPipeline;
+using UnityEngine.Rendering;
 
 public class WeatherSystem : JobComponentSystem
 {
@@ -18,14 +20,12 @@ public class WeatherSystem : JobComponentSystem
 	public float noiseScale = 50;
 
 	public static INoiseFilter cloudFilter;
-	public static WeatherSystem INST;
 
 	private float _shortDiag;
 	private Vector3 _offset;
 	private float _cloudFieldNormalizedWidth;
 	private Vector3 _windDir;
 	private Transform _cam;
-	private float _windSpeed;
 	private float _maxNoiseValue;
 	private float _innerRadius;
 	private InitializeClouds _init;
@@ -39,7 +39,9 @@ public class WeatherSystem : JobComponentSystem
 	private float _nextWeatherTime;
 	private float _transitionTime = 0;
 	private float _totalWeatherChance;
+	private VolumetricFog _fogComponent;
 	private int _dir = 1;
+	private static WeatherSystem _INST;
 
 	public struct GenerateFieldJob : IJobParallelFor
 	{
@@ -76,7 +78,7 @@ public class WeatherSystem : JobComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		INST = this;
+		_INST = this;
 	}
 
 	protected override void OnStartRunning()
@@ -90,16 +92,16 @@ public class WeatherSystem : JobComponentSystem
 		cloudFilter = NoiseFilterFactory.CreateNoiseFilter(noiseSettings, 1);
 		_windDir = UnityEngine.Random.insideUnitSphere;
 		_cloudFieldNormalizedWidth = (_init.fieldWidth * _shortDiag) / 2f;
-		_windSpeed = _init.windSpeed;
 		_maxNoiseValue = 1 - noiseSettings.minValue;
 		if (_cloudField.IsCreated)
 			_cloudField.Dispose();
 		_rand = new System.Random(Map.ActiveMap.Seed);
-		_curWeather = _init.weatherDefinations[0];
-		_curWeatherState = _curWeather.state;
-		_nextWeatherTime = _rand.Range(_curWeather.duration.x, _curWeather.duration.y);
 		_totalWeatherChance = _init.weatherDefinations.Sum(d => d.chance);
-
+		SelectNextWeather();
+		_curWeather = _nextWeather;
+		_nextWeather = null;
+		_init.volumeProfile.TryGet(out _fogComponent);
+		ApplyWeather(_curWeather.state);
 		_cloudField = new NativeArray<float2>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudPos = new NativeArray<float3>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		for (int z = 0; z < _init.fieldHeight; z++)
@@ -119,7 +121,7 @@ public class WeatherSystem : JobComponentSystem
 		_windDir.z = Mathf.Sin(windSampleDir);
 		_windDir.y = Mathf.Cos(windSampleStr);
 
-		_offset += _windDir * Time.deltaTime * _windSpeed;
+		_offset += _windDir * Time.deltaTime * _curWeatherState.windSpeed;
 		GenerateCloudField();
 		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var job = new CloudsJob
@@ -158,27 +160,39 @@ public class WeatherSystem : JobComponentSystem
 			_transitionTime += Time.deltaTime;
 			var t = _transitionTime / _nextWeather.transitionTime;
 			t = math.clamp(t, 0, 1);
-			ApplyWeather(t);
-			
+			ApplyWeather(WeatherState.Lerp(_curWeather.state, _nextWeather.state, t)); ;
+
 			if (_transitionTime >= _nextWeather.transitionTime)
 			{
 				_curWeather = _nextWeather;
-				ApplyWeather(1);
+				ApplyWeather(_curWeather.state);
 				_nextWeather = null;
 			}
 		}
 	}
 
-	public void ApplyWeather(float t)
+	public void ApplyWeather(WeatherState state)
 	{
-		_curWeatherState = WeatherState.Lerp(_curWeather.state, _nextWeather.state, t);
+		_curWeatherState = state;
 
-		_init.cloudMesh.material.SetColor("_BaseColor", _curWeatherState.cloudColor);
+		_init.sun.colorTemperature = _curWeatherState.sunTemp;
+		//_init.sun.intensity = _curWeatherState.su
+		_init.sun.color = _curWeatherState.sunColor;
+
+		if (_curWeatherState.fogDensity == 9999)
+			_fogComponent.active = false;
+		else
+			_fogComponent.active = true;
+		_fogComponent.meanHeight.value = _curWeatherState.fogHeight;
+		_fogComponent.density.value = _curWeatherState.fogDensity;
+		_fogComponent.albedo.value = _curWeatherState.fogColor;
+
+		_init.cloudMesh.material.SetColor("_BaseColor", state.cloudColor);
 	}
 
 	public void SelectNextWeather()
 	{
-		var chance = _totalWeatherChance - _curWeather.chance;
+		var chance = _totalWeatherChance - _curWeather?.chance ?? 0;
 		var selection = _rand.Range(0, chance);
 
 		for (int i = 0; i < _init.weatherDefinations.Length; i++)
@@ -189,11 +203,19 @@ public class WeatherSystem : JobComponentSystem
 			if(selection <= 0)
 			{
 				_nextWeather = _init.weatherDefinations[i];
-				_nextWeatherTime = _rand.Range(_nextWeather.duration.x, _nextWeather.duration.y) + _nextWeather.transitionTime + Time.time;
-				Debug.Log($"Next Weather: {_nextWeather}, starting in {_nextWeatherTime}s");
+				_nextWeatherTime = _rand.Range(_nextWeather.duration.x, _nextWeather.duration.y) + _nextWeather.transitionTime;
+				Debug.Log($"Transitioning To {_nextWeather}, {_nextWeatherTime}s Duration");
+				_nextWeatherTime += Time.time;
 				break;
 			}
 		}
+	}
+
+	public static void SkipWeather()
+	{
+		_INST._nextWeather = null;
+		_INST._transitionTime = 0;
+		_INST._nextWeatherTime = Time.time;
 	}
 
 	public void GenerateCloudField()

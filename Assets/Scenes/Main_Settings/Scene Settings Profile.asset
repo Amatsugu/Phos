@@ -1374,7 +1374,7 @@ MonoBehaviour:
     m_Value: 1
   color:
     m_OverrideState: 1
-    m_Value: {r: 0.745283, g: 0, b: 0, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 1
     showAlpha: 0
     showEyeDropper: 1
@@ -1385,7 +1385,7 @@ MonoBehaviour:
     max: 1
   maxFogDistance:
     m_OverrideState: 1
-    m_Value: 9821
+    m_Value: 3000
     min: 0
   mipFogMaxMip:
     m_OverrideState: 0
@@ -1402,23 +1402,23 @@ MonoBehaviour:
     min: 0
   albedo:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 6.34
+    m_Value: 10.12
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 6.3
   meanHeight:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 6.3
   anisotropy:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.636
     min: -1
     max: 1
   globalLightProbeDimmer:

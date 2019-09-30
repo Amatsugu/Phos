@@ -15,18 +15,17 @@ MonoBehaviour:
   state:
     cloudDensity: 0.8
     cloudColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
-    windSpeed:
-      x: 0.08
-      y: 0.1
+    windSpeed: 0.15
     percipitation: 0
     weatherType: 0
     isStorm: 0
-    fogDensity: 0
-    fogHeight: 0
+    fogDensity: 10
+    fogBaseHeight: 1
+    fogHeight: 3
     fogColor: {r: 1, g: 1, b: 1, a: 1}
     sunBrightness: 2.98
     sunColor: {r: 1, g: 1, b: 1, a: 1}
-    sunTemp: 6070
+    sunTemp: 8155
     ambientLightBrightness: 0
     ambientColor: {r: 0, g: 0, b: 0, a: 0}
   chance: 500

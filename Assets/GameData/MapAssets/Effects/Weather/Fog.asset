@@ -10,25 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 799315c37b2d64541a9c7fa1dac3bb1c, type: 3}
-  m_Name: Sunny
+  m_Name: Fog
   m_EditorClassIdentifier: 
   state:
-    cloudDensity: 0.25
-    cloudColor: {r: 1, g: 1, b: 1, a: 1}
-    windSpeed: 0.1
+    cloudDensity: 0.1
+    cloudColor: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
+    windSpeed: 0.05
     percipitation: 0
     weatherType: 0
     isStorm: 0
-    fogDensity: 9999
-    fogHeight: 0
+    fogDensity: 6
+    fogBaseHeight: 6
+    fogHeight: 10
     fogColor: {r: 1, g: 1, b: 1, a: 1}
     sunBrightness: 2.98
     sunColor: {r: 1, g: 1, b: 1, a: 1}
-    sunTemp: 5350
+    sunTemp: 10867
     ambientLightBrightness: 0
     ambientColor: {r: 0, g: 0, b: 0, a: 0}
-  chance: 1000
-  transitionTime: 10
+  chance: 500
+  transitionTime: 15
   duration:
-    x: 200
-    y: 250
+    x: 100
+    y: 200
