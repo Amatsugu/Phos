@@ -1408,17 +1408,17 @@ MonoBehaviour:
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 10.12
+    m_Value: 10.53
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: 6.3
+    m_Value: 0
   meanHeight:
     m_OverrideState: 1
-    m_Value: 6.3
+    m_Value: 0
   anisotropy:
     m_OverrideState: 1
-    m_Value: 0.636
+    m_Value: 0
     min: -1
     max: 1
   globalLightProbeDimmer:

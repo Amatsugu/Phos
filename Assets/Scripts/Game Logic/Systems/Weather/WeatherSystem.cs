@@ -40,6 +40,7 @@ public class WeatherSystem : JobComponentSystem
 	private float _transitionTime = 0;
 	private float _totalWeatherChance;
 	private VolumetricFog _fogComponent;
+	private ProceduralSky _skyComponent;
 	private int _dir = 1;
 	private static WeatherSystem _INST;
 
@@ -101,6 +102,7 @@ public class WeatherSystem : JobComponentSystem
 		_curWeather = _nextWeather;
 		_nextWeather = null;
 		_init.volumeProfile.TryGet(out _fogComponent);
+		_init.volumeProfile.TryGet(out _skyComponent);
 		ApplyWeather(_curWeather.state);
 		_cloudField = new NativeArray<float2>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudPos = new NativeArray<float3>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
@@ -175,15 +177,21 @@ public class WeatherSystem : JobComponentSystem
 	{
 		_curWeatherState = state;
 
+		//Sky
+		_skyComponent.skyTint.value = _curWeatherState.skyColor;
+
+		//Sun
 		_init.sun.colorTemperature = _curWeatherState.sunTemp;
 		//_init.sun.intensity = _curWeatherState.su
 		_init.sun.color = _curWeatherState.sunColor;
 
+		//Fog
 		if (_curWeatherState.fogDensity == 9999)
 			_fogComponent.active = false;
 		else
 			_fogComponent.active = true;
 		_fogComponent.meanHeight.value = _curWeatherState.fogHeight;
+		_fogComponent.baseHeight.value = _curWeatherState.fogBaseHeight;
 		_fogComponent.density.value = _curWeatherState.fogDensity;
 		_fogComponent.albedo.value = _curWeatherState.fogColor;
 
@@ -239,6 +247,7 @@ public class WeatherSystem : JobComponentSystem
 
 	protected override void OnDestroyManager()
 	{
+		ApplyWeather(_init.weatherDefinations[0].state);
 		_cloudField.Dispose();
 	}
 }

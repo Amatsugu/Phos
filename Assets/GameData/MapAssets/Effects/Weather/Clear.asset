@@ -20,8 +20,10 @@ MonoBehaviour:
     weatherType: 0
     isStorm: 0
     fogDensity: 9999
+    fogBaseHeight: 0
     fogHeight: 0
     fogColor: {r: 1, g: 1, b: 1, a: 1}
+    skyColor: {r: 0, g: 0.9672265, b: 1, a: 1}
     sunBrightness: 2.98
     sunColor: {r: 1, g: 1, b: 1, a: 1}
     sunTemp: 6070

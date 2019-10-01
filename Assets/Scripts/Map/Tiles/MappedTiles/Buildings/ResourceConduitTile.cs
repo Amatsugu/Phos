@@ -36,7 +36,10 @@ public class ResourceConduitTile : PoweredBuildingTile
 	public void UpdateLines()
 	{
 		var lines = _conduitLines.Keys.ToArray();
-		var thisHeight = Coords.worldXZ + new Vector3(0, Map.ActiveMap.conduitGraph.GetNode(Coords).height, 0);
+		if (!Map.ActiveMap.conduitGraph.ContainsNode(Coords))
+			return;
+		var cNode = Map.ActiveMap.conduitGraph.GetNode(Coords);
+		var thisHeight = Coords.worldXZ + new Vector3(0, cNode.height, 0);
 		for (int i = 0; i < lines.Length; i++)
 		{
 			if (Map.ActiveMap.conduitGraph.ContainsNode(lines[i]))

@@ -20,12 +20,11 @@ public struct WeatherState
 	public float fogHeight;
 	public Color fogColor;
 	[Header("Lighting")]
+	public Color skyColor;
 	public float sunBrightness;
 	public Color sunColor;
 	[Range(1000, 20000)]
 	public float sunTemp;
-	public float ambientLightBrightness;
-	public Color ambientColor;
 
 	public enum ParticleType
 	{
@@ -50,9 +49,8 @@ public struct WeatherState
 			isStorm = t >= .5f ? a.isStorm : b.isStorm,
 			sunBrightness = a.sunBrightness.Lerp(b.sunBrightness, t),
 			sunColor = Color.Lerp(a.sunColor, b.sunColor, t),
+			skyColor = Color.Lerp(a.skyColor, b.skyColor, t),
 			sunTemp = a.sunTemp.Lerp(b.sunTemp, t),
-			ambientLightBrightness = a.ambientLightBrightness.Lerp(b.ambientLightBrightness, t),
-			ambientColor = Color.Lerp(a.ambientColor, b.ambientColor, t)
 		};
 	}
 }
