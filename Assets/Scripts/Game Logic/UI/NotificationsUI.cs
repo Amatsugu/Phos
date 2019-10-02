@@ -132,7 +132,7 @@ public class NotificationsUI : UIHover
 		var curOffset = 0f;
 		if (_animTime < 1)
 		{
-			_animTime += Time.deltaTime * animSpeed;
+			_animTime += Time.unscaledDeltaTime * animSpeed;
 			if (_animTime > 1)
 				_animTime = 1;
 		}
@@ -143,7 +143,7 @@ public class NotificationsUI : UIHover
 				var curNotif = _activeNotifs[i] >= _notifsMin.Length ? _notifsMin[_activeNotifs[i] - _notifsMin.Length] : _notifsBig[_activeNotifs[i]];
 				curNotif.rectTransform.anchoredPosition = Vector2.Lerp(curNotif.rectTransform.anchoredPosition, basePos + new Vector2(0, curOffset), _animTime);
 				curOffset += spacing + curNotif.rectTransform.rect.height;
-				if (Time.time > curNotif.endTime)
+				if (Time.unscaledTime > curNotif.endTime)
 				{
 					if (curNotif.opacity <= 0)
 					{
@@ -154,12 +154,12 @@ public class NotificationsUI : UIHover
 					}
 					else
 					{
-						curNotif.SetOpacity(curNotif.opacity - Time.deltaTime * animSpeed);
+						curNotif.SetOpacity(curNotif.opacity - Time.unscaledDeltaTime * animSpeed);
 					}
 				}
 				else if (curNotif.opacity < 1)
 				{
-					curNotif.SetOpacity(curNotif.opacity + Time.deltaTime * animSpeed);
+					curNotif.SetOpacity(curNotif.opacity + Time.unscaledDeltaTime * animSpeed);
 				}
 				j++;
 			}

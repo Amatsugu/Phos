@@ -45,6 +45,7 @@ public class UIResearchNode : UIHover
 
 	public void SetAnchoredPos(Vector3 pos)
 	{
+		rTransform = rTransform ?? GetComponent<RectTransform>();
 		rTransform.anchoredPosition = pos;
 	}
 

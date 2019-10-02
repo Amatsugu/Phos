@@ -45,7 +45,7 @@ public class UINotifPopup : MonoBehaviour
 		SetOpacity(0);
 		icon.sprite = notification.sprite;
 		title.SetText(notification.title);
-		endTime = Time.time + notifTime;
+		endTime = Time.unscaledTime + notifTime;
 		_button.onClick.RemoveAllListeners();
 		if(notification.type == NotifTargetType.Tile)
 		{

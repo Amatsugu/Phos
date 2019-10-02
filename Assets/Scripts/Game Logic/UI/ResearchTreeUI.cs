@@ -114,6 +114,7 @@ public class ResearchTreeUI : UIPanel
 
 	public void ShowTree(BuildingCategory category)
 	{
+		Show();
 		ClearTree();
 		_selectedCategory = category;
 		_curTree = researchDatabase[category];

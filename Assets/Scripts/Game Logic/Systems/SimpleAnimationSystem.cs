@@ -78,7 +78,7 @@ namespace AnimationSystem
 
 			public void Execute(ref RotateAxis axis, ref RotateSpeed speed, ref Rotation rot)
 			{
-				rot.Value = Quaternion.Euler(((Quaternion)rot.Value).eulerAngles + (axis.Value * speed.Value));
+				rot.Value = Quaternion.Euler(((Quaternion)rot.Value).eulerAngles + (axis.Value * speed.Value * dt));
 			}
 		}
 

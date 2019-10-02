@@ -55,7 +55,7 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	public virtual void OnEnable()
 	{
-
+		rTransform = rTransform ?? GetComponent<RectTransform>();
 	}
 
 	protected virtual void Awake()
@@ -80,6 +80,7 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	public virtual void SetActive(bool active)
 	{
+		rTransform = rTransform ?? GetComponent<RectTransform>();
 		if (IsActive == active)
 			return;
 		gameObject.SetActive(active);

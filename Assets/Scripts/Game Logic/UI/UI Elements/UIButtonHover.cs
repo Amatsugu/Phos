@@ -19,9 +19,9 @@ public class UIButtonHover : UIHover
 	{
 		base.Update();
 		if (isHovered)
-			_curTime += Time.deltaTime * speed;
+			_curTime += Time.unscaledDeltaTime * speed;
 		else
-			_curTime -= Time.deltaTime * speed;
+			_curTime -= Time.unscaledDeltaTime * speed;
 		_curTime = math.clamp(_curTime, 0, 1);
 		var pos = rTransform.localPosition;
 		var t = 1 - _curTime;

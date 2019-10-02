@@ -31,9 +31,9 @@ public class UIBuildingTooltip : UIPanel
 	{
 		base.Update();
 		if (_isClosing)
-			_animTime -= Time.deltaTime * speed;
+			_animTime -= Time.unscaledDeltaTime * speed;
 		else
-			_animTime += Time.deltaTime * speed;
+			_animTime += Time.unscaledDeltaTime * speed;
 		_animTime = Mathf.Clamp(_animTime, 0, 1);
 		var t = 1 - _animTime;
 		t *= t * t * t;

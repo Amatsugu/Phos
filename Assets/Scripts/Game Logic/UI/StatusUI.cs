@@ -82,7 +82,7 @@ public class StatusUI : UIHover
 		base.LateUpdate();
 		if(_selectedDisplay != -1)
 		{
-			_animTime += Time.deltaTime * animSpeed;
+			_animTime += Time.unscaledDeltaTime * animSpeed;
 			var targetX = _displays[_selectedDisplay].rTransform.position.x;
 			var pos = resourceBreakdown.rTransform.anchoredPosition;
 			pos.x = Mathf.Lerp(pos.x, targetX, _animTime);

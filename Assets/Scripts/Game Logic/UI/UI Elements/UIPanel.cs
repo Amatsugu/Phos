@@ -20,7 +20,7 @@ public class UIPanel : UIHover
 	{
 		get
 		{
-			return gameObject.activeInHierarchy;
+			return gameObject?.activeInHierarchy ?? false;
 		}
 	}
 

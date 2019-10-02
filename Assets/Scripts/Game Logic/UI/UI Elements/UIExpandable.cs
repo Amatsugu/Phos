@@ -40,9 +40,9 @@ public class UIExpandable : UIHover
 	{
 		base.Update();
 		if (isExpanded)
-			_animTime += Time.deltaTime * expandSpeed;
+			_animTime += Time.unscaledDeltaTime * expandSpeed;
 		else
-			_animTime -= Time.deltaTime * expandSpeed;
+			_animTime -= Time.unscaledDeltaTime * expandSpeed;
 		_animTime = Mathf.Clamp(_animTime, 0, 1);
 		var ease = _animTime.EaseOut(4);
 		expandTarget.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(baseSize.x, expandSize.x, ease));

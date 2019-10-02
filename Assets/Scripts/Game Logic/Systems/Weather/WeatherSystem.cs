@@ -180,10 +180,6 @@ public class WeatherSystem : JobComponentSystem
 		//Sky
 		_skyComponent.skyTint.value = _curWeatherState.skyColor;
 
-		//Sun
-		_init.sun.colorTemperature = _curWeatherState.sunTemp;
-		//_init.sun.intensity = _curWeatherState.su
-		_init.sun.color = _curWeatherState.sunColor;
 
 		//Fog
 		if (_curWeatherState.fogDensity == 9999)
@@ -195,7 +191,19 @@ public class WeatherSystem : JobComponentSystem
 		_fogComponent.density.value = _curWeatherState.fogDensity;
 		_fogComponent.albedo.value = _curWeatherState.fogColor;
 
+		//Clouds
 		_init.cloudMesh.material.SetColor("_BaseColor", state.cloudColor);
+
+		//Sun
+#if DEBUG
+		if (_init.sun != null)
+		{
+#endif
+			_init.sun.colorTemperature = _curWeatherState.sunTemp;
+			_init.sun.color = _curWeatherState.sunColor;
+#if DEBUG
+		}
+#endif
 	}
 
 	public void SelectNextWeather()
@@ -245,9 +253,15 @@ public class WeatherSystem : JobComponentSystem
 
 	}
 
-	protected override void OnDestroyManager()
+
+	protected override void OnDestroy()
 	{
 		ApplyWeather(_init.weatherDefinations[0].state);
+		base.OnDestroy();
+	}
+
+	protected override void OnDestroyManager()
+	{
 		_cloudField.Dispose();
 	}
 }

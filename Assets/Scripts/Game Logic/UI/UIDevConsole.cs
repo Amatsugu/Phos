@@ -107,7 +107,7 @@ public class UIDevConsole : MonoBehaviour
 		}
 		_sb.AppendLine($"<color={color}><b>[{type}]</b> {condition}</color>");
 		_logs.Add($"[{type}] {condition}\n\t{stackTrace.Replace("\n", "\n\t")}");
-		if(consolePanel.IsOpen)
+		if(consolePanel?.IsOpen == true)
 			UpdateConsoleText();
 	}
 
@@ -238,5 +238,6 @@ public class UIDevConsole : MonoBehaviour
 	void OnDisable()
 	{
 		File.WriteAllLines("output.log", _logs);
+		Application.logMessageReceived -= DebugLogMessage;
 	}
 }

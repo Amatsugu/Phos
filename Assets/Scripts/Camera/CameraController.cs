@@ -155,11 +155,11 @@ public class CameraController : MonoBehaviour
 					_targetHeight = Mathf.Clamp(_targetHeight, minHeight, maxHeight);
 			}
 			var desHeight = (_targetHeight < minHeight) ? minHeight : _targetHeight;
-			pos.y = Mathf.Lerp(pos.y, desHeight, _anim += Time.deltaTime * zoomSpeed);
+			pos.y = Mathf.Lerp(pos.y, desHeight, _anim += Time.unscaledDeltaTime * zoomSpeed);
 			var t = pos.y.Remap(minHeight, maxHeight, 0, 1);
 			if (_canRotate)
 			{
-				_rotationTime += Time.deltaTime * zoomSpeed;
+				_rotationTime += Time.unscaledDeltaTime * zoomSpeed;
 				_rotationTime = Mathf.Clamp(_rotationTime, 0, 1);
 				var angle = lowAngle.Lerp(highAngle, angleCurve.Evaluate(t));
 				rot.x = rot.x.Lerp(angle, _rotationTime);
@@ -167,7 +167,7 @@ public class CameraController : MonoBehaviour
 		}
 		if(_isFocusing)
 		{
-			_focusTime += Time.deltaTime;
+			_focusTime += Time.unscaledDeltaTime;
 			pos = Vector3.Lerp(pos, _focusPos, _focusTime);
 			if (_focusTime >= 1)
 				_isFocusing = false;
