@@ -28,7 +28,7 @@ public class WeatherSystem : JobComponentSystem
 	private Transform _cam;
 	private float _maxNoiseValue;
 	private float _innerRadius;
-	private InitializeClouds _init;
+	private InitializeWeather _init;
 	private NativeArray<float2> _cloudField;
 	private NativeArray<float3> _cloudPos;
 
@@ -43,6 +43,7 @@ public class WeatherSystem : JobComponentSystem
 	private ProceduralSky _skyComponent;
 	private int _dir = 1;
 	private static WeatherSystem _INST;
+	private Transform _rainTransform;
 
 	public struct GenerateFieldJob : IJobParallelFor
 	{
@@ -88,7 +89,7 @@ public class WeatherSystem : JobComponentSystem
 		_shortDiag = HexCoords.CalculateShortDiagonal(gridSize);
 		_innerRadius = HexCoords.CalculateInnerRadius(gridSize);
 		_cam = Camera.main.transform;
-		_init = Object.FindObjectOfType<InitializeClouds>();
+		_init = Object.FindObjectOfType<InitializeWeather>();
 		noiseSettings = _init.noiseSettings;
 		cloudFilter = NoiseFilterFactory.CreateNoiseFilter(noiseSettings, 1);
 		_windDir = UnityEngine.Random.insideUnitSphere;
@@ -98,6 +99,8 @@ public class WeatherSystem : JobComponentSystem
 			_cloudField.Dispose();
 		_rand = new System.Random(Map.ActiveMap.Seed);
 		_totalWeatherChance = _init.weatherDefinations.Sum(d => d.chance);
+		_rainTransform = _init.rainVfx.transform;
+
 		SelectNextWeather();
 		_curWeather = _nextWeather;
 		_nextWeather = null;
@@ -117,14 +120,7 @@ public class WeatherSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		var windSampleDir = Mathf.PerlinNoise(_offset.x / 50, _offset.z / 50) * Mathf.PI * 4; ;
-		var windSampleStr = Mathf.PerlinNoise(_offset.x / 100 + 100, _offset.z / 100 + 100) * Mathf.PI * 4; ;
-		_windDir.x = Mathf.Cos(windSampleDir);
-		_windDir.z = Mathf.Sin(windSampleDir);
-		_windDir.y = Mathf.Cos(windSampleStr);
-
-		_offset += _windDir * Time.deltaTime * _curWeatherState.windSpeed;
-		GenerateCloudField();
+		SimulateWeather();
 		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var job = new CloudsJob
 		{
@@ -144,13 +140,24 @@ public class WeatherSystem : JobComponentSystem
 			field = _cloudField,
 			camPos = job.camPos
 		};
-		SimulateWeather();
+
+		_rainTransform.position = new Vector3(_cam.position.x, _init.clouldHeight, _cam.position.z);
+
 
 		return cloudShadowJob.Schedule(this, dep);
 	}
 
 	public void SimulateWeather()
 	{
+		var windSampleDir = Mathf.PerlinNoise(_offset.x / 50, _offset.z / 50) * Mathf.PI * 4; ;
+		var windSampleStr = Mathf.PerlinNoise(_offset.x / 100 + 100, _offset.z / 100 + 100) * Mathf.PI * 4; ;
+		_windDir.x = Mathf.Cos(windSampleDir);
+		_windDir.z = Mathf.Sin(windSampleDir);
+		_windDir.y = Mathf.Cos(windSampleStr);
+		_init.rainVfx.SetVector3("Wind", _windDir * -1);
+		_offset += _windDir * Time.deltaTime * _curWeatherState.windSpeed;
+		GenerateCloudField();
+
 		if (Time.time >= _nextWeatherTime && _nextWeather == null)
 		{
 			SelectNextWeather();
@@ -193,6 +200,22 @@ public class WeatherSystem : JobComponentSystem
 
 		//Clouds
 		_init.cloudMesh.material.SetColor("_BaseColor", state.cloudColor);
+
+		//Particles
+		switch (state.weatherType)
+		{
+			case WeatherState.ParticleType.Rain:
+				_init.rainVfx.SetFloat("Percipitation", state.percipitation);
+				break;
+			case WeatherState.ParticleType.Snow:
+				_init.rainVfx.SetFloat("Percipitation", 1-state.percipitation);
+				break;
+			case WeatherState.ParticleType.None:
+				_init.rainVfx.SetFloat("Percipitation", state.percipitation);
+				break;
+
+		}
+
 
 		//Sun
 #if DEBUG

@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state:
     cloudDensity: 0.8
-    cloudColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+    cloudColor: {r: 0.735849, g: 0.735849, b: 0.735849, a: 1}
     windSpeed: 0.15
     percipitation: 0
     weatherType: 0
     isStorm: 0
-    fogDensity: 10.53
-    fogBaseHeight: 2.07
-    fogHeight: 7.1
+    fogDensity: 20
+    fogBaseHeight: 0
+    fogHeight: 12
     fogColor: {r: 1, g: 1, b: 1, a: 1}
     skyColor: {r: 0.1981132, g: 0.77380687, b: 0.7924528, a: 1}
     sunBrightness: 2.98

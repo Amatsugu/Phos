@@ -153,7 +153,7 @@ MonoBehaviour:
     max: 5
   skyTint:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0.9672265, b: 1, a: 1}
+    m_Value: {r: 0.36690104, g: 0.6819869, b: 0.8018868, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
@@ -1367,7 +1367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29b00527f85bb3346a4d2cb710971587, type: 3}
   m_Name: VolumetricFog
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   m_AdvancedMode: 0
   colorMode:
     m_OverrideState: 1
@@ -1402,28 +1402,28 @@ MonoBehaviour:
     min: 0
   albedo:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 10.53
+    m_Value: 20
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 3
   meanHeight:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 4
   anisotropy:
     m_OverrideState: 1
     m_Value: 0
     min: -1
     max: 1
   globalLightProbeDimmer:
-    m_OverrideState: 0
-    m_Value: 1
+    m_OverrideState: 1
+    m_Value: 0.48
     min: 0
     max: 1
   enableDistantFog:

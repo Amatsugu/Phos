@@ -5,15 +5,17 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Experimental.VFX;
 using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
-public class InitializeClouds : MonoBehaviour
+public class InitializeWeather : MonoBehaviour
 {
 	public MeshEntity cloudMesh;
 	public MeshEntity cloudShadowMesh;
 	public Light sun;
 	public VolumeProfile volumeProfile;
+	public VisualEffect rainVfx;
 	public WeatherDefination[] weatherDefinations;
 	public float clouldHeight;
 	public int fieldHeight = 200;
