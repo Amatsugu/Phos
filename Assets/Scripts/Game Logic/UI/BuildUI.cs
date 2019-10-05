@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
-using Unity.Rendering;
 using System.Linq;
 using UnityEngine.EventSystems;
 using AnimationSystem.Animations;

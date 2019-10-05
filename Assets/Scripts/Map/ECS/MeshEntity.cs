@@ -7,6 +7,7 @@ using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 
 [CreateAssetMenu(menuName = "ECS/Mesh Entity")]
 public class MeshEntity : ScriptableObject
@@ -50,6 +51,8 @@ public class MeshEntity : ScriptableObject
 
 	public virtual IEnumerable<ComponentType> GetComponents()
 	{
+		HDAdditionalLightData d;
+		
 		return new ComponentType[]{
 			typeof(Translation),
 			typeof(LocalToWorld),

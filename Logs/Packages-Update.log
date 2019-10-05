@@ -73,3 +73,21 @@ Update Mode: updateDependencies
 The following packages were updated:
   com.unity.ide.rider from version 1.0.4 to 1.0.8
   com.unity.ide.vscode from version 1.0.4 to 1.0.7
+
+=== Fri Oct  4 21:07:57 2019
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.rider from version 1.0.8 to 1.1.0
+  com.unity.ide.vscode from version 1.0.7 to 1.1.2
+  com.unity.probuilder from version 4.0.4 to 4.1.0
+  com.unity.render-pipelines.core from version 6.9.1 to 7.1.1
+  com.unity.render-pipelines.high-definition from version 6.9.1-preview to 7.1.1
+  com.unity.shadergraph from version 6.9.1 to 7.1.1
+  com.unity.test-framework from version 1.0.13 to 1.1.1
+  com.unity.timeline from version 1.1.0 to 1.2.2
+  com.unity.visualeffectgraph from version 6.9.1-preview to 7.1.1
+The following packages were removed:
+  com.unity.package-manager-ui@2.2.0

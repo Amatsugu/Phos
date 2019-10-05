@@ -5,11 +5,10 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.HDPipeline;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class WeatherSystem : JobComponentSystem
 {
@@ -39,8 +38,8 @@ public class WeatherSystem : JobComponentSystem
 	private float _nextWeatherTime;
 	private float _transitionTime = 0;
 	private float _totalWeatherChance;
-	private VolumetricFog _fogComponent;
-	private ProceduralSky _skyComponent;
+	private Fog _fogComponent;
+	private PhysicallyBasedSky _skyComponent;
 	private int _dir = 1;
 	private static WeatherSystem _INST;
 	private Transform _rainTransform;
@@ -185,7 +184,7 @@ public class WeatherSystem : JobComponentSystem
 		_curWeatherState = state;
 
 		//Sky
-		_skyComponent.skyTint.value = _curWeatherState.skyColor;
+		//_skyComponent.skyTint.value = _curWeatherState.skyColor;
 
 
 		//Fog
@@ -193,9 +192,9 @@ public class WeatherSystem : JobComponentSystem
 			_fogComponent.active = false;
 		else
 			_fogComponent.active = true;
-		_fogComponent.meanHeight.value = _curWeatherState.fogHeight;
+		_fogComponent.maximumHeight.value = _curWeatherState.fogHeight;
 		_fogComponent.baseHeight.value = _curWeatherState.fogBaseHeight;
-		_fogComponent.density.value = _curWeatherState.fogDensity;
+		_fogComponent.depthExtent.value = _curWeatherState.fogDensity;
 		_fogComponent.albedo.value = _curWeatherState.fogColor;
 
 		//Clouds
