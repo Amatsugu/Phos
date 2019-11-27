@@ -130,6 +130,7 @@ Material:
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 3.2
+    - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
     - _AlphaCutoff: 0.5
     - _AlphaCutoffEnable: 0

@@ -34,7 +34,7 @@ public class BuildQueueSystem : ComponentSystem
 		for (int i = 0; i < _constructionOrders.Count; i++)
 		{
 			var curOrder = _constructionOrders[i];
-			curOrder.curTime += Time.deltaTime;
+			curOrder.curTime += Time.DeltaTime;
 			if (curOrder.curTime >= curOrder.timeNeeded || GameRegistry.Cheats.INSTANT_BUILD)
 				(Map.ActiveMap[curOrder.building] as BuildingTile).Build();
 			_constructionOrders[i] = curOrder;

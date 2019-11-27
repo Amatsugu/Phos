@@ -33,7 +33,7 @@ public class InitializeWeather : MonoBehaviour
 
     void Start()
     {
-		var em = World.Active.EntityManager;
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		_clouds = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudShadows = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		cloudMesh.Instantiate(_clouds);

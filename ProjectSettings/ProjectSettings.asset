@@ -359,7 +359,15 @@ PlayerSettings:
     Android: 1
     iPhone: 1
     tvOS: 1
-  m_BuildTargetGroupLightmapEncodingQuality: []
+  m_BuildTargetGroupLightmapEncodingQuality:
+  - m_BuildTarget: Standalone
+    m_EncodingQuality: 2
+  - m_BuildTarget: Android
+    m_EncodingQuality: 2
+  - m_BuildTarget: Lumin
+    m_EncodingQuality: 2
+  - m_BuildTarget: Windows Store Apps
+    m_EncodingQuality: 2
   m_BuildTargetGroupLightmapSettings: []
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
@@ -568,6 +576,7 @@ PlayerSettings:
   ps4contentSearchFeaturesUsed: 0
   ps4attribEyeToEyeDistanceSettingVR: 0
   ps4IncludedModules: []
+  ps4attribVROutputEnabled: 0
   monoEnv: 
   splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 9a7c501bd1d4e7744aefb9b0151cf92d,
     type: 3}

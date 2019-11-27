@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: Cloud ShadowOnly
   m_EditorClassIdentifier: 
-  mesh: {fileID: 6500021456185103864, guid: e36a623d0086e58498aaec5ff9fb118e, type: 3}
+  mesh: {fileID: 4333350756199448746, guid: e36a623d0086e58498aaec5ff9fb118e, type: 3}
   material: {fileID: 2100000, guid: 832fbd138ec579349bf6a61bd9431c40, type: 2}
   castShadows: 3
   receiveShadows: 0

@@ -33,9 +33,14 @@ public class UIInfoPopup : UIExpandable
 
 	void OnValidate()
 	{
-		if (iconRects.Length != MAX_NOTIFS)
+		if (iconRects == null)
+			iconRects = new UIHover[MAX_NOTIFS];
+		else if (iconRects.Length != MAX_NOTIFS)
 			Array.Resize(ref iconRects, MAX_NOTIFS);
-		if (iconImages.Length != MAX_NOTIFS)
+
+		if (iconImages == null)
+			iconImages = new Image[MAX_NOTIFS];
+		else if (iconImages.Length != MAX_NOTIFS)
 			Array.Resize(ref iconImages, MAX_NOTIFS);
 	}
 

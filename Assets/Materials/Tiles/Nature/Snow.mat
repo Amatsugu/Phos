@@ -31,10 +31,10 @@ Material:
     MotionVector: User
   disabledShaderPasses:
   - DistortionVectors
+  - MOTIONVECTORS
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
-  - MOTIONVECTORS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -162,6 +162,7 @@ Material:
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
+    - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
     - _AlphaClip: 0
     - _AlphaCutoff: 0.5
@@ -169,6 +170,8 @@ Material:
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
+    - _AlphaDstBlend: 0
+    - _AlphaSrcBlend: 1
     - _Anisotropy: 0
     - _Blend: 0
     - _BlendMode: 0
@@ -237,7 +240,7 @@ Material:
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
     - _MaterialID: 1
-    - _Metallic: 0.091
+    - _Metallic: 1
     - _Mode: 0
     - _NormalMapSpace: 0
     - _NormalScale: 1
@@ -257,7 +260,7 @@ Material:
     - _SelectionThickness: 0
     - _ShiverDirectionality: 0.5
     - _ShiverDrag: 0.2
-    - _Smoothness: 0.554
+    - _Smoothness: 0
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SmoothnessTextureChannel: 0
@@ -286,9 +289,11 @@ Material:
     - _ThicknessMultiplier: 1
     - _TransmissionEnable: 1
     - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
     - _TransparentDepthPrepassEnable: 0
     - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
     - _TransparentWritingVelocity: 0
     - _UVBase: 0
     - _UVDetail: 0
@@ -300,6 +305,7 @@ Material:
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4
     - _ZTestModeDistortion: 4
+    - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

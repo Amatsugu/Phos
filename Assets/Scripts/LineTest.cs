@@ -12,7 +12,7 @@ public class LineTest : MonoBehaviour
 	void Start()
 	{
 		var e = line.Instantiate(new Vector3(50, 10, 50));
-		var em = World.Active.EntityManager;
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		em.AddComponentData(e, new LineSegment
 		{
 			Start = new float3(0, 10, 0),

@@ -119,7 +119,7 @@ public class UnitMovementSystem : JobComponentSystem
 		var handle = job.Schedule(this, inputDeps);
 		handle.Complete();
 		var buffer2 = World.GetExistingSystem<EntityCommandBufferSystem>().CreateCommandBuffer();
-		var moveJob = new PathFollowJob(Time.deltaTime, buffer2);
+		var moveJob = new PathFollowJob(Time.DeltaTime, buffer2);
 		handle = moveJob.Schedule(this, handle);
 		handle.Complete();
 		Map.ActiveMap.UpdateUnitChunks();

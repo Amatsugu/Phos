@@ -154,7 +154,7 @@ public class WeatherSystem : JobComponentSystem
 		_windDir.z = Mathf.Sin(windSampleDir);
 		_windDir.y = Mathf.Cos(windSampleStr);
 		_init.rainVfx.SetVector3("Wind", _windDir * -1);
-		_offset += _windDir * Time.deltaTime * _curWeatherState.windSpeed;
+		_offset += _windDir * Time.DeltaTime * _curWeatherState.windSpeed;
 		GenerateCloudField();
 
 		if (Time.time >= _nextWeatherTime && _nextWeather == null)
@@ -165,7 +165,7 @@ public class WeatherSystem : JobComponentSystem
 
 		if (_nextWeather != null)
 		{
-			_transitionTime += Time.deltaTime;
+			_transitionTime += Time.DeltaTime;
 			var t = _transitionTime / _nextWeather.transitionTime;
 			t = math.clamp(t, 0, 1);
 			ApplyWeather(WeatherState.Lerp(_curWeather.state, _nextWeather.state, t)); ;
@@ -243,7 +243,7 @@ public class WeatherSystem : JobComponentSystem
 				_nextWeather = _init.weatherDefinations[i];
 				_nextWeatherTime = _rand.Range(_nextWeather.duration.x, _nextWeather.duration.y) + _nextWeather.transitionTime;
 				Debug.Log($"Transitioning To {_nextWeather}, {_nextWeatherTime}s Duration");
-				_nextWeatherTime += Time.time;
+				_nextWeatherTime += (float)Time.ElapsedTime;
 				break;
 			}
 		}
@@ -253,7 +253,7 @@ public class WeatherSystem : JobComponentSystem
 	{
 		_INST._nextWeather = null;
 		_INST._transitionTime = 0;
-		_INST._nextWeatherTime = Time.time;
+		_INST._nextWeatherTime = (float)_INST.Time.ElapsedTime;
 	}
 
 	public void GenerateCloudField()

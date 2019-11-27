@@ -20,7 +20,7 @@ namespace AnimationSystem
 				PostUpdateCommands.RemoveComponent<FallAnim>(e);
 			});
 
-			var curTime = Time.time;
+			var curTime = UnityEngine.Time.time;
 			//Thumper
 			Entities.ForEach((Slider th, ref Translation t) =>
 			{
@@ -86,18 +86,18 @@ namespace AnimationSystem
 		{
 			var gravityJob = new GravityJob
 			{
-				dt = Time.deltaTime
+				dt = Time.DeltaTime
 			};
 			var dep = gravityJob.Schedule(this, inputDeps);
 			var velocityJob = new VelocityJob
 			{
-				dt = Time.deltaTime
+				dt = Time.DeltaTime
 			};
 			dep = velocityJob.Schedule(this, dep);
 			var floorJob = new FloorJob();
 			dep = floorJob.Schedule(this, dep);
 
-			var rotJob = new RotateJob { dt = Time.deltaTime };
+			var rotJob = new RotateJob { dt = Time.DeltaTime };
 			dep = rotJob.Schedule(this, dep);
 
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15dce6ee827b60949a5c98bab2fea005, type: 3}
   m_Name: CannotGatherIndicator
   m_EditorClassIdentifier: 
-  mesh: {fileID: 6500021456185103864, guid: e36a623d0086e58498aaec5ff9fb118e, type: 3}
+  mesh: {fileID: 4333350756199448746, guid: e36a623d0086e58498aaec5ff9fb118e, type: 3}
   material: {fileID: 2100000, guid: 44ae31a79949e204abc045aef530a413, type: 2}
   castShadows: 0
   receiveShadows: 0

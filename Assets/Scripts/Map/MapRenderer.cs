@@ -47,7 +47,7 @@ public class MapRenderer : MonoBehaviour
 
 	public void Init()
 	{
-		_entityManager = World.Active.EntityManager;
+		_entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 		map = generator.GenerateMap(transform);
 		generator.GenerateFeatures(map);
 		map.Render(_entityManager);

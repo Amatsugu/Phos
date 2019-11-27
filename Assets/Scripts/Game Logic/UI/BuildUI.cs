@@ -13,6 +13,7 @@ using Unity.Mathematics;
 using Random = UnityEngine.Random;
 using DataStore.ConduitGraph;
 using Effects.Lines;
+using Unity.Rendering;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
@@ -85,7 +86,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_renderedEntities = new Dictionary<MeshEntity, int>();
 		_activeUnits = new List<UIUnitIcon>();
 		_cam = GameRegistry.Camera;
-		_EM = World.Active.EntityManager;
+		_EM = World.DefaultGameObjectInjectionWorld.EntityManager;
         HideBuildWindow();
 		placeMode = hqMode = true;
 		_selectedBuilding = HQTile;

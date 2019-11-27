@@ -22,7 +22,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual Entity GetEntity()
 	{
-		var em = World.Active.EntityManager;
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		if (_entity == null || !em.Exists(_entity))
 		{
 			Debug.Log($"<b>Create Entity:</b> {name}");
@@ -47,7 +47,7 @@ public class MeshEntity : ScriptableObject
 	}
 
 	protected virtual EntityArchetype GetArchetype() => 
-		World.Active.EntityManager.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
+		World.DefaultGameObjectInjectionWorld.EntityManager.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
 
 	public virtual IEnumerable<ComponentType> GetComponents()
 	{
@@ -66,7 +66,7 @@ public class MeshEntity : ScriptableObject
 
 	public Entity Instantiate(Vector3 position, Vector3 scale)
 	{
-		var em = World.Active.EntityManager;
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
 		em.SetComponentData(e, new NonUniformScale { Value = scale });
@@ -75,13 +75,13 @@ public class MeshEntity : ScriptableObject
 
 	public void Instantiate(NativeArray<Entity> output)
 	{
-		var em = World.Active.EntityManager;
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		em.Instantiate(GetEntity(), output);
 	}
 
 	public Entity Instantiate(Vector3 position, Vector3 scale, Entity parent)
 	{
-		var em = World.Active.EntityManager;
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		var e = Map.EM.Instantiate(GetEntity());
 		em.SetComponentData(e, new NonUniformScale { Value = scale });
 		em.AddComponent(e, typeof(LocalTranslation));

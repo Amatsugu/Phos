@@ -742,6 +742,20 @@ public class Map : IDisposable
 		return tileDist;
 	}
 
+	public NativeArray<float> GenerateNavData()
+	{
+		var nav = new NativeArray<float>(totalHeight * totalWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+		for (int z = 0; z < totalHeight; z++)
+		{
+			for (int x = 0; x < totalWidth; x++)
+			{
+				var t = this[x, z];
+				nav[x + z * totalWidth] = t.IsUnderwater ? -1 : (t.info.isTraverseable ? t.Height : -1);
+			}
+		}
+		return nav;
+	}
+
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
 
 	public List<Tile> GetPath(HexCoords src, HexCoords dst, float maxIncline = float.MaxValue, Func<Tile, bool> include = null) => GetPath(this[src], this[dst], maxIncline, include);

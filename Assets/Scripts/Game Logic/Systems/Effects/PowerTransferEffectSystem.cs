@@ -94,7 +94,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 				ep.progress = 0;
 				t.Value = path[0];
 			}
-			t.Value = Vector3.MoveTowards(t.Value, path[ep.progress], 10 * Time.deltaTime);
+			t.Value = Vector3.MoveTowards(t.Value, path[ep.progress], 10 * Time.DeltaTime);
 			if (ep.progress < path.Count)
 			{
 				if((Vector3)t.Value == path[ep.progress])

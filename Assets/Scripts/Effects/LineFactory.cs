@@ -15,7 +15,7 @@ namespace Effects.Lines
 		public static Entity CreateLine(MeshEntityRotatable line, Vector3 a, Vector3 b)
 		{
 			var e = line.Instantiate(a, Vector3.one);
-			var em = World.Active.EntityManager;
+			var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 			em.AddComponentData(e, new LineSegment
 			{
 				Start = a,
@@ -33,7 +33,7 @@ namespace Effects.Lines
 		public static void UpdateStaticLine(Entity e, Vector3 a, Vector3 b, float thiccness = 0.1f)
 		{
 			var (t, s, r) = PrepareLine(a, b, thiccness);
-			var em = World.Active.EntityManager;
+			var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 			em.SetComponentData(e, new Translation { Value = t });
 			em.SetComponentData(e, new NonUniformScale { Value = s });
 			em.SetComponentData(e, new Rotation { Value = r });
