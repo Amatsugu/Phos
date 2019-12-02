@@ -749,7 +749,7 @@ public class Map : IDisposable
 		{
 			for (int x = 0; x < totalWidth; x++)
 			{
-				var t = this[x, z];
+				var t = this[HexCoords.FromOffsetCoords(x,z, tileEdgeLength)];
 				nav[x + z * totalWidth] = t.IsUnderwater ? -1 : (t.info.isTraverseable ? t.Height : -1);
 			}
 		}

@@ -121,7 +121,7 @@ public class InteractionUI : MonoBehaviour
 				var tile = Map.ActiveMap.GetTileFromRay(ray);
 				if (tile != null)
 				{
-					//InstructUnitMovement(tile);
+					InstructUnitMovement(tile);
 				}
 			}
 		}
