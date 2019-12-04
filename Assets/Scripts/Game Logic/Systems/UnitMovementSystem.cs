@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using NGenerics.DataStructures.General;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,13 +83,80 @@ public class UnitMovementSystem : JobComponentSystem
 		}
 
 		[BurstCompile]
-		void GetPath(int w, int h)
+		void GetPath(HexCoords src, HexCoords dst, int w, int h)
 		{
-			HashSet<HexCoords> open = new HashSet<HexCoords>();
+			Heap<PathNode> open = new Heap<PathNode>(HeapType.Minimum);
+			open.Add(new PathNode(null, 1));
+			HashSet<PathNode> closed = new HashSet<PathNode>();
+
+			var dstNode = new PathNode(null, 1);
+			PathNode last = null;
 			
 			while(true)
 			{
+				if (closed.Contains(dstNode))
+					break;
 
+				PathNode curTileNode = open.RemoveRoot();
+				closed.Add(curTileNode);
+
+				last = curTileNode;
+
+				//var neighbors = HexCoords.GetNeighbors
+			}
+		}
+
+		private class PathNode : IComparer<PathNode>
+		{
+			public HexCoords coords;
+			public Vector3 surfacePoint;
+			public int G;
+			public PathNode src;
+			public float F;
+
+			public PathNode(Tile tile, int g, PathNode src = null)
+			{
+				coords = tile.Coords;
+				surfacePoint = tile.SurfacePoint;
+				G = g;
+				this.src = src;
+			}
+
+
+			public void CacheF(Vector3 b)
+			{
+				F = CalculateF(b);
+			}
+
+			public float CalculateF(Vector3 b)
+			{
+				var d = surfacePoint - b;
+				return G + (d.sqrMagnitude);
+			}
+
+			public int Compare(PathNode x, PathNode y)
+			{
+				var diff = x.F - y.F;
+				if (diff == 0)
+					return 0;
+				if (diff < 0)
+					return -1;
+				else
+					return 1;
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (obj is PathNode n)
+				{
+					return n.coords.Equals(n.coords);
+				}
+				return false;
+			}
+
+			public override int GetHashCode()
+			{
+				return coords.GetHashCode();
 			}
 		}
 	}
