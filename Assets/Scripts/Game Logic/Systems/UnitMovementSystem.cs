@@ -1,5 +1,4 @@
-﻿using NGenerics.DataStructures.General;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +84,7 @@ public class UnitMovementSystem : JobComponentSystem
 		[BurstCompile]
 		void GetPath(HexCoords src, HexCoords dst, int w, int h)
 		{
-			Heap<PathNode> open = new Heap<PathNode>(HeapType.Minimum);
+			/*Heap<PathNode> open = new Heap<PathNode>(HeapType.Minimum);
 			open.Add(new PathNode(null, 1));
 			HashSet<PathNode> closed = new HashSet<PathNode>();
 
@@ -97,13 +96,13 @@ public class UnitMovementSystem : JobComponentSystem
 				if (closed.Contains(dstNode))
 					break;
 
-				PathNode curTileNode = open.RemoveRoot();
+				//PathNode curTileNode = open.RemoveRoot();
 				closed.Add(curTileNode);
 
 				last = curTileNode;
 
 				//var neighbors = HexCoords.GetNeighbors
-			}
+			}*/
 		}
 
 		private class PathNode : IComparer<PathNode>
