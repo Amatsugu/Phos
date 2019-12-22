@@ -64,6 +64,14 @@ public class MeshEntity : ScriptableObject
 
 	public Entity Instantiate(Vector3 position) => Instantiate(position, Vector3.one);
 
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Vector3 scale)
+	{
+		var e = commandBuffer.Instantiate(GetEntity());
+		commandBuffer.SetComponent(e, new Translation { Value = position });
+		commandBuffer.SetComponent(e, new NonUniformScale { Value = scale });
+		return e;
+	}
+
 	public Entity Instantiate(Vector3 position, Vector3 scale)
 	{
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -79,7 +87,8 @@ public class MeshEntity : ScriptableObject
 		em.Instantiate(GetEntity(), output);
 	}
 
-	public Entity Instantiate(Vector3 position, Vector3 scale, Entity parent)
+
+	/*public Entity Instantiate(Vector3 position, Vector3 scale, Entity parent)
 	{
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		var e = Map.EM.Instantiate(GetEntity());
@@ -89,5 +98,5 @@ public class MeshEntity : ScriptableObject
 		em.AddComponent(e, typeof(ChildOf));
 		em.SetComponentData(e, new ChildOf { parent = parent });
 		return e;
-	}
+	}*/
 }

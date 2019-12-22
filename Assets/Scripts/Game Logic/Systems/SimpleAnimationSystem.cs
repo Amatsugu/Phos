@@ -111,21 +111,37 @@ namespace AnimationSystem.AnimationData
 	public struct Gravity : IComponentData
 	{
 		public float Value;
+		public override bool Equals(object obj) => Value.Equals(obj);
+		public override int GetHashCode() => Value.GetHashCode();
+		public static bool operator ==(Gravity left, Gravity right) => left.Equals(right);
+		public static bool operator !=(Gravity left, Gravity right) => !(left == right);
 	}
 
 	public struct Velocity : IComponentData
 	{
 		public float3 Value;
+		public override bool Equals(object obj) => Value.Equals(obj);
+		public override int GetHashCode() => Value.GetHashCode();
+		public static bool operator ==(Velocity left, Velocity right) => left.Equals(right);
+		public static bool operator !=(Velocity left, Velocity right) => !(left == right);
 	}
 
 	public struct Fall : IComponentData
 	{
 		public float Value;
+		public override bool Equals(object obj) => Value.Equals(obj);
+		public override int GetHashCode() => Value.GetHashCode();
+		public static bool operator ==(Fall left, Fall right) => left.Equals(right);
+		public static bool operator !=(Fall left, Fall right) => !(left == right);
 	}
 
 	public struct Floor : IComponentData
 	{
 		public float Value;
+		public override bool Equals(object obj) => Value.Equals(obj);
+		public override int GetHashCode() => Value.GetHashCode();
+		public static bool operator ==(Floor left, Floor right) => left.Equals(right);
+		public static bool operator !=(Floor left, Floor right) => !(left == right);
 	}
 
 	public struct HitFloorCallback : IComponentData
