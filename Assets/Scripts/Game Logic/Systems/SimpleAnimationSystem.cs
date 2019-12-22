@@ -82,18 +82,41 @@ namespace AnimationSystem
 			}
 		}
 
+		public struct AccelerationJob : IJobForEach<Velocity, Acceleration>
+		{
+			public float dt;
+
+			public void Execute(ref Velocity vel, ref Acceleration accel)
+			{
+				vel.Value += accel.Value * dt;
+			}
+		}
+
+		public struct SeekTargetJob : IJobForEach<Translation, SeekTarget, Acceleration>
+		{
+			public float dt;
+
+			public void Execute(ref Translation p, ref SeekTarget target, ref Acceleration a)
+			{
+				var moveDir = math.normalize(target.Value - p.Value);
+				a.Value = moveDir * target.MaxAccel;
+			}
+		}
+
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
-			var gravityJob = new GravityJob
-			{
-				dt = Time.DeltaTime
-			};
+			var gravityJob = new GravityJob { dt = Time.DeltaTime };
 			var dep = gravityJob.Schedule(this, inputDeps);
-			var velocityJob = new VelocityJob
-			{
-				dt = Time.DeltaTime
-			};
+
+			var seekJob = new SeekTargetJob();
+			dep = seekJob.Schedule(this, dep);
+			
+			var accelJob = new AccelerationJob { dt = Time.DeltaTime };
+			dep = accelJob.Schedule(this, dep);
+
+			var velocityJob = new VelocityJob { dt = Time.DeltaTime };
 			dep = velocityJob.Schedule(this, dep);
+
 			var floorJob = new FloorJob();
 			dep = floorJob.Schedule(this, dep);
 
@@ -124,6 +147,15 @@ namespace AnimationSystem.AnimationData
 		public override int GetHashCode() => Value.GetHashCode();
 		public static bool operator ==(Velocity left, Velocity right) => left.Equals(right);
 		public static bool operator !=(Velocity left, Velocity right) => !(left == right);
+	}
+
+	public struct Acceleration : IComponentData
+	{
+		public float3 Value;
+		public override bool Equals(object obj) => Value.Equals(obj);
+		public override int GetHashCode() => Value.GetHashCode();
+		public static bool operator ==(Acceleration left, Acceleration right) => left.Equals(right);
+		public static bool operator !=(Acceleration left, Acceleration right) => !(left == right);
 	}
 
 	public struct Fall : IComponentData
@@ -174,6 +206,12 @@ namespace AnimationSystem.Animations
 	public struct RotateSpeed : IComponentData
 	{
 		public float Value;
+	}
+
+	public struct SeekTarget : IComponentData
+	{
+		public float3 Value;
+		public float MaxAccel;
 	}
 
 	public struct Slider : ISharedComponentData, IEquatable<Slider>

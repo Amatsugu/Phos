@@ -1,7 +1,9 @@
 ﻿using AnimationSystem.AnimationData;
+using AnimationSystem.Animations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -9,6 +11,7 @@ using UnityEngine.AddressableAssets;
 public class UnitAttackSystem : ComponentSystem
 {
 	private MeshEntityRotatable _bullet;
+	private Unity.Mathematics.Random _rand;
 	protected override void OnStartRunning()
 	{
 		var op = Addressables.LoadAssetAsync<MeshEntityRotatable>("EnergyPacket");
@@ -16,6 +19,8 @@ public class UnitAttackSystem : ComponentSystem
 		{
 			_bullet = e.Result;
 		};
+		_rand = new Unity.Mathematics.Random();
+		_rand.InitState();
 	}
 
 	protected override void OnUpdate()
@@ -24,8 +29,15 @@ public class UnitAttackSystem : ComponentSystem
 			if (Time.ElapsedTime >= s.Value)
 			{
 				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, Vector3.one);
-				PostUpdateCommands.AddComponent(proj, new Velocity { Value = ((Map.ActiveMap.HQ.SurfacePoint + Vector3.up * 5) - (Vector3)t.Value).normalized * 5});
-				s.Value = (float)Time.ElapsedTime + 1;
+				PostUpdateCommands.AddComponent(proj, new SeekTarget 
+				{ 
+					Value = (Map.ActiveMap.HQ.SurfacePoint + Vector3.up * 5),
+					MaxAccel = 5
+				});
+				PostUpdateCommands.AddComponent(proj, new Acceleration());
+				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
+				PostUpdateCommands.AddComponent(proj, new Velocity { Value = new float3(0, 10, 0) });
+				s.Value = (float)Time.ElapsedTime + 1 + _rand.NextFloat();
 			}
 
 		});
