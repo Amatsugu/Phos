@@ -19,9 +19,9 @@ MonoBehaviour:
     percipitation: 0
     weatherType: 0
     isStorm: 0
-    fogDensity: 6
+    fogDensity: 200
     fogBaseHeight: 3
-    fogHeight: 4
+    fogHeight: 70
     fogColor: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
     skyColor: {r: 0.36690104, g: 0.6819869, b: 0.8018868, a: 1}
     sunBrightness: 2.98

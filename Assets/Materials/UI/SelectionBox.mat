@@ -124,7 +124,7 @@ Material:
     m_Floats:
     - Vector1_290E6D31: 58.6
     - Vector1_337938A5: 11.1
-    - Vector1_40B28D88: 2.9
+    - Vector1_40B28D88: 6.1
     - Vector1_FBEDD2B5: 2
     - _AORemapMax: 1
     - _AORemapMin: 0
@@ -206,7 +206,7 @@ Material:
     - _PPDMinSamples: 5
     - _PPDPrimitiveLength: 1
     - _PPDPrimitiveWidth: 1
-    - _ReceivesSSR: 1
+    - _ReceivesSSR: 0
     - _RefractionModel: 0
     - _RenderQueueType: 5
     - _RequireSplitLighting: 0

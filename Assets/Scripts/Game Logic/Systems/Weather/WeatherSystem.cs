@@ -39,7 +39,7 @@ public class WeatherSystem : JobComponentSystem
 	private float _transitionTime = 0;
 	private float _totalWeatherChance;
 	private Fog _fogComponent;
-	private PhysicallyBasedSky _skyComponent;
+	//private PhysicallyBasedSky _skyComponent;
 	private int _dir = 1;
 	private static WeatherSystem _INST;
 	private Transform _rainTransform;
@@ -104,7 +104,7 @@ public class WeatherSystem : JobComponentSystem
 		_curWeather = _nextWeather;
 		_nextWeather = null;
 		_init.volumeProfile.TryGet(out _fogComponent);
-		_init.volumeProfile.TryGet(out _skyComponent);
+		//_init.volumeProfile.TryGet(out _skyComponent);
 		ApplyWeather(_curWeather.state);
 		_cloudField = new NativeArray<float2>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudPos = new NativeArray<float3>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
