@@ -12,6 +12,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
+[Serializable]
 public class Map : IDisposable
 {
 	public static Map ActiveMap;
@@ -59,6 +60,7 @@ public class Map : IDisposable
 		ActiveMap = this;
 	}
 
+	[Serializable]
 	public struct Chunk
 	{
 		public const int SIZE = 32;

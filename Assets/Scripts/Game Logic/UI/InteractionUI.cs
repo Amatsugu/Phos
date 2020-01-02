@@ -60,6 +60,11 @@ public class InteractionUI : MonoBehaviour
 		
 	}
 
+	private void OnValidate()
+	{
+		_moveOrderQueue = new Queue<MoveOrder>();
+	}
+
 	void DestroyTile()
 	{
 		var t = _selectedTile as BuildingTile;

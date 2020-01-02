@@ -41,7 +41,6 @@ public class NotificationsUI : UIHover
 		}
 	}
 
-
 	private int[] _activeNotifs;
 	private int _activeCount;
 	private UINotifPopup[] _notifsMin;
@@ -97,6 +96,11 @@ public class NotificationsUI : UIHover
 			_notifsMin[i] = Instantiate(notifMin, rTransform);
 		}
 
+	}
+
+	private void OnValidate()
+	{
+		_notificationQueue = new Queue<PendingNotification>();
 	}
 
 	protected override void Update()

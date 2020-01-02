@@ -29,15 +29,23 @@ public class UnitAttackSystem : ComponentSystem
 			if (Time.ElapsedTime >= s.Value)
 			{
 				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, Vector3.one);
-				PostUpdateCommands.AddComponent(proj, new SeekTarget 
+				/*PostUpdateCommands.AddComponent(proj, new SeekTarget 
 				{ 
 					Value = (Map.ActiveMap.HQ.SurfacePoint + Vector3.up * 5),
 					MaxAccel = 5
-				});
-				PostUpdateCommands.AddComponent(proj, new Acceleration());
+				});*/
+				PostUpdateCommands.AddComponent(proj, new Acceleration { Value = new float3(0, -9.8f, 0) });
 				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
-				PostUpdateCommands.AddComponent(proj, new Velocity { Value = new float3(0, 10, 0) });
-				s.Value = (float)Time.ElapsedTime + 1 + _rand.NextFloat();
+				var dist = math.distance(t.Value, Map.ActiveMap.HQ.SurfacePoint + Vector3.up * 5);
+				var angle = math.radians(45);
+				var speed = math.sqrt((dist * 9.8f)/ math.sin(angle));
+				var vel = new float3
+				{
+					x = speed * math.cos(angle),
+					y = speed * math.sin(angle)
+				};
+				PostUpdateCommands.AddComponent(proj, new Velocity { Value = vel });
+				s.Value = (float)Time.ElapsedTime + 1;
 			}
 
 		});

@@ -21,8 +21,6 @@ MonoBehaviour:
     m_Address: EnergyPacket
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_mainAssetType: MeshEntityRotatable, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 51b15f0d79b2f04479bd4bdacaa5d36a, type: 2}
   m_SchemaSet:

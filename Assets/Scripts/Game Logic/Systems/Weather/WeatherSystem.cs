@@ -278,8 +278,8 @@ public class WeatherSystem : JobComponentSystem
 
 	protected override void OnStopRunning()
 	{
-		base.OnStopRunning();
 		ApplyWeather(_init.weatherDefinations[0].state);
+		base.OnStopRunning();
 	}
 
 	protected override void OnDestroyManager()
