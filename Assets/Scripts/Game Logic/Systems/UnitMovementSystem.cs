@@ -32,6 +32,11 @@ public class UnitMovementSystem : JobComponentSystem
 		_mapWidth = Map.ActiveMap.width;
 	}
 
+	protected override void OnStopRunning()
+	{
+		_navData.Dispose();
+	}
+
 	[ExcludeComponent(typeof(PathProgress), typeof(Path))]
 	public struct PathFinderJob : IJobForEachWithEntity<Translation, Destination, UnitId>
 	{

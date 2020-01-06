@@ -29,21 +29,31 @@ public class UnitAttackSystem : ComponentSystem
 			if (Time.ElapsedTime >= s.Value)
 			{
 				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, Vector3.one);
-				/*PostUpdateCommands.AddComponent(proj, new SeekTarget 
-				{ 
-					Value = (Map.ActiveMap.HQ.SurfacePoint + Vector3.up * 5),
-					MaxAccel = 5
-				});*/
 				PostUpdateCommands.AddComponent(proj, new Acceleration { Value = new float3(0, -9.8f, 0) });
 				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
-				var dist = math.distance(t.Value, Map.ActiveMap.HQ.SurfacePoint + Vector3.up * 5);
+				var targetPoint = (float3)Map.ActiveMap.HQ.SurfacePoint;
+
+				var dist = math.distance(t.Value, targetPoint);
 				var angle = math.radians(45);
-				var speed = math.sqrt((dist * 9.8f)/ math.sin(angle));
+				var speed = math.sqrt((dist * 9.8f)/ math.sin(2*angle));
+
+				var diff = t.Value - targetPoint;
+				var aim = math.atan(diff.z/diff.x);
+
+				Debug.DrawRay(t.Value, Vector3.forward * diff.x, Color.blue, 1);
+				Debug.DrawRay(t.Value, Vector3.right * diff.z, Color.red, 1);
+				Debug.DrawRay(t.Value, Quaternion.LookRotation(diff, Vector3.up) * Vector3.right * dist, Color.green, 1);
+				//Debug.DrawRay(t.Value, math.rotate(quaternion.RotateY(aim), new float3(1,0,0)) * dist, Color.cyan, 1);
+
 				var vel = new float3
 				{
-					x = speed * math.cos(angle),
-					y = speed * math.sin(angle)
+					x = speed * math.sin(angle),
+					y = speed * math.cos(angle)
 				};
+				
+				var vel2 = math.rotate(quaternion.LookRotation(diff, Vector3.up), vel);
+				
+				
 				PostUpdateCommands.AddComponent(proj, new Velocity { Value = vel });
 				s.Value = (float)Time.ElapsedTime + 1;
 			}

@@ -278,7 +278,8 @@ public class WeatherSystem : JobComponentSystem
 
 	protected override void OnStopRunning()
 	{
-		ApplyWeather(_init.weatherDefinations[0].state);
+		if(_init.rainVfx != null)
+			ApplyWeather(_init.weatherDefinations[0].state);
 		base.OnStopRunning();
 	}
 
