@@ -210,14 +210,14 @@ public class InteractionUI : MonoBehaviour
 		var occupiedSet = new HashSet<HexCoords>();
 		var openSet = new HashSet<HexCoords>();
 
-		var openTiles = HexCoords.HexSelect(tile.Coords, r);
+		var openTiles = HexCoords.SpiralSelect(tile.Coords, r);
 		for (int i = 0; i < openTiles.Length; i++)
 			openSet.Add(openTiles[i]);
 		for (int i = 0; i < orderedUnits.Length; i++)
 		{
 			for (int j = 0; j < openTiles.Length; j++)
 			{
-				var footprint = HexCoords.HexSelect(openTiles[j], orderedUnits[i].info.size);
+				var footprint = HexCoords.SpiralSelect(openTiles[j], orderedUnits[i].info.size);
 				if(IsValidFootPrint(footprint, openSet, occupiedSet))
 				{
 					for (int x = 0; x < footprint.Length; x++)

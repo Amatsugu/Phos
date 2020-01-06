@@ -37,12 +37,12 @@ public class UnitAttackSystem : ComponentSystem
 				var angle = math.radians(45);
 				var speed = math.sqrt((dist * 9.8f)/ math.sin(2*angle));
 
-				var diff = t.Value - targetPoint;
-				var aim = math.atan(diff.z/diff.x);
+				var diff = targetPoint - t.Value;
+				var aim = math.asin(diff.x/((diff.x * diff.x) + (diff.z * diff.z)));
 
-				Debug.DrawRay(t.Value, Vector3.forward * diff.x, Color.blue, 1);
-				Debug.DrawRay(t.Value, Vector3.right * diff.z, Color.red, 1);
-				Debug.DrawRay(t.Value, Quaternion.LookRotation(diff, Vector3.up) * Vector3.right * dist, Color.green, 1);
+				Debug.DrawRay(t.Value, Vector3.forward * diff.z, Color.blue, 1);
+				Debug.DrawRay(t.Value, Vector3.right * diff.x, Color.red, 1);
+				Debug.DrawRay(t.Value, Quaternion.Euler(0, aim * Mathf.Rad2Deg, 0) * Vector3.right * dist, Color.green, 1);
 				//Debug.DrawRay(t.Value, math.rotate(quaternion.RotateY(aim), new float3(1,0,0)) * dist, Color.cyan, 1);
 
 				var vel = new float3
@@ -51,10 +51,10 @@ public class UnitAttackSystem : ComponentSystem
 					y = speed * math.cos(angle)
 				};
 				
-				var vel2 = math.rotate(quaternion.LookRotation(diff, Vector3.up), vel);
+				var vel2 = math.rotate(quaternion.RotateY(aim), vel);
 				
 				
-				PostUpdateCommands.AddComponent(proj, new Velocity { Value = vel });
+				PostUpdateCommands.AddComponent(proj, new Velocity { Value = vel2 });
 				s.Value = (float)Time.ElapsedTime + 1;
 			}
 

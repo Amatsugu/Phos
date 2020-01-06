@@ -482,30 +482,17 @@ public class Map : IDisposable
 
 	public List<Tile> HexSelect(HexCoords center, int radius, bool excludeCenter = false)
 	{
-		var selection = new List<Tile>();
 		radius = Mathf.Abs(radius);
+		var selection = new List<Tile>(HexCoords.GetTileCount(radius));
 		if (radius == 0)
 		{
 			selection.Add(this[center]);
 			return selection;
 		}
-		for (int y = -radius; y <= radius; y++)
-		{
-			int xMin = -radius, xMax = radius;
-			if (y < 0)
-				xMin = -radius - y;
-			if (y > 0)
-				xMax = radius - y;
-			for (int x = xMin; x <= xMax; x++)
-			{
-				var t = this[center.x + x, center.y + y];
-				if (t == null)
-					continue;
-				if (excludeCenter && t.Coords == center)
-					continue;
-				selection.Add(t);
-			}
-		}
+		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter, innerRadius);
+		for (int i = 0; i < coords.Length; i++)
+			selection.Add(this[coords[i]]);
+
 		return selection;
 	}
 
@@ -514,22 +501,13 @@ public class Map : IDisposable
 		radius = Mathf.Abs(radius);
 		if (radius == 0)
 			return;
-		for (int y = -radius; y <= radius; y++)
+		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter, innerRadius);
+		for (int i = 0; i < coords.Length; i++)
 		{
-			int xMin = -radius, xMax = radius;
-			if (y < 0)
-				xMin = -radius - y;
-			if (y > 0)
-				xMax = radius - y;
-			for (int x = xMin; x <= xMax; x++)
-			{
-				var t = this[center.x + x, center.y + y];
-				if (t == null)
-					continue;
-				if (excludeCenter && t.Coords == center)
-					continue;
-				action(t);
-			}
+			var t = this[coords[i]];
+			if (t == null)
+				continue;
+			action(t);
 		}
 	}
 
@@ -538,29 +516,14 @@ public class Map : IDisposable
 		radius = Mathf.Abs(radius);
 		if (radius == 0)
 			return;
-		bool isDone = false;
-		for (int y = -radius; y <= radius; y++)
+		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter, innerRadius);
+		for (int i = 0; i < coords.Length; i++)
 		{
-			if (isDone)
+			var t = this[coords[i]];
+			if (t == null)
+				continue;
+			if (!action(t))
 				break;
-			int xMin = -radius, xMax = radius;
-			if (y < 0)
-				xMin = -radius - y;
-			if (y > 0)
-				xMax = radius - y;
-			for (int x = xMin; x <= xMax; x++)
-			{
-				var t = this[center.x + x, center.y + y];
-				if (t == null)
-					continue;
-				if (excludeCenter && t.Coords == center)
-					continue;
-				if(!action(t))
-				{
-					isDone = true;
-					break;
-				}
-			}
 		}
 	}
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -25,11 +26,16 @@ public struct HexCoords
 	public readonly int offsetZ;
 	public readonly bool isCreated;
 
-	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null)
+	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null) : this(x,y, -x - y, edgeLength, innerRadius)
+	{
+
+	}
+
+	public HexCoords(int x, int y, int z, float edgeLength, float? innerRadius = null)
 	{
 		this.x = x;
 		this.y = y;
-		this.z = -x - y;
+		this.z = z;
 		this.edgeLength = edgeLength;
 		var innerR = (innerRadius ?? Mathf.Sqrt(3f) / 2f * this.edgeLength);
 		offsetX = x + y / 2;
@@ -98,6 +104,8 @@ public struct HexCoords
 
 	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
 
+	public int Distance(HexCoords b) => (math.abs(x - b.x) + math.abs(y - b.y) + math.abs(z - b.z)) / 2;
+
 	public float DistanceToSq(HexCoords b) => (worldXZ - b.worldXZ).sqrMagnitude;
 
 	public static float DistanceSq(HexCoords a, HexCoords b) => (a.worldXZ - b.worldXZ).sqrMagnitude;
@@ -138,6 +146,7 @@ public struct HexCoords
 
 	public static bool operator !=(HexCoords a, HexCoords b) => !a.Equals(b);
 
+	[Obsolete]
 	public static HexCoords[] HexSelect(HexCoords center, int radius, bool excludeCenter = false)
 	{
 		radius = Mathf.Abs(radius);
@@ -166,15 +175,73 @@ public struct HexCoords
 		return selection;
 	}
 
+	public static HexCoords[] SpiralSelect(HexCoords center, int radius, bool excludeCenter = false, float? innerRadius = null)
+	{
+		int count = GetTileCount(radius);
+		if (excludeCenter)
+			count--;
+		var selection = new HexCoords[count];
+		int c = 0;
+		if (!excludeCenter)
+			selection[c++] = center;
+		for (int k = 0; k <= radius; k++)
+		{
+			var item = center.Scale(4, k, innerRadius);
+			for (int i = 0; i < 6; i++)
+			{
+				for (int j = 0; j < k; j++)
+				{
+					selection[c++] = item;
+					item = item.GetNeighbor(i, innerRadius);
+				}
+			}
+		}
+		return selection;
+	}
+
+	public static HexCoords[] SelectRing(HexCoords center, int radius, float? innerRadius = null)
+	{
+		var items = new HexCoords[6 * radius];
+		int c = 0;
+		var item = center.Scale(4, radius, innerRadius);
+		for (int i = 0; i < 6; i++)
+		{
+			for (int j = 0; j < radius; j++)
+			{
+				items[c++] =item;
+				item = item.GetNeighbor(i, innerRadius);
+			}
+		}
+		return items;
+	}
+
+	public static readonly int3[] DIRECTIONS = new int3[] 
+	{ 
+		new int3( 1, -1,  0),
+		new int3( 1,  0, -1),
+		new int3( 0, +1, -1),
+		new int3(-1, +1,  0),
+		new int3(-1,  0, +1),
+		new int3( 0, -1, +1),
+	};
+
+	public HexCoords Scale(int dir, int radius, float? innerRadius = null)
+	{
+		var s = DIRECTIONS[dir] * radius;
+		return new HexCoords(x + s.x, y + s.y, edgeLength, innerRadius);
+	}
+
+	public HexCoords GetNeighbor(int dir, float? innerRadius = null)
+	{
+		var d = DIRECTIONS[dir];
+		return new HexCoords(x + d.x, y + d.y, edgeLength, innerRadius);
+	}
+
 	public static HexCoords[] GetNeighbors(HexCoords center, float? innerRadius = null)
 	{
 		HexCoords[] neighbors = new HexCoords[6];
-		neighbors[0] = new HexCoords(center.x - 1, center.y    , center.edgeLength, innerRadius);
-		neighbors[1] = new HexCoords(center.x - 1, center.y + 1, center.edgeLength, innerRadius);
-		neighbors[2] = new HexCoords(center.x    , center.y + 1, center.edgeLength, innerRadius);
-		neighbors[3] = new HexCoords(center.x + 1, center.y    , center.edgeLength, innerRadius);
-		neighbors[4] = new HexCoords(center.x + 1, center.y - 1, center.edgeLength, innerRadius);
-		neighbors[5] = new HexCoords(center.x    , center.y - 1, center.edgeLength, innerRadius);
+		for (int i = 0; i < 6; i++)
+			neighbors[i] = center.GetNeighbor(i, innerRadius);
 		return neighbors;
 	}
 
