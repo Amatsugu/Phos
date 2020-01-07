@@ -32,7 +32,9 @@ public class HQTile : BuildingTile
 		EventManager.InvokeEvent("OnHQPlaced");
 		Map.EM.AddComponentData(_tileEntity, new PhosCore
 		{
-			fireRate = 5f
+			spinRate = 1f,
+			fireRate = .5f,
+			nextVolleyTime = Time.time + 1
 		});
 	}
 

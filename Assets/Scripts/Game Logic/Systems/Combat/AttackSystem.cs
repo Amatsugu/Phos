@@ -34,7 +34,7 @@ public class UnitAttackSystem : ComponentSystem
 				var targetPoint = (float3)Map.ActiveMap.HQ.SurfacePoint;
 
 				PostUpdateCommands.AddComponent(proj, new Velocity { Value = GetAttackVector(t.Value.x, targetPoint) });
-				s.Value = (float)Time.ElapsedTime + 1;
+				s.Value += 1;
 			}
 
 		});

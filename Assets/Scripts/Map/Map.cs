@@ -867,7 +867,7 @@ public class Map : IDisposable
 		var selection = this.HexSelect(coord, radius);
 		if (selection.Count == 0)
 			return seaLevel;
-		var max = selection.Max(t => t.Height);
+		var max = selection.Max(t => t == null ? 0 : t.Height);
 		return (max < seaLevel) ? seaLevel : max;
 	}
 
