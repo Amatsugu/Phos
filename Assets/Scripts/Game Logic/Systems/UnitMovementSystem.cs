@@ -75,7 +75,7 @@ public class UnitMovementSystem : JobComponentSystem
 			};
 			if (path.Value == null)
 			{
-				Debug.LogWarning($"Null Path From: {curCoord} To: {dst}");
+				//Debug.LogWarning($"Null Path From: {curCoord} To: {dst}");
 				PostUpdateCommands.RemoveComponent<Destination>(index, e);
 				return;
 			}

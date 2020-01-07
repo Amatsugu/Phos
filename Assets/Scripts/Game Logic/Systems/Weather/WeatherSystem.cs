@@ -283,7 +283,7 @@ public class WeatherSystem : JobComponentSystem
 		base.OnStopRunning();
 	}
 
-	protected override void OnDestroyManager()
+	protected override void OnDestroy()
 	{
 		_cloudField.Dispose();
 	}

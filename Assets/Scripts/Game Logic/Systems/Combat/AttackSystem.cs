@@ -29,37 +29,41 @@ public class UnitAttackSystem : ComponentSystem
 			if (Time.ElapsedTime >= s.Value)
 			{
 				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, Vector3.one);
-				PostUpdateCommands.AddComponent(proj, new Acceleration { Value = new float3(0, -9.8f, 0) });
-				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
+				PostUpdateCommands.AddComponent(proj, new Gravity { Value = 9.8f });
+				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 15 });
 				var targetPoint = (float3)Map.ActiveMap.HQ.SurfacePoint;
 
-				var dist = math.distance(t.Value, targetPoint);
-				var angle = math.radians(45);
-				var speed = math.sqrt((dist * 9.8f)/ math.sin(2*angle));
-
-				var diff = targetPoint - t.Value;
-				var aim = math.asin(diff.x/((diff.x * diff.x) + (diff.z * diff.z)));
-
-				Debug.DrawRay(t.Value, Vector3.forward * diff.z, Color.blue, 1);
-				Debug.DrawRay(t.Value, Vector3.right * diff.x, Color.red, 1);
-				Debug.DrawRay(t.Value, Quaternion.Euler(0, aim * Mathf.Rad2Deg, 0) * Vector3.right * dist, Color.green, 1);
-				//Debug.DrawRay(t.Value, math.rotate(quaternion.RotateY(aim), new float3(1,0,0)) * dist, Color.cyan, 1);
-
-				var vel = new float3
-				{
-					x = speed * math.sin(angle),
-					y = speed * math.cos(angle)
-				};
-				
-				var vel2 = math.rotate(quaternion.RotateY(aim), vel);
-				
-				
-				PostUpdateCommands.AddComponent(proj, new Velocity { Value = vel2 });
+				PostUpdateCommands.AddComponent(proj, new Velocity { Value = GetAttackVector(t.Value.x, targetPoint) });
 				s.Value = (float)Time.ElapsedTime + 1;
 			}
 
 		});
+	}
+
+	public static float3 GetAttackVector(float3 pos, float3 target, float fireAngle = 45)
+	{
+		var dist = math.distance(pos, target);
+
+		var angle = math.radians(fireAngle);
+
+		float g = 9.8f;
+		var diff = target - pos;
 		
+
+		float tanG = math.tan(angle);
+		float upper = math.sqrt(g) * math.sqrt(dist) * math.sqrt(tanG * tanG + 1.0f);
+		float lower = math.sqrt(2 * tanG - ((2 * diff.y) / dist));
+
+		float v = upper / lower;
+
+		var vel = new float3
+		{
+			z = v * math.cos(angle),
+			y = v * math.sin(angle)
+		};
+		diff.y = 0;
+		return vel;
+		//return math.rotate(quaternion.LookRotation(diff, Vector3.up), vel);
 	}
 }
 
