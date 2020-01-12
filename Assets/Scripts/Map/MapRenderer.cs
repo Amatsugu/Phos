@@ -26,6 +26,7 @@ public class MapRenderer : MonoBehaviour
 	private Transform _ocean;
 	private Camera _cam;
 	private Vector3 _lastCamPos;
+	private Quaternion _lastCamRot;
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
 
@@ -62,7 +63,8 @@ public class MapRenderer : MonoBehaviour
 	private void LateUpdate()
 	{
 		var camPos = _cam.transform.position;
-		if (_lastCamPos != camPos)
+		var camRot = _cam.transform.rotation;
+		if (_lastCamPos != camPos || _lastCamRot != camRot)
 		{
 			GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
 			map.UpdateView(_camPlanes);

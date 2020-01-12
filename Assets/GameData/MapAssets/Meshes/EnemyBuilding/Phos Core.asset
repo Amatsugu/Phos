@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
   m_Name: Phos Core
   m_EditorClassIdentifier: 
-  mesh: {fileID: 8148062620494451969, guid: d9e6e161be51e2040adc78b26a60d3b5, type: 3}
+  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: c5bd27640a28cbf40bc7a31293db797e, type: 2}
   castShadows: 1
   receiveShadows: 1
@@ -20,7 +20,7 @@ MonoBehaviour:
   description: 
   decorators: []
   isTraverseable: 1
-  buildingMesh: {fileID: 0}
+  buildingMesh: {fileID: 11400000, guid: 12f33196a9f8f6f49af32137683eda3f, type: 2}
   constructionMesh: {fileID: 0}
   tier: 1
   constructionTime: 2

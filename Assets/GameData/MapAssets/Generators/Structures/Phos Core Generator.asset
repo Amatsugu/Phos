@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0075aa8497fef3b42bf39bb768deffcb, type: 3}
+  m_Name: Phos Core Generator
+  m_EditorClassIdentifier: 
+  count:
+    x: 5
+    y: 10
+  tile: {fileID: 11400000, guid: 345658ca8afa8e14195c332196239802, type: 2}
+  minDist: 50
+  altitudeRange:
+    x: 5
+    y: 15

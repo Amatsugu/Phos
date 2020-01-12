@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Map Asset/Generator/Feature/Structures")]
 public class StructureGenerator : FeatureGenerator
 {
     public int2 count;
@@ -25,30 +26,35 @@ public class StructureGenerator : FeatureGenerator
         while (curCount < countToGen)
         {
             if (attempts > 1024)
+            {
+                Debug.Log("Abort, too many Attempts");
                 break;
+            }
             attempts++;
             var coord = HexCoords.FromOffsetCoords(rand.NextInt(0, map.totalWidth), rand.NextInt(0, map.totalHeight), map.tileEdgeLength);
             var tile = map[coord];
 
 
-            if (coordsToGen.Any(c => c == coord))
+            if (coordsToGen.Any(c => c.isCreated && c.Equals(coord)))
                 break;
             if (coordsToGen.Any(c => c.isCreated && c.Distance(coord) <= minDist))
                 break;
-            if (tile.Height <= altitudeRange.x || tile.Height >= altitudeRange.y)
+            /*if (tile.Height <= altitudeRange.x || tile.Height >= altitudeRange.y)
                 break;
-
+                */
 
 
             coordsToGen[curCount++] = coord;
             attempts = 0;
         }
 
-        for (int i = 0; i < countToGen; i++)
+
+        Debug.Log($"Genetating {curCount} cores");
+        for (int i = 0; i < curCount; i++)
         {
             if (!coordsToGen[i].isCreated)
                 break;
-            map.ReplaceTile(map[coordsToGen[i]], tile);
+            map[coordsToGen[i]] = tile.CreateTile(coordsToGen[i], map[coordsToGen[i]].Height);
         }
 
     }

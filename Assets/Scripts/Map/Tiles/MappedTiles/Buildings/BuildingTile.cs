@@ -22,16 +22,9 @@ public class BuildingTile : Tile
 
 	public override Entity Render()
 	{
-		if(_isBuilt)
-		{
-			if(buildingInfo.buildingMesh != null)
-				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
-		}else
-		{
-			if (buildingInfo.constructionMesh != null)
-				_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
-		}
-		return base.Render();
+		var e =base.Render();
+		Build();
+		return e;
 	}
 
 	public override TileInfo GetMeshEntity()
