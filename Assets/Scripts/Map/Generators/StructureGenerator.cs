@@ -36,12 +36,12 @@ public class StructureGenerator : FeatureGenerator
 
 
             if (coordsToGen.Any(c => c.isCreated && c.Equals(coord)))
-                break;
+                continue;
             if (coordsToGen.Any(c => c.isCreated && c.Distance(coord) <= minDist))
-                break;
-            /*if (tile.Height <= altitudeRange.x || tile.Height >= altitudeRange.y)
-                break;
-                */
+                continue;
+            if (tile.Height <= altitudeRange.x || tile.Height >= altitudeRange.y)
+                continue;
+                
 
 
             coordsToGen[curCount++] = coord;

@@ -19,4 +19,4 @@ MonoBehaviour:
   minDist: 50
   altitudeRange:
     x: 5
-    y: 15
+    y: 10
