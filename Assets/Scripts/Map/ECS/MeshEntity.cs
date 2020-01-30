@@ -59,6 +59,7 @@ public class MeshEntity : ScriptableObject
 			typeof(NonUniformScale),
 			typeof(RenderMesh),
 			typeof(PerInstanceCullingTag),
+			typeof(Disabled)
 		};
 	}
 
@@ -67,6 +68,7 @@ public class MeshEntity : ScriptableObject
 	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Vector3 scale)
 	{
 		var e = commandBuffer.Instantiate(GetEntity());
+		commandBuffer.RemoveComponent(e, typeof(Disabled));
 		commandBuffer.SetComponent(e, new Translation { Value = position });
 		commandBuffer.SetComponent(e, new NonUniformScale { Value = scale });
 		return e;
@@ -78,6 +80,7 @@ public class MeshEntity : ScriptableObject
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
 		em.SetComponentData(e, new NonUniformScale { Value = scale });
+		em.RemoveComponent<Disabled>(e);
 		return e;
 	}
 
@@ -85,6 +88,7 @@ public class MeshEntity : ScriptableObject
 	{
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		em.Instantiate(GetEntity(), output);
+		em.RemoveComponent<Disabled>(output);
 	}
 
 

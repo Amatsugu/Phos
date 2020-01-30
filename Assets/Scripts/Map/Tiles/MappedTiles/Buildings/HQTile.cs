@@ -30,12 +30,6 @@ public class HQTile : BuildingTile
 		}
 		GameRegistry.BaseNameUI.panel.Show();
 		EventManager.InvokeEvent("OnHQPlaced");
-		Map.EM.AddComponentData(_tileEntity, new PhosCore
-		{
-			spinRate = 1f,
-			fireRate = .5f,
-			nextVolleyTime = Time.time + 1
-		});
 	}
 
 	protected override void OnBuilt()

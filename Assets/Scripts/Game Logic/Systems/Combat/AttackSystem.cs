@@ -25,7 +25,7 @@ public class UnitAttackSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
-		Entities.ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p) => {
+		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p) => {
 			if (Time.ElapsedTime >= s.Value)
 			{
 				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, Vector3.one);
@@ -34,7 +34,7 @@ public class UnitAttackSystem : ComponentSystem
 				var targetPoint = (float3)Map.ActiveMap.HQ.SurfacePoint;
 
 				PostUpdateCommands.AddComponent(proj, new Velocity { Value = GetAttackVector(t.Value.x, targetPoint) });
-				s.Value += 1;
+				s.Value = Time.ElapsedTime + 1;
 			}
 
 		});
@@ -69,7 +69,7 @@ public class UnitAttackSystem : ComponentSystem
 
 public struct AttackSpeed : IComponentData
 {
-	public float Value;
+	public double Value;
 	public override bool Equals(object obj) => Value.Equals(obj);
 	public override int GetHashCode() => Value.GetHashCode();
 	public static bool operator ==(AttackSpeed left, AttackSpeed right) => left.Equals(right);

@@ -11,6 +11,7 @@ public class PhosCoreSystem : ComponentSystem
 {
 
 	private MeshEntityRotatable _bullet;
+	private bool _isReady = false;
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
@@ -18,28 +19,32 @@ public class PhosCoreSystem : ComponentSystem
 		op.Completed += e =>
 		{
 			_bullet = e.Result;
+			_isReady = true;
 		};
 	}
 
 	protected override void OnUpdate()
 	{
-		Entities.ForEach((Entity e, ref PhosCore core, ref Translation t) =>
+		if (!_isReady)
+			return;
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref HexPosition p) =>
 		{
 			if (core.nextVolleyTime <= Time.ElapsedTime)
 			{
 				var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2);
 
+				var t = Map.ActiveMap[p.coords];
 				for (int i = 0; i < 6; i++)
 				{
 					var curAngle = baseAngle + (math.PI / 3) * i;
 					var dir = math.rotate(quaternion.RotateY(curAngle), Vector3.forward);
-					Debug.DrawRay(t.Value + new float3(0, 10, 0), dir, Color.magenta);
-					var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + dir, Vector3.one);
-					PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 5 });
-					PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir });
+					Debug.DrawRay(t.SurfacePoint + new Vector3(0, 10, 0), dir, Color.magenta);
+					var proj = _bullet.BufferedInstantiate(PostUpdateCommands, (float3)t.SurfacePoint + dir + new float3(0,3,0), Vector3.one);
+					PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 30 });
+					PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * 10 });
 
 				}
-				core.nextVolleyTime += core.fireRate;
+				core.nextVolleyTime = Time.ElapsedTime + core.fireRate;
 			}
 		});
 	}
