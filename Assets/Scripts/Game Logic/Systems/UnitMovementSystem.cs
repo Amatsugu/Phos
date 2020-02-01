@@ -204,11 +204,11 @@ public class UnitMovementSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		var buffer = World.GetExistingSystem<EntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent();
+		var buffer = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent();
 		var job = new PathFinderJob(_tileEdgeLength, buffer, _navData);
 		var handle = job.Schedule(this, inputDeps);
 		handle.Complete();
-		var buffer2 = World.GetExistingSystem<EntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent();
+		var buffer2 = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent();
 		var moveJob = new PathFollowJob(Time.DeltaTime, buffer2);
 		handle = moveJob.Schedule(this, handle);
 		handle.Complete();
