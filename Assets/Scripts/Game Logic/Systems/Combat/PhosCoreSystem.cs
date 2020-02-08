@@ -1,4 +1,5 @@
 ﻿using AnimationSystem.AnimationData;
+using Effects.Lines;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,13 +43,15 @@ public class PhosCoreSystem : ComponentSystem
 				{
 					var curAngle = baseAngle + (math.PI / 3) * i;
 					var dir = math.rotate(quaternion.RotateY(curAngle), Vector3.forward);
+					dir.y = 1;
 					Debug.DrawRay(t.SurfacePoint + new Vector3(0, 10, 0), dir, Color.magenta);
 					var proj = _bullet.BufferedInstantiate(PostUpdateCommands, (float3)t.SurfacePoint + dir + new float3(0, 3, 0), Vector3.one);
-					PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
+					PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 5 });
 					PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * core.projectileSpeed });
+					PostUpdateCommands.AddComponent(proj, new Gravity { Value = 9.8f });
 					PostUpdateCommands.AddComponent(proj, new PhosProjectile
 					{
-						targetTime = Time.ElapsedTime + (10 * core.targetDelayRatio),
+						targetTime = Time.ElapsedTime + core.targetDelay + (i * (1/12f)),
 						target = targetPoint,
 						flightSpeed = core.projectileSpeed * 10
 					});
@@ -71,7 +74,10 @@ public class PhosCoreSystem : ComponentSystem
 				if (curTime >= proj.targetTime)
 				{
 					CMB.RemoveComponent(index, entity, typeof(PhosProjectile));
+					CMB.RemoveComponent(index, entity, typeof(Gravity));
 					vel.Value = math.normalize(proj.target - t.Value) * proj.flightSpeed;
+					LineFactory.UpdateStaticLine(CMB, index, entity, t.Value, proj.target, .5f);
+
 				}
 			}
 		}
@@ -96,7 +102,7 @@ public class PhosCoreSystem : ComponentSystem
 		public float fireRate;
 		public double nextVolleyTime;
 		public float projectileSpeed;
-		public float targetDelayRatio;
+		public float targetDelay;
 		public float targetingRange;
 	}
 

@@ -34,15 +34,10 @@ namespace Tiles.EnemyBuildings
 				nextVolleyTime = Time.time,
 				projectileSpeed = projectileSpeed,
 				targetingRange = targetingRange,
-				targetDelayRatio = targetingDelay
+				targetDelay = targetingDelay
 			});
 
 			return e;
-		}
-
-		private void OnValidate()
-		{
-			targetingDelay = Mathf.Clamp(targetingDelay, 0, 1);
 		}
 	}
 }
