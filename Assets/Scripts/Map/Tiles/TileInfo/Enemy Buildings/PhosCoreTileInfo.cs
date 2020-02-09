@@ -18,6 +18,8 @@ namespace Tiles.EnemyBuildings
 		public float targetingDelay = .2f;
 		public float targetingRange = 10;
 
+		public MeshEntityRotatable ring;
+
 		public override IEnumerable<ComponentType> GetComponents()
 		{
 			return base.GetComponents().Append(typeof(PhosCore));
@@ -34,7 +36,8 @@ namespace Tiles.EnemyBuildings
 				nextVolleyTime = Time.time,
 				projectileSpeed = projectileSpeed,
 				targetingRange = targetingRange,
-				targetDelay = targetingDelay
+				targetDelay = targetingDelay,
+				ring = ring.Instantiate(Map.ActiveMap[pos].SurfacePoint, Vector3.one)
 			});
 
 			return e;

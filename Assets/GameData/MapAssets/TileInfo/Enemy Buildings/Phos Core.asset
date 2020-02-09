@@ -38,8 +38,9 @@ MonoBehaviour:
   cost: []
   production: []
   consumption: []
-  fireRate: 0.5
-  spinRate: 3.14
+  fireRate: 20
+  spinRate: 5
   projectileSpeed: 10
   targetingDelay: 1
   targetingRange: 20
+  ring: {fileID: 11400000, guid: 64973f25b9a027a4c9e05e13cc4a8445, type: 2}

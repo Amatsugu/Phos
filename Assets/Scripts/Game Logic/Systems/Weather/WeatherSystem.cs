@@ -40,7 +40,6 @@ public class WeatherSystem : JobComponentSystem
 	private float _totalWeatherChance;
 	private Fog _fogComponent;
 	//private PhysicallyBasedSky _skyComponent;
-	private int _dir = 1;
 	private static WeatherSystem _INST;
 	private Transform _rainTransform;
 

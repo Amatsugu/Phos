@@ -32,9 +32,10 @@ public class PhosCoreSystem : ComponentSystem
 			return;
 		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref HexPosition p) =>
 		{
+			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2);
+			PostUpdateCommands.SetComponent(core.ring, new Rotation { Value = quaternion.AxisAngle(Vector3.up, baseAngle + (math.PI * 2) / 12f) });
 			if (core.nextVolleyTime <= Time.ElapsedTime)
 			{
-				var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2);
 
 				var t = Map.ActiveMap[p.coords];
 				var targetPoint = t.SurfacePoint + UnityEngine.Random.insideUnitSphere * core.targetingRange;
@@ -43,12 +44,12 @@ public class PhosCoreSystem : ComponentSystem
 				{
 					var curAngle = baseAngle + (math.PI / 3) * i;
 					var dir = math.rotate(quaternion.RotateY(curAngle), Vector3.forward);
-					dir.y = 1;
 					Debug.DrawRay(t.SurfacePoint + new Vector3(0, 10, 0), dir, Color.magenta);
-					var proj = _bullet.BufferedInstantiate(PostUpdateCommands, (float3)t.SurfacePoint + dir + new float3(0, 3, 0), Vector3.one);
+					var proj = _bullet.BufferedInstantiate(PostUpdateCommands, (float3)t.SurfacePoint + (dir * 1.9f) + new float3(0, 2.25916f, 0), Vector3.one * .4f);
+					dir.y = .4f;
 					PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 5 });
 					PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * core.projectileSpeed });
-					PostUpdateCommands.AddComponent(proj, new Gravity { Value = 9.8f });
+					//PostUpdateCommands.AddComponent(proj, new Gravity { Value = 9.8f });
 					PostUpdateCommands.AddComponent(proj, new PhosProjectile
 					{
 						targetTime = Time.ElapsedTime + core.targetDelay + (i * (1/12f)),
@@ -76,7 +77,7 @@ public class PhosCoreSystem : ComponentSystem
 					CMB.RemoveComponent(index, entity, typeof(PhosProjectile));
 					CMB.RemoveComponent(index, entity, typeof(Gravity));
 					vel.Value = math.normalize(proj.target - t.Value) * proj.flightSpeed;
-					LineFactory.UpdateStaticLine(CMB, index, entity, t.Value, proj.target, .5f);
+					LineFactory.UpdateStaticLine(CMB, index, entity, t.Value, proj.target);
 
 				}
 			}
@@ -104,6 +105,7 @@ public class PhosCoreSystem : ComponentSystem
 		public float projectileSpeed;
 		public float targetDelay;
 		public float targetingRange;
+		public Entity ring;
 	}
 
 	public struct PhosProjectile : IComponentData
