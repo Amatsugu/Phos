@@ -3,6 +3,7 @@ using Effects.Lines;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -15,6 +16,7 @@ public class PhosCoreSystem : ComponentSystem
 
 	private MeshEntityRotatable _bullet;
 	private int _state = 0;
+	private Map _map;
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
@@ -24,6 +26,7 @@ public class PhosCoreSystem : ComponentSystem
 			_bullet = e.Result;
 			_state = 1;
 		};
+		_map = Map.ActiveMap;
 	}
 
 	protected override void OnUpdate()
@@ -38,11 +41,6 @@ public class PhosCoreSystem : ComponentSystem
 		}
 	}
 
-	private void GetTargetsInRange()
-	{
-
-	}
-
 	private void SimulateAI()
 	{
 		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref HexPosition p) =>
@@ -51,11 +49,13 @@ public class PhosCoreSystem : ComponentSystem
 			PostUpdateCommands.SetComponent(core.ring, new Rotation { Value = quaternion.AxisAngle(Vector3.up, baseAngle + (math.PI * 2) / 12f) });
 			if (core.nextVolleyTime <= Time.ElapsedTime)
 			{
+				var unitsInRange = _map.SelectUnitsInRange(p.coords, core.targetingRange);
+				if (unitsInRange.Count == 0)
+					return;
+				var targets = unitsInRange.Take(6).Select(unitId => (float3)_map.units[unitId].Position).ToArray();
 
 				var t = Map.ActiveMap[p.coords];
-				var targetPoint = t.SurfacePoint + UnityEngine.Random.insideUnitSphere * core.targetingRange;
-				targetPoint = Map.ActiveMap[HexCoords.FromPosition(targetPoint)].SurfacePoint;
-				FireBurst(t.SurfacePoint, baseAngle, targetPoint, core);
+				FireBurst(t.SurfacePoint, baseAngle, targets, core);
 				core.nextVolleyTime = Time.ElapsedTime + core.fireRate;
 			}
 		});
@@ -65,7 +65,7 @@ public class PhosCoreSystem : ComponentSystem
 	{
 		for (int i = 0; i < 6; i++)
 		{
-			FirePorjectile(startPos, baseAngle + (math.PI / 3) * i, targets[i], core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)));
+			FirePorjectile(startPos, baseAngle + (math.PI / 3) * i, targets[i % targets.Length], core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)));
 		}
 	}
 
@@ -135,7 +135,7 @@ public class PhosCoreSystem : ComponentSystem
 		public double nextVolleyTime;
 		public float projectileSpeed;
 		public float targetDelay;
-		public float targetingRange;
+		public int targetingRange;
 		public Entity ring;
 	}
 

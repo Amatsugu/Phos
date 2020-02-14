@@ -16,7 +16,7 @@ namespace Tiles.EnemyBuildings
 		public float spinRate = 1;
 		public float projectileSpeed = 1;
 		public float targetingDelay = .2f;
-		public float targetingRange = 10;
+		public int targetingRange = 10;
 
 		public MeshEntityRotatable ring;
 

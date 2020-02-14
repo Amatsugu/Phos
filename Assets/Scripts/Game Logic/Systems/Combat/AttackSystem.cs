@@ -12,6 +12,7 @@ public class UnitAttackSystem : ComponentSystem
 {
 	private MeshEntityRotatable _bullet;
 	private Unity.Mathematics.Random _rand;
+	private int _state;
 	protected override void OnStartRunning()
 	{
 		var op = Addressables.LoadAssetAsync<MeshEntityRotatable>("EnergyPacket");
@@ -24,6 +25,18 @@ public class UnitAttackSystem : ComponentSystem
 	}
 
 	protected override void OnUpdate()
+	{
+		switch(_state)
+		{
+			case 0: //Idle
+				break;
+			case 1: //Attack
+				AttackAI();
+				break;
+		}
+	}
+
+	private void AttackAI()
 	{
 		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p) => {
 			if (Time.ElapsedTime >= s.Value)
