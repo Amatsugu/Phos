@@ -69,6 +69,7 @@ public class MapRenderer : MonoBehaviour
 			GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
 			map.UpdateView(_camPlanes);
 			_lastCamPos = _cam.transform.position;
+			_lastCamRot = _cam.transform.rotation;
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z);
 		}
 

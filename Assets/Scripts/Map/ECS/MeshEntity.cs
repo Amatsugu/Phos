@@ -51,8 +51,6 @@ public class MeshEntity : ScriptableObject
 
 	public virtual IEnumerable<ComponentType> GetComponents()
 	{
-		HDAdditionalLightData d;
-		
 		return new ComponentType[]{
 			typeof(Translation),
 			typeof(LocalToWorld),

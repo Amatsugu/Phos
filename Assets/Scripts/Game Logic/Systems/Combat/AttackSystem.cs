@@ -19,6 +19,7 @@ public class UnitAttackSystem : ComponentSystem
 		op.Completed += e =>
 		{
 			_bullet = e.Result;
+			_state = 1;
 		};
 		_rand = new Unity.Mathematics.Random();
 		_rand.InitState();
@@ -31,7 +32,7 @@ public class UnitAttackSystem : ComponentSystem
 			case 0: //Idle
 				break;
 			case 1: //Attack
-				AttackAI();
+				//AttackAI();
 				break;
 		}
 	}

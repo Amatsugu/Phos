@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Physics;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
@@ -35,12 +37,26 @@ public class MobileUnitInfo : MeshEntityRotatable
 
 	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id)
 	{
-		var e = Instantiate(pos, Vector3.one, rotation);
+		var e = Instantiate(pos + Vector3.up * 5, Vector3.one, rotation);
 		Map.EM.SetComponentData(e, new MoveSpeed { Value = moveSpeed });
 		Map.EM.SetComponentData(e, new Heading { Value = Vector3.forward });
 		Map.EM.SetComponentData(e, new UnitId { Value = id });
 		Map.EM.SetComponentData(e, new Projectile { Value = projectile.GetEntity() });
 		Map.EM.SetComponentData(e, new AttackSpeed { Value = attackSpeed });
+
+		Map.EM.AddComponentData(e, new PhysicsCollider
+		{
+			Value = Unity.Physics.BoxCollider.Create(new BoxGeometry { Center = pos, Size = new float3(1, 1, 1), Orientation = quaternion.identity })
+		});
+
+		Map.EM.AddComponentData(e, new PhysicsVelocity
+		{
+			Linear = new float3()
+		});
+
+		Map.EM.AddComponentData(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1));
+		
+
 		return e;
 	}
 }
