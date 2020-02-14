@@ -103,6 +103,23 @@ namespace AnimationSystem
 			}
 		}
 
+		public struct DragJob : IJobForEach<Drag, Velocity>
+		{
+			public DragJob(float dt)
+			{
+				this.dt = dt;
+			}
+
+			public readonly float dt;
+			public const float airDensity = 1.2f;
+
+			public void Execute(ref Drag drag, ref Velocity velocity)
+			{
+				
+				velocity.Value -= drag.Value * velocity.Value * dt;
+			}
+		}
+
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
 			var gravityJob = new GravityJob { dt = Time.DeltaTime };
@@ -113,6 +130,9 @@ namespace AnimationSystem
 			
 			var accelJob = new AccelerationJob { dt = Time.DeltaTime };
 			dep = accelJob.Schedule(this, dep);
+
+			var dragJob = new DragJob(Time.DeltaTime);
+			dep = dragJob.Schedule(this, dep);
 
 			var velocityJob = new VelocityJob { dt = Time.DeltaTime };
 			dep = velocityJob.Schedule(this, dep);
@@ -147,6 +167,11 @@ namespace AnimationSystem.AnimationData
 		public override int GetHashCode() => Value.GetHashCode();
 		public static bool operator ==(Velocity left, Velocity right) => left.Equals(right);
 		public static bool operator !=(Velocity left, Velocity right) => !(left == right);
+	}
+
+	public struct Drag : IComponentData
+	{
+		public float Value;
 	}
 
 	public struct Acceleration : IComponentData

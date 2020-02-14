@@ -156,7 +156,7 @@ public class WeatherSystem : JobComponentSystem
 		_offset += _windDir * Time.DeltaTime * _curWeatherState.windSpeed;
 		GenerateCloudField();
 
-		if (Time.time >= _nextWeatherTime && _nextWeather == null)
+		if (Time.ElapsedTime >= _nextWeatherTime && _nextWeather == null)
 		{
 			SelectNextWeather();
 			_transitionTime = 0;

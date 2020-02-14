@@ -14,7 +14,7 @@ public class PhosCoreSystem : ComponentSystem
 {
 
 	private MeshEntityRotatable _bullet;
-	private bool _isReady = false;
+	private int _state = 0;
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
@@ -22,14 +22,29 @@ public class PhosCoreSystem : ComponentSystem
 		op.Completed += e =>
 		{
 			_bullet = e.Result;
-			_isReady = true;
+			_state = 1;
 		};
 	}
 
 	protected override void OnUpdate()
 	{
-		if (!_isReady)
-			return;
+		switch (_state)
+		{
+			case 0:
+				break;
+			case 1:
+				SimulateAI();
+				break;
+		}
+	}
+
+	private void GetTargetsInRange()
+	{
+
+	}
+
+	private void SimulateAI()
+	{
 		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref HexPosition p) =>
 		{
 			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2);
@@ -40,26 +55,41 @@ public class PhosCoreSystem : ComponentSystem
 				var t = Map.ActiveMap[p.coords];
 				var targetPoint = t.SurfacePoint + UnityEngine.Random.insideUnitSphere * core.targetingRange;
 				targetPoint = Map.ActiveMap[HexCoords.FromPosition(targetPoint)].SurfacePoint;
-				for (int i = 0; i < 6; i++)
-				{
-					var curAngle = baseAngle + (math.PI / 3) * i;
-					var dir = math.rotate(quaternion.RotateY(curAngle), Vector3.forward);
-					Debug.DrawRay(t.SurfacePoint + new Vector3(0, 10, 0), dir, Color.magenta);
-					var proj = _bullet.BufferedInstantiate(PostUpdateCommands, (float3)t.SurfacePoint + (dir * 1.9f) + new float3(0, 2.25916f, 0), Vector3.one * .4f);
-					dir.y = .4f;
-					PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 5 });
-					PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * core.projectileSpeed });
-					//PostUpdateCommands.AddComponent(proj, new Gravity { Value = 9.8f });
-					PostUpdateCommands.AddComponent(proj, new PhosProjectile
-					{
-						targetTime = Time.ElapsedTime + core.targetDelay + (i * (1/12f)),
-						target = targetPoint,
-						flightSpeed = core.projectileSpeed * 10
-					});
-
-				}
+				FireBurst(t.SurfacePoint, baseAngle, targetPoint, core);
 				core.nextVolleyTime = Time.ElapsedTime + core.fireRate;
 			}
+		});
+	}
+
+	private void FireBurst(float3 startPos, float baseAngle, float3[] targets, PhosCore core)
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			FirePorjectile(startPos, baseAngle + (math.PI / 3) * i, targets[i], core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)));
+		}
+	}
+
+	private void FireBurst(float3 startPos, float baseAngle, float3 target, PhosCore core)
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			FirePorjectile(startPos, baseAngle + (math.PI / 3) * i, target, core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)));
+		}
+	}
+
+	private void FirePorjectile(float3 startPos, float angle, float3 target, PhosCore core, double targetTime)
+	{
+		var dir = math.rotate(quaternion.RotateY(angle), Vector3.forward);
+		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, startPos + (dir * 1.9f) + new float3(0, 2.25916f, 0), Vector3.one * .4f);
+		dir.y = .4f;
+		PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 5 });
+		PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * core.projectileSpeed });
+		PostUpdateCommands.AddComponent(proj, new Drag { Value = 3.2f });
+		PostUpdateCommands.AddComponent(proj, new PhosProjectile
+		{
+			targetTime = targetTime,
+			target = target,
+			flightSpeed = core.projectileSpeed * 10
 		});
 	}
 
@@ -76,6 +106,7 @@ public class PhosCoreSystem : ComponentSystem
 				{
 					CMB.RemoveComponent(index, entity, typeof(PhosProjectile));
 					CMB.RemoveComponent(index, entity, typeof(Gravity));
+					CMB.RemoveComponent(index, entity, typeof(Drag));
 					vel.Value = math.normalize(proj.target - t.Value) * proj.flightSpeed;
 					LineFactory.UpdateStaticLine(CMB, index, entity, t.Value, proj.target);
 

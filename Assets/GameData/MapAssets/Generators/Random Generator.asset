@@ -105,7 +105,7 @@ MonoBehaviour:
       minValue: 0
       center: {x: 0, y: 0, z: 0}
       weightMultiplier: 4.57
-  useSeed: 0
+  useSeed: 1
   useSeedDev: 1
   seed: -343038221
   landSeaRatio: 0.35

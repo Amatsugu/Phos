@@ -12,7 +12,6 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-[Serializable]
 public class Map : IDisposable
 {
 	public static Map ActiveMap;
@@ -60,7 +59,6 @@ public class Map : IDisposable
 		ActiveMap = this;
 	}
 
-	[Serializable]
 	public struct Chunk
 	{
 		public const int SIZE = 32;
@@ -415,13 +413,15 @@ public class Map : IDisposable
 		if (!IsRendered)
 			throw new Exception("Map is not rendered yet");
 		var chunksChanged = 0;
-
+		
 		for (int i = 0; i < Chunks.Length; i++)
 		{
 			if (Chunks[i].Show(Chunks[i].InView(camPlanes)))
 				chunksChanged++;
 		}
 	}
+
+	
 
 	public void Render(EntityManager entityManager)
 	{

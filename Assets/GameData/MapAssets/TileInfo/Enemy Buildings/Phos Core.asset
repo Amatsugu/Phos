@@ -38,7 +38,7 @@ MonoBehaviour:
   cost: []
   production: []
   consumption: []
-  fireRate: 20
+  fireRate: 0.5
   spinRate: 5
   projectileSpeed: 10
   targetingDelay: 1
