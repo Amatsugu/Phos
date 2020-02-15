@@ -81,10 +81,16 @@ public class ResourceConduitTile : PoweredBuildingTile
 		base.Show(isShown);
 	}
 
+	protected override void OnBuilt()
+	{
+		Debug.Log("Node Added");
+		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
+		base.OnBuilt();
+	}
+
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
-		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
 	}
 
 	public override void FindConduitConnections()

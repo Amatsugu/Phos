@@ -11,7 +11,7 @@ public class BuildingTile : Tile
 	public bool IsBuilt => _isBuilt;
 
 	private Entity _building;
-	private bool _isBuilt;
+	protected bool _isBuilt;
 
 	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
 	{
@@ -22,8 +22,9 @@ public class BuildingTile : Tile
 
 	public override Entity Render()
 	{
-		var e =base.Render();
-		Build();
+		var e = base.Render();
+		if(_isBuilt)
+			Build();
 		return e;
 	}
 

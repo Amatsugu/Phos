@@ -30,6 +30,8 @@ public class CameraController : MonoBehaviour
 	private bool _canRotate = true;
 	private float _rotationTime = 0;
 
+	private int _state = 0;
+
 	void Awake()
 	{
 		GameRegistry.INST.cameraController = this;
@@ -111,7 +113,7 @@ public class CameraController : MonoBehaviour
 			pos += moveVector * moveSpeed * Time.deltaTime;
 		}
 
-		if (!GameRegistry.BuildUI.uiBlock)
+		if (true) //Todo do raycast on ui
 		{
 			//Drag Panning
 			Vector3 curPos;

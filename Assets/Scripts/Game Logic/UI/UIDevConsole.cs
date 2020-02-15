@@ -85,8 +85,9 @@ public class UIDevConsole : MonoBehaviour
 			inputBox.text = "";
 			inputBox.ActivateInputField();
 		});
-
-    }
+		consolePanel.Show();
+		consolePanel.Hide();
+	}
 
 	private void DebugLogMessage(string condition, string stackTrace, LogType type)
 	{
@@ -106,6 +107,8 @@ public class UIDevConsole : MonoBehaviour
 				color = "#ff0000";
 				break;
 		}
+		if (_sb.Length >= 10000)
+			_sb.Clear();
 		_sb.AppendLine($"<color={color}><b>[{type}]</b> {condition}</color>");
 		_logs.Add($"[{type}] {condition}\n\t{stackTrace.Replace("\n", "\n\t")}");
 		if(consolePanel?.IsOpen == true)
@@ -123,6 +126,7 @@ public class UIDevConsole : MonoBehaviour
     {
         if(Input.GetKeyUp(KeyCode.BackQuote) && !inputBox.isFocused)
 		{
+			Debug.Log($"Console {consolePanel.IsOpen}");
 			if (consolePanel.IsOpen)
 				consolePanel.Hide();
 			else

@@ -20,6 +20,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public BuildingDatabase buildings;
 	public HQTileInfo HQTile;
 	public MeshEntityRotatable landingMesh;
+	public BuildState State { get; private set; }
 
 	/*	UI	*/
 	[Header("UI")]
@@ -46,14 +47,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public int poweredTileDisplayRange;
 	public float inidcatorOffset = .5f;
 	
-	//State
-	[HideInInspector]
-	public bool placeMode;
-	[HideInInspector]
-	public bool hqMode;
 
 	public RectTransform unitUIPrefab;
-	public bool uiBlock;
 
 	private List<UIUnitIcon> _activeUnits;
 	private BuildingTileInfo _selectedBuilding;
@@ -71,7 +66,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	private float _poweredTileRangeSq;
 	private List<string> _errors;
 
-	
+	public enum BuildState
+	{
+		Disabled = 0,
+		Idle,
+		HQPlacement,
+		Placement
+	}
 
 	void Awake()
 	{
@@ -88,7 +89,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_cam = GameRegistry.Camera;
 		_EM = World.DefaultGameObjectInjectionWorld.EntityManager;
         HideBuildWindow();
-		placeMode = hqMode = true;
+		State = BuildState.HQPlacement;
 		_selectedBuilding = HQTile;
 		infoBanner.SetText("Place HQ Building");
 			/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
@@ -114,148 +115,181 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		if (_cam == null)
 			_cam = GameRegistry.Camera;
 #endif
-		if (Input.GetKey(KeyCode.Escape) && !hqMode)
-		{
-			if (placeMode)
-			{
-				placeMode = false;
-				HideAllIndicators();
-			}
-			else
-				HideBuildWindow();
-		}
+
 		var mPos = Input.mousePosition;
-		if (!uiBlock)
+		switch(State)
 		{
-			var selectedTile = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mPos), _cam.transform.position.y * 2);
-			if (placeMode)
+			case BuildState.Disabled:
+				break;
+			case BuildState.Idle:
+				ReadCloseInput();
+				break;
+			case BuildState.HQPlacement:
+				UpdatePlacementUI(mPos);
+				break;
+			case BuildState.Placement:
+				UpdatePlacementUI(mPos);
+				ReadDeselectBuildingInput();
+				break;
+		}
+	}
+
+	void UpdatePlacementUI(Vector2 mousePos)
+	{
+		var selectedTile = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
+		if(selectedTile == null)
+		{
+			HideAllIndicators();
+			return;
+		}
+		_validPlacement = true;
+		_suffientFunds = true;
+		var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
+		ValidatePathPlacement(selectedTile);
+		ValidatePlacement(tilesToOccupy);
+		ShowPoweredTiles(selectedTile);
+		switch (_selectedBuilding)
+		{
+			case ResourceConduitTileInfo conduit:
+				ValidateResourceConduit(selectedTile, conduit);
+				break;
+			case ResourceGatheringBuildingInfo building:
+				ValidateResourceGatheringBuilding(selectedTile, tilesToOccupy, building);
+				break;
+		}
+		if (Input.GetKeyDown(KeyCode.Mouse0))
+			PlaceBuilding(selectedTile);
+	}
+
+	void ValidatePathPlacement(Tile selectedTile)
+	{
+		if (_selectedBuilding.placementMode != PlacementMode.Path)
+			return;
+		if (Input.GetKeyDown(KeyCode.Mouse0))
+		{
+			_startPoint = selectedTile;
+		}
+		if (Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
+		{
+			//Target tile is valid?
+			if (InvalidPlacementSelector(selectedTile))
 			{
-				if (selectedTile != null)
+				HideIndicator(placementPathIndicatorEntity);
+				_buildPath = null;
+			}
+			if (!(selectedTile is ResourceTile))
+				_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
+			else
+				_buildPath = null;
+			if (_buildPath != null)
+			{
+				if (_buildPath.Any(t => t.IsUnderwater))
 				{
-					_validPlacement = true;
-					_suffientFunds = true;
-					_errors.Clear();
-					var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
-					//Path Placement
-					if (_selectedBuilding.placementMode == PlacementMode.Path && Input.GetKeyDown(KeyCode.Mouse0))
-					{
-						_startPoint = selectedTile;
-					}
-					if (_selectedBuilding.placementMode == PlacementMode.Path && Input.GetKey(KeyCode.Mouse0) && _startPoint != null)
-					{
-						//Target tile is valid?
-						if (InvalidPlacementSelector(selectedTile))
-						{
-							HideIndicator(placementPathIndicatorEntity);
-							_buildPath = null;
-						}
-						if (!(selectedTile is ResourceTile))
-							_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
-						else
-							_buildPath = null;
-						if (_buildPath != null)
-						{
-							if (_buildPath.Any(t => t.IsUnderwater))
-							{
-								var invalidTiles = _buildPath.Where(t => t.IsUnderwater);
-								ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
-								ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
-								_validPlacement = false;
-							}
-							else
-							{
-								HideIndicator(errorIndicatorEntity);
-								ShowIndicators(placementPathIndicatorEntity, _buildPath);
-								_validPlacement = false;
-							}
-						}
-					}
-					//Validation
-					if (!GameRegistry.ResourceSystem.HasAllResources(_selectedBuilding.cost)) //Has Resources
-					{
-						HideIndicator(selectIndicatorEntity);
-						ShowIndicators(errorIndicatorEntity, tilesToOccupy);
-						_validPlacement = false;
-						_suffientFunds = false;
-						_errors.Add("Insuffient Resources");
-					}
-					else if (tilesToOccupy.Any(InvalidPlacementSelector)) //Valid Placement
-					{
-						var invalidTiles = tilesToOccupy.Where(InvalidPlacementSelector);
-						ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
-						ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
-						_validPlacement = false;
-						_errors.Add("Cannot place on these tiles.");
-					}
-					else
-					{
-						HideIndicator(errorIndicatorEntity);
-						ShowIndicators(selectIndicatorEntity, tilesToOccupy);
-					}
-					ShowPoweredTiles(selectedTile);
-					//Per Type validation
-					switch(_selectedBuilding)
-					{
-						case ResourceConduitTileInfo conduit:
-							ValidateResourceConduit(selectedTile, conduit);
-							break;
-						case ResourceGatheringBuildingInfo building:
-							ValidateResourceGatheringBuilding(selectedTile, tilesToOccupy, building);
-							break;
-					}
-					//Placement
-					if (Input.GetKeyUp(KeyCode.Mouse0))
-					{
-						_startPoint = null;
-						if (_validPlacement || _selectedBuilding.placementMode == PlacementMode.Path)
-						{
-							if (!hqMode)
-								ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
-							if (_buildPath == null)
-							{
-								BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, landingMesh);
-							}
-							else
-							{
-								for (int i = 0; i < _buildPath.Count; i++)
-								{
-									if (InvalidPlacementSelector(_buildPath[i]))
-										continue;
-									BuildQueueSystem.QueueBuilding(_selectedBuilding, _buildPath[i], landingMesh);
-								}
-								_buildPath = null;
-							}
-							if (hqMode)
-							{
-								HideAllIndicators();
-								placeMode = false;
-								infoBanner.SetActive(false);
-								void onHide()
-								{
-									placeMode = hqMode = false;
-									GameRegistry.BaseNameUI.panel.OnHide -= onHide;
-								}
-								GameRegistry.BaseNameUI.panel.OnHide += onHide;
-							}
-						}else
-						{
-							//TODO: Add more detailed error
-							for (int i = 0; i < _errors.Count; i++)
-							{
-								NotificationsUI.Notify(NotifType.Error, _errors[i]);
-							}
-						}
-					}
+					var invalidTiles = _buildPath.Where(t => t.IsUnderwater);
+					ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
+					ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
+					_validPlacement = false;
 				}
 				else
-					HideAllIndicators();
+				{
+					HideIndicator(errorIndicatorEntity);
+					ShowIndicators(placementPathIndicatorEntity, _buildPath);
+					_validPlacement = false;
+				}
 			}
+		}
+	}
+
+	void ValidatePlacement(List<Tile> tilesToOccupy)
+	{
+		if (!GameRegistry.ResourceSystem.HasAllResources(_selectedBuilding.cost)) //Has Resources
+		{
+			HideIndicator(selectIndicatorEntity);
+			ShowIndicators(errorIndicatorEntity, tilesToOccupy);
+			_validPlacement = false;
+			_suffientFunds = false;
+			_errors.Add("Insuffient Resources");
+		}
+		else if (tilesToOccupy.Any(InvalidPlacementSelector)) //Valid Placement
+		{
+			var invalidTiles = tilesToOccupy.Where(InvalidPlacementSelector);
+			ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
+			ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
+			_validPlacement = false;
+			_errors.Add("Cannot place on these tiles.");
+		}
+		else
+		{
+			HideIndicator(errorIndicatorEntity);
+			ShowIndicators(selectIndicatorEntity, tilesToOccupy);
+		}
+	}
+
+	void PlaceBuilding(Tile selectedTile)
+	{
+		_startPoint = null;
+		if (_validPlacement || _selectedBuilding.placementMode == PlacementMode.Path)
+		{
+			if (State == BuildState.Placement)
+				ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
+			if (_buildPath == null)
+			{
+				BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, landingMesh);
+			}
+			else
+			{
+				for (int i = 0; i < _buildPath.Count; i++)
+				{
+					if (InvalidPlacementSelector(_buildPath[i]))
+						continue;
+					BuildQueueSystem.QueueBuilding(_selectedBuilding, _buildPath[i], landingMesh);
+				}
+				_buildPath = null;
+			}
+			if (State == BuildState.HQPlacement)
+			{
+				_selectedBuilding = null;
+				HideAllIndicators();
+				State = BuildState.Disabled;
+				infoBanner.SetActive(false);
+				void onHide()
+				{
+					GameRegistry.BaseNameUI.panel.OnHide -= onHide;
+				}
+				GameRegistry.BaseNameUI.panel.OnHide += onHide;
+			}
+		}
+		else
+		{
+			//TODO: Add more detailed error
+			for (int i = 0; i < _errors.Count; i++)
+			{
+				NotificationsUI.Notify(NotifType.Error, _errors[i]);
+			}
+		}
+		_errors.Clear();
+	}
+
+	void ReadCloseInput()
+	{
+		if (Input.GetKeyUp(KeyCode.Escape))
+		{
+			HideBuildWindow();
+		}
+	}
+
+	void ReadDeselectBuildingInput()
+	{
+		if (Input.GetKeyUp(KeyCode.Escape))
+		{
+			State = BuildState.Idle;
+			HideAllIndicators();
 		}
 	}
 
 	void ShowPoweredTiles(Tile selectedTile)
 	{
-		if (hqMode)
+		if (State == BuildState.HQPlacement)
 			return;
 		var poweredTiles = new List<Tile>(250);
 		var unPoweredTiles = new List<Tile>(250);
@@ -471,11 +505,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void ShowBuildWindow(BuildingDatabase.BuildingDefination[] buildings)
 	{
-		if (hqMode)
+		if (State == BuildState.HQPlacement)
 			return;
 		GameRegistry.InteractionUI.interactionPanel.HidePanel();
 		buildWindow.SetActive(true);
-		placeMode = false;
+		State = BuildState.Idle;
 		_selectedBuilding = null;
 		if(_activeUnits.Count < buildings.Length)
 		{
@@ -506,7 +540,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if(GameRegistry.ResourceSystem.HasAllResources(building.cost))
 				{
 					_selectedBuilding = building;
-					placeMode = true;
+					State = BuildState.Placement;
 				}
 			};
 			_activeUnits[i].OnHover += () => 
@@ -545,7 +579,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public void HideBuildWindow()
 	{
 		HideAllIndicators();
-		placeMode = false;
+		State = BuildState.Disabled;
 		_lastBuildingCategory = null;
 		_selectedBuilding = null;
 		buildWindow.SetActive(false);
@@ -558,11 +592,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		HideAllIndicators();
-		uiBlock = true;
+		State = BuildState.Disabled;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		uiBlock = false;
+		if(_selectedBuilding != null)
+			State = BuildState.Placement;
 	}
 }

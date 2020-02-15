@@ -20,6 +20,14 @@ public class InteractionUI : MonoBehaviour
 	private Tile _start, _end;
 	private Queue<MoveOrder> _moveOrderQueue;
 
+	private InteractionState _curState;
+	private enum InteractionState
+	{
+		Diabled,
+		Inspect,
+		OrderUnit
+	}
+
 	public struct MoveOrder
 	{
 		public Vector3 dst;
@@ -80,59 +88,85 @@ public class InteractionUI : MonoBehaviour
 
 	void Update()
 	{
-		if (GameRegistry.BuildUI.hqMode)
-			return;
 		var mPos = Input.mousePosition;
-		if (Input.GetKeyUp(KeyCode.Escape))
-			interactionPanel.HidePanel();
-
-		if (!GameRegistry.BuildUI.placeMode)
+		switch (_curState)
 		{
-			if (!_uiBlocked && !GameRegistry.BuildUI.uiBlock && !NotificationsUI.INST.isHovered)
+			case InteractionState.Diabled:
+				break;
+			case InteractionState.Inspect:
+				ProcessCloseInput();
+				InspectUI(mPos);
+				break;
+			case InteractionState.OrderUnit:
+				ProcessCloseInput();
+				InstructUnitUI(mPos);
+				break;
+		}
+		
+	}
+
+	void ProcessCloseInput()
+	{
+		if(Input.GetKeyUp(KeyCode.Escape))
+		{
+			interactionPanel.HidePanel();
+			_curState = InteractionState.Inspect;
+		}
+	}
+
+	void InstructUnitUI(Vector2 mousePos)
+	{
+		if (Input.GetKeyUp(KeyCode.Mouse1) && _selectedUnits.Count > 0)
+		{
+			var ray = _cam.ScreenPointToRay(mousePos);
+			var tile = Map.ActiveMap.GetTileFromRay(ray);
+			if (tile != null)
 			{
-				if (Input.GetKeyDown(KeyCode.Mouse0))
+				InstructUnitMovement(tile);
+			}
+		}
+	}
+
+	void InspectUI(Vector2 mousePos)
+	{
+		if(GameRegistry.BuildUI.State > BuildUI.BuildState.Idle)
+		{
+			HidePanel();
+			_curState = InteractionState.Diabled;
+		}
+		if (!_uiBlocked && !NotificationsUI.INST.isHovered)
+		{
+			if (Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				var ray = _cam.ScreenPointToRay(mousePos);
+				_start = Map.ActiveMap.GetTileFromRay(ray);
+				HidePanel();
+			}
+			if (Input.GetKey(KeyCode.Mouse0))
+			{
+				var ray = _cam.ScreenPointToRay(mousePos);
+				_end = Map.ActiveMap.GetTileFromRay(ray);
+				if (_start != _end && _start != null && _end != null)
+					DisplaySelectionRect();
+			}
+			if (Input.GetKeyUp(KeyCode.Mouse0))
+			{
+				selectionBox.gameObject.SetActive(false);
+				var ray = _cam.ScreenPointToRay(mousePos);
+				_end = Map.ActiveMap.GetTileFromRay(ray);
+				if (_start != null && _end != null)
 				{
-					var ray = _cam.ScreenPointToRay(mPos);
-					_start = Map.ActiveMap.GetTileFromRay(ray);
-					HidePanel();
-				}
-				if (Input.GetKey(KeyCode.Mouse0))
-				{
-					var ray = _cam.ScreenPointToRay(mPos);
-					_end = Map.ActiveMap.GetTileFromRay(ray);
-					if (_start != _end && _start != null && _end != null)
-						DisplaySelectionRect();
-				}
-				if (Input.GetKeyUp(KeyCode.Mouse0))
-				{
-					selectionBox.gameObject.SetActive(false);
-					var ray = _cam.ScreenPointToRay(mPos);
-					_end = Map.ActiveMap.GetTileFromRay(ray);
-					if (_start != null && _end != null)
+					_selectedUnits.Clear();
+					if (_start == _end)
+						ShowPanel(_end);
+					else
 					{
-						_selectedUnits.Clear();
-						if (_start == _end)
-							ShowPanel(_end);
-						else
-						{
-							_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
-						}
+						_curState = InteractionState.OrderUnit;
+						_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
 					}
 				}
 			}
-			if (Input.GetKeyUp(KeyCode.Mouse1) && _selectedUnits.Count > 0)
-			{
-				var ray = _cam.ScreenPointToRay(mPos);
-				var tile = Map.ActiveMap.GetTileFromRay(ray);
-				if (tile != null)
-				{
-					InstructUnitMovement(tile);
-				}
-			}
 		}
-		else
-			HidePanel();
-
 	}
 
 	void LateUpdate()

@@ -285,5 +285,6 @@ public class WeatherSystem : JobComponentSystem
 	protected override void OnDestroy()
 	{
 		_cloudField.Dispose();
+		_cloudPos.Dispose();
 	}
 }

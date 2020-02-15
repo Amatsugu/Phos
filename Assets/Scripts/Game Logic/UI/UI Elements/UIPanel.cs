@@ -27,7 +27,7 @@ public class UIPanel : UIHover
 	protected override void Start()
 	{
 		PanelBase = GetComponent<RectTransform>();
-		if (hideOnStart || (hideInEditor && Application.isEditor))
+		if (hideOnStart /*|| (hideInEditor && Application.isEditor)*/)
 			Hide();
 		else
 			OnShow?.Invoke();
@@ -39,11 +39,11 @@ public class UIPanel : UIHover
 		}
 	}
 
-	protected override void Update()
+	protected override void LateUpdate()
 	{
 		if (!hideOnBlur)
 			return;
-		if (Input.GetKeyDown(KeyCode.Mouse0) && !isHovered)
+		if (Input.GetKeyUp(KeyCode.Mouse0) && !isHovered)
 		{
 			Hide();
 		}

@@ -81,8 +81,6 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	public virtual void SetActive(bool active)
 	{
 		rTransform = rTransform ?? GetComponent<RectTransform>();
-		if (IsActive == active)
-			return;
 		gameObject.SetActive(active);
 		if(!active)
 			isHovered = false;
