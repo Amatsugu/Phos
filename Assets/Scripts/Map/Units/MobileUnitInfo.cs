@@ -46,7 +46,7 @@ public class MobileUnitInfo : MeshEntityRotatable
 
 		Map.EM.AddComponentData(e, new PhysicsCollider
 		{
-			Value = Unity.Physics.BoxCollider.Create(new BoxGeometry { Center = pos, Size = new float3(1, 1, 1), Orientation = quaternion.identity }, CollisionFilter.Default, Unity.Physics.Material.Default)
+			Value = Unity.Physics.BoxCollider.Create(new BoxGeometry { Center = default, Size = new float3(1, 1, 1), Orientation = quaternion.identity }, CollisionFilter.Default, Unity.Physics.Material.Default)
 		});
 
 		Map.EM.AddComponentData(e, new PhysicsVelocity
