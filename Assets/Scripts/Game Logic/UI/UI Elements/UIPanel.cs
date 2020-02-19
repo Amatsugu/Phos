@@ -27,7 +27,7 @@ public class UIPanel : UIHover
 	protected override void Start()
 	{
 		PanelBase = GetComponent<RectTransform>();
-		if (hideOnStart /*|| (hideInEditor && Application.isEditor)*/)
+		if (hideOnStart || (hideInEditor && Application.isEditor))
 			Hide();
 		else
 			OnShow?.Invoke();

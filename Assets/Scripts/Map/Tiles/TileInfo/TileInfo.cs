@@ -39,7 +39,7 @@ public class TileInfo : MeshEntityRotatable
 			Orientation = quaternion.identity,
 			SideCount = 6,
 			BevelRadius = 0
-		});
+		}, CollisionFilter.Default, Unity.Physics.Material.Default);
 
 		
 

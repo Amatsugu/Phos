@@ -14,6 +14,7 @@ using Random = UnityEngine.Random;
 using DataStore.ConduitGraph;
 using Effects.Lines;
 using Unity.Rendering;
+using Unity.Physics.Systems;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
@@ -136,7 +137,31 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	void UpdatePlacementUI(Vector2 mousePos)
 	{
-		var selectedTile = Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
+		var s = new System.Diagnostics.Stopwatch();
+		s.Start();
+		Tile selectedTile = null;//Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
+		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
+		var ray = _cam.ScreenPointToRay(mousePos);
+		if (col.CastRay(new Unity.Physics.RaycastInput
+		{
+			Start = ray.origin,
+			End = ray.GetPoint(_cam.transform.position.y * 2),
+			Filter = new Unity.Physics.CollisionFilter
+			{
+				BelongsTo = ~0u,
+				CollidesWith = ~0u,
+				GroupIndex = 0
+			}
+		}, out var hit))
+		{
+			Debug.Log(hit.Position);
+			selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(col.Bodies[hit.RigidBodyIndex].Entity).coords];
+		}
+		s.Stop();
+		Debug.Log($"T: {s.ElapsedMilliseconds}ms");
+		Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
+
+
 		if(selectedTile == null)
 		{
 			HideAllIndicators();
