@@ -2,9 +2,10 @@
   "dependencies": {
     "com.unity.addressables": "1.1.10",
     "com.unity.burst": "1.2.3",
-    "com.unity.entities": "0.5.1-preview.11",
+    "com.unity.collections": "0.5.2-preview.8",
+    "com.unity.entities": "0.6.0-preview.24",
     "com.unity.ide.vscode": "1.1.4",
-    "com.unity.jobs": "0.2.4-preview.11",
+    "com.unity.jobs": "0.2.5-preview.20",
     "com.unity.mathematics": "1.1.0",
     "com.unity.physics": "0.2.5-preview.1",
     "com.unity.progrids": "3.0.3-preview.4",

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
@@ -57,6 +58,8 @@ public class MeshEntity : ScriptableObject
 			typeof(NonUniformScale),
 			typeof(RenderMesh),
 			typeof(PerInstanceCullingTag),
+			typeof(WorldRenderBounds),
+			typeof(ChunkWorldRenderBounds),
 			typeof(Disabled)
 		};
 	}
@@ -89,6 +92,14 @@ public class MeshEntity : ScriptableObject
 		em.RemoveComponent<Disabled>(output);
 	}
 
+	public AABB GetRenderBounds(float3 pos, float3 scale)
+	{
+		return new AABB
+		{
+			Center = pos,
+			Extents = scale
+		};
+	}
 
 	/*public Entity Instantiate(Vector3 position, Vector3 scale, Entity parent)
 	{

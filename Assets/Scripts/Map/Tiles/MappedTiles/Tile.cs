@@ -31,7 +31,7 @@ public class Tile
 	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
 	{
 		Coords = coords;
-		Height = height;
+		Height = 5;//height;
 		info = tInfo;
 		if (height < Map.ActiveMap.seaLevel)
 		{

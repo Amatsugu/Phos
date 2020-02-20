@@ -33,12 +33,12 @@ public class TileInfo : MeshEntityRotatable
 
 		var collider = CylinderCollider.Create(new CylinderGeometry()
 		{
-			Center = new float3(0, 0, 0),
-			Height = scale.y * 2,
+			Center = new float3(0, .5f, 0),
+			Height = scale.y,
 			Radius = pos.edgeLength,
-			Orientation = quaternion.Euler(new float3(90, 30, 0)),
+			Orientation = quaternion.Euler(0, 0, 90),
 			SideCount = 6,
-			BevelRadius = 0
+			BevelRadius = 0.005f
 		}, CollisionFilter.Default, Unity.Physics.Material.Default);
 
 		
