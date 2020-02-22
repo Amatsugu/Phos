@@ -88,6 +88,8 @@ public class WeatherSystem : JobComponentSystem
 		_innerRadius = HexCoords.CalculateInnerRadius(gridSize);
 		_cam = Camera.main.transform;
 		_init = Object.FindObjectOfType<InitializeWeather>();
+		if (_init == null)
+			return;
 		noiseSettings = _init.noiseSettings;
 		cloudFilter = NoiseFilterFactory.CreateNoiseFilter(noiseSettings, 1);
 		_windDir = UnityEngine.Random.insideUnitSphere;
@@ -95,7 +97,7 @@ public class WeatherSystem : JobComponentSystem
 		_maxNoiseValue = 1 - noiseSettings.minValue;
 		if (_cloudField.IsCreated)
 			_cloudField.Dispose();
-		_rand = new System.Random(Map.ActiveMap.Seed);
+		_rand = new System.Random(Map.ActiveMap?.Seed ?? 0);
 		_totalWeatherChance = _init.weatherDefinations.Sum(d => d.chance);
 		_rainTransform = _init.rainVfx.transform;
 
@@ -118,6 +120,8 @@ public class WeatherSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
+		if (_init == null)
+			return inputDeps;
 		SimulateWeather();
 		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var job = new CloudsJob
@@ -147,6 +151,7 @@ public class WeatherSystem : JobComponentSystem
 
 	public void SimulateWeather()
 	{
+		
 		var windSampleDir = Mathf.PerlinNoise(_offset.x / 50, _offset.z / 50) * Mathf.PI * 4; ;
 		var windSampleStr = Mathf.PerlinNoise(_offset.x / 100 + 100, _offset.z / 100 + 100) * Mathf.PI * 4; ;
 		_windDir.x = Mathf.Cos(windSampleDir);

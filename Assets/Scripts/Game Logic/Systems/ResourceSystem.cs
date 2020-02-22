@@ -13,6 +13,8 @@ public class ResourceSystem : ComponentSystem
 	public float ticRate = 1;
 
 	public ResourceTransactionRecord[] resourceRecords;
+	private bool _canRun;
+
 	public struct ResourceTransactionRecord
 	{
 		public int resId;
@@ -112,6 +114,8 @@ public class ResourceSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
+		if(GameRegistry.INST == null)
+			_canRun = false;
 		GameRegistry.INST.resourceSystem = this;
 		resourceRecords = new ResourceTransactionRecord[ResourceDatabase.ResourceCount];
 		for (int i = 0; i < resourceRecords.Length; i++)
@@ -127,6 +131,8 @@ public class ResourceSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
+		if (!_canRun)
+			return;
 		if (DateTime.Now < nextTic)
 			return;
 		//Init Tick

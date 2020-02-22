@@ -25,6 +25,8 @@ public class UnitMovementSystem : JobComponentSystem
 	{
 		base.OnStartRunning();
 		//paths = new Dictionary<int, Path>();
+		if (Map.ActiveMap == null)
+			return;
 		paths = new ConcurrentDictionary<int, Path>();
 		_navData = Map.ActiveMap.GenerateNavData();
 		_tileEdgeLength = Map.ActiveMap.tileEdgeLength;
@@ -204,6 +206,8 @@ public class UnitMovementSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
+		if (!_navData.IsCreated)
+			return inputDeps;
 		var buffer = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent();
 		var job = new PathFinderJob(_tileEdgeLength, buffer, _navData);
 		var handle = job.Schedule(this, inputDeps);

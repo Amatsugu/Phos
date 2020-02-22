@@ -11,7 +11,8 @@ public class EventManager : MonoBehaviour
 			if (_inst == null)
 			{
 				_inst = FindObjectOfType<EventManager>();
-				_inst._events = new Dictionary<string, List<System.Action>>();
+				if(_inst != null)
+					_inst._events = new Dictionary<string, List<System.Action>>();
 			}
 			return _inst;
 		}
@@ -23,6 +24,8 @@ public class EventManager : MonoBehaviour
 
 	public static void AddEventListener(string name, System.Action callback)
 	{
+		if (INST == null)
+			return;
 		if(!INST._events.ContainsKey(name))
 			INST._events.Add(name, new List<System.Action>());
 		INST._events[name].Add(callback);

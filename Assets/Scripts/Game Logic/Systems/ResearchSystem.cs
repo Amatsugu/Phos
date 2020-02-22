@@ -57,6 +57,8 @@ public class ResearchSystem : ComponentSystem
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
+		if (GameRegistry.INST == null)
+			return;
 		rDatabase = GameRegistry.ResearchDatabase;
 		EventManager.AddEventListener("OnTick", () => isTick = true);
 	}
