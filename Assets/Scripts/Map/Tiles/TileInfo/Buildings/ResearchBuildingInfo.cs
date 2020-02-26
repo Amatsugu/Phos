@@ -15,7 +15,7 @@ public class ResearchBuildingInfo : BuildingTileInfo
 		return base.GetComponents().Concat(new ComponentType[] { typeof(ResearchBuildingCategory), typeof(ResearchConsumptionMulti) });
 	}
 
-	public override Entity Instantiate(HexCoords pos, Vector3 scale)
+	public override Entity Instantiate(HexCoords pos, float scale)
 	{
 		var e = base.Instantiate(pos, scale);
 		Map.EM.SetComponentData(e, new ResearchBuildingCategory { Value = researchCategory });

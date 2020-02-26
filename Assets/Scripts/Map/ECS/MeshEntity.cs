@@ -18,6 +18,7 @@ public class MeshEntity : ScriptableObject
 	public UnityEngine.Rendering.ShadowCastingMode castShadows = UnityEngine.Rendering.ShadowCastingMode.On;
 	public bool receiveShadows = true;
 	public bool isStatic = true;
+	public bool nonUniformScale = true;
 
 	protected Entity _entity;
 
@@ -55,7 +56,7 @@ public class MeshEntity : ScriptableObject
 		return new ComponentType[]{
 			typeof(Translation),
 			typeof(LocalToWorld),
-			typeof(NonUniformScale),
+			nonUniformScale ? typeof(NonUniformScale) : typeof(Scale),
 			typeof(RenderMesh),
 			typeof(PerInstanceCullingTag),
 			typeof(WorldRenderBounds),
@@ -64,14 +65,26 @@ public class MeshEntity : ScriptableObject
 		};
 	}
 
-	public Entity Instantiate(Vector3 position) => Instantiate(position, Vector3.one);
+	public Entity Instantiate(float3 position) => Instantiate(position, Vector3.one);
 
-	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Vector3 scale)
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float3 scale)
 	{
 		var e = commandBuffer.Instantiate(GetEntity());
 		commandBuffer.RemoveComponent(e, typeof(Disabled));
 		commandBuffer.SetComponent(e, new Translation { Value = position });
 		commandBuffer.SetComponent(e, new NonUniformScale { Value = scale });
+		return e;
+	}
+
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale)
+	{
+		var e = commandBuffer.Instantiate(GetEntity());
+		commandBuffer.RemoveComponent(e, typeof(Disabled));
+		commandBuffer.SetComponent(e, new Translation { Value = position });
+		if(nonUniformScale)
+			commandBuffer.SetComponent(e, new NonUniformScale { Value = new float3(scale, scale, scale) });
+		else
+			commandBuffer.SetComponent(e, new Scale { Value = scale });
 		return e;
 	}
 
@@ -85,6 +98,19 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
+	public Entity Instantiate(Vector3 position, float scale)
+	{
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+		var e = em.Instantiate(GetEntity());
+		em.SetComponentData(e, new Translation { Value = position });
+		if (nonUniformScale)
+			em.SetComponentData(e, new NonUniformScale { Value = new float3(scale, scale, scale) });
+		else
+			em.SetComponentData(e, new Scale { Value = scale });
+		em.RemoveComponent<Disabled>(e);
+		return e;
+	}
+
 	public void Instantiate(NativeArray<Entity> output)
 	{
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -92,24 +118,4 @@ public class MeshEntity : ScriptableObject
 		em.RemoveComponent<Disabled>(output);
 	}
 
-	public AABB GetRenderBounds(float3 pos, float3 scale)
-	{
-		return new AABB
-		{
-			Center = pos,
-			Extents = scale
-		};
-	}
-
-	/*public Entity Instantiate(Vector3 position, Vector3 scale, Entity parent)
-	{
-		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-		var e = Map.EM.Instantiate(GetEntity());
-		em.SetComponentData(e, new NonUniformScale { Value = scale });
-		em.AddComponent(e, typeof(LocalTranslation));
-		em.SetComponentData(e, new LocalTranslation { Value = position });
-		em.AddComponent(e, typeof(ChildOf));
-		em.SetComponentData(e, new ChildOf { parent = parent });
-		return e;
-	}*/
 }

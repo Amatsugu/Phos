@@ -25,7 +25,7 @@ namespace Tiles.EnemyBuildings
 			return base.GetComponents().Append(typeof(PhosCore));
 		}
 
-		public override Entity Instantiate(HexCoords pos, Vector3 scale)
+		public override Entity Instantiate(HexCoords pos, float scale)
 		{
 			var e = base.Instantiate(pos, scale);
 

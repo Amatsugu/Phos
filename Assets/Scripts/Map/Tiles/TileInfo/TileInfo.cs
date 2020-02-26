@@ -19,27 +19,25 @@ public class TileInfo : MeshEntityRotatable
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
+		nonUniformScale = false;
 		return base.GetComponents().Concat(new ComponentType[]{
 			typeof(HexPosition),
 			typeof(PhysicsCollider)
 		});
 	}
 
-	public virtual Entity Instantiate(HexCoords pos, Vector3 scale)
+	public virtual Entity Instantiate(HexCoords pos, float height)
 	{
-		var e = Instantiate(pos.worldXZ, scale);
+		var e = Instantiate(new Vector3(pos.worldX, height, pos.worldZ), pos.edgeLength);
 		Map.EM.SetComponentData(e, new HexPosition { coords = pos });
 
-		var offset = scale.y - .5f;
-		if (scale.y < Map.ActiveMap.seaLevel)
-			offset = Map.ActiveMap.seaLevel - .5f;
 
 		var collider = CylinderCollider.Create(new CylinderGeometry()
 		{
-			Center = new float3(0, offset, 0),
-			Height = 1,
+			Center = new float3(0, -25, 0),
+			Height = 50,
 			Radius = pos.edgeLength,
-			Orientation = quaternion.Euler(90, 30, 0),
+			Orientation = quaternion.Euler(270, 270, 0),
 			SideCount = 6,
 			BevelRadius = 0
 		}, CollisionFilter.Default, Unity.Physics.Material.Default);

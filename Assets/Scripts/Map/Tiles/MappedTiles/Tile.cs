@@ -103,8 +103,9 @@ public class Tile
 	{
 		if (!_isRendered)
 			return;
+
 		if(info.mesh != null)
-			Map.EM.SetComponentData(_tileEntity, new NonUniformScale { Value = new Vector3(1, Height, 1) });
+			Map.EM.SetComponentData(_tileEntity, new Translation { Value = SurfacePoint });
 
 	}
 
@@ -192,7 +193,7 @@ public class Tile
 	{
 		IsShown = true;
 		_isRendered = true;
-		_tileEntity = GetMeshEntity().Instantiate(Coords, new Vector3(1, Height, 1));
+		_tileEntity = GetMeshEntity().Instantiate(Coords, Height);
 		return _tileEntity;
 	}
 

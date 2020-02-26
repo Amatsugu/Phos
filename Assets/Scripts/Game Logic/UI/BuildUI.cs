@@ -152,9 +152,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			}
 		}, out var hit))
 		{
-			selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(col.Bodies[hit.RigidBodyIndex].Entity).coords];
+			if(hit.RigidBodyIndex != -1)
+				selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(col.Bodies[hit.RigidBodyIndex].Entity).coords];
 		}
 		Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);
+		Debug.DrawRay(hit.Position, Vector3.right, Color.red);
+		Debug.DrawRay(hit.Position, Vector3.forward, Color.blue);
+		Debug.DrawRay(hit.Position, Vector3.up, Color.green);
 		Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
 
 

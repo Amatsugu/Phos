@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: Cloud
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
+  mesh: {fileID: -7545762965820161845, guid: 846670154a1d4ce489f97fbe5b363355, type: 3}
   material: {fileID: 2100000, guid: 832fbd138ec579349bf6a61bd9431c40, type: 2}
   castShadows: 0
   receiveShadows: 0
   isStatic: 1
+  nonUniformScale: 1

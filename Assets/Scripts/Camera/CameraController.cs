@@ -30,7 +30,15 @@ public class CameraController : MonoBehaviour
 	private bool _canRotate = true;
 	private float _rotationTime = 0;
 
-	private int _state = 0;
+	private CameraMode _state = 0;
+
+	public enum CameraMode 
+	{ 
+		Locked = 0,
+		Panning,
+		Free,
+		Cenematic
+	}
 
 	void Awake()
 	{
