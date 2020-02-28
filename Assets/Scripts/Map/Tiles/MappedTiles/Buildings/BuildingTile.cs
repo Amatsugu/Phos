@@ -24,7 +24,10 @@ public class BuildingTile : Tile
 	{
 		var e = base.Render();
 		if(_isBuilt)
+		{
+			_isBuilt = false;
 			Build();
+		}
 		return e;
 	}
 

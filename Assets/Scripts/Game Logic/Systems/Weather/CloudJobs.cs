@@ -67,7 +67,7 @@ public struct CloudShadowsJob : IJobForEach<CloudData, Translation, NonUniformSc
 		t.Value = c.pos + camPos;
 
 		var cloudSize = field[c.index].x;
-		var cloudHeight = 1;// field[c.index].y;
+		var cloudHeight = field[c.index].y;
 		s.Value = new float3(size * cloudSize, cloudHeight, size * cloudSize);
 	}
 }

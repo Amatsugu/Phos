@@ -37,7 +37,7 @@ public class MobileUnitInfo : MeshEntityRotatable
 
 	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id)
 	{
-		var e = Instantiate(pos + Vector3.up * 5, Vector3.one, rotation);
+		var e = Instantiate(pos, Vector3.one, rotation);
 		Map.EM.SetComponentData(e, new MoveSpeed { Value = moveSpeed });
 		Map.EM.SetComponentData(e, new Heading { Value = Vector3.forward });
 		Map.EM.SetComponentData(e, new UnitId { Value = id });
@@ -54,12 +54,6 @@ public class MobileUnitInfo : MeshEntityRotatable
 				BevelRadius = 0 
 			}, CollisionFilter.Default, Unity.Physics.Material.Default)
 		});
-
-		Map.EM.AddComponentData(e, new PhysicsVelocity
-		{
-			Linear = new float3()
-		});
-
 		Map.EM.AddComponentData(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1));
 		
 

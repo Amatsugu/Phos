@@ -13,7 +13,7 @@ public class MobileUnit
 	public HexCoords Coords { get; protected set; }
 	public Vector3 Position
 	{
-		get => _position;
+		get => Map.EM.GetComponentData<Translation>(Entity).Value;
 		set
 		{
 			UpdatePos(value);

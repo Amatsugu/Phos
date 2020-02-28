@@ -623,6 +623,6 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		if(_selectedBuilding != null)
-			State = BuildState.Placement;
+			State = (_selectedBuilding is HQTileInfo) ? BuildState.HQPlacement : BuildState.Placement;
 	}
 }

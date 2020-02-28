@@ -17,6 +17,7 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
+  nonUniformScale: 0
   description: 
   decorators: []
   isTraverseable: 1
@@ -38,9 +39,9 @@ MonoBehaviour:
   cost: []
   production: []
   consumption: []
-  fireRate: 0.8
+  fireRate: 0.5
   spinRate: 5
-  projectileSpeed: 10
-  targetingDelay: 0.75
+  projectileSpeed: 15
+  targetingDelay: 0.5
   targetingRange: 10
   ring: {fileID: 11400000, guid: 64973f25b9a027a4c9e05e13cc4a8445, type: 2}

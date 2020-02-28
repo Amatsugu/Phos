@@ -97,7 +97,7 @@ public class BuildQueueSystem : ComponentSystem
 	}
 	void PlaceBuilding(BuildOrder order)
 	{
-		Map.ActiveMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average);
+		Map.ActiveMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
 		Map.ActiveMap.ReplaceTile(order.dstTile, order.building);
 		_constructionOrders.Add(new ConstructionOrder
 		{

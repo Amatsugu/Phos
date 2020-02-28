@@ -650,7 +650,7 @@ public class Map : IDisposable
 		}
 	}
 
-	public void HexFlatten(HexCoords center, int innerRadius, int outerRadius, FlattenMode mode = FlattenMode.Center)
+	public void HexFlatten(HexCoords center, int innerRadius, int outerRadius, FlattenMode mode = FlattenMode.Center, bool excludeUnderwater = false)
 	{
 		if (innerRadius == 0 || outerRadius == 0)
 			return;
@@ -668,6 +668,8 @@ public class Map : IDisposable
 		if (outerRadius <= innerRadius)
 			return;
 		var outerSelection = HexSelect(center, outerRadius).Except(innerSelection);
+		if(excludeUnderwater)
+			outerSelection = outerSelection.Where(t => !t.IsUnderwater);
 		foreach (var tile in outerSelection)
 		{
 			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);

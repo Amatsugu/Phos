@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: EnergyPacket
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 92a751f183a54144ebaf6f1dbd6d7afc
+    m_Address: EnemyProjectile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 51b15f0d79b2f04479bd4bdacaa5d36a, type: 2}
   m_SchemaSet:

@@ -8,6 +8,8 @@ using Unity.Physics;
 using UnityEngine;
 using Unity.Collections;
 using Unity.Mathematics;
+using Unity.Physics.Authoring;
+using BoxCollider = Unity.Physics.BoxCollider;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
 public class TileInfo : MeshEntityRotatable
@@ -22,7 +24,8 @@ public class TileInfo : MeshEntityRotatable
 		nonUniformScale = false;
 		return base.GetComponents().Concat(new ComponentType[]{
 			typeof(HexPosition),
-			typeof(PhysicsCollider)
+			typeof(PhysicsCollider),
+			typeof(PhysicsDebugDisplayData)
 		});
 	}
 
@@ -31,17 +34,27 @@ public class TileInfo : MeshEntityRotatable
 		var e = Instantiate(new Vector3(pos.worldX, height, pos.worldZ), pos.edgeLength);
 		Map.EM.SetComponentData(e, new HexPosition { coords = pos });
 
-
-		var collider = CylinderCollider.Create(new CylinderGeometry()
+		Map.EM.SetComponentData(e, new PhysicsDebugDisplayData
+		{
+			DrawColliders = 1
+		});
+		/*var collider = CylinderCollider.Create(new CylinderGeometry()
 		{
 			Center = new float3(0, -25, 0),
 			Height = 50,
 			Radius = pos.edgeLength,
-			Orientation = quaternion.Euler(270, 270, 0),
+			Orientation = quaternion.Euler(90, 30, 0),
 			SideCount = 6,
 			BevelRadius = 0
 		}, CollisionFilter.Default, Unity.Physics.Material.Default);
-
+		*/
+		var collider = BoxCollider.Create(new BoxGeometry
+		{
+			BevelRadius = 0,
+			Center = new float3(0, -25, 0),
+			Size = new float3(1, 50, 1),
+			Orientation = quaternion.identity
+		});
 		
 
 		Map.EM.SetComponentData(e, new PhysicsCollider

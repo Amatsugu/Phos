@@ -282,13 +282,15 @@ public class WeatherSystem : JobComponentSystem
 
 	protected override void OnStopRunning()
 	{
-		if(_init.rainVfx != null)
+		if(_init?.rainVfx != null)
 			ApplyWeather(_init.weatherDefinations[0].state);
 		base.OnStopRunning();
 	}
 
 	protected override void OnDestroy()
 	{
+		if (_init == null)
+			return;
 		_cloudField.Dispose();
 		_cloudPos.Dispose();
 	}

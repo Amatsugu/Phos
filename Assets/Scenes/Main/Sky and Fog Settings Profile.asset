@@ -64,12 +64,12 @@ MonoBehaviour:
     m_Value: 1
   anisotropy:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: -0.656
     min: -1
     max: 1
   globalLightProbeDimmer:
     m_OverrideState: 1
-    m_Value: 0.699
+    m_Value: 0.573
     min: 0
     max: 1
   depthExtent:
@@ -294,10 +294,10 @@ MonoBehaviour:
     m_Value: 1
   enable:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   length:
     m_OverrideState: 1
-    m_Value: 0.15
+    m_Value: 0.486
     min: 0
     max: 1
   opacity:
@@ -307,7 +307,7 @@ MonoBehaviour:
     max: 1
   distanceScaleFactor:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 1
     min: 0
     max: 1
   maxDistance:

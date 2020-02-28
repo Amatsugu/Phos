@@ -115,7 +115,10 @@ public class ResourceSystem : ComponentSystem
 	{
 		base.OnCreate();
 		if(GameRegistry.INST == null)
+		{
 			_canRun = false;
+			return;
+		}
 		GameRegistry.INST.resourceSystem = this;
 		resourceRecords = new ResourceTransactionRecord[ResourceDatabase.ResourceCount];
 		for (int i = 0; i < resourceRecords.Length; i++)

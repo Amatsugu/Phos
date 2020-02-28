@@ -72,7 +72,10 @@ public class MeshEntity : ScriptableObject
 		var e = commandBuffer.Instantiate(GetEntity());
 		commandBuffer.RemoveComponent(e, typeof(Disabled));
 		commandBuffer.SetComponent(e, new Translation { Value = position });
-		commandBuffer.SetComponent(e, new NonUniformScale { Value = scale });
+		if(nonUniformScale)
+			commandBuffer.SetComponent(e, new NonUniformScale { Value = scale });
+		else
+			commandBuffer.SetComponent(e, new Scale { Value = scale.x });
 		return e;
 	}
 
@@ -93,7 +96,10 @@ public class MeshEntity : ScriptableObject
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
-		em.SetComponentData(e, new NonUniformScale { Value = scale });
+		if (nonUniformScale)
+			em.SetComponentData(e, new NonUniformScale { Value = scale });
+		else
+			em.SetComponentData(e, new Scale { Value = scale.x });
 		em.RemoveComponent<Disabled>(e);
 		return e;
 	}

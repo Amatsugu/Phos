@@ -7,6 +7,7 @@ using System.Linq;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -14,13 +15,13 @@ using UnityEngine.AddressableAssets;
 public class PhosCoreSystem : ComponentSystem
 {
 
-	private MeshEntityRotatable _bullet;
+	private DynamicMeshEntity _bullet;
 	private int _state = 0;
 	private Map _map;
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
-		var op = Addressables.LoadAssetAsync<MeshEntityRotatable>("EnergyPacket");
+		var op = Addressables.LoadAssetAsync<DynamicMeshEntity>("EnemyProjectile");
 		op.Completed += e =>
 		{
 			_bullet = e.Result;
@@ -80,11 +81,13 @@ public class PhosCoreSystem : ComponentSystem
 	private void FirePorjectile(float3 startPos, float angle, float3 target, PhosCore core, double targetTime)
 	{
 		var dir = math.rotate(quaternion.RotateY(angle), Vector3.forward);
-		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, startPos + (dir * 1.9f) + new float3(0, 2.25916f, 0), Vector3.one * .4f);
+		var pos = startPos + (dir * 1.9f) + new float3(0, 2.25916f, 0);
 		dir.y = .4f;
+		var vel = dir * core.projectileSpeed;
+		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, quaternion.identity, vel);
 		PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 5 });
-		PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * core.projectileSpeed });
-		PostUpdateCommands.AddComponent(proj, new Drag { Value = 3.2f });
+		//PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * core.projectileSpeed });
+		//PostUpdateCommands.AddComponent(proj, new Drag { Value = 3.2f });
 		PostUpdateCommands.AddComponent(proj, new PhosProjectile
 		{
 			targetTime = targetTime,
@@ -92,57 +95,56 @@ public class PhosCoreSystem : ComponentSystem
 			flightSpeed = core.projectileSpeed * 10
 		});
 	}
+}
 
-	public class PhosProjectileSystem : JobComponentSystem
+public class PhosProjectileSystem : JobComponentSystem
+{
+	struct PhosProjectileJob : IJobForEachWithEntity<PhosProjectile, PhysicsVelocity, Translation>
 	{
-		struct PhosProjectileJob : IJobForEachWithEntity<PhosProjectile, Velocity, Translation>
+		public EntityCommandBuffer.Concurrent CMB;
+		public double curTime;
+
+		public void Execute(Entity entity, int index, ref PhosProjectile proj, ref PhysicsVelocity vel, ref Translation t)
 		{
-			public EntityCommandBuffer.Concurrent CMB;
-			public double curTime;
-
-			public void Execute(Entity entity, int index, ref PhosProjectile proj, ref Velocity vel, ref Translation t)
+			if (curTime >= proj.targetTime)
 			{
-				if (curTime >= proj.targetTime)
-				{
-					CMB.RemoveComponent(index, entity, typeof(PhosProjectile));
-					CMB.RemoveComponent(index, entity, typeof(Gravity));
-					CMB.RemoveComponent(index, entity, typeof(Drag));
-					vel.Value = math.normalize(proj.target - t.Value) * proj.flightSpeed;
-					LineFactory.UpdateStaticLine(CMB, index, entity, t.Value, proj.target);
+				CMB.RemoveComponent(index, entity, typeof(PhosProjectile));
+				CMB.RemoveComponent(index, entity, typeof(Gravity));
+				CMB.RemoveComponent(index, entity, typeof(Drag));
+				vel.Linear = math.normalize(proj.target - t.Value) * proj.flightSpeed;
+				LineFactory.UpdateStaticLine(CMB, index, entity, t.Value, proj.target, .5f);
 
-				}
 			}
 		}
+	}
 
-		protected override JobHandle OnUpdate(JobHandle inputDeps)
+	protected override JobHandle OnUpdate(JobHandle inputDeps)
+	{
+		var job = new PhosProjectileJob
 		{
-			var job = new PhosProjectileJob 
-			{ 
-				CMB = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent(),
-				curTime = Time.ElapsedTime
-			};
-			inputDeps = job.Schedule(this, inputDeps);
-			inputDeps.Complete();
-			return inputDeps;
-		}
+			CMB = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent(),
+			curTime = Time.ElapsedTime
+		};
+		inputDeps = job.Schedule(this, inputDeps);
+		inputDeps.Complete();
+		return inputDeps;
 	}
+}
 
+public struct PhosCore : IComponentData
+{
+	public float spinRate;
+	public float fireRate;
+	public double nextVolleyTime;
+	public float projectileSpeed;
+	public float targetDelay;
+	public int targetingRange;
+	public Entity ring;
+}
 
-	public struct PhosCore : IComponentData
-	{
-		public float spinRate;
-		public float fireRate;
-		public double nextVolleyTime;
-		public float projectileSpeed;
-		public float targetDelay;
-		public int targetingRange;
-		public Entity ring;
-	}
-
-	public struct PhosProjectile : IComponentData
-	{
-		public double targetTime;
-		public float flightSpeed;
-		public float3 target;
-	}
+public struct PhosProjectile : IComponentData
+{
+	public double targetTime;
+	public float flightSpeed;
+	public float3 target;
 }

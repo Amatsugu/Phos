@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
@@ -16,18 +17,32 @@ public class MeshEntityRotatable : MeshEntity
 		});
 	}
 
-	public Entity Instantiate(Vector3 position, Vector3 scale, Quaternion rotation)
+	public Entity Instantiate(float3 position, float3 scale, Quaternion rotation)
 	{
 		var e = Instantiate(position, scale);
 		Map.EM.SetComponentData(e, new Rotation { Value = rotation });
 		return e;
 	}
 
-	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Vector3 scale, Quaternion rotation)
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float3 scale, Quaternion rotation)
 	{
 		var e = BufferedInstantiate(commandBuffer, position, scale);
 		commandBuffer.SetComponent(e, new Translation { Value = position });
-		commandBuffer.SetComponent(e, new NonUniformScale { Value = scale });
+		commandBuffer.SetComponent(e, new Rotation { Value = rotation });
+		return e;
+	}
+
+	public Entity Instantiate(float3 position, float scale, Quaternion rotation)
+	{
+		var e = Instantiate(position, scale);
+		Map.EM.SetComponentData(e, new Rotation { Value = rotation });
+		return e;
+	}
+
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale, Quaternion rotation)
+	{
+		var e = BufferedInstantiate(commandBuffer, position, scale);
+		commandBuffer.SetComponent(e, new Translation { Value = position });
 		commandBuffer.SetComponent(e, new Rotation { Value = rotation });
 		return e;
 	}
