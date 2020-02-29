@@ -347,7 +347,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
 			nodes.RemoveAt(nodes.Count - 1);
 		nodes.RemoveAll(n => n.conduitPos == selectedTile.Coords);
-		ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + new Vector3(0, conduitInfo.powerLineOffset, 0), nodes);
+		ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + new float3(0, conduitInfo.powerLineOffset, 0), nodes);
 #if DEBUG
 		for (int i = 0; i < nodes.Count; i++)
 		{
@@ -514,7 +514,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if(i >= _renderedEntities[indicatorMesh])
 					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
 
-				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint + new Vector3(0, inidcatorOffset, 0) });
+				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint + new float3(0, inidcatorOffset, 0) });
 			}
 			else
 			{

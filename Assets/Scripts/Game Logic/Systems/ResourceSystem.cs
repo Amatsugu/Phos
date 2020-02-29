@@ -9,11 +9,11 @@ public class ResourceSystem : ComponentSystem
 	public static int[] resCount;
 	public static int maxStorage;
 
-	public DateTime nextTic;
+	public double nextTic;
 	public float ticRate = 1;
 
 	public ResourceTransactionRecord[] resourceRecords;
-	private bool _canRun;
+	private bool _canRun = true;
 
 	public struct ResourceTransactionRecord
 	{
@@ -116,6 +116,7 @@ public class ResourceSystem : ComponentSystem
 		base.OnCreate();
 		if(GameRegistry.INST == null)
 		{
+			Debug.LogWarning("Can't Run");
 			_canRun = false;
 			return;
 		}
@@ -129,21 +130,20 @@ public class ResourceSystem : ComponentSystem
 
 	protected override void OnStartRunning()
 	{
-		nextTic = DateTime.Now.AddSeconds(1 / ticRate);
+		nextTic = Time.ElapsedTime + (1 / ticRate);
 	}
 
 	protected override void OnUpdate()
 	{
 		if (!_canRun)
 			return;
-		if (DateTime.Now < nextTic)
+		if (Time.ElapsedTime < nextTic)
 			return;
 		//Init Tick
-		nextTic = nextTic.AddSeconds(1 / ticRate);
+		nextTic = Time.ElapsedTime + (1 / ticRate);
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i].Clear();
 		EventManager.InvokeEvent("OnTick");
-
 
 		//Consumption
 		Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>

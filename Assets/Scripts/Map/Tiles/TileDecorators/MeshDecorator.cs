@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ using UnityEngine;
 public class MeshDecorator : TileDecorator
 {
 	public Vector3 rotation;
-	public Vector3 offset;
+	public float3 offset;
 	public float randomRotMin = 0;
 	public float randomRotMax = 180;
 

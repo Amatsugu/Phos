@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
@@ -474,7 +475,7 @@ public class Map : IDisposable
 				if ((a - b).sqrMagnitude <= tileEdgeLength * tileEdgeLength)
 					return t;
 			}
-			if ((t.SurfacePoint - p).sqrMagnitude <= tileEdgeLength * tileEdgeLength)
+			if (((Vector3)t.SurfacePoint - p).sqrMagnitude <= tileEdgeLength * tileEdgeLength)
 				return t;
 		}
 		return null;

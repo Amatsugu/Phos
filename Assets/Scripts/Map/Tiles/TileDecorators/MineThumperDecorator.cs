@@ -3,12 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Building Decorators/Thumper")]
 public class MineThumperDecorator : TileDecorator
 {
-	public Vector3[] offsets = new Vector3[2];
+	public float3[] offsets = new float3[2];
 	public AnimationCurve[] curves = new AnimationCurve[2];
 
 	void OnValidate()
@@ -32,7 +33,7 @@ public class MineThumperDecorator : TileDecorator
 				duration = 2,
 				animationCurve = curves[i],
 				basePos = tile.SurfacePoint + offsets[i],
-				maxPos = tile.SurfacePoint + offsets[i] + new Vector3(0,.5f,0),
+				maxPos = tile.SurfacePoint + offsets[i] + new float3(0,.5f,0),
 				phase = Time.time + ((1-i) * .1f)
 			});
 		}

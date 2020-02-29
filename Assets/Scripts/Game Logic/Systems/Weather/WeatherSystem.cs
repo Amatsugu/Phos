@@ -289,9 +289,9 @@ public class WeatherSystem : JobComponentSystem
 
 	protected override void OnDestroy()
 	{
-		if (_init == null)
-			return;
-		_cloudField.Dispose();
-		_cloudPos.Dispose();
+		if(_cloudField.IsCreated)
+			_cloudField.Dispose();
+		if(_cloudPos.IsCreated)
+			_cloudPos.Dispose();
 	}
 }

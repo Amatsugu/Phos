@@ -12,7 +12,7 @@ using UnityEngine;
 public class Tile
 {
 	public HexCoords Coords { get; protected set; }
-	public Vector3 SurfacePoint { get; protected set; }
+	public float3 SurfacePoint { get; protected set; }
 	public float Height { get; protected set; }
 	public bool IsUnderwater { get; protected set; }
 
@@ -35,13 +35,13 @@ public class Tile
 		info = tInfo;
 		if (height < Map.ActiveMap.seaLevel)
 		{
-			SurfacePoint = new Vector3(Coords.worldX, Map.ActiveMap.seaLevel, Coords.worldZ);
+			SurfacePoint = new float3(Coords.worldX, Map.ActiveMap.seaLevel, Coords.worldZ);
 			IsUnderwater = true;
 		}
 		else
 		{
 			IsUnderwater = false;
-			SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
+			SurfacePoint = new float3(Coords.worldX, Height, Coords.worldZ);
 		}
 	}
 

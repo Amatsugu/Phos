@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ public class UIInfoPopup : UIExpandable
 	[Header("Popup Settings")]
 	public TMP_Text title;
 	public TMP_Text desc;
-	public Vector3 offset = new Vector3(0, 1, 0);
+	public float3 offset = new float3(0, 1, 0);
 	public MeshEntityRotatable line;
 	public float hoverSpacing;
 	public float blurSpacing;

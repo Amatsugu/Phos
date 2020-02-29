@@ -81,7 +81,7 @@ public class PhosCoreSystem : ComponentSystem
 	private void FirePorjectile(float3 startPos, float angle, float3 target, PhosCore core, double targetTime)
 	{
 		var dir = math.rotate(quaternion.RotateY(angle), Vector3.forward);
-		var pos = startPos + (dir * 1.9f) + new float3(0, 2.25916f, 0);
+		var pos = startPos + (dir * 2.9f) + new float3(0, 4, 0);
 		dir.y = .4f;
 		var vel = dir * core.projectileSpeed;
 		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, quaternion.identity, vel);
@@ -92,7 +92,7 @@ public class PhosCoreSystem : ComponentSystem
 		{
 			targetTime = targetTime,
 			target = target,
-			flightSpeed = core.projectileSpeed * 10
+			flightSpeed = core.projectileSpeed * 15
 		});
 	}
 }
@@ -112,8 +112,6 @@ public class PhosProjectileSystem : JobComponentSystem
 				CMB.RemoveComponent(index, entity, typeof(Gravity));
 				CMB.RemoveComponent(index, entity, typeof(Drag));
 				vel.Linear = math.normalize(proj.target - t.Value) * proj.flightSpeed;
-				LineFactory.UpdateStaticLine(CMB, index, entity, t.Value, proj.target, .5f);
-
 			}
 		}
 	}

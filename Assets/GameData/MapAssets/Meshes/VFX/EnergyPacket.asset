@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: EnergyPacket
   m_EditorClassIdentifier: 
-  mesh: {fileID: -7859401362885015629, guid: 2632746049f52834099932ed311a813e, type: 3}
+  mesh: {fileID: 8929111303131502281, guid: 9510d43d68c718a4a9a2a4585252a5f2, type: 3}
   material: {fileID: 2100000, guid: 76e1191a23174ad4a93dbcdef8b76d74, type: 2}
   castShadows: 1
   receiveShadows: 0
   isStatic: 0
+  nonUniformScale: 1

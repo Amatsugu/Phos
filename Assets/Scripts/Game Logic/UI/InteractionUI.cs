@@ -64,6 +64,7 @@ public class InteractionUI : MonoBehaviour
 		EventManager.AddEventListener("nameWindowClose", () =>
 		{
 			enabled = true;
+			_curState = InteractionState.Inspect;
 		});
 		
 	}
@@ -92,6 +93,8 @@ public class InteractionUI : MonoBehaviour
 		switch (_curState)
 		{
 			case InteractionState.Diabled:
+				if (GameRegistry.BuildUI.State <= BuildUI.BuildState.HQPlacement)
+					_curState = InteractionState.Inspect;
 				break;
 			case InteractionState.Inspect:
 				ProcessCloseInput();
@@ -111,6 +114,11 @@ public class InteractionUI : MonoBehaviour
 		{
 			interactionPanel.HidePanel();
 			_curState = InteractionState.Inspect;
+		}
+		if(GameRegistry.BuildUI.State > BuildUI.BuildState.Disabled)
+		{
+			interactionPanel.HidePanel();
+			_curState = InteractionState.Diabled;
 		}
 	}
 

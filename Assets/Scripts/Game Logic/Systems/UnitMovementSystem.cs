@@ -194,13 +194,18 @@ public class UnitMovementSystem : JobComponentSystem
 				return;
 			}
 			var dst = path.Value[pathId.Progress].SurfacePoint;
+
 			dst.y = t.Value.y;
 			t.Value = Vector3.MoveTowards(t.Value, dst, deltaTime * speed.Value);
 			var unit = Map.ActiveMap.units[id.Value];
 			t.Value.y = Map.ActiveMap[unit.Coords].Height;
 			unit.UpdatePos(t.Value);
-			if((Vector3)t.Value == dst)
+			if(t.Value.Equals(dst))
+			{
 				pathId.Progress++;
+				return;
+			}
+			r.Value = quaternion.LookRotation(t.Value - dst, new float3(0,1,0));
 		}
 	}
 

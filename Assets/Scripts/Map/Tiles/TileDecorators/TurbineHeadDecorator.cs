@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset / Building Decorators / Wind Turbine")]
 public class TurbineHeadDecorator : TileDecorator
 {
-	public Vector3 bladeOffset = Vector3.zero;
+	public float3 bladeOffset = Vector3.zero;
 
 	public override int GetDecorEntityCount(Tile tile) => 1;
 
@@ -18,7 +19,7 @@ public class TurbineHeadDecorator : TileDecorator
 		var entities = new Entity[1];
 		entities[0] = meshEntity.Instantiate(tile.SurfacePoint);
 		Map.EM.AddComponentData(entities[0], new RotateAxis { Value = Vector3.up });
-		Map.EM.AddComponentData(entities[0], new RotateSpeed { Value = -4 });
+		Map.EM.AddComponentData(entities[0], new RotateSpeed { Value = -40 });
 		return entities;
 	}
 
