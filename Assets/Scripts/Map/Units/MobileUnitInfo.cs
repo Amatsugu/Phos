@@ -19,6 +19,7 @@ public class MobileUnitInfo : MeshEntityRotatable
 
 	public float moveSpeed = 1;
 	public float attackSpeed = 1;
+	public float maxHealth;
 	public int size;
 	public UnitType type;
 	public MeshEntityRotatable projectile;
@@ -31,11 +32,13 @@ public class MobileUnitInfo : MeshEntityRotatable
 			typeof(UnitId),
 			typeof(Projectile),
 			typeof(AttackSpeed),
+			typeof(Health),
+			typeof(FactionId),
 		});
 	}
 
 
-	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id)
+	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id, Faction faction = Faction.None)
 	{
 		var e = Instantiate(pos, Vector3.one, rotation);
 		Map.EM.SetComponentData(e, new MoveSpeed { Value = moveSpeed });
@@ -43,6 +46,8 @@ public class MobileUnitInfo : MeshEntityRotatable
 		Map.EM.SetComponentData(e, new UnitId { Value = id });
 		Map.EM.SetComponentData(e, new Projectile { Value = projectile.GetEntity() });
 		Map.EM.SetComponentData(e, new AttackSpeed { Value = attackSpeed });
+		Map.EM.SetComponentData(e, new Health { maxHealth = maxHealth, Value = maxHealth });
+		Map.EM.SetComponentData(e, new FactionId { Value = faction });
 
 		Map.EM.AddComponentData(e, new PhysicsCollider
 		{

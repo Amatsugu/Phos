@@ -16,8 +16,9 @@ public class TileInfo : MeshEntityRotatable
 {
 	[Header("Tile Info")]
 	public string description;
-    public TileDecorator[] decorators;
+	public TileDecorator[] decorators;
 	public bool isTraverseable = true;
+	public Faction faction;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
@@ -25,7 +26,8 @@ public class TileInfo : MeshEntityRotatable
 		return base.GetComponents().Concat(new ComponentType[]{
 			typeof(HexPosition),
 			typeof(PhysicsCollider),
-			typeof(PhysicsDebugDisplayData)
+			typeof(PhysicsDebugDisplayData), 
+			typeof(FactionId)
 		});
 	}
 
@@ -33,6 +35,7 @@ public class TileInfo : MeshEntityRotatable
 	{
 		var e = Instantiate(new Vector3(pos.worldX, height, pos.worldZ), pos.edgeLength);
 		Map.EM.SetComponentData(e, new HexPosition { coords = pos });
+		Map.EM.SetComponentData(e, new FactionId { Value = faction });
 
 		Map.EM.SetComponentData(e, new PhysicsDebugDisplayData
 		{

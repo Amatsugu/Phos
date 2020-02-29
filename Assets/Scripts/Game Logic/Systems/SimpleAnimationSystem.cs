@@ -1,6 +1,7 @@
 ﻿using AnimationSystem.AnimationData;
 using AnimationSystem.Animations;
 using System;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -9,6 +10,7 @@ using UnityEngine;
 
 namespace AnimationSystem
 {
+	[BurstCompile]
 	public class SimpleAnimationSystem : ComponentSystem
 	{
 		protected override void OnUpdate()
@@ -43,8 +45,10 @@ namespace AnimationSystem
 
 
 	[UpdateBefore(typeof(SimpleAnimationSystem))]
+	[BurstCompile]
 	public class SimpleAnimationJobSystem : JobComponentSystem
 	{
+		[BurstCompile]
 		public struct GravityJob : IJobForEach<Gravity, Velocity>
 		{
 			public float dt;
@@ -54,6 +58,7 @@ namespace AnimationSystem
 			}
 		}
 
+		[BurstCompile]
 		public struct VelocityJob : IJobForEach<Velocity, Translation>
 		{
 			public float dt;
@@ -63,6 +68,7 @@ namespace AnimationSystem
 			}
 		}
 
+		[BurstCompile]
 		public struct FloorJob : IJobForEach<Floor, Translation> //TODO Optimize this
 		{
 			public void Execute(ref Floor f, ref Translation t)
@@ -72,6 +78,7 @@ namespace AnimationSystem
 			}
 		}
 
+		[BurstCompile]
 		public struct RotateJob : IJobForEach<RotateAxis, RotateSpeed, Rotation>
 		{
 			public float dt;
@@ -82,6 +89,7 @@ namespace AnimationSystem
 			}
 		}
 
+		[BurstCompile]
 		public struct AccelerationJob : IJobForEach<Velocity, Acceleration>
 		{
 			public float dt;
@@ -92,6 +100,7 @@ namespace AnimationSystem
 			}
 		}
 
+		[BurstCompile]
 		public struct SeekTargetJob : IJobForEach<Translation, SeekTarget, Acceleration>
 		{
 			public float dt;
@@ -103,6 +112,7 @@ namespace AnimationSystem
 			}
 		}
 
+		[BurstCompile]
 		public struct DragJob : IJobForEach<Drag, Velocity>
 		{
 			public DragJob(float dt)

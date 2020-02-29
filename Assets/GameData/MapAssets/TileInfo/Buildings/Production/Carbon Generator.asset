@@ -17,9 +17,11 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
+  nonUniformScale: 1
   description: Produces power
   decorators: []
   isTraverseable: 0
+  faction: 1
   buildingMesh: {fileID: 11400000, guid: 7f6f3993fc3063844b2980e8f75acee1, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   tier: 1
@@ -34,6 +36,7 @@ MonoBehaviour:
   upgradeTarget:
     id: -1
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  preserveGroundTile: 0
   cost:
   - id: 1
     ammount: 60

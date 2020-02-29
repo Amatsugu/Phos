@@ -17,26 +17,31 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  decorators: []
+  nonUniformScale: 1
   description: 'Unlocks Structure research '
+  decorators: []
   isTraverseable: 0
+  faction: 1
   buildingMesh: {fileID: 11400000, guid: 396bb86d2dfd29140b0d4ed8115681dc, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  constructionTime: 2
   tier: 1
+  constructionTime: 2
   category: 1
   size: 0
   flattenOuterRange: 0
   resourceTransferRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  placementMode: 0
+  upgradeTarget:
+    id: -1
+  icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  preserveGroundTile: 0
   cost:
   - id: 1
     ammount: 16
   - id: 2
     ammount: 8
-  icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  placementMode: 0
-  upgradeTarget:
-    id: -1
   production: []
   consumption: []
   researchCategory: 4

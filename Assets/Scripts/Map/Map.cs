@@ -237,13 +237,13 @@ public class Map : IDisposable
 
 	}
 
-	public MobileUnit AddUnit(MobileUnitInfo unitInfo, Tile tile)
+	public MobileUnit AddUnit(MobileUnitInfo unitInfo, Tile tile, Faction faction)
 	{
 		var id = _nextId++;
 		var chunkIndex = tile.Coords.GetChunkIndex(width);
 		if(unitLocations[chunkIndex] == null)
 			unitLocations[chunkIndex] = new List<int>();
-		var unit = new MobileUnit(id, unitInfo, tile, chunkIndex);
+		var unit = new MobileUnit(id, unitInfo, tile, chunkIndex, faction);
 		unitLocations[chunkIndex].Add(id);
 		units.Add(id, unit);
 		if (IsRendered)

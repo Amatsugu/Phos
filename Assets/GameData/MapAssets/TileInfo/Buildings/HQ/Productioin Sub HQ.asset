@@ -17,21 +17,26 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  decorators: []
+  nonUniformScale: 0
   description: 
+  decorators: []
   isTraverseable: 0
+  faction: 1
   buildingMesh: {fileID: 11400000, guid: 4807fae3b4dde5a4bab4426ff6291c9e, type: 2}
   constructionMesh: {fileID: 0}
-  constructionTime: 0
   tier: 0
+  constructionTime: 0
   category: 0
   size: 0
   flattenOuterRange: 0
   resourceTransferRange: 0
-  cost: []
-  icon: {fileID: 0}
+  isOffshore: 0
+  offshoreOnly: 0
   placementMode: 0
   upgradeTarget:
     id: -1
+  icon: {fileID: 0}
+  preserveGroundTile: 0
+  cost: []
   production: []
   consumption: []

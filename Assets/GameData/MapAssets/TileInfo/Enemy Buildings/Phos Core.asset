@@ -21,6 +21,7 @@ MonoBehaviour:
   description: 
   decorators: []
   isTraverseable: 1
+  faction: 2
   buildingMesh: {fileID: 11400000, guid: 12f33196a9f8f6f49af32137683eda3f, type: 2}
   constructionMesh: {fileID: 0}
   tier: 1

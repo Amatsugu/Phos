@@ -25,16 +25,18 @@ public class MobileUnit
 
 	protected int _chunk;
 	private bool _isShown;
+	private Faction _faction;
 	public Vector3 _position;
 
 
-	public MobileUnit(int id, MobileUnitInfo info, Tile tile, int chunkId)
+	public MobileUnit(int id, MobileUnitInfo info, Tile tile, int chunkId, Faction faction)
 	{
 		this.id = id;
 		this.info = info;
 		_position = tile.SurfacePoint;
 		Coords = tile.Coords;
 		_chunk = chunkId;
+		_faction = faction;
 	}
 
 	public Entity Render()
@@ -42,7 +44,9 @@ public class MobileUnit
 		if (IsRendered)
 			return Entity;
 		IsRendered  = _isShown = true;
-		return Entity =  info.Instantiate(_position, Quaternion.identity, id);
+		Entity =  info.Instantiate(_position, Quaternion.identity, id);
+		Map.EM.SetComponentData(Entity, new FactionId { Value = _faction });
+		return Entity;
 	}
 
 	public void UpdatePos(Vector3 pos)
@@ -81,6 +85,9 @@ public class MobileUnit
 
 	public virtual void Die()
 	{
+		Map.ActiveMap.unitLocations[_chunk].Remove(id);
+		Map.ActiveMap.units.Remove(id);
+		Map.EM.DestroyEntity(Entity);
 		//TODO: Death Effect
 		//Map.ActiveMap[occupiedTile].DeOccupyTile(id);
 	}

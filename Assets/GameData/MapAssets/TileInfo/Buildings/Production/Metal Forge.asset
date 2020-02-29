@@ -17,17 +17,26 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  decorators: []
+  nonUniformScale: 1
   description: Forges an alloy with iron and carbon to produce steel.
+  decorators: []
   isTraverseable: 0
+  faction: 1
   buildingMesh: {fileID: 11400000, guid: 41cfa5a46899f3a42be761d72cc6125a, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  constructionTime: 2
   tier: 2
+  constructionTime: 2
   category: 3
   size: 0
   flattenOuterRange: 0
   resourceTransferRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  placementMode: 0
+  upgradeTarget:
+    id: -1
+  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  preserveGroundTile: 0
   cost:
   - id: 1
     ammount: 75
@@ -35,10 +44,6 @@ MonoBehaviour:
     ammount: 35
   - id: 2
     ammount: 10
-  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  placementMode: 0
-  upgradeTarget:
-    id: -1
   production:
   - id: 4
     ammount: 8

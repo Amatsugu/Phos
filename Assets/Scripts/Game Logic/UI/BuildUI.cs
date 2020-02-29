@@ -89,7 +89,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_activeUnits = new List<UIUnitIcon>();
 		_cam = GameRegistry.Camera;
 		_EM = World.DefaultGameObjectInjectionWorld.EntityManager;
-        HideBuildWindow();
+		HideBuildWindow();
 		State = BuildState.HQPlacement;
 		_selectedBuilding = HQTile;
 		infoBanner.SetText("Place HQ Building");
