@@ -15,6 +15,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 	private readonly float _connectRangeSq;
 	private readonly Dictionary<HexCoords, Entity> _conduitLines;
 	private bool _switchLines;
+	private Entity _energyPacket;
 
 	public ResourceConduitTile(HexCoords coords, float height, ResourceConduitTileInfo tInfo) : base(coords, height, tInfo)
 	{
@@ -81,16 +82,11 @@ public class ResourceConduitTile : PoweredBuildingTile
 		base.Show(isShown);
 	}
 
-	protected override void OnBuilt()
-	{
-		Debug.Log("Node Added");
-		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
-		base.OnBuilt();
-	}
-
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
+		Debug.Log("Node Added");
+		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
 	}
 
 	public override void FindConduitConnections()
@@ -200,9 +196,9 @@ public class ResourceConduitTile : PoweredBuildingTile
 	{
 		if (_connectionInit && HasHQConnection)
 			return;
-		var e = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .5f);
+		_energyPacket = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .15f);
 		var cNode = Map.ActiveMap.conduitGraph.GetNode(Coords);
-		Map.EM.AddComponentData(e, new EnergyPacket
+		Map.EM.AddComponentData(_energyPacket, new EnergyPacket
 		{
 			id = cNode.id,
 			progress = -1,
@@ -282,17 +278,16 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 	public override void Destroy()
 	{
-		base.Destroy();
 		try
 		{
 			var lines = _conduitLines.Values.ToArray();
-			for (int i = 0; i < lines.Length; i++)
-			{
-				Map.EM.DestroyEntity(lines[i]);
-			}
+			foreach (var line in _conduitLines)
+				Map.EM.DestroyEntity(line.Value);
 		}
 		catch
 		{
 		}
+		Map.EM.DestroyEntity(_energyPacket);
+		base.Destroy();
 	}
 }

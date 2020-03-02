@@ -13,7 +13,6 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-[BurstCompile]
 public class PhosCoreSystem : ComponentSystem
 {
 
@@ -86,20 +85,18 @@ public class PhosCoreSystem : ComponentSystem
 		var pos = startPos + (dir * 2.9f) + new float3(0, 4, 0);
 		dir.y = .4f;
 		var vel = dir * core.projectileSpeed;
-		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, quaternion.identity, vel);
-		PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 5 });
+		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, quaternion.identity, vel * 0);
+		PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 15 });
 		PostUpdateCommands.AddComponent(proj, team);
 		PostUpdateCommands.AddComponent(proj, new Damage
 		{
 			Value = 25
 		});
-		//PostUpdateCommands.AddComponent(proj, new Velocity { Value = dir * core.projectileSpeed });
-		//PostUpdateCommands.AddComponent(proj, new Drag { Value = 3.2f });
 		PostUpdateCommands.AddComponent(proj, new PhosProjectile
 		{
 			targetTime = targetTime,
 			target = target,
-			flightSpeed = core.projectileSpeed * 15
+			flightSpeed = core.projectileSpeed * .5f
 		});
 	}
 }
@@ -117,8 +114,6 @@ public class PhosProjectileSystem : JobComponentSystem
 			if (curTime >= proj.targetTime)
 			{
 				CMB.RemoveComponent(index, entity, typeof(PhosProjectile));
-				CMB.RemoveComponent(index, entity, typeof(Gravity));
-				CMB.RemoveComponent(index, entity, typeof(Drag));
 				vel.Linear = math.normalize(proj.target - t.Value) * proj.flightSpeed;
 			}
 		}

@@ -27,16 +27,7 @@ public class DynamicMeshEntity : MeshEntityRotatable
 	{
 		var e = Instantiate(position, 1, rotation);
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-		em.SetComponentData(e, new PhysicsCollider
-		{
-			Value = SphereCollider.Create(new SphereGeometry
-			{
-				Radius = colliderRadius,
-			}, CollisionFilter.Default, new Unity.Physics.Material
-			{
-				Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
-			})
-		});
+		em.SetComponentData(e, GetCollider());
 		em.SetComponentData(e, new PhysicsVelocity
 		{
 			Linear = velocity,
@@ -48,14 +39,8 @@ public class DynamicMeshEntity : MeshEntityRotatable
 	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Quaternion rotation, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var e = BufferedInstantiate(commandBuffer, position, 1, rotation);
-		var col = SphereCollider.Create(new SphereGeometry
-		{
-			Radius = colliderRadius
-		});
-		commandBuffer.SetComponent(e, new PhysicsCollider
-		{
-			Value = col
-		});
+		var col = GetCollider();
+		commandBuffer.SetComponent(e, col);
 		commandBuffer.SetComponent(e, new PhysicsVelocity
 		{
 			Linear = velocity,
@@ -63,4 +48,12 @@ public class DynamicMeshEntity : MeshEntityRotatable
 		});
 		return e;
 	}
+
+	protected virtual PhysicsCollider GetCollider() => new PhysicsCollider
+	{
+		Value = SphereCollider.Create(new SphereGeometry
+		{
+			Radius = colliderRadius,
+		})
+	};
 }

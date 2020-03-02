@@ -14,6 +14,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 	private Dictionary<int, List<Vector3>> _effectPaths;
 	private HashSet<int> _removalList;
 	private static PowerTransferEffectSystem _INST;
+	private bool _removeAll;
 
 	protected override void OnCreate()
 	{
@@ -25,6 +26,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 	{
 		base.OnStartRunning();
 		EventManager.AddEventListener("OnHQPlaced", OnHQ);
+		EventManager.AddEventListener("OnMapDestroyed", () => _removeAll = true);
 		_effectPaths = new Dictionary<int, List<Vector3>>();
 		_removalList = new HashSet<int>();
 	}
@@ -77,8 +79,20 @@ public class PowerTransferEffectSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
+		if(_removeAll && _effectPaths.Count == 0)
+		{
+			_removeAll = false;
+			_removalList.Clear();
+			_effectPaths.Clear();
+		}
 		Entities.ForEach((Entity e, ref EnergyPacket ep, ref Translation t, ref Rotation r) =>
 		{
+			if(_removeAll)
+			{
+				PostUpdateCommands.DestroyEntity(e);
+				_effectPaths.Remove(ep.id);
+				return;
+			}
 			if (!_effectPaths.ContainsKey(ep.id))
 			{
 				if(_removalList.Contains(ep.id))

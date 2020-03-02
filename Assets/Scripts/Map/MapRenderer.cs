@@ -39,6 +39,7 @@ public class MapRenderer : MonoBehaviour
 		min = Vector3.zero;
 		max = new Vector3(map.totalWidth * map.shortDiagonal, 0, map.totalHeight * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
+		EventManager.AddEventListener("OnMapRegen", Regenerate);
 	}
 
 	private void OnDestroy()
@@ -86,7 +87,9 @@ public class MapRenderer : MonoBehaviour
 	public void Regenerate()
 	{
 		map.Destroy();
-		SceneManager.LoadScene(0);
+		Init();
+		_lastCamPos = Vector3.zero;
+		GameObject.Destroy(_ocean);
 	}
 }
 

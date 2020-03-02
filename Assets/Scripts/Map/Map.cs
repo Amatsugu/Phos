@@ -878,8 +878,11 @@ public class Map : IDisposable
 	{
 		if (!IsRendered)
 			return;
+		foreach (var unitEntry in units)
+			unitEntry.Value.Destroy();
 		foreach (var chunk in Chunks)
 			chunk.Destroy();
+		EventManager.InvokeEvent("OnMapDestroyed");
 		IsRendered = false;
 	}
 

@@ -22,6 +22,7 @@ public class UIDevConsole : MonoBehaviour
 	private Dictionary<string, Command> _commands;
 
 	private List<string> _logs;
+	private string _lastCmd;
 
 	void Awake()
 	{
@@ -54,8 +55,19 @@ public class UIDevConsole : MonoBehaviour
 			GameRegistry.Cheats.NO_RESOURCE_COST = !GameRegistry.Cheats.NO_RESOURCE_COST;
 			AddConsoleMessage($"noResourceCost: <b>{GameRegistry.Cheats.NO_RESOURCE_COST}</b>");
 		}, "Toggles resource cost"));
+		AddCommand(new SetResolutionCommand());
+		AddCommand(new Command("toggleFullscreen", () =>
+		{
+			Screen.fullScreen = !Screen.fullScreen;
+			AddConsoleMessage($"Fullscreen: {Screen.fullScreen}");
+		}, "Toggles fullscreen mode"));
+		AddCommand(new SetWindowStateCommand());
 		AddCommand(new TimeScaleCommand());
 		AddCommand(new Command("nextWeather", WeatherSystem.SkipWeather, "Skips the current weather"));
+		AddCommand(new Command("regenLevel", () =>
+		{
+			EventManager.InvokeEvent("OnMapRegen");
+		}, "Destroys and unrenders the map"));
 	}
 
     // Start is called before the first frame update
@@ -81,9 +93,19 @@ public class UIDevConsole : MonoBehaviour
 		inputBox.onSubmit.AddListener(s => {
 			if (s.Length == 0 || string.IsNullOrWhiteSpace(s))
 				return;
+			
 			ParseCommand(inputBox.text);
 			inputBox.text = "";
 			inputBox.ActivateInputField();
+		});
+
+		inputBox.onValueChanged.AddListener(s =>
+		{
+			if (inputBox.text == "`")
+			{
+				consolePanel.Hide();
+				inputBox.text = "";
+			}
 		});
 		consolePanel.Show();
 		consolePanel.Hide();
@@ -124,13 +146,22 @@ public class UIDevConsole : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        if(Input.GetKeyUp(KeyCode.BackQuote) && !inputBox.isFocused)
+        if(Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
 		{
-			Debug.Log($"Console {consolePanel.IsOpen}");
 			if (consolePanel.IsOpen)
 				consolePanel.Hide();
 			else
 				consolePanel.Show();
+		}
+		if (Input.GetKeyUp(KeyCode.UpArrow) && inputBox.isFocused && inputBox.text != _lastCmd)
+		{
+			inputBox.text = _lastCmd;
+			inputBox.caretPosition = inputBox.text.Length;
+		}
+
+		if(Input.GetKeyUp(KeyCode.F4))
+		{
+			ScreenCapture.CaptureScreenshot($"{Application.dataPath}/Phos {Time.time}.png");
 		}
     }
 
@@ -145,26 +176,28 @@ public class UIDevConsole : MonoBehaviour
 
 	void ParseCommand(string commandString)
 	{
+		_lastCmd = commandString;
 		var commandSplit = commandString.Split(' ');
 		AddConsoleMessage($"> {commandString}", false);
-		if (_commands.ContainsKey(commandSplit[0]))
+		if (_commands.ContainsKey(commandSplit[0].ToLower()))
 		{
-			_commands[commandSplit[0]].Execute(commandSplit);
+			_commands[commandSplit[0].ToLower()].Execute(commandSplit);
 		}else
 		{
 			AddConsoleMessage($"No such command '{commandSplit[0]}'");
 		}
 	}
 
-	public void AddCommand(Command command)
+	internal void AddCommand(Command command)
 	{
-		if (!_commands.ContainsKey(command.name))
-			_commands.Add(command.name, command);
+		if (!_commands.ContainsKey(command.name.ToLower()))
+			_commands.Add(command.name.ToLower(), command);
 	}
 
-	public class Command
+	internal class Command
 	{
 		public string name;
+		public virtual string HelpMessage => _helpMessage;
 		private readonly Action _action;
 		private readonly string _helpMessage;
 
@@ -184,13 +217,9 @@ public class UIDevConsole : MonoBehaviour
 			_action?.Invoke();
 		}
 
-		public virtual string GetHelpMessage()
-		{
-			return _helpMessage;
-		}
 	}
 
-	public class HelpCommand : Command
+	private class HelpCommand : Command
 	{
 		public HelpCommand() : base("help")
 		{
@@ -204,23 +233,20 @@ public class UIDevConsole : MonoBehaviour
 				var commands = INST._commands.Values.ToArray();
 				for (int i = 0; i < commands.Length; i++)
 				{
-					AddConsoleMessage($"{commands[i].name}:\t{commands[i].GetHelpMessage()}");
+					AddConsoleMessage($"{commands[i].name}:\t{commands[i].HelpMessage}");
 				}
 				return;
 			}
 			if (INST._commands.ContainsKey(args[1]))
-				AddConsoleMessage(INST._commands[args[1]].GetHelpMessage());
+				AddConsoleMessage(INST._commands[args[1]].HelpMessage);
 			else
 				AddConsoleMessage($"No such command: '{args[1]}'");
 		}
 
-		public override string GetHelpMessage()
-		{
-			return "Shows the help message for the given command or lists all commands";
-		}
+		public override string HelpMessage => "Shows the help message for the given command or lists all commands";
 	}
 
-	public class TimeScaleCommand : Command
+	private class TimeScaleCommand : Command
 	{
 		public TimeScaleCommand() : base("timescale")
 		{
@@ -238,7 +264,80 @@ public class UIDevConsole : MonoBehaviour
 			AddConsoleMessage($"Timescale: {Time.timeScale}");
 
 		}
+
+		public override string HelpMessage => "Sets the timescale";
 	}
+
+	private class SetResolutionCommand : Command
+	{
+		public SetResolutionCommand() : base("setResolution")
+		{
+			
+		}
+
+		public override void Execute(string[] args)
+		{
+			if (args.Length < 3)
+			{
+				AddConsoleMessage("Invalid input, Usage:\n\t\tsetResolution <width> <height>");
+				return;
+			}
+			if (int.TryParse(args[1], out int w))
+			{
+				if (int.TryParse(args[2], out int h))
+				{
+					Screen.SetResolution(w, h, Screen.fullScreen);
+					AddConsoleMessage($"Resolution: {Screen.currentResolution}");
+				}else
+					AddConsoleMessage($"[{args[2]} is not a number]");
+			}
+			else
+				AddConsoleMessage($"[{args[1]} is not a number]");
+
+
+		}
+
+		public override string HelpMessage => "Sets the current resolution.";
+	}
+
+	private class SetWindowStateCommand : Command
+	{
+		public SetWindowStateCommand() : base("setWindowState")
+		{
+		}
+
+		public override string HelpMessage => $"Set the current window state. ({string.Join(" | ", Enumerable.Range(0,3).Select(i => $"[{i}]{(FullScreenMode)i}"))})";
+
+		public override void Execute(string[] args)
+		{
+			if(args.Length == 1)
+			{
+				PrintInvalid();
+				return;
+			}
+			if (int.TryParse(args[1], out var modeId))
+			{
+				if (modeId < 0 || modeId > 3)
+				{
+					PrintInvalid();
+					return;
+				}
+				Screen.fullScreenMode = (FullScreenMode)modeId;
+				AddConsoleMessage($"Fullscreen Mode: {Screen.fullScreenMode}");
+			}
+			else
+				PrintInvalid();
+
+		}
+
+		private void PrintInvalid()
+		{
+			AddConsoleMessage("Invalid input");
+			AddConsoleMessage("Usage setWindowState <0-3>");
+			AddConsoleMessage(string.Join(" | ", Enumerable.Range(0, 3).Select(i => $"[{i}]{(FullScreenMode)i}")));
+		}
+	}
+
 
 	void OnDisable()
 	{

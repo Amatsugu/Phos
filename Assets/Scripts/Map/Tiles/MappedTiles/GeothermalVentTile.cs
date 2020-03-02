@@ -44,6 +44,7 @@ public class GeothermalVentTile : ResourceTile
 	public override void Destroy()
 	{
 		GameObject.Destroy(_gyser);
+		Map.EM.DestroyEntity(_core);
 		base.Destroy();
 	}
 
@@ -78,5 +79,11 @@ public class GeothermalVentShellTile : ResourceTile
 			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_shell);
 		else
 			Map.EM.AddComponent(_shell, typeof(FrozenRenderSceneTag));
+	}
+
+	public override void Destroy()
+	{
+		Map.EM.DestroyEntity(_shell);
+		base.Destroy();
 	}
 }

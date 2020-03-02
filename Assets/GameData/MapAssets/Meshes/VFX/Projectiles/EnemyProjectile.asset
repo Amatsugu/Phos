@@ -18,4 +18,4 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  colliderRadius: 0.01
+  colliderRadius: 1

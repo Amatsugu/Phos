@@ -138,13 +138,22 @@ public class BuildingTile : Tile
 		Map.EM.RemoveComponent<BuildingOffTag>(_tileEntity);
 		Map.EM.AddComponent(_tileEntity, typeof(FirstTickTag));
 	}
-		 
+
+	public override void OnPlaced()
+	{
+		base.OnPlaced();
+		StartConstruction();
+	}
+
+	protected virtual void StartConstruction()
+	{
+		if(buildingInfo.constructionMesh != null)
+			_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
+	}
 
 	protected virtual void OnBuilt()
 	{
 		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.name}", this);
-
-		
 	}
 }
 

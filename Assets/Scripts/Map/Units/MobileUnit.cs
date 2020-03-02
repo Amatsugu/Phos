@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Transforms;
@@ -79,7 +80,6 @@ public class MobileUnit
 			Map.EM.AddComponent(Entity, typeof(Destination));
 		}
 		Map.EM.RemoveComponent<PathProgress>(Entity);
-		//Map.EM.RemoveComponent<Path>(Entity);
 		Map.EM.SetComponentData(Entity, new Destination { Value = pos });
 	}
 
@@ -87,13 +87,17 @@ public class MobileUnit
 	{
 		Map.ActiveMap.unitLocations[_chunk].Remove(id);
 		Map.ActiveMap.units.Remove(id);
-		Map.EM.DestroyEntity(Entity);
+		Destroy();
 		//TODO: Death Effect
-		//Map.ActiveMap[occupiedTile].DeOccupyTile(id);
 	}
 
 	public override int GetHashCode()
 	{
 		return id;
+	}
+
+	public void Destroy()
+	{
+		Map.EM.DestroyEntity(Entity);
 	}
 }

@@ -7,6 +7,8 @@ using Unity.Physics;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Burst;
+using Unity.Physics.Systems;
+using UnityEngine;
 
 [RequireComponentTag(TagComponents = new[] { typeof(FactionId) })]
 [BurstCompile]
@@ -35,6 +37,15 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 [BurstCompile]
 public class ProjectileCollisionSystem : JobComponentSystem
 {
+	private PhysicsWorld _physicsWorld;
+	private ISimulation _sim;
+
+	protected override void OnStartRunning()
+	{
+		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>().PhysicsWorld;
+		_sim = World.GetOrCreateSystem<StepPhysicsWorld>().Simulation;
+	}
+
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
 		var job = new ProjectileCollisionJob
@@ -43,8 +54,7 @@ public class ProjectileCollisionSystem : JobComponentSystem
 			health = GetComponentDataFromEntity<Health>(false),
 			faction = GetComponentDataFromEntity<FactionId>(true),
 		};
-
-
+		inputDeps = job.Schedule(_sim, ref _physicsWorld, inputDeps);
 		return inputDeps;
 	}
 }

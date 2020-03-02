@@ -57,7 +57,10 @@ public class MobileUnitInfo : MeshEntityRotatable
 				Size = new float3(1, 1, 1),
 				Orientation = quaternion.identity,
 				BevelRadius = 0 
-			}, CollisionFilter.Default, Unity.Physics.Material.Default)
+			}, CollisionFilter.Default, new Unity.Physics.Material
+			{
+				Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
+			})
 		});
 		Map.EM.AddComponentData(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1));
 		

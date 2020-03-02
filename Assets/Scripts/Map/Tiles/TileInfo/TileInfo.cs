@@ -57,7 +57,10 @@ public class TileInfo : MeshEntityRotatable
 			Center = new float3(0, -25, 0),
 			Size = new float3(1, 50, 1),
 			Orientation = quaternion.identity
-		});
+		}/*, CollisionFilter.Default, new Unity.Physics.Material
+		{
+			Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
+		}*/);
 		
 
 		Map.EM.SetComponentData(e, new PhysicsCollider

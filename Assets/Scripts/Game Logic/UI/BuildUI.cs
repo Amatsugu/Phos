@@ -153,7 +153,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}, out var hit))
 		{
 			if(hit.RigidBodyIndex != -1)
-				selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(col.Bodies[hit.RigidBodyIndex].Entity).coords];
+			{
+				var e = col.Bodies[hit.RigidBodyIndex].Entity;
+				if(Map.EM.HasComponent<HexPosition>(e))
+					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).coords];
+			}
 		}
 		Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);
 		Debug.DrawRay(hit.Position, Vector3.right, Color.red);
@@ -167,6 +171,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			HideAllIndicators();
 			return;
 		}
+		_errors.Clear();
 		_validPlacement = true;
 		_suffientFunds = true;
 		var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
@@ -288,11 +293,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			//TODO: Add more detailed error
 			for (int i = 0; i < _errors.Count; i++)
-			{
 				NotificationsUI.Notify(NotifType.Error, _errors[i]);
-			}
+			_errors.Clear();
 		}
-		_errors.Clear();
 	}
 
 	void ReadCloseInput()

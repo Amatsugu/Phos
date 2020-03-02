@@ -124,6 +124,15 @@ public class ResourceSystem : ComponentSystem
 			return;
 		}
 		GameRegistry.INST.resourceSystem = this;
+		InitCounts();
+		EventManager.AddEventListener("OnMapDestroyed", () =>
+		{
+			InitCounts();
+		});
+	}
+
+	private void InitCounts()
+	{
 		resourceRecords = new ResourceTransactionRecord[ResourceDatabase.ResourceCount];
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i] = new ResourceTransactionRecord(i);
