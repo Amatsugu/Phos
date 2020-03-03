@@ -41,27 +41,25 @@ public class TileInfo : MeshEntityRotatable
 		{
 			DrawColliders = 1
 		});
-		/*var collider = CylinderCollider.Create(new CylinderGeometry()
+#if TRUE
+		var verts = new NativeArray<float3>(mesh.vertices.Select(v => (float3)v).ToArray(), Allocator.Temp);
+		var collider = ConvexCollider.Create(default, new ConvexHullGenerationParameters
 		{
-			Center = new float3(0, -25, 0),
-			Height = 50,
-			Radius = pos.edgeLength,
-			Orientation = quaternion.Euler(90, 30, 0),
-			SideCount = 6,
 			BevelRadius = 0
-		}, CollisionFilter.Default, Unity.Physics.Material.Default);
-		*/
+		}, CollisionFilter.Default, Unity.Physics.Material.Default); ;
+		//verts.Dispose();
+#else
 		var collider = BoxCollider.Create(new BoxGeometry
 		{
 			BevelRadius = 0,
 			Center = new float3(0, -25, 0),
 			Size = new float3(1, 50, 1),
 			Orientation = quaternion.identity
-		}/*, CollisionFilter.Default, new Unity.Physics.Material
+		}, CollisionFilter.Default, new Unity.Physics.Material
 		{
 			Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
-		}*/);
-		
+		});
+#endif
 
 		Map.EM.SetComponentData(e, new PhysicsCollider
 		{

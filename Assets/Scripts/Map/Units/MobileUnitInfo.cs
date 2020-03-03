@@ -62,7 +62,6 @@ public class MobileUnitInfo : MeshEntityRotatable
 				Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
 			})
 		});
-		Map.EM.AddComponentData(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1));
 		
 
 		return e;

@@ -18,7 +18,8 @@ public class DynamicMeshEntity : MeshEntityRotatable
 		return base.GetComponents().Concat(new ComponentType[]
 		{
 			typeof(PhysicsCollider),
-			typeof(PhysicsVelocity)
+			typeof(PhysicsVelocity),
+			typeof(PhysicsMass)
 		});
 
 	}
@@ -33,6 +34,8 @@ public class DynamicMeshEntity : MeshEntityRotatable
 			Linear = velocity,
 			Angular = angularVelocity
 		});
+		em.AddComponentData(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1));
+
 		return e;
 	}
 
@@ -46,6 +49,7 @@ public class DynamicMeshEntity : MeshEntityRotatable
 			Linear = velocity,
 			Angular = angularVelocity
 		});
+		commandBuffer.SetComponent(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1));
 		return e;
 	}
 
@@ -54,6 +58,9 @@ public class DynamicMeshEntity : MeshEntityRotatable
 		Value = SphereCollider.Create(new SphereGeometry
 		{
 			Radius = colliderRadius,
+		}, CollisionFilter.Default, new Unity.Physics.Material
+		{
+			Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
 		})
 	};
 }

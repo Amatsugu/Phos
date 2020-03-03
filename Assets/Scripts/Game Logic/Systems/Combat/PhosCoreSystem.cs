@@ -85,8 +85,10 @@ public class PhosCoreSystem : ComponentSystem
 		var pos = startPos + (dir * 2.9f) + new float3(0, 4, 0);
 		dir.y = .4f;
 		var vel = dir * core.projectileSpeed;
-		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, quaternion.identity, vel * 0);
+		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, quaternion.identity, vel);
+		PostUpdateCommands.SetComponent(proj, new Scale { Value = .5f });
 		PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 15 });
+		PostUpdateCommands.AddComponent(proj, new PhysicsGravityFactor { Value = 0 });
 		PostUpdateCommands.AddComponent(proj, team);
 		PostUpdateCommands.AddComponent(proj, new Damage
 		{
@@ -96,7 +98,7 @@ public class PhosCoreSystem : ComponentSystem
 		{
 			targetTime = targetTime,
 			target = target,
-			flightSpeed = core.projectileSpeed * .5f
+			flightSpeed = core.projectileSpeed * 15
 		});
 	}
 }

@@ -897,9 +897,9 @@ public class Map : IDisposable
 		{
 			if (disposing)
 			{
+				Destroy();
 			}
 
-			Destroy();
 
 			disposedValue = true;
 		}

@@ -17,12 +17,14 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 	public ComponentDataFromEntity<Health> health;
 	public ComponentDataFromEntity<FactionId> faction;
 	public ComponentDataFromEntity<Damage> damage;
+	public EntityCommandBuffer.Concurrent cmb;
 
 	public void Execute(CollisionEvent collisionEvent)
 	{
+		Debug.Log("");
 		if (damage.HasComponent(collisionEvent.Entities.EntityA))
 			DealDamage(collisionEvent.Entities.EntityA, collisionEvent.Entities.EntityB);
-		else
+		else if(damage.HasComponent(collisionEvent.Entities.EntityB))
 			DealDamage(collisionEvent.Entities.EntityB, collisionEvent.Entities.EntityA);
 	}
 
