@@ -31,8 +31,13 @@ public class InitializeWeather : MonoBehaviour
 	private NativeArray<Entity> _clouds;
 	private NativeArray<Entity> _cloudShadows;
 
-    void Start()
-    {
+	void Awake()
+	{
+		EventManager.AddEventListener("OnMapLoaded", InitWather);
+	}
+
+	void InitWather()
+	{
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		_clouds = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudShadows = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
@@ -49,19 +54,24 @@ public class InitializeWeather : MonoBehaviour
 				var pos = HexCoords.OffsetToWorldPosXZ(x, z, innerR, 2);
 				pos.y = clouldHeight;
 				em.SetComponentData(_clouds[x + z * fieldWidth], new Translation { Value = pos });
+				em.SetComponentData(_clouds[x + z * fieldWidth], new NonUniformScale { Value = Vector3.one * 4 });
 				em.SetComponentData(_clouds[x + z * fieldWidth], new CloudData { pos = pos, index = x + z * fieldWidth });
 				em.SetComponentData(_cloudShadows[x + z * fieldWidth], new Translation { Value = pos });
+				em.SetComponentData(_cloudShadows[x + z * fieldWidth], new NonUniformScale { Value = Vector3.one * 4 });
 				em.SetComponentData(_cloudShadows[x + z * fieldWidth], new CloudData { pos = pos, index = x + z * fieldWidth });
 			}
 		}
+		EventManager.RemoveEventListener("OnMapLoaded", InitWather);
     }
 
 	void OnDestroy()
 	{
 		if (enabled)
 		{
-			_clouds.Dispose();
-			_cloudShadows.Dispose();
+			if(_clouds.IsCreated)
+				_clouds.Dispose();
+			if(_cloudShadows.IsCreated)
+				_cloudShadows.Dispose();
 		}
 	}
 }

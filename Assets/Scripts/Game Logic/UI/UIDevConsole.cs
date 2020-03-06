@@ -133,8 +133,7 @@ public class UIDevConsole : MonoBehaviour
 			_sb.Clear();
 		_sb.AppendLine($"<color={color}><b>[{type}]</b> {condition}</color>");
 		_logs.Add($"[{type}] {condition}\n\t{stackTrace.Replace("\n", "\n\t")}");
-		if(consolePanel?.IsOpen == true)
-			UpdateConsoleText();
+		UpdateConsoleText();
 	}
 
 	public void UpdateConsoleText()

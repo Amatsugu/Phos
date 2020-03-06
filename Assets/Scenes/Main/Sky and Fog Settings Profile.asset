@@ -18,7 +18,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   colorMode:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   color:
     m_OverrideState: 0
@@ -28,7 +28,7 @@ MonoBehaviour:
     showEyeDropper: 1
   maxFogDistance:
     m_OverrideState: 1
-    m_Value: 300
+    m_Value: 318.6
     min: 0
   mipFogMaxMip:
     m_OverrideState: 0
@@ -50,26 +50,26 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0
   albedo:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 50
+    m_Value: 137.2
     min: 1
   enableVolumetricFog:
     m_OverrideState: 1
     m_Value: 1
   anisotropy:
     m_OverrideState: 1
-    m_Value: -0.656
+    m_Value: 0
     min: -1
     max: 1
   globalLightProbeDimmer:
     m_OverrideState: 1
-    m_Value: 0.573
+    m_Value: 1
     min: 0
     max: 1
   depthExtent:
@@ -172,13 +172,13 @@ MonoBehaviour:
     max: 360
   skyIntensityMode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 2
   exposure:
     m_OverrideState: 1
     m_Value: 8.5
   multiplier:
     m_OverrideState: 1
-    m_Value: 232.14
+    m_Value: 950
     min: 0
   upperHemisphereLuxValue:
     m_OverrideState: 0
@@ -201,7 +201,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   hdriSky:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {fileID: 8900000, guid: 316349adcc056984aa3e1cd26607993a, type: 3}
   enableBackplate:
     m_OverrideState: 0

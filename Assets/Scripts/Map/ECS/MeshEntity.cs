@@ -61,7 +61,8 @@ public class MeshEntity : ScriptableObject
 			typeof(PerInstanceCullingTag),
 			typeof(WorldRenderBounds),
 			typeof(ChunkWorldRenderBounds),
-			typeof(Disabled)
+			typeof(Disabled),
+			typeof(RenderBounds)
 		};
 	}
 
@@ -72,7 +73,15 @@ public class MeshEntity : ScriptableObject
 		var e = commandBuffer.Instantiate(GetEntity());
 		commandBuffer.RemoveComponent(e, typeof(Disabled));
 		commandBuffer.SetComponent(e, new Translation { Value = position });
-		if(nonUniformScale)
+		commandBuffer.SetComponent(e, new RenderBounds
+		{
+			Value = new AABB
+			{
+				Center = mesh.bounds.center,
+				Extents = mesh.bounds.extents
+			}
+		});
+		if (nonUniformScale)
 			commandBuffer.SetComponent(e, new NonUniformScale { Value = scale });
 		else
 			commandBuffer.SetComponent(e, new Scale { Value = scale.x });
@@ -84,7 +93,15 @@ public class MeshEntity : ScriptableObject
 		var e = commandBuffer.Instantiate(GetEntity());
 		commandBuffer.RemoveComponent(e, typeof(Disabled));
 		commandBuffer.SetComponent(e, new Translation { Value = position });
-		if(nonUniformScale)
+		commandBuffer.SetComponent(e, new RenderBounds
+		{
+			Value = new AABB
+			{
+				Center = mesh.bounds.center,
+				Extents = mesh.bounds.extents
+			}
+		});
+		if (nonUniformScale)
 			commandBuffer.SetComponent(e, new NonUniformScale { Value = new float3(scale, scale, scale) });
 		else
 			commandBuffer.SetComponent(e, new Scale { Value = scale });
@@ -96,6 +113,14 @@ public class MeshEntity : ScriptableObject
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
+		em.SetComponentData(e, new RenderBounds
+		{
+			Value = new AABB
+			{
+				Center = mesh.bounds.center,
+				Extents = mesh.bounds.extents
+			}
+		});
 		if (nonUniformScale)
 			em.SetComponentData(e, new NonUniformScale { Value = scale });
 		else
@@ -109,6 +134,14 @@ public class MeshEntity : ScriptableObject
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
+		em.SetComponentData(e, new RenderBounds
+		{
+			Value = new AABB
+			{
+				Center = mesh.bounds.center,
+				Extents = mesh.bounds.extents
+			}
+		});
 		if (nonUniformScale)
 			em.SetComponentData(e, new NonUniformScale { Value = new float3(scale, scale, scale) });
 		else

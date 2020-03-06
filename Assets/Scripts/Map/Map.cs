@@ -161,9 +161,18 @@ public class Map : IDisposable
 			isRendered = true;
 			if(!_chunkTiles.IsCreated)
 				_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			var renderBounds = new AABB
+			{
+				Center = Bounds.center,
+				Extents = Bounds.extents
+			};
 			for (int i = 0; i < SIZE * SIZE; i++)
 			{
 				_chunkTiles[i] = Tiles[i].Render();
+				EM.SetComponentData(_chunkTiles[i], new ChunkWorldRenderBounds
+				{
+					Value = renderBounds
+				});
 				Tiles[i].RenderDecorators();
 			}
 		}
@@ -343,6 +352,9 @@ public class Map : IDisposable
 
 	public List<int> SelectUnitsInRange(HexCoords center, int radius)
 	{
+		var unitsInRange = new List<int>();
+		if (units.Count == 0)
+			return unitsInRange;
 		var worldRadius = HexCoords.TileToWorldDist(radius, innerRadius);
 		var worldRadiusSq = worldRadius * worldRadius;
 		List<int> candidateChunks = new List<int>();
@@ -387,7 +399,6 @@ public class Map : IDisposable
 		if (down && left)
 			candidateChunks.Add(HexCoords.GetChunkIndex(chunkX - 1, chunkZ - 1, width));
 
-		var unitsInRange = new List<int>();
 		for (int i = 0; i < candidateChunks.Count; i++)
 		{
 			var candidateUnits = unitLocations[candidateChunks[i]];
@@ -431,6 +442,11 @@ public class Map : IDisposable
 		IsRendered = true;
 		if (EM == null)
 			EM = entityManager;
+		/*
+		for (int i = 0; i < Chunks.Length; i++)
+		{
+			Chunks[i].Render();
+		}*/
 	}
 
 	/// <summary>

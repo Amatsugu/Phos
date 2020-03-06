@@ -33,6 +33,8 @@ public class EventManager : MonoBehaviour
 
 	public static void InvokeEvent(string name)
 	{
+		if (INST == null)
+			return;
 		if(INST._events.ContainsKey(name))
 			for (int i = 0; i < INST._events[name].Count; i++)
 				INST._events[name][i]?.Invoke();

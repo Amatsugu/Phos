@@ -41,7 +41,7 @@ public class TileInfo : MeshEntityRotatable
 		{
 			DrawColliders = 1
 		});
-#if TRUE
+#if false
 		var verts = new NativeArray<float3>(mesh.vertices.Select(v => (float3)v).ToArray(), Allocator.Temp);
 		var collider = ConvexCollider.Create(default, new ConvexHullGenerationParameters
 		{
@@ -65,7 +65,6 @@ public class TileInfo : MeshEntityRotatable
 		{
 			Value = collider
 		});
-
 		return e;
 	}
 

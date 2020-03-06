@@ -98,6 +98,7 @@ public class MobileUnit
 
 	public void Destroy()
 	{
-		Map.EM.DestroyEntity(Entity);
+		if(Map.EM.Exists(Entity))
+			Map.EM.DestroyEntity(Entity);
 	}
 }

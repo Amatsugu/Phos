@@ -82,7 +82,10 @@ public class BuildingTile : Tile
 		_isBuilt = true;
 		if (buildingInfo.constructionMesh != null)
 			Map.EM.DestroyEntity(_building);
-		_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
+		if (buildingInfo.buildingMesh.mesh == null)
+			Debug.LogWarning($"No Building Assigned for {GetName()}");
+		else
+			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
 		PrepareEntity();
 		OnBuilt();
 		RenderDecorators();

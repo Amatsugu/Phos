@@ -21,7 +21,6 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 
 	public void Execute(CollisionEvent collisionEvent)
 	{
-		Debug.Log("");
 		if (damage.HasComponent(collisionEvent.Entities.EntityA))
 			DealDamage(collisionEvent.Entities.EntityA, collisionEvent.Entities.EntityB);
 		else if(damage.HasComponent(collisionEvent.Entities.EntityB))
