@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
 using TMPro;
+
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 
 public class UIDevConsole : MonoBehaviour
@@ -26,7 +24,7 @@ public class UIDevConsole : MonoBehaviour
 	private List<string> _logs;
 	private string _lastCmd;
 
-	void Awake()
+	private void Awake()
 	{
 		_sb = new StringBuilder();
 		Application.logMessageReceived += DebugLogMessage;
@@ -37,7 +35,7 @@ public class UIDevConsole : MonoBehaviour
 		AddDefaultCommands();
 	}
 
-	void AddDefaultCommands()
+	private void AddDefaultCommands()
 	{
 		AddCommand(new Command("close", () => consolePanel.Hide(), "Closes the console"));
 		AddCommand(new HelpCommand());
@@ -87,9 +85,9 @@ public class UIDevConsole : MonoBehaviour
 		}, "Runs all the cheat commands"));
 	}
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	// Start is called before the first frame update
+	private void Start()
+	{
 		consolePanel.OnHide += () =>
 		{
 			GameRegistry.BuildUI.enabled = true;
@@ -107,10 +105,11 @@ public class UIDevConsole : MonoBehaviour
 			UpdateConsoleText();
 		};
 
-		inputBox.onSubmit.AddListener(s => {
+		inputBox.onSubmit.AddListener(s =>
+		{
 			if (s.Length == 0 || string.IsNullOrWhiteSpace(s))
 				return;
-			
+
 			ParseCommand(inputBox.text);
 			inputBox.text = "";
 			inputBox.ActivateInputField();
@@ -131,17 +130,20 @@ public class UIDevConsole : MonoBehaviour
 	private void DebugLogMessage(string condition, string stackTrace, LogType type)
 	{
 		var color = "#ffffff";
-		switch(type)
+		switch (type)
 		{
 			case LogType.Warning:
 				color = "#ffff00";
 				break;
+
 			case LogType.Assert:
 				color = "#ff0000";
 				break;
+
 			case LogType.Error:
 				color = "#ee0000";
 				break;
+
 			case LogType.Exception:
 				color = "#ff0000";
 				break;
@@ -160,9 +162,9 @@ public class UIDevConsole : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
 		{
 			if (consolePanel.IsOpen)
 				consolePanel.Hide();
@@ -175,22 +177,22 @@ public class UIDevConsole : MonoBehaviour
 			inputBox.caretPosition = inputBox.text.Length;
 		}
 
-		if(Input.GetKeyUp(KeyCode.F4))
+		if (Input.GetKeyUp(KeyCode.F4))
 		{
 			ScreenCapture.CaptureScreenshot($"{Application.dataPath}/Phos {Time.time}.png");
 		}
-    }
+	}
 
 	public static void AddConsoleMessage(string message, bool indent = true)
 	{
 		if (indent)
 			INST._sb.Append('\t');
 		INST._sb.AppendLine(message);
-		if(INST.consolePanel.IsOpen)
+		if (INST.consolePanel.IsOpen)
 			INST.UpdateConsoleText();
 	}
 
-	void ParseCommand(string commandString)
+	private void ParseCommand(string commandString)
 	{
 		_lastCmd = commandString;
 		var commandSplit = commandString.Split(' ');
@@ -198,7 +200,8 @@ public class UIDevConsole : MonoBehaviour
 		if (_commands.ContainsKey(commandSplit[0].ToLower()))
 		{
 			_commands[commandSplit[0].ToLower()].Execute(commandSplit);
-		}else
+		}
+		else
 		{
 			AddConsoleMessage($"No such command '{commandSplit[0]}'");
 		}
@@ -232,14 +235,12 @@ public class UIDevConsole : MonoBehaviour
 		{
 			_action?.Invoke();
 		}
-
 	}
 
 	private class HelpCommand : Command
 	{
 		public HelpCommand() : base("help")
 		{
-			
 		}
 
 		public override void Execute(string[] args)
@@ -270,7 +271,7 @@ public class UIDevConsole : MonoBehaviour
 
 		public override void Execute(string[] args)
 		{
-			if(args.Length == 2)
+			if (args.Length == 2)
 			{
 				if (float.TryParse(args[1], out float t))
 					Time.timeScale = t;
@@ -278,7 +279,6 @@ public class UIDevConsole : MonoBehaviour
 					AddConsoleMessage($"Invalid input \"{args[1]}\"");
 			}
 			AddConsoleMessage($"Timescale: {Time.timeScale}");
-
 		}
 
 		public override string HelpMessage => "Sets the timescale";
@@ -288,7 +288,6 @@ public class UIDevConsole : MonoBehaviour
 	{
 		public SetResolutionCommand() : base("setResolution")
 		{
-			
 		}
 
 		public override void Execute(string[] args)
@@ -304,13 +303,12 @@ public class UIDevConsole : MonoBehaviour
 				{
 					Screen.SetResolution(w, h, Screen.fullScreen);
 					AddConsoleMessage($"Resolution: {Screen.currentResolution}");
-				}else
+				}
+				else
 					AddConsoleMessage($"[{args[2]} is not a number]");
 			}
 			else
 				AddConsoleMessage($"[{args[1]} is not a number]");
-
-
 		}
 
 		public override string HelpMessage => "Sets the current resolution.";
@@ -322,11 +320,11 @@ public class UIDevConsole : MonoBehaviour
 		{
 		}
 
-		public override string HelpMessage => $"Set the current window state. ({string.Join(" | ", Enumerable.Range(0,3).Select(i => $"[{i}]{(FullScreenMode)i}"))})";
+		public override string HelpMessage => $"Set the current window state. ({string.Join(" | ", Enumerable.Range(0, 3).Select(i => $"[{i}]{(FullScreenMode)i}"))})";
 
 		public override void Execute(string[] args)
 		{
-			if(args.Length == 1)
+			if (args.Length == 1)
 			{
 				PrintInvalid();
 				return;
@@ -343,7 +341,6 @@ public class UIDevConsole : MonoBehaviour
 			}
 			else
 				PrintInvalid();
-
 		}
 
 		private void PrintInvalid()
@@ -354,8 +351,7 @@ public class UIDevConsole : MonoBehaviour
 		}
 	}
 
-
-	void OnDisable()
+	private void OnDisable()
 	{
 		File.WriteAllLines("output.log", _logs);
 		Application.logMessageReceived -= DebugLogMessage;

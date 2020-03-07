@@ -1,15 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
 public class MobileUnitInfo : MeshEntityRotatable
 {
-
 	public enum UnitType
 	{
 		Land,
@@ -37,7 +37,6 @@ public class MobileUnitInfo : MeshEntityRotatable
 		});
 	}
 
-
 	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id, Faction faction = Faction.None)
 	{
 		var e = Instantiate(pos, Vector3.one, rotation);
@@ -51,18 +50,17 @@ public class MobileUnitInfo : MeshEntityRotatable
 
 		Map.EM.AddComponentData(e, new PhysicsCollider
 		{
-			Value = Unity.Physics.BoxCollider.Create(new BoxGeometry 
-			{ 
+			Value = Unity.Physics.BoxCollider.Create(new BoxGeometry
+			{
 				Center = new float3(),
 				Size = new float3(1, 1, 1),
 				Orientation = quaternion.identity,
-				BevelRadius = 0 
+				BevelRadius = 0
 			}, CollisionFilter.Default, new Unity.Physics.Material
 			{
 				Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
 			})
 		});
-		
 
 		return e;
 	}

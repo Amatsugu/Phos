@@ -27,9 +27,13 @@ public class BuildingTileInfo : TileInfo
 	public int size = 0;
 	public int flattenOuterRange = 0;
 	public int resourceTransferRange = 0;
+	[Header("Offshore")]
 	public bool isOffshore;
 	[ConditionalHide("isOffshore")]
 	public bool offshoreOnly;
+	[ConditionalHide("isOffshore")]
+	[CreateNewAsset("Assets/GameData/MapAssets/Meshes", typeof(MeshEntityRotatable))]
+	public MeshEntityRotatable offshorePlatformMesh;
 	[Header("Building Info")]
 	public PlacementMode placementMode = PlacementMode.Single;
 	public BuildingIdentifier upgradeTarget;

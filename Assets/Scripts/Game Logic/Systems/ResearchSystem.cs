@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Entities;
+
 using UnityEngine;
 
 [UpdateAfter(typeof(ResourceSystem))]
@@ -16,14 +17,13 @@ public class ResearchSystem : ComponentSystem
 		public bool isCompleted;
 	}
 
-
 	public Dictionary<BuildingCategory, int> activeResearch;
 
 	public Dictionary<int, ResearchProgress> researchProgress;
 
 	public ResearchDatabase rDatabase;
 
-	private static  ResearchSystem _INST;
+	private static ResearchSystem _INST;
 
 	private bool isTick;
 
@@ -37,19 +37,19 @@ public class ResearchSystem : ComponentSystem
 		_INST = this;
 	}
 
-	void LoadResearchProgress()
+	private void LoadResearchProgress()
 	{
 		activeResearch = new Dictionary<BuildingCategory, int>();
 		researchProgress = new Dictionary<int, ResearchProgress>();
 		var prog = researchProgress.Values.ToArray();
 		for (int i = 0; i < prog.Length; i++)
 		{
-			if(prog[i].isCompleted)
+			if (prog[i].isCompleted)
 				rDatabase[prog[i].identifier].reward?.ActivateReward();
 		}
 	}
 
-	void SaveResearchProgress()
+	private void SaveResearchProgress()
 	{
 		//TODO: Save info
 	}
@@ -93,7 +93,7 @@ public class ResearchSystem : ComponentSystem
 		});
 	}
 
-	void ProcessResearch(BuildingCategory category, float multi, int buildingSrc)
+	private void ProcessResearch(BuildingCategory category, float multi, int buildingSrc)
 	{
 		if (!activeResearch.ContainsKey(category))
 			return;
@@ -122,11 +122,11 @@ public class ResearchSystem : ComponentSystem
 			}
 		}
 
-		if(isComplete)
+		if (isComplete)
 		{
 			r.isCompleted = true;
-			Debug.Log($"Research: {rDatabase[r.identifier].name} Completed"); 
-			NotificationsUI.NotifyWithTarget(NotifType.Info,  $"Research Complete: {rDatabase[r.identifier].name}", GameRegistry.ResearchTreeUI);
+			Debug.Log($"Research: {rDatabase[r.identifier].name} Completed");
+			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Research Complete: {rDatabase[r.identifier].name}", GameRegistry.ResearchTreeUI);
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
 			EventManager.InvokeEvent("OnResearchComplete");
@@ -136,7 +136,7 @@ public class ResearchSystem : ComponentSystem
 	public static void SetActiveResearch(ResearchIdentifier identifier)
 	{
 		Debug.Log($"Research: {_INST.rDatabase[identifier].name} Started");
-		if(!_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
+		if (!_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
 		{
 			var cost = _INST.rDatabase[identifier].resourceCost;
 			_INST.researchProgress.Add(identifier.GetHashCode(), new ResearchProgress
@@ -152,7 +152,6 @@ public class ResearchSystem : ComponentSystem
 		else
 			_INST.activeResearch.Add(identifier.category, identifier.GetHashCode());
 		NotificationsUI.Notify(NotifType.Info, $"Research Started: {_INST.rDatabase[identifier].name}");
-
 	}
 
 	public static ResearchProgress GetActiveResearchProgress(BuildingCategory category)
@@ -205,7 +204,8 @@ public class ResearchSystem : ComponentSystem
 		if (_INST.researchProgress.ContainsKey(id))
 		{
 			_INST.researchProgress[id].isCompleted = true;
-		}else
+		}
+		else
 		{
 			_INST.researchProgress.Add(id, new ResearchProgress
 			{
@@ -217,7 +217,7 @@ public class ResearchSystem : ComponentSystem
 
 	public static void UnlockAllResearch()
 	{
-		foreach(var r in _INST.rDatabase.trees)
+		foreach (var r in _INST.rDatabase.trees)
 		{
 			var nodes = r.Value.tree.nodes;
 			for (int i = 0; i < nodes.Count; i++)
@@ -230,7 +230,7 @@ public class ResearchSystem : ComponentSystem
 			}
 		}
 	}
-	
+
 	public static ResearchProgress GetResearchProgress(ResearchIdentifier identifier)
 	{
 		if (_INST.researchProgress.ContainsKey(identifier.GetHashCode()))

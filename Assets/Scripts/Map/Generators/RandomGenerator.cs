@@ -1,16 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Unity.Collections;
-using Unity.Jobs;
-using UnityEngine;
 
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Generator/Random")]
 public class RandomGenerator : MapGenerator
 {
-
 	[System.Serializable]
 	public struct NoiseLayer
 	{
@@ -21,9 +16,8 @@ public class RandomGenerator : MapGenerator
 	}
 
 	public int borderSize = 16;
-	public AnimationCurve borderCurve = AnimationCurve.EaseInOut(0,0,1,1);
+	public AnimationCurve borderCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 	public BiomePainter biomePainter;
-
 
 	public float noiseScale = .5f;
 	public NoiseLayer[] noiseLayers;
@@ -34,9 +28,9 @@ public class RandomGenerator : MapGenerator
 	public int seed = 11;
 	public float landSeaRatio = .4f;
 
-
 	[HideInInspector]
 	public bool biomeFold;
+
 	[HideInInspector]
 	public bool preview;
 
@@ -51,10 +45,10 @@ public class RandomGenerator : MapGenerator
 	{
 		var reject = 0;
 		var totalStartTime = DateTime.Now;
-	Start:
+		Start:
 		var startTime = DateTime.Now;
 #if DEBUG
-		if(!(useSeed || useSeedDev))
+		if (!(useSeed || useSeedDev))
 			seed = startTime.GetHashCode();
 #else
 		if (!useSeed)
@@ -92,7 +86,7 @@ public class RandomGenerator : MapGenerator
 			else
 				Debug.LogWarning("Unalble to find satisfactory level");
 		}
-		Debug.Log($"Generate HightMap... {(DateTime.Now-startTime).TotalMilliseconds}ms {reject} Rejects");
+		Debug.Log($"Generate HightMap... {(DateTime.Now - startTime).TotalMilliseconds}ms {reject} Rejects");
 		startTime = DateTime.Now;
 		var tempMap = biomePainter.GetTempMap(map.totalWidth, map.totalHeight, heightMap, min, max, seaLevel);
 		Debug.Log($"Generate Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
@@ -108,7 +102,7 @@ public class RandomGenerator : MapGenerator
 				var coord = HexCoords.FromOffsetCoords(x, z, edgeLength);
 				var i = x + z * map.totalWidth;
 				var height = heightMap[i];
-                var (tInfo, biomeId) = biomePainter.GetTile(moistureMap[i], tempMap[i], height, seaLevel);
+				var (tInfo, biomeId) = biomePainter.GetTile(moistureMap[i], tempMap[i], height, seaLevel);
 				map[coord] = tInfo.CreateTile(coord, height).SetBiome(biomeId, moistureMap[i], tempMap[i]);
 			}
 		}
@@ -140,7 +134,7 @@ public class RandomGenerator : MapGenerator
 			{
 				var i = x + z * w;
 				tTex.SetPixel(x, z, colors[Mathf.RoundToInt(tMap[i])]);
-				mTex.SetPixel(x, z, colors[15-Mathf.RoundToInt(mMap[i])]);
+				mTex.SetPixel(x, z, colors[15 - Mathf.RoundToInt(mMap[i])]);
 				bTex.SetPixel(x, z, colors[Mathf.RoundToInt(tMap[i]) + Mathf.RoundToInt(mMap[i]) * 4]);
 			}
 		}

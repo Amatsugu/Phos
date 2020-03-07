@@ -106,4 +106,7 @@ MonoBehaviour:
   - id: 32
     info: {fileID: 11400000, guid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb, type: 2}
     category: 3
-  _nextId: 33
+  - id: 33
+    info: {fileID: 11400000, guid: 74972f4338262c245b3f0a0d8d3a93f1, type: 2}
+    category: 2
+  _nextId: 34

@@ -11,6 +11,7 @@ public class BuildingTile : Tile
 	public bool IsBuilt => _isBuilt;
 
 	private Entity _building;
+	private Entity _offshorePlatform;
 	protected bool _isBuilt;
 
 	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
@@ -52,7 +53,10 @@ public class BuildingTile : Tile
 		{
 			if (buildingInfo.buildingMesh != null)
 				Map.EM.DestroyEntity(_building);
-		}catch
+			if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
+				Map.EM.DestroyEntity(_offshorePlatform);
+		}
+		catch
 		{
 
 		}
@@ -86,6 +90,9 @@ public class BuildingTile : Tile
 			Debug.LogWarning($"No Building Assigned for {GetName()}");
 		else
 			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
+
+		if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
+			_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
 		PrepareEntity();
 		OnBuilt();
 		RenderDecorators();
