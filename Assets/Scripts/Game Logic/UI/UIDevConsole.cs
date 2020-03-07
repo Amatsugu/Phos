@@ -7,6 +7,8 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 
 public class UIDevConsole : MonoBehaviour
@@ -68,6 +70,23 @@ public class UIDevConsole : MonoBehaviour
 		{
 			EventManager.InvokeEvent("OnMapRegen");
 		}, "Destroys and unrenders the map"));
+		AddCommand(new Command("debugProfiles", () =>
+		{
+			var volumes = GameObject.FindObjectsOfType<Volume>().Select(v => v.profile).ToArray();
+			foreach (var vol in volumes)
+			{
+				if(vol.TryGet<Exposure>(out var exp))
+				{
+					AddConsoleMessage($"Mode: {exp.mode}");
+					AddConsoleMessage($"Exposure: {exp.fixedExposure}");
+				}
+				if(vol.TryGet<HDRISky>(out var sky))
+				{
+					AddConsoleMessage($"Sky Exposure: {sky.exposure}");
+				}
+			}
+
+		}, "Debug"));
 	}
 
     // Start is called before the first frame update

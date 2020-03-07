@@ -209,6 +209,10 @@ public class WeatherSystem : JobComponentSystem
 		{
 			case WeatherState.ParticleType.Rain:
 				_init.rainVfx.SetFloat("Percipitation", state.percipitation);
+				if (state.percipitation == 0)
+					_init.rainVfx.gameObject.SetActive(false);
+				else
+					_init.rainVfx.gameObject.SetActive(true);
 				break;
 			case WeatherState.ParticleType.Snow:
 				_init.rainVfx.SetFloat("Percipitation", 1-state.percipitation);
