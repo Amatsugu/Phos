@@ -70,23 +70,21 @@ public class UIDevConsole : MonoBehaviour
 		{
 			EventManager.InvokeEvent("OnMapRegen");
 		}, "Destroys and unrenders the map"));
-		AddCommand(new Command("debugProfiles", () =>
+		AddCommand(new Command("unlockAll", () =>
 		{
-			var volumes = GameObject.FindObjectsOfType<Volume>().Select(v => v.profile).ToArray();
-			foreach (var vol in volumes)
+			foreach (var building in GameRegistry.BuildingDatabase.buildings.Keys)
 			{
-				if(vol.TryGet<Exposure>(out var exp))
-				{
-					AddConsoleMessage($"Mode: {exp.mode}");
-					AddConsoleMessage($"Exposure: {exp.fixedExposure}");
-				}
-				if(vol.TryGet<HDRISky>(out var sky))
-				{
-					AddConsoleMessage($"Sky Exposure: {sky.exposure}");
-				}
+				GameRegistry.UnlockBuilding(new BuildingIdentifier { id = building });
 			}
-
-		}, "Debug"));
+			AddConsoleMessage("Unlocked All Buildings");
+		}, "Unlocks All Buildings"));
+		AddCommand(new Command("fullCheat", () =>
+		{
+			ParseCommand("noResourceCost");
+			ParseCommand("instantBuild");
+			ParseCommand("instantResearch");
+			ParseCommand("unlockAll");
+		}, "Runs all the cheat commands"));
 	}
 
     // Start is called before the first frame update

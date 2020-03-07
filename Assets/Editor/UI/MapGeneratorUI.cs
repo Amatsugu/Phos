@@ -83,7 +83,7 @@ public class MapGeneratorUI : Editor
 	public void GenTex()
 	{
 		creator.InitFilters();
-		var max = 0f;
+		float max = 0f, min = float.MaxValue;
 		int w = _previewTex.width, h = _previewTex.height;
 		var hMap = new float[h * w];
 		var landToSeaRatio = 0f;
@@ -96,33 +96,53 @@ public class MapGeneratorUI : Editor
 				var sample = creator.GenerateHeight(sX, sZ);
 				if (sample > max)
 					max = sample;
+				if (sample < min)
+					min = sample;
 				if (sample > creator.seaLevel)
 					landToSeaRatio++;
 				hMap[x + z * w] = sample;
 			}
 		}
+		Random.InitState(creator.seed);
+		var temp = creator.biomePainter.GetTempMap(w, h, hMap, min, max, creator.seaLevel);
+		var filter = NoiseFilterFactory.CreateNoiseFilter(creator.noiseLayers[0].noiseSettings, creator.seed);
+		var moist = creator.biomePainter.GetMoistureMap(w, h, filter, creator.noiseScale);
+
+		var waterGrad = new Gradient();
+		waterGrad.SetKeys(new GradientColorKey[]
+		{
+						new GradientColorKey(new Color(66/255f, 209/255f, 245/255f), 0),
+						new GradientColorKey(new Color(0, 11/255f, 69/255f), 1)
+		}, new GradientAlphaKey[]
+		{
+						new GradientAlphaKey(1, 1)
+		});
 		_lsr = landToSeaRatio / hMap.Length;
 		for (int z = 0; z < h; z++)
 		{
 			for (int x = 0; x < w; x++)
 			{
 				var a = hMap[x + z * w];
+				var i = x + z * w;
+				var (tile, _) = creator.biomePainter.GetTile(moist[i], temp[i], a, creator.seaLevel);
+				var color = tile.material.color;
 				if (a > creator.seaLevel)
 				{
-					var color = new Color(0, .8f, 0);
 					if (z - 1 >= 0)
 					{
 						var b = hMap[x + (z - 1) * w];
-						if (a - b < -.3f)
-							color = new Color(.4f, .9f, .4f);
-						else if (a - b > .3f)
-							color = new Color(0, .6f, 0);
+						if (a - b < -.2f)
+							color = color * 1.2f;
+						else if (a - b > .2f)
+							color = color * .8f;
 					}
+					color.a = 1;
 					_previewTexColors[x + z * _previewTex.height] = color;
-					//_previewTex.SetPixel(x, z, color);
 				}else
 				{
-					_previewTexColors[x + z * _previewTex.height] = Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Remap(a, 0, creator.seaLevel, .5f, 1));
+					var d = MathUtils.Remap(a, 0, creator.seaLevel, 1, 0);
+					
+					_previewTexColors[x + z * _previewTex.height] = Color.Lerp(color, waterGrad.Evaluate(d), d);
 					//_previewTex.SetPixel(x, z, Color.Lerp(new Color(0, 0, .01f), Color.cyan, MathUtils.Map(a, 0, creator.seaLevel, .5f, 1)));
 				}
 			}

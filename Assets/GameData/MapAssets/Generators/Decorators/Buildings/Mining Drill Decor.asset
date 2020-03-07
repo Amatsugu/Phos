@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b545c6da26973b648afc9aa1f547c25f, type: 3}
-  m_Name: Turbine Head Decor
+  m_Name: Mining Drill Decor
   m_EditorClassIdentifier: 
-  meshEntity: {fileID: 11400000, guid: f5b5966ec5e089d478efabace0666799, type: 2}
+  meshEntity: {fileID: 11400000, guid: b81bdab9143fd604b961255a567e3683, type: 2}
   densityMulti: 1
   bladeOffset:
     x: 0

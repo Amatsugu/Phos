@@ -57,10 +57,16 @@ public class ResearchSystem : ComponentSystem
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
+		EventManager.AddEventListener("OnMapLoaded", Init);
+	}
+
+	private void Init()
+	{
 		if (GameRegistry.INST == null)
 			return;
 		rDatabase = GameRegistry.ResearchDatabase;
 		EventManager.AddEventListener("OnTick", () => isTick = true);
+		EventManager.RemoveEventListener("OnMapLoaded", Init);
 	}
 
 	protected override void OnUpdate()
@@ -209,6 +215,22 @@ public class ResearchSystem : ComponentSystem
 		}
 	}
 
+	public static void UnlockAllResearch()
+	{
+		foreach(var r in _INST.rDatabase.trees)
+		{
+			var nodes = r.Value.tree.nodes;
+			for (int i = 0; i < nodes.Count; i++)
+			{
+				UnlockResearch(new ResearchIdentifier
+				{
+					category = r.Value.tree.category,
+					researchId = nodes[i].id
+				});
+			}
+		}
+	}
+	
 	public static ResearchProgress GetResearchProgress(ResearchIdentifier identifier)
 	{
 		if (_INST.researchProgress.ContainsKey(identifier.GetHashCode()))

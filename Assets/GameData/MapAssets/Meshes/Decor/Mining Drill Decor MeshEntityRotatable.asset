@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Advanced Mining Laser Mesh
+  m_Name: Mining Drill Decor MeshEntityRotatable
   m_EditorClassIdentifier: 
-  mesh: {fileID: -2432090755550338912, guid: cbb73a31a297f4049b46600c59f83d99, type: 3}
-  material: {fileID: 2100000, guid: 0aa1c517a135c88409fae2b7f28389b5, type: 2}
+  mesh: {fileID: 2583931747965024622, guid: 1bf0220d534427948a8282617ed94b2d, type: 3}
+  material: {fileID: 2100000, guid: d1bd85203ec745d40bae4db357bd5dda, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
+  nonUniformScale: 1

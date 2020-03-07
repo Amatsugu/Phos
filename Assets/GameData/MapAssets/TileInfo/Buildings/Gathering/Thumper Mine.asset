@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c2f48f35186256469050c882e08c1e1, type: 3}
-  m_Name: Advanced Mining Laser
+  m_Name: Thumper Mine
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
@@ -18,15 +18,14 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  description: 'An Improved mining laser that not only has a higher range but also
-    mines at a higher efficiency, producing more resources per tile. In Addition
-    it can also mine Silver and Gold. '
-  decorators: []
+  description: A basic mine. It can only mine Iron and Coal at a moderate range.
+  decorators:
+  - {fileID: 11400000, guid: 1572bf99efb7943449614f9ea5afe96e, type: 2}
   isTraverseable: 1
   faction: 1
-  buildingMesh: {fileID: 11400000, guid: 1a6e2d608f330684282a507f252731ae, type: 2}
+  buildingMesh: {fileID: 11400000, guid: fdad5a311b68bd5448df43a04167253f, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  tier: 2
+  tier: 1
   constructionTime: 2
   category: 2
   size: 0
@@ -37,26 +36,20 @@ MonoBehaviour:
   placementMode: 0
   upgradeTarget:
     id: -1
-  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  preserveGroundTile: 0
+  icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  preserveGroundTile: 1
   cost:
   - id: 1
     ammount: 60
-  - id: 4
-    ammount: 40
-  - id: 4
-    ammount: 30
+  - id: 0
+    ammount: 20
   production: []
   consumption:
   - id: 0
-    ammount: 6
+    ammount: 2
   resourcesToGather:
   - id: 1
-    ammount: 1
+    ammount: 0.5
   - id: 2
-    ammount: 1.5
-  - id: 6
-    ammount: 1.25
-  - id: 7
     ammount: 1
   gatherRange: 3
