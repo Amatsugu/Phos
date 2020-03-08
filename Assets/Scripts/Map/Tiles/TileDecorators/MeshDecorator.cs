@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile Decorators/Mesh")]
@@ -13,8 +12,6 @@ public class MeshDecorator : TileDecorator
 	public float3 offset;
 	public float randomRotMin = 0;
 	public float randomRotMax = 180;
-
-	
 
 	public override int GetDecorEntityCount(Tile tile)
 	{

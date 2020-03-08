@@ -1,19 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Orbit : MonoBehaviour
 {
-
 	public Vector3 target;
 	public float height = 40;
 	public float distance = 40;
 	public float speed = 1;
 
 	private float _angle;
-    // Update is called once per frame
-    void Update()
-    {
+
+	// Update is called once per frame
+	private void Update()
+	{
 		if (Input.GetKeyDown(KeyCode.X))
 		{
 			this.enabled = false;

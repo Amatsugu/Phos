@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Unity.Entities;
+
 using UnityEngine;
-using static PhosCoreSystem;
 
 namespace Tiles.EnemyBuildings
 {
@@ -31,7 +29,7 @@ namespace Tiles.EnemyBuildings
 
 			Map.EM.AddComponentData(e, new PhosCore
 			{
-				fireRate = 1/fireRate,
+				fireRate = 1 / fireRate,
 				spinRate = spinRate,
 				nextVolleyTime = Time.time,
 				projectileSpeed = projectileSpeed,

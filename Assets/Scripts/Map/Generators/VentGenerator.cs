@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Generator/Feature/Geothermal Vents")]
@@ -19,7 +18,7 @@ public class VentGenerator : FeatureGenerator
 			{
 				if (rand.Next(0, rarity) != 0)
 					continue;
-				var center = map[HexCoords.FromOffsetCoords(x,z, map.tileEdgeLength)];
+				var center = map[HexCoords.FromOffsetCoords(x, z, map.tileEdgeLength)];
 				if (!center.IsUnderwater)
 					continue;
 				var coord = center.Coords;
@@ -43,5 +42,4 @@ public class VentGenerator : FeatureGenerator
 		}
 		Debug.Log($"{GeneratorName}: {vents} vents generated");
 	}
-
 }

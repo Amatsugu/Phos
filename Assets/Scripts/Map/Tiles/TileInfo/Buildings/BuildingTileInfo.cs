@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Entities;
-using Unity.Rendering;
-using Unity.Transforms;
+
 using UnityEngine;
 
 public enum PlacementMode
@@ -18,30 +17,40 @@ public class BuildingTileInfo : TileInfo
 	[Header("Mesh")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable buildingMesh;
+
 	public MeshEntityRotatable constructionMesh;
+
 	[Header("Stats")]
 	[Range(1, 6)]
 	public int tier = 1;
+
 	public float constructionTime = 2;
 	public BuildingCategory category;
 	public int size = 0;
 	public int flattenOuterRange = 0;
 	public int resourceTransferRange = 0;
+
 	[Header("Offshore")]
 	public bool isOffshore;
+
 	[ConditionalHide("isOffshore")]
 	public bool offshoreOnly;
+
 	[ConditionalHide("isOffshore")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable offshorePlatformMesh;
+
 	[Header("Building Info")]
 	public PlacementMode placementMode = PlacementMode.Single;
+
 	public BuildingIdentifier upgradeTarget;
 	public Sprite icon;
 	public bool preserveGroundTile;
+
 	[Header("Resources")]
 	[SerializeField]
 	public ResourceIndentifier[] cost;
+
 	public ResourceIndentifier[] production;
 	public ResourceIndentifier[] consumption;
 
@@ -52,7 +61,7 @@ public class BuildingTileInfo : TileInfo
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
-		if(consumption.Length != 0 || production.Any(p => p.id == 0))
+		if (consumption.Length != 0 || production.Any(p => p.id == 0))
 			return new PoweredBuildingTile(pos, height, this);
 		else
 			return new BuildingTile(pos, height, this);
@@ -88,7 +97,7 @@ public class BuildingTileInfo : TileInfo
 		for (int i = 0; i < consumption.Length; i++)
 		{
 			costString += $"{ResourceDatabase.GetResourceString(consumption[i].id)} -{consumption[i].ammount}/t";
-			if (i < consumption.Length -1)
+			if (i < consumption.Length - 1)
 				costString += "\n";
 		}
 		return costString;

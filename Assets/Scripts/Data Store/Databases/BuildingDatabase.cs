@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game Data/Building Database")]
 public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 {
-	void OnEnable()
+	private void OnEnable()
 	{
 		if (buildings == null)
 			Reset();

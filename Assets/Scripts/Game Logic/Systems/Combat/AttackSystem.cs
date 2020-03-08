@@ -1,10 +1,9 @@
 ﻿using AnimationSystem.AnimationData;
-using AnimationSystem.Animations;
-using System.Collections;
-using System.Collections.Generic;
+
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -13,6 +12,7 @@ public class UnitAttackSystem : ComponentSystem
 	private MeshEntityRotatable _bullet;
 	private Unity.Mathematics.Random _rand;
 	private int _state;
+
 	protected override void OnStartRunning()
 	{
 		var op = Addressables.LoadAssetAsync<MeshEntityRotatable>("EnergyPacket");
@@ -27,19 +27,21 @@ public class UnitAttackSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
-		switch(_state)
+		switch (_state)
 		{
 			case 0: //Idle
 				break;
+
 			case 1: //Attack
-				//AttackAI();
+					//AttackAI();
 				break;
 		}
 	}
 
 	private void AttackAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p) => {
+		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p) =>
+		{
 			if (Time.ElapsedTime >= s.Value)
 			{
 				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, Vector3.one);
@@ -50,7 +52,6 @@ public class UnitAttackSystem : ComponentSystem
 				PostUpdateCommands.AddComponent(proj, new Velocity { Value = GetAttackVector(t.Value.x, targetPoint) });
 				s.Value = Time.ElapsedTime + 1;
 			}
-
 		});
 	}
 
@@ -62,7 +63,6 @@ public class UnitAttackSystem : ComponentSystem
 
 		float g = 9.8f;
 		var diff = target - pos;
-		
 
 		float tanG = math.tan(angle);
 		float upper = math.sqrt(g) * math.sqrt(dist) * math.sqrt(tanG * tanG + 1.0f);
@@ -84,17 +84,25 @@ public class UnitAttackSystem : ComponentSystem
 public struct AttackSpeed : IComponentData
 {
 	public double Value;
+
 	public override bool Equals(object obj) => Value.Equals(obj);
+
 	public override int GetHashCode() => Value.GetHashCode();
+
 	public static bool operator ==(AttackSpeed left, AttackSpeed right) => left.Equals(right);
+
 	public static bool operator !=(AttackSpeed left, AttackSpeed right) => !(left == right);
 }
 
 public struct Projectile : IComponentData
 {
 	public Entity Value;
+
 	public override bool Equals(object obj) => Value.Equals(obj);
+
 	public override int GetHashCode() => Value.GetHashCode();
+
 	public static bool operator ==(Projectile left, Projectile right) => left.Equals(right);
+
 	public static bool operator !=(Projectile left, Projectile right) => !(left == right);
 }

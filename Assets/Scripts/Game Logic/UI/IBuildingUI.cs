@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface IBuildingUI
+﻿public interface IBuildingUI
 {
 	void Show(InteractiveBuildingTile target);
 

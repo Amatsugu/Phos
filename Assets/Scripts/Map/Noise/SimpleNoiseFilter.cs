@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public struct SimpleNoiseFilter : INoiseFilter
 {
-	Noise noise;
-	NoiseSettings settings;
+	private Noise noise;
+	private NoiseSettings settings;
 
 	public SimpleNoiseFilter(NoiseSettings noiseSettings, int seed = 0)
 	{

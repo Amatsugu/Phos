@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using System.Text;
+﻿using UnityEngine;
 
 public class StatusUI : UIHover
 {
@@ -38,7 +33,7 @@ public class StatusUI : UIHover
 			_displays[i].OnHover += () =>
 			{
 				_selectedDisplay = id;
-				if(!resourceBreakdown.IsActive)
+				if (!resourceBreakdown.IsActive)
 				{
 					var targetX = _displays[_selectedDisplay].rTransform.position.x;
 					var pos = resourceBreakdown.rTransform.anchoredPosition;
@@ -63,7 +58,7 @@ public class StatusUI : UIHover
 		base.Update();
 		for (int i = 0; i < _displays.Length; i++)
 		{
-			if(ResourceSystem.resCount[i] != 0)
+			if (ResourceSystem.resCount[i] != 0)
 			{
 				_displays[i].gameObject.SetActive(true);
 			}
@@ -80,7 +75,7 @@ public class StatusUI : UIHover
 	protected override void LateUpdate()
 	{
 		base.LateUpdate();
-		if(_selectedDisplay != -1)
+		if (_selectedDisplay != -1)
 		{
 			_animTime += Time.unscaledDeltaTime * animSpeed;
 			var targetX = _displays[_selectedDisplay].rTransform.position.x;
@@ -89,5 +84,4 @@ public class StatusUI : UIHover
 			resourceBreakdown.rTransform.anchoredPosition = pos;
 		}
 	}
-
 }

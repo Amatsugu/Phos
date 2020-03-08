@@ -1,19 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class UIPanel : UIHover
 {
-
 	public RectTransform PanelBase { get; private set; }
 	public Button closeButton;
 	public TMP_Text titleText;
 	public bool hideOnStart = true;
 	public bool hideOnBlur = true;
 	public bool hideInEditor = false;
+
 	public event System.Action OnShow;
+
 	public event System.Action OnHide;
 
 	public bool IsOpen
@@ -31,7 +31,7 @@ public class UIPanel : UIHover
 			Hide();
 		else
 			OnShow?.Invoke();
-		if(closeButton != null)
+		if (closeButton != null)
 		{
 			var click = new Button.ButtonClickedEvent();
 			click.AddListener(Hide);
@@ -67,7 +67,6 @@ public class UIPanel : UIHover
 		{
 			Destroy(transform.GetChild(i).gameObject);
 		}
-
 	}
 
 	public static Vector3 ContrainToScreen(Vector3 pos, Rect rect)

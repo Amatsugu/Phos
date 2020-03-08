@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
-using Unity.Transforms;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile Decorators/Ice")]
@@ -10,12 +8,10 @@ public class IceDecorator : TileDecorator
 {
 	public float height;
 
-
 	public override int GetDecorEntityCount(Tile tile)
 	{
 		return 0;
 	}
-
 
 	public override Entity[] Render(Tile tile)
 	{

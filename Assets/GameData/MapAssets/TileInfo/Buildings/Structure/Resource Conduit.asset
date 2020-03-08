@@ -23,7 +23,7 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 0
   faction: 1
-  buildingMesh: {fileID: 11400000, guid: e62d3f653db9df84fbc5fd56f75ae0fe, type: 2}
+  buildingMesh: {fileID: 11400000, guid: 1cccbdfb97aeb9f43955b041dd54202c, type: 2}
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   tier: 1
   constructionTime: 2
@@ -33,6 +33,7 @@ MonoBehaviour:
   resourceTransferRange: 0
   isOffshore: 0
   offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
   placementMode: 0
   upgradeTarget:
     id: -1
@@ -50,4 +51,4 @@ MonoBehaviour:
   lineEntity: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
   lineEntityInactive: {fileID: 11400000, guid: c7c93174831cb88429bc7e5a33ff5238, type: 2}
   energyPacket: {fileID: 11400000, guid: 387055346b29e1f4890789816ea8cee3, type: 2}
-  powerLineOffset: 1
+  powerLineOffset: 1.46

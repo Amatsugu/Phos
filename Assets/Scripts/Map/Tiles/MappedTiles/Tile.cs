@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
+
 using UnityEngine;
 
 public class Tile
@@ -22,7 +21,6 @@ public class Tile
 	public int biomeId;
 	public bool IsShown { get; private set; }
 	public TileInfo originalTile;
-
 
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
@@ -104,9 +102,8 @@ public class Tile
 		if (!_isRendered)
 			return;
 
-		if(info.mesh != null)
+		if (info.mesh != null)
 			Map.EM.SetComponentData(_tileEntity, new Translation { Value = SurfacePoint });
-
 	}
 
 	private void UpdateDecorations()
@@ -149,7 +146,6 @@ public class Tile
 
 	public virtual void TileUpdated(Tile src, TileUpdateType updateType)
 	{
-
 	}
 
 	public virtual void Destroy()
@@ -158,12 +154,13 @@ public class Tile
 		{
 			Map.EM.DestroyEntity(_tileEntity);
 			Map.EM.DestroyEntity(_decor);
-		}catch
+		}
+		catch
 		{
-
-		}finally
+		}
+		finally
 		{
-			if(_decor.IsCreated)
+			if (_decor.IsCreated)
 				_decor.Dispose();
 		}
 	}
@@ -171,11 +168,10 @@ public class Tile
 	public virtual void Show(bool isShown)
 	{
 		IsShown = isShown;
-		if(isShown)
+		if (isShown)
 		{
 			//Map.EM.RemoveComponent(_decor, typeof(Frozen));
 			Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
-
 		}
 		else
 		{

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+
+using UnityEngine;
 
 namespace Effects.Lines
 {
@@ -26,7 +22,7 @@ namespace Effects.Lines
 
 		public static Entity CreateStaticLine(MeshEntityRotatable line, Vector3 a, Vector3 b, float thiccness = 0.1f)
 		{
-			var (t,s,r) = PrepareLine(a, b, thiccness);
+			var (t, s, r) = PrepareLine(a, b, thiccness);
 			return line.Instantiate(t, s, r);
 		}
 

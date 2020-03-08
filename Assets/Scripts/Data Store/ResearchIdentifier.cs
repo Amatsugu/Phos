@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
-using UnityEngine;
+﻿using Unity.Entities;
 
 public struct ResearchIdentifier : IComponentData
 {
 	public BuildingCategory category;
 	public int researchId;
 
-	const int prime = 31;
+	private const int prime = 31;
+
 	public override int GetHashCode()
 	{
 		int hash = 23;

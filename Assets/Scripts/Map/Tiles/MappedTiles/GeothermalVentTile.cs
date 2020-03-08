@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Rendering;
+
 using UnityEngine;
 
 public class GeothermalVentTile : ResourceTile
@@ -47,7 +46,6 @@ public class GeothermalVentTile : ResourceTile
 		Map.EM.DestroyEntity(_core);
 		base.Destroy();
 	}
-
 }
 
 public class GeothermalVentShellTile : ResourceTile
@@ -61,6 +59,7 @@ public class GeothermalVentShellTile : ResourceTile
 		ventInfo = tInfo;
 		this.angle = angle;
 	}
+
 	public override TileInfo GetMeshEntity()
 	{
 		return originalTile;
@@ -68,7 +67,7 @@ public class GeothermalVentShellTile : ResourceTile
 
 	public override Entity Render()
 	{
-		_shell = ventInfo.shell.Instantiate(new Vector3(Coords.worldX, Height, Coords.worldZ), Vector3.one, Quaternion.Euler(0, angle-60, 0));
+		_shell = ventInfo.shell.Instantiate(new Vector3(Coords.worldX, Height, Coords.worldZ), Vector3.one, Quaternion.Euler(0, angle - 60, 0));
 		return base.Render();
 	}
 

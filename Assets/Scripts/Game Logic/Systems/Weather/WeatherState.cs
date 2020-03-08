@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
+
 using UnityEngine;
 
 [System.Serializable]
@@ -8,21 +7,29 @@ public struct WeatherState
 {
 	[Header("Clouds")]
 	public float cloudDensity;
+
 	public Color cloudColor;
+
 	[Header("Atmosphere")]
 	public float windSpeed;
+
 	public float percipitation;
 	public ParticleType weatherType;
 	public bool isStorm;
+
 	[Header("Fog")]
 	public float fogDensity;
+
 	public float fogBaseHeight;
 	public float fogHeight;
 	public Color fogColor;
+
 	[Header("Lighting")]
 	public Color skyColor;
+
 	public float sunBrightness;
 	public Color sunColor;
+
 	[Range(1000, 20000)]
 	public float sunTemp;
 

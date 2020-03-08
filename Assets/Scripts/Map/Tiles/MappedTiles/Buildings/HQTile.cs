@@ -1,9 +1,6 @@
 ﻿using DataStore.ConduitGraph;
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
-using UnityEngine;
 
 public class HQTile : BuildingTile
 {
@@ -50,19 +47,17 @@ public class HQTile : BuildingTile
 		var foundation = Map.ActiveMap.HexSelect(Coords, buildingInfo.size);
 		for (int i = 0; i < foundation.Count; i++)
 		{
-			if(foundation[i] != this)
+			if (foundation[i] != this)
 				foundation[i].UpdateHeight(Height);
 		}
 	}
-
-	
 }
 
 public class SubHQTile : PoweredBuildingTile
 {
 	public SubHQTile(HexCoords coords, float height, SubHQTileInfo tInfo) : base(coords, height, tInfo)
 	{
-		HasHQConnection = true;	
+		HasHQConnection = true;
 	}
 
 	public override void OnPlaced()

@@ -1,21 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
+
 using UnityEngine;
 
 public class ResourceBreakdownUI : UIHover
 {
 	[Header("Title Text")]
 	public RectTransform productionTitle;
+
 	public RectTransform demandTitle;
 	public RectTransform satisfactionTitle;
 	public RectTransform excessTitle;
+
 	[Header("Body Text")]
 	public TMP_Text productionText;
+
 	public TMP_Text demandText;
 	public TMP_Text satisfactionText;
 	public TMP_Text excessText;
-
 
 	private int _resId;
 	private float _targetHeight;
@@ -26,7 +27,6 @@ public class ResourceBreakdownUI : UIHover
 		base.Awake();
 		gameObject.SetActive(false);
 	}
-
 
 	protected override void LateUpdate()
 	{
@@ -47,8 +47,8 @@ public class ResourceBreakdownUI : UIHover
 		prefHeight += excessText.preferredHeight;
 
 		prefHeight += 5 * 8;
-		
-		if(_targetHeight != prefHeight && prefHeight != rTransform.rect.height)
+
+		if (_targetHeight != prefHeight && prefHeight != rTransform.rect.height)
 		{
 			_animTime = 0;
 			_targetHeight = prefHeight;
@@ -56,7 +56,6 @@ public class ResourceBreakdownUI : UIHover
 		_animTime += Time.deltaTime * 2;
 
 		rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Lerp(rTransform.rect.height, _targetHeight, _animTime));
-
 	}
 
 	public void SetResource(int resId)
@@ -64,7 +63,7 @@ public class ResourceBreakdownUI : UIHover
 		_resId = resId;
 	}
 
-	string GetProductionText(int resId)
+	private string GetProductionText(int resId)
 	{
 		var transaction = GameRegistry.ResourceSystem.resourceRecords[resId];
 		string text = "";
@@ -79,7 +78,7 @@ public class ResourceBreakdownUI : UIHover
 		return text;
 	}
 
-	string GetDemandText(int resId)
+	private string GetDemandText(int resId)
 	{
 		var transaction = GameRegistry.ResourceSystem.resourceRecords[resId];
 		string text = "";
@@ -94,7 +93,7 @@ public class ResourceBreakdownUI : UIHover
 		return text;
 	}
 
-	string GetSatisfactionText(int resId)
+	private string GetSatisfactionText(int resId)
 	{
 		var transaction = GameRegistry.ResourceSystem.resourceRecords[resId];
 		string text = "";
@@ -109,7 +108,7 @@ public class ResourceBreakdownUI : UIHover
 		return text;
 	}
 
-	string GetExcessText(int resId)
+	private string GetExcessText(int resId)
 	{
 		var transaction = GameRegistry.ResourceSystem.resourceRecords[resId];
 		string text = "";

@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 
 public class LineReneringSystem : JobComponentSystem
 {
-	struct LineSegmentJob : IJobForEachWithEntity<LineSegment, Translation, Rotation, NonUniformScale>
+	private struct LineSegmentJob : IJobForEachWithEntity<LineSegment, Translation, Rotation, NonUniformScale>
 	{
 		public void Execute(Entity e, int index, ref LineSegment ls, ref Translation t, ref Rotation r, ref NonUniformScale s)
 		{
@@ -28,10 +26,9 @@ public class LineReneringSystem : JobComponentSystem
 	}
 }
 
-
 public class LineWidthSystem : JobComponentSystem
 {
-	struct LineWidthJob : IJobForEachWithEntity<LineWidth, NonUniformScale>
+	private struct LineWidthJob : IJobForEachWithEntity<LineWidth, NonUniformScale>
 	{
 		public void Execute(Entity e, int index, ref LineWidth lw, ref NonUniformScale s)
 		{

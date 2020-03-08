@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 public class ChildOfSystem : ComponentSystem
 {
@@ -11,7 +8,7 @@ public class ChildOfSystem : ComponentSystem
 	{
 		Entities.WithNone<Disabled, Frozen>().ForEach((Entity e, ref ChildOf c, ref LocalTranslation lT, ref ParentHeigharcy p, ref Translation t) =>
 		{
-			if(!lT.Applied)
+			if (!lT.Applied)
 			{
 				t.Value = p.totalOfset + lT.Value;
 				lT.Applied = true;
@@ -37,14 +34,12 @@ public class ChildOfSystem : ComponentSystem
 			else
 				PostUpdateCommands.RemoveComponent<ChildOf>(e);
 		});
-
-
 	}
 
-	ParentHeigharcy DetermineHeigharcy(Entity parent)
+	private ParentHeigharcy DetermineHeigharcy(Entity parent)
 	{
-		float3 totalOffset = new float3(0,0,0);
-		while(EntityManager.HasComponent<ChildOf>(parent))
+		float3 totalOffset = new float3(0, 0, 0);
+		while (EntityManager.HasComponent<ChildOf>(parent))
 		{
 			var c = EntityManager.GetComponentData<ChildOf>(parent);
 			var p = EntityManager.GetComponentData<LocalTranslation>(parent);

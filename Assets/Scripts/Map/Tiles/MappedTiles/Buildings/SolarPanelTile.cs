@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class SolarPanelTile : TickedTile
+﻿public class SolarPanelTile : TickedTile
 {
 	public SolarPanelTileInfo solarInfo;
 

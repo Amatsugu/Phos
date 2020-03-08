@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +15,7 @@ public class UIResearchResource : MonoBehaviour
 	public void SetResource(int rId)
 	{
 		_rId = rId;
-		if(resourceName != null)
+		if (resourceName != null)
 			resourceName.text = ResourceDatabase.GetResourceName(rId);
 		icon.sprite = ResourceDatabase.GetSprite(rId);
 	}
@@ -25,12 +24,12 @@ public class UIResearchResource : MonoBehaviour
 	{
 		var progress = (float)curProgress / total;
 		progressBar.fillAmount = progress;
-		if(resourceProgress != null)
+		if (resourceProgress != null)
 			resourceProgress.text = $"{curProgress}/{total}";
 		if (resourceName == null)
 			return;
 		var deltaText = "";
-		if(lastTickDelta != 0)
+		if (lastTickDelta != 0)
 			deltaText = $"[{ (lastTickDelta > 0 ? "+" : "")}{ lastTickDelta}]";
 		resourceName.text = $"{ResourceDatabase.GetResourceName(_rId)} {deltaText}";
 	}

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 
 namespace DataStore.ConduitGraph
@@ -15,6 +15,7 @@ namespace DataStore.ConduitGraph
 		private readonly ConduitNode _baseNode;
 
 		public event Action<ConduitNode> OnNodeRemoved;
+
 		public event Action<ConduitNode> OnNodeAdded;
 
 		private int _curId = 0;
@@ -54,7 +55,7 @@ namespace DataStore.ConduitGraph
 			OnNodeAdded?.Invoke(newNode);
 		}
 
-		ConduitNode CreateNode(HexCoords nodePos, float height)
+		private ConduitNode CreateNode(HexCoords nodePos, float height)
 		{
 			var id = _curId++;
 			var newNode = new ConduitNode(id, nodePos, height, maxConnections);
@@ -80,7 +81,7 @@ namespace DataStore.ConduitGraph
 				if (excludeFull && n.IsFull)
 					continue;
 				var dist = nodePos.DistanceToSq(pos[i]);
-				if(dist < bestDist)
+				if (dist < bestDist)
 				{
 					bestDist = dist;
 					closest = n;
@@ -88,7 +89,6 @@ namespace DataStore.ConduitGraph
 			}
 			return closest.IsFull ? default : closest;
 		}
-
 
 		/// <summary>
 		/// Gets the closest node and excludes the base node
@@ -119,11 +119,11 @@ namespace DataStore.ConduitGraph
 		{
 			var visited = new HashSet<ConduitNode>();
 			TraverseGraph(_baseNode, visited);
-			if(visited.Count == Count)
+			if (visited.Count == Count)
 				return new ConduitNode[0];
 
 			var nodesArr = nodes.Values.ToArray();
-			var disconected = new ConduitNode[Count-visited.Count];
+			var disconected = new ConduitNode[Count - visited.Count];
 			var j = 0;
 			for (int i = 0; i < Count; i++)
 			{
@@ -256,7 +256,7 @@ namespace DataStore.ConduitGraph
 			var closed = new HashSet<PathNode>();
 			var dstNode = new PathNode(dst, 1);
 			PathNode last = null;
-			while(open.Count > 0)
+			while (open.Count > 0)
 			{
 				if (closed.Contains(dstNode))
 				{
@@ -282,14 +282,14 @@ namespace DataStore.ConduitGraph
 					else
 					{
 						var o = open.First(oAdj => oAdj.Equals(adj));
-						if(adj.F < o.F)
+						if (adj.F < o.F)
 						{
 							open.Remove(o);
 							open.Add(adj);
 						}
 					}
 				}
-				if(open.Count > 512)
+				if (open.Count > 512)
 				{
 					Debug.LogWarning("Big Path");
 					break;
@@ -325,7 +325,6 @@ namespace DataStore.ConduitGraph
 		public int ConnectionCount { get; private set; }
 		public bool IsEmpty => ConnectionCount == 0;
 		public bool IsFull => ConnectionCount == maxConnections;
-
 
 		public ConduitNode(int id, HexCoords pos, float height, int maxConnections = 6)
 		{
@@ -373,7 +372,7 @@ namespace DataStore.ConduitGraph
 		{
 			for (int i = 0; i < maxConnections; i++)
 			{
-				if(_connections[i] == nodeId)
+				if (_connections[i] == nodeId)
 				{
 					_connections[i] = -1;
 					ConnectionCount--;
@@ -397,7 +396,7 @@ namespace DataStore.ConduitGraph
 
 		public override bool Equals(object obj)
 		{
-			if(obj is ConduitNode r)
+			if (obj is ConduitNode r)
 				return r.id == id;
 			return false;
 		}

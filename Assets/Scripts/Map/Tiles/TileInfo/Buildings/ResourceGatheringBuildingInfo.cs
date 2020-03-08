@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.Entities;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building/Resoruce Gathering")]
 public class ResourceGatheringBuildingInfo : BuildingTileInfo

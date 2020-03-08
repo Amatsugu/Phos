@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.Entities;
-using Unity.Transforms;
-using Unity.Rendering;
-using Unity.Mathematics;
+﻿using Unity.Entities;
+
 using UnityEngine;
-using UnityEngine.Rendering;
-using Unity.Jobs;
-using UnityEngine.SceneManagement;
 
 public class MapRenderer : MonoBehaviour
 {
@@ -23,8 +14,10 @@ public class MapRenderer : MonoBehaviour
 
 	[HideInInspector]
 	public Map map;
+
 	[HideInInspector]
 	public Vector3 min, max;
+
 	private Transform _ocean;
 	private Camera _cam;
 	private Vector3 _lastCamPos;
@@ -67,7 +60,7 @@ public class MapRenderer : MonoBehaviour
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
 		EventManager.InvokeEvent("OnMapLoaded");
 	}
-	
+
 	private void LateUpdate()
 	{
 		var camPos = _cam.transform.position;
@@ -81,7 +74,6 @@ public class MapRenderer : MonoBehaviour
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z);
 		}
 
-		
 		if (generator.Regen)
 		{
 			generator.Regen = false;
@@ -99,5 +91,3 @@ public class MapRenderer : MonoBehaviour
 		GameObject.Destroy(_ocean);
 	}
 }
-
-

@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
-using UnityEditor;
 
 [System.Serializable]
 public class ResearchTree
 {
-
 	public ResearchTree(string name)
 	{
 		this.name = name;
 		Reset();
 	}
-
 
 	public BuildingCategory category;
 	public string name;
@@ -83,7 +79,7 @@ public class ResearchTree
 			return true;
 		for (int i = 0; i < parent.Count; i++)
 		{
-			if(IsDeepChild(nodes[parent.childrenIDs[i]], child))
+			if (IsDeepChild(nodes[parent.childrenIDs[i]], child))
 			{
 				return true;
 			}
@@ -97,7 +93,7 @@ public class ResearchTree
 			return null;
 		for (int i = 0; i < nodes.Count; i++)
 		{
-			if(nodes[i] != null)
+			if (nodes[i] != null)
 			{
 				if (nodes[i].IsParentOf(child))
 					return nodes[i];
@@ -121,20 +117,18 @@ public class ResearchTree
 		return nodes.Count;
 	}
 
-	void OnEnable()
+	private void OnEnable()
 	{
-		if(nodes == null)
+		if (nodes == null)
 		{
 			Reset();
 		}
 	}
 
-
 	public int GetDepth()
 	{
 		return BaseNode.GetDepth(this) + 1;
 	}
-
 
 	[System.Serializable]
 	public class ResearchTech
@@ -150,9 +144,7 @@ public class ResearchTree
 		public int[] childrenIDs;
 		public int Count;
 
-
 		public const int MAX_CHILDREN = 3;
-
 
 		public ResearchTech(string name, string description = "", int id = 0)
 		{

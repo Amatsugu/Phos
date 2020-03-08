@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,8 +23,7 @@ public class UINotifPopup : MonoBehaviour
 
 	private Color _iC, _bC, _tC, _mC;
 
-
-	void Start()
+	private void Start()
 	{
 		GameObject = gameObject;
 		Show(false);
@@ -35,7 +33,7 @@ public class UINotifPopup : MonoBehaviour
 		_iC = icon.color;
 		_bC = _bg.color;
 		_tC = title.color;
-		if(message != null)
+		if (message != null)
 			_mC = message.color;
 	}
 
@@ -47,12 +45,13 @@ public class UINotifPopup : MonoBehaviour
 		title.SetText(notification.title);
 		endTime = Time.unscaledTime + notifTime;
 		_button.onClick.RemoveAllListeners();
-		if(notification.type == NotifTargetType.Tile)
+		if (notification.type == NotifTargetType.Tile)
 		{
 			var tile = notification.tile;
-			if(tile != null)
+			if (tile != null)
 				_button.onClick.AddListener(() => CameraController.FocusOnTile(tile));
-		}else
+		}
+		else
 		{
 			var panel = notification.panel;
 			_button.onClick.AddListener(() => panel.Show());
@@ -86,6 +85,5 @@ public class UINotifPopup : MonoBehaviour
 		col = _mC;
 		col.a *= opacity;
 		message.color = col;
-
 	}
 }

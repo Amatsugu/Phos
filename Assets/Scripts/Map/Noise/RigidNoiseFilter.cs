@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public struct RigidNoiseFilter : INoiseFilter
 {
-	Noise noise;
-	NoiseSettings settings;
+	private Noise noise;
+	private NoiseSettings settings;
 
 	public RigidNoiseFilter(NoiseSettings noiseSettings, int seed = 0)
 	{
@@ -17,7 +15,6 @@ public struct RigidNoiseFilter : INoiseFilter
 
 	public float Evaluate(Vector3 point, float minValue)
 	{
-
 		float noiseValue = 0;
 		float freq = settings.baseRoughness;
 		float amp = 1;

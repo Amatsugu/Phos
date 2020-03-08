@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,13 +14,14 @@ public class UIResearchNode : UIHover
 	public Button button;
 	public Outline outline;
 	public RectTransform resourceCostPrefab;
+
 	[HideInInspector]
 	public int nodeId;
 
 	[Header("Sections")]
 	public RectTransform info;
-	public RectTransform extraInfo;
 
+	public RectTransform extraInfo;
 
 	private UIResearchResource[] _uIResearchResources;
 	private Vector2 _curSize;
@@ -53,7 +54,7 @@ public class UIResearchNode : UIHover
 	{
 		_curSize = size;
 		rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
-		if(isHovered)
+		if (isHovered)
 			rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _curSize.y + descText.preferredHeight);
 		else
 			rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
@@ -83,7 +84,7 @@ public class UIResearchNode : UIHover
 	{
 		for (int i = 0; i < _uIResearchResources.Length; i++)
 		{
-			if(i >= resources.Length)
+			if (i >= resources.Length)
 			{
 				_uIResearchResources[i]?.gameObject.SetActive(false);
 				continue;

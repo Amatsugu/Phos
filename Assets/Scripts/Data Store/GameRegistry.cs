@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 
 public class GameRegistry : MonoBehaviour
 {
-
 	public static GameRegistry INST
 	{
 		get
@@ -28,7 +27,6 @@ public class GameRegistry : MonoBehaviour
 	public static BuildingDatabase BuildingDatabase => INST._buildingDatabase;
 	public static ResearchDatabase ResearchDatabase => INST.researchDatabase;
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
-
 
 	public BuildUI buildUI;
 	public InteractionUI interactionUI;
@@ -61,7 +59,7 @@ public class GameRegistry : MonoBehaviour
 	public static void UnlockBuilding(BuildingIdentifier building)
 	{
 		EventManager.InvokeEvent("OnBuildingUnlocked");
-		if(!_inst._unlockedBuildings.Contains(building.id))
+		if (!_inst._unlockedBuildings.Contains(building.id))
 			_inst._unlockedBuildings.Add(building.id);
 	}
 

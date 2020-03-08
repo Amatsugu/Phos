@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class TickedTile : PoweredBuildingTile
+﻿public class TickedTile : PoweredBuildingTile
 {
 	public TickedTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
 	{
@@ -22,6 +18,5 @@ public class TickedTile : PoweredBuildingTile
 
 	protected virtual void OnTick()
 	{
-
 	}
 }

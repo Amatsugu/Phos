@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 using UnityEngine;
 
 public class EventManager : MonoBehaviour
@@ -11,7 +11,7 @@ public class EventManager : MonoBehaviour
 			if (_inst == null)
 			{
 				_inst = FindObjectOfType<EventManager>();
-				if(_inst != null)
+				if (_inst != null)
 					_inst._events = new Dictionary<string, List<System.Action>>();
 			}
 			return _inst;
@@ -26,7 +26,7 @@ public class EventManager : MonoBehaviour
 	{
 		if (INST == null)
 			return;
-		if(!INST._events.ContainsKey(name))
+		if (!INST._events.ContainsKey(name))
 			INST._events.Add(name, new List<System.Action>());
 		INST._events[name].Add(callback);
 	}
@@ -35,14 +35,14 @@ public class EventManager : MonoBehaviour
 	{
 		if (INST == null)
 			return;
-		if(INST._events.ContainsKey(name))
+		if (INST._events.ContainsKey(name))
 			for (int i = 0; i < INST._events[name].Count; i++)
 				INST._events[name][i]?.Invoke();
 	}
 
 	public static void RemoveAllEventListeners(string name)
 	{
-		if(INST._events.ContainsKey(name))
+		if (INST._events.ContainsKey(name))
 			INST._events[name].Clear();
 	}
 

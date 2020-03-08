@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DevWindowUI : UIPanel
 {
@@ -17,6 +15,4 @@ public class DevWindowUI : UIPanel
 		};
 		base.Start();
 	}
-
-	
 }

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
+
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 
 [CreateAssetMenu(menuName = "ECS/Mesh Entity")]
 public class MeshEntity : ScriptableObject
@@ -48,7 +47,7 @@ public class MeshEntity : ScriptableObject
 		return _entity;
 	}
 
-	protected virtual EntityArchetype GetArchetype() => 
+	protected virtual EntityArchetype GetArchetype() =>
 		World.DefaultGameObjectInjectionWorld.EntityManager.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
 
 	public virtual IEnumerable<ComponentType> GetComponents()
@@ -156,5 +155,4 @@ public class MeshEntity : ScriptableObject
 		em.Instantiate(GetEntity(), output);
 		em.RemoveComponent<Disabled>(output);
 	}
-
 }

@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Vent Tile Info")]
 public class VentTileInfo : ResourceTileInfo
 {
 	[Header("Vent")]
 	public MeshEntityRotatable core;
+
 	public MeshEntityRotatable shell;
 	public GameObject gyser;
 

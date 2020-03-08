@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.Transforms;
+
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
 public class WeatherSystem : JobComponentSystem
@@ -39,8 +37,10 @@ public class WeatherSystem : JobComponentSystem
 	private float _transitionTime = 0;
 	private float _totalWeatherChance;
 	private Fog _fogComponent;
+
 	//private PhysicallyBasedSky _skyComponent;
 	private static WeatherSystem _INST;
+
 	private Transform _rainTransform;
 
 	public struct GenerateFieldJob : IJobParallelFor
@@ -52,8 +52,10 @@ public class WeatherSystem : JobComponentSystem
 		public float3 offset;
 		public float cloudDensity;
 		public float maxNoiseValue;
+
 		[ReadOnly]
 		public NativeArray<float3> cloudPos;
+
 		public NativeArray<float2> cloudField;
 
 		public void Execute(int i)
@@ -145,13 +147,11 @@ public class WeatherSystem : JobComponentSystem
 
 		_rainTransform.position = new Vector3(_cam.position.x, _init.clouldHeight, _cam.position.z);
 
-
 		return cloudShadowJob.Schedule(this, dep);
 	}
 
 	public void SimulateWeather()
 	{
-		
 		var windSampleDir = Mathf.PerlinNoise(_offset.x / 50, _offset.z / 50) * Mathf.PI * 4; ;
 		var windSampleStr = Mathf.PerlinNoise(_offset.x / 100 + 100, _offset.z / 100 + 100) * Mathf.PI * 4; ;
 		_windDir.x = Mathf.Cos(windSampleDir);
@@ -190,7 +190,6 @@ public class WeatherSystem : JobComponentSystem
 		//Sky
 		//_skyComponent.skyTint.value = _curWeatherState.skyColor;
 
-
 		//Fog
 		if (_curWeatherState.fogDensity == 9999)
 			_fogComponent.active = false;
@@ -214,15 +213,15 @@ public class WeatherSystem : JobComponentSystem
 				else
 					_init.rainVfx.gameObject.SetActive(true);
 				break;
+
 			case WeatherState.ParticleType.Snow:
-				_init.rainVfx.SetFloat("Percipitation", 1-state.percipitation);
+				_init.rainVfx.SetFloat("Percipitation", 1 - state.percipitation);
 				break;
+
 			case WeatherState.ParticleType.None:
 				_init.rainVfx.SetFloat("Percipitation", state.percipitation);
 				break;
-
 		}
-
 
 		//Sun
 #if DEBUG
@@ -246,7 +245,7 @@ public class WeatherSystem : JobComponentSystem
 			if (_init.weatherDefinations[i] == _curWeather)
 				continue;
 			selection -= _init.weatherDefinations[i].chance;
-			if(selection <= 0)
+			if (selection <= 0)
 			{
 				_nextWeather = _init.weatherDefinations[i];
 				_nextWeatherTime = _rand.Range(_nextWeather.duration.x, _nextWeather.duration.y) + _nextWeather.transitionTime;
@@ -280,22 +279,20 @@ public class WeatherSystem : JobComponentSystem
 			offset = _offset
 		};
 		generate.Schedule(_cloudField.Length, _cloudField.Length / 8).Complete();
-
 	}
-
 
 	protected override void OnStopRunning()
 	{
-		if(_init?.rainVfx != null)
+		if (_init?.rainVfx != null)
 			ApplyWeather(_init.weatherDefinations[0].state);
 		base.OnStopRunning();
 	}
 
 	protected override void OnDestroy()
 	{
-		if(_cloudField.IsCreated)
+		if (_cloudField.IsCreated)
 			_cloudField.Dispose();
-		if(_cloudPos.IsCreated)
+		if (_cloudPos.IsCreated)
 			_cloudPos.Dispose();
 	}
 }

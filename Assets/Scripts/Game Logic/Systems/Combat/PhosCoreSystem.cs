@@ -1,24 +1,21 @@
-﻿using AnimationSystem.AnimationData;
-using Effects.Lines;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.Linq;
+
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
+
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 public class PhosCoreSystem : ComponentSystem
 {
-
 	private DynamicMeshEntity _bullet;
 	private int _state = 0;
 	private Map _map;
+
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
@@ -37,6 +34,7 @@ public class PhosCoreSystem : ComponentSystem
 		{
 			case 0:
 				break;
+
 			case 1:
 				SimulateAI();
 				break;
@@ -106,7 +104,7 @@ public class PhosCoreSystem : ComponentSystem
 [BurstCompile]
 public class PhosProjectileSystem : JobComponentSystem
 {
-	struct PhosProjectileJob : IJobForEachWithEntity<PhosProjectile, PhysicsVelocity, Translation>
+	private struct PhosProjectileJob : IJobForEachWithEntity<PhosProjectile, PhysicsVelocity, Translation>
 	{
 		public EntityCommandBuffer.Concurrent CMB;
 		public double curTime;

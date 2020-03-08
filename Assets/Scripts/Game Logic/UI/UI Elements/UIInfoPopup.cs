@@ -1,10 +1,12 @@
 ﻿using Effects.Lines;
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using TMPro;
+
 using Unity.Entities;
 using Unity.Mathematics;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +14,7 @@ public class UIInfoPopup : UIExpandable
 {
 	[Header("Popup Settings")]
 	public TMP_Text title;
+
 	public TMP_Text desc;
 	public float3 offset = new float3(0, 1, 0);
 	public MeshEntityRotatable line;
@@ -32,7 +35,7 @@ public class UIInfoPopup : UIExpandable
 	private int[] _ids;
 	private int _nextId = 0;
 
-	void OnValidate()
+	private void OnValidate()
 	{
 		if (iconRects == null)
 			iconRects = new UIHover[MAX_NOTIFS];
@@ -53,7 +56,7 @@ public class UIInfoPopup : UIExpandable
 		{
 			var index = i;
 			iconRects[i].SetActive(false);
-			iconRects[i].OnHover += () => 
+			iconRects[i].OnHover += () =>
 			{
 				title.SetText(_titles[index]);
 				desc.SetText(_messages[index]);
@@ -61,7 +64,7 @@ public class UIInfoPopup : UIExpandable
 		}
 	}
 
-	void Clear()
+	private void Clear()
 	{
 		_titles = new string[MAX_NOTIFS];
 		_messages = new string[MAX_NOTIFS];
@@ -112,8 +115,8 @@ public class UIInfoPopup : UIExpandable
 			_messages[i] = i == MAX_NOTIFS - 1 ? null : _messages[i + 1];
 			_ids[i] = i == MAX_NOTIFS - 1 ? -1 : _ids[i + 1];
 		}
-		iconRects[MAX_NOTIFS-1].SetActive(false);
-		iconRects[MAX_NOTIFS-1].rTransform.anchoredPosition = Vector2.zero;
+		iconRects[MAX_NOTIFS - 1].SetActive(false);
+		iconRects[MAX_NOTIFS - 1].rTransform.anchoredPosition = Vector2.zero;
 		_curNotifCount--;
 	}
 
@@ -133,7 +136,7 @@ public class UIInfoPopup : UIExpandable
 		_spacingTime = Mathf.Clamp(_spacingTime, 0, 1);
 		for (int i = 0; i < _curNotifCount; i++)
 		{
-			var offset = i - ((_curNotifCount - 1)/ 2f);
+			var offset = i - ((_curNotifCount - 1) / 2f);
 			var pos = new Vector2
 			{
 				x = (blurSpacing * offset).Lerp(offset * hoverSpacing, _spacingTime.EaseOut())
@@ -148,10 +151,9 @@ public class UIInfoPopup : UIExpandable
 		try
 		{
 			Map.EM.DestroyEntity(_line);
-		}catch
+		}
+		catch
 		{
-
 		}
 	}
-
 }

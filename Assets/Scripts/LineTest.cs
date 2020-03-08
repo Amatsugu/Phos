@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
+
 using UnityEngine;
 
 public class LineTest : MonoBehaviour
@@ -9,7 +8,7 @@ public class LineTest : MonoBehaviour
 	public MeshEntityRotatable line;
 
 	// Start is called before the first frame update
-	void Start()
+	private void Start()
 	{
 		var e = line.Instantiate(new Vector3(50, 10, 50));
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -20,9 +19,8 @@ public class LineTest : MonoBehaviour
 		});
 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	// Update is called once per frame
+	private void Update()
+	{
+	}
 }

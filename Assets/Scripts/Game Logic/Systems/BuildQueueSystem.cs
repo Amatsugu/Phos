@@ -1,10 +1,11 @@
 ﻿using AnimationSystem.AnimationData;
 using AnimationSystem.Animations;
-using System.Collections;
+
 using System.Collections.Generic;
+
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
+
 using Random = UnityEngine.Random;
 
 public class BuildQueueSystem : ComponentSystem
@@ -12,6 +13,7 @@ public class BuildQueueSystem : ComponentSystem
 	private Dictionary<int, BuildOrder> _pendingBuildOrders;
 	private List<int> _readyToBuildOrders;
 	private List<ConstructionOrder> _constructionOrders;
+	private List<int> _removal;
 
 	private static BuildQueueSystem _INST;
 
@@ -21,6 +23,7 @@ public class BuildQueueSystem : ComponentSystem
 		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
 		_readyToBuildOrders = new List<int>();
 		_constructionOrders = new List<ConstructionOrder>();
+		_removal = new List<int>();
 	}
 
 	protected override void OnUpdate()
@@ -29,17 +32,21 @@ public class BuildQueueSystem : ComponentSystem
 		ProcessConstructionOrders();
 	}
 
-	void ProcessConstructionOrders()
+	private void ProcessConstructionOrders()
 	{
 		for (int i = 0; i < _constructionOrders.Count; i++)
 		{
 			var curOrder = _constructionOrders[i];
-			curOrder.curTime += Time.DeltaTime;
-			if (curOrder.curTime >= curOrder.timeNeeded || GameRegistry.Cheats.INSTANT_BUILD)
+			if (Time.ElapsedTime > curOrder.buildTime)
+			{
 				(Map.ActiveMap[curOrder.building] as BuildingTile).Build();
-			_constructionOrders[i] = curOrder;
+				_removal.Add(i);
+			}
 		}
-		_constructionOrders.RemoveAll(o => o.curTime >= o.timeNeeded);
+		var offset = 0;
+		for (int i = 0; i < _removal.Count; i++)
+			_constructionOrders.RemoveAt(_removal[i] - offset++);
+		_removal.Clear();
 	}
 
 	public static void QueueBuilding(BuildingTileInfo building, Tile dst, MeshEntityRotatable dropPod)
@@ -47,7 +54,7 @@ public class BuildQueueSystem : ComponentSystem
 		_INST.QueueBuilding(dst, building, dropPod);
 	}
 
-	void QueueBuilding(Tile tile, BuildingTileInfo building, MeshEntityRotatable dropPod)
+	private void QueueBuilding(Tile tile, BuildingTileInfo building, MeshEntityRotatable dropPod)
 	{
 		var hqMode = building is HQTileInfo;
 		var callback = tile.Coords.GetHashCode();
@@ -78,13 +85,14 @@ public class BuildQueueSystem : ComponentSystem
 			{
 				_readyToBuildOrders.Add(callback);
 			});
-		}else
+		}
+		else
 		{
 			_readyToBuildOrders.Add(callback);
 		}
 	}
 
-	void BuildReadyBuildings()
+	private void BuildReadyBuildings()
 	{
 		for (int i = 0; i < _readyToBuildOrders.Count; i++)
 		{
@@ -95,13 +103,14 @@ public class BuildQueueSystem : ComponentSystem
 		}
 		_readyToBuildOrders.Clear();
 	}
-	void PlaceBuilding(BuildOrder order)
+
+	private void PlaceBuilding(BuildOrder order)
 	{
 		Map.ActiveMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
 		Map.ActiveMap.ReplaceTile(order.dstTile, order.building);
 		_constructionOrders.Add(new ConstructionOrder
 		{
-			timeNeeded = order.building.constructionTime,
+			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + order.building.constructionTime,
 			building = order.dstTile.Coords
 		});
 	}
@@ -115,7 +124,6 @@ public struct BuildOrder
 
 public struct ConstructionOrder
 {
-	public float timeNeeded;
-	public float curTime;
+	public double buildTime;
 	public HexCoords building;
 }

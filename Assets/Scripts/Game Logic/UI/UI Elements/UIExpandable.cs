@@ -1,22 +1,26 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class UIExpandable : UIHover
 {
 	[Header("Expandable Settings")]
 	public bool expandOnHover;
+
 	public Vector2 expandSize;
 	public bool overrideBaseSize;
+
 	[ConditionalHide("overrideBaseSize")]
 	public Vector2 baseSize;
+
 	public RectTransform expandTarget;
 	public float expandSpeed = 1;
+
 	[HideInInspector]
 	public bool isExpanded;
 
 	public event Action OnExpand;
+
 	public event Action OnContract;
 
 	private float _animTime;
@@ -25,7 +29,7 @@ public class UIExpandable : UIHover
 	{
 		base.Start();
 		expandTarget = expandTarget ?? rTransform;
-		if(!overrideBaseSize)
+		if (!overrideBaseSize)
 			baseSize = expandTarget.rect.size;
 		if (expandOnHover)
 		{

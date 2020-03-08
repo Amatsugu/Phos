@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 using UnityEngine;
 
 public enum NotifType
@@ -19,13 +19,18 @@ public class NotificationsUI : UIHover
 {
 	[Header("Prefabs")]
 	public UINotifPopup notifBig;
+
 	public UINotifPopup notifMin;
+
 	[Header("Icons")]
 	public Sprite infoIcon;
+
 	public Sprite warningIcon;
 	public Sprite errorIcon;
+
 	[Header("Config")]
 	public float notifTime = 2;
+
 	public float animSpeed = 2;
 	public int maxNotifs = 6;
 	public float spacing = 10;
@@ -48,7 +53,6 @@ public class NotificationsUI : UIHover
 	private static NotificationsUI _inst;
 	private Queue<PendingNotification> _notificationQueue;
 	private float _animTime = 1;
-
 
 	public class PendingNotification
 	{
@@ -95,7 +99,6 @@ public class NotificationsUI : UIHover
 			_notifsBig[i] = Instantiate(notifBig, rTransform);
 			_notifsMin[i] = Instantiate(notifMin, rTransform);
 		}
-
 	}
 
 	private void OnValidate()
@@ -142,7 +145,7 @@ public class NotificationsUI : UIHover
 		}
 		for (int i = 0, j = 0; i < _activeNotifs.Length && j < _activeCount; i++)
 		{
-			if(_activeNotifs[i] != -1)
+			if (_activeNotifs[i] != -1)
 			{
 				var curNotif = _activeNotifs[i] >= _notifsMin.Length ? _notifsMin[_activeNotifs[i] - _notifsMin.Length] : _notifsBig[_activeNotifs[i]];
 				curNotif.rectTransform.anchoredPosition = Vector2.Lerp(curNotif.rectTransform.anchoredPosition, basePos + new Vector2(0, curOffset), _animTime);
@@ -170,7 +173,7 @@ public class NotificationsUI : UIHover
 		}
 	}
 
-	void AddNotif(int id)
+	private void AddNotif(int id)
 	{
 		for (int i = 0; i < _activeNotifs.Length; i++)
 		{
@@ -183,14 +186,15 @@ public class NotificationsUI : UIHover
 		}
 	}
 
-	(int id, UINotifPopup notif) GetNotifMin() => GetNotif(_notifsMin);
-	(int id, UINotifPopup notif) GetNotifBig() => GetNotif(_notifsBig);
+	private (int id, UINotifPopup notif) GetNotifMin() => GetNotif(_notifsMin);
 
-	(int id, UINotifPopup notif) GetNotif(UINotifPopup[] popups)
+	private (int id, UINotifPopup notif) GetNotifBig() => GetNotif(_notifsBig);
+
+	private (int id, UINotifPopup notif) GetNotif(UINotifPopup[] popups)
 	{
 		for (int i = 0; i < popups.Length; i++)
 		{
-			if(!popups[i].isShown)
+			if (!popups[i].isShown)
 			{
 				return (i, popups[i]);
 			}
@@ -209,7 +213,7 @@ public class NotificationsUI : UIHover
 	}
 	*/
 
-	void ShowAllActive(bool isShown)
+	private void ShowAllActive(bool isShown)
 	{
 		for (int i = 0, j = 0; i < _activeNotifs.Length && j < _activeCount; i++)
 		{
@@ -235,14 +239,16 @@ public class NotificationsUI : UIHover
 
 	private void CreateNotification(NotifType type, string title, string message)
 	{
-		switch(type)
+		switch (type)
 		{
 			case NotifType.Info:
 				CreateNotification(infoIcon, title, message);
 				break;
+
 			case NotifType.Warning:
 				CreateNotification(warningIcon, title, message);
 				break;
+
 			case NotifType.Error:
 				CreateNotification(errorIcon, title, message);
 				break;
@@ -256,9 +262,11 @@ public class NotificationsUI : UIHover
 			case NotifType.Info:
 				CreateNotification(infoIcon, title, message, tile);
 				break;
+
 			case NotifType.Warning:
 				CreateNotification(warningIcon, title, message, tile);
 				break;
+
 			case NotifType.Error:
 				CreateNotification(errorIcon, title, message, tile);
 				break;
@@ -272,9 +280,11 @@ public class NotificationsUI : UIHover
 			case NotifType.Info:
 				CreateNotification(infoIcon, title, message, panel);
 				break;
+
 			case NotifType.Warning:
 				CreateNotification(warningIcon, title, message, panel);
 				break;
+
 			case NotifType.Error:
 				CreateNotification(errorIcon, title, message, panel);
 				break;

@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
-using UnityEngine;
 
+using UnityEngine;
 
 public abstract class TileDecorator : ScriptableObject
 {
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Decor", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable meshEntity;
+
 	public float densityMulti = 1;
 
-    public abstract int GetDecorEntityCount(Tile tile);
+	public abstract int GetDecorEntityCount(Tile tile);
 
 	public abstract Entity[] Render(Tile tile);
 

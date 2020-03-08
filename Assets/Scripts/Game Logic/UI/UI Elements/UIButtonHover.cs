@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
+
 using UnityEngine;
 
 public class UIButtonHover : UIHover
@@ -30,5 +29,4 @@ public class UIButtonHover : UIHover
 		pos.z = math.lerp(0, floatDist, t);
 		rTransform.localPosition = pos;
 	}
-
 }

@@ -1,11 +1,14 @@
 ﻿using AnimationSystem.AnimationData;
 using AnimationSystem.Animations;
+
 using System;
+
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 
 namespace AnimationSystem
@@ -43,7 +46,6 @@ namespace AnimationSystem
 		}
 	}
 
-
 	[UpdateBefore(typeof(SimpleAnimationSystem))]
 	[BurstCompile]
 	public class SimpleAnimationJobSystem : JobComponentSystem
@@ -52,6 +54,7 @@ namespace AnimationSystem
 		public struct GravityJob : IJobForEach<Gravity, Velocity>
 		{
 			public float dt;
+
 			public void Execute(ref Gravity g, ref Velocity v)
 			{
 				v.Value += new float3(0, -g.Value * dt, 0);
@@ -62,6 +65,7 @@ namespace AnimationSystem
 		public struct VelocityJob : IJobForEach<Velocity, Translation>
 		{
 			public float dt;
+
 			public void Execute(ref Velocity v, ref Translation t)
 			{
 				t.Value += v.Value * dt;
@@ -125,7 +129,6 @@ namespace AnimationSystem
 
 			public void Execute(ref Drag drag, ref Velocity velocity)
 			{
-				
 				velocity.Value -= drag.Value * velocity.Value * dt;
 			}
 		}
@@ -137,7 +140,7 @@ namespace AnimationSystem
 
 			var seekJob = new SeekTargetJob();
 			dep = seekJob.Schedule(this, dep);
-			
+
 			var accelJob = new AccelerationJob { dt = Time.DeltaTime };
 			dep = accelJob.Schedule(this, dep);
 
@@ -153,7 +156,6 @@ namespace AnimationSystem
 			var rotJob = new RotateJob { dt = Time.DeltaTime };
 			dep = rotJob.Schedule(this, dep);
 
-
 			return dep;
 		}
 	}
@@ -164,18 +166,26 @@ namespace AnimationSystem.AnimationData
 	public struct Gravity : IComponentData
 	{
 		public float Value;
+
 		public override bool Equals(object obj) => Value.Equals(obj);
+
 		public override int GetHashCode() => Value.GetHashCode();
+
 		public static bool operator ==(Gravity left, Gravity right) => left.Equals(right);
+
 		public static bool operator !=(Gravity left, Gravity right) => !(left == right);
 	}
 
 	public struct Velocity : IComponentData
 	{
 		public float3 Value;
+
 		public override bool Equals(object obj) => Value.Equals(obj);
+
 		public override int GetHashCode() => Value.GetHashCode();
+
 		public static bool operator ==(Velocity left, Velocity right) => left.Equals(right);
+
 		public static bool operator !=(Velocity left, Velocity right) => !(left == right);
 	}
 
@@ -187,27 +197,39 @@ namespace AnimationSystem.AnimationData
 	public struct Acceleration : IComponentData
 	{
 		public float3 Value;
+
 		public override bool Equals(object obj) => Value.Equals(obj);
+
 		public override int GetHashCode() => Value.GetHashCode();
+
 		public static bool operator ==(Acceleration left, Acceleration right) => left.Equals(right);
+
 		public static bool operator !=(Acceleration left, Acceleration right) => !(left == right);
 	}
 
 	public struct Fall : IComponentData
 	{
 		public float Value;
+
 		public override bool Equals(object obj) => Value.Equals(obj);
+
 		public override int GetHashCode() => Value.GetHashCode();
+
 		public static bool operator ==(Fall left, Fall right) => left.Equals(right);
+
 		public static bool operator !=(Fall left, Fall right) => !(left == right);
 	}
 
 	public struct Floor : IComponentData
 	{
 		public float Value;
+
 		public override bool Equals(object obj) => Value.Equals(obj);
+
 		public override int GetHashCode() => Value.GetHashCode();
+
 		public static bool operator ==(Floor left, Floor right) => left.Equals(right);
+
 		public static bool operator !=(Floor left, Floor right) => !(left == right);
 	}
 
@@ -278,5 +300,3 @@ namespace AnimationSystem.Animations
 		}
 	}
 }
-
-

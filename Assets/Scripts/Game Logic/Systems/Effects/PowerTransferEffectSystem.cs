@@ -1,10 +1,11 @@
 ﻿using DataStore.ConduitGraph;
-using System.Collections;
+
 using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 
 public class PowerTransferEffectSystem : ComponentSystem
@@ -73,13 +74,13 @@ public class PowerTransferEffectSystem : ComponentSystem
 			_effectPaths.Add(node.id, path);
 		for (int i = 1; i < path.Count; i++)
 		{
-			Debug.DrawLine(path[i-1], path[i], Color.magenta, 5);
+			Debug.DrawLine(path[i - 1], path[i], Color.magenta, 5);
 		}
 	}
 
 	protected override void OnUpdate()
 	{
-		if(_removeAll && _effectPaths.Count == 0)
+		if (_removeAll && _effectPaths.Count == 0)
 		{
 			_removeAll = false;
 			_removalList.Clear();
@@ -87,7 +88,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 		}
 		Entities.ForEach((Entity e, ref EnergyPacket ep, ref Translation t, ref Rotation r) =>
 		{
-			if(_removeAll)
+			if (_removeAll)
 			{
 				PostUpdateCommands.DestroyEntity(e);
 				_effectPaths.Remove(ep.id);
@@ -95,7 +96,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 			}
 			if (!_effectPaths.ContainsKey(ep.id))
 			{
-				if(_removalList.Contains(ep.id))
+				if (_removalList.Contains(ep.id))
 				{
 					PostUpdateCommands.DestroyEntity(e);
 					_removalList.Remove(ep.id);
@@ -103,7 +104,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 				return;
 			}
 			var path = _effectPaths[ep.id];
-			if(ep.progress == -1 || ep.progress >= path.Count)
+			if (ep.progress == -1 || ep.progress >= path.Count)
 			{
 				ep.progress = 0;
 				t.Value = path[0];
@@ -111,14 +112,14 @@ public class PowerTransferEffectSystem : ComponentSystem
 			t.Value = Vector3.MoveTowards(t.Value, path[ep.progress], 10 * Time.DeltaTime);
 			if (ep.progress < path.Count)
 			{
-				if((Vector3)t.Value == path[ep.progress])
+				if ((Vector3)t.Value == path[ep.progress])
 				{
 					ep.progress++;
-					if(ep.progress < path.Count)
+					if (ep.progress < path.Count - 1)
 						r.Value = Quaternion.LookRotation((Vector3)t.Value - path[ep.progress], Vector3.up);
 				}
 			}
-			if(ep.progress >= path.Count)
+			if (ep.progress >= path.Count)
 			{
 				ep.progress = 0;
 				t.Value = path[0];

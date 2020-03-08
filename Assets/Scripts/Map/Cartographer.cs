@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class Cartographer
 {
@@ -8,9 +6,9 @@ public static class Cartographer
 	{
 		int size = Map.Chunk.SIZE * res;
 		var colors = new Color[size * size];
-		for (int y = 0; y < size; y+= res)
+		for (int y = 0; y < size; y += res)
 		{
-			for (int x = 0; x < size; x+= res)
+			for (int x = 0; x < size; x += res)
 			{
 				int cX = x / res, cY = y / res;
 				var tile1 = chunk.Tiles[cX + cY * Map.Chunk.SIZE];
@@ -23,7 +21,8 @@ public static class Cartographer
 						color *= 1.2f;
 					else if (tileDelta > .3f)
 						color *= .8f;
-				}else
+				}
+				else
 				{
 					var d = MathUtils.Remap(tile1.Height, 0, tile1.SurfacePoint.y, 1, 0);
 					var g = new Gradient();
@@ -38,7 +37,7 @@ public static class Cartographer
 					color = Color.Lerp(color, g.Evaluate(d), d);
 				}
 				color.a = 1;
-				for (int pX = x; pX < x + res; pX ++)
+				for (int pX = x; pX < x + res; pX++)
 				{
 					for (int pY = y; pY < y + res; pY++)
 					{
@@ -84,7 +83,7 @@ public static class Cartographer
 				else
 				{
 					var d = MathUtils.Remap(tile1.Height, 0, tile1.SurfacePoint.y, 1, 0);
-					
+
 					color = Color.Lerp(color, waterGrad.Evaluate(d), d);
 				}
 				color.a = 1;

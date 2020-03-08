@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game Data/Research Database")]
@@ -10,6 +10,7 @@ public class ResearchDatabase : ScriptableObject, ISerializationCallbackReceiver
 
 	[SerializeField]
 	public ResearchTreeInfo[] treeValues;
+
 	[SerializeField]
 	public BuildingCategory[] treeKeys;
 

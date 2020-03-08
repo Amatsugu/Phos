@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
+
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 
 public class UnitMovementSystem : JobComponentSystem
 {
-
 	private float _tileEdgeLength;
 	private Camera _cam;
 	private int _mapWidth;
@@ -44,6 +43,7 @@ public class UnitMovementSystem : JobComponentSystem
 	{
 		public EntityCommandBuffer.Concurrent PostUpdateCommands;
 		public readonly float edgeLength;
+
 		[ReadOnly]
 		public readonly NativeArray<float> navData;
 
@@ -89,7 +89,7 @@ public class UnitMovementSystem : JobComponentSystem
 		}
 
 		[BurstCompile]
-		void GetPath(HexCoords src, HexCoords dst, int w, int h)
+		private void GetPath(HexCoords src, HexCoords dst, int w, int h)
 		{
 			/*Heap<PathNode> open = new Heap<PathNode>(HeapType.Minimum);
 			open.Add(new PathNode(null, 1));
@@ -97,7 +97,7 @@ public class UnitMovementSystem : JobComponentSystem
 
 			var dstNode = new PathNode(null, 1);
 			PathNode last = null;
-			
+
 			while(true)
 			{
 				if (closed.Contains(dstNode))
@@ -127,7 +127,6 @@ public class UnitMovementSystem : JobComponentSystem
 				G = g;
 				this.src = src;
 			}
-
 
 			public void CacheF(Vector3 b)
 			{
@@ -169,7 +168,6 @@ public class UnitMovementSystem : JobComponentSystem
 
 	public struct PathFollowJob : IJobForEachWithEntity<PathProgress, UnitId, Translation, Rotation, MoveSpeed>
 	{
-
 		public EntityCommandBuffer.Concurrent PostUpdateCommands;
 
 		public PathFollowJob(float deltaTime, EntityCommandBuffer.Concurrent commandBuffer)
@@ -188,7 +186,7 @@ public class UnitMovementSystem : JobComponentSystem
 			if (pathId.Progress >= path.Value.Count)
 			{
 				paths.TryRemove(id.Value, out path);
-				PostUpdateCommands.RemoveComponent<PathProgress>(index*2, entity);
+				PostUpdateCommands.RemoveComponent<PathProgress>(index * 2, entity);
 				//PostUpdateCommands.RemoveComponent<Path>(entity);
 				PostUpdateCommands.RemoveComponent<Destination>((int)((index + .5f) * 2), entity);
 				return;
@@ -200,12 +198,12 @@ public class UnitMovementSystem : JobComponentSystem
 			var unit = Map.ActiveMap.units[id.Value];
 			t.Value.y = Map.ActiveMap[unit.Coords].Height;
 			unit.UpdatePos(t.Value);
-			if(t.Value.Equals(dst))
+			if (t.Value.Equals(dst))
 			{
 				pathId.Progress++;
 				return;
 			}
-			r.Value = quaternion.LookRotation(t.Value - dst, new float3(0,1,0));
+			r.Value = quaternion.LookRotation(t.Value - dst, new float3(0, 1, 0));
 		}
 	}
 

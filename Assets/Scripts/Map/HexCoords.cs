@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using Unity.Mathematics;
+
 using UnityEngine;
 
 public struct HexCoords
@@ -9,26 +9,32 @@ public struct HexCoords
 	//Position
 	[SerializeField]
 	public readonly int x;
+
 	[SerializeField]
 	public readonly int y;
+
 	[SerializeField]
 	public readonly int z;
+
 	//Hex info
 	[HideInInspector]
 	public readonly float edgeLength;
+
 	//World Pos
 	public readonly float worldX;
+
 	public readonly float worldZ;
 	public readonly Vector3 worldXZ;
 	public readonly Vector2 worldXY;
+
 	//Offsets
 	public readonly int offsetX;
+
 	public readonly int offsetZ;
 	public readonly bool isCreated;
 
-	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null) : this(x,y, -x - y, edgeLength, innerRadius)
+	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null) : this(x, y, -x - y, edgeLength, innerRadius)
 	{
-
 	}
 
 	public HexCoords(int x, int y, int z, float edgeLength, float? innerRadius = null)
@@ -78,7 +84,7 @@ public struct HexCoords
 		z -= offset;
 		x -= offset;
 		int iX = Mathf.RoundToInt(x);
-		int iY = Mathf.RoundToInt(-x -z);
+		int iY = Mathf.RoundToInt(-x - z);
 		return new HexCoords(iX, iY, edgeLength, innerRadius);
 	}
 
@@ -109,7 +115,7 @@ public struct HexCoords
 	public float DistanceToSq(HexCoords b) => (worldXZ - b.worldXZ).sqrMagnitude;
 
 	public static float DistanceSq(HexCoords a, HexCoords b) => (a.worldXZ - b.worldXZ).sqrMagnitude;
-	
+
 	public static (float X, float Z) OffsetToWorldPos(int x, int z, float innerRadius, float edgeLength)
 	{
 		var worldX = (x + z * .5f - z / 2) * (innerRadius * 2f);
@@ -208,15 +214,15 @@ public struct HexCoords
 		{
 			for (int j = 0; j < radius; j++)
 			{
-				items[c++] =item;
+				items[c++] = item;
 				item = item.GetNeighbor(i, innerRadius);
 			}
 		}
 		return items;
 	}
 
-	public static readonly int3[] DIRECTIONS = new int3[] 
-	{ 
+	public static readonly int3[] DIRECTIONS = new int3[]
+	{
 		new int3( 1, -1,  0),
 		new int3( 1,  0, -1),
 		new int3( 0, +1, -1),
@@ -271,7 +277,8 @@ public struct HexCoords
 	}
 
 	// override object.GetHashCode
-	const int prime = 31;
+	private const int prime = 31;
+
 	public override int GetHashCode()
 	{
 		int hash = 23;

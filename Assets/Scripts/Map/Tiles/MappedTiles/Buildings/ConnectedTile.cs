@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
-using Unity.Rendering;
 using Unity.Transforms;
+
 using UnityEngine;
 
 public class ConnectedTile : PoweredBuildingTile
@@ -61,9 +59,9 @@ public class ConnectedTile : PoweredBuildingTile
 		try
 		{
 			Map.EM.DestroyEntity(_connections);
-		}catch
+		}
+		catch
 		{
-
 		}
 		finally
 		{
@@ -102,9 +100,10 @@ public class ConnectedTile : PoweredBuildingTile
 				continue;
 			if (n is PoweredBuildingTile pb && pb.HasHQConnection)
 			{
-				if(Map.EM.HasComponent<Disabled>(_connections[i]))
+				if (Map.EM.HasComponent<Disabled>(_connections[i]))
 					Map.EM.RemoveComponent(_connections[i], typeof(Disabled));
-			}else
+			}
+			else
 			{
 				if (!Map.EM.HasComponent<Disabled>(_connections[i]))
 					Map.EM.AddComponent(_connections[i], typeof(Disabled));

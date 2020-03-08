@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/HQ")]
 public class HQTileInfo : BuildingTileInfo
@@ -17,9 +15,9 @@ public class HQTileInfo : BuildingTileInfo
 		return new HQTile(pos, height, this);
 	}
 
-	void OnValidate()
+	private void OnValidate()
 	{
-		if(subHQTiles?.Length != 6)
+		if (subHQTiles?.Length != 6)
 			Array.Resize(ref subHQTiles, 6);
 	}
 }

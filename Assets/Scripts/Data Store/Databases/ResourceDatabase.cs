@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+
 using UnityEngine;
 
 public class ResourceDatabase : MonoBehaviour
 {
 	public ResourceList resourceList;
+
 	#region Singleton
+
 	public static ResourceDatabase INST
 	{
 		get
@@ -18,8 +19,8 @@ public class ResourceDatabase : MonoBehaviour
 	}
 
 	private static ResourceDatabase _instance;
-	#endregion
 
+	#endregion Singleton
 
 	public static int ResourceCount => INST == null ? 0 : INST.resourceList.resourceDefinations.Length;
 
@@ -57,15 +58,9 @@ public class ResourceDatabase : MonoBehaviour
 
 	public static string GetResourceString(int id, bool longVersion = false)
 	{
-		if(longVersion)
+		if (longVersion)
 			return $"<sprite={GetSpriteId(id)}> {GetResourceName(id)}";
 		else
 			return $"<sprite={GetSpriteId(id)}>";
 	}
-
-
-
-	
-
-
 }

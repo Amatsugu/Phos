@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile Mapper/Gradient")]
@@ -13,7 +12,6 @@ public class GradientTileMapper : TileMapper
 	public TileInfo[] Tiles;
 	public TileInfo oceanTile;
 	public Dictionary<Color, TileInfo> tiles = new Dictionary<Color, TileInfo>();
-
 
 	public void OnEnable()
 	{

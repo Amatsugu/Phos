@@ -1,30 +1,34 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using TMPro;
+
 using UnityEngine;
-using UnityEngine.UI;
+
 using static ResearchTree;
 
 public class ResearchTreeUI : UIPanel
 {
 	public ResearchDatabase researchDatabase;
 	public RectTransform nodeParent;
+
 	[Header("Elements")]
 	public RectTransform nodeOriginal;
+
 	public RectTransform connector;
+
 	[Header("Sidebar")]
 	public TMP_Text activeTitle;
+
 	public TMP_Text activeDesc;
 	public RectTransform activeCostParent;
 	public GameObject UIresource;
 
 	[Header("Config")]
 	public Vector3 offset = new Vector2();
+
 	public Vector2 nodeSpacing = new Vector2(50, 50);
 
 	public bool regen;
-
 
 	private UIResearchNode[] _uiNodes;
 	private RectTransform[] _uiNodeConnectors;
@@ -58,7 +62,6 @@ public class ResearchTreeUI : UIPanel
 			GameRegistry.InteractionUI.enabled = true;
 			GameRegistry.CameraController.enabled = true;
 		};
-		
 	}
 
 	protected override void Start()
@@ -87,13 +90,13 @@ public class ResearchTreeUI : UIPanel
 				Array.Resize(ref _resources, active.resources.Length);
 			for (int i = 0; i < _resources.Length; i++)
 			{
-				if(_resources[i] == null)
+				if (_resources[i] == null)
 				{
 					var uiRes = Instantiate(UIresource, activeCostParent, false).GetComponent<UIResearchResource>();
 					uiRes.gameObject.SetActive(true);
 					_resources[i] = uiRes;
 				}
-				if(i >= active.resources.Length)
+				if (i >= active.resources.Length)
 				{
 					_resources[i].gameObject.SetActive(false);
 					continue;
@@ -106,10 +109,15 @@ public class ResearchTreeUI : UIPanel
 	}
 
 	public void ShowProductionTree() => ShowTree(BuildingCategory.Production);
+
 	public void ShowDefenseTree() => ShowTree(BuildingCategory.Defense);
+
 	public void ShowMilitaryTree() => ShowTree(BuildingCategory.Military);
+
 	public void ShowResourcesTree() => ShowTree(BuildingCategory.Gathering);
+
 	public void ShowStructureTree() => ShowTree(BuildingCategory.Structure);
+
 	public void ShowTechTree() => ShowTree(BuildingCategory.Tech);
 
 	public void ShowTree(BuildingCategory category)
@@ -126,7 +134,7 @@ public class ResearchTreeUI : UIPanel
 		nodeParent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _curTree.GetDepth() * _totalOffset.x);
 	}
 
-	int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true, bool redraw = true)
+	private int DrawTree(ResearchTech curTech, int depth = 0, int c = 0, bool parentResearched = true, bool redraw = true)
 	{
 		var pos = new Vector3((depth * _totalOffset.x) + offset.x, (-c * _totalOffset.y) - offset.y);
 
@@ -147,7 +155,7 @@ public class ResearchTreeUI : UIPanel
 			uiNode.descText.SetText(curTech.description);
 		}
 		uiNode.button.onClick.RemoveAllListeners();
-		
+
 		var prog = ResearchSystem.GetResearchProgress(new ResearchIdentifier
 		{
 			category = _selectedCategory,
@@ -196,7 +204,8 @@ public class ResearchTreeUI : UIPanel
 				uiNode.icon.color = uiNode.outline.effectColor = new Color(.2f, .2f, .2f);
 				uiNode.button.interactable = false;
 			}
-		}else
+		}
+		else
 		{
 			uiNode.button.interactable = true;
 			uiNode.icon.color = Color.white;
@@ -206,7 +215,7 @@ public class ResearchTreeUI : UIPanel
 		var expectedConnectorCount = curTech.Count + (curTech.Count > 1 ? 1 : 0);
 		//TODO: Sort out this calculation
 		if (_curConnectorElem + expectedConnectorCount + 1 >= _uiNodeConnectors.Length)
-			Array.Resize(ref _uiNodeConnectors, _uiNodeConnectors.Length + expectedConnectorCount +1);
+			Array.Resize(ref _uiNodeConnectors, _uiNodeConnectors.Length + expectedConnectorCount + 1);
 		for (int i = 0; i < curTech.Count; i++)
 		{
 			if (redraw)
@@ -262,7 +271,7 @@ public class ResearchTreeUI : UIPanel
 		ShowActiveInfo();
 	}
 
-	void ResetActiveInfo()
+	private void ResetActiveInfo()
 	{
 		activeTitle.text = "Active Research";
 		activeDesc.text = "No active Research";
@@ -282,9 +291,8 @@ public class ResearchTreeUI : UIPanel
 		activeDesc.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, activeDesc.preferredHeight);
 	}
 
-	void ClearTree()
+	private void ClearTree()
 	{
-		
 		for (int i = 0; i < _curNodeElement; i++)
 			_uiNodes[i].SetActive(false);
 		_curNodeElement = 0;

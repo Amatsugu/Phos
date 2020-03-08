@@ -1,11 +1,13 @@
 ﻿using DataStore.ConduitGraph;
+
 using Effects.Lines;
-using System.Collections;
+
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Collections;
+
 using Unity.Entities;
 using Unity.Rendering;
+
 using UnityEngine;
 
 public class ResourceConduitTile : PoweredBuildingTile
@@ -48,7 +50,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 				var curNode = Map.ActiveMap.conduitGraph.GetNode(lines[i]);
 				var a = thisHeight;
 				var b = curNode.conduitPos.worldXZ + new Vector3(0, curNode.height, 0);
-				if(_switchLines)
+				if (_switchLines)
 				{
 					Map.EM.DestroyEntity(_conduitLines[lines[i]]);
 					var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
@@ -112,9 +114,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 
 			connectionsMade++;
 
-
 			thisNode.ConnectTo(closest[i]);
-
 
 			//var tile = Map.ActiveMap[closest[i].conduitPos];
 			var a = closest[i].conduitPos.worldXZ + new Vector3(0, closest[i].height, 0);
@@ -150,7 +150,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 		_connectionInit = true;
 	}
 
-	void AddNewConnections() //TODO: Work this out
+	private void AddNewConnections() //TODO: Work this out
 	{
 		var curNode = Map.ActiveMap.conduitGraph.GetNode(Coords);
 		if (curNode.IsFull)

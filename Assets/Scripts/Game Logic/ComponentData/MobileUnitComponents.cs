@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 
 public struct MoveSpeed : IComponentData
 {
@@ -50,4 +49,3 @@ public struct PathProgress : IComponentData
 	public int Delay;
 	public int Progress;
 }
-

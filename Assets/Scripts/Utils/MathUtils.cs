@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Unity.Mathematics;
-using UnityEngine;
+﻿using Unity.Mathematics;
 
 public static class MathUtils
 {

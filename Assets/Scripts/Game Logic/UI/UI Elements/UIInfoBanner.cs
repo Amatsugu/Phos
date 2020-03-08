@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
+
 using UnityEngine;
 
 public class UIInfoBanner : MonoBehaviour
@@ -18,5 +17,4 @@ public class UIInfoBanner : MonoBehaviour
 	}
 
 	public void SetActive(bool active) => gameObject.SetActive(active);
-
 }

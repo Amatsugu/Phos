@@ -1,10 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+
 using UnityEngine;
+
 using SphereCollider = Unity.Physics.SphereCollider;
 
 [CreateAssetMenu(menuName = "ECS/Dynamic Entity")]
@@ -21,7 +23,6 @@ public class DynamicMeshEntity : MeshEntityRotatable
 			typeof(PhysicsVelocity),
 			typeof(PhysicsMass)
 		});
-
 	}
 
 	public virtual Entity Instantiate(float3 position, quaternion rotation, float3 velocity = default, float3 angularVelocity = default)

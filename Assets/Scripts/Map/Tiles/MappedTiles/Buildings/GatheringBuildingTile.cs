@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 
 public class GatheringBuildingTile : PoweredBuildingTile
@@ -61,7 +61,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 				}
 			}
 		}
-		
+
 		if (Map.EM.HasComponent<ProductionData>(_tileEntity))
 		{
 			var exisitingProdData = Map.EM.GetSharedComponentData<ProductionData>(_tileEntity);
@@ -94,7 +94,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		var tiles = Map.ActiveMap.HexSelect(Coords, fullRange * 2, true);
 		foreach (var tile in tiles)
 		{
-			if(tile is GatheringBuildingTile gb)
+			if (tile is GatheringBuildingTile gb)
 			{
 				gb.OnPlaced();
 			}

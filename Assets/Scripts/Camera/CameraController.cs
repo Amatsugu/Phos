@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
@@ -32,23 +30,23 @@ public class CameraController : MonoBehaviour
 
 	private CameraMode _state = 0;
 
-	public enum CameraMode 
-	{ 
+	public enum CameraMode
+	{
 		Locked = 0,
 		Panning,
 		Free,
 		Cenematic
 	}
 
-	void Awake()
+	private void Awake()
 	{
 		GameRegistry.INST.cameraController = this;
 		GameRegistry.INST.mainCamera = _cam = GetComponent<Camera>();
 		_thisTransform = transform;
 	}
 
-    void Start()
-    {
+	private void Start()
+	{
 		_targetHeight = maxHeight;
 		/*if (Application.isEditor)
 			maxHeight = 500;*/
@@ -63,15 +61,15 @@ public class CameraController : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
-    {
+	private void Update()
+	{
 #if DEBUG
 		if (mapRenderer == null)
 			mapRenderer = FindObjectOfType<MapRenderer>();
 #endif
 
 		_canRotate = true;
-		if(Input.GetKeyDown(KeyCode.X))
+		if (Input.GetKeyDown(KeyCode.X))
 		{
 			this.enabled = false;
 			GetComponent<Orbit>().enabled = true;
@@ -84,7 +82,6 @@ public class CameraController : MonoBehaviour
 
 		if (!Input.GetKey(KeyCode.Mouse1))
 		{
-
 			if (Input.GetKey(KeyCode.A))
 				moveVector.x = -1;
 			else if (Input.GetKey(KeyCode.D))
@@ -94,8 +91,6 @@ public class CameraController : MonoBehaviour
 				moveVector.z = 1;
 			else if (Input.GetKey(KeyCode.S))
 				moveVector.z = -1;
-
-
 
 			if (edgePan)
 			{
@@ -175,7 +170,7 @@ public class CameraController : MonoBehaviour
 				rot.x = rot.x.Lerp(angle, _rotationTime);
 			}
 		}
-		if(_isFocusing)
+		if (_isFocusing)
 		{
 			_focusTime += Time.unscaledDeltaTime;
 			pos = Vector3.Lerp(pos, _focusPos, _focusTime);
@@ -200,7 +195,6 @@ public class CameraController : MonoBehaviour
 		_isFocusing = true;
 		_focusTime = 0;
 	}
-
 
 	public static void FocusOnTile(Tile tile) => GameRegistry.CameraController.FocusTile(tile);
 }

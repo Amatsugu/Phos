@@ -1,16 +1,14 @@
 using DataStore.ConduitGraph;
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
-using Unity.Transforms;
+
 using UnityEngine;
 
 public class Map : IDisposable
@@ -73,7 +71,6 @@ public class Map : IDisposable
 		private Bounds _bounds;
 		private NativeArray<Entity> _chunkTiles;
 
-
 		public Chunk(int offsetX, int offsetZ)
 		{
 			isShown = false;
@@ -123,7 +120,6 @@ public class Map : IDisposable
 			}
 			catch
 			{
-
 			}
 			finally
 			{
@@ -136,7 +132,7 @@ public class Map : IDisposable
 
 		public bool Show(bool shown)
 		{
-			if(!isRendered && shown)
+			if (!isRendered && shown)
 			{
 				Render();
 				return true;
@@ -159,7 +155,7 @@ public class Map : IDisposable
 		{
 			isShown = true;
 			isRendered = true;
-			if(!_chunkTiles.IsCreated)
+			if (!_chunkTiles.IsCreated)
 				_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 			var renderBounds = new AABB
 			{
@@ -229,7 +225,6 @@ public class Map : IDisposable
 		}
 	}
 
-
 	/// <summary>
 	/// Get a tile at the given HexCoords Position
 	/// </summary>
@@ -243,14 +238,13 @@ public class Map : IDisposable
 		{
 			return this[new HexCoords(x, y, tileEdgeLength, innerRadius)];
 		}
-
 	}
 
 	public MobileUnit AddUnit(MobileUnitInfo unitInfo, Tile tile, Faction faction)
 	{
 		var id = _nextId++;
 		var chunkIndex = tile.Coords.GetChunkIndex(width);
-		if(unitLocations[chunkIndex] == null)
+		if (unitLocations[chunkIndex] == null)
 			unitLocations[chunkIndex] = new List<int>();
 		var unit = new MobileUnit(id, unitInfo, tile, chunkIndex, faction);
 		unitLocations[chunkIndex].Add(id);
@@ -290,7 +284,7 @@ public class Map : IDisposable
 		Vector3 worldLeft, worldRight;
 		worldLeft = worldRight = Vector3.zero;
 		//Normalize positions
-		if(left.offsetZ < right.offsetZ)
+		if (left.offsetZ < right.offsetZ)
 		{
 			cZMin = cLeft.chunkZ;
 			cZMax = cRight.chunkZ;
@@ -365,13 +359,13 @@ public class Map : IDisposable
 		var chunkBounds = Chunks[candidateChunks[0]].Bounds;
 		bool left, right, up, down;
 		left = right = up = down = false;
-		if(centerPos.x - worldRadius < chunkBounds.min.x)
+		if (centerPos.x - worldRadius < chunkBounds.min.x)
 		{
 			var nX = chunkX - 1;
-			if(left = nX >=0)
+			if (left = nX >= 0)
 				candidateChunks.Add(HexCoords.GetChunkIndex(nX, chunkZ, width));
 		}
-		if(centerPos.x + worldRadius > chunkBounds.max.x)
+		if (centerPos.x + worldRadius > chunkBounds.max.x)
 		{
 			var nX = chunkX + 1;
 			if (right = nX <= width)
@@ -390,7 +384,7 @@ public class Map : IDisposable
 			if (up = nZ <= height)
 				candidateChunks.Add(HexCoords.GetChunkIndex(chunkX, nZ, width));
 		}
-		if(up && right)
+		if (up && right)
 			candidateChunks.Add(HexCoords.GetChunkIndex(chunkX + 1, chunkZ + 1, width));
 		if (down && right)
 			candidateChunks.Add(HexCoords.GetChunkIndex(chunkX + 1, chunkZ - 1, width));
@@ -425,15 +419,13 @@ public class Map : IDisposable
 		if (!IsRendered)
 			throw new Exception("Map is not rendered yet");
 		var chunksChanged = 0;
-		
+
 		for (int i = 0; i < Chunks.Length; i++)
 		{
 			if (Chunks[i].Show(Chunks[i].InView(camPlanes)))
 				chunksChanged++;
 		}
 	}
-
-	
 
 	public void Render(EntityManager entityManager)
 	{
@@ -457,12 +449,12 @@ public class Map : IDisposable
 	public Tile[] GetNeighbors(HexCoords coords)
 	{
 		Tile[] neighbors = new Tile[6];
-		neighbors[0] = this[coords.x - 1, coords.y    ]; //Left
+		neighbors[0] = this[coords.x - 1, coords.y]; //Left
 		neighbors[1] = this[coords.x - 1, coords.y + 1]; //Top Left
-		neighbors[2] = this[coords.x    , coords.y + 1]; //Top Right
-		neighbors[3] = this[coords.x + 1, coords.y    ]; //Right
+		neighbors[2] = this[coords.x, coords.y + 1]; //Top Right
+		neighbors[3] = this[coords.x + 1, coords.y]; //Right
 		neighbors[4] = this[coords.x + 1, coords.y - 1]; //Bottom Right
-		neighbors[5] = this[coords.x    , coords.y - 1]; //Bottom Left
+		neighbors[5] = this[coords.x, coords.y - 1]; //Bottom Left
 		return neighbors;
 	}
 
@@ -483,7 +475,7 @@ public class Map : IDisposable
 				continue;
 			if (p.y > t.Height + tileEdgeLength)
 				continue;
-			if(p.y <= t.Height && p.y >= 0)
+			if (p.y <= t.Height && p.y >= 0)
 			{
 				var a = t.Coords.worldXZ;
 				var b = p;
@@ -605,11 +597,12 @@ public class Map : IDisposable
 	{
 		var selection = new List<Tile>();
 		int xMin, xMax, zMin, zMax;
-		if(left.offsetX < right.offsetX)
+		if (left.offsetX < right.offsetX)
 		{
 			xMin = left.offsetX;
 			xMax = right.offsetX;
-		}else
+		}
+		else
 		{
 			xMax = left.offsetX;
 			xMin = right.offsetX;
@@ -685,7 +678,7 @@ public class Map : IDisposable
 		if (outerRadius <= innerRadius)
 			return;
 		var outerSelection = HexSelect(center, outerRadius).Except(innerSelection);
-		if(excludeUnderwater)
+		if (excludeUnderwater)
 			outerSelection = outerSelection.Where(t => !t.IsUnderwater);
 		foreach (var tile in outerSelection)
 		{
@@ -733,7 +726,7 @@ public class Map : IDisposable
 		{
 			for (int x = 0; x < totalWidth; x++)
 			{
-				var t = this[HexCoords.FromOffsetCoords(x,z, tileEdgeLength)];
+				var t = this[HexCoords.FromOffsetCoords(x, z, tileEdgeLength)];
 				nav[x + z * totalWidth] = t.IsUnderwater ? -1 : (t.info.isTraverseable ? t.Height : -1);
 			}
 		}
@@ -778,7 +771,7 @@ public class Map : IDisposable
 			closed.Add(curTileNode);
 			last = curTileNode;
 			var neighbors = GetNeighbors(curTileNode.coords);
-			for(int i = 0; i < neighbors.Length; i++)
+			for (int i = 0; i < neighbors.Length; i++)
 			{
 				if (neighbors[i] == null)
 					continue;
@@ -787,7 +780,7 @@ public class Map : IDisposable
 				var neighbor = neighbors[i];
 				if (Mathf.Abs(neighbor.Height - curTileNode.surfacePoint.y) > maxIncline)
 					continue;
-				if(filter != null && !neighbor.Equals(dst) && !neighbor.Equals(src) && !filter(neighbor))
+				if (filter != null && !neighbor.Equals(dst) && !neighbor.Equals(src) && !filter(neighbor))
 				{
 					continue;
 				}
@@ -844,7 +837,6 @@ public class Map : IDisposable
 			this.src = src;
 		}
 
-
 		public void CacheF(Vector3 b)
 		{
 			F = CalculateF(b);
@@ -870,7 +862,6 @@ public class Map : IDisposable
 			return coords.GetHashCode();
 		}
 	}
-
 
 	public float GetHeight(Vector3 worldPos, int radius = 0) => GetHeight(HexCoords.FromPosition(worldPos, tileEdgeLength), radius);
 
@@ -902,9 +893,8 @@ public class Map : IDisposable
 		IsRendered = false;
 	}
 
-
-
 	#region IDisposable Support
+
 	private bool disposedValue = false; // To detect redundant calls
 
 	protected virtual void Dispose(bool disposing)
@@ -915,7 +905,6 @@ public class Map : IDisposable
 			{
 				Destroy();
 			}
-
 
 			disposedValue = true;
 		}
@@ -934,5 +923,6 @@ public class Map : IDisposable
 		Dispose(true);
 		GC.SuppressFinalize(this);
 	}
-	#endregion
+
+	#endregion IDisposable Support
 }

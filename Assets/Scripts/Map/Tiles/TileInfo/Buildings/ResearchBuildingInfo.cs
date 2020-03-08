@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+
 using Unity.Entities;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Research Building")]
@@ -36,5 +37,4 @@ public class ResearchBuildingInfo : BuildingTileInfo
 		b += $"Unlocks {researchCategory} Research";
 		return b;
 	}
-
 }

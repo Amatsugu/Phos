@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile Mapper/Stacked")]
 public class StackedTileMapper : TileMapper

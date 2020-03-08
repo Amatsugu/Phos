@@ -2,14 +2,17 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 
 [ExcludeComponent(typeof(ShadowOnlyTag))]
 public struct CloudsJob : IJobForEach<CloudData, Translation, NonUniformScale>
 {
 	public float size;
+
 	[ReadOnly]
 	public NativeArray<float2> field;
+
 	public float3 camPos;
 	public float3 rawCamPos;
 	public float disolveDist;
@@ -51,15 +54,16 @@ public struct CloudsJob : IJobForEach<CloudData, Translation, NonUniformScale>
 		}
 		s.Value = new float3(size * cloudSize, cloudHeight, size * cloudSize);
 	}
-
 }
 
 [RequireComponentTag(typeof(ShadowOnlyTag))]
 public struct CloudShadowsJob : IJobForEach<CloudData, Translation, NonUniformScale>
 {
 	public float size;
+
 	[ReadOnly]
 	public NativeArray<float2> field;
+
 	public float3 camPos;
 
 	public void Execute(ref CloudData c, ref Translation t, ref NonUniformScale s)

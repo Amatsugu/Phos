@@ -17,14 +17,12 @@ public class BuildingTile : Tile
 	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
 	{
 		buildingInfo = tInfo;
-		if (GameRegistry.Cheats.INSTANT_BUILD)
-			_isBuilt = true;
 	}
 
 	public override Entity Render()
 	{
 		var e = base.Render();
-		if(_isBuilt)
+		if (_isBuilt)
 		{
 			_isBuilt = false;
 			Build();
@@ -58,7 +56,6 @@ public class BuildingTile : Tile
 		}
 		catch
 		{
-
 		}
 	}
 
@@ -100,7 +97,7 @@ public class BuildingTile : Tile
 
 	protected virtual void PrepareEntity()
 	{
-		if(Map.EM.HasComponent<BuildingId>(_tileEntity))
+		if (Map.EM.HasComponent<BuildingId>(_tileEntity))
 			Map.EM.SetComponentData(_tileEntity, new BuildingId
 			{
 				Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
@@ -130,7 +127,6 @@ public class BuildingTile : Tile
 		}
 		if (consumption.Length > 0)
 		{
-
 			var cData = new ConsumptionData
 			{
 				resourceIds = new int[consumption.Length],
@@ -157,7 +153,7 @@ public class BuildingTile : Tile
 
 	protected virtual void StartConstruction()
 	{
-		if(buildingInfo.constructionMesh != null)
+		if (buildingInfo.constructionMesh != null)
 			_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
 	}
 
@@ -228,7 +224,7 @@ public class PoweredBuildingTile : BuildingTile
 
 	public virtual void OnHQDisconnected()
 	{
-		if(_connectionInit)
+		if (_connectionInit)
 		{
 			if (HasHQConnection)
 			{
@@ -240,7 +236,7 @@ public class PoweredBuildingTile : BuildingTile
 			else
 				return;
 		}
-		if(!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
+		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
 			Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
 		HasHQConnection = false;
 		InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and results in a consumtion penalty.");
@@ -251,5 +247,4 @@ public class PoweredBuildingTile : BuildingTile
 		base.OnRemoved();
 		InfoPopupUI.HidePopup(Coords);
 	}
-
 }

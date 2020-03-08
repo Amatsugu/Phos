@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,7 +9,9 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	public bool isHovered;
 
 	public event Action OnHover;
+
 	public event Action OnBlur;
+
 	[HideInInspector]
 	public RectTransform rTransform;
 
@@ -65,24 +66,21 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	protected virtual void Start()
 	{
-
 	}
 
 	protected virtual void Update()
 	{
-
 	}
 
 	protected virtual void LateUpdate()
 	{
-
 	}
 
 	public virtual void SetActive(bool active)
 	{
 		rTransform = rTransform ?? GetComponent<RectTransform>();
 		gameObject.SetActive(active);
-		if(!active)
+		if (!active)
 			isHovered = false;
 	}
 }

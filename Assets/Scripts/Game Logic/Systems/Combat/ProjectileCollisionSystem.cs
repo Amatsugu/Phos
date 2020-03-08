@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Physics;
+﻿using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Burst;
+using Unity.Physics;
 using Unity.Physics.Systems;
-using UnityEngine;
 
 [RequireComponentTag(TagComponents = new[] { typeof(FactionId) })]
 [BurstCompile]
@@ -23,7 +17,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 	{
 		if (damage.HasComponent(collisionEvent.Entities.EntityA))
 			DealDamage(collisionEvent.Entities.EntityA, collisionEvent.Entities.EntityB);
-		else if(damage.HasComponent(collisionEvent.Entities.EntityB))
+		else if (damage.HasComponent(collisionEvent.Entities.EntityB))
 			DealDamage(collisionEvent.Entities.EntityB, collisionEvent.Entities.EntityA);
 	}
 

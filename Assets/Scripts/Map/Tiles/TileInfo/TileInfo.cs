@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Entities;
-using Unity.Rendering;
-using Unity.Transforms;
-using Unity.Physics;
-using UnityEngine;
-using Unity.Collections;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Physics.Authoring;
+
+using UnityEngine;
+
 using BoxCollider = Unity.Physics.BoxCollider;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
@@ -16,6 +15,7 @@ public class TileInfo : MeshEntityRotatable
 {
 	[Header("Tile Info")]
 	public string description;
+
 	public TileDecorator[] decorators;
 	public bool isTraverseable = true;
 	public Faction faction;
@@ -26,7 +26,7 @@ public class TileInfo : MeshEntityRotatable
 		return base.GetComponents().Concat(new ComponentType[]{
 			typeof(HexPosition),
 			typeof(PhysicsCollider),
-			typeof(PhysicsDebugDisplayData), 
+			typeof(PhysicsDebugDisplayData),
 			typeof(FactionId)
 		});
 	}

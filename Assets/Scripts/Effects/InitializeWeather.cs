@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
+
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.VFX;
-using Random = UnityEngine.Random;
 
 public class InitializeWeather : MonoBehaviour
 {
@@ -21,22 +18,25 @@ public class InitializeWeather : MonoBehaviour
 	public int fieldHeight = 200;
 	public int fieldWidth = 100;
 	public NoiseSettings noiseSettings;
+
 	[Range(1, 100)]
 	public float camDisolveDist = 10;
+
 	[Range(1, 50)]
 	public float disolveOffsetDist = 20;
+
 	public float disolveUpperBound = 0;
 	public float disolveLowerBound = 0;
 
 	private NativeArray<Entity> _clouds;
 	private NativeArray<Entity> _cloudShadows;
 
-	void Awake()
+	private void Awake()
 	{
 		EventManager.AddEventListener("OnMapLoaded", InitWather);
 	}
 
-	void InitWather()
+	private void InitWather()
 	{
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		_clouds = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
@@ -62,15 +62,15 @@ public class InitializeWeather : MonoBehaviour
 			}
 		}
 		EventManager.RemoveEventListener("OnMapLoaded", InitWather);
-    }
+	}
 
-	void OnDestroy()
+	private void OnDestroy()
 	{
 		if (enabled)
 		{
-			if(_clouds.IsCreated)
+			if (_clouds.IsCreated)
 				_clouds.Dispose();
-			if(_cloudShadows.IsCreated)
+			if (_cloudShadows.IsCreated)
 				_cloudShadows.Dispose();
 		}
 	}

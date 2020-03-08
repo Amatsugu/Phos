@@ -3,8 +3,6 @@
  * and heavily refactored to improve performance. */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 public class OpenSimplexNoise
@@ -104,7 +102,6 @@ public class OpenSimplexNoise
 		{
 			lookup2D[lookupPairs2D[i]] = contributions2D[lookupPairs2D[i + 1]];
 		}
-
 
 		var base3D = new int[][]
 		{

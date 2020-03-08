@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Rendering;
 using Unity.Transforms;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ECS/Rotatable Mesh Enity")]
@@ -46,7 +46,6 @@ public class MeshEntityRotatable : MeshEntity
 		commandBuffer.SetComponent(e, new Rotation { Value = rotation });
 		return e;
 	}
-
 
 	/*public Entity Instantiate(Vector3 position, Vector3 scale, Quaternion rotation, Entity parent)
 	{

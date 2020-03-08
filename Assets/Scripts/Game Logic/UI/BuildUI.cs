@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using Unity.Collections;
-using Unity.Entities;
-using Unity.Transforms;
-using System.Linq;
-using UnityEngine.EventSystems;
-using AnimationSystem.Animations;
-using AnimationSystem.AnimationData;
-using Unity.Mathematics;
-using Random = UnityEngine.Random;
-using DataStore.ConduitGraph;
+﻿using DataStore.ConduitGraph;
+
 using Effects.Lines;
-using Unity.Rendering;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using TMPro;
+
+using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics.Systems;
+using Unity.Rendering;
+using Unity.Transforms;
+
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
@@ -24,13 +24,17 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public BuildState State { get; private set; }
 
 	/*	UI	*/
+
 	[Header("UI")]
 	public UIInfoBanner infoBanner;
+
 	public GameObject buildWindow;
 	public RectTransform scrollContent;
+
 	//Indicators
 	[Header("Indicators")]
 	public MeshEntity selectIndicatorEntity;
+
 	public MeshEntity placementPathIndicatorEntity;
 	public MeshEntity gatheringIndicatorEntity;
 	public MeshEntity cannotGatheringIndicatorEntity;
@@ -39,15 +43,17 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	public MeshEntity unpoweredTileIndicatorEntity;
 	public MeshEntity errorIndicatorEntity;
 	public MeshEntityRotatable resourceConduitPreviewLine;
+
 	//Tooltip
 	[Header("Tooltip")]
 	public UIBuildingTooltip toolTip;
+
 	public TMP_Text floatingText;
 
 	[Header("Config")]
 	public int poweredTileDisplayRange;
+
 	public float inidcatorOffset = .5f;
-	
 
 	public RectTransform unitUIPrefab;
 
@@ -75,13 +81,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		Placement
 	}
 
-	void Awake()
+	private void Awake()
 	{
 		GameRegistry.INST.buildUI = this;
 		GameRegistry.SetBuildingDatabase(buildings);
 	}
 
-	void Start()
+	private void Start()
 	{
 		_errors = new List<string>();
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
@@ -93,24 +99,24 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		State = BuildState.HQPlacement;
 		_selectedBuilding = HQTile;
 		infoBanner.SetText("Place HQ Building");
-			/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
-			
-		if(selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
+		/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
+
+		if (selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
 			Debug.LogError("Null");
 
 		EventManager.AddEventListener("OnBuildingUnlocked", () =>
 		{
-			if(_lastBuildingCategory != null)
+			if (_lastBuildingCategory != null)
 				ShowBuildWindow(buildings[(BuildingCategory)_lastBuildingCategory]);
 		});
 		_poweredTileRangeSq = HexCoords.TileToWorldDist(poweredTileDisplayRange, Map.ActiveMap.innerRadius);
 		_poweredTileRangeSq *= _poweredTileRangeSq;
 	}
 
-	bool InvalidPlacementSelector(Tile t) => (_selectedBuilding.offshoreOnly ? !t.IsUnderwater : (t.IsUnderwater && !_selectedBuilding.isOffshore)) || t is BuildingTile || (t is ResourceTile && !t.IsUnderwater);
+	private bool InvalidPlacementSelector(Tile t) => (_selectedBuilding.offshoreOnly ? !t.IsUnderwater : (t.IsUnderwater && !_selectedBuilding.isOffshore)) || t is BuildingTile || (t is ResourceTile && !t.IsUnderwater);
 
 	// Update is called once per frame
-	void Update()
+	private void Update()
 	{
 #if DEBUG
 		if (_cam == null)
@@ -118,16 +124,19 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 #endif
 
 		var mPos = Input.mousePosition;
-		switch(State)
+		switch (State)
 		{
 			case BuildState.Disabled:
 				break;
+
 			case BuildState.Idle:
 				ReadCloseInput();
 				break;
+
 			case BuildState.HQPlacement:
 				UpdatePlacementUI(mPos);
 				break;
+
 			case BuildState.Placement:
 				UpdatePlacementUI(mPos);
 				ReadDeselectBuildingInput();
@@ -135,7 +144,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void UpdatePlacementUI(Vector2 mousePos)
+	private void UpdatePlacementUI(Vector2 mousePos)
 	{
 		Tile selectedTile = null;//Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
 		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
@@ -152,10 +161,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			}
 		}, out var hit))
 		{
-			if(hit.RigidBodyIndex != -1)
+			if (hit.RigidBodyIndex != -1)
 			{
 				var e = col.Bodies[hit.RigidBodyIndex].Entity;
-				if(Map.EM.HasComponent<HexPosition>(e))
+				if (Map.EM.HasComponent<HexPosition>(e))
 					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).coords];
 			}
 		}
@@ -165,8 +174,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		Debug.DrawRay(hit.Position, Vector3.up, Color.green);
 		Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
 
-
-		if(selectedTile == null)
+		if (selectedTile == null)
 		{
 			HideAllIndicators();
 			return;
@@ -183,6 +191,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			case ResourceConduitTileInfo conduit:
 				ValidateResourceConduit(selectedTile, conduit);
 				break;
+
 			case ResourceGatheringBuildingInfo building:
 				ValidateResourceGatheringBuilding(selectedTile, tilesToOccupy, building);
 				break;
@@ -191,7 +200,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			PlaceBuilding(selectedTile);
 	}
 
-	void ValidatePathPlacement(Tile selectedTile)
+	private void ValidatePathPlacement(Tile selectedTile)
 	{
 		if (_selectedBuilding.placementMode != PlacementMode.Path)
 			return;
@@ -230,7 +239,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void ValidatePlacement(List<Tile> tilesToOccupy)
+	private void ValidatePlacement(List<Tile> tilesToOccupy)
 	{
 		if (!GameRegistry.ResourceSystem.HasAllResources(_selectedBuilding.cost)) //Has Resources
 		{
@@ -255,7 +264,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void PlaceBuilding(Tile selectedTile)
+	private void PlaceBuilding(Tile selectedTile)
 	{
 		_startPoint = null;
 		if (_validPlacement || _selectedBuilding.placementMode == PlacementMode.Path)
@@ -298,7 +307,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void ReadCloseInput()
+	private void ReadCloseInput()
 	{
 		if (Input.GetKeyUp(KeyCode.Escape))
 		{
@@ -306,7 +315,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void ReadDeselectBuildingInput()
+	private void ReadDeselectBuildingInput()
 	{
 		if (Input.GetKeyUp(KeyCode.Escape))
 		{
@@ -315,7 +324,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void ShowPoweredTiles(Tile selectedTile)
+	private void ShowPoweredTiles(Tile selectedTile)
 	{
 		if (State == BuildState.HQPlacement)
 			return;
@@ -342,7 +351,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			HideIndicator(unpoweredTileIndicatorEntity);
 	}
 
-	void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)
+	private void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)
 	{
 		var rangeSqr = HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius);
 		rangeSqr *= rangeSqr;
@@ -362,7 +371,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.poweredRange, true));
 	}
 
-	void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f)
+	private void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f)
 	{
 		GrowIndicators(line, nodes.Count);
 		int c = 0;
@@ -388,13 +397,13 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_renderedEntities[line] = c;
 	}
 
-	void ValidateResourceGatheringBuilding(Tile selectedTile, List<Tile> tilesToOccupy, ResourceGatheringBuildingInfo buildingInfo)
+	private void ValidateResourceGatheringBuilding(Tile selectedTile, List<Tile> tilesToOccupy, ResourceGatheringBuildingInfo buildingInfo)
 	{
 		var resInRange = new Dictionary<int, int>();
 		var resTiles = new Dictionary<int, List<Tile>>();
 		Map.ActiveMap.HexSelectForEach(selectedTile.Coords, buildingInfo.size + buildingInfo.gatherRange, t =>
 		{
-			if(t is ResourceTile rt && !rt.gatherer.isCreated)
+			if (t is ResourceTile rt && !rt.gatherer.isCreated)
 			{
 				var yeild = rt.resInfo.resourceYields;
 				for (int i = 0; i < yeild.Length; i++)
@@ -417,7 +426,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		var cannotGatherTiles = new List<Tile>();
 		var gatheredTiles = new List<Tile>();
 		var gatherText = new System.Text.StringBuilder();
-		
+
 		for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
 		{
 			var res = buildingInfo.resourcesToGather[i];
@@ -431,7 +440,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			}
 			resTiles.Remove(res.id);
 		}
-		foreach(var tiles in resTiles)
+		foreach (var tiles in resTiles)
 			cannotGatherTiles.AddRange(tiles.Value);
 		if (gatheredTiles.Count > 0)
 		{
@@ -460,7 +469,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void HideIndicator(MeshEntity indicator)
+	private void HideIndicator(MeshEntity indicator)
 	{
 		if (!_indicatorEntities.ContainsKey(indicator))
 			return;
@@ -471,7 +480,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_renderedEntities[indicator] = 0;
 	}
 
-	void HideAllIndicators()
+	private void HideAllIndicators()
 	{
 		foreach (var indicators in _indicatorEntities)
 		{
@@ -484,7 +493,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 	}
 
-	void GrowIndicators(MeshEntity indicatorMesh, int count)
+	private void GrowIndicators(MeshEntity indicatorMesh, int count)
 	{
 		List<Entity> entities;
 		if (!_indicatorEntities.ContainsKey(indicatorMesh))
@@ -507,14 +516,14 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		}
 	}
 
-	void ShowIndicators(MeshEntity indicatorMesh, List<Tile> tiles)
+	private void ShowIndicators(MeshEntity indicatorMesh, List<Tile> tiles)
 	{
 		GrowIndicators(indicatorMesh, tiles.Count);
 		for (int i = 0; i < _indicatorEntities[indicatorMesh].Count; i++)
 		{
 			if (i < tiles.Count)
 			{
-				if(i >= _renderedEntities[indicatorMesh])
+				if (i >= _renderedEntities[indicatorMesh])
 					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
 
 				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint + new float3(0, inidcatorOffset, 0) });
@@ -523,13 +532,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			{
 				if (i >= _renderedEntities[indicatorMesh])
 					break;
-				if(i < _renderedEntities[indicatorMesh])
+				if (i < _renderedEntities[indicatorMesh])
 					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(FrozenRenderSceneTag));
 			}
 		}
 		_renderedEntities[indicatorMesh] = tiles.Count;
 	}
-
 
 	public void ShowBuildWindow(BuildingDatabase.BuildingDefination[] buildings)
 	{
@@ -539,7 +547,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		buildWindow.SetActive(true);
 		State = BuildState.Idle;
 		_selectedBuilding = null;
-		if(_activeUnits.Count < buildings.Length)
+		if (_activeUnits.Count < buildings.Length)
 		{
 			GrowUnitsUI(buildings.Length);
 		}
@@ -553,7 +561,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			}
 			var building = buildings[i].info;
 #if DEBUG
-			if(building == null)
+			if (building == null)
 			{
 				Debug.LogWarning("Null building in list, aborting");
 				break;
@@ -565,17 +573,17 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 			_activeUnits[i].ClearAllEvents();
 			_activeUnits[i].OnClick += () =>
 			{
-				if(GameRegistry.ResourceSystem.HasAllResources(building.cost))
+				if (GameRegistry.ResourceSystem.HasAllResources(building.cost))
 				{
 					_selectedBuilding = building;
 					State = BuildState.Placement;
 				}
 			};
-			_activeUnits[i].OnHover += () => 
-				toolTip.ShowToolTip(building.icon, 
-									building.name, 
-									building.description, 
-									building.GetCostString(), 
+			_activeUnits[i].OnHover += () =>
+				toolTip.ShowToolTip(building.icon,
+									building.name,
+									building.description,
+									building.GetCostString(),
 									building.GetProductionString());
 			_activeUnits[i].OnBlur += () => toolTip.Hide();
 			_activeUnits[i].icon.sprite = building.icon;
@@ -598,10 +606,15 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	}
 
 	public void ShowTechWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Tech)]);
+
 	public void ShowResourcesWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Gathering)]);
+
 	public void ShowProdcutionWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Production)]);
+
 	public void ShowStructureWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Structure)]);
+
 	public void ShowMilitaryWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Military)]);
+
 	public void ShowDefenseWindow() => ShowBuildWindow(buildings[(BuildingCategory)(_lastBuildingCategory = BuildingCategory.Defense)]);
 
 	public void HideBuildWindow()
@@ -625,7 +638,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		if(_selectedBuilding != null)
+		if (_selectedBuilding != null)
 			State = (_selectedBuilding is HQTileInfo) ? BuildState.HQPlacement : BuildState.Placement;
 	}
 }

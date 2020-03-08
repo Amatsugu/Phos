@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 
 public struct CloudData : IComponentData
 {
@@ -12,5 +9,4 @@ public struct CloudData : IComponentData
 
 public struct ShadowOnlyTag : IComponentData
 {
-
 }

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +12,7 @@ public class UIInteractionPanel : UIHover
 		get => rTransform.anchoredPosition;
 		set => rTransform.anchoredPosition = value;
 	}
+
 	public bool PanelVisible { get; private set; }
 	public float Width => rTransform.rect.width;
 	public float Height => rTransform.rect.height;
@@ -23,18 +24,21 @@ public class UIInteractionPanel : UIHover
 	public Button destroyBtn;
 
 	public event Action OnUpgradeHover;
+
 	public event Action OnUpgradeBlur;
 
 	public event Action OnDestroyHover;
+
 	public event Action OnDestroyBlur;
 
 	public event Action OnUpgradeClick;
+
 	public event Action OnDestroyClick;
 
-
 	private GameObject _gameObject;
-    protected override void Awake()
-    {
+
+	protected override void Awake()
+	{
 		base.Awake();
 		_gameObject = gameObject;
 
@@ -48,8 +52,7 @@ public class UIInteractionPanel : UIHover
 		destroyHover.OnHover += () => OnDestroyHover?.Invoke();
 	}
 
-
-	public void ShowPanel(string title, string desc, bool showUpgradeBtn = true, bool showDestroyBtn = true,  string upgradeText = "Upgrade", string destroyText = "Destroy")
+	public void ShowPanel(string title, string desc, bool showUpgradeBtn = true, bool showDestroyBtn = true, string upgradeText = "Upgrade", string destroyText = "Destroy")
 	{
 		_gameObject.SetActive(PanelVisible = true);
 		titleText.SetText(title);

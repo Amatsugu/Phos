@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building/Solar Panel")]
 public class SolarPanelTileInfo : BuildingTileInfo

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+
 using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +17,6 @@ public class UIResourceDisplay : UIHover
 	public RectTransform inOutRect;
 	public float expandSpeed;
 
-
 	public Color negativeColor = Color.red;
 	public Color positiveColor = Color.green;
 	public Color warningColor = Color.yellow;
@@ -30,7 +30,7 @@ public class UIResourceDisplay : UIHover
 	private float _inOutWidth;
 	private float _logisticsWidth;
 
-    protected override void Awake()
+	protected override void Awake()
 	{
 		base.Awake();
 		SetInfo(0, 0, 0, 0, false);
@@ -44,7 +44,6 @@ public class UIResourceDisplay : UIHover
 		OnBlur += Close;
 	}
 
-
 	public void Close()
 	{
 		if (!_expanded)
@@ -52,19 +51,18 @@ public class UIResourceDisplay : UIHover
 		_expanded = false;
 	}
 
-
 	protected override void Update()
 	{
-		if(_expanded)
+		if (_expanded)
 		{
 			_expandProgress += Time.deltaTime * expandSpeed;
-		}else
+		}
+		else
 			_expandProgress -= Time.deltaTime * expandSpeed;
 		_expandProgress = Mathf.Clamp(_expandProgress, 0, 1);
 		var t = _expandProgress * _expandProgress * _expandProgress;
 		rTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_baseWidth - _inOutWidth, _baseWidth, t));
 		logisticsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Mathf.Lerp(_logisticsWidth - _inOutWidth, _logisticsWidth, t));
-
 	}
 
 	public void Open()
@@ -85,29 +83,31 @@ public class UIResourceDisplay : UIHover
 		incomeText.SetText(income.ToString());
 		consumeText.SetText(consumption.ToString());
 		netText.SetText(Mathf.Abs(netIncome).ToString());
-		if(netIncome == 0)
+		if (netIncome == 0)
 		{
 			netText.color = warningColor;
 			netSignText.color = warningColor;
 			netSignText.SetText("+");
-		}else if(netIncome > 0)
+		}
+		else if (netIncome > 0)
 		{
 			netText.color = positiveColor;
 			netSignText.color = positiveColor;
 			netSignText.SetText("+");
 		}
-		else if(netIncome < 0)
+		else if (netIncome < 0)
 		{
 			netText.color = negativeColor;
 			netSignText.color = negativeColor;
 			netSignText.SetText("-");
 		}
-		if(atMax != _atMax)
+		if (atMax != _atMax)
 		{
-			if(atMax)
+			if (atMax)
 			{
 				StartCoroutine(FlashResourceCapWarning());
-			}else
+			}
+			else
 			{
 				StopAllCoroutines();
 				storedText.color = neutralColor;
@@ -116,13 +116,11 @@ public class UIResourceDisplay : UIHover
 		}
 	}
 
-	IEnumerator FlashResourceCapWarning()
+	private IEnumerator FlashResourceCapWarning()
 	{
 		if (_animProgress >= 1)
 			_animProgress = 0;
 		storedText.color = Color.Lerp(neutralColor, warningColor, Mathf.Round(_animProgress += Time.deltaTime));
 		yield return new WaitForEndOfFrame();
 	}
-
-	
 }

@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
-using UnityEngine;
+﻿using Unity.Entities;
 
 public class TimedDeathSystem : ComponentSystem
 {
-    protected override void OnUpdate()
-    {
-        Entities.ForEach((Entity e, ref DeathTime t) =>
-        {
-            if (Time.ElapsedTime >= t.Value)
-                PostUpdateCommands.DestroyEntity(e);
-        });
-    }
+	protected override void OnUpdate()
+	{
+		Entities.ForEach((Entity e, ref DeathTime t) =>
+		{
+			if (Time.ElapsedTime >= t.Value)
+				PostUpdateCommands.DestroyEntity(e);
+		});
+	}
 
-    public struct DeathTime : IComponentData
-    {
-        public double Value;
-    }
+	public struct DeathTime : IComponentData
+	{
+		public double Value;
+	}
 }

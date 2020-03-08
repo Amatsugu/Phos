@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
-using Unity.Jobs;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class MapGenerator : ScriptableObject
 {
@@ -13,6 +8,7 @@ public abstract class MapGenerator : ScriptableObject
 	public float edgeLength = 1;
 	public FeatureGenerator[] featureGenerators;
 	public bool useJobs = true;
+
 	[HideInInspector]
 	public bool Regen;
 
@@ -30,6 +26,4 @@ public abstract class MapGenerator : ScriptableObject
 	}
 
 	public abstract Map GenerateMap(Transform parent = null);
-
-	
 }

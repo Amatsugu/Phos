@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
+
 using Debug = UnityEngine.Debug;
 
 public class InteractionUI : MonoBehaviour
@@ -21,6 +21,7 @@ public class InteractionUI : MonoBehaviour
 	private Queue<MoveOrder> _moveOrderQueue;
 
 	private InteractionState _curState;
+
 	private enum InteractionState
 	{
 		Diabled,
@@ -40,12 +41,12 @@ public class InteractionUI : MonoBehaviour
 		}
 	}
 
-	void Awake()
+	private void Awake()
 	{
 		GameRegistry.INST.interactionUI = this;
 	}
 
-	void Start()
+	private void Start()
 	{
 		_cam = GameRegistry.Camera;
 		_moveOrderQueue = new Queue<MoveOrder>();
@@ -66,7 +67,6 @@ public class InteractionUI : MonoBehaviour
 			enabled = true;
 			_curState = InteractionState.Inspect;
 		});
-		
 	}
 
 	private void OnValidate()
@@ -74,7 +74,7 @@ public class InteractionUI : MonoBehaviour
 		_moveOrderQueue = new Queue<MoveOrder>();
 	}
 
-	void DestroyTile()
+	private void DestroyTile()
 	{
 		var t = _selectedTile as BuildingTile;
 		Map.ActiveMap.RevertTile(t);
@@ -82,12 +82,11 @@ public class InteractionUI : MonoBehaviour
 		interactionPanel.HidePanel();
 	}
 
-	void UpgradeTile()
+	private void UpgradeTile()
 	{
-
 	}
 
-	void Update()
+	private void Update()
 	{
 		var mPos = Input.mousePosition;
 		switch (_curState)
@@ -96,33 +95,34 @@ public class InteractionUI : MonoBehaviour
 				if (GameRegistry.BuildUI.State <= BuildUI.BuildState.HQPlacement)
 					_curState = InteractionState.Inspect;
 				break;
+
 			case InteractionState.Inspect:
 				ProcessCloseInput();
 				InspectUI(mPos);
 				break;
+
 			case InteractionState.OrderUnit:
 				ProcessCloseInput();
 				InstructUnitUI(mPos);
 				break;
 		}
-		
 	}
 
-	void ProcessCloseInput()
+	private void ProcessCloseInput()
 	{
-		if(Input.GetKeyUp(KeyCode.Escape))
+		if (Input.GetKeyUp(KeyCode.Escape))
 		{
 			interactionPanel.HidePanel();
 			_curState = InteractionState.Inspect;
 		}
-		if(GameRegistry.BuildUI.State > BuildUI.BuildState.Disabled)
+		if (GameRegistry.BuildUI.State > BuildUI.BuildState.Disabled)
 		{
 			interactionPanel.HidePanel();
 			_curState = InteractionState.Diabled;
 		}
 	}
 
-	void InstructUnitUI(Vector2 mousePos)
+	private void InstructUnitUI(Vector2 mousePos)
 	{
 		if (Input.GetKeyUp(KeyCode.Mouse1) && _selectedUnits.Count > 0)
 		{
@@ -135,9 +135,9 @@ public class InteractionUI : MonoBehaviour
 		}
 	}
 
-	void InspectUI(Vector2 mousePos)
+	private void InspectUI(Vector2 mousePos)
 	{
-		if(GameRegistry.BuildUI.State > BuildUI.BuildState.Idle)
+		if (GameRegistry.BuildUI.State > BuildUI.BuildState.Idle)
 		{
 			HidePanel();
 			_curState = InteractionState.Diabled;
@@ -177,7 +177,7 @@ public class InteractionUI : MonoBehaviour
 		}
 	}
 
-	void LateUpdate()
+	private void LateUpdate()
 	{
 #if DEBUG
 		for (int i = 0; i < _selectedUnits.Count; i++)
@@ -187,7 +187,7 @@ public class InteractionUI : MonoBehaviour
 		}
 #endif
 
-		if(interactionPanel.PanelVisible)
+		if (interactionPanel.PanelVisible)
 		{
 			var uiPos = _cam.WorldToScreenPoint(_selectedTile.SurfacePoint);
 			if (uiPos.x <= -interactionPanel.Width)
@@ -211,16 +211,15 @@ public class InteractionUI : MonoBehaviour
 			interactionPanel.AnchoredPosition = uiPos;
 		}
 		var curCost = 0f;
-		while(curCost < maxMoveCostPerFrame && _moveOrderQueue.Count > 0)
+		while (curCost < maxMoveCostPerFrame && _moveOrderQueue.Count > 0)
 		{
 			var order = _moveOrderQueue.Dequeue();
 			curCost += order.cost;
 			order.Complete();
 		}
-
 	}
 
-	void DisplaySelectionRect()
+	private void DisplaySelectionRect()
 	{
 		//Drag Select
 		var p0 = _start.Coords.worldXZ;
@@ -241,12 +240,12 @@ public class InteractionUI : MonoBehaviour
 		selectionBox.gameObject.SetActive(true);
 	}
 
-	void InstructUnitMovement(Tile tile)
+	private void InstructUnitMovement(Tile tile)
 	{
 		var tilesNeeded = 0;
 		for (int i = 0; i < _selectedUnits.Count; i++)
 			tilesNeeded += HexCoords.GetTileCount(Map.ActiveMap.units[_selectedUnits[i]].info.size);
-		var r = HexCoords.CalculateRadius(tilesNeeded)+1;
+		var r = HexCoords.CalculateRadius(tilesNeeded) + 1;
 		var orderedUnits = _selectedUnits.Select(uId => Map.ActiveMap.units[uId]).OrderBy(u => u.info.size).Reverse().ToArray();
 
 		var occupiedSet = new HashSet<HexCoords>();
@@ -260,7 +259,7 @@ public class InteractionUI : MonoBehaviour
 			for (int j = 0; j < openTiles.Length; j++)
 			{
 				var footprint = HexCoords.SpiralSelect(openTiles[j], orderedUnits[i].info.size);
-				if(IsValidFootPrint(footprint, openSet, occupiedSet))
+				if (IsValidFootPrint(footprint, openSet, occupiedSet))
 				{
 					for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
@@ -278,13 +277,13 @@ public class InteractionUI : MonoBehaviour
 		}
 	}
 
-	bool IsValidFootPrint(HexCoords[] footprint, HashSet<HexCoords> open, HashSet<HexCoords> occupied)
+	private bool IsValidFootPrint(HexCoords[] footprint, HashSet<HexCoords> open, HashSet<HexCoords> occupied)
 	{
 		bool isValid = true;
 		for (int i = 0; i < footprint.Length; i++)
 		{
 			var coord = footprint[i];
-			if(Map.ActiveMap[coord].IsUnderwater)
+			if (Map.ActiveMap[coord].IsUnderwater)
 			{
 				isValid = false;
 				break;
@@ -294,7 +293,7 @@ public class InteractionUI : MonoBehaviour
 				isValid = false;
 				break;
 			}
-			if(occupied.Contains(coord))
+			if (occupied.Contains(coord))
 			{
 				isValid = false;
 				break;
@@ -304,37 +303,42 @@ public class InteractionUI : MonoBehaviour
 		return isValid;
 	}
 
-	void HidePanel()
+	private void HidePanel()
 	{
 		interactionPanel.HidePanel();
 	}
 
-	void ShowPanel(Tile tile)
+	private void ShowPanel(Tile tile)
 	{
 		_selectedTile = tile;
 		interactionPanel.rTransform.position = tile.SurfacePoint;
-		
+
 		switch (tile)
 		{
 			case HQTile _:
 				//GameRegistry.ResearchTreeUI.Show(null);
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
+
 			case SubHQTile _:
 				//GameRegistry.ResearchTreeUI.Show(null);
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
 				break;
+
 			case ResearchBuildingTile rb:
-				if(rb.HasHQConnection)
+				if (rb.HasHQConnection)
 					GameRegistry.ResearchTreeUI.Show(rb);
 				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());
 				break;
+
 			case BuildingTile _:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());
 				break;
+
 			case ResourceTile _:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), false, false);
 				break;
+
 			default:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), false, false);
 				break;

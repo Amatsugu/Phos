@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
+
 using UnityEngine;
 
 [BurstCompile]
@@ -117,7 +116,7 @@ public class ResourceSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		if(GameRegistry.INST == null)
+		if (GameRegistry.INST == null)
 		{
 			Debug.LogWarning("Can't Run");
 			_canRun = false;
@@ -165,13 +164,12 @@ public class ResourceSystem : ComponentSystem
 				ConsumeResourses(c.resourceIds, c.rates, demandSrc: id.Value);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
-			}else
+			}
+			else
 			{
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
-
 			}
-
 		});
 
 		//Debuffed Consumption
@@ -224,7 +222,6 @@ public class ResourceSystem : ComponentSystem
 
 	public void LogExcess(int rId, int rate, int srcBuilding) => resourceRecords[rId].LogExcess(rate, srcBuilding);
 
-
 	public bool HasAllResources(int[] ids, int[] rates, float multi = 1, int demandSrc = -1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
@@ -233,7 +230,7 @@ public class ResourceSystem : ComponentSystem
 		for (int i = 0; i < ids.Length; i++)
 		{
 			var totalRate = multi == 1 ? rates[i] : (int)(rates[i] * multi);
-			if(demandSrc != -1)
+			if (demandSrc != -1)
 				LogDemand(ids[i], totalRate, demandSrc);
 			if (resCount[ids[i]] < totalRate)
 				hasRes = false;
@@ -257,7 +254,7 @@ public class ResourceSystem : ComponentSystem
 		return hasRes;
 	}
 
-	void ConsumeResourses(int[] ids, int[] rates, float multi = 1, int demandSrc = -1)
+	private void ConsumeResourses(int[] ids, int[] rates, float multi = 1, int demandSrc = -1)
 	{
 		if (GameRegistry.Cheats.NO_RESOURCE_COST)
 			return;

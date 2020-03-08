@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using TMPro;
-using System.Collections;
+﻿using TMPro;
+
+using UnityEngine;
 
 [RequireComponent(typeof(TMP_Text))]
 public class FPSCounter : MonoBehaviour
@@ -12,15 +12,17 @@ public class FPSCounter : MonoBehaviour
 	private int frames = 0; // Frames drawn over the interval
 	private float timeleft; // Left time for current interval
 	private TMP_Text t;
-	void Start()
+
+	private void Start()
 	{
 		timeleft = updateInterval;
 		t = GetComponent<TMP_Text>();
 	}
-	void Update()
+
+	private void Update()
 	{
 		//if (t == null)
-			//Start();
+		//Start();
 		timeleft -= Time.deltaTime;
 		accum += Time.timeScale / Time.deltaTime;
 		++frames;
@@ -29,7 +31,7 @@ public class FPSCounter : MonoBehaviour
 		{
 			// display two fractional digits (f2 format)
 			float fps = accum / frames;
-			t.text  = $"{((int)(fps * 100))/100} FPS";
+			t.text = $"{((int)(fps * 100)) / 100} FPS";
 			t.color = fpsColor.Evaluate((fps - 15) / 60f);
 			//DebugConsole.Log(format, level);
 			timeleft = updateInterval;

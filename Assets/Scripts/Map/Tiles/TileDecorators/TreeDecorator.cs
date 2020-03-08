@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile Decorators/Trees")]
@@ -51,7 +48,6 @@ public class TreeDecorator : TileDecorator
 			entities[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size), Quaternion.Euler(0, _rand.Range(0, 360), 0));
 		}
 		return entities;
-
 	}
 
 	/*public override Matrix4x4[] GetTransformMatricies(Tile tile)
