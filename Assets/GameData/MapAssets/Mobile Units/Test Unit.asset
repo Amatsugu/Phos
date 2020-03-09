@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e5934fb526a474596ba32584653e5a, type: 3}
   m_Name: Test Unit
   m_EditorClassIdentifier: 
-  mesh: {fileID: -5495902117074765545, guid: 34fb018c804ee3141a4cf213824df580, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  mesh: {fileID: -4707071215487635230, guid: 4662ab6cf2bd63045bc78266402d79c2, type: 3}
+  material: {fileID: 2100000, guid: e440dce879ca15048ac2ad010ec5f4f3, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 0
@@ -22,5 +22,4 @@ MonoBehaviour:
   attackSpeed: 1
   maxHealth: 100
   size: 1
-  type: 0
   projectile: {fileID: 11400000, guid: 387055346b29e1f4890789816ea8cee3, type: 2}

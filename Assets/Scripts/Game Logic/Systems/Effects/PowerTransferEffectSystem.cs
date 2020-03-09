@@ -53,16 +53,22 @@ public class PowerTransferEffectSystem : ComponentSystem
 		}
 	}
 
+	//Register a new node effect
 	public static void AddNode(ConduitNode node)
 	{
 		_INST.OnNodeAdded(node);
 	}
 
+	//Unregester a node effect
 	public static void RemoveNode(ConduitNode node)
 	{
 		_INST.OnNodeRemoved(node);
 	}
 
+	/// <summary>
+	/// Add and Caluclate and cache the paths for the node effects
+	/// </summary>
+	/// <param name="node">Node to add</param>
 	private void OnNodeAdded(ConduitNode node)
 	{
 		var path = _conduitGraph.GetPath(node);

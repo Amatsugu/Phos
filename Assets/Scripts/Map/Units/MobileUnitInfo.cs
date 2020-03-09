@@ -8,20 +8,14 @@ using Unity.Physics;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
-public class MobileUnitInfo : MeshEntityRotatable
+public partial class MobileUnitInfo : MeshEntityRotatable
 {
-	public enum UnitType
-	{
-		Land,
-		Air,
-		Naval
-	}
-
 	public float moveSpeed = 1;
 	public float attackSpeed = 1;
 	public float maxHealth;
 	public int size;
-	public UnitType type;
+	public UnitDomain unitDomain;
+	public UnitClass unitClass;
 	public MeshEntityRotatable projectile;
 
 	public override IEnumerable<ComponentType> GetComponents()
@@ -34,6 +28,8 @@ public class MobileUnitInfo : MeshEntityRotatable
 			typeof(AttackSpeed),
 			typeof(Health),
 			typeof(FactionId),
+			typeof(UnitClass),
+			typeof(UnitDomain),
 		});
 	}
 
@@ -47,6 +43,8 @@ public class MobileUnitInfo : MeshEntityRotatable
 		Map.EM.SetComponentData(e, new AttackSpeed { Value = attackSpeed });
 		Map.EM.SetComponentData(e, new Health { maxHealth = maxHealth, Value = maxHealth });
 		Map.EM.SetComponentData(e, new FactionId { Value = faction });
+		Map.EM.SetComponentData(e, new UnitDomain { Value = unitDomain.Value });
+		Map.EM.SetComponentData(e, new UnitClass { Value = unitClass.Value });
 
 		Map.EM.AddComponentData(e, new PhysicsCollider
 		{
