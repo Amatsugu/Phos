@@ -41,6 +41,7 @@ namespace Tiles.EnemyBuildings
 			return e;
 		}
 
+
 		public override Tile CreateTile(HexCoords pos, float height)
 		{
 			return new EnemyBuildingTile(pos, height, this);

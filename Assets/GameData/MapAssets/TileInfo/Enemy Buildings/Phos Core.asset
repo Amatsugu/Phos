@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Phos Core
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: c5bd27640a28cbf40bc7a31293db797e, type: 2}
+  material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
@@ -32,6 +32,7 @@ MonoBehaviour:
   resourceTransferRange: 0
   isOffshore: 0
   offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
   placementMode: 0
   upgradeTarget:
     id: -1

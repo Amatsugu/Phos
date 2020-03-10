@@ -19,7 +19,8 @@ public class MobileUnit
 		}
 	}
 
-	public Entity Entity { get; protected set; }
+	public Entity Entity;
+	public Entity HeadEntity;
 	public bool IsRendered { get; protected set; }
 
 	protected int _chunk;
@@ -43,6 +44,8 @@ public class MobileUnit
 			return Entity;
 		IsRendered = _isShown = true;
 		Entity = info.Instantiate(_position, Quaternion.identity, id);
+		if(info.head != null)
+			HeadEntity = info.head.Instantiate(_position, 1, Quaternion.identity);
 		Map.EM.SetComponentData(Entity, new FactionId { Value = _faction });
 		return Entity;
 	}
@@ -97,5 +100,7 @@ public class MobileUnit
 	{
 		if (Map.EM.Exists(Entity))
 			Map.EM.DestroyEntity(Entity);
+		if (Map.EM.Exists(HeadEntity))
+			Map.EM.DestroyEntity(HeadEntity);
 	}
 }

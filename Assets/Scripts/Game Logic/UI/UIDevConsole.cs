@@ -356,4 +356,9 @@ public class UIDevConsole : MonoBehaviour
 		File.WriteAllLines("output.log", _logs);
 		Application.logMessageReceived -= DebugLogMessage;
 	}
+
+	private void OnDestroy()
+	{
+		OnDisable();
+	}
 }

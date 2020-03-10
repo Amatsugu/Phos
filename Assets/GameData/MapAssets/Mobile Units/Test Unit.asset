@@ -17,7 +17,8 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 0
-  nonUniformScale: 1
+  nonUniformScale: 0
+  head: {fileID: 11400000, guid: 68cb1fd3b1861fd4880a15223d7f5b63, type: 2}
   moveSpeed: 10
   attackSpeed: 1
   maxHealth: 100

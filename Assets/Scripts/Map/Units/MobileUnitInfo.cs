@@ -10,6 +10,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
 public partial class MobileUnitInfo : MeshEntityRotatable
 {
+	public MeshEntityRotatable head;
 	public float moveSpeed = 1;
 	public float attackSpeed = 1;
 	public float maxHealth;

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Phos Core Ring
+  m_Name: Test Head
   m_EditorClassIdentifier: 
-  mesh: {fileID: -8918129631489911150, guid: d9e6e161be51e2040adc78b26a60d3b5, type: 3}
-  material: {fileID: 2100000, guid: 317ace37ee002c64bad3a61e16540797, type: 2}
+  mesh: {fileID: -476746044771901990, guid: 4662ab6cf2bd63045bc78266402d79c2, type: 3}
+  material: {fileID: 2100000, guid: e440dce879ca15048ac2ad010ec5f4f3, type: 2}
   castShadows: 1
   receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  isStatic: 0
+  nonUniformScale: 0

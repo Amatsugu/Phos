@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Phos Core MeshEntityRotatable
   m_EditorClassIdentifier: 
   mesh: {fileID: 8148062620494451969, guid: d9e6e161be51e2040adc78b26a60d3b5, type: 3}
-  material: {fileID: 2100000, guid: c5bd27640a28cbf40bc7a31293db797e, type: 2}
+  material: {fileID: 2100000, guid: 317ace37ee002c64bad3a61e16540797, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
+  nonUniformScale: 1
