@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -31,11 +31,11 @@ public struct NextTile : IComponentData
 
 public struct Path : ISharedComponentData, IEquatable<Path>
 {
-	public List<Tile> Value;
+	public NativeList<HexCoords> Value;
 
 	public bool Equals(Path other)
 	{
-		return Value == other.Value;
+		return Value.Equals(other.Value);
 	}
 
 	public override int GetHashCode()

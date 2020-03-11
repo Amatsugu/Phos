@@ -4,7 +4,7 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
-public struct HexCoords
+public struct HexCoords : IEquatable<HexCoords>
 {
 	//Position
 	[SerializeField]
@@ -286,4 +286,6 @@ public struct HexCoords
 		hash = hash * prime + offsetZ;
 		return hash;
 	}
+
+	public bool Equals(HexCoords other) => this == other;
 }

@@ -719,15 +719,15 @@ public class Map : IDisposable
 		return tileDist;
 	}
 
-	public NativeArray<float> GenerateNavData()
+	public NativeHashMap<HexCoords, float> GenerateNavData()
 	{
-		var nav = new NativeArray<float>(totalHeight * totalWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+		var nav = new NativeHashMap<HexCoords, float>(totalHeight * totalWidth, Allocator.Persistent);
 		for (int z = 0; z < totalHeight; z++)
 		{
 			for (int x = 0; x < totalWidth; x++)
 			{
 				var t = this[HexCoords.FromOffsetCoords(x, z, tileEdgeLength)];
-				nav[x + z * totalWidth] = t.IsUnderwater ? -1 : (t.info.isTraverseable ? t.Height : -1);
+				nav.Add(t.Coords, t.IsUnderwater ? -1 : (t.info.isTraverseable ? t.Height : -1));
 			}
 		}
 		return nav;
