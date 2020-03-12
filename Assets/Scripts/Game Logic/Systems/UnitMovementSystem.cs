@@ -15,7 +15,7 @@ public class UnitMovementSystem : ComponentSystem
 	private Camera _cam;
 	private int _mapWidth;
 	private EntityQuery EntityQuery;
-	public static NativeHashMap<int, Path> paths;
+	//public static NativeHashMap<int, Path> paths;
 
 	private NativeHashMap<HexCoords, float> _navData;
 
@@ -24,8 +24,8 @@ public class UnitMovementSystem : ComponentSystem
 		base.OnStartRunning();
 		if (Map.ActiveMap == null)
 			return;
-		paths = new NativeHashMap<int, Path>();
-		_navData = Map.ActiveMap.GenerateNavData();
+		//paths = new NativeHashMap<int, Path>();
+		//_navData = Map.ActiveMap.GenerateNavData();
 		_tileEdgeLength = Map.ActiveMap.tileEdgeLength;
 		_cam = GameRegistry.Camera;
 		_mapWidth = Map.ActiveMap.width;
