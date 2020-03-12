@@ -31,6 +31,7 @@ public class WeatherSystem : JobComponentSystem
 
 	private WeatherDefination _curWeather;
 	private WeatherDefination _nextWeather;
+	private WeatherState _prevWeatherState;
 	private WeatherState _curWeatherState;
 	private System.Random _rand;
 	private float _nextWeatherTime;
@@ -109,6 +110,7 @@ public class WeatherSystem : JobComponentSystem
 		_init.volumeProfile.TryGet(out _fogComponent);
 		//_init.volumeProfile.TryGet(out _skyComponent);
 		ApplyWeather(_curWeather.state);
+		_prevWeatherState = _curWeatherState;
 		_cloudField = new NativeArray<float2>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudPos = new NativeArray<float3>(_init.fieldWidth * _init.fieldHeight, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		for (int z = 0; z < _init.fieldHeight; z++)
@@ -172,12 +174,12 @@ public class WeatherSystem : JobComponentSystem
 			_transitionTime += Time.DeltaTime;
 			var t = _transitionTime / _nextWeather.transitionTime;
 			t = math.clamp(t, 0, 1);
-			ApplyWeather(WeatherState.Lerp(_curWeather.state, _nextWeather.state, t)); ;
+			ApplyWeather(WeatherState.Lerp(_prevWeatherState, _nextWeather.state, t)); ;
 
 			if (_transitionTime >= _nextWeather.transitionTime)
 			{
 				_curWeather = _nextWeather;
-				ApplyWeather(_curWeather.state);
+				ApplyWeather(_curWeatherState);
 				_nextWeather = null;
 			}
 		}
@@ -251,6 +253,7 @@ public class WeatherSystem : JobComponentSystem
 				_nextWeatherTime = _rand.Range(_nextWeather.duration.x, _nextWeather.duration.y) + _nextWeather.transitionTime;
 				Debug.Log($"Transitioning To {_nextWeather}, {_nextWeatherTime}s Duration");
 				_nextWeatherTime += (float)Time.ElapsedTime;
+				_prevWeatherState = _curWeatherState;
 				break;
 			}
 		}

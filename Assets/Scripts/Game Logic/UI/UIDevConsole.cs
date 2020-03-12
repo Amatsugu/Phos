@@ -8,6 +8,7 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading;
 
 public class UIDevConsole : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class UIDevConsole : MonoBehaviour
 	{
 		_sb = new StringBuilder();
 		Application.logMessageReceived += DebugLogMessage;
-		Application.logMessageReceivedThreaded += DebugLogMessage;
+		//Application.logMessageReceivedThreaded += DebugLogMessage;
 		_commands = new Dictionary<string, Command>();
 		_logs = new List<string>();
 		INST = this;

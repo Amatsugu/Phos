@@ -147,11 +147,6 @@ public struct HexCoords : IEquatable<HexCoords>
 		else
 			return Mathf.CeilToInt(a);
 	}
-
-	public static bool operator ==(HexCoords a, HexCoords b) => a.Equals(b);
-
-	public static bool operator !=(HexCoords a, HexCoords b) => !a.Equals(b);
-
 	[Obsolete]
 	public static HexCoords[] HexSelect(HexCoords center, int radius, bool excludeCenter = false)
 	{
@@ -259,6 +254,20 @@ public struct HexCoords : IEquatable<HexCoords>
 			return false;
 		return true;
 	}
+	// override object.GetHashCode
+	private const int prime = 31;
+
+	public override int GetHashCode()
+	{
+		int hash = 23;
+		hash = hash * prime + offsetX;
+		hash = hash * prime + offsetZ;
+		return hash;
+	}
+
+	public static bool operator !=(HexCoords a, HexCoords b) => !a.Equals(b);
+
+	public static bool operator ==(HexCoords a, HexCoords b) => a.Equals(b);
 
 	// override object.Equals
 	public override bool Equals(object obj)
@@ -273,19 +282,8 @@ public struct HexCoords : IEquatable<HexCoords>
 		var h = (HexCoords)obj;
 		if (!h.isCreated)
 			return false;
-		return (h.x == x && h.y == y);
+		return this.Equals(h);
 	}
 
-	// override object.GetHashCode
-	private const int prime = 31;
-
-	public override int GetHashCode()
-	{
-		int hash = 23;
-		hash = hash * prime + offsetX;
-		hash = hash * prime + offsetZ;
-		return hash;
-	}
-
-	public bool Equals(HexCoords other) => this == other;
+	public bool Equals(HexCoords other) => x == other.x && y == other.y && z == other.z;
 }
