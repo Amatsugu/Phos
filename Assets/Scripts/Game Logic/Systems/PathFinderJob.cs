@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Debug = UnityEngine.Debug;
 
 namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 {
@@ -15,15 +18,17 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 		protected override void OnUpdate()
 		{
 			var cmb = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent();
-			var path = new PathFinderJob(Map.ActiveMap.tileEdgeLength, Map.ActiveMap.innerRadius, cmb, Map.ActiveMap.GenerateNavData());
+			var navData = Map.ActiveMap.GenerateNavData();
+			var path = new PathFinderJob(Map.ActiveMap.tileEdgeLength, Map.ActiveMap.innerRadius, cmb, navData);
 			Entities.WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
 			{
-				var p = new Path { Value = path.GetPath(t.Value, t.Value) };
-				PostUpdateCommands.AddSharedComponent(e, p);
-				PostUpdateCommands.AddComponent<PathProgress>(e);
+				//var p = new Path { Value = path.GetPath(t.Value, t.Value) };
+				//PostUpdateCommands.AddSharedComponent(e, p);
+				//PostUpdateCommands.AddComponent<PathProgress>(e);
 			});
 			/*inputDeps = path.Schedule(this, inputDeps);
 			return inputDeps;*/
+			navData.Dispose();
 		}
 	}
 
@@ -49,22 +54,36 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 
 		public void Execute(Entity e, int index, [ReadOnly]ref Translation t, [ReadOnly]ref Destination d, [ReadOnly]ref UnitId id)
 		{
-			var path = GetPath(t.Value, d.Value);
+			/*var path = GetPath(t.Value, d.Value);
 			if (!path.IsCreated)
 				return;
 			var p = new Path { Value =  path };
-			PostUpdateCommands.AddSharedComponent(index, e, p);
+			PostUpdateCommands.AddSharedComponent(index, e, p);*/
 		}
 
-		public NativeList<HexCoords> GetPath(float3 src, float3 dst)
+		//public NativeList<HexCoords> GetPath(float3 src, float3 dst) => GetPath(src, dst, navData, innerRadius);
+
+		[BurstCompile]
+		public static NativeList<HexCoords> GetPath(
+			float3 src,
+			float3 dst,
+			ref NativeHashMap<HexCoords, float> navData,
+			float innerRadius,
+			ref NativeList<PathNode> open,
+			ref NativeHashMap<PathNode, float> closed,
+			ref NativeHashMap<PathNode, PathNode> nodePairs)
 		{
 			var srcCoord = HexCoords.FromPosition(src);
 			var dstCoord = HexCoords.FromPosition(dst);
 			var srcNode = new PathNode(srcCoord, src.y, 0);
 			var dstNode = new PathNode(dstCoord);
-			NativeList<PathNode> open = new NativeList<PathNode>(Allocator.Temp);
-			NativeHashMap<PathNode, float> closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Temp);
-			NativeHashMap<PathNode, PathNode> nodePairs = new NativeHashMap<PathNode, PathNode>(navData.Length, Allocator.Temp);
+			open.Clear();
+			closed.Clear();
+			nodePairs.Clear();
+
+			//NativeList<PathNode> open = new NativeList<PathNode>(Allocator.Temp);
+			//NativeHashMap<PathNode, float> closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Temp);
+			//NativeHashMap<PathNode, PathNode> nodePairs = new NativeHashMap<PathNode, PathNode>(navData.Length, Allocator.Temp);
 			open.Add(srcNode);
 			int pathLen = 0;
 			var neighbors = new NativeArray<HexCoords>(6, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
@@ -74,16 +93,20 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 					break;
 				if (closed.ContainsKey(dstNode))
 					break;
+
 				var (best, bestIndex) = GetBestNode(ref open);
 				open.RemoveAtSwapBack(bestIndex);
 				best.GetNeighbors(ref neighbors, innerRadius, navData);
+				closed.Add(best, best.F);
 				for (int i = 0; i < 6; i++)
 				{
 					var curNeighbor = neighbors[i];
-					if (!curNeighbor.isCreated)
+					if (!navData.ContainsKey(curNeighbor))
 						continue;
 
 					var newNode = new PathNode(curNeighbor, navData[curNeighbor], best.G + 1);
+					if (closed.ContainsKey(newNode))
+						continue;
 					if (navData[curNeighbor] < 0)
 					{
 						closed.Add(newNode, 0);
@@ -93,24 +116,20 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 					if (curNeighbor == dstCoord)
 					{
 						closed.Add(dstNode = newNode, 0);
+						nodePairs.Add(newNode, best);
 						pathLen = newNode.G;
 						break;
 					}
 					newNode.CacheF(dst);
-					if (UpdateOrAddOpen(newNode, ref open, ref closed))
-					{
-						if (nodePairs.ContainsKey(newNode))
-							nodePairs[newNode] = best;
-						else
-							nodePairs.Add(newNode, best);
-					}
+					UpdateOrAddOpen(newNode, ref open, ref closed);
+					if (!nodePairs.ContainsKey(newNode))
+						nodePairs.Add(newNode, best);
 				}
-				closed.Add(best, best.F);
 			}
-			open.Dispose();
+			//open.Dispose();
 			if (closed.ContainsKey(dstNode))
 			{
-				closed.Dispose();
+				//closed.Dispose();
 				var path = new NativeList<HexCoords>(pathLen, Allocator.Persistent);
 				var curNode = dstNode;
 				while (!curNode.Equals(srcNode))
@@ -118,14 +137,15 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 					path.Add(curNode.coords);
 					curNode = nodePairs[curNode];
 				}
-				nodePairs.Dispose();
+				//nodePairs.Dispose();
 				return path;
 			}
-			nodePairs.Dispose();
+			Debug.LogWarning("No Path");
+			//nodePairs.Dispose();
 			return default;
 		}
 
-		private bool UpdateOrAddOpen(PathNode newNode, ref NativeList<PathNode> open, ref NativeHashMap<PathNode, float> closed)
+		private static bool UpdateOrAddOpen(PathNode newNode, ref NativeList<PathNode> open, ref NativeHashMap<PathNode, float> closed)
 		{
 			for (int i = 0; i < open.Length; i++)
 			{
@@ -147,7 +167,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			return true;
 		}
 
-		private (PathNode best, int index) GetBestNode(ref NativeList<PathNode> open)
+		private static (PathNode best, int index) GetBestNode(ref NativeList<PathNode> open)
 		{
 			var (best, index) = (open[0], 0);
 			for (int i = 1; i < open.Length; i++)

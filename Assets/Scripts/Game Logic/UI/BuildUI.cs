@@ -1,12 +1,16 @@
-﻿using DataStore.ConduitGraph;
+﻿using Amatsugu.Phos.ECS.Jobs.Pathfinder;
+
+using DataStore.ConduitGraph;
 
 using Effects.Lines;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using TMPro;
 
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Systems;
@@ -15,6 +19,9 @@ using Unity.Transforms;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Profiling;
+using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 {
@@ -104,6 +111,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		if (selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
 			Debug.LogError("Null");
 
+
 		EventManager.AddEventListener("OnBuildingUnlocked", () =>
 		{
 			if (_lastBuildingCategory != null)
@@ -111,6 +119,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		});
 		_poweredTileRangeSq = HexCoords.TileToWorldDist(poweredTileDisplayRange, Map.ActiveMap.innerRadius);
 		_poweredTileRangeSq *= _poweredTileRangeSq;
+
 	}
 
 	private bool InvalidPlacementSelector(Tile t) => (_selectedBuilding.offshoreOnly ? !t.IsUnderwater : (t.IsUnderwater && !_selectedBuilding.isOffshore)) || t is BuildingTile || (t is ResourceTile && !t.IsUnderwater);
@@ -217,7 +226,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				_buildPath = null;
 			}
 			if (!(selectedTile is ResourceTile))
+			{
 				_buildPath = Map.ActiveMap.GetPath(_startPoint, selectedTile, filter: t => !(t is ResourceTile));
+			}
 			else
 				_buildPath = null;
 			if (_buildPath != null)

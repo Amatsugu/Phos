@@ -8,7 +8,6 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
-using System.Threading;
 
 public class UIDevConsole : MonoBehaviour
 {
@@ -40,7 +39,9 @@ public class UIDevConsole : MonoBehaviour
 	{
 		AddCommand(new Command("close", () => consolePanel.Hide(), "Closes the console"));
 		AddCommand(new HelpCommand());
+		//Info
 		AddCommand(new Command("seed", () => AddConsoleMessage(Map.ActiveMap.Seed.ToString()), "Displays the current map seed"));
+		//Cheats
 		AddCommand(new Command("instantBuild", () =>
 		{
 			GameRegistry.Cheats.INSTANT_BUILD = !GameRegistry.Cheats.INSTANT_BUILD;
@@ -56,19 +57,6 @@ public class UIDevConsole : MonoBehaviour
 			GameRegistry.Cheats.NO_RESOURCE_COST = !GameRegistry.Cheats.NO_RESOURCE_COST;
 			AddConsoleMessage($"noResourceCost: <b>{GameRegistry.Cheats.NO_RESOURCE_COST}</b>");
 		}, "Toggles resource cost"));
-		AddCommand(new SetResolutionCommand());
-		AddCommand(new Command("toggleFullscreen", () =>
-		{
-			Screen.fullScreen = !Screen.fullScreen;
-			AddConsoleMessage($"Fullscreen: {Screen.fullScreen}");
-		}, "Toggles fullscreen mode"));
-		AddCommand(new SetWindowStateCommand());
-		AddCommand(new TimeScaleCommand());
-		AddCommand(new Command("nextWeather", WeatherSystem.SkipWeather, "Skips the current weather"));
-		AddCommand(new Command("regenLevel", () =>
-		{
-			EventManager.InvokeEvent("OnMapRegen");
-		}, "Destroys and unrenders the map"));
 		AddCommand(new Command("unlockAll", () =>
 		{
 			foreach (var building in GameRegistry.BuildingDatabase.buildings.Keys)
@@ -84,6 +72,39 @@ public class UIDevConsole : MonoBehaviour
 			ParseCommand("instantResearch");
 			ParseCommand("unlockAll");
 		}, "Runs all the cheat commands"));
+		//Graphics Settings
+		AddCommand(new SetResolutionCommand());
+		AddCommand(new Command("toggleFullscreen", () =>
+		{
+			Screen.fullScreen = !Screen.fullScreen;
+			AddConsoleMessage($"Fullscreen: {Screen.fullScreen}");
+		}, "Toggles fullscreen mode"));
+		AddCommand(new SetWindowStateCommand());
+		AddCommand(new TimeScaleCommand());
+		AddCommand(new Command("nextWeather", WeatherSystem.SkipWeather, "Skips the current weather"));
+		AddCommand(new Command("toggleVSync", () =>
+		{
+			QualitySettings.vSyncCount = (QualitySettings.vSyncCount + 1) % 3;
+			switch (QualitySettings.vSyncCount)
+			{
+				case 0:
+					AddConsoleMessage("Vsync: Off");
+					break;
+
+				case 1:
+					AddConsoleMessage("Vsync: Every VBlank");
+					break;
+
+				case 2:
+					AddConsoleMessage("Vsync: Every 2nd VBlank");
+					break;
+			}
+		}, "toggles Vsync on/off"));
+		//Debug
+		AddCommand(new Command("regenLevel", () =>
+		{
+			EventManager.InvokeEvent("OnMapRegen");
+		}, "Destroys and unrenders the map"));
 	}
 
 	// Start is called before the first frame update

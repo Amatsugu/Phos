@@ -727,7 +727,8 @@ public class Map : IDisposable
 			for (int x = 0; x < totalWidth; x++)
 			{
 				var t = this[HexCoords.FromOffsetCoords(x, z, tileEdgeLength)];
-				nav.Add(t.Coords, t.IsUnderwater ? -1 : (t.info.isTraverseable ? t.Height : -1));
+				var navValue = t.IsUnderwater ? t.Height * -1 : (t.info.isTraverseable ? t.Height : float.MinValue);
+				nav.Add(t.Coords, navValue);
 			}
 		}
 		return nav;
@@ -800,7 +801,7 @@ public class Map : IDisposable
 					}
 				}
 			}
-			if (open.Count > 512)
+			if (open.Count > 1024)
 			{
 				Debug.LogWarning("Big Path");
 				break;
