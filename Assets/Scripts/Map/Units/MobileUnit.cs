@@ -79,7 +79,11 @@ public class MobileUnit
 		{
 			Map.EM.AddComponent(Entity, typeof(Destination));
 		}
-		Map.EM.RemoveComponent<PathProgress>(Entity);
+		if(Map.EM.HasComponent<Path>(Entity))
+		{ 
+			Map.EM.RemoveComponent<PathProgress>(Entity);	
+			Map.EM.RemoveComponent<Path>(Entity);
+		}
 		Map.EM.SetComponentData(Entity, new Destination { Value = pos });
 	}
 

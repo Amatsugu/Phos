@@ -22,5 +22,5 @@ MonoBehaviour:
   moveSpeed: 10
   attackSpeed: 1
   maxHealth: 100
-  size: 1
+  size: 0
   projectile: {fileID: 11400000, guid: 387055346b29e1f4890789816ea8cee3, type: 2}

@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
+using UnityEngine.UI;
 using static Amatsugu.Phos.ECS.Jobs.Pathfinder.PathFinderJob;
 using Debug = UnityEngine.Debug;
 
@@ -25,6 +27,8 @@ public class InteractionUI : MonoBehaviour
 
 	private InteractionState _curState;
 	private NativeHashMap<HexCoords, float> _navData;
+	public GraphicRaycaster raycaster;
+	public EventSystem eventSystem;
 
 	private enum InteractionState
 	{
@@ -64,11 +68,20 @@ public class InteractionUI : MonoBehaviour
 		EventManager.AddEventListener("nameWindowOpen", () =>
 		{
 			interactionPanel.HidePanel();
-			enabled = false;
+			_curState = InteractionState.Diabled; interactionPanel.HidePanel();
 		});
 		EventManager.AddEventListener("nameWindowClose", () =>
 		{
-			enabled = true;
+			_curState = InteractionState.Inspect;
+		});
+
+		EventManager.AddEventListener("OnBuildWindowOpen", () =>
+		{
+			interactionPanel.HidePanel();
+			_curState = InteractionState.Diabled;
+		});
+		EventManager.AddEventListener("OnBuildWindowClose", () =>
+		{
 			_curState = InteractionState.Inspect;
 		});
 		_navData = Map.ActiveMap.GenerateNavData();
@@ -94,11 +107,11 @@ public class InteractionUI : MonoBehaviour
 	private void Update()
 	{
 		var mPos = Input.mousePosition;
+		
 		switch (_curState)
 		{
 			case InteractionState.Diabled:
-				if (GameRegistry.BuildUI.State <= BuildUI.BuildState.HQPlacement)
-					_curState = InteractionState.Inspect;
+				
 				break;
 
 			case InteractionState.Inspect:
@@ -120,11 +133,6 @@ public class InteractionUI : MonoBehaviour
 			interactionPanel.HidePanel();
 			_curState = InteractionState.Inspect;
 		}
-		if (GameRegistry.BuildUI.State > BuildUI.BuildState.Disabled)
-		{
-			interactionPanel.HidePanel();
-			_curState = InteractionState.Diabled;
-		}
 	}
 
 	private void InstructUnitUI(Vector2 mousePos)
@@ -135,57 +143,13 @@ public class InteractionUI : MonoBehaviour
 			var tile = Map.ActiveMap.GetTileFromRay(ray);
 			if (tile != null)
 			{
-				NativeList<PathNode> open = new NativeList<PathNode>(Allocator.Temp);
-				NativeHashMap<PathNode, float> closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Temp);
-				NativeHashMap<PathNode, PathNode> nodePairs = new NativeHashMap<PathNode, PathNode>(_navData.Length, Allocator.Temp);
-				for (int i = 0; i < _selectedUnits.Count; i++)
-				{
-					var curUnitPos = Map.ActiveMap.units[_selectedUnits[i]].Position;
-					var path = PathFinderJob.GetPath(curUnitPos, tile.SurfacePoint, ref _navData, Map.ActiveMap.innerRadius, ref open, ref closed, ref nodePairs);
-					if (!path.IsCreated)
-						continue;
-					for (int p = 0; p < path.Length -1; p++)
-					{
-						var pos = path[p].worldXZ;
-						pos.y = _navData[path[p]];
-						var pos2 = path[p+1].worldXZ;
-						pos2.y = _navData[path[p+1]];
-						Debug.DrawLine(pos, pos2, Color.cyan, 1);
-					}
-					path.Dispose();
-				}
-				open.Dispose();
-				closed.Dispose();
-				nodePairs.Dispose();
-				//Debug.Log($"Burst: {st.ElapsedTicks}");
-				/*Profiler.BeginSample("Path Finder Default");
-				st.Start();
-				for (int i = 0; i < _selectedUnits.Count; i++)
-				{
-					var curUnitPos = Map.ActiveMap.units[_selectedUnits[i]].Position;
-					var path = Map.ActiveMap.GetPath(HexCoords.FromPosition(curUnitPos), tile.Coords);
-					for (int p = 0; p < path.Count - 1; p++)
-					{
-						var pos = path[p].SurfacePoint;
-						var pos2 = path[p + 1].SurfacePoint;
-						Debug.DrawLine(pos, pos2, Color.red, 1);
-					}
-				}
-				st.Stop();
-				//Debug.Log($"Path: {st.ElapsedTicks}");
-				Profiler.EndSample();*/
-				//InstructUnitMovement(tile);
+				InstructUnitMovement(tile);
 			}
 		}
 	}
 
 	private void InspectUI(Vector2 mousePos)
 	{
-		if (GameRegistry.BuildUI.State > BuildUI.BuildState.Idle)
-		{
-			HidePanel();
-			_curState = InteractionState.Diabled;
-		}
 		if (!_uiBlocked && !NotificationsUI.INST.isHovered)
 		{
 			if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -313,6 +277,7 @@ public class InteractionUI : MonoBehaviour
 						dst = Map.ActiveMap[openTiles[j]].SurfacePoint
 					};
 					order.cost = (order.dst - order.unit.Position).sqrMagnitude;
+					Debug.DrawRay(order.dst, Vector3.up, Color.magenta, 1);
 					_moveOrderQueue.Enqueue(order);
 
 					break;

@@ -20,23 +20,27 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
+using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
-public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
+public class BuildUI : MonoBehaviour
 {
+	[Header("Buildings")]
 	public BuildingDatabase buildings;
 	public HQTileInfo HQTile;
 	public MeshEntityRotatable landingMesh;
-	public BuildState State { get; private set; }
+
 
 	/*	UI	*/
 
 	[Header("UI")]
 	public UIInfoBanner infoBanner;
-
+	public RectTransform unitUIPrefab;
 	public GameObject buildWindow;
 	public RectTransform scrollContent;
+	public GraphicRaycaster raycaster;
+	public EventSystem eventSystem;
 
 	//Indicators
 	[Header("Indicators")]
@@ -59,10 +63,10 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	[Header("Config")]
 	public int poweredTileDisplayRange;
-
 	public float inidcatorOffset = .5f;
 
-	public RectTransform unitUIPrefab;
+	public BuildState State { get => _state; }
+
 
 	private List<UIUnitIcon> _activeUnits;
 	private BuildingTileInfo _selectedBuilding;
@@ -79,6 +83,8 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	private float _poweredTileRangeSq;
 	private List<string> _errors;
+	private BuildState _state;
+	private BuildState _prevState;
 
 	public enum BuildState
 	{
@@ -103,7 +109,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_cam = GameRegistry.Camera;
 		_EM = World.DefaultGameObjectInjectionWorld.EntityManager;
 		HideBuildWindow();
-		State = BuildState.HQPlacement;
+		_state = BuildState.HQPlacement;
 		_selectedBuilding = HQTile;
 		infoBanner.SetText("Place HQ Building");
 		/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
@@ -133,13 +139,36 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 #endif
 
 		var mPos = Input.mousePosition;
-		switch (State)
+		var pointerData = new PointerEventData(eventSystem)
+		{
+			position = mPos
+		};
+		var results = new List<RaycastResult>();
+		raycaster.Raycast(pointerData, results);
+		if(results.Count > 0)
+		{
+			if (_state > BuildState.Idle)
+			{
+				_prevState = _state;
+				_state = BuildState.Idle;
+			}
+		}else
+		{
+			if (_state == BuildState.Idle)
+			{
+				_state = _prevState;
+				_prevState = BuildState.Idle;
+			}
+		}
+		switch (_state)
 		{
 			case BuildState.Disabled:
 				break;
 
 			case BuildState.Idle:
 				ReadCloseInput();
+				if (Input.GetKeyDown(KeyCode.Mouse0) && results.Count == 0)
+					HideBuildWindow();
 				break;
 
 			case BuildState.HQPlacement:
@@ -280,7 +309,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		_startPoint = null;
 		if (_validPlacement || _selectedBuilding.placementMode == PlacementMode.Path)
 		{
-			if (State == BuildState.Placement)
+			if (_state == BuildState.Placement)
 				ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
 			if (_buildPath == null)
 			{
@@ -296,11 +325,11 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				}
 				_buildPath = null;
 			}
-			if (State == BuildState.HQPlacement)
+			if (_state == BuildState.HQPlacement)
 			{
 				_selectedBuilding = null;
 				HideAllIndicators();
-				State = BuildState.Disabled;
+				_state = BuildState.Disabled;
 				infoBanner.SetActive(false);
 				void onHide()
 				{
@@ -330,14 +359,15 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
 		if (Input.GetKeyUp(KeyCode.Escape))
 		{
-			State = BuildState.Idle;
+			_state = BuildState.Idle;
+			_prevState = BuildState.Idle;
 			HideAllIndicators();
 		}
 	}
 
 	private void ShowPoweredTiles(Tile selectedTile)
 	{
-		if (State == BuildState.HQPlacement)
+		if (_state == BuildState.HQPlacement)
 			return;
 		var poweredTiles = new List<Tile>(250);
 		var unPoweredTiles = new List<Tile>(250);
@@ -552,11 +582,12 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void ShowBuildWindow(BuildingDatabase.BuildingDefination[] buildings)
 	{
-		if (State == BuildState.HQPlacement)
+		EventManager.InvokeEvent("OnBuildWindowOpen");
+		if (_state == BuildState.HQPlacement)
 			return;
 		GameRegistry.InteractionUI.interactionPanel.HidePanel();
 		buildWindow.SetActive(true);
-		State = BuildState.Idle;
+		_state = BuildState.Idle;
 		_selectedBuilding = null;
 		if (_activeUnits.Count < buildings.Length)
 		{
@@ -587,7 +618,7 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 				if (GameRegistry.ResourceSystem.HasAllResources(building.cost))
 				{
 					_selectedBuilding = building;
-					State = BuildState.Placement;
+					_state = BuildState.Placement;
 				}
 			};
 			_activeUnits[i].OnHover += () =>
@@ -630,8 +661,9 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 
 	public void HideBuildWindow()
 	{
+		EventManager.InvokeEvent("OnBuildWindowClose");
 		HideAllIndicators();
-		State = BuildState.Disabled;
+		_state = BuildState.Disabled;
 		_lastBuildingCategory = null;
 		_selectedBuilding = null;
 		buildWindow.SetActive(false);
@@ -639,17 +671,5 @@ public class BuildUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 		{
 			_activeUnits[i]?.gameObject.SetActive(false);
 		}
-	}
-
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		HideAllIndicators();
-		State = BuildState.Disabled;
-	}
-
-	public void OnPointerExit(PointerEventData eventData)
-	{
-		if (_selectedBuilding != null)
-			State = (_selectedBuilding is HQTileInfo) ? BuildState.HQPlacement : BuildState.Placement;
 	}
 }

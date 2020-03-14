@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using UnityEngine;
+
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
@@ -61,10 +60,17 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			PostUpdateCommands.AddSharedComponent(index, e, p);*/
 		}
 
-		//public NativeList<HexCoords> GetPath(float3 src, float3 dst) => GetPath(src, dst, navData, innerRadius);
+
+		public static (NativeList<PathNode> open, NativeHashMap<PathNode, float> closed, NativeHashMap<PathNode, PathNode> nodePairs) PrepareCollections(int navDataLen)
+		{
+			NativeList<PathNode> open = new NativeList<PathNode>(Allocator.Persistent);
+			NativeHashMap<PathNode, float> closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
+			NativeHashMap<PathNode, PathNode> nodePairs = new NativeHashMap<PathNode, PathNode>(navDataLen, Allocator.Persistent);
+			return (open, closed, nodePairs);
+		}
 
 		[BurstCompile]
-		public static NativeList<HexCoords> GetPath(
+		public static List<HexCoords> GetPath(
 			float3 src,
 			float3 dst,
 			ref NativeHashMap<HexCoords, float> navData,
@@ -76,7 +82,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			var srcCoord = HexCoords.FromPosition(src);
 			var dstCoord = HexCoords.FromPosition(dst);
 			var srcNode = new PathNode(srcCoord, src.y, 0);
-			var dstNode = new PathNode(dstCoord);
+			var dstNode = new PathNode(dstCoord, dst.y, 0);
 			open.Clear();
 			closed.Clear();
 			nodePairs.Clear();
@@ -105,6 +111,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 						continue;
 
 					var newNode = new PathNode(curNeighbor, navData[curNeighbor], best.G + 1);
+					//Debug.DrawLine(best.surfacePoint, newNode.surfacePoint, Color.blue, 1);
 					if (closed.ContainsKey(newNode))
 						continue;
 					if (navData[curNeighbor] < 0)
@@ -130,7 +137,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			if (closed.ContainsKey(dstNode))
 			{
 				//closed.Dispose();
-				var path = new NativeList<HexCoords>(pathLen, Allocator.Persistent);
+				var path = new List<HexCoords>();
 				var curNode = dstNode;
 				while (!curNode.Equals(srcNode))
 				{

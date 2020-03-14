@@ -1,6 +1,9 @@
 ﻿using DataStore.ConduitGraph;
 
 using System;
+using Unity.Mathematics;
+using Unity.Transforms;
+using UnityEngine;
 
 public class HQTile : BuildingTile
 {
@@ -35,7 +38,18 @@ public class HQTile : BuildingTile
 		for (int i = 0; i < spawnTiles.Count; i++)
 		{
 			if (!(spawnTiles[i] is BuildingTile))
-				Map.ActiveMap.AddUnit(hqInfo.unitInfo, spawnTiles[i], hqInfo.faction);
+			{
+				var b = spawnTiles[i].SurfacePoint;
+				b.y = SurfacePoint.y;
+				var fwd = SurfacePoint - b;
+				var unit = Map.ActiveMap.AddUnit(hqInfo.unitInfo, spawnTiles[i], hqInfo.faction);
+				var rot = new Rotation
+				{
+					Value = quaternion.LookRotation(fwd, Vector3.up)
+				};
+				Map.EM.SetComponentData(unit.Entity, rot);
+				Map.EM.SetComponentData(unit.HeadEntity, rot);
+			}
 		}
 		//PowerTransferEffectSystem.AddNode(Map.ActiveMap.conduitGraph.GetNode(Coords));
 		ResourceSystem.AddResources(hqInfo.startingResources);
