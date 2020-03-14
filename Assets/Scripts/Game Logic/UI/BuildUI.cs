@@ -118,7 +118,7 @@ public class BuildUI : MonoBehaviour
 			Debug.LogError("Null");
 
 
-		EventManager.AddEventListener("OnBuildingUnlocked", () =>
+		EventManager.AddEventListener(GameEvent.OnBuildingUnlocked, () =>
 		{
 			if (_lastBuildingCategory != null)
 				ShowBuildWindow(buildings[(BuildingCategory)_lastBuildingCategory]);
@@ -582,7 +582,7 @@ public class BuildUI : MonoBehaviour
 
 	public void ShowBuildWindow(BuildingDatabase.BuildingDefination[] buildings)
 	{
-		EventManager.InvokeEvent("OnBuildWindowOpen");
+		EventManager.InvokeEvent(GameEvent.OnBuildWindowOpen);
 		if (_state == BuildState.HQPlacement)
 			return;
 		GameRegistry.InteractionUI.interactionPanel.HidePanel();
@@ -661,7 +661,7 @@ public class BuildUI : MonoBehaviour
 
 	public void HideBuildWindow()
 	{
-		EventManager.InvokeEvent("OnBuildWindowClose");
+		EventManager.InvokeEvent(GameEvent.OnBuildWindowClose);
 		HideAllIndicators();
 		_state = BuildState.Disabled;
 		_lastBuildingCategory = null;

@@ -16,7 +16,13 @@ public class PhosCoreSystem : ComponentSystem
 	private int _state = 0;
 	private Map _map;
 
-	protected override void OnStartRunning()
+	protected override void OnCreate()
+	{
+		base.OnCreate();
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+	}
+
+	protected void Init()
 	{
 		base.OnStartRunning();
 		var op = Addressables.LoadAssetAsync<DynamicMeshEntity>("EnemyProjectile");
@@ -26,6 +32,7 @@ public class PhosCoreSystem : ComponentSystem
 			_state = 1;
 		};
 		_map = Map.ActiveMap;
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
 	}
 
 	protected override void OnUpdate()

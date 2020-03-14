@@ -15,7 +15,7 @@ public class ResourceSystem : ComponentSystem
 	public float ticRate = 1;
 
 	public ResourceTransactionRecord[] resourceRecords;
-	private bool _canRun = true;
+	private bool _canRun;
 
 	public struct ResourceTransactionRecord
 	{
@@ -116,15 +116,16 @@ public class ResourceSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		if (GameRegistry.INST == null)
-		{
-			Debug.LogWarning("Can't Run");
-			_canRun = false;
-			return;
-		}
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+	}
+
+	private void Init()
+	{
+		_canRun = true;
 		GameRegistry.INST.resourceSystem = this;
 		InitCounts();
-		EventManager.AddEventListener("OnMapDestroyed", () =>
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
+		EventManager.AddEventListener(GameEvent.OnMapDestroyed, () =>
 		{
 			InitCounts();
 		});
@@ -154,7 +155,7 @@ public class ResourceSystem : ComponentSystem
 		nextTic = Time.ElapsedTime + (1 / ticRate);
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i].Clear();
-		EventManager.InvokeEvent("OnTick");
+		EventManager.InvokeEvent(GameEvent.OnGameTick);
 
 		//Consumption
 		Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>

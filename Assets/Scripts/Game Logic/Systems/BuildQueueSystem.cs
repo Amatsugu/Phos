@@ -19,45 +19,43 @@ public class BuildQueueSystem : ComponentSystem
 
 	protected override void OnCreate()
 	{
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+	}
+
+	private void Init()
+	{
 		_INST = this;
 		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
 		_readyToBuildOrders = new List<int>();
 		_constructionOrders = new List<ConstructionOrder>();
 		_removal = new List<int>();
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
 	}
 
 	protected override void OnUpdate()
 	{
-		BuildReadyBuildings();
+		PlaceReadyBuildings();
 		ProcessConstructionOrders();
 	}
 
-	private void ProcessConstructionOrders()
-	{
-		for (int i = 0; i < _constructionOrders.Count; i++)
-		{
-			var curOrder = _constructionOrders[i];
-			if (Time.ElapsedTime > curOrder.buildTime)
-			{
-				(Map.ActiveMap[curOrder.building] as BuildingTile).Build();
-				_removal.Add(i);
-			}
-		}
-		var offset = 0;
-		for (int i = 0; i < _removal.Count; i++)
-			_constructionOrders.RemoveAt(_removal[i] - offset++);
-		_removal.Clear();
-	}
+	/// <summary>
+	/// Add a building to the build queue
+	/// </summary>
+	/// <param name="building">The tile info of the building to build</param>
+	/// <param name="dst">The tile on which the building will be placed</param>
+	/// <param name="dropPod">The mesh entity that will be used as a drop pod</param>
+	public static void QueueBuilding(BuildingTileInfo building, Tile dst, MeshEntityRotatable dropPod) => _INST.QueueBuilding(dst, building, dropPod);
 
-	public static void QueueBuilding(BuildingTileInfo building, Tile dst, MeshEntityRotatable dropPod)
-	{
-		_INST.QueueBuilding(dst, building, dropPod);
-	}
-
+	/// <summary>
+	/// Add a building to the build queue
+	/// </summary>
+	/// <param name="tile">The tile on which the building will be placed</param>
+	/// <param name="building">The tile info of the building to build</param>
+	/// <param name="dropPod">The mesh entity that will be used as a drop pod</param>
 	private void QueueBuilding(Tile tile, BuildingTileInfo building, MeshEntityRotatable dropPod)
 	{
 		var hqMode = building is HQTileInfo;
-		var callback = tile.Coords.GetHashCode();
+		var callback = tile.Coords.ToString().GetHashCode();
 		_pendingBuildOrders.Add(callback, new BuildOrder
 		{
 			building = building,
@@ -81,7 +79,7 @@ public class BuildQueueSystem : ComponentSystem
 				eventId = callback
 			});
 			EntityManager.AddComponentData(e, new Gravity { Value = 9.8f });
-			EventManager.AddEventListener(callback.ToString(), () =>
+			EventManager.AddEventListener(callback, () =>
 			{
 				_readyToBuildOrders.Add(callback);
 			});
@@ -91,19 +89,25 @@ public class BuildQueueSystem : ComponentSystem
 			_readyToBuildOrders.Add(callback);
 		}
 	}
-
-	private void BuildReadyBuildings()
+	/// <summary>
+	/// Place all buildings that have been marked as ready to place
+	/// </summary>
+	private void PlaceReadyBuildings()
 	{
 		for (int i = 0; i < _readyToBuildOrders.Count; i++)
 		{
 			var orderId = _readyToBuildOrders[i];
-			EventManager.RemoveAllEventListeners(orderId.ToString());
+			EventManager.RemoveAllEventListeners(orderId);
 			PlaceBuilding(_pendingBuildOrders[orderId]);
 			_pendingBuildOrders.Remove(orderId);
 		}
 		_readyToBuildOrders.Clear();
 	}
 
+	/// <summary>
+	/// Places a building on the map
+	/// </summary>
+	/// <param name="order">The build order cotaining the detials on how to place the building</param>
 	private void PlaceBuilding(BuildOrder order)
 	{
 		Map.ActiveMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
@@ -113,6 +117,26 @@ public class BuildQueueSystem : ComponentSystem
 			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + order.building.constructionTime,
 			building = order.dstTile.Coords
 		});
+	}
+
+	/// <summary>
+	/// Checks if the building's construction timer is complete and finishes up the build process
+	/// </summary>
+	private void ProcessConstructionOrders()
+	{
+		for (int i = 0; i < _constructionOrders.Count; i++)
+		{
+			var curOrder = _constructionOrders[i];
+			if (Time.ElapsedTime > curOrder.buildTime)
+			{
+				(Map.ActiveMap[curOrder.building] as BuildingTile).Build();
+				_removal.Add(i);
+			}
+		}
+		var offset = 0;
+		for (int i = 0; i < _removal.Count; i++)
+			_constructionOrders.RemoveAt(_removal[i] - offset++);
+		_removal.Clear();
 	}
 }
 

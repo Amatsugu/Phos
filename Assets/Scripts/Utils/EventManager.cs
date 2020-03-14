@@ -2,6 +2,21 @@
 
 using UnityEngine;
 
+public enum GameEvent
+{
+	OnMapLoaded = 1805809122,
+	OnMapRegen = -1290680596,
+	OnWeatherInit = -1795000521,
+	OnHQPlaced = 347355883,
+	OnMapDestroyed = -904577914,
+	OnGameSaving = -43491477,
+	OnGameTick = -998220040,
+	OnBuildingUnlocked = 2117215534,
+	OnBuildWindowOpen = 1968727591,
+	OnBuildWindowClose = -1653997983,
+	OnResearchComplete = -1721594843,
+}
+
 public class EventManager : MonoBehaviour
 {
 	public static EventManager INST
@@ -12,7 +27,7 @@ public class EventManager : MonoBehaviour
 			{
 				_inst = FindObjectOfType<EventManager>();
 				if (_inst != null)
-					_inst._events = new Dictionary<string, List<System.Action>>();
+					_inst._events = new Dictionary<int, List<System.Action>>();
 			}
 			return _inst;
 		}
@@ -20,35 +35,49 @@ public class EventManager : MonoBehaviour
 
 	private static EventManager _inst;
 
-	private Dictionary<string, List<System.Action>> _events;
+	private Dictionary<int, List<System.Action>> _events;
 
-	public static void AddEventListener(string name, System.Action callback)
+	public static void AddEventListener(string name, System.Action callback) => AddEventListener(name.GetHashCode(), callback);
+
+	public static void AddEventListener(GameEvent gameEvent, System.Action callback) => AddEventListener((int)gameEvent, callback);
+
+	public static void AddEventListener(int eventID, System.Action callback)
+	{
+		if (!INST._events.ContainsKey(eventID))
+			INST._events.Add(eventID, new List<System.Action>());
+		INST._events[eventID].Add(callback);
+	}
+
+	public static void InvokeEvent(string name) => InvokeEvent(name.GetHashCode());
+
+	public static void InvokeEvent(GameEvent gameEvent) => InvokeEvent((int)gameEvent);
+
+	public static void InvokeEvent(int eventID)
 	{
 		if (INST == null)
 			return;
-		if (!INST._events.ContainsKey(name))
-			INST._events.Add(name, new List<System.Action>());
-		INST._events[name].Add(callback);
+		if (INST._events.ContainsKey(eventID))
+			for (int i = 0; i < INST._events[eventID].Count; i++)
+				INST._events[eventID][i]?.Invoke();
 	}
 
-	public static void InvokeEvent(string name)
+	public static void RemoveAllEventListeners(string name) => RemoveAllEventListeners(name.GetHashCode());
+
+	public static void RemoveAllEventListeners(GameEvent gameEvent) => RemoveAllEventListeners((int)gameEvent);
+
+	public static void RemoveAllEventListeners(int eventID)
 	{
-		if (INST == null)
-			return;
-		if (INST._events.ContainsKey(name))
-			for (int i = 0; i < INST._events[name].Count; i++)
-				INST._events[name][i]?.Invoke();
+		if (INST._events.ContainsKey(eventID))
+			INST._events[eventID].Clear();
 	}
 
-	public static void RemoveAllEventListeners(string name)
-	{
-		if (INST._events.ContainsKey(name))
-			INST._events[name].Clear();
-	}
+	public static void RemoveEventListener(string name, System.Action callback) => RemoveEventListener(name.GetHashCode(), callback);
 
-	public static void RemoveEventListener(string name, System.Action callback)
+	public static void RemoveEventListener(GameEvent gameEvent, System.Action callback) => RemoveEventListener((int)gameEvent, callback);
+
+	public static void RemoveEventListener(int eventID, System.Action callback)
 	{
-		if (INST._events.ContainsKey(name))
-			INST._events[name].Remove(callback);
+		if (INST._events.ContainsKey(eventID))
+			INST._events[eventID].Remove(callback);
 	}
 }

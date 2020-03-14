@@ -33,7 +33,7 @@ public class InitializeWeather : MonoBehaviour
 
 	private void Awake()
 	{
-		EventManager.AddEventListener("OnMapLoaded", InitWather);
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, InitWather);
 	}
 
 	private void InitWather()
@@ -61,7 +61,8 @@ public class InitializeWeather : MonoBehaviour
 				em.SetComponentData(_cloudShadows[x + z * fieldWidth], new CloudData { pos = pos, index = x + z * fieldWidth });
 			}
 		}
-		EventManager.RemoveEventListener("OnMapLoaded", InitWather);
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, InitWather);
+		EventManager.InvokeEvent(GameEvent.OnWeatherInit);
 	}
 
 	private void OnDestroy()

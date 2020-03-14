@@ -68,12 +68,12 @@ public class ResearchTreeUI : UIPanel
 	{
 		base.Start();
 		_resources = new UIResearchResource[0];
-		EventManager.AddEventListener("OnResearchComplete", () =>
+		EventManager.AddEventListener(GameEvent.OnResearchComplete, () =>
 		{
 			_curNodeElement = 0;
 			DrawTree(_curTree.BaseNode, redraw: false);
 		});
-		EventManager.AddEventListener("OnTick", () =>
+		EventManager.AddEventListener(GameEvent.OnGameTick, () =>
 		{
 			if (!IsOpen)
 				return;

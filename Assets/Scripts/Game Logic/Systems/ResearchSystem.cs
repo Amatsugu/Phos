@@ -32,8 +32,8 @@ public class ResearchSystem : ComponentSystem
 		base.OnCreate();
 
 		LoadResearchProgress();
-		EventManager.AddEventListener("OnGameSaving", SaveResearchProgress);
-
+		EventManager.AddEventListener(GameEvent.OnGameSaving, SaveResearchProgress);
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
 		_INST = this;
 	}
 
@@ -54,19 +54,13 @@ public class ResearchSystem : ComponentSystem
 		//TODO: Save info
 	}
 
-	protected override void OnStartRunning()
-	{
-		base.OnStartRunning();
-		EventManager.AddEventListener("OnMapLoaded", Init);
-	}
-
 	private void Init()
 	{
 		if (GameRegistry.INST == null)
 			return;
 		rDatabase = GameRegistry.ResearchDatabase;
-		EventManager.AddEventListener("OnTick", () => isTick = true);
-		EventManager.RemoveEventListener("OnMapLoaded", Init);
+		EventManager.AddEventListener(GameEvent.OnGameTick, () => isTick = true);
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
 	}
 
 	protected override void OnUpdate()
@@ -129,7 +123,7 @@ public class ResearchSystem : ComponentSystem
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Research Complete: {rDatabase[r.identifier].name}", GameRegistry.ResearchTreeUI);
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
-			EventManager.InvokeEvent("OnResearchComplete");
+			EventManager.InvokeEvent(GameEvent.OnResearchComplete);
 		}
 	}
 

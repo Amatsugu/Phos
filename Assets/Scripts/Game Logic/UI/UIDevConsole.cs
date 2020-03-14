@@ -103,7 +103,7 @@ public class UIDevConsole : MonoBehaviour
 		//Debug
 		AddCommand(new Command("regenLevel", () =>
 		{
-			EventManager.InvokeEvent("OnMapRegen");
+			EventManager.InvokeEvent(GameEvent.OnMapRegen);
 		}, "Destroys and unrenders the map"));
 	}
 

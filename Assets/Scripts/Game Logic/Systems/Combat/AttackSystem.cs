@@ -12,8 +12,15 @@ public class UnitAttackSystem : ComponentSystem
 	private MeshEntityRotatable _bullet;
 	private Unity.Mathematics.Random _rand;
 	private int _state;
+	private bool _canRun;
 
-	protected override void OnStartRunning()
+	protected override void OnCreate()
+	{
+		base.OnCreate();
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+	}
+
+	protected void Init()
 	{
 		var op = Addressables.LoadAssetAsync<MeshEntityRotatable>("EnergyPacket");
 		op.Completed += e =>
@@ -23,6 +30,7 @@ public class UnitAttackSystem : ComponentSystem
 		};
 		_rand = new Unity.Mathematics.Random();
 		_rand.InitState();
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
 	}
 
 	protected override void OnUpdate()

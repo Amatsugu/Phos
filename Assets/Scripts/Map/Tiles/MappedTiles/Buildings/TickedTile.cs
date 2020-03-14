@@ -7,13 +7,13 @@
 	protected override void OnBuilt()
 	{
 		base.OnBuilt();
-		EventManager.AddEventListener("OnTick", OnTick);
+		EventManager.AddEventListener(GameEvent.OnGameTick, OnTick);
 	}
 
 	public override void OnRemoved()
 	{
 		base.OnRemoved();
-		EventManager.RemoveEventListener("OnTick", OnTick);
+		EventManager.RemoveEventListener(GameEvent.OnGameTick, OnTick);
 	}
 
 	protected virtual void OnTick()

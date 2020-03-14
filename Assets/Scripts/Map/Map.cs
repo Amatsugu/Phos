@@ -890,7 +890,7 @@ public class Map : IDisposable
 			unitEntry.Value.Destroy();
 		foreach (var chunk in Chunks)
 			chunk.Destroy();
-		EventManager.InvokeEvent("OnMapDestroyed");
+		EventManager.InvokeEvent(GameEvent.OnMapDestroyed);
 		IsRendered = false;
 	}
 

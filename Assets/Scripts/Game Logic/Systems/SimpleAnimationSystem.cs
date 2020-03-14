@@ -39,7 +39,7 @@ namespace AnimationSystem
 			{
 				if (t.Value.y <= f.Value)
 				{
-					EventManager.InvokeEvent(floorCallback.eventId.ToString());
+					EventManager.InvokeEvent(floorCallback.eventId);
 					PostUpdateCommands.DestroyEntity(e);
 				}
 			});

@@ -14,7 +14,7 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 	protected override void Awake()
 	{
 		base.Awake();
-		EventManager.AddEventListener("OnTick", () =>
+		EventManager.AddEventListener(GameEvent.OnGameTick, () =>
 		{
 			if (IsActive && isHovered)
 				Hover();

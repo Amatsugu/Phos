@@ -21,22 +21,25 @@ public class PowerTransferEffectSystem : ComponentSystem
 	{
 		base.OnCreate();
 		_INST = this;
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+
 	}
 
-	protected override void OnStartRunning()
+	protected void Init()
 	{
 		base.OnStartRunning();
-		EventManager.AddEventListener("OnHQPlaced", OnHQ);
-		EventManager.AddEventListener("OnMapDestroyed", () => _removeAll = true);
+		EventManager.AddEventListener(GameEvent.OnHQPlaced, OnHQ);
+		EventManager.AddEventListener(GameEvent.OnMapDestroyed, DestroyAll);
 		_effectPaths = new Dictionary<int, List<Vector3>>();
 		_removalList = new HashSet<int>();
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
 	}
 
 	private void OnHQ()
 	{
 		_conduitGraph = Map.ActiveMap.conduitGraph;
 		_conduitGraph.OnNodeRemoved += OnNodeRemoved;
-		EventManager.RemoveEventListener("OnHQPlaced", OnHQ);
+		EventManager.RemoveEventListener(GameEvent.OnHQPlaced, OnHQ);
 	}
 
 	private void OnNodeRemoved(ConduitNode node)
@@ -131,6 +134,18 @@ public class PowerTransferEffectSystem : ComponentSystem
 				t.Value = path[0];
 			}
 		});
+	}
+
+	void DestroyAll()
+	{
+		_removeAll = false;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		DestroyAll();
+		EventManager.RemoveEventListener(GameEvent.OnMapDestroyed, DestroyAll);
 	}
 }
 

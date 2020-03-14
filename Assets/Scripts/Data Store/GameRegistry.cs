@@ -58,7 +58,7 @@ public class GameRegistry : MonoBehaviour
 
 	public static void UnlockBuilding(BuildingIdentifier building)
 	{
-		EventManager.InvokeEvent("OnBuildingUnlocked");
+		EventManager.InvokeEvent(GameEvent.OnBuildingUnlocked);
 		if (!_inst._unlockedBuildings.Contains(building.id))
 			_inst._unlockedBuildings.Add(building.id);
 	}

@@ -29,7 +29,7 @@ public class HQTile : BuildingTile
 			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTiles[i]);
 		}
 		GameRegistry.BaseNameUI.panel.Show();
-		EventManager.InvokeEvent("OnHQPlaced");
+		EventManager.InvokeEvent(GameEvent.OnHQPlaced);
 	}
 
 	protected override void OnBuilt()

@@ -75,12 +75,12 @@ public class InteractionUI : MonoBehaviour
 			_curState = InteractionState.Inspect;
 		});
 
-		EventManager.AddEventListener("OnBuildWindowOpen", () =>
+		EventManager.AddEventListener(GameEvent.OnBuildWindowOpen, () =>
 		{
 			interactionPanel.HidePanel();
 			_curState = InteractionState.Diabled;
 		});
-		EventManager.AddEventListener("OnBuildWindowClose", () =>
+		EventManager.AddEventListener(GameEvent.OnBuildWindowClose, () =>
 		{
 			_curState = InteractionState.Inspect;
 		});

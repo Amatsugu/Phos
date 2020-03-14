@@ -11,25 +11,6 @@ using Debug = UnityEngine.Debug;
 
 namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 {
-	[BurstCompile]
-	public class PathFinderSystem : ComponentSystem
-	{
-		protected override void OnUpdate()
-		{
-			var cmb = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent();
-			var navData = Map.ActiveMap.GenerateNavData();
-			var path = new PathFinderJob(Map.ActiveMap.tileEdgeLength, Map.ActiveMap.innerRadius, cmb, navData);
-			Entities.WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
-			{
-				//var p = new Path { Value = path.GetPath(t.Value, t.Value) };
-				//PostUpdateCommands.AddSharedComponent(e, p);
-				//PostUpdateCommands.AddComponent<PathProgress>(e);
-			});
-			/*inputDeps = path.Schedule(this, inputDeps);
-			return inputDeps;*/
-			navData.Dispose();
-		}
-	}
 
 	[ExcludeComponent(typeof(PathProgress), typeof(Path))]
 	public struct PathFinderJob : IJobForEachWithEntity<Translation, Destination, UnitId>
