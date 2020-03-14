@@ -115,20 +115,22 @@ public class ResourceSystem : ComponentSystem
 
 	protected override void OnCreate()
 	{
-		base.OnCreate();
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+		Debug.Log("Resource System Map Load Register");
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, InitResSystem);
 	}
 
-	private void Init()
+	private void InitResSystem()
 	{
+		Debug.Log($"Resource System: Init");
 		_canRun = true;
 		GameRegistry.INST.resourceSystem = this;
 		InitCounts();
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, InitResSystem);
 		EventManager.AddEventListener(GameEvent.OnMapDestroyed, () =>
 		{
 			InitCounts();
 		});
+		nextTic = Time.ElapsedTime + (1 / ticRate);
 	}
 
 	private void InitCounts()
@@ -138,11 +140,6 @@ public class ResourceSystem : ComponentSystem
 			resourceRecords[i] = new ResourceTransactionRecord(i);
 		resCount = new int[ResourceDatabase.ResourceCount];
 		maxStorage = 1000;
-	}
-
-	protected override void OnStartRunning()
-	{
-		nextTic = Time.ElapsedTime + (1 / ticRate);
 	}
 
 	protected override void OnUpdate()

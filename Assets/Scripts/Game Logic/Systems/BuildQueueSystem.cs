@@ -19,17 +19,17 @@ public class BuildQueueSystem : ComponentSystem
 
 	protected override void OnCreate()
 	{
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, InitBuildQueue);
 	}
 
-	private void Init()
+	private void InitBuildQueue()
 	{
 		_INST = this;
 		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
 		_readyToBuildOrders = new List<int>();
 		_constructionOrders = new List<ConstructionOrder>();
 		_removal = new List<int>();
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, InitBuildQueue);
 	}
 
 	protected override void OnUpdate()

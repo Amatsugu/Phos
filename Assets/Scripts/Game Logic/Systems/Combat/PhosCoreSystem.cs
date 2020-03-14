@@ -24,7 +24,7 @@ public class PhosCoreSystem : ComponentSystem
 
 	protected void Init()
 	{
-		base.OnStartRunning();
+		Debug.Log("Phos Core System: Init ");
 		var op = Addressables.LoadAssetAsync<DynamicMeshEntity>("EnemyProjectile");
 		op.Completed += e =>
 		{

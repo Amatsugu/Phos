@@ -5,11 +5,13 @@ using UnityEngine;
 public enum GameEvent
 {
 	OnMapLoaded = 1805809122,
+	OnGameReady = 1859452432,
 	OnMapRegen = -1290680596,
 	OnWeatherInit = -1795000521,
 	OnHQPlaced = 347355883,
 	OnMapDestroyed = -904577914,
 	OnGameSaving = -43491477,
+	OnGameStart = -89447245,
 	OnGameTick = -998220040,
 	OnBuildingUnlocked = 2117215534,
 	OnBuildWindowOpen = 1968727591,
@@ -37,20 +39,21 @@ public class EventManager : MonoBehaviour
 
 	private Dictionary<int, List<System.Action>> _events;
 
-	public static void AddEventListener(string name, System.Action callback) => AddEventListener(name.GetHashCode(), callback);
+	public static void AddEventListener(string name, System.Action callback) => AddEventListener(Animator.StringToHash(name), callback);
 
-	public static void AddEventListener(GameEvent gameEvent, System.Action callback) => AddEventListener((int)gameEvent, callback);
+	public static void AddEventListener(GameEvent gameEvent, System.Action callback) => AddEventListener(gameEvent, callback);
 
 	public static void AddEventListener(int eventID, System.Action callback)
 	{
 		if (!INST._events.ContainsKey(eventID))
 			INST._events.Add(eventID, new List<System.Action>());
 		INST._events[eventID].Add(callback);
+		Debug.Log($"Register [{eventID}]: {callback.Method.Name}");
 	}
 
 	public static void InvokeEvent(string name) => InvokeEvent(name.GetHashCode());
 
-	public static void InvokeEvent(GameEvent gameEvent) => InvokeEvent((int)gameEvent);
+	public static void InvokeEvent(GameEvent gameEvent) => InvokeEvent(Animator.StringToHash(gameEvent.ToString()));
 
 	public static void InvokeEvent(int eventID)
 	{
@@ -58,7 +61,10 @@ public class EventManager : MonoBehaviour
 			return;
 		if (INST._events.ContainsKey(eventID))
 			for (int i = 0; i < INST._events[eventID].Count; i++)
+			{
+				Debug.Log($"Invoke [{eventID}]: {INST._events[eventID][i]?.Method.Name}");
 				INST._events[eventID][i]?.Invoke();
+			}
 	}
 
 	public static void RemoveAllEventListeners(string name) => RemoveAllEventListeners(name.GetHashCode());
@@ -79,5 +85,6 @@ public class EventManager : MonoBehaviour
 	{
 		if (INST._events.ContainsKey(eventID))
 			INST._events[eventID].Remove(callback);
+		//Debug.Log($"UnRegister [{eventID}]: {callback.Method.ToString()}");
 	}
 }

@@ -35,6 +35,7 @@ public class MapRenderer : MonoBehaviour
 		max = new Vector3(map.totalWidth * map.shortDiagonal, 0, map.totalHeight * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 		EventManager.AddEventListener(GameEvent.OnMapRegen, Regenerate);
+		EventManager.InvokeEvent(GameEvent.OnGameStart);
 	}
 
 	private void OnDestroy()
@@ -58,7 +59,9 @@ public class MapRenderer : MonoBehaviour
 		pos *= 2;
 		pos.y = map.seaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
+		Debug.Log("Map Load Invoke");
 		EventManager.InvokeEvent(GameEvent.OnMapLoaded);
+		EventManager.InvokeEvent(GameEvent.OnGameReady);
 	}
 
 	private void LateUpdate()

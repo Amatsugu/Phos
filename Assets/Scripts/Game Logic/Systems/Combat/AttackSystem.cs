@@ -17,11 +17,12 @@ public class UnitAttackSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+		EventManager.AddEventListener(GameEvent.OnMapLoaded, InitAttackSystem);
 	}
 
-	protected void Init()
+	protected void InitAttackSystem()
 	{
+		Debug.Log("Attack System: Init");
 		var op = Addressables.LoadAssetAsync<MeshEntityRotatable>("EnergyPacket");
 		op.Completed += e =>
 		{
@@ -30,7 +31,7 @@ public class UnitAttackSystem : ComponentSystem
 		};
 		_rand = new Unity.Mathematics.Random();
 		_rand.InitState();
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
+		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, InitAttackSystem);
 	}
 
 	protected override void OnUpdate()

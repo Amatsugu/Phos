@@ -98,10 +98,20 @@ public class BuildUI : MonoBehaviour
 	{
 		GameRegistry.INST.buildUI = this;
 		GameRegistry.SetBuildingDatabase(buildings);
+		EventManager.AddEventListener(GameEvent.OnGameReady, Init);
+		enabled = false;
+	}
+
+	void Init()
+	{
+		enabled = true;
+		Debug.Log($"BuildUI Init");
+		EventManager.RemoveEventListener(GameEvent.OnGameReady, Init);
 	}
 
 	private void Start()
 	{
+		Debug.Log("Build UI Start");
 		_errors = new List<string>();
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
@@ -281,7 +291,7 @@ public class BuildUI : MonoBehaviour
 
 	private void ValidatePlacement(List<Tile> tilesToOccupy)
 	{
-		if (!GameRegistry.ResourceSystem.HasAllResources(_selectedBuilding.cost)) //Has Resources
+		if (!GameRegistry.ResourceSystem.HasAllResources(_selectedBuilding.cost) && _state != BuildState.HQPlacement) //Has Resources
 		{
 			HideIndicator(selectIndicatorEntity);
 			ShowIndicators(errorIndicatorEntity, tilesToOccupy);
