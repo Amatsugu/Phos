@@ -75,15 +75,16 @@ public class InteractionUI : MonoBehaviour
 			_curState = InteractionState.Inspect;
 		});
 
-		EventManager.AddEventListener(GameEvent.OnBuildWindowOpen, () =>
+		GameRegistry.BuildUI.OnBuildWindowOpen +=  () =>
 		{
 			interactionPanel.HidePanel();
 			_curState = InteractionState.Diabled;
-		});
-		EventManager.AddEventListener(GameEvent.OnBuildWindowClose, () =>
+		};
+		GameRegistry.BuildUI.OnBuildWindowClose += () =>
 		{
+			Debug.Log("Build Closed");
 			_curState = InteractionState.Inspect;
-		});
+		};
 		_navData = Map.ActiveMap.GenerateNavData();
 	}
 
@@ -111,7 +112,8 @@ public class InteractionUI : MonoBehaviour
 		switch (_curState)
 		{
 			case InteractionState.Diabled:
-				
+				if (GameRegistry.BuildUI.State == BuildUI.BuildState.Disabled)
+					_curState = InteractionState.Inspect;
 				break;
 
 			case InteractionState.Inspect:

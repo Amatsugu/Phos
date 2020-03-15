@@ -81,13 +81,13 @@ public class WeatherSystem : JobComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		EventManager.AddEventListener(GameEvent.OnWeatherInit, Init);
+		GameEvents.OnWeatherInit += Init;
 		_INST = this;
 	}
 
 	protected void Init()
 	{
-		EventManager.RemoveEventListener(GameEvent.OnWeatherInit, Init);
+		GameEvents.OnWeatherInit -= Init;
 		_shortDiag = HexCoords.CalculateShortDiagonal(gridSize);
 		_innerRadius = HexCoords.CalculateInnerRadius(gridSize);
 		_cam = Camera.main.transform;

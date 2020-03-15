@@ -116,7 +116,7 @@ public class ResourceSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		Debug.Log("Resource System Map Load Register");
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, InitResSystem);
+		GameEvents.OnMapLoaded += InitResSystem;
 	}
 
 	private void InitResSystem()
@@ -125,11 +125,8 @@ public class ResourceSystem : ComponentSystem
 		_canRun = true;
 		GameRegistry.INST.resourceSystem = this;
 		InitCounts();
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, InitResSystem);
-		EventManager.AddEventListener(GameEvent.OnMapDestroyed, () =>
-		{
-			InitCounts();
-		});
+		GameEvents.OnMapLoaded -= InitResSystem;
+		GameEvents.OnMapDestroyed += InitCounts;
 		nextTic = Time.ElapsedTime + (1 / ticRate);
 	}
 
@@ -152,7 +149,7 @@ public class ResourceSystem : ComponentSystem
 		nextTic = Time.ElapsedTime + (1 / ticRate);
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i].Clear();
-		EventManager.InvokeEvent(GameEvent.OnGameTick);
+		GameEvents.InvokeOnGameTick();
 
 		//Consumption
 		Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>

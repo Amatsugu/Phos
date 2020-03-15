@@ -17,7 +17,7 @@ public class UnitAttackSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, InitAttackSystem);
+		GameEvents.OnMapLoaded += InitAttackSystem;
 	}
 
 	protected void InitAttackSystem()
@@ -31,7 +31,7 @@ public class UnitAttackSystem : ComponentSystem
 		};
 		_rand = new Unity.Mathematics.Random();
 		_rand.InitState();
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, InitAttackSystem);
+		GameEvents.OnMapLoaded -= InitAttackSystem;
 	}
 
 	protected override void OnUpdate()

@@ -722,16 +722,20 @@ public class Map : IDisposable
 	public NativeHashMap<HexCoords, float> GenerateNavData()
 	{
 		var nav = new NativeHashMap<HexCoords, float>(totalHeight * totalWidth, Allocator.Persistent);
+		GenerateNavData(ref nav);
+		return nav;
+	}
+	public void GenerateNavData(ref NativeHashMap<HexCoords, float> navData)
+	{
 		for (int z = 0; z < totalHeight; z++)
 		{
 			for (int x = 0; x < totalWidth; x++)
 			{
 				var t = this[HexCoords.FromOffsetCoords(x, z, tileEdgeLength)];
 				var navValue = t.IsUnderwater ? t.Height * -1 : (t.info.isTraverseable ? t.Height : float.MinValue);
-				nav.Add(t.Coords, navValue);
+				navData.Add(t.Coords, navValue);
 			}
 		}
-		return nav;
 	}
 
 	public Tile[] GetNeighbors(Tile tile) => GetNeighbors(tile.Coords);
@@ -890,7 +894,7 @@ public class Map : IDisposable
 			unitEntry.Value.Destroy();
 		foreach (var chunk in Chunks)
 			chunk.Destroy();
-		EventManager.InvokeEvent(GameEvent.OnMapDestroyed);
+		GameEvents.InvokeOnMapDestroyed();
 		IsRendered = false;
 	}
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Unity.Entities;
@@ -25,6 +26,8 @@ public class ResearchSystem : ComponentSystem
 
 	private static ResearchSystem _INST;
 
+	public event Action OnResearchComplete;
+
 	private bool isTick;
 
 	protected override void OnCreate()
@@ -32,8 +35,8 @@ public class ResearchSystem : ComponentSystem
 		base.OnCreate();
 
 		LoadResearchProgress();
-		EventManager.AddEventListener(GameEvent.OnGameSaving, SaveResearchProgress);
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+		GameEvents.OnGameSaving += SaveResearchProgress;
+		GameEvents.OnMapLoaded += Init;
 		_INST = this;
 	}
 
@@ -59,8 +62,14 @@ public class ResearchSystem : ComponentSystem
 		if (GameRegistry.INST == null)
 			return;
 		rDatabase = GameRegistry.ResearchDatabase;
-		EventManager.AddEventListener(GameEvent.OnGameTick, () => isTick = true);
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
+		GameRegistry.INST.researchSystem = this;
+		GameEvents.OnGameTick += Tick;
+		GameEvents.OnMapLoaded -= Init;
+	}
+
+	void Tick()
+	{
+		isTick = true;
 	}
 
 	protected override void OnUpdate()
@@ -123,7 +132,7 @@ public class ResearchSystem : ComponentSystem
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Research Complete: {rDatabase[r.identifier].name}", GameRegistry.ResearchTreeUI);
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
-			EventManager.InvokeEvent(GameEvent.OnResearchComplete);
+			OnResearchComplete?.Invoke();
 		}
 	}
 

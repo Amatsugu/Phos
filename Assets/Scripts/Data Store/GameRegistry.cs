@@ -27,6 +27,7 @@ public class GameRegistry : MonoBehaviour
 	public static BuildingDatabase BuildingDatabase => INST._buildingDatabase;
 	public static ResearchDatabase ResearchDatabase => INST.researchDatabase;
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
+	public static ResearchSystem ResearchSystem => INST.researchSystem;
 
 	public BuildUI buildUI;
 	public InteractionUI interactionUI;
@@ -37,6 +38,7 @@ public class GameRegistry : MonoBehaviour
 	public CameraController cameraController;
 	public ResearchDatabase researchDatabase;
 	public ResourceSystem resourceSystem;
+	public ResearchSystem researchSystem;
 
 	private BuildingDatabase _buildingDatabase;
 
@@ -58,7 +60,7 @@ public class GameRegistry : MonoBehaviour
 
 	public static void UnlockBuilding(BuildingIdentifier building)
 	{
-		EventManager.InvokeEvent(GameEvent.OnBuildingUnlocked);
+		EventManager.InvokeEvent(GameEvent.OnBuildingUnlocked.ToString());
 		if (!_inst._unlockedBuildings.Contains(building.id))
 			_inst._unlockedBuildings.Add(building.id);
 	}

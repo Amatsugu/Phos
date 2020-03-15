@@ -14,11 +14,13 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 	protected override void Awake()
 	{
 		base.Awake();
-		EventManager.AddEventListener(GameEvent.OnGameTick, () =>
-		{
-			if (IsActive && isHovered)
-				Hover();
-		});
+		GameEvents.OnGameTick += OnTick;
+	}
+
+	public void OnTick()
+	{
+		if (IsActive && isHovered)
+			Hover();
 	}
 
 	public Vector3 anchoredPosition

@@ -16,13 +16,13 @@ public class StatusUI : UIHover
 		base.Awake();
 		GameRegistry.INST.statusUI = this;
 		enabled = false;
-		EventManager.AddEventListener(GameEvent.OnHQPlaced, Init);
+		GameEvents.OnHQPlaced += Init;
 	}
 
 	private void Init()
 	{
 		enabled = true;
-		EventManager.RemoveEventListener(GameEvent.OnHQPlaced, Init);
+		GameEvents.OnHQPlaced -= Init;
 	}
 
 	protected override void Start()

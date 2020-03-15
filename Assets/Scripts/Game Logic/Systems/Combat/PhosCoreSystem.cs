@@ -19,7 +19,7 @@ public class PhosCoreSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+		GameEvents.OnMapLoaded += Init;
 	}
 
 	protected void Init()
@@ -32,7 +32,7 @@ public class PhosCoreSystem : ComponentSystem
 			_state = 1;
 		};
 		_map = Map.ActiveMap;
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
+		GameEvents.OnMapLoaded -= Init;
 	}
 
 	protected override void OnUpdate()

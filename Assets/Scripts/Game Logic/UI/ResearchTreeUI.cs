@@ -67,45 +67,48 @@ public class ResearchTreeUI : UIPanel
 	protected override void Start()
 	{
 		base.Start();
-		_resources = new UIResearchResource[0];
-		EventManager.AddEventListener(GameEvent.OnResearchComplete, () =>
+		_resources = Array.Empty<UIResearchResource>();
+		// TODO: Improve this
+		EventManager.AddEventListener(GameEvent.OnResearchComplete.ToString(), () =>
 		{
 			_curNodeElement = 0;
 			DrawTree(_curTree.BaseNode, redraw: false);
 		});
-		EventManager.AddEventListener(GameEvent.OnGameTick, () =>
+		GameEvents.OnGameTick += OnTick;
+	}
+
+	void OnTick()
+	{
+		if (!IsOpen)
+			return;
+		var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
+		if (active == null)
 		{
-			if (!IsOpen)
-				return;
-			var active = ResearchSystem.GetActiveResearchProgress(_selectedCategory);
-			if (active == null)
+			ResetActiveInfo();
+			return;
+		}
+		ShowActiveInfo();
+		_curNodeElement = 0;
+		DrawTree(_curTree.BaseNode, redraw: false);
+		if (_resources.Length < active.resources.Length)
+			Array.Resize(ref _resources, active.resources.Length);
+		for (int i = 0; i < _resources.Length; i++)
+		{
+			if (_resources[i] == null)
 			{
-				ResetActiveInfo();
-				return;
+				var uiRes = Instantiate(UIresource, activeCostParent, false).GetComponent<UIResearchResource>();
+				uiRes.gameObject.SetActive(true);
+				_resources[i] = uiRes;
 			}
-			ShowActiveInfo();
-			_curNodeElement = 0;
-			DrawTree(_curTree.BaseNode, redraw: false);
-			if (_resources.Length < active.resources.Length)
-				Array.Resize(ref _resources, active.resources.Length);
-			for (int i = 0; i < _resources.Length; i++)
+			if (i >= active.resources.Length)
 			{
-				if (_resources[i] == null)
-				{
-					var uiRes = Instantiate(UIresource, activeCostParent, false).GetComponent<UIResearchResource>();
-					uiRes.gameObject.SetActive(true);
-					_resources[i] = uiRes;
-				}
-				if (i >= active.resources.Length)
-				{
-					_resources[i].gameObject.SetActive(false);
-					continue;
-				}
-				_resources[i].gameObject.SetActive(true);
-				_resources[i].SetResource(active.resources[i].id);
-				_resources[i].UpdateData(active.rProgress[i], (int)active.resources[i].ammount, active.lastTickProgress[i]);
+				_resources[i].gameObject.SetActive(false);
+				continue;
 			}
-		});
+			_resources[i].gameObject.SetActive(true);
+			_resources[i].SetResource(active.resources[i].id);
+			_resources[i].UpdateData(active.rProgress[i], (int)active.resources[i].ammount, active.lastTickProgress[i]);
+		}
 	}
 
 	public void ShowProductionTree() => ShowTree(BuildingCategory.Production);

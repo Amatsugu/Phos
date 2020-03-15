@@ -28,7 +28,7 @@ public class UnitMovementSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		base.OnCreate();
-		EventManager.AddEventListener(GameEvent.OnMapLoaded, Init);
+		GameEvents.OnMapLoaded += Init;
 	}
 
 	protected override void OnStartRunning()
@@ -48,12 +48,19 @@ public class UnitMovementSystem : ComponentSystem
 		_open = new NativeList<PathNode>(Allocator.Persistent);
 		_closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
 		_nodePairs = new NativeHashMap<PathNode, PathNode>(_navData.Length, Allocator.Persistent);
-		EventManager.RemoveEventListener(GameEvent.OnMapLoaded, Init);
+		GameEvents.OnMapLoaded -= Init;
+		GameEvents.OnMapChanged += OnMapChanged;
+	}
+
+	void OnMapChanged()
+	{
+		Map.ActiveMap.GenerateNavData(ref _navData);
 	}
 
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
+		GameEvents.OnMapChanged -= OnMapChanged;
 		_navData.Dispose();
 	}
 
