@@ -49,3 +49,13 @@ public struct UnitClass : IComponentData, IEquatable<UnitClass>
 		Support
 	}
 }
+
+public struct UnitState : IComponentData
+{
+	public enum State
+	{
+		HoldFire,
+		AttackOnSight,
+
+	}
+}

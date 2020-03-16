@@ -11,8 +11,7 @@ public class UnitAttackSystem : ComponentSystem
 {
 	private MeshEntityRotatable _bullet;
 	private Unity.Mathematics.Random _rand;
-	private int _state;
-	private bool _canRun;
+	private int _state = 0;
 
 	protected override void OnCreate()
 	{
@@ -41,7 +40,7 @@ public class UnitAttackSystem : ComponentSystem
 			case 0: //Idle
 				break;
 
-			case 1: //Attack
+			case 1:
 					//AttackAI();
 				break;
 		}

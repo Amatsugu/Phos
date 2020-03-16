@@ -206,9 +206,9 @@ public class BuildUI : MonoBehaviour
 			End = ray.GetPoint(_cam.transform.position.y * 2),
 			Filter = new Unity.Physics.CollisionFilter
 			{
+				GroupIndex = 0,
 				BelongsTo = ~0u,
-				CollidesWith = ~0u,
-				GroupIndex = 0
+				CollidesWith = ~0u
 			}
 		}, out var hit))
 		{

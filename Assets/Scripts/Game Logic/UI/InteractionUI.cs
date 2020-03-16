@@ -123,6 +123,7 @@ public class InteractionUI : MonoBehaviour
 
 			case InteractionState.OrderUnit:
 				ProcessCloseInput();
+				//InspectUI(mPos);
 				InstructUnitUI(mPos);
 				break;
 		}
@@ -326,6 +327,9 @@ public class InteractionUI : MonoBehaviour
 
 		switch (tile)
 		{
+			case Tile t when t.info.faction > Faction.Player:
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false, showUpgradeBtn: false);
+				break;
 			case HQTile _:
 				//GameRegistry.ResearchTreeUI.Show(null);
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);

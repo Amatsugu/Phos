@@ -47,6 +47,14 @@ public partial class MobileUnitInfo : MeshEntityRotatable
 		Map.EM.SetComponentData(e, new UnitDomain { Value = unitDomain.Value });
 		Map.EM.SetComponentData(e, new UnitClass { Value = unitClass.Value });
 
+		var physMat = Unity.Physics.Material.Default;
+		physMat.Flags |= Unity.Physics.Material.MaterialFlags.EnableCollisionEvents;
+		var collisionFilter = new CollisionFilter
+		{
+			CollidesWith = ~0u,
+			BelongsTo = 1u << (int)faction,
+			GroupIndex = 0
+		};
 		Map.EM.AddComponentData(e, new PhysicsCollider
 		{
 			Value = Unity.Physics.BoxCollider.Create(new BoxGeometry
@@ -55,10 +63,7 @@ public partial class MobileUnitInfo : MeshEntityRotatable
 				Size = new float3(1, 1, 1),
 				Orientation = quaternion.identity,
 				BevelRadius = 0
-			}, CollisionFilter.Default, new Unity.Physics.Material
-			{
-				Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
-			})
+			}, collisionFilter, physMat)
 		});
 
 		return e;

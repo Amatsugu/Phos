@@ -41,6 +41,14 @@ public class TileInfo : MeshEntityRotatable
 		{
 			DrawColliders = 1
 		});
+		var physMat = Unity.Physics.Material.Default;
+		physMat.Flags |= Unity.Physics.Material.MaterialFlags.EnableCollisionEvents;
+		var colFilter = new CollisionFilter
+		{
+			CollidesWith = ~0u,
+			BelongsTo = 1u << (int)faction,
+			GroupIndex = 0
+		};
 #if false
 		var verts = new NativeArray<float3>(mesh.vertices.Select(v => (float3)v).ToArray(), Allocator.Temp);
 		var collider = ConvexCollider.Create(default, new ConvexHullGenerationParameters
@@ -55,10 +63,7 @@ public class TileInfo : MeshEntityRotatable
 			Center = new float3(0, -25, 0),
 			Size = new float3(1, 50, 1),
 			Orientation = quaternion.identity
-		}, CollisionFilter.Default, new Unity.Physics.Material
-		{
-			Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
-		});
+		}, colFilter, physMat);
 #endif
 
 		Map.EM.SetComponentData(e, new PhysicsCollider
