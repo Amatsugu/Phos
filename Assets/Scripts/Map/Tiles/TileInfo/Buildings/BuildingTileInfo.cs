@@ -42,6 +42,7 @@ public class BuildingTileInfo : TileInfo
 
 	[Header("Building Info")]
 	public PlacementMode placementMode = PlacementMode.Single;
+	public float maxHealth;
 
 	public BuildingIdentifier upgradeTarget;
 	public Sprite icon;
@@ -56,9 +57,25 @@ public class BuildingTileInfo : TileInfo
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
-		return base.GetComponents().Concat(new ComponentType[] { typeof(BuildingOffTag), typeof(BuildingId) });
+		return base.GetComponents().Concat(new ComponentType[] 
+		{
+			typeof(BuildingOffTag), 
+			typeof(BuildingId),
+			typeof(Health),
+		});
 	}
 
+	public override Entity Instantiate(HexCoords pos, float height)
+	{
+		var e = base.Instantiate(pos, height);
+		Map.EM.SetComponentData(e, new Health
+		{
+			maxHealth = maxHealth,
+			Value = maxHealth
+		});
+		return e;
+	}
+	
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
 		if (consumption.Length != 0 || production.Any(p => p.id == 0))

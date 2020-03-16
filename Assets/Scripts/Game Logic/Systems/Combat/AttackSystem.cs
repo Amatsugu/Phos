@@ -1,7 +1,9 @@
-﻿using AnimationSystem.AnimationData;
-
+﻿using System;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -9,9 +11,14 @@ using UnityEngine.AddressableAssets;
 
 public class UnitAttackSystem : ComponentSystem
 {
-	private MeshEntityRotatable _bullet;
+	private DynamicMeshEntity _bullet;
 	private Unity.Mathematics.Random _rand;
 	private int _state = 0;
+	private BuildPhysicsWorld _physicsWorld;
+	private NativeList<int> _castHits;
+	[ReadOnly]
+	private ComponentDataFromEntity<Translation> _tranlationData;
+	private ComponentDataFromEntity<Health> _healthData;
 
 	protected override void OnCreate()
 	{
@@ -22,7 +29,9 @@ public class UnitAttackSystem : ComponentSystem
 	protected void InitAttackSystem()
 	{
 		Debug.Log("Attack System: Init");
-		var op = Addressables.LoadAssetAsync<MeshEntityRotatable>("EnergyPacket");
+		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
+		_castHits = new NativeList<int>(Allocator.Persistent);
+		var op = Addressables.LoadAssetAsync<DynamicMeshEntity>("EnemyProjectile");
 		op.Completed += e =>
 		{
 			_bullet = e.Result;
@@ -30,7 +39,19 @@ public class UnitAttackSystem : ComponentSystem
 		};
 		_rand = new Unity.Mathematics.Random();
 		_rand.InitState();
+
+		_tranlationData = GetComponentDataFromEntity<Translation>();
+		_healthData = GetComponentDataFromEntity<Health>();
+
 		GameEvents.OnMapLoaded -= InitAttackSystem;
+		GameEvents.OnMapDestroyed += OnDestroy;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		_castHits.Dispose();
+		GameEvents.OnMapDestroyed -= OnDestroy;
 	}
 
 	protected override void OnUpdate()
@@ -41,24 +62,67 @@ public class UnitAttackSystem : ComponentSystem
 				break;
 
 			case 1:
-					//AttackAI();
+				AttackAI();
 				break;
 		}
 	}
 
 	private void AttackAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p) =>
+		_tranlationData = GetComponentDataFromEntity<Translation>();
+		_healthData = GetComponentDataFromEntity<Health>();
+		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p, ref UnitId id) =>
 		{
-			if (Time.ElapsedTime >= s.Value)
+			if (s.NextAttackTime <= Time.ElapsedTime)
 			{
-				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, Vector3.one);
-				PostUpdateCommands.AddComponent(proj, new Gravity { Value = 9.8f });
-				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 15 });
-				var targetPoint = (float3)Map.ActiveMap.HQ.SurfacePoint;
+				s.NextAttackTime = Time.ElapsedTime + s.Value;
 
-				PostUpdateCommands.AddComponent(proj, new Velocity { Value = GetAttackVector(t.Value.x, targetPoint) });
-				s.Value = Time.ElapsedTime + 1;
+				//Get Objects in Rect Range
+				var ab = new AABB
+				{
+					Center = t.Value,
+					Extents = new float3(5, 50, 5)
+				};
+				_physicsWorld.PhysicsWorld.CollisionWorld.OverlapAabb(new OverlapAabbInput
+				{
+					Aabb = new Aabb
+					{
+						Max = ab.Max,
+						Min = ab.Min
+					},
+					Filter = new CollisionFilter
+					{
+						BelongsTo = 1u << (int)Faction.Phos,
+						CollidesWith = ~0u,
+						GroupIndex = 0
+					}
+				}, ref _castHits);
+				//Get Circual Range
+				for (int i = 0; i < _castHits.Length; i++)
+				{
+					if (_physicsWorld.PhysicsWorld.Bodies.Length <= _castHits[i])
+						continue;
+					var body = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]];
+					var entity = body.Entity;
+					if (!(EntityManager.HasComponent<Health>(entity) && EntityManager.HasComponent<FactionId>(entity)))
+						continue;
+					if (EntityManager.GetComponentData<FactionId>(entity).Value != Faction.Phos)
+						continue;
+					var pos = EntityManager.GetComponentData<Translation>(entity).Value;
+					var dir = pos - t.Value;
+					var dist = math.lengthsq(dir);
+					if(dist <= 25)
+					{
+						var turretDir = dir;
+						turretDir.y = 0;
+						Debug.Log(EntityManager.GetName(entity));
+						EntityManager.SetComponentData(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
+						dir = math.normalize(dir) * 5;
+						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, quaternion.LookRotation(dir, Vector3.up), dir);
+						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 1 });
+						break;
+					}
+				}
 			}
 		});
 	}
@@ -89,11 +153,14 @@ public class UnitAttackSystem : ComponentSystem
 	}
 }
 
-public struct AttackSpeed : IComponentData
+public struct AttackSpeed : IComponentData, IEquatable<AttackSpeed>
 {
-	public double Value;
+	public float Value;
+	public double NextAttackTime;
 
-	public override bool Equals(object obj) => Value.Equals(obj);
+	public bool Equals(AttackSpeed other) => Value == other.Value;// && NextAttackTime == other.NextAttackTime;
+
+	public override bool Equals(object obj) => obj is AttackSpeed atk ? Equals(atk) : false;
 
 	public override int GetHashCode() => Value.GetHashCode();
 

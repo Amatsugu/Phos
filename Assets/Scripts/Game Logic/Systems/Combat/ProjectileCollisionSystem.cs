@@ -15,10 +15,10 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 
 	public void Execute(CollisionEvent collisionEvent)
 	{
-		if (damage.HasComponent(collisionEvent.Entities.EntityA))
+		/*if (damage.HasComponent(collisionEvent.Entities.EntityA))
 			DealDamage(collisionEvent.Entities.EntityA, collisionEvent.Entities.EntityB);
 		else if (damage.HasComponent(collisionEvent.Entities.EntityB))
-			DealDamage(collisionEvent.Entities.EntityB, collisionEvent.Entities.EntityA);
+			DealDamage(collisionEvent.Entities.EntityB, collisionEvent.Entities.EntityA);*/
 	}
 
 	private void DealDamage(Entity src, Entity tgt)
@@ -32,24 +32,25 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 [BurstCompile]
 public class ProjectileCollisionSystem : JobComponentSystem
 {
-	private PhysicsWorld _physicsWorld;
-	private ISimulation _sim;
+	private BuildPhysicsWorld _physicsWorld;
+	private StepPhysicsWorld _sim;
 
 	protected override void OnStartRunning()
 	{
-		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>().PhysicsWorld;
-		_sim = World.GetOrCreateSystem<StepPhysicsWorld>().Simulation;
+		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
+		_sim = World.GetOrCreateSystem<StepPhysicsWorld>();
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
+		
 		var job = new ProjectileCollisionJob
 		{
 			damage = GetComponentDataFromEntity<Damage>(true),
 			health = GetComponentDataFromEntity<Health>(false),
 			faction = GetComponentDataFromEntity<FactionId>(true),
 		};
-		inputDeps = job.Schedule(_sim, ref _physicsWorld, inputDeps);
+		inputDeps = job.Schedule(_sim.Simulation, ref _physicsWorld.PhysicsWorld, inputDeps);
 		return inputDeps;
 	}
 }
