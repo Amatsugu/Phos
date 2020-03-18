@@ -128,7 +128,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 				//nodePairs.Dispose();
 				return path;
 			}
-			Debug.LogWarning("No Path");
+			UnityEngine.Debug.LogWarning("No Path");
 			//nodePairs.Dispose();
 			return default;
 		}

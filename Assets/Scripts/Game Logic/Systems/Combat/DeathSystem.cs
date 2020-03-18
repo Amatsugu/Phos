@@ -12,7 +12,7 @@ public class DeathSystem : ComponentSystem
 		{
 			if (health.Value > 0)
 				return;
-			Debug.Log($"Killing {id.Value}");
+			UnityEngine.Debug.Log($"Killing {id.Value}");
 			Map.ActiveMap.units[id.Value].Die();
 		});
 	}

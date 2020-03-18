@@ -100,11 +100,11 @@ public class Map : IDisposable
 		{
 			var inView = GeometryUtility.TestPlanesAABB(camPlanes, _bounds);
 			var color = inView ? Color.red : Color.blue;
-			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, 0, _bounds.max.z), color);
-			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.max.z), color);
-			Debug.DrawLine(new Vector3(_bounds.max.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
-			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
-			Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, SIZE, _bounds.min.z), color);
+			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, 0, _bounds.max.z), color);
+			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.max.z), color);
+			UnityEngine.Debug.DrawLine(new Vector3(_bounds.max.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, SIZE, _bounds.min.z), color);
 			return inView;
 		}
 
@@ -319,9 +319,9 @@ public class Map : IDisposable
 		cZMax = Math.Min(height, cZMax);
 
 #if DEBUG
-		Debug.DrawRay(worldLeft, Vector3.up, Color.magenta, 5);
-		Debug.DrawLine(worldLeft, worldRight, Color.green, 5);
-		Debug.DrawRay(worldRight, Vector3.up, Color.magenta, 5);
+		UnityEngine.Debug.DrawRay(worldLeft, Vector3.up, Color.magenta, 5);
+		UnityEngine.Debug.DrawLine(worldLeft, worldRight, Color.green, 5);
+		UnityEngine.Debug.DrawRay(worldRight, Vector3.up, Color.magenta, 5);
 #endif
 
 		var selectedUnits = new List<int>();
@@ -709,7 +709,7 @@ public class Map : IDisposable
 		if (tile.originalTile != null)
 			ReplaceTile(tile, tile.originalTile);
 		else
-			Debug.LogWarning("No Original Tile to revert to");
+			UnityEngine.Debug.LogWarning("No Original Tile to revert to");
 	}
 
 	public int GetDistance(HexCoords a, HexCoords b)
@@ -807,7 +807,7 @@ public class Map : IDisposable
 			}
 			if (open.Count > 1024)
 			{
-				Debug.LogWarning("Big Path");
+				UnityEngine.Debug.LogWarning("Big Path");
 				break;
 			}
 		}

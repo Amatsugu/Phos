@@ -40,6 +40,6 @@ public class VentGenerator : FeatureGenerator
 				vents++;
 			}
 		}
-		Debug.Log($"{GeneratorName}: {vents} vents generated");
+		UnityEngine.Debug.Log($"{GeneratorName}: {vents} vents generated");
 	}
 }

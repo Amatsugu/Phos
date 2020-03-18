@@ -27,7 +27,7 @@ public class StructureGenerator : FeatureGenerator
 		{
 			if (attempts > 1024)
 			{
-				Debug.Log("Abort, too many Attempts");
+				UnityEngine.Debug.Log("Abort, too many Attempts");
 				break;
 			}
 			attempts++;
@@ -45,7 +45,7 @@ public class StructureGenerator : FeatureGenerator
 			attempts = 0;
 		}
 
-		Debug.Log($"Genetating {curCount} cores");
+		UnityEngine.Debug.Log($"Genetating {curCount} cores");
 		for (int i = 0; i < curCount; i++)
 		{
 			if (!coordsToGen[i].isCreated)

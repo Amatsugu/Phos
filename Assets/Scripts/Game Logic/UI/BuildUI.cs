@@ -108,13 +108,13 @@ public class BuildUI : MonoBehaviour
 	void Init()
 	{
 		enabled = true;
-		Debug.Log($"BuildUI Init");
+		UnityEngine.Debug.Log($"BuildUI Init");
 		GameEvents.OnGameReady -= Init;
 	}
 
 	private void Start()
 	{
-		Debug.Log("Build UI Start");
+		UnityEngine.Debug.Log("Build UI Start");
 		_errors = new List<string>();
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
@@ -128,7 +128,7 @@ public class BuildUI : MonoBehaviour
 		/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
 
 		if (selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
-			Debug.LogError("Null");
+			UnityEngine.Debug.LogError("Null");
 
 		// TODO: Improve this
 		EventManager.AddEventListener(GameEvent.OnBuildingUnlocked.ToString(), () =>
@@ -219,11 +219,11 @@ public class BuildUI : MonoBehaviour
 					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).coords];
 			}
 		}
-		Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);
-		Debug.DrawRay(hit.Position, Vector3.right, Color.red);
-		Debug.DrawRay(hit.Position, Vector3.forward, Color.blue);
-		Debug.DrawRay(hit.Position, Vector3.up, Color.green);
-		Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
+		UnityEngine.Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);
+		UnityEngine.Debug.DrawRay(hit.Position, Vector3.right, Color.red);
+		UnityEngine.Debug.DrawRay(hit.Position, Vector3.forward, Color.blue);
+		UnityEngine.Debug.DrawRay(hit.Position, Vector3.up, Color.green);
+		UnityEngine.Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
 
 		if (selectedTile == null)
 		{
@@ -417,7 +417,7 @@ public class BuildUI : MonoBehaviour
 #if DEBUG
 		for (int i = 0; i < nodes.Count; i++)
 		{
-			Debug.DrawLine(selectedTile.SurfacePoint, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
+			UnityEngine.Debug.DrawLine(selectedTile.SurfacePoint, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
 		}
 #endif
 		//else
@@ -618,7 +618,7 @@ public class BuildUI : MonoBehaviour
 #if DEBUG
 			if (building == null)
 			{
-				Debug.LogWarning("Null building in list, aborting");
+				UnityEngine.Debug.LogWarning("Null building in list, aborting");
 				break;
 			}
 #endif

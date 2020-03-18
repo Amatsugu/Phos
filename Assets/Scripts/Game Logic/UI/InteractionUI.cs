@@ -82,7 +82,7 @@ public class InteractionUI : MonoBehaviour
 		};
 		GameRegistry.BuildUI.OnBuildWindowClose += () =>
 		{
-			Debug.Log("Build Closed");
+			UnityEngine.Debug.Log("Build Closed");
 			_curState = InteractionState.Inspect;
 		};
 		_navData = Map.ActiveMap.GenerateNavData();
@@ -194,7 +194,7 @@ public class InteractionUI : MonoBehaviour
 		for (int i = 0; i < _selectedUnits.Count; i++)
 		{
 			var unit = Map.ActiveMap.units[_selectedUnits[i]];
-			Debug.DrawRay(unit.Position, Vector3.up, Color.white);
+			UnityEngine.Debug.DrawRay(unit.Position, Vector3.up, Color.white);
 		}
 #endif
 
@@ -239,10 +239,10 @@ public class InteractionUI : MonoBehaviour
 		var p3 = _end.Coords.worldXZ;
 #if DEBUG
 		p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
-		Debug.DrawLine(p0, p1, Color.white);
-		Debug.DrawLine(p1, p3, Color.white);
-		Debug.DrawLine(p0, p2, Color.white);
-		Debug.DrawLine(p2, p3, Color.white);
+		UnityEngine.Debug.DrawLine(p0, p1, Color.white);
+		UnityEngine.Debug.DrawLine(p1, p3, Color.white);
+		UnityEngine.Debug.DrawLine(p0, p2, Color.white);
+		UnityEngine.Debug.DrawLine(p2, p3, Color.white);
 #endif
 		var w = p0.x - p1.x;
 		var h = p0.z - p2.z;
@@ -280,7 +280,7 @@ public class InteractionUI : MonoBehaviour
 						dst = Map.ActiveMap[openTiles[j]].SurfacePoint
 					};
 					order.cost = (order.dst - order.unit.Position).sqrMagnitude;
-					Debug.DrawRay(order.dst, Vector3.up, Color.magenta, 1);
+					UnityEngine.Debug.DrawRay(order.dst, Vector3.up, Color.magenta, 1);
 					_moveOrderQueue.Enqueue(order);
 
 					break;

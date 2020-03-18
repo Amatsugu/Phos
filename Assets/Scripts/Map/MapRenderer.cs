@@ -59,7 +59,7 @@ public class MapRenderer : MonoBehaviour
 		pos *= 2;
 		pos.y = map.seaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
-		Debug.Log("Map Load Invoke");
+		UnityEngine.Debug.Log("Map Load Invoke");
 		GameEvents.InvokeOnMapLoaded();
 		GameEvents.InvokeOnGameReady();
 	}

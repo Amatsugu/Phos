@@ -54,7 +54,7 @@ public class ResearchDatabaseUI : Editor
 			if (db.ContainsKey(treeInfo.tree.category))
 			{
 				if(treeInfo != db[treeInfo.tree.category])
-					Debug.LogWarning($"Replacing Exisiting tree '{db[treeInfo.tree.category].name}' with '{treeInfo.name}'");
+					UnityEngine.Debug.LogWarning($"Replacing Exisiting tree '{db[treeInfo.tree.category].name}' with '{treeInfo.name}'");
 				db[treeInfo.tree.category] = treeInfo;
 			}
 			else

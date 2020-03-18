@@ -291,7 +291,7 @@ namespace DataStore.ConduitGraph
 				}
 				if (open.Count > 512)
 				{
-					Debug.LogWarning("Big Path");
+					UnityEngine.Debug.LogWarning("Big Path");
 					break;
 				}
 			}

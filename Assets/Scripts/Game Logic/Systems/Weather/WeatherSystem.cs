@@ -252,7 +252,7 @@ public class WeatherSystem : JobComponentSystem
 			{
 				_nextWeather = _init.weatherDefinations[i];
 				_nextWeatherTime = _rand.Range(_nextWeather.duration.x, _nextWeather.duration.y) + _nextWeather.transitionTime;
-				Debug.Log($"Transitioning To {_nextWeather}, {_nextWeatherTime}s Duration");
+				UnityEngine.Debug.Log($"Transitioning To {_nextWeather}, {_nextWeatherTime}s Duration");
 				_nextWeatherTime += (float)Time.ElapsedTime;
 				_prevWeatherState = _curWeatherState;
 				break;

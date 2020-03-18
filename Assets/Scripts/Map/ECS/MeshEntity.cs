@@ -26,7 +26,7 @@ public class MeshEntity : ScriptableObject
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 		if (_entity == null || !em.Exists(_entity))
 		{
-			Debug.Log($"<b>Create Entity:</b> {name}");
+			UnityEngine.Debug.Log($"<b>Create Entity:</b> {name}");
 			var architype = GetArchetype();
 			RenderMesh sharedMesh = new RenderMesh
 			{

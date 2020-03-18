@@ -16,7 +16,7 @@ public class BuildingDatabaseUI : Editor
 		database = target as BuildingDatabase;
 		if (database.buildingCategories == null && !Application.isPlaying)
 		{
-			Debug.LogWarning("Building DB resetting");
+			UnityEngine.Debug.LogWarning("Building DB resetting");
 			database.Reset();
 			Refresh();
 			serializedObject.ApplyModifiedProperties();

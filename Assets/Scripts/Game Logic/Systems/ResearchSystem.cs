@@ -128,7 +128,7 @@ public class ResearchSystem : ComponentSystem
 		if (isComplete)
 		{
 			r.isCompleted = true;
-			Debug.Log($"Research: {rDatabase[r.identifier].name} Completed");
+			UnityEngine.Debug.Log($"Research: {rDatabase[r.identifier].name} Completed");
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Research Complete: {rDatabase[r.identifier].name}", GameRegistry.ResearchTreeUI);
 			rDatabase[r.identifier].reward?.ActivateReward();
 			activeResearch[category] = -1;
@@ -138,7 +138,7 @@ public class ResearchSystem : ComponentSystem
 
 	public static void SetActiveResearch(ResearchIdentifier identifier)
 	{
-		Debug.Log($"Research: {_INST.rDatabase[identifier].name} Started");
+		UnityEngine.Debug.Log($"Research: {_INST.rDatabase[identifier].name} Started");
 		if (!_INST.researchProgress.ContainsKey(identifier.GetHashCode()))
 		{
 			var cost = _INST.rDatabase[identifier].resourceCost;

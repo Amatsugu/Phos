@@ -115,13 +115,13 @@ public class ResourceSystem : ComponentSystem
 
 	protected override void OnCreate()
 	{
-		Debug.Log("Resource System Map Load Register");
+		UnityEngine.Debug.Log("Resource System Map Load Register");
 		GameEvents.OnMapLoaded += InitResSystem;
 	}
 
 	private void InitResSystem()
 	{
-		Debug.Log($"Resource System: Init");
+		UnityEngine.Debug.Log($"Resource System: Init");
 		_canRun = true;
 		GameRegistry.INST.resourceSystem = this;
 		InitCounts();

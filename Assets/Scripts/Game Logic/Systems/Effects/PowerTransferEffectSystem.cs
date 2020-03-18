@@ -83,7 +83,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 			_effectPaths.Add(node.id, path);
 		for (int i = 1; i < path.Count; i++)
 		{
-			Debug.DrawLine(path[i - 1], path[i], Color.magenta, 5);
+			UnityEngine.Debug.DrawLine(path[i - 1], path[i], Color.magenta, 5);
 		}
 	}
 

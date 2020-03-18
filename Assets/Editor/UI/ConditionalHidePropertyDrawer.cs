@@ -77,7 +77,7 @@ public class ConditionalHidePropertyDrawer : PropertyDrawer
             case SerializedPropertyType.Enum:
                 return sourcePropertyValue.enumValueIndex == condHAtt.enumIndex;
             default:
-                Debug.LogError("Data type of the property used for conditional hiding [" + sourcePropertyValue.propertyType + "] is currently not supported");
+				UnityEngine.Debug.LogError("Data type of the property used for conditional hiding [" + sourcePropertyValue.propertyType + "] is currently not supported");
                 return true;
         }
     }

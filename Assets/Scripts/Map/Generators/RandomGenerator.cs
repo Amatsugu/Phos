@@ -84,15 +84,15 @@ public class RandomGenerator : MapGenerator
 			if (reject < 10)
 				goto Start;
 			else
-				Debug.LogWarning("Unalble to find satisfactory level");
+				UnityEngine.Debug.LogWarning("Unalble to find satisfactory level");
 		}
-		Debug.Log($"Generate HightMap... {(DateTime.Now - startTime).TotalMilliseconds}ms {reject} Rejects");
+		UnityEngine.Debug.Log($"Generate HightMap... {(DateTime.Now - startTime).TotalMilliseconds}ms {reject} Rejects");
 		startTime = DateTime.Now;
 		var tempMap = biomePainter.GetTempMap(map.totalWidth, map.totalHeight, heightMap, min, max, seaLevel);
-		Debug.Log($"Generate Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		UnityEngine.Debug.Log($"Generate Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		startTime = DateTime.Now;
 		var moistureMap = biomePainter.GetMoistureMap(map.totalWidth, map.totalHeight, noiseFilters[0], noiseScale);
-		Debug.Log($"Generate Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		UnityEngine.Debug.Log($"Generate Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		//SaveBiomeMaps(tempMap, moistureMap, map.totalWidth, map.totalHeight);
 		startTime = DateTime.Now;
 		for (int z = 0; z < map.totalWidth; z++)
@@ -106,8 +106,8 @@ public class RandomGenerator : MapGenerator
 				map[coord] = tInfo.CreateTile(coord, height).SetBiome(biomeId, moistureMap[i], tempMap[i]);
 			}
 		}
-		Debug.Log($"Paint map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
-		Debug.Log($"Done... {(DateTime.Now - totalStartTime).TotalMilliseconds}ms");
+		UnityEngine.Debug.Log($"Paint map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		UnityEngine.Debug.Log($"Done... {(DateTime.Now - totalStartTime).TotalMilliseconds}ms");
 		return map;
 	}
 

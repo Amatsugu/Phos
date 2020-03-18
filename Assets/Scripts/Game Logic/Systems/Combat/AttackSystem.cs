@@ -28,7 +28,7 @@ public class UnitAttackSystem : ComponentSystem
 
 	protected void InitAttackSystem()
 	{
-		Debug.Log("Attack System: Init");
+		UnityEngine.Debug.Log("Attack System: Init");
 		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
 		_castHits = new NativeList<int>(Allocator.Persistent);
 		var op = Addressables.LoadAssetAsync<DynamicMeshEntity>("EnemyProjectile");
@@ -69,9 +69,10 @@ public class UnitAttackSystem : ComponentSystem
 
 	private void AttackAI()
 	{
-		_tranlationData = GetComponentDataFromEntity<Translation>();
-		_healthData = GetComponentDataFromEntity<Health>();
-		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p, ref UnitId id) =>
+		//_tranlationData = GetComponentDataFromEntity<Translation>();
+		//_healthData = GetComponentDataFromEntity<Health>();
+		_castHits.Clear();
+		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p, ref UnitId id, ref FactionId faction) =>
 		{
 			if (s.NextAttackTime <= Time.ElapsedTime)
 			{
@@ -92,7 +93,7 @@ public class UnitAttackSystem : ComponentSystem
 					},
 					Filter = new CollisionFilter
 					{
-						BelongsTo = 1u << (int)Faction.Phos,
+						BelongsTo =  ~((1u << (int)faction.Value) | (1u << (int)Faction.None)),
 						CollidesWith = ~0u,
 						GroupIndex = 0
 					}
@@ -102,25 +103,35 @@ public class UnitAttackSystem : ComponentSystem
 				{
 					if (_physicsWorld.PhysicsWorld.Bodies.Length <= _castHits[i])
 						continue;
-					var body = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]];
-					var entity = body.Entity;
-					if (!(EntityManager.HasComponent<Health>(entity) && EntityManager.HasComponent<FactionId>(entity)))
+					
+					var entity = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
+					if (!EntityManager.HasComponent<Health>(entity))
 						continue;
-					if (EntityManager.GetComponentData<FactionId>(entity).Value != Faction.Phos)
+					/*
+					if (!EntityManager.HasComponent<FactionId>(entity))
 						continue;
+					var fac = EntityManager.GetComponentData<FactionId>(entity).Value;
+					if (fac == Faction.None)
+						continue;
+					if (fac == faction.Value)
+						continue;
+						*/
 					var pos = EntityManager.GetComponentData<Translation>(entity).Value;
 					var dir = pos - t.Value;
 					var dist = math.lengthsq(dir);
-					if(dist <= 25)
+					if(dist <= 100)
 					{
 						var turretDir = dir;
 						turretDir.y = 0;
-						Debug.Log(EntityManager.GetName(entity));
-						EntityManager.SetComponentData(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
+						DebugUtilz.DrawCrosshair(pos, .5f, Color.magenta, .5f);
+						/*
+						Debug.Log($"Firing at: {EntityManager.GetName(entity)}");
+						EntityManager.SetComponentData(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(-turretDir, Vector3.up) });
 						dir = math.normalize(dir) * 5;
 						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, quaternion.LookRotation(dir, Vector3.up), dir);
 						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 1 });
-						break;
+						*/
+						//break;
 					}
 				}
 			}

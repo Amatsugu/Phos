@@ -84,7 +84,7 @@ public class BuildingTile : Tile
 		if (buildingInfo.constructionMesh != null)
 			Map.EM.DestroyEntity(_building);
 		if (buildingInfo.buildingMesh.mesh == null)
-			Debug.LogWarning($"No Building Assigned for {GetName()}");
+			UnityEngine.Debug.LogWarning($"No Building Assigned for {base.GetName()}");
 		else
 			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
 

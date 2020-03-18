@@ -87,7 +87,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 	public override void OnPlaced()
 	{
 		base.OnPlaced();
-		Debug.Log("Node Added");
+		UnityEngine.Debug.Log("Node Added");
 		Map.ActiveMap.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
 	}
 
