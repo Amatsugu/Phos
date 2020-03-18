@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a28301a30433c4e41a83503a7fa1a6eb, type: 3}
-  m_Name: EnemyProjectile
+  m_Name: PlayerProjectile
   m_EditorClassIdentifier: 
   mesh: {fileID: 8929111303131502281, guid: 9510d43d68c718a4a9a2a4585252a5f2, type: 3}
-  material: {fileID: 2100000, guid: 8086d3ccad5f02b4b83f3f348adb3cca, type: 2}
+  material: {fileID: 2100000, guid: 6a9fc4ad06ad1744f90fad146bfa4282, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
   colliderRadius: 0.5
   mass: 1
-  faction: 2
+  faction: 1
   selfCollision: 0

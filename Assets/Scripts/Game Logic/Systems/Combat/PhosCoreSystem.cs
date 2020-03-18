@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Assets.Scripts.Map.ECS;
+using System.Linq;
 
 using Unity.Burst;
 using Unity.Entities;
@@ -12,7 +13,7 @@ using UnityEngine.AddressableAssets;
 
 public class PhosCoreSystem : ComponentSystem
 {
-	private DynamicMeshEntity _bullet;
+	private ProjectileMeshEntity _bullet;
 	private int _state = 0;
 	private Map _map;
 
@@ -25,7 +26,7 @@ public class PhosCoreSystem : ComponentSystem
 	protected void Init()
 	{
 		UnityEngine.Debug.Log("Phos Core System: Init ");
-		var op = Addressables.LoadAssetAsync<DynamicMeshEntity>("EnemyProjectile");
+		var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyProjectile");
 		op.Completed += e =>
 		{
 			_bullet = e.Result;
@@ -90,7 +91,7 @@ public class PhosCoreSystem : ComponentSystem
 		var pos = startPos + (dir * 2.9f) + new float3(0, 4, 0);
 		dir.y = .4f;
 		var vel = dir * core.projectileSpeed;
-		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, quaternion.identity, vel);
+		var proj = _bullet.BufferedInstantiate(PostUpdateCommands, pos, 0.5f, vel);
 		PostUpdateCommands.SetComponent(proj, new Scale { Value = .5f });
 		PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 15 });
 		PostUpdateCommands.AddComponent(proj, new PhysicsGravityFactor { Value = 0 });

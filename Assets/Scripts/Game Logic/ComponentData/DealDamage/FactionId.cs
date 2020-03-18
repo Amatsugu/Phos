@@ -2,7 +2,7 @@
 
 public enum Faction
 {
-	None,
+	None = 0,
 	Player,
 	Phos
 }

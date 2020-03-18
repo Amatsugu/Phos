@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Map.ECS;
+using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -11,7 +12,7 @@ using UnityEngine.AddressableAssets;
 
 public class UnitAttackSystem : ComponentSystem
 {
-	private DynamicMeshEntity _bullet;
+	private ProjectileMeshEntity _bullet;
 	private Unity.Mathematics.Random _rand;
 	private int _state = 0;
 	private BuildPhysicsWorld _physicsWorld;
@@ -31,7 +32,7 @@ public class UnitAttackSystem : ComponentSystem
 		UnityEngine.Debug.Log("Attack System: Init");
 		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
 		_castHits = new NativeList<int>(Allocator.Persistent);
-		var op = Addressables.LoadAssetAsync<DynamicMeshEntity>("EnemyProjectile");
+		var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerProjectile");
 		op.Completed += e =>
 		{
 			_bullet = e.Result;
@@ -72,6 +73,7 @@ public class UnitAttackSystem : ComponentSystem
 		//_tranlationData = GetComponentDataFromEntity<Translation>();
 		//_healthData = GetComponentDataFromEntity<Health>();
 		_castHits.Clear();
+		int range = 20;
 		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p, ref UnitId id, ref FactionId faction) =>
 		{
 			if (s.NextAttackTime <= Time.ElapsedTime)
@@ -82,7 +84,7 @@ public class UnitAttackSystem : ComponentSystem
 				var ab = new AABB
 				{
 					Center = t.Value,
-					Extents = new float3(5, 50, 5)
+					Extents = new float3(range, range, range)
 				};
 				_physicsWorld.PhysicsWorld.CollisionWorld.OverlapAabb(new OverlapAabbInput
 				{
@@ -93,8 +95,8 @@ public class UnitAttackSystem : ComponentSystem
 					},
 					Filter = new CollisionFilter
 					{
-						BelongsTo =  ~((1u << (int)faction.Value) | (1u << (int)Faction.None)),
-						CollidesWith = ~0u,
+						BelongsTo =  ~0u,
+						CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None)),
 						GroupIndex = 0
 					}
 				}, ref _castHits);
@@ -107,30 +109,18 @@ public class UnitAttackSystem : ComponentSystem
 					var entity = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
 					if (!EntityManager.HasComponent<Health>(entity))
 						continue;
-					/*
-					if (!EntityManager.HasComponent<FactionId>(entity))
-						continue;
-					var fac = EntityManager.GetComponentData<FactionId>(entity).Value;
-					if (fac == Faction.None)
-						continue;
-					if (fac == faction.Value)
-						continue;
-						*/
+					
 					var pos = EntityManager.GetComponentData<Translation>(entity).Value;
-					var dir = pos - t.Value;
+					var dir = t.Value - pos;
 					var dist = math.lengthsq(dir);
-					if(dist <= 100)
+					if(dist <= range * range)
 					{
 						var turretDir = dir;
 						turretDir.y = 0;
-						DebugUtilz.DrawCrosshair(pos, .5f, Color.magenta, .5f);
-						/*
-						Debug.Log($"Firing at: {EntityManager.GetName(entity)}");
-						EntityManager.SetComponentData(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(-turretDir, Vector3.up) });
-						dir = math.normalize(dir) * 5;
-						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value, quaternion.LookRotation(dir, Vector3.up), dir);
+						EntityManager.SetComponentData(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
+						dir = math.normalize(dir) * -10;
+						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, dir);
 						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 1 });
-						*/
 						//break;
 					}
 				}

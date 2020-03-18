@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: EnergyPacket
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 55862559bdae3734096a682461b34c0c
+    m_Address: PlayerProjectile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   - m_GUID: 92a751f183a54144ebaf6f1dbd6d7afc
     m_Address: EnemyProjectile
     m_ReadOnly: 0
