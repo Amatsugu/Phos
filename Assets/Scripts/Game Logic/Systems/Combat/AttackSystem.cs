@@ -45,14 +45,14 @@ public class UnitAttackSystem : ComponentSystem
 		_healthData = GetComponentDataFromEntity<Health>();
 
 		GameEvents.OnMapLoaded -= InitAttackSystem;
-		GameEvents.OnMapDestroyed += OnDestroy;
+		GameEvents.OnMapDestroyed += Destroy;
 	}
 
-	protected override void OnDestroy()
+	protected void Destroy()
 	{
 		base.OnDestroy();
 		_castHits.Dispose();
-		GameEvents.OnMapDestroyed -= OnDestroy;
+		GameEvents.OnMapDestroyed -= Destroy;
 	}
 
 	protected override void OnUpdate()
@@ -118,9 +118,9 @@ public class UnitAttackSystem : ComponentSystem
 						var turretDir = dir;
 						turretDir.y = 0;
 						EntityManager.SetComponentData(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
-						dir = math.normalize(dir) * -10;
-						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, dir);
-						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 1 });
+						dir = math.normalize(dir) * -20;
+						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
+						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
 						//break;
 					}
 				}
