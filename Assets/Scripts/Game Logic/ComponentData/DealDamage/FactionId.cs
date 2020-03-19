@@ -4,7 +4,9 @@ public enum Faction
 {
 	None = 0,
 	Player,
-	Phos
+	Phos,
+	PlayerProjectile,
+	PhosProjectile
 }
 
 public struct FactionId : IComponentData

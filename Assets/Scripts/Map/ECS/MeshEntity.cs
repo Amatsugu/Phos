@@ -28,23 +28,29 @@ public class MeshEntity : ScriptableObject
 		{
 			UnityEngine.Debug.Log($"<b>Create Entity:</b> {name}");
 			var architype = GetArchetype();
-			RenderMesh sharedMesh = new RenderMesh
-			{
-				castShadows = castShadows,
-				mesh = mesh,
-				subMesh = 0,
-				material = material,
-				receiveShadows = receiveShadows
-			};
 
 			_entity = em.CreateEntity(architype);
-			em.SetSharedComponentData(_entity, sharedMesh);
-#if DEBUG
-			em.SetName(_entity, $"{this.GetType().Name}: {name}");
-#endif
+			PrepareDefaultComponentData(_entity);
 			return _entity;
 		}
 		return _entity;
+	}
+
+	public virtual void PrepareDefaultComponentData(Entity entity)
+	{
+		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+		RenderMesh sharedMesh = new RenderMesh
+		{
+			castShadows = castShadows,
+			mesh = mesh,
+			subMesh = 0,
+			material = material,
+			receiveShadows = receiveShadows
+		};
+		em.SetSharedComponentData(entity, sharedMesh);
+#if DEBUG
+		em.SetName(entity, $"{this.GetType().Name}: {name}");
+#endif
 	}
 
 	protected virtual EntityArchetype GetArchetype() =>

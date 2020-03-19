@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Tiles.EnemyBuildings
 {
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Enemy Building/Phos Core")]
-	public class PhosCoreTileInfo : BuildingTileInfo
+	public class PhosCoreTileInfo : BuildingTileEntity
 	{
 		public float fireRate = 1;
 		public float spinRate = 1;

@@ -6,7 +6,7 @@ using UnityEngine;
 public class MobileUnit
 {
 	public int id;
-	public MobileUnitInfo info;
+	public MobileUnitEntity info;
 
 	public HexCoords Coords { get; protected set; }
 
@@ -28,7 +28,7 @@ public class MobileUnit
 	private Faction _faction;
 	public Vector3 _position;
 
-	public MobileUnit(int id, MobileUnitInfo info, Tile tile, int chunkId, Faction faction)
+	public MobileUnit(int id, MobileUnitEntity info, Tile tile, int chunkId, Faction faction)
 	{
 		this.id = id;
 		this.info = info;

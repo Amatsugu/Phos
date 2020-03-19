@@ -72,7 +72,7 @@ public class BuildUI : MonoBehaviour
 
 
 	private List<UIUnitIcon> _activeUnits;
-	private BuildingTileInfo _selectedBuilding;
+	private BuildingTileEntity _selectedBuilding;
 	private Camera _cam;
 	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
 	private Dictionary<MeshEntity, int> _renderedEntities;
@@ -243,7 +243,7 @@ public class BuildUI : MonoBehaviour
 				ValidateResourceConduit(selectedTile, conduit);
 				break;
 
-			case ResourceGatheringBuildingInfo building:
+			case ResourceGatheringBuildingEntity building:
 				ValidateResourceGatheringBuilding(selectedTile, tilesToOccupy, building);
 				break;
 		}
@@ -451,7 +451,7 @@ public class BuildUI : MonoBehaviour
 		_renderedEntities[line] = c;
 	}
 
-	private void ValidateResourceGatheringBuilding(Tile selectedTile, List<Tile> tilesToOccupy, ResourceGatheringBuildingInfo buildingInfo)
+	private void ValidateResourceGatheringBuilding(Tile selectedTile, List<Tile> tilesToOccupy, ResourceGatheringBuildingEntity buildingInfo)
 	{
 		var resInRange = new Dictionary<int, int>();
 		var resTiles = new Dictionary<int, List<Tile>>();

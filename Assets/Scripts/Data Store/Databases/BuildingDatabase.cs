@@ -27,7 +27,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 	public class BuildingDefination
 	{
 		public int id;
-		public BuildingTileInfo info;
+		public BuildingTileEntity info;
 		public BuildingCategory category;
 
 		public override int GetHashCode()
@@ -48,7 +48,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 		return _nextId++;
 	}
 
-	public int GetId(BuildingTileInfo building)
+	public int GetId(BuildingTileEntity building)
 	{
 		foreach (var b in buildings.Values)
 		{

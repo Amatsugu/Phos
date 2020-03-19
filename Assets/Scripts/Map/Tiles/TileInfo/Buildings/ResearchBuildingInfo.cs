@@ -6,7 +6,7 @@ using Unity.Entities;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Research Building")]
-public class ResearchBuildingInfo : BuildingTileInfo
+public class ResearchBuildingInfo : BuildingTileEntity
 {
 	public BuildingCategory researchCategory;
 	public float consumptionMuli = 2;

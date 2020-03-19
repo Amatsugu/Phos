@@ -12,7 +12,6 @@ namespace Assets.Scripts.Map.ECS
 	public class ProjectileMeshEntity : DynamicMeshEntity
 	{
 		public Faction faction;
-		public bool selfCollision;
 
 		public Entity Instantiate(float3 position, float scale, float3 velocity = default, float3 angularVelocity = default)
 		{
@@ -28,10 +27,15 @@ namespace Assets.Scripts.Map.ECS
 			return e;
 		}
 
+		protected override PhysicsMass GetMass()
+		{
+			return PhysicsMass.CreateKinematic(MassProperties.UnitSphere);
+		}
+
 		protected override CollisionFilter GetFilter() => new CollisionFilter
 		{
 			BelongsTo = (1u << (int)faction),
-			CollidesWith = selfCollision ? (~0u) : ~(1u << (int)faction),
+			CollidesWith = ~((1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.PlayerProjectile)),
 			GroupIndex = 0
 		};
 	}

@@ -8,7 +8,7 @@ using UnityEngine;
 public class StructureGenerator : FeatureGenerator
 {
 	public int2 count;
-	public BuildingTileInfo tile;
+	public BuildingTileEntity tile;
 	public float minDist;
 	public float2 altitudeRange;
 

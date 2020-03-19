@@ -70,8 +70,6 @@ public class UnitAttackSystem : ComponentSystem
 
 	private void AttackAI()
 	{
-		//_tranlationData = GetComponentDataFromEntity<Translation>();
-		//_healthData = GetComponentDataFromEntity<Health>();
 		_castHits.Clear();
 		int range = 20;
 		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p, ref UnitId id, ref FactionId faction) =>
@@ -81,22 +79,18 @@ public class UnitAttackSystem : ComponentSystem
 				s.NextAttackTime = Time.ElapsedTime + s.Value;
 
 				//Get Objects in Rect Range
-				var ab = new AABB
-				{
-					Center = t.Value,
-					Extents = new float3(range, range, range)
-				};
+				var range3 = new float3(range, range, range);
 				_physicsWorld.PhysicsWorld.CollisionWorld.OverlapAabb(new OverlapAabbInput
 				{
 					Aabb = new Aabb
 					{
-						Max = ab.Max,
-						Min = ab.Min
+						Max = t.Value + range3,
+						Min = t.Value - range3
 					},
 					Filter = new CollisionFilter
 					{
 						BelongsTo =  ~0u,
-						CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None)),
+						CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile)),
 						GroupIndex = 0
 					}
 				}, ref _castHits);
@@ -121,7 +115,7 @@ public class UnitAttackSystem : ComponentSystem
 						dir = math.normalize(dir) * -20;
 						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
 						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
-						//break;
+						break;
 					}
 				}
 			}

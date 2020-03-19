@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Connected Tile")]
-public class ConnectedTileInfo : BuildingTileInfo
+public class ConnectedTileInfo : BuildingTileEntity
 {
-	public BuildingTileInfo[] tileConnections;
+	public BuildingTileEntity[] tileConnections;
 	public bool connectToSelf = false;
 	public MeshEntityRotatable connectionMesh;
 

@@ -1,6 +1,6 @@
 ﻿public class TickedTile : PoweredBuildingTile
 {
-	public TickedTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
+	public TickedTile(HexCoords coords, float height, BuildingTileEntity tInfo) : base(coords, height, tInfo)
 	{
 	}
 

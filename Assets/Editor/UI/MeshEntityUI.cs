@@ -21,7 +21,7 @@ public class MeshEntityUI : Editor
 			EditorGUILayout.InspectorTitlebar(true, meshEntity.material);
 			CreateEditor(meshEntity.material).OnInspectorGUI();
 		}
-		if(meshEntity is BuildingTileInfo b)
+		if(meshEntity is BuildingTileEntity b)
 		{
 			if(b.buildingMesh != null && b.buildingMesh != b)
 			{

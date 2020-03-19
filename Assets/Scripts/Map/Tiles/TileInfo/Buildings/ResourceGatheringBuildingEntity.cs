@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building/Resoruce Gathering")]
-public class ResourceGatheringBuildingInfo : BuildingTileInfo
+public class ResourceGatheringBuildingEntity : BuildingTileEntity
 {
 	public ResourceIndentifier[] resourcesToGather;
 	public int gatherRange = 3;

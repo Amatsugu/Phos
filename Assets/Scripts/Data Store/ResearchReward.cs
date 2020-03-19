@@ -81,5 +81,5 @@ public class BuildingIdentifier
 [System.Serializable]
 public struct UnitIdentifier
 {
-	public MobileUnitInfo unit;
+	public MobileUnitEntity unit;
 }

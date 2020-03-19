@@ -12,7 +12,7 @@ public enum PlacementMode
 }
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
-public class BuildingTileInfo : TileInfo
+public class BuildingTileEntity : TileInfo
 {
 	[Header("Mesh")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]

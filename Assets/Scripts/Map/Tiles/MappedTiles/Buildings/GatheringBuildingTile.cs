@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class GatheringBuildingTile : PoweredBuildingTile
 {
-	public ResourceGatheringBuildingInfo gatherInfo;
+	public ResourceGatheringBuildingEntity gatherInfo;
 
-	public GatheringBuildingTile(HexCoords coords, float height, ResourceGatheringBuildingInfo tInfo) : base(coords, height, tInfo)
+	public GatheringBuildingTile(HexCoords coords, float height, ResourceGatheringBuildingEntity tInfo) : base(coords, height, tInfo)
 	{
 		gatherInfo = tInfo;
 	}

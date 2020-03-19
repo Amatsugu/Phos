@@ -3,12 +3,12 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/HQ")]
-public class HQTileInfo : BuildingTileInfo
+public class HQTileInfo : BuildingTileEntity
 {
 	public ResourceIndentifier[] startingResources;
 
 	public SubHQTileInfo[] subHQTiles;
-	public MobileUnitInfo unitInfo;
+	public MobileUnitEntity unitInfo;
 
 	public override Tile CreateTile(HexCoords pos, float height)
 	{

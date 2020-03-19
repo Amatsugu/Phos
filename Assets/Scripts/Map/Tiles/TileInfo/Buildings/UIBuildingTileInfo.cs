@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class InteractiveBuildingTileInfo : BuildingTileInfo
+public class InteractiveBuildingTileInfo : BuildingTileEntity
 {
 	public RectTransform UIScreen;
 

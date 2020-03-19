@@ -44,7 +44,7 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="building">The tile info of the building to build</param>
 	/// <param name="dst">The tile on which the building will be placed</param>
 	/// <param name="dropPod">The mesh entity that will be used as a drop pod</param>
-	public static void QueueBuilding(BuildingTileInfo building, Tile dst, MeshEntityRotatable dropPod) => _INST.QueueBuilding(dst, building, dropPod);
+	public static void QueueBuilding(BuildingTileEntity building, Tile dst, MeshEntityRotatable dropPod) => _INST.QueueBuilding(dst, building, dropPod);
 
 	/// <summary>
 	/// Add a building to the build queue
@@ -52,7 +52,7 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="tile">The tile on which the building will be placed</param>
 	/// <param name="building">The tile info of the building to build</param>
 	/// <param name="dropPod">The mesh entity that will be used as a drop pod</param>
-	private void QueueBuilding(Tile tile, BuildingTileInfo building, MeshEntityRotatable dropPod)
+	private void QueueBuilding(Tile tile, BuildingTileEntity building, MeshEntityRotatable dropPod)
 	{
 		var hqMode = building is HQTileInfo;
 		var callback = tile.Coords.ToString().GetHashCode();
@@ -143,7 +143,7 @@ public class BuildQueueSystem : ComponentSystem
 public struct BuildOrder
 {
 	public Tile dstTile;
-	public BuildingTileInfo building;
+	public BuildingTileEntity building;
 }
 
 public struct ConstructionOrder

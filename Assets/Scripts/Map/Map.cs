@@ -240,7 +240,7 @@ public class Map : IDisposable
 		}
 	}
 
-	public MobileUnit AddUnit(MobileUnitInfo unitInfo, Tile tile, Faction faction)
+	public MobileUnit AddUnit(MobileUnitEntity unitInfo, Tile tile, Faction faction)
 	{
 		var id = _nextId++;
 		var chunkIndex = tile.Coords.GetChunkIndex(width);

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BuildingTile : Tile
 {
-	public readonly BuildingTileInfo buildingInfo;
+	public readonly BuildingTileEntity buildingInfo;
 	public int distanceToHQ;
 	public int upgradeLevel = 0;
 	public bool IsBuilt => _isBuilt;
@@ -14,7 +14,7 @@ public class BuildingTile : Tile
 	private Entity _offshorePlatform;
 	protected bool _isBuilt;
 
-	public BuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
+	public BuildingTile(HexCoords coords, float height, BuildingTileEntity tInfo) : base(coords, height, tInfo)
 	{
 		buildingInfo = tInfo;
 	}
@@ -169,7 +169,7 @@ public class PoweredBuildingTile : BuildingTile
 
 	protected bool _connectionInit;
 
-	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileInfo tInfo) : base(coords, height, tInfo)
+	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileEntity tInfo) : base(coords, height, tInfo)
 	{
 	}
 

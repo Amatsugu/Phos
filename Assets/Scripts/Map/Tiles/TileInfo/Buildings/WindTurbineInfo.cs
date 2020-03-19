@@ -1,4 +1,4 @@
-﻿public class WindTurbineInfo : BuildingTileInfo
+﻿public class WindTurbineInfo : BuildingTileEntity
 {
 	public override Tile CreateTile(HexCoords pos, float height)
 	{

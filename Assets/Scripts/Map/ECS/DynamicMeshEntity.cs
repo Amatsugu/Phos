@@ -51,9 +51,11 @@ public class DynamicMeshEntity : MeshEntityRotatable
 			Linear = velocity,
 			Angular = angularVelocity
 		});
-		commandBuffer.SetComponent(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1));
+		commandBuffer.SetComponent(e, GetMass());
 		return e;
 	}
+
+	protected virtual PhysicsMass GetMass() => PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1);
 
 	protected virtual PhysicsCollider GetCollider() => new PhysicsCollider
 	{

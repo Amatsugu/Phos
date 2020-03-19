@@ -59,14 +59,14 @@ public class BuildingDatabaseUI : Editor
 
 	public void Refresh()
 	{
-		var bd = new Dictionary<BuildingCategory, List<BuildingTileInfo>>();
+		var bd = new Dictionary<BuildingCategory, List<BuildingTileEntity>>();
 		var assets = AssetDatabase.FindAssets("t:BuildingTileInfo", new[] { "Assets/GameData/MapAssets/TileInfo/Buildings" });
 		foreach (var asset in assets)
 		{
 			var assetPath = AssetDatabase.GUIDToAssetPath(asset);
-			var building = AssetDatabase.LoadAssetAtPath<BuildingTileInfo>(assetPath);
+			var building = AssetDatabase.LoadAssetAtPath<BuildingTileEntity>(assetPath);
 			if (!bd.ContainsKey(building.category))
-				bd.Add(building.category, new List<BuildingTileInfo>());
+				bd.Add(building.category, new List<BuildingTileEntity>());
 			bd[building.category].Add(building);
 		}
 		foreach (var category in bd.Keys)
@@ -77,7 +77,7 @@ public class BuildingDatabaseUI : Editor
 		CullDeleted();
 	}
 
-	public void AddBuildings(BuildingCategory category, BuildingTileInfo[] orderedBuildings)
+	public void AddBuildings(BuildingCategory category, BuildingTileEntity[] orderedBuildings)
 	{
 		if (!database.buildingCategories.ContainsKey(category))
 			database.buildingCategories.Add(category, new int[orderedBuildings.Length]);
