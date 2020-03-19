@@ -11,7 +11,7 @@ No, but they will be in control of a terrestrial army that they will use to figh
 Unity
 
 **When will Phos be released?**
-TBD, likely by the end of this year I will have betas.
+TBD
 
 **How much will Phos cost?**
 I'm not sure not a price point yet, but it definitely won't exceed $20 with the current scope of development plans.
