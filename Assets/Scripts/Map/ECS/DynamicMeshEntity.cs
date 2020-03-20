@@ -12,8 +12,13 @@ using SphereCollider = Unity.Physics.SphereCollider;
 [CreateAssetMenu(menuName = "ECS/Dynamic Entity")]
 public class DynamicMeshEntity : MeshEntityRotatable
 {
-	[Header("Collision")]
+	[Header("Physics")]
+	public bool enableCollision = true;
+	[ConditionalHide("enableCollision")]
 	public float colliderRadius;
+	public bool gravity = true;
+	[ConditionalHide("gravity")]
+	public float gravityFactor = 1;
 	public float mass = 1;
 
 	public override IEnumerable<ComponentType> GetComponents()
@@ -22,7 +27,17 @@ public class DynamicMeshEntity : MeshEntityRotatable
 		{
 			typeof(PhysicsCollider),
 			typeof(PhysicsVelocity),
-			typeof(PhysicsMass)
+			typeof(PhysicsMass),
+			typeof(PhysicsGravityFactor)
+		});
+	}
+
+	public override void PrepareDefaultComponentData(Entity entity)
+	{
+		base.PrepareDefaultComponentData(entity);
+		Map.EM.SetComponentData(entity, new PhysicsGravityFactor
+		{
+			Value = gravity ? 0 : gravityFactor
 		});
 	}
 

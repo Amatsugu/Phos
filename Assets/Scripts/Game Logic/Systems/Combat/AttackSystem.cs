@@ -1,5 +1,5 @@
-﻿using Assets.Scripts.Map.ECS;
-using System;
+﻿using System;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -17,8 +17,10 @@ public class UnitAttackSystem : ComponentSystem
 	private int _state = 0;
 	private BuildPhysicsWorld _physicsWorld;
 	private NativeList<int> _castHits;
+
 	[ReadOnly]
 	private ComponentDataFromEntity<Translation> _tranlationData;
+
 	private ComponentDataFromEntity<Health> _healthData;
 
 	protected override void OnCreate()
@@ -35,8 +37,11 @@ public class UnitAttackSystem : ComponentSystem
 		var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerProjectile");
 		op.Completed += e =>
 		{
-			_bullet = e.Result;
-			_state = 1;
+			if (e.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+			{
+				_bullet = e.Result;
+				_state = 1;
+			}
 		};
 		_rand = new Unity.Mathematics.Random();
 		_rand.InitState();
@@ -89,7 +94,7 @@ public class UnitAttackSystem : ComponentSystem
 					},
 					Filter = new CollisionFilter
 					{
-						BelongsTo =  ~0u,
+						BelongsTo = ~0u,
 						CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile)),
 						GroupIndex = 0
 					}
@@ -99,19 +104,19 @@ public class UnitAttackSystem : ComponentSystem
 				{
 					if (_physicsWorld.PhysicsWorld.Bodies.Length <= _castHits[i])
 						continue;
-					
+
 					var entity = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
 					if (!EntityManager.HasComponent<Health>(entity))
 						continue;
-					
+
 					var pos = EntityManager.GetComponentData<Translation>(entity).Value;
 					var dir = t.Value - pos;
 					var dist = math.lengthsq(dir);
-					if(dist <= range * range)
+					if (dist <= range * range)
 					{
 						var turretDir = dir;
 						turretDir.y = 0;
-						EntityManager.SetComponentData(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
+						PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
 						dir = math.normalize(dir) * -20;
 						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
 						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });

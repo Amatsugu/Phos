@@ -34,6 +34,7 @@ MonoBehaviour:
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
+  maxHealth: 0
   upgradeTarget:
     id: -1
   icon: {fileID: 0}
@@ -47,3 +48,5 @@ MonoBehaviour:
   targetingDelay: 0.5
   targetingRange: 10
   ring: {fileID: 11400000, guid: 64973f25b9a027a4c9e05e13cc4a8445, type: 2}
+  projectile: {fileID: 11400000, guid: 92a751f183a54144ebaf6f1dbd6d7afc, type: 2}
+  laser: {fileID: 11400000, guid: 3efb8b32381cc1646adffa7c63f5639f, type: 2}

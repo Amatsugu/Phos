@@ -10,13 +10,16 @@ namespace Tiles.EnemyBuildings
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Enemy Building/Phos Core")]
 	public class PhosCoreTileInfo : BuildingTileEntity
 	{
+		[Header("Stats")]
 		public float fireRate = 1;
 		public float spinRate = 1;
 		public float projectileSpeed = 1;
 		public float targetingDelay = .2f;
 		public int targetingRange = 10;
-
+		[Header("Child Entities")]
 		public MeshEntityRotatable ring;
+		public MeshEntityRotatable projectile;
+		public MeshEntityRotatable laser;
 
 		public override IEnumerable<ComponentType> GetComponents()
 		{
@@ -35,7 +38,9 @@ namespace Tiles.EnemyBuildings
 				projectileSpeed = projectileSpeed,
 				targetingRange = targetingRange,
 				targetDelay = targetingDelay,
-				ring = ring.Instantiate(Map.ActiveMap[pos].SurfacePoint, Vector3.one)
+				ring = ring.Instantiate(Map.ActiveMap[pos].SurfacePoint, Vector3.one),
+				laser = laser.GetEntity(),
+				projectile = projectile.GetEntity()
 			});
 
 			return e;
