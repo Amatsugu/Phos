@@ -36,18 +36,16 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 		});
 	}
 
-
 	public override void PrepareDefaultComponentData(Entity entity)
 	{
 		base.PrepareDefaultComponentData(entity);
 		Map.EM.SetComponentData(entity, new MoveSpeed { Value = moveSpeed });
 		Map.EM.SetComponentData(entity, new Heading { Value = Vector3.forward });
 		Map.EM.SetComponentData(entity, new Projectile { Value = projectile.GetEntity() });
-		Map.EM.SetComponentData(entity, new AttackSpeed { Value = attackSpeed });
+		Map.EM.SetComponentData(entity, new AttackSpeed { Value = 1f / attackSpeed });
 		Map.EM.SetComponentData(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
 		Map.EM.SetComponentData(entity, new UnitDomain { Value = unitDomain.Value });
 		Map.EM.SetComponentData(entity, new UnitClass { Value = unitClass.Value });
-
 		Map.EM.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
 	}
 
@@ -65,7 +63,7 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 
 		var physMat = Unity.Physics.Material.Default;
 		physMat.Flags |= Unity.Physics.Material.MaterialFlags.EnableCollisionEvents;
-		
+
 		Map.EM.SetComponentData(e, new PhysicsCollider
 		{
 			Value = Unity.Physics.BoxCollider.Create(new BoxGeometry

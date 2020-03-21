@@ -34,7 +34,7 @@ namespace Tiles.EnemyBuildings
 
 			Map.EM.AddComponentData(e, new PhosCore
 			{
-				fireRate = 1 / fireRate,
+				fireRate = 1f/fireRate,
 				spinRate = spinRate,
 				nextVolleyTime = Time.time,
 				projectileSpeed = projectileSpeed,

@@ -20,7 +20,7 @@ MonoBehaviour:
   nonUniformScale: 0
   head: {fileID: 11400000, guid: 68cb1fd3b1861fd4880a15223d7f5b63, type: 2}
   moveSpeed: 10
-  attackSpeed: 2
+  attackSpeed: 5
   maxHealth: 100
   size: 0
   projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}

@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 
 public struct InactiveBuildingTag : IComponentData
 {
@@ -15,4 +16,9 @@ public struct FirstTickTag : IComponentData
 public struct BuildingId : IComponentData
 {
 	public int Value;
+}
+
+public struct CenterOfMass : IComponentData
+{
+	public float3 Offset;
 }

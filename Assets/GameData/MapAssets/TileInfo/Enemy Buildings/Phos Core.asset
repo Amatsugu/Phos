@@ -23,6 +23,10 @@ MonoBehaviour:
   isTraverseable: 1
   faction: 2
   buildingMesh: {fileID: 11400000, guid: 12f33196a9f8f6f49af32137683eda3f, type: 2}
+  centerOfMass:
+    x: 0
+    y: 4
+    z: 0
   constructionMesh: {fileID: 0}
   tier: 1
   constructionTime: 2
@@ -42,11 +46,11 @@ MonoBehaviour:
   cost: []
   production: []
   consumption: []
-  fireRate: 0.5
+  fireRate: 2
   spinRate: 5
-  projectileSpeed: 15
+  projectileSpeed: 10
   targetingDelay: 0.5
-  targetingRange: 10
+  targetingRange: 20
   ring: {fileID: 11400000, guid: 64973f25b9a027a4c9e05e13cc4a8445, type: 2}
   projectile: {fileID: 11400000, guid: 92a751f183a54144ebaf6f1dbd6d7afc, type: 2}
   laser: {fileID: 11400000, guid: 3efb8b32381cc1646adffa7c63f5639f, type: 2}

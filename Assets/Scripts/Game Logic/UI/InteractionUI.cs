@@ -193,8 +193,10 @@ public class InteractionUI : MonoBehaviour
 #if DEBUG
 		for (int i = 0; i < _selectedUnits.Count; i++)
 		{
+			if (!Map.ActiveMap.units.ContainsKey(_selectedUnits[i]))
+				continue;
 			var unit = Map.ActiveMap.units[_selectedUnits[i]];
-			UnityEngine.Debug.DrawRay(unit.Position, Vector3.up, Color.white);
+			Debug.DrawRay(unit.Position, Vector3.up, Color.white);
 		}
 #endif
 

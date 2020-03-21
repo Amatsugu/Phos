@@ -87,21 +87,21 @@ public class UnitAttackSystem : ComponentSystem
 		{
 			if (!EntityManager.Exists(atkTarget.Value))
 				return;
-			var pos = EntityManager.GetComponentData<Translation>(atkTarget.Value);
-			var dir = t.Value - pos.Value;
+			var pos = EntityManager.GetComponentData<Translation>(atkTarget.Value).Value + EntityManager.GetComponentData<CenterOfMass>(atkTarget.Value).Offset;
+			var dir = t.Value - pos;
 			var dist = math.lengthsq(dir);
 			if (dist > 20 * 20)
 			{
 				PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 				return;
 			}
-			if (Time.ElapsedTime >= atkSpeed.NextAttackTime)
-			{
-				//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
-				dir = math.normalize(dir) * -20;
-				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
-				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
-			}
+			if (atkSpeed.NextAttackTime > Time.ElapsedTime)
+				return;
+			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
+			//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
+			dir = math.normalize(dir) * -20;
+			var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
+			PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
 		});
 	}
 
@@ -110,8 +110,9 @@ public class UnitAttackSystem : ComponentSystem
 		int range = 20;
 		Entities.WithNone<Disabled, AttackTarget>().ForEach((Entity e, ref Translation t, ref FactionId faction, ref AttackSpeed atkSpeed) =>
 		{
-			if (atkSpeed.NextAttackTime < Time.ElapsedTime)
+			if (atkSpeed.NextAttackTime > Time.ElapsedTime)
 				return;
+			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//Get Objects in Rect Range
 			_physicsWorld.AABBCast(t.Value, new float3(range, range, range), new CollisionFilter
 			{
@@ -129,7 +130,7 @@ public class UnitAttackSystem : ComponentSystem
 				if (!EntityManager.HasComponent<Health>(target))
 					continue;
 
-				var pos = EntityManager.GetComponentData<Translation>(target).Value;
+				var pos = EntityManager.GetComponentData<Translation>(target).Value + EntityManager.GetComponentData<CenterOfMass>(target).Offset;
 				var dir = t.Value - pos;
 				var dist = math.lengthsq(dir);
 				if (dist <= range * range)

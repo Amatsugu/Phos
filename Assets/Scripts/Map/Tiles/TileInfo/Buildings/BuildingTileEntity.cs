@@ -2,7 +2,7 @@
 using System.Linq;
 
 using Unity.Entities;
-
+using Unity.Mathematics;
 using UnityEngine;
 
 public enum PlacementMode
@@ -17,7 +17,7 @@ public class BuildingTileEntity : TileInfo
 	[Header("Mesh")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable buildingMesh;
-
+	public float3 centerOfMass;
 	public MeshEntityRotatable constructionMesh;
 
 	[Header("Stats")]
@@ -62,20 +62,24 @@ public class BuildingTileEntity : TileInfo
 			typeof(BuildingOffTag), 
 			typeof(BuildingId),
 			typeof(Health),
+			typeof(CenterOfMass),
 		});
 	}
 
-	public override Entity Instantiate(HexCoords pos, float height)
+	public override void PrepareDefaultComponentData(Entity entity)
 	{
-		var e = base.Instantiate(pos, height);
-		Map.EM.SetComponentData(e, new Health
+		base.PrepareDefaultComponentData(entity);
+		Map.EM.SetComponentData(entity, new Health
 		{
 			maxHealth = maxHealth,
 			Value = maxHealth
 		});
-		return e;
+		Map.EM.SetComponentData(entity, new CenterOfMass
+		{
+			Offset = centerOfMass
+		});
 	}
-	
+
 	public override Tile CreateTile(HexCoords pos, float height)
 	{
 		if (consumption.Length != 0 || production.Any(p => p.id == 0))
