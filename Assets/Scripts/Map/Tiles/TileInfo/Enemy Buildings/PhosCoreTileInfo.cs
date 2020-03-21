@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Entities;
 
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Tiles.EnemyBuildings
 {
@@ -18,6 +19,7 @@ namespace Tiles.EnemyBuildings
 		public int targetingRange = 10;
 		[Header("Child Entities")]
 		public MeshEntityRotatable ring;
+		[Header("Projectiles")]
 		public MeshEntityRotatable projectile;
 		public MeshEntityRotatable laser;
 

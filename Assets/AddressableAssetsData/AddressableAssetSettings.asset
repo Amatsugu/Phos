@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 3e15562f3402d1c43a39fad5556a0f4e
+  m_DefaultGroup: 2c06710c9a117744e8ba504382cb719d
   m_BuildRemoteCatalog: 0
+  m_DisableCatalogUpdateOnStart: 0
+  m_UniqueBundleIds: 0
   m_RemoteCatalogBuildPath:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
   m_overridePlayerVersion: 
   m_GroupAssets:
-  - {fileID: 11400000, guid: 663c870a7012633428f23447a790cdc8, type: 2}
   - {fileID: 11400000, guid: 168232383480e2543b9d0df5dc02737e, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
@@ -63,10 +64,13 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
-    - Tiles
-    - Units
-    - Buildings
-    - Resources
+    - Weather
+    - Tile
+    - Building
+    - Resource
+    - Unit
+    - Player
+    - Phos
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: a445caae8e7891a4ab78e5e43394f4a3, type: 2}
