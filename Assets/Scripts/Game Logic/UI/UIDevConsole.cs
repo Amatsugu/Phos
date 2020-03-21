@@ -38,6 +38,7 @@ public class UIDevConsole : MonoBehaviour
 	private void AddDefaultCommands()
 	{
 		AddCommand(new Command("close", () => consolePanel.Hide(), "Closes the console"));
+		AddCommand(new Command("quit", () => Application.Quit(0), "Quits the Game"));
 		AddCommand(new HelpCommand());
 		//Info
 		AddCommand(new Command("seed", () => AddConsoleMessage(Map.ActiveMap.Seed.ToString()), "Displays the current map seed"));
@@ -171,7 +172,10 @@ public class UIDevConsole : MonoBehaviour
 				break;
 		}
 		if (_sb.Length >= 10000)
+		{
 			_sb.Clear();
+			Save();
+		}
 		_sb.AppendLine($"<color={color}><b>[{type}]</b> {condition}</color>");
 		_logs.Add($"[{type}] {condition}\n\t{stackTrace.Replace("\n", "\n\t")}");
 		UpdateConsoleText();
@@ -233,6 +237,21 @@ public class UIDevConsole : MonoBehaviour
 	{
 		if (!_commands.ContainsKey(command.name.ToLower()))
 			_commands.Add(command.name.ToLower(), command);
+	}
+
+	private void Save()
+	{
+		File.WriteAllLines("output.log", _logs);
+	}
+
+	private void OnDisable()
+	{
+		Application.logMessageReceived -= DebugLogMessage;
+	}
+
+	private void OnDestroy()
+	{
+		OnDisable();
 	}
 
 	internal class Command
@@ -373,14 +392,4 @@ public class UIDevConsole : MonoBehaviour
 		}
 	}
 
-	private void OnDisable()
-	{
-		File.WriteAllLines("output.log", _logs);
-		Application.logMessageReceived -= DebugLogMessage;
-	}
-
-	private void OnDestroy()
-	{
-		OnDisable();
-	}
 }

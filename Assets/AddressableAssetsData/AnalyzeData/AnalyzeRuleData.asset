@@ -42,3 +42,7 @@ MonoBehaviour:
     - m_ResultName: defaultlocalgroup_assets_all.bundle:Implicit:Assets/Materials/Projectiles/Enemy
         Projectile.mat
       m_Severity: 0
+  - RuleName: Check Sprite Atlas to Addressable Duplicate Dependencies
+    Results: []
+  - RuleName: UnityEditor.AddressableAssets.Build.AnalyzeRules.AnalyzeRule
+    Results: []

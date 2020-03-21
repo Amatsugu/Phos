@@ -17,30 +17,14 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 2c06710c9a117744e8ba504382cb719d
   m_SerializeEntries:
-  - m_GUID: 0916d0c03da4488419a09b66e76cac63
-    m_Address: Building Database
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_mainAssetType: BuildingDatabase, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: 09489523b83d41847a6602e3cb9a1fb3
-    m_Address: Weather
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Weather
-    m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
   - m_GUID: 387055346b29e1f4890789816ea8cee3
     m_Address: EnergyPacket
     m_ReadOnly: 0
     m_SerializedLabels: []
     m_mainAssetType: MeshEntityRotatable, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 11400000, guid: 387055346b29e1f4890789816ea8cee3, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 387055346b29e1f4890789816ea8cee3, type: 2}
   - m_GUID: 3efb8b32381cc1646adffa7c63f5639f
     m_Address: EnemyLaser
     m_ReadOnly: 0
@@ -48,8 +32,8 @@ MonoBehaviour:
     - Phos
     m_mainAssetType: ProjectileMeshEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 11400000, guid: 3efb8b32381cc1646adffa7c63f5639f, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 3efb8b32381cc1646adffa7c63f5639f, type: 2}
   - m_GUID: 55862559bdae3734096a682461b34c0c
     m_Address: PlayerProjectile
     m_ReadOnly: 0
@@ -57,16 +41,8 @@ MonoBehaviour:
     - Player
     m_mainAssetType: ProjectileMeshEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: 5c8a61b6ab99ab543b88aec681680692
-    m_Address: Research Database
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_mainAssetType: ResearchDatabase, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    m_MainAsset: {fileID: 11400000, guid: 5c8a61b6ab99ab543b88aec681680692, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: 5c8a61b6ab99ab543b88aec681680692, type: 2}
+    m_MainAsset: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
   - m_GUID: 82565ca868227874db5e1fb73bfd5a28
     m_Address: Enemy Buildings
     m_ReadOnly: 0
@@ -75,8 +51,8 @@ MonoBehaviour:
     - Building
     - Phos
     m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 102900000, guid: 82565ca868227874db5e1fb73bfd5a28, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: 82565ca868227874db5e1fb73bfd5a28, type: 3}
   - m_GUID: 8a2656cfec119844284b45f21ee944be
     m_Address: Buildings
     m_ReadOnly: 0
@@ -87,17 +63,8 @@ MonoBehaviour:
     - Building
     - Player
     m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: 8ebe59ea3fea6be4fb8345d91bbd1237
-    m_Address: TileInfo
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Tiles
-    - Tile
-    m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 102900000, guid: 8a2656cfec119844284b45f21ee944be, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: 8a2656cfec119844284b45f21ee944be, type: 3}
   - m_GUID: 92a751f183a54144ebaf6f1dbd6d7afc
     m_Address: EnemyProjectile
     m_ReadOnly: 0
@@ -105,8 +72,8 @@ MonoBehaviour:
     - Phos
     m_mainAssetType: ProjectileMeshEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 11400000, guid: 92a751f183a54144ebaf6f1dbd6d7afc, type: 2}
+    m_TargetAsset: {fileID: 11400000, guid: 92a751f183a54144ebaf6f1dbd6d7afc, type: 2}
   - m_GUID: b61e4f02f77f7c34db2412ed897fe5e5
     m_Address: Resources
     m_ReadOnly: 0
@@ -116,16 +83,8 @@ MonoBehaviour:
     - Tile
     - Resource
     m_mainAssetType: 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
-  - m_GUID: c901ba43007104e41956c9d33011aa23
-    m_Address: ResourceList
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_mainAssetType: ResourceList, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    m_MainAsset: {fileID: 11400000, guid: c901ba43007104e41956c9d33011aa23, type: 2}
-    m_TargetAsset: {fileID: 11400000, guid: c901ba43007104e41956c9d33011aa23, type: 2}
+    m_MainAsset: {fileID: 102900000, guid: b61e4f02f77f7c34db2412ed897fe5e5, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: b61e4f02f77f7c34db2412ed897fe5e5, type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 51b15f0d79b2f04479bd4bdacaa5d36a, type: 2}
   m_SchemaSet:
