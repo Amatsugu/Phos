@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
-using static Amatsugu.Phos.ECS.Jobs.Pathfinder.PathFinderJob;
+using static Amatsugu.Phos.ECS.Jobs.Pathfinder.PathFinder;
 using Debug = UnityEngine.Debug;
 
 public class InteractionUI : MonoBehaviour

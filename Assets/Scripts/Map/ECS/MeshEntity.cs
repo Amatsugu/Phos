@@ -23,7 +23,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual Entity GetEntity()
 	{
-		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+		var em = Map.EM;
 		if (_entity == null || !em.Exists(_entity))
 		{
 			UnityEngine.Debug.Log($"<b>Create Entity:</b> {name}");
@@ -38,7 +38,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual void PrepareDefaultComponentData(Entity entity)
 	{
-		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+		var em = Map.EM;
 		RenderMesh sharedMesh = new RenderMesh
 		{
 			castShadows = castShadows,
@@ -62,7 +62,7 @@ public class MeshEntity : ScriptableObject
 	}
 
 	protected virtual EntityArchetype GetArchetype() =>
-		World.DefaultGameObjectInjectionWorld.EntityManager.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
+		Map.EM.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
 
 	public virtual IEnumerable<ComponentType> GetComponents()
 	{
@@ -108,7 +108,7 @@ public class MeshEntity : ScriptableObject
 
 	public Entity Instantiate(Vector3 position, Vector3 scale)
 	{
-		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+		var em = Map.EM;
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
 		if (nonUniformScale)
@@ -121,7 +121,7 @@ public class MeshEntity : ScriptableObject
 
 	public Entity Instantiate(Vector3 position, float scale)
 	{
-		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+		var em = Map.EM;
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
 		if (nonUniformScale)
@@ -134,7 +134,7 @@ public class MeshEntity : ScriptableObject
 
 	public void Instantiate(NativeArray<Entity> output)
 	{
-		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+		var em = Map.EM;
 		em.Instantiate(GetEntity(), output);
 		em.RemoveComponent<Disabled>(output);
 	}

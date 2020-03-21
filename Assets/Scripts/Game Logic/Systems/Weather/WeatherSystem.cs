@@ -4,7 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-
+using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -78,10 +78,38 @@ public class WeatherSystem : JobComponentSystem
 		}
 	}
 
+	private EntityQuery _cloudQuery;
+	private EntityQuery _cloudShadowQuery;
+
 	protected override void OnCreate()
 	{
 		base.OnCreate();
 		GameEvents.OnWeatherInit += Init;
+		var cloudDesc = new EntityQueryDesc
+		{
+			All = new ComponentType[]
+			{
+				ComponentType.ReadOnly<CloudData>(),
+				typeof(Translation),
+				typeof(NonUniformScale),
+			},
+			None = new ComponentType[]
+			{
+				typeof(ShadowOnlyTag)
+			}
+		};
+		_cloudQuery = GetEntityQuery(cloudDesc);
+		var shadowDesc = new EntityQueryDesc
+		{
+			All = new ComponentType[]
+			{
+				ComponentType.ReadOnly<CloudData>(),
+				typeof(Translation),
+				typeof(NonUniformScale),
+				typeof(ShadowOnlyTag)
+			},
+		};
+		_cloudShadowQuery = GetEntityQuery(shadowDesc);
 		_INST = this;
 	}
 
@@ -129,6 +157,9 @@ public class WeatherSystem : JobComponentSystem
 			return inputDeps;
 		SimulateWeather();
 		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
+		var cloudType = GetArchetypeChunkComponentType<CloudData>(true);
+		var translationType = GetArchetypeChunkComponentType<Translation>(false);
+		var scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false);
 		var job = new CloudsJob
 		{
 			size = cloudSize,
@@ -137,20 +168,26 @@ public class WeatherSystem : JobComponentSystem
 			disolveDist = _init.camDisolveDist * _init.camDisolveDist,
 			rawCamPos = _cam.position + (_cam.forward * _init.disolveOffsetDist),
 			disolveLower = _init.disolveLowerBound,
-			disolveUpper = _init.disolveUpperBound
+			disolveUpper = _init.disolveUpperBound,
+			cloudType = cloudType,
+			translationType = translationType,
+			scaleType = scaleType
 		};
-		var dep = job.Schedule(this, inputDeps);
+		var dep = job.Schedule(_cloudQuery, inputDeps);
 
 		var cloudShadowJob = new CloudShadowsJob
 		{
 			size = cloudSize,
 			field = _cloudField,
-			camPos = job.camPos
+			camPos = job.camPos,
+			cloudType = cloudType,
+			translationType = translationType,
+			scaleType = scaleType
 		};
 
 		_rainTransform.position = new Vector3(_cam.position.x, _init.clouldHeight, _cam.position.z);
 
-		return cloudShadowJob.Schedule(this, dep);
+		return cloudShadowJob.Schedule(_cloudShadowQuery, dep);
 	}
 
 	public void SimulateWeather()

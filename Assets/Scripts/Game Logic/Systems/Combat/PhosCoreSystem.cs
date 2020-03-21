@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -115,29 +116,62 @@ public class PhosCoreSystem : ComponentSystem
 [BurstCompile]
 public class PhosProjectileSystem : JobComponentSystem
 {
-	private struct PhosProjectileJob : IJobForEachWithEntity<PhosProjectile, PhysicsVelocity, Translation>
+	[BurstCompile]
+	private struct PhosProjectileJob : IJobChunk //IJobForEachWithEntity<PhosProjectile, PhysicsVelocity, Translation>
 	{
-		public EntityCommandBuffer.Concurrent CMB;
 		public double curTime;
+		[ReadOnly] public ArchetypeChunkComponentType<PhosProjectile> projectileType;
+		public ArchetypeChunkComponentType<PhysicsVelocity> velocityType;
+		[ReadOnly] public ArchetypeChunkComponentType<Translation> translationType;
 
-		public void Execute(Entity entity, int index, ref PhosProjectile proj, ref PhysicsVelocity vel, ref Translation t)
+		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 		{
-			if (curTime >= proj.targetTime)
+			var vel = chunk.GetNativeArray(velocityType);
+			var proj = chunk.GetNativeArray(projectileType);
+			var trans = chunk.GetNativeArray(translationType);
+			for (int i = 0; i < chunk.Count; i++)
 			{
-				CMB.RemoveComponent(index, entity, typeof(PhosProjectile));
-				vel.Linear = math.normalize(proj.target - t.Value) * proj.flightSpeed;
+				if (curTime < proj[i].targetTime)
+					continue;
+				var v = vel[i];
+				v.Linear = math.normalize(proj[i].target - trans[i].Value) * proj[i].flightSpeed;
+				vel[i] = v;
 			}
 		}
+	}
+
+	private EntityQuery entityQuery;
+
+	protected override void OnCreate()
+	{
+		base.OnCreate();
+		var desc = new EntityQueryDesc
+		{
+			All = new ComponentType[]
+			{
+				ComponentType.ReadOnly<PhosProjectile>(),
+				typeof(PhysicsVelocity),
+				ComponentType.ReadOnly<Translation>(),
+			},
+			None = new ComponentType[]
+			{
+				typeof(Disabled)
+			}
+		};
+		entityQuery = GetEntityQuery(desc);
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
 		var job = new PhosProjectileJob
 		{
-			CMB = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer().ToConcurrent(),
-			curTime = Time.ElapsedTime
+			curTime = Time.ElapsedTime,
+			projectileType = GetArchetypeChunkComponentType<PhosProjectile>(true),
+			velocityType = GetArchetypeChunkComponentType<PhysicsVelocity>(false),
+			translationType = GetArchetypeChunkComponentType<Translation>(true),
 		};
-		inputDeps = job.Schedule(this, inputDeps);
+		////inputDeps = job.Schedule(this, inputDeps);
+		inputDeps = job.ScheduleParallel(entityQuery, inputDeps);
 		inputDeps.Complete();
 		return inputDeps;
 	}

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -10,6 +10,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+[BurstCompile]
 public class UnitAttackSystem : ComponentSystem
 {
 	private ProjectileMeshEntity _bullet;
@@ -76,52 +77,71 @@ public class UnitAttackSystem : ComponentSystem
 	private void AttackAI()
 	{
 		_castHits.Clear();
-		int range = 20;
-		Entities.WithNone<Disabled>().ForEach((ref AttackSpeed s, ref Translation t, ref Projectile p, ref UnitId id, ref FactionId faction) =>
+		SelectTarget();
+		RotateTurretAndShootAI();
+	}
+
+	private void RotateTurretAndShootAI()
+	{
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref Translation t, ref AttackSpeed atkSpeed, ref AttackTarget atkTarget) =>
 		{
-			if (s.NextAttackTime <= Time.ElapsedTime)
+			if (!EntityManager.Exists(atkTarget.Value))
+				return;
+			var pos = EntityManager.GetComponentData<Translation>(atkTarget.Value);
+			var dir = t.Value - pos.Value;
+			var dist = math.lengthsq(dir);
+			if (dist > 20 * 20)
 			{
-				s.NextAttackTime = Time.ElapsedTime + s.Value;
+				PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+				return;
+			}
+			if (Time.ElapsedTime >= atkSpeed.NextAttackTime)
+			{
+				//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
+				dir = math.normalize(dir) * -20;
+				var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
+				PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
+			}
+		});
+	}
 
-				//Get Objects in Rect Range
-				var range3 = new float3(range, range, range);
-				_physicsWorld.PhysicsWorld.CollisionWorld.OverlapAabb(new OverlapAabbInput
+	private void SelectTarget()
+	{
+		int range = 20;
+		Entities.WithNone<Disabled, AttackTarget>().ForEach((Entity e, ref Translation t, ref FactionId faction, ref AttackSpeed atkSpeed) =>
+		{
+			if (atkSpeed.NextAttackTime < Time.ElapsedTime)
+				return;
+			//Get Objects in Rect Range
+			_physicsWorld.AABBCast(t.Value, new float3(range, range, range), new CollisionFilter
+			{
+				BelongsTo = ~0u,
+				CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile)),
+				GroupIndex = 0
+			}, ref _castHits);
+			//Get Circual Range
+			for (int i = 0; i < _castHits.Length; i++)
+			{
+				if (_physicsWorld.PhysicsWorld.Bodies.Length <= _castHits[i])
+					continue;
+
+				var target = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
+				if (!EntityManager.HasComponent<Health>(target))
+					continue;
+
+				var pos = EntityManager.GetComponentData<Translation>(target).Value;
+				var dir = t.Value - pos;
+				var dist = math.lengthsq(dir);
+				if (dist <= range * range)
 				{
-					Aabb = new Aabb
+					var turretDir = dir;
+					turretDir.y = 0;
+					PostUpdateCommands.AddComponent(e, new AttackTarget
 					{
-						Max = t.Value + range3,
-						Min = t.Value - range3
-					},
-					Filter = new CollisionFilter
-					{
-						BelongsTo = ~0u,
-						CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile)),
-						GroupIndex = 0
-					}
-				}, ref _castHits);
-				//Get Circual Range
-				for (int i = 0; i < _castHits.Length; i++)
-				{
-					if (_physicsWorld.PhysicsWorld.Bodies.Length <= _castHits[i])
-						continue;
+						Value = target
+					});
 
-					var entity = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
-					if (!EntityManager.HasComponent<Health>(entity))
-						continue;
-
-					var pos = EntityManager.GetComponentData<Translation>(entity).Value;
-					var dir = t.Value - pos;
-					var dist = math.lengthsq(dir);
-					if (dist <= range * range)
-					{
-						var turretDir = dir;
-						turretDir.y = 0;
-						PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
-						dir = math.normalize(dir) * -20;
-						var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
-						PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 10 });
-						break;
-					}
+					break;
 				}
 			}
 		});
@@ -151,6 +171,11 @@ public class UnitAttackSystem : ComponentSystem
 		return vel;
 		//return math.rotate(quaternion.LookRotation(diff, Vector3.up), vel);
 	}
+}
+
+public struct AttackTarget : IComponentData
+{
+	public Entity Value;
 }
 
 public struct AttackSpeed : IComponentData, IEquatable<AttackSpeed>

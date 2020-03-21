@@ -4,9 +4,11 @@ using AnimationSystem.Animations;
 using System;
 
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -51,110 +53,254 @@ namespace AnimationSystem
 	public class SimpleAnimationJobSystem : JobComponentSystem
 	{
 		[BurstCompile]
-		public struct GravityJob : IJobForEach<Gravity, Velocity>
+		public struct GravityJob : IJobChunk
 		{
+			public ArchetypeChunkComponentType<Velocity> velocityType;
+			[ReadOnly] public ArchetypeChunkComponentType<Gravity> gravityType;
 			public float dt;
 
 			public void Execute(ref Gravity g, ref Velocity v)
 			{
 				v.Value += new float3(0, -g.Value * dt, 0);
 			}
-		}
 
-		[BurstCompile]
-		public struct VelocityJob : IJobForEach<Velocity, Translation>
-		{
-			public float dt;
-
-			public void Execute(ref Velocity v, ref Translation t)
+			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 			{
-				t.Value += v.Value * dt;
+				var vel = chunk.GetNativeArray(velocityType);
+				var grav = chunk.GetNativeArray(gravityType);
+
+				for (int i = 0; i < chunk.Count; i++)
+				{
+					var curVel = vel[i];
+					curVel.Value += new float3(0, -grav[i].Value * dt, 0);
+					vel[i] = curVel;
+				}
 			}
 		}
 
 		[BurstCompile]
-		public struct FloorJob : IJobForEach<Floor, Translation> //TODO Optimize this
+		public struct VelocityJob : IJobChunk
 		{
+			public ArchetypeChunkComponentType<Translation> translationType;
+			[ReadOnly] public ArchetypeChunkComponentType<Velocity> velocityType;
+			public float dt;
+
+			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+			{
+				var vel = chunk.GetNativeArray(velocityType);
+				var trans = chunk.GetNativeArray(translationType);
+
+				for (int i = 0; i < chunk.Count; i++)
+				{
+					var curT = trans[i];
+					curT.Value += vel[i].Value * dt;
+					trans[i] = curT;
+				}
+			}
+		}
+
+		[BurstCompile]
+		public struct FloorJob : IJobChunk //IJobForEach<Floor, Translation> //TODO Optimize this
+		{
+			public ArchetypeChunkComponentType<Floor> floorType;
+			public ArchetypeChunkComponentType<Translation> transType;
+
 			public void Execute(ref Floor f, ref Translation t)
 			{
 				if (t.Value.y <= f.Value)
 					t.Value.y = f.Value;
 			}
+
+			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+			{
+				var f = chunk.GetNativeArray(floorType);
+				var t = chunk.GetNativeArray(transType);
+				for (int i = 0; i < chunk.Count; i++)
+				{
+					var p = t[i];
+					var fl = f[i].Value;
+					if (p.Value.y < fl)
+					{
+						p.Value.y = fl;
+						t[i] = p;
+					}
+				}
+			}
 		}
 
 		[BurstCompile]
-		public struct RotateJob : IJobForEach<RotateAxis, RotateSpeed, Rotation>
+		public struct RotateJob : IJobChunk //IJobForEach<RotateAxis, RotateSpeed, Rotation>
 		{
 			public float dt;
+			[ReadOnly] public ArchetypeChunkComponentType<RotateAxis> axisType;
+			[ReadOnly] public ArchetypeChunkComponentType<RotateSpeed> speedType;
+			public ArchetypeChunkComponentType<Rotation> rotationType;
 
-			public void Execute(ref RotateAxis axis, ref RotateSpeed speed, ref Rotation rot)
+			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 			{
-				rot.Value = Quaternion.Euler(((Quaternion)rot.Value).eulerAngles + (axis.Value * speed.Value * dt));
+				var axis = chunk.GetNativeArray(axisType);
+				var speed = chunk.GetNativeArray(speedType);
+				var rot = chunk.GetNativeArray(rotationType);
+
+				for (int i = 0; i < chunk.Count; i++)
+				{
+					var r = rot[i].Value;
+					rot[i] = new Rotation
+					{
+						Value = math.mul(math.normalize(r), quaternion.AxisAngle(axis[i].Value, speed[i].Value * dt))
+					};
+				}
 			}
 		}
 
 		[BurstCompile]
-		public struct AccelerationJob : IJobForEach<Velocity, Acceleration>
+		public struct AccelerationJob : IJobChunk//IJobForEach<Velocity, Acceleration>
 		{
+
+			public ArchetypeChunkComponentType<Velocity> velocityType;
+			[ReadOnly] public ArchetypeChunkComponentType<Acceleration> accelerationType;
 			public float dt;
 
-			public void Execute(ref Velocity vel, ref Acceleration accel)
+			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 			{
-				vel.Value += accel.Value * dt;
+				var vel = chunk.GetNativeArray(velocityType);
+				var accel = chunk.GetNativeArray(accelerationType);
+
+				for (int i = 0; i < chunk.Count; i++)
+				{
+					var curVel = vel[i];
+					curVel.Value += accel[i].Value * dt;
+					vel[i] = curVel;
+				}
 			}
 		}
 
-		[BurstCompile]
-		public struct SeekTargetJob : IJobForEach<Translation, SeekTarget, Acceleration>
+		private EntityQuery _rotateQuery;
+		private EntityQuery _accelQuery;
+		private EntityQuery _gravityQuery;
+		private EntityQuery _velQuery;
+		private EntityQuery _floorQuery;
+
+		protected override void OnCreate()
 		{
-			public float dt;
-
-			public void Execute(ref Translation p, ref SeekTarget target, ref Acceleration a)
+			base.OnCreate();
+			var rotDesc = new EntityQueryDesc
 			{
-				var moveDir = math.normalize(target.Value - p.Value);
-				a.Value = moveDir * target.MaxAccel;
-			}
-		}
-
-		[BurstCompile]
-		public struct DragJob : IJobForEach<Drag, Velocity>
-		{
-			public DragJob(float dt)
+				All = new ComponentType[]
+				{
+					ComponentType.ReadOnly<RotateAxis>(),
+					ComponentType.ReadOnly<RotateSpeed>(),
+					typeof(Rotation)
+				},
+				None = new ComponentType[]
+				{
+					typeof(Disabled),
+					typeof(FrozenRenderSceneTag),
+				}
+			};
+			_rotateQuery = GetEntityQuery(rotDesc);
+			var accelDesc = new EntityQueryDesc
 			{
-				this.dt = dt;
-			}
-
-			public readonly float dt;
-			public const float airDensity = 1.2f;
-
-			public void Execute(ref Drag drag, ref Velocity velocity)
+				All = new ComponentType[]
+				{
+					ComponentType.ReadOnly<Acceleration>(),
+					typeof(Velocity)
+				},
+				None = new ComponentType[]
+				{
+					typeof(Disabled),
+					typeof(FrozenRenderSceneTag),
+				}
+			};
+			_accelQuery = GetEntityQuery(accelDesc);
+			var gravityDesc = new EntityQueryDesc
 			{
-				velocity.Value -= drag.Value * velocity.Value * dt;
-			}
+				All = new ComponentType[]
+				{
+					ComponentType.ReadOnly<Gravity>(),
+					typeof(Velocity)
+				},
+				None = new ComponentType[]
+				{
+					typeof(Disabled),
+					typeof(FrozenRenderSceneTag),
+				}
+			};
+			_gravityQuery = GetEntityQuery(gravityDesc);
+			var velDesc = new EntityQueryDesc
+			{
+				All = new ComponentType[]
+				{
+					ComponentType.ReadOnly<Velocity>(),
+					typeof(Translation)
+				},
+				None = new ComponentType[]
+				{
+					typeof(Disabled),
+					typeof(FrozenRenderSceneTag),
+				}
+			};
+			_velQuery = GetEntityQuery(velDesc);
+
+			var floorDesc = new EntityQueryDesc
+			{
+				All = new ComponentType[]
+				{
+					ComponentType.ReadOnly<Floor>(),
+					typeof(Translation)
+				},
+				None = new ComponentType[]
+				{
+					typeof(Disabled),
+					typeof(FrozenRenderSceneTag),
+				}
+			};
+			_floorQuery = GetEntityQuery(floorDesc);
 		}
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
-			var gravityJob = new GravityJob { dt = Time.DeltaTime };
-			var dep = gravityJob.Schedule(this, inputDeps);
+			var v = GetArchetypeChunkComponentType<Velocity>(false);
+			var gravityJob = new GravityJob 
+			{ 
+				dt = Time.DeltaTime,
+				gravityType = GetArchetypeChunkComponentType<Gravity>(true),
+				velocityType = v
+			};
+			var dep = gravityJob.Schedule(_gravityQuery, inputDeps);
 
-			var seekJob = new SeekTargetJob();
-			dep = seekJob.Schedule(this, dep);
+			var accelJob = new AccelerationJob 
+			{ 
+				dt = Time.DeltaTime,
+				accelerationType = GetArchetypeChunkComponentType<Acceleration>(true),
+				velocityType = v
+			};
+			dep = accelJob.Schedule(_accelQuery, dep);
 
-			var accelJob = new AccelerationJob { dt = Time.DeltaTime };
-			dep = accelJob.Schedule(this, dep);
+			var t = GetArchetypeChunkComponentType<Translation>(false);
+			var velocityJob = new VelocityJob 
+			{
+				dt = Time.DeltaTime,
+				velocityType = GetArchetypeChunkComponentType<Velocity>(true),
+				translationType = t
+			};
+			dep = velocityJob.Schedule(_velQuery, dep);
 
-			var dragJob = new DragJob(Time.DeltaTime);
-			dep = dragJob.Schedule(this, dep);
+			var floorJob = new FloorJob
+			{
+				floorType = GetArchetypeChunkComponentType<Floor>(true),
+				transType = t
+			};
+			dep = floorJob.Schedule(_floorQuery, dep);
 
-			var velocityJob = new VelocityJob { dt = Time.DeltaTime };
-			dep = velocityJob.Schedule(this, dep);
-
-			var floorJob = new FloorJob();
-			dep = floorJob.Schedule(this, dep);
-
-			var rotJob = new RotateJob { dt = Time.DeltaTime };
-			dep = rotJob.Schedule(this, dep);
+			var rotJob = new RotateJob 
+			{ 
+				dt = Time.DeltaTime,
+				axisType = GetArchetypeChunkComponentType<RotateAxis>(true),
+				speedType = GetArchetypeChunkComponentType<RotateSpeed>(true),
+				rotationType = GetArchetypeChunkComponentType<Rotation>(false),
+			};
+			dep = rotJob.Schedule(_rotateQuery, dep);
 
 			return dep;
 		}

@@ -10,28 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Packed Assets
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: Packed Assets
   m_Data:
     m_SerializedData: []
-  m_GUID: 3e15562f3402d1c43a39fad5556a0f4e
+  m_GUID: 2c06710c9a117744e8ba504382cb719d
   m_SerializeEntries:
-  - m_GUID: 0916d0c03da4488419a09b66e76cac63
-    m_Address: Building Database
+  - m_GUID: 387055346b29e1f4890789816ea8cee3
+    m_Address: EnergyPacket
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 5c8a61b6ab99ab543b88aec681680692
-    m_Address: Research Database
+  - m_GUID: 3efb8b32381cc1646adffa7c63f5639f
+    m_Address: EnemyLaser
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: c901ba43007104e41956c9d33011aa23
-    m_Address: ResourceList
+  - m_GUID: 55862559bdae3734096a682461b34c0c
+    m_Address: PlayerProjectile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 92a751f183a54144ebaf6f1dbd6d7afc
+    m_Address: EnemyProjectile
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 51b15f0d79b2f04479bd4bdacaa5d36a, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: ad5e7ee3b44a70f44afc4043e766d3d2, type: 2}
-    - {fileID: 11400000, guid: 635be7c619e4e864381e685b3fc0dc1d, type: 2}
+    - {fileID: 11400000, guid: e57b782a56fbec44ebd7d301dc399e2b, type: 2}
+    - {fileID: 11400000, guid: 5fac5a797a954ec448b108efe010a027, type: 2}

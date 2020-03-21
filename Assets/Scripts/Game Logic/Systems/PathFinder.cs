@@ -13,34 +13,9 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 {
 
 	[ExcludeComponent(typeof(PathProgress), typeof(Path))]
-	public struct PathFinderJob : IJobForEachWithEntity<Translation, Destination, UnitId>
+	public struct PathFinder 
 	{
 		public const int MAX_PATH_LENGTH = 1024;
-		public readonly float edgeLength;
-		public readonly float innerRadius;
-
-		[ReadOnly]
-		public readonly NativeHashMap<HexCoords, float> navData;
-
-		private EntityCommandBuffer.Concurrent PostUpdateCommands;
-
-		public PathFinderJob(float edgeLength, float innerRadius, EntityCommandBuffer.Concurrent entityCommand, NativeHashMap<HexCoords, float> navData)
-		{
-			this.edgeLength = edgeLength;
-			this.innerRadius = innerRadius;
-			this.navData = navData;
-			PostUpdateCommands = entityCommand;
-		}
-
-		public void Execute(Entity e, int index, [ReadOnly]ref Translation t, [ReadOnly]ref Destination d, [ReadOnly]ref UnitId id)
-		{
-			/*var path = GetPath(t.Value, d.Value);
-			if (!path.IsCreated)
-				return;
-			var p = new Path { Value =  path };
-			PostUpdateCommands.AddSharedComponent(index, e, p);*/
-		}
-
 
 		public static (NativeList<PathNode> open, NativeHashMap<PathNode, float> closed, NativeHashMap<PathNode, PathNode> nodePairs) PrepareCollections(int navDataLen)
 		{
@@ -76,7 +51,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			var neighbors = new NativeArray<HexCoords>(6, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
 			while (open.Length > 0)
 			{
-				if (closed.Length > MAX_PATH_LENGTH)
+				if (closed.Count() > MAX_PATH_LENGTH)
 					break;
 				if (closed.ContainsKey(dstNode))
 					break;
@@ -164,6 +139,11 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 					(best, index) = (open[i], i);
 			}
 			return (best, index);
+		}
+
+		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+		{
+			
 		}
 
 		public struct PathNode : IComparer<PathNode>, IEquatable<PathNode>

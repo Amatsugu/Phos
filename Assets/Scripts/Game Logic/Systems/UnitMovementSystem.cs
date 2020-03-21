@@ -8,7 +8,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 using UnityEngine;
-using static Amatsugu.Phos.ECS.Jobs.Pathfinder.PathFinderJob;
+using static Amatsugu.Phos.ECS.Jobs.Pathfinder.PathFinder;
 
 public class UnitMovementSystem : ComponentSystem
 {
@@ -47,7 +47,7 @@ public class UnitMovementSystem : ComponentSystem
 		//_paths = new Dictionary<int, NativeList<HexCoords>>();
 		_open = new NativeList<PathNode>(Allocator.Persistent);
 		_closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
-		_nodePairs = new NativeHashMap<PathNode, PathNode>(_navData.Length, Allocator.Persistent);
+		_nodePairs = new NativeHashMap<PathNode, PathNode>(_navData.Count(), Allocator.Persistent);
 		GameEvents.OnMapLoaded -= Init;
 		GameEvents.OnMapChanged += OnMapChanged;
 	}
