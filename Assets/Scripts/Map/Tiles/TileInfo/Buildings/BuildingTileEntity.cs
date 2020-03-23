@@ -28,7 +28,6 @@ public class BuildingTileEntity : TileInfo
 	public BuildingCategory category;
 	public int size = 0;
 	public int flattenOuterRange = 0;
-	public int resourceTransferRange = 0;
 
 	[Header("Offshore")]
 	public bool isOffshore;
@@ -62,7 +61,7 @@ public class BuildingTileEntity : TileInfo
 			typeof(BuildingOffTag), 
 			typeof(BuildingId),
 			typeof(Health),
-			typeof(CenterOfMass),
+			typeof(CenterOfMassOffset),
 		});
 	}
 
@@ -74,9 +73,9 @@ public class BuildingTileEntity : TileInfo
 			maxHealth = maxHealth,
 			Value = maxHealth
 		});
-		Map.EM.SetComponentData(entity, new CenterOfMass
+		Map.EM.SetComponentData(entity, new CenterOfMassOffset
 		{
-			Offset = centerOfMass
+			Value = centerOfMass
 		});
 	}
 

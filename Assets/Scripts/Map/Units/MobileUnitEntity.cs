@@ -10,13 +10,17 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
 public partial class MobileUnitEntity : MeshEntityRotatable
 {
-	public MeshEntityRotatable head;
+	[Header("Stats")]
 	public float moveSpeed = 1;
 	public float attackSpeed = 1;
 	public float maxHealth;
 	public int size;
+	[Header("Classification")]
 	public UnitDomain unitDomain;
 	public UnitClass unitClass;
+	[Header("Misc")]
+	public float3 centerOfMassOffset;
+	public MeshEntityRotatable head;
 	public MeshEntityRotatable projectile;
 
 	public override IEnumerable<ComponentType> GetComponents()
@@ -33,6 +37,7 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 			typeof(UnitDomain),
 			typeof(PhysicsCollider),
 			typeof(PhysicsMass),
+			typeof(CenterOfMassOffset)
 		});
 	}
 
@@ -47,6 +52,7 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 		Map.EM.SetComponentData(entity, new UnitDomain { Value = unitDomain.Value });
 		Map.EM.SetComponentData(entity, new UnitClass { Value = unitClass.Value });
 		Map.EM.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
+		Map.EM.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
 	}
 
 	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id, Faction faction = Faction.None)

@@ -38,6 +38,7 @@ namespace Tiles.EnemyBuildings
 				spinRate = spinRate,
 				nextVolleyTime = Time.time,
 				projectileSpeed = projectileSpeed,
+				targetingRangeSq = targetingRange * targetingRange,
 				targetingRange = targetingRange,
 				targetDelay = targetingDelay,
 				ring = ring.Instantiate(Map.ActiveMap[pos].SurfacePoint, Vector3.one),

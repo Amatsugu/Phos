@@ -6,6 +6,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -17,11 +18,15 @@ public class PhosCoreSystem : ComponentSystem
 	private Map _map;
 	private ProjectileMeshEntity projectile;
 	private ProjectileMeshEntity laser;
+	private BuildPhysicsWorld buildPhysics;
+	private NativeList<int> _inRangeList;
+	private NativeArray<float3> _curTargets;
 
 	protected override void OnCreate()
 	{
 		base.OnCreate();
 		GameEvents.OnMapLoaded += Init;
+		buildPhysics = World.GetOrCreateSystem<BuildPhysicsWorld>();
 	}
 
 	protected void Init()
@@ -30,6 +35,8 @@ public class PhosCoreSystem : ComponentSystem
 		_map = Map.ActiveMap;
 		var projLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyProjectile");
 		var laserLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyLaser");
+		_inRangeList = new NativeList<int>(Allocator.Persistent);
+		_curTargets = new NativeArray<float3>(6, Allocator.Persistent);
 		projLoad.Completed += r =>
 		{
 			if (r.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
@@ -44,6 +51,13 @@ public class PhosCoreSystem : ComponentSystem
 				laser = r.Result;
 		};
 		GameEvents.OnMapLoaded -= Init;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		_inRangeList.Dispose();
+		_curTargets.Dispose();
 	}
 
 	protected override void OnUpdate()
@@ -61,25 +75,35 @@ public class PhosCoreSystem : ComponentSystem
 
 	private void SimulateAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref HexPosition pos, ref FactionId faction) =>
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref Translation t, ref FactionId faction) =>
 		{
 			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2);
 			PostUpdateCommands.SetComponent(core.ring, new Rotation { Value = quaternion.AxisAngle(Vector3.up, baseAngle + (math.PI * 2) / 12f) });
 			if (core.nextVolleyTime <= Time.ElapsedTime)
 			{
-				var unitsInRange = _map.SelectUnitsInRange(pos.coords, core.targetingRange);
-				if (unitsInRange.Count == 0)
+				_inRangeList.Clear();
+				buildPhysics.AABBCast(t.Value, new float3(core.targetingRange), new CollisionFilter
+				{
+					BelongsTo = ~0u,
+					CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile)),
+					GroupIndex = 0
+				}, ref _inRangeList);
+				if (_inRangeList.Length == 0)
 					return;
-				var targets = unitsInRange.Take(6).Select(unitId => (float3)_map.units[unitId].Position).ToArray();
-
-				var t = Map.ActiveMap[pos.coords];
-				FireBurst(t.SurfacePoint, baseAngle, targets, core, faction);
+				for (int i = 0; i < 6; i++)
+				{
+					var targetEntity = buildPhysics.PhysicsWorld.Bodies[_inRangeList[i % _inRangeList.Length]].Entity;
+					var target = EntityManager.GetComponentData<Translation>(targetEntity).Value + EntityManager.GetComponentData<CenterOfMassOffset>(targetEntity).Value;
+					if (math.lengthsq(target - t.Value) <= core.targetingRangeSq)
+						_curTargets[i] = target;
+				}
+				FireBurst(t.Value, baseAngle, _curTargets, core, faction);
 				core.nextVolleyTime = Time.ElapsedTime + core.fireRate;
 			}
 		});
 	}
 
-	private void FireBurst(float3 startPos, float baseAngle, float3[] targets, PhosCore core, FactionId team)
+	private void FireBurst(float3 startPos, float baseAngle, NativeArray<float3> targets, PhosCore core, FactionId team)
 	{
 		for (int i = 0; i < 6; i++)
 		{
@@ -185,6 +209,7 @@ public struct PhosCore : IComponentData
 	public float projectileSpeed;
 	public float targetDelay;
 	public int targetingRange;
+	public int targetingRangeSq;
 	public Entity ring;
 	public Entity projectile;
 	public Entity laser;
