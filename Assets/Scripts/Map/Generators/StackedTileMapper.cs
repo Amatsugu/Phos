@@ -6,16 +6,16 @@ public class StackedTileMapper : TileMapper
 	[System.Serializable]
 	public class TileLayer
 	{
-		public TileInfo tileInfo;
+		public TileEntity tileInfo;
 		public float startHeight;
 	}
 
 	public TileLayer[] surfaceLayers;
 	public TileLayer[] oceanLayers;
 
-	public override TileInfo GetTile(float altitude, float seaLevel, float maxValue = 1)
+	public override TileEntity GetTile(float altitude, float seaLevel, float maxValue = 1)
 	{
-		TileInfo tile = null;
+		TileEntity tile = null;
 		altitude -= seaLevel;
 		if (altitude < 0)
 		{

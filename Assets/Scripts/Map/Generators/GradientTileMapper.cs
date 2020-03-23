@@ -9,9 +9,9 @@ public class GradientTileMapper : TileMapper
 	public Gradient oceanGradient = new Gradient();
 
 	public AnimationCurve moveCostCurve = new AnimationCurve();
-	public TileInfo[] Tiles;
-	public TileInfo oceanTile;
-	public Dictionary<Color, TileInfo> tiles = new Dictionary<Color, TileInfo>();
+	public TileEntity[] Tiles;
+	public TileEntity oceanTile;
+	public Dictionary<Color, TileEntity> tiles = new Dictionary<Color, TileEntity>();
 
 	public void OnEnable()
 	{
@@ -26,7 +26,7 @@ public class GradientTileMapper : TileMapper
 		}
 	}
 
-	public override TileInfo GetTile(float sample, float seaLevel, float maxValue = 1)
+	public override TileEntity GetTile(float sample, float seaLevel, float maxValue = 1)
 	{
 		if (sample <= seaLevel)
 			return oceanTile;

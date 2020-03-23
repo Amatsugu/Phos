@@ -8,7 +8,7 @@
 		resInfo = tInfo;
 	}
 
-	public override TileInfo GetMeshEntity()
+	public override TileEntity GetMeshEntity()
 	{
 		return originalTile ?? info;
 	}

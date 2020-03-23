@@ -12,6 +12,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+[BurstCompile]
 public class PhosCoreSystem : ComponentSystem
 {
 	private int _state = 0;
@@ -31,7 +32,6 @@ public class PhosCoreSystem : ComponentSystem
 
 	protected void Init()
 	{
-		Debug.Log("Phos Core System: Init ");
 		_map = Map.ActiveMap;
 		var projLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyProjectile");
 		var laserLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyLaser");
@@ -77,15 +77,15 @@ public class PhosCoreSystem : ComponentSystem
 	{
 		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref Translation t, ref FactionId faction) =>
 		{
-			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2);
+			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2); //Angle of the ring
 			PostUpdateCommands.SetComponent(core.ring, new Rotation { Value = quaternion.AxisAngle(Vector3.up, baseAngle + (math.PI * 2) / 12f) });
 			if (core.nextVolleyTime <= Time.ElapsedTime)
 			{
 				_inRangeList.Clear();
 				buildPhysics.AABBCast(t.Value, new float3(core.targetingRange), new CollisionFilter
 				{
-					BelongsTo = ~0u,
-					CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile)),
+					BelongsTo = 1u << (int)faction.Value,
+					CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile)),
 					GroupIndex = 0
 				}, ref _inRangeList);
 				if (_inRangeList.Length == 0)
@@ -93,7 +93,7 @@ public class PhosCoreSystem : ComponentSystem
 				for (int i = 0; i < 6; i++)
 				{
 					var targetEntity = buildPhysics.PhysicsWorld.Bodies[_inRangeList[i % _inRangeList.Length]].Entity;
-					var target = EntityManager.GetComponentData<Translation>(targetEntity).Value + EntityManager.GetComponentData<CenterOfMassOffset>(targetEntity).Value;
+					var target = EntityManager.GetComponentData<CenterOfMass>(targetEntity).Value;
 					if (math.lengthsq(target - t.Value) <= core.targetingRangeSq)
 						_curTargets[i] = target;
 				}

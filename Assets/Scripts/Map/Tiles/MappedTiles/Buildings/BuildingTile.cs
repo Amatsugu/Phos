@@ -30,7 +30,7 @@ public class BuildingTile : Tile
 		return e;
 	}
 
-	public override TileInfo GetMeshEntity()
+	public override TileEntity GetMeshEntity()
 	{
 		return buildingInfo.preserveGroundTile ? originalTile : buildingInfo;
 	}

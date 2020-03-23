@@ -17,8 +17,3 @@ public struct BuildingId : IComponentData
 {
 	public int Value;
 }
-
-public struct CenterOfMassOffset : IComponentData
-{
-	public float3 Value;
-}

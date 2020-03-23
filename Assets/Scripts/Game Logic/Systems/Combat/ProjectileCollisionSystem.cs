@@ -6,7 +6,7 @@ using Unity.Physics.Systems;
 using UnityEngine;
 
 [RequireComponentTag(TagComponents = new[] { typeof(FactionId) })]
-//[BurstCompile]
+[BurstCompile]
 public struct ProjectileCollisionJob : ICollisionEventsJob
 {
 	public ComponentDataFromEntity<Health> health;
@@ -35,7 +35,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 	}
 }
 
-//[BurstCompile]
+[BurstCompile]
 public class ProjectileCollisionSystem : JobComponentSystem
 {
 	private BuildPhysicsWorld _physicsWorld;

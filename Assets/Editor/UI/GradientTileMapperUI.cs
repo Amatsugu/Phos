@@ -37,7 +37,7 @@ public class GradientTileMapperUI : Editor
 			/*if (_mapper.tileGradient.colorKeys.Length == lastSize)
 				return;*/
 			lastSize = _mapper.tileGradient.colorKeys.Length;
-			var t = new TileInfo[_mapper.Tiles.Length];
+			var t = new TileEntity[_mapper.Tiles.Length];
 			_mapper.Tiles.CopyTo(t, 0);
 			_mapper.tiles.Clear();
 			for (int i = 0; i < lastSize; i++)
@@ -56,7 +56,7 @@ public class GradientTileMapperUI : Editor
 					//Debug.LogError("All colors in the gradient must be unique");
 				}
 			}
-			_mapper.Tiles = new TileInfo[lastSize];
+			_mapper.Tiles = new TileEntity[lastSize];
 			_mapper.tiles.Values.CopyTo(_mapper.Tiles, 0);
 		}
 		EditorGUILayout.BeginFadeGroup(warn ? 1 : 0);

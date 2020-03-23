@@ -32,7 +32,6 @@ public class UnitAttackSystem : ComponentSystem
 
 	protected void InitAttackSystem()
 	{
-		UnityEngine.Debug.Log("Attack System: Init");
 		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
 		_castHits = new NativeList<int>(Allocator.Persistent);
 		var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerProjectile");
@@ -116,8 +115,8 @@ public class UnitAttackSystem : ComponentSystem
 			//Get Objects in Rect Range
 			_physicsWorld.AABBCast(t.Value, new float3(range, range, range), new CollisionFilter
 			{
-				BelongsTo = ~0u,
-				CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile)),
+				BelongsTo = 1u << (int)faction.Value,
+				CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile)),
 				GroupIndex = 0
 			}, ref _castHits);
 			//Get Circual Range
@@ -130,7 +129,7 @@ public class UnitAttackSystem : ComponentSystem
 				if (!EntityManager.HasComponent<Health>(target))
 					continue;
 
-				var pos = EntityManager.GetComponentData<Translation>(target).Value + EntityManager.GetComponentData<CenterOfMassOffset>(target).Value;
+				var pos = EntityManager.GetComponentData<CenterOfMass>(target).Value;
 				var dir = t.Value - pos;
 				var dist = math.lengthsq(dir);
 				if (dist <= range * range)

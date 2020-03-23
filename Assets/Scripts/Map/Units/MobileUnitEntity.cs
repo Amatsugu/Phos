@@ -37,7 +37,8 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 			typeof(UnitDomain),
 			typeof(PhysicsCollider),
 			typeof(PhysicsMass),
-			typeof(CenterOfMassOffset)
+			typeof(CenterOfMassOffset),
+			typeof(CenterOfMass)
 		});
 	}
 
@@ -55,11 +56,12 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 		Map.EM.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
 	}
 
-	public Entity Instantiate(Vector3 pos, Quaternion rotation, int id, Faction faction = Faction.None)
+	public Entity Instantiate(float3 pos, Quaternion rotation, int id, Faction faction = Faction.None)
 	{
 		var e = Instantiate(pos, Vector3.one, rotation);
 		Map.EM.SetComponentData(e, new UnitId { Value = id });
 		Map.EM.SetComponentData(e, new FactionId { Value = faction });
+		Map.EM.SetComponentData(e, new CenterOfMass { Value = pos + centerOfMassOffset });
 		var collisionFilter = new CollisionFilter
 		{
 			CollidesWith = ~0u,

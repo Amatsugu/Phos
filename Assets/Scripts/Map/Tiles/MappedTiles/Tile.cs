@@ -15,18 +15,18 @@ public class Tile
 	public float Height { get; protected set; }
 	public bool IsUnderwater { get; protected set; }
 
-	public readonly TileInfo info;
+	public readonly TileEntity info;
 
 	public float moisture, temperature;
 	public int biomeId;
 	public bool IsShown { get; private set; }
-	public TileInfo originalTile;
+	public TileEntity originalTile;
 
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
 	protected bool _isRendered;
 
-	public Tile(HexCoords coords, float height, TileInfo tInfo = null)
+	public Tile(HexCoords coords, float height, TileEntity tInfo = null)
 	{
 		Coords = coords;
 		Height = height;
@@ -180,7 +180,7 @@ public class Tile
 		}
 	}
 
-	public virtual TileInfo GetMeshEntity()
+	public virtual TileEntity GetMeshEntity()
 	{
 		return info;
 	}

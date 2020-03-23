@@ -58,7 +58,7 @@ public class BiomePainter : ScriptableObject
 		return tempMap;
 	}
 
-	public (TileInfo tInfo, int biomeId) GetTile(float moisture, float temp, float height, float seaLevel)
+	public (TileEntity tInfo, int biomeId) GetTile(float moisture, float temp, float height, float seaLevel)
 	{
 		var biome = Mathf.RoundToInt(temp) + Mathf.RoundToInt(moisture) * 4;
 		return (biomes[biome].GetTile(height, seaLevel), biome);

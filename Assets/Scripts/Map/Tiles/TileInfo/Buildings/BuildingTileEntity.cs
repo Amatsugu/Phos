@@ -12,12 +12,12 @@ public enum PlacementMode
 }
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
-public class BuildingTileEntity : TileInfo
+public class BuildingTileEntity : TileEntity
 {
 	[Header("Mesh")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable buildingMesh;
-	public float3 centerOfMass;
+	public float3 centerOfMassOffset;
 	public MeshEntityRotatable constructionMesh;
 
 	[Header("Stats")]
@@ -31,10 +31,8 @@ public class BuildingTileEntity : TileInfo
 
 	[Header("Offshore")]
 	public bool isOffshore;
-
 	[ConditionalHide("isOffshore")]
 	public bool offshoreOnly;
-
 	[ConditionalHide("isOffshore")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable offshorePlatformMesh;
@@ -62,6 +60,7 @@ public class BuildingTileEntity : TileInfo
 			typeof(BuildingId),
 			typeof(Health),
 			typeof(CenterOfMassOffset),
+			typeof(CenterOfMass),
 		});
 	}
 
@@ -75,8 +74,16 @@ public class BuildingTileEntity : TileInfo
 		});
 		Map.EM.SetComponentData(entity, new CenterOfMassOffset
 		{
-			Value = centerOfMass
+			Value = centerOfMassOffset
 		});
+	}
+
+	public override Entity Instantiate(HexCoords pos, float height)
+	{
+		var e = base.Instantiate(pos, height);
+		var p = new float3(pos.worldX, height, pos.worldZ);
+		Map.EM.SetComponentData(e, new CenterOfMass { Value = p + centerOfMassOffset });
+		return e;
 	}
 
 	public override Tile CreateTile(HexCoords pos, float height)

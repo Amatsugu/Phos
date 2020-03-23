@@ -181,7 +181,7 @@ public class Map : IDisposable
 			}
 		}
 
-		public Tile ReplaceTile(HexCoords chunkCoord, TileInfo newTile)
+		public Tile ReplaceTile(HexCoords chunkCoord, TileEntity newTile)
 		{
 			if (!isRendered)
 				Render();
@@ -409,7 +409,7 @@ public class Map : IDisposable
 		return unitsInRange;
 	}
 
-	public TileInfo[] GetTileTyes()
+	public TileEntity[] GetTileTyes()
 	{
 		return Chunks.SelectMany(c => c.Tiles.Select(t => t.info)).Distinct().ToArray();
 	}
@@ -689,7 +689,7 @@ public class Map : IDisposable
 		}
 	}
 
-	public Tile ReplaceTile(Tile tile, TileInfo newTile)
+	public Tile ReplaceTile(Tile tile, TileEntity newTile)
 	{
 		if (!IsRendered)
 			throw new Exception("Cannot use ReplaceTile for an unrendered map");

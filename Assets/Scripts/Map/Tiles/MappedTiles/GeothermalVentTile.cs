@@ -15,7 +15,7 @@ public class GeothermalVentTile : ResourceTile
 		ventInfo = tInfo;
 	}
 
-	public override TileInfo GetMeshEntity()
+	public override TileEntity GetMeshEntity()
 	{
 		return originalTile;
 	}
@@ -60,7 +60,7 @@ public class GeothermalVentShellTile : ResourceTile
 		this.angle = angle;
 	}
 
-	public override TileInfo GetMeshEntity()
+	public override TileEntity GetMeshEntity()
 	{
 		return originalTile;
 	}

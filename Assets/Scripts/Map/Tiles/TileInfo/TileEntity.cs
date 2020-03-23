@@ -11,7 +11,7 @@ using UnityEngine;
 using BoxCollider = Unity.Physics.BoxCollider;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
-public class TileInfo : MeshEntityRotatable
+public class TileEntity : MeshEntityRotatable
 {
 	[Header("Tile Info")]
 	public string description;
@@ -46,7 +46,7 @@ public class TileInfo : MeshEntityRotatable
 		var colFilter = new CollisionFilter
 		{
 			CollidesWith = ~0u,
-			BelongsTo = 1u << (int)faction,
+			BelongsTo = (1u << (int)faction) | (1u << (int)Faction.Tile),
 			GroupIndex = 0
 		};
 #if false
@@ -64,6 +64,15 @@ public class TileInfo : MeshEntityRotatable
 			Size = new float3(1, 50, 1),
 			Orientation = quaternion.identity
 		}, colFilter, physMat);
+		/*var collider = CylinderCollider.Create(new CylinderGeometry
+		{
+			BevelRadius = 0.04f,
+			Center = new float3(0, -25, 0),
+			SideCount = 6,
+			Height = 50,
+			Radius = pos.edgeLength,
+			Orientation = quaternion.RotateX(math.radians(90))
+		}, colFilter, physMat);*/
 #endif
 
 		Map.EM.SetComponentData(e, new PhysicsCollider

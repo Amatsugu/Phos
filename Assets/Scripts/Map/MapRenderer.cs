@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapRenderer : MonoBehaviour
 {
-	public TileInfo tile;
+	public TileEntity tile;
 	public MapGenerator generator;
 	public GameObject oceanPlane;
 	public MeshEntityRotatable line;

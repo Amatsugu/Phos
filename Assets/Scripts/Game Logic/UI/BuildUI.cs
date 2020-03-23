@@ -207,8 +207,8 @@ public class BuildUI : MonoBehaviour
 			Filter = new Unity.Physics.CollisionFilter
 			{
 				GroupIndex = 0,
-				BelongsTo = ~0u,
-				CollidesWith = ~0u
+				BelongsTo = (1u << (int)Faction.Tile),
+				CollidesWith = (1u << (int)Faction.Tile)
 			}
 		}, out var hit))
 		{
