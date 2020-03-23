@@ -126,7 +126,7 @@ public class PhosCoreSystem : ComponentSystem
 		dir.y = .4f;
 		var vel = dir * core.projectileSpeed;
 		var proj = projectile.BufferedInstantiate(PostUpdateCommands, pos, .5f, vel);
-		PostUpdateCommands.AddComponent(proj, new TimedDeathSystem.DeathTime { Value = Time.ElapsedTime + 15 });
+		PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 15 });
 
 		PostUpdateCommands.AddComponent(proj, new PhosProjectile
 		{

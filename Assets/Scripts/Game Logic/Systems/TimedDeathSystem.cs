@@ -1,5 +1,7 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 
+[BurstCompile]
 public class TimedDeathSystem : ComponentSystem
 {
 	protected override void OnUpdate()
@@ -11,8 +13,9 @@ public class TimedDeathSystem : ComponentSystem
 		});
 	}
 
-	public struct DeathTime : IComponentData
-	{
-		public double Value;
-	}
+}
+
+public struct DeathTime : IComponentData
+{
+	public double Value;
 }
