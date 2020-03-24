@@ -65,7 +65,7 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 		var collisionFilter = new CollisionFilter
 		{
 			CollidesWith = ~0u,
-			BelongsTo = 1u << (int)faction,
+			BelongsTo = (1u << (int)faction) | (1u << (int)Faction.Unit),
 			GroupIndex = 0
 		};
 

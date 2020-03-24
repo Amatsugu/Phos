@@ -85,7 +85,7 @@ public class PhosCoreSystem : ComponentSystem
 				buildPhysics.AABBCast(t.Value, new float3(core.targetingRange), new CollisionFilter
 				{
 					BelongsTo = 1u << (int)faction.Value,
-					CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile)),
+					CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
 					GroupIndex = 0
 				}, ref _inRangeList);
 				if (_inRangeList.Length == 0)

@@ -11,15 +11,21 @@ public static class PhysicsUtilz
 {
 	public static void AABBCast(this BuildPhysicsWorld world, float3 center, float3 extents, CollisionFilter filter, ref NativeList<int> castHits)
 	{
+		var bounds = new Aabb
+		{
+			Max = center + extents,
+			Min = center - extents
+		};
+		AABBCast(world, bounds, filter, ref castHits);
+	}
+
+	public static void AABBCast(this BuildPhysicsWorld world, Aabb bounds, CollisionFilter filter, ref NativeList<int> castHits)
+	{
 		world.PhysicsWorld.CollisionWorld.OverlapAabb(new OverlapAabbInput
 		{
-			Aabb = new Aabb
-			{
-				Max = center + extents,
-				Min = center - extents
-			},
+			Aabb = bounds,
 			Filter = filter
-			
+
 		}, ref castHits);
 	}
 }

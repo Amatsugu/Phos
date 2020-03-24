@@ -1,4 +1,5 @@
 ﻿using Unity.Mathematics;
+using Unity.Physics;
 
 public static class MathUtils
 {
@@ -57,5 +58,45 @@ public static class MathUtils
 	public static float Ease(this float value, int power)
 	{
 		return value.EaseIn(power) * value.EaseOut(power);
+	}
+
+	public static Aabb PhysicsBounds(float3 a, float3 b)
+	{
+		float3 min = default, max = default;
+		if (a.x <= b.x)
+		{
+			min.x = a.x;
+			max.x = b.x;
+		}else
+		{
+			min.x = b.x;
+			max.x = a.x;
+		}
+		if(a.y <= b.y)
+		{
+			min.y = a.y;
+			max.y = b.y;
+		}else
+		{
+			min.y = b.y;
+			max.y = a.y;
+		}
+		if (a.z <= b.z)
+		{
+			min.z = a.z;
+			max.z = b.z;
+		}
+		else
+		{
+			min.z = b.z;
+			max.z = a.z;
+		}
+
+		var bounds = new Aabb()
+		{
+			Min = min,
+			Max = max
+		};
+		return bounds;
 	}
 }

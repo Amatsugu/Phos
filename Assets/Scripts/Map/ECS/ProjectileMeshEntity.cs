@@ -7,7 +7,7 @@ using Unity.Physics;
 
 using UnityEngine;
 
-public class ProjectileMeshEntity : DynamicMeshEntity
+public class ProjectileMeshEntity : PhysicsMeshEntity
 {
 	[Header("Projectile Settings")]
 	public Faction faction;

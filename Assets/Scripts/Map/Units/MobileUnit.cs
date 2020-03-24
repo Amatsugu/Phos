@@ -43,7 +43,7 @@ public class MobileUnit
 		if (IsRendered)
 			return Entity;
 		IsRendered = _isShown = true;
-		Entity = info.Instantiate(_position, Quaternion.identity, id);
+		Entity = info.Instantiate(_position, Quaternion.identity, id, _faction);
 		if(info.head != null)
 			HeadEntity = info.head.Instantiate(_position, 1, Quaternion.identity);
 		Map.EM.SetComponentData(Entity, new FactionId { Value = _faction });

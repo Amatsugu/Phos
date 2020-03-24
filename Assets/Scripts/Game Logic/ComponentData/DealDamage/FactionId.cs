@@ -7,7 +7,8 @@ public enum Faction
 	Phos,
 	PlayerProjectile,
 	PhosProjectile,
-	Tile
+	Tile,
+	Unit
 }
 
 public struct FactionId : IComponentData

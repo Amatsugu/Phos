@@ -10,12 +10,13 @@ using UnityEngine;
 using SphereCollider = Unity.Physics.SphereCollider;
 
 [CreateAssetMenu(menuName = "ECS/Dynamic Entity")]
-public class DynamicMeshEntity : MeshEntityRotatable
+public class PhysicsMeshEntity : MeshEntityRotatable
 {
 	[Header("Physics")]
 	public bool enableCollision = true;
 	[ConditionalHide("enableCollision")]
 	public float colliderRadius;
+	public bool isKenematic;
 	public bool gravity = true;
 	[ConditionalHide("gravity")]
 	public float gravityFactor = 1;
@@ -39,38 +40,35 @@ public class DynamicMeshEntity : MeshEntityRotatable
 		{
 			Value = gravity ? 0 : gravityFactor
 		});
+		Map.EM.AddComponentData(entity, GetMass());
+		Map.EM.SetComponentData(entity, GetCollider());
+
 	}
 
 	public virtual Entity Instantiate(float3 position, quaternion rotation, float scale = 1, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var e = Instantiate(position, scale, rotation);
-		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-		em.SetComponentData(e, GetCollider());
+		var em = Map.EM;
 		em.SetComponentData(e, new PhysicsVelocity
 		{
 			Linear = velocity,
 			Angular = angularVelocity
 		});
-		em.AddComponentData(e, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, mass));
-
 		return e;
 	}
 
 	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Quaternion rotation, float scale = 1, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var e = BufferedInstantiate(commandBuffer, position, scale, rotation);
-		var col = GetCollider();
-		commandBuffer.SetComponent(e, col);
 		commandBuffer.SetComponent(e, new PhysicsVelocity
 		{
 			Linear = velocity,
 			Angular = angularVelocity
 		});
-		commandBuffer.SetComponent(e, GetMass());
 		return e;
 	}
 
-	protected virtual PhysicsMass GetMass() => PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1);
+	protected virtual PhysicsMass GetMass() => isKenematic ? PhysicsMass.CreateKinematic(MassProperties.UnitSphere) : PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1);
 
 	protected virtual PhysicsCollider GetCollider() => new PhysicsCollider
 	{

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Unity.Collections;
+using Unity.Entities;
+using Unity.Physics;
+using Unity.Physics.Systems;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
@@ -16,6 +19,8 @@ public class InteractionUI : MonoBehaviour
 	public Transform selectionBox;
 
 	public float maxMoveCostPerFrame = 100;
+	public GraphicRaycaster raycaster;
+	public EventSystem eventSystem;
 
 	private Camera _cam;
 
@@ -27,8 +32,8 @@ public class InteractionUI : MonoBehaviour
 
 	private InteractionState _curState;
 	private NativeHashMap<HexCoords, float> _navData;
-	public GraphicRaycaster raycaster;
-	public EventSystem eventSystem;
+	private BuildPhysicsWorld _buildPhysicsWorld;
+	private NativeList<int> _castHits;
 
 	private enum InteractionState
 	{
@@ -56,6 +61,8 @@ public class InteractionUI : MonoBehaviour
 
 	private void Start()
 	{
+		_buildPhysicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
+		_castHits = new NativeList<int>(Allocator.Persistent);
 		_cam = GameRegistry.Camera;
 		_moveOrderQueue = new Queue<MoveOrder>();
 		_selectedUnits = new List<int>();
@@ -123,7 +130,7 @@ public class InteractionUI : MonoBehaviour
 
 			case InteractionState.OrderUnit:
 				ProcessCloseInput();
-				//InspectUI(mPos);
+				InspectUI(mPos);
 				InstructUnitUI(mPos);
 				break;
 		}
@@ -181,7 +188,26 @@ public class InteractionUI : MonoBehaviour
 					else
 					{
 						_curState = InteractionState.OrderUnit;
-						_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
+						var bounds = MathUtils.PhysicsBounds(_start.SurfacePoint, _end.SurfacePoint);
+						bounds.Max.y = 50;
+						bounds.Min.y = 0;
+						DebugUtilz.DrawCrosshair(bounds.Min, 50, Color.cyan, 0);
+						DebugUtilz.DrawCrosshair(bounds.Max, 50, Color.cyan, 0);
+						_buildPhysicsWorld.AABBCast(bounds, new CollisionFilter
+						{
+							BelongsTo = 1u << (int)Faction.Player,
+							CollidesWith = 1u << (int)Faction.Unit
+						}, ref _castHits);
+						if(_castHits.Length > 0)
+						{
+							for (int i = 0; i < _castHits.Length; i++)
+							{
+								var entity = _buildPhysicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
+								_selectedUnits.Add(Map.EM.GetComponentData<UnitId>(entity).Value);
+							}
+						}
+						//_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
+
 					}
 				}
 			}
@@ -360,5 +386,10 @@ public class InteractionUI : MonoBehaviour
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), false, false);
 				break;
 		}
+	}
+
+	private void OnDestroy()
+	{
+		_castHits.Dispose();
 	}
 }

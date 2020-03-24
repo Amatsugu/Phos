@@ -274,7 +274,7 @@ public class Map : IDisposable
 		}
 	}
 
-	public List<int> SelectUnits(HexCoords left, HexCoords right)
+	/*public List<int> SelectUnits(HexCoords left, HexCoords right)
 	{
 		//Transform to chunk space
 		var cLeft = left.GetChunkPos();
@@ -342,7 +342,7 @@ public class Map : IDisposable
 			}
 		}
 		return selectedUnits;
-	}
+	}*/
 
 	public List<int> SelectUnitsInRange(HexCoords center, int radius)
 	{
