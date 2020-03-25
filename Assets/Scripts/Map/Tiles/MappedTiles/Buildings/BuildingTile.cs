@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -76,6 +77,8 @@ public class BuildingTile : Tile
 		base.Show(isShown);
 	}
 
+	protected virtual quaternion GetBuildingRotation() => quaternion.identity;
+
 	public void Build()
 	{
 		if (_isBuilt)
@@ -86,7 +89,7 @@ public class BuildingTile : Tile
 		if (buildingInfo.buildingMesh.mesh == null)
 			UnityEngine.Debug.LogWarning($"No Building Assigned for {base.GetName()}");
 		else
-			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint);
+			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, GetBuildingRotation(), GameRegistry.BuildingDatabase.GetId(buildingInfo), buildingInfo.maxHealth, buildingInfo.faction);
 
 		if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
 			_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
@@ -95,18 +98,20 @@ public class BuildingTile : Tile
 		RenderDecorators();
 	}
 
+	protected virtual Entity GetBuildingEntity()
+	{
+		return buildingInfo.buildingMesh.mesh != null ? _building : _tileEntity;
+	}
+
 	protected virtual void PrepareEntity()
 	{
-		if (Map.EM.HasComponent<BuildingId>(_tileEntity))
-			Map.EM.SetComponentData(_tileEntity, new BuildingId
-			{
-				Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
-			});
-		else
-			Map.EM.AddComponentData(_tileEntity, new BuildingId
-			{
-				Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
-			});
+		var entity = GetBuildingEntity();
+		/*
+		Map.EM.AddComponentData(entity, new BuildingId
+		{
+			Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
+		});
+			*/
 		var production = buildingInfo.production;
 		var consumption = buildingInfo.consumption;
 		if (production.Length > 0)
@@ -141,8 +146,8 @@ public class BuildingTile : Tile
 
 			Map.EM.AddSharedComponentData(_tileEntity, cData);
 		}
-		Map.EM.RemoveComponent<BuildingOffTag>(_tileEntity);
-		Map.EM.AddComponent(_tileEntity, typeof(FirstTickTag));
+		//Map.EM.RemoveComponent<BuildingOffTag>(entity);
+		Map.EM.AddComponent(entity, typeof(FirstTickTag));
 	}
 
 	public override void OnPlaced()

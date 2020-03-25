@@ -24,7 +24,7 @@ public class MeshEntityRotatable : MeshEntity
 		return e;
 	}
 
-	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float3 scale, Quaternion rotation)
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float3 scale, quaternion rotation)
 	{
 		var e = BufferedInstantiate(commandBuffer, position, scale);
 		commandBuffer.SetComponent(e, new Translation { Value = position });
@@ -32,14 +32,14 @@ public class MeshEntityRotatable : MeshEntity
 		return e;
 	}
 
-	public Entity Instantiate(float3 position, float scale, Quaternion rotation)
+	public Entity Instantiate(float3 position, float scale, quaternion rotation)
 	{
 		var e = Instantiate(position, scale);
 		Map.EM.SetComponentData(e, new Rotation { Value = rotation });
 		return e;
 	}
 
-	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale, Quaternion rotation)
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale, quaternion rotation)
 	{
 		var e = BufferedInstantiate(commandBuffer, position, scale);
 		commandBuffer.SetComponent(e, new Translation { Value = position });

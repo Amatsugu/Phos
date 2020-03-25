@@ -15,6 +15,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	protected override void PrepareEntity()
 	{
 		base.PrepareEntity();
+		var entity = GetBuildingEntity();
 		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
 		var resInRange = new Dictionary<int, int>();
 		var resTiles = new Dictionary<int, List<ResourceTile>>();
@@ -62,7 +63,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			}
 		}
 
-		if (Map.EM.HasComponent<ProductionData>(_tileEntity))
+		if (Map.EM.HasComponent<ProductionData>(entity))
 		{
 			var exisitingProdData = Map.EM.GetSharedComponentData<ProductionData>(_tileEntity);
 			if (exisitingProdData.rates?.Length > 0)
@@ -73,9 +74,9 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			}
 		}
 		else
-			Map.EM.AddSharedComponentData(_tileEntity, prodData);
+			Map.EM.AddSharedComponentData(entity, prodData);
 
-		var p = Map.EM.GetSharedComponentData<ProductionData>(_tileEntity);
+		var p = Map.EM.GetSharedComponentData<ProductionData>(entity);
 	}
 
 	public override void OnRemoved()

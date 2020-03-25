@@ -16,7 +16,7 @@ public class BuildingTileEntity : TileEntity
 {
 	[Header("Mesh")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
-	public MeshEntityRotatable buildingMesh;
+	public BuildingMeshEntity buildingMesh;
 	public float3 centerOfMassOffset;
 	public MeshEntityRotatable constructionMesh;
 
@@ -56,9 +56,9 @@ public class BuildingTileEntity : TileEntity
 	{
 		return base.GetComponents().Concat(new ComponentType[] 
 		{
-			typeof(BuildingOffTag), 
-			typeof(BuildingId),
-			typeof(Health),
+			//typeof(BuildingOffTag), 
+			//typeof(BuildingId),
+			//typeof(Health),
 			typeof(CenterOfMassOffset),
 			typeof(CenterOfMass),
 		});
