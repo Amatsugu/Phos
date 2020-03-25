@@ -15,10 +15,12 @@ public class HealthBarEntity : MeshEntityRotatable
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
-		return base.GetComponents().Concat(new ComponentType[]{
+		var c = base.GetComponents().Concat(new ComponentType[]{
 			typeof(HealthBar),
-			isFill ? typeof(HealthBarFillTag) : null
 		});
+		if (isFill)
+			c.Append(typeof(HealthBarFillTag));
+		return c;
 	}
 
 	public override void PrepareDefaultComponentData(Entity entity)

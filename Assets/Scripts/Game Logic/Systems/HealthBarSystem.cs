@@ -98,7 +98,11 @@ public class HealthBarSystem : JobComponentSystem
 			{
 				typeof(Translation),
 				typeof(Rotation),
+			},
+			Any = new ComponentType[]
+			{
 				ComponentType.ReadOnly<HealthBar>(),
+				ComponentType.ReadOnly<HealthBarFillTag>()
 			}
 		};
 		_barQuery = GetEntityQuery(barDesc);
@@ -109,20 +113,20 @@ public class HealthBarSystem : JobComponentSystem
 		var hBarType = GetArchetypeChunkComponentType<HealthBar>(true);
 		var rotJob = new UpdateBarRotation
 		{
-			barType = hBarType,
 			camRot = _cam.rotation,
-			camFwd = _cam.forward,
+			camFwd = math.normalize(_cam.forward),
 			posSrc = GetComponentDataFromEntity<CenterOfMass>(true),
 			rotationType = GetArchetypeChunkComponentType<Rotation>(false),
 			translationType = GetArchetypeChunkComponentType<Translation>(false),
-			fillType = GetArchetypeChunkComponentType<HealthBarFillTag>(true)
+			fillType = GetArchetypeChunkComponentType<HealthBarFillTag>(true),
+			barType = hBarType,
 		};
 		inputDeps = rotJob.Schedule(_barQuery, inputDeps);
 
 		var fillJob = new UpdateBarFillJob
 		{
-			barType = hBarType,
 			healthSrc = GetComponentDataFromEntity<Health>(true),
+			barType = hBarType,
 			scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false)
 		};
 		inputDeps = fillJob.Schedule(_fillQuery, inputDeps);

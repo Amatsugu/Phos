@@ -285,7 +285,10 @@ public class InteractionUI : MonoBehaviour
 	{
 		var tilesNeeded = 0;
 		for (int i = 0; i < _selectedUnits.Count; i++)
-			tilesNeeded += HexCoords.GetTileCount(Map.ActiveMap.units[_selectedUnits[i]].info.size);
+		{
+			if(Map.ActiveMap.units.ContainsKey(_selectedUnits[i]))
+				tilesNeeded += HexCoords.GetTileCount(Map.ActiveMap.units[_selectedUnits[i]].info.size);
+		}
 		var r = HexCoords.CalculateRadius(tilesNeeded) + 1;
 		var orderedUnits = _selectedUnits.Select(uId => Map.ActiveMap.units[uId]).OrderBy(u => u.info.size).Reverse().ToArray();
 
