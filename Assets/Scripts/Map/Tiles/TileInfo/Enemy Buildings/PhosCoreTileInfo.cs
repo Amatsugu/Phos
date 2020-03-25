@@ -25,34 +25,22 @@ namespace Tiles.EnemyBuildings
 
 		public override IEnumerable<ComponentType> GetComponents()
 		{
-			return base.GetComponents().Append(typeof(PhosCore));
-		}
-
-		public override Entity Instantiate(HexCoords pos, float scale)
-		{
-			var e = base.Instantiate(pos, scale);
-
-			Map.EM.AddComponentData(e, new PhosCore
+			return base.GetComponents().Concat(new ComponentType[] 
 			{
-				fireRate = 1f/fireRate,
-				spinRate = spinRate,
-				nextVolleyTime = Time.time,
-				projectileSpeed = projectileSpeed,
-				targetingRangeSq = targetingRange * targetingRange,
-				targetingRange = targetingRange,
-				targetDelay = targetingDelay,
-				ring = ring.Instantiate(Map.ActiveMap[pos].SurfacePoint, Vector3.one),
-				laser = laser.GetEntity(),
-				projectile = projectile.GetEntity()
+				//typeof(PhosCore),
+				//typeof(PhosCoreData),
 			});
-
-			return e;
 		}
 
+		public override void PrepareDefaultComponentData(Entity entity)
+		{
+			base.PrepareDefaultComponentData(entity);
+			
+		}
 
 		public override Tile CreateTile(HexCoords pos, float height)
 		{
-			return new EnemyBuildingTile(pos, height, this);
+			return new PhosCoreTile(pos, height, this);
 		}
 	}
 }

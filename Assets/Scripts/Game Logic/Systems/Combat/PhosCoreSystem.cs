@@ -75,10 +75,10 @@ public class PhosCoreSystem : ComponentSystem
 
 	private void SimulateAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref Translation t, ref FactionId faction) =>
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref PhosCoreData data, ref Translation t, ref FactionId faction) =>
 		{
 			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2); //Angle of the ring
-			PostUpdateCommands.SetComponent(core.ring, new Rotation { Value = quaternion.AxisAngle(Vector3.up, baseAngle + (math.PI * 2) / 12f) });
+			PostUpdateCommands.SetComponent(data.ring, new Rotation { Value = quaternion.AxisAngle(Vector3.up, baseAngle + (math.PI * 2) / 12f) });
 			if (core.nextVolleyTime <= Time.ElapsedTime)
 			{
 				_inRangeList.Clear();
@@ -210,6 +210,10 @@ public struct PhosCore : IComponentData
 	public float targetDelay;
 	public int targetingRange;
 	public int targetingRangeSq;
+}
+
+public struct PhosCoreData : IComponentData
+{
 	public Entity ring;
 	public Entity projectile;
 	public Entity laser;

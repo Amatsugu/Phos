@@ -128,7 +128,7 @@ public class BuildingTile : Tile
 				pData.rates[i] = (int)production[i].ammount;
 			}
 
-			Map.EM.AddSharedComponentData(_tileEntity, pData);
+			Map.EM.AddSharedComponentData(entity, pData);
 		}
 		if (consumption.Length > 0)
 		{
@@ -144,7 +144,7 @@ public class BuildingTile : Tile
 				cData.rates[i] = (int)consumption[i].ammount;
 			}
 
-			Map.EM.AddSharedComponentData(_tileEntity, cData);
+			Map.EM.AddSharedComponentData(entity, cData);
 		}
 		//Map.EM.RemoveComponent<BuildingOffTag>(entity);
 		Map.EM.AddComponent(entity, typeof(FirstTickTag));
@@ -221,7 +221,7 @@ public class PoweredBuildingTile : BuildingTile
 			if (HasHQConnection)
 				return;
 			if (!HasHQConnection)
-				Map.EM.RemoveComponent<ConsumptionDebuff>(_tileEntity);
+				Map.EM.RemoveComponent<ConsumptionDebuff>(GetBuildingEntity());
 		}
 		HasHQConnection = true;
 		InfoPopupUI.HidePopup(Coords);
@@ -241,8 +241,9 @@ public class PoweredBuildingTile : BuildingTile
 			else
 				return;
 		}
-		if (!Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity))
-			Map.EM.AddComponentData(_tileEntity, new ConsumptionDebuff { distance = distanceToHQ });
+		var e = GetBuildingEntity();
+		if (!Map.EM.HasComponent<ConsumptionDebuff>(e))
+			Map.EM.AddComponentData(e, new ConsumptionDebuff { distance = distanceToHQ });
 		HasHQConnection = false;
 		InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and results in a consumtion penalty.");
 	}

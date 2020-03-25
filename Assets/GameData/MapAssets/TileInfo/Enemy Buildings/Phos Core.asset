@@ -21,11 +21,10 @@ MonoBehaviour:
   description: 
   decorators: []
   isTraverseable: 1
-  faction: 2
   buildingMesh: {fileID: 11400000, guid: 12f33196a9f8f6f49af32137683eda3f, type: 2}
   centerOfMassOffset:
     x: 0
-    y: 4
+    y: 0
     z: 0
   constructionMesh: {fileID: 0}
   tier: 1
@@ -38,6 +37,7 @@ MonoBehaviour:
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
   maxHealth: 0
+  faction: 2
   upgradeTarget:
     id: -1
   icon: {fileID: 0}

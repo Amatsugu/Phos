@@ -18,7 +18,6 @@ public class TileEntity : MeshEntityRotatable
 
 	public TileDecorator[] decorators;
 	public bool isTraverseable = true;
-	public Faction faction;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
@@ -27,14 +26,13 @@ public class TileEntity : MeshEntityRotatable
 			typeof(HexPosition),
 			typeof(PhysicsCollider),
 			typeof(PhysicsDebugDisplayData),
-			typeof(FactionId)
 		});
 	}
 
 	public override void PrepareDefaultComponentData(Entity entity)
 	{
 		base.PrepareDefaultComponentData(entity);
-		Map.EM.SetComponentData(entity, new FactionId { Value = faction });
+		//Map.EM.SetComponentData(entity, new FactionId { Value = faction });
 
 		Map.EM.SetComponentData(entity, new PhysicsDebugDisplayData
 		{
@@ -45,7 +43,7 @@ public class TileEntity : MeshEntityRotatable
 		var colFilter = new CollisionFilter
 		{
 			CollidesWith = ~0u,
-			BelongsTo = (1u << (int)faction) | (1u << (int)Faction.Tile),
+			BelongsTo = 1u << (int)Faction.Tile,
 			GroupIndex = 0
 		};
 #if false

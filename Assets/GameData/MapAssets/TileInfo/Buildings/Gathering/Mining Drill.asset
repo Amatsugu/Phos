@@ -26,7 +26,7 @@ MonoBehaviour:
   isTraverseable: 1
   faction: 1
   buildingMesh: {fileID: 11400000, guid: 1a6e2d608f330684282a507f252731ae, type: 2}
-  centerOfMass:
+  centerOfMassOffset:
     x: 0
     y: 0
     z: 0

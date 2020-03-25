@@ -15,7 +15,7 @@ public enum PlacementMode
 public class BuildingTileEntity : TileEntity
 {
 	[Header("Mesh")]
-	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
+	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(BuildingMeshEntity))]
 	public BuildingMeshEntity buildingMesh;
 	public float3 centerOfMassOffset;
 	public MeshEntityRotatable constructionMesh;
@@ -40,6 +40,7 @@ public class BuildingTileEntity : TileEntity
 	[Header("Building Info")]
 	public PlacementMode placementMode = PlacementMode.Single;
 	public float maxHealth;
+	public Faction faction;
 
 	public BuildingIdentifier upgradeTarget;
 	public Sprite icon;
@@ -56,9 +57,6 @@ public class BuildingTileEntity : TileEntity
 	{
 		return base.GetComponents().Concat(new ComponentType[] 
 		{
-			//typeof(BuildingOffTag), 
-			//typeof(BuildingId),
-			//typeof(Health),
 			typeof(CenterOfMassOffset),
 			typeof(CenterOfMass),
 		});
@@ -67,11 +65,6 @@ public class BuildingTileEntity : TileEntity
 	public override void PrepareDefaultComponentData(Entity entity)
 	{
 		base.PrepareDefaultComponentData(entity);
-		Map.EM.SetComponentData(entity, new Health
-		{
-			maxHealth = maxHealth,
-			Value = maxHealth
-		});
 		Map.EM.SetComponentData(entity, new CenterOfMassOffset
 		{
 			Value = centerOfMassOffset

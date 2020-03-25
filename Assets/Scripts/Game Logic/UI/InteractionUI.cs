@@ -357,7 +357,7 @@ public class InteractionUI : MonoBehaviour
 
 		switch (tile)
 		{
-			case Tile t when t.info.faction > Faction.Player:
+			case BuildingTile b when b.buildingInfo.faction != Faction.Phos:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false, showUpgradeBtn: false);
 				break;
 			case HQTile _:

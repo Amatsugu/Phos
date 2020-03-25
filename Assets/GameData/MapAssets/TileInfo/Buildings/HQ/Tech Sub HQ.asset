@@ -23,16 +23,21 @@ MonoBehaviour:
   isTraverseable: 0
   faction: 1
   buildingMesh: {fileID: 11400000, guid: 1f8895393fbf86f4f9aa7d16ee0a2c9d, type: 2}
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0
   constructionMesh: {fileID: 0}
   tier: 0
   constructionTime: 0
   category: 0
   size: 0
   flattenOuterRange: 0
-  resourceTransferRange: 0
   isOffshore: 0
   offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
   placementMode: 0
+  maxHealth: 0
   upgradeTarget:
     id: -1
   icon: {fileID: 0}

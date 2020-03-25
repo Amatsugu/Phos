@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: Mining Drill Mesh
   m_EditorClassIdentifier: 
   mesh: {fileID: -1660190692152958474, guid: 1bf0220d534427948a8282617ed94b2d, type: 3}
@@ -18,3 +18,7 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0

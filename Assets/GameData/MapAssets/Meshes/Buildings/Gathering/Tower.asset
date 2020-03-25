@@ -9,10 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: Tower
   m_EditorClassIdentifier: 
   mesh: {fileID: -1277366460620338370, guid: 2a683fed900f02c4d9e7877625dfa2fa, type: 3}
   material: {fileID: 2100000, guid: 832fbd138ec579349bf6a61bd9431c40, type: 2}
   castShadows: 1
   receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 1
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0

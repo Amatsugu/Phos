@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -44,8 +45,8 @@ public class MobileUnit
 			return Entity;
 		IsRendered = _isShown = true;
 		Entity = info.Instantiate(_position, Quaternion.identity, id, _faction);
-		if(info.head != null)
-			HeadEntity = info.head.Instantiate(_position, 1, Quaternion.identity);
+		if (info.head != null)
+			HeadEntity = info.head.Instantiate(_position, new float3(1, 1, 1), Quaternion.identity);
 		Map.EM.SetComponentData(Entity, new FactionId { Value = _faction });
 		return Entity;
 	}

@@ -124,15 +124,17 @@ public class PowerTransferEffectSystem : ComponentSystem
 				{
 					ep.progress++;
 					if (ep.progress < path.Count - 1)
+					{
 						r.Value = Quaternion.LookRotation((Vector3)t.Value - path[ep.progress], Vector3.up);
+					}
 				}
 			}
-			t.Value = Vector3.MoveTowards(t.Value, path[ep.progress], 10 * Time.DeltaTime);
 			if (ep.progress >= path.Count)
 			{
 				ep.progress = 0;
 				t.Value = path[0];
-			}
+			}else
+				t.Value = Vector3.MoveTowards(t.Value, path[ep.progress], 10 * Time.DeltaTime);
 		});
 	}
 
