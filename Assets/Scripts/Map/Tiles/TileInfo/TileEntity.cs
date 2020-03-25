@@ -31,13 +31,12 @@ public class TileEntity : MeshEntityRotatable
 		});
 	}
 
-	public virtual Entity Instantiate(HexCoords pos, float height)
+	public override void PrepareDefaultComponentData(Entity entity)
 	{
-		var e = Instantiate(new Vector3(pos.worldX, height, pos.worldZ), pos.edgeLength);
-		Map.EM.SetComponentData(e, new HexPosition { coords = pos });
-		Map.EM.SetComponentData(e, new FactionId { Value = faction });
+		base.PrepareDefaultComponentData(entity);
+		Map.EM.SetComponentData(entity, new FactionId { Value = faction });
 
-		Map.EM.SetComponentData(e, new PhysicsDebugDisplayData
+		Map.EM.SetComponentData(entity, new PhysicsDebugDisplayData
 		{
 			DrawColliders = 1
 		});
@@ -75,10 +74,17 @@ public class TileEntity : MeshEntityRotatable
 		}, colFilter, physMat);*/
 #endif
 
-		Map.EM.SetComponentData(e, new PhysicsCollider
+		Map.EM.SetComponentData(entity, new PhysicsCollider
 		{
 			Value = collider
 		});
+	}
+
+	public virtual Entity Instantiate(HexCoords pos, float height)
+	{
+		var e = Instantiate(new Vector3(pos.worldX, height, pos.worldZ), pos.edgeLength);
+		Map.EM.SetComponentData(e, new HexPosition { coords = pos });
+		
 		return e;
 	}
 

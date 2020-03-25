@@ -19,7 +19,7 @@ MonoBehaviour:
   isStatic: 0
   nonUniformScale: 0
   moveSpeed: 10
-  attackSpeed: 5
+  attackSpeed: 1
   maxHealth: 100
   size: 0
   centerOfMassOffset:
@@ -28,3 +28,5 @@ MonoBehaviour:
     z: 0
   head: {fileID: 11400000, guid: 68cb1fd3b1861fd4880a15223d7f5b63, type: 2}
   projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
+  healthBar: {fileID: 11400000, guid: 1fd6bf963780f464cb38393a7a54d4d1, type: 2}
+  healthBarFill: {fileID: 11400000, guid: fbd2a2f645d3cbb4e962582546f841e7, type: 2}

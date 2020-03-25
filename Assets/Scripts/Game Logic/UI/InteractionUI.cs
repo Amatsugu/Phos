@@ -200,9 +200,11 @@ public class InteractionUI : MonoBehaviour
 						}, ref _castHits);
 						if(_castHits.Length > 0)
 						{
+							_selectedUnits.Clear();
 							for (int i = 0; i < _castHits.Length; i++)
 							{
 								var entity = _buildPhysicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
+								Debug.Log(Map.EM.GetName(entity));
 								_selectedUnits.Add(Map.EM.GetComponentData<UnitId>(entity).Value);
 							}
 						}

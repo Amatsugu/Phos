@@ -22,6 +22,8 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 	public float3 centerOfMassOffset;
 	public MeshEntityRotatable head;
 	public MeshEntityRotatable projectile;
+	public MeshEntityRotatable healthBar;
+	public MeshEntityRotatable healthBarFill;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
@@ -82,6 +84,12 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 				BevelRadius = 0
 			}, collisionFilter, physMat)
 		});
+
+		var bar = healthBar.Instantiate(pos);
+		Map.EM.AddComponentData(bar, new HealthBar { target = e });
+		var fill = healthBarFill.Instantiate(pos);
+		Map.EM.AddComponentData(fill, new HealthBar { target = e }); ;
+		Map.EM.AddComponent<HealthBarFillTag>(fill);
 		return e;
 	}
 }
