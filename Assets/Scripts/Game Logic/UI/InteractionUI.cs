@@ -204,7 +204,6 @@ public class InteractionUI : MonoBehaviour
 							for (int i = 0; i < _castHits.Length; i++)
 							{
 								var entity = _buildPhysicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
-								Debug.Log(Map.EM.GetName(entity));
 								_selectedUnits.Add(Map.EM.GetComponentData<UnitId>(entity).Value);
 							}
 						}
@@ -360,9 +359,6 @@ public class InteractionUI : MonoBehaviour
 
 		switch (tile)
 		{
-			case BuildingTile b when b.buildingInfo.faction != Faction.Phos:
-				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false, showUpgradeBtn: false);
-				break;
 			case HQTile _:
 				//GameRegistry.ResearchTreeUI.Show(null);
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false);
@@ -378,7 +374,9 @@ public class InteractionUI : MonoBehaviour
 					GameRegistry.ResearchTreeUI.Show(rb);
 				//interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());
 				break;
-
+			case BuildingTile b when b.buildingInfo.faction != Faction.Phos:
+				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription(), showDestroyBtn: false, showUpgradeBtn: false);
+				break;
 			case BuildingTile _:
 				interactionPanel.ShowPanel(tile.GetName(), tile.GetDescription());
 				break;

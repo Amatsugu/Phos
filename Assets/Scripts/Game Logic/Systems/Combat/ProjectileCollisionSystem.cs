@@ -36,6 +36,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 }
 
 [BurstCompile]
+[UpdateAfter(typeof(StepPhysicsWorld))]
 public class ProjectileCollisionSystem : JobComponentSystem
 {
 	private BuildPhysicsWorld _physicsWorld;

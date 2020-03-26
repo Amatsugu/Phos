@@ -147,7 +147,7 @@ namespace AnimationSystem
 					var r = rot[i].Value;
 					rot[i] = new Rotation
 					{
-						Value = math.mul(math.normalize(r), quaternion.AxisAngle(axis[i].Value, speed[i].Value * dt))
+						Value = math.mul(math.normalizesafe(r), quaternion.AxisAngle(axis[i].Value, speed[i].Value * dt))
 					};
 				}
 			}

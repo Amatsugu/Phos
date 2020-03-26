@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 [BurstCompile]
+[UpdateAfter(typeof(BuildPhysicsWorld))]
 public class PhosCoreSystem : ComponentSystem
 {
 	private int _state = 0;
@@ -138,6 +139,7 @@ public class PhosCoreSystem : ComponentSystem
 }
 
 [BurstCompile]
+[UpdateAfter(typeof(BuildPhysicsWorld))]
 public class PhosProjectileSystem : JobComponentSystem
 {
 	[BurstCompile]

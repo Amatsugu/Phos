@@ -164,6 +164,7 @@ public class BuildUI : MonoBehaviour
 			{
 				_prevState = _state;
 				_state = BuildState.Idle;
+				HideAllIndicators();
 			}
 		}else
 		{

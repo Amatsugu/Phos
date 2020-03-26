@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!382020655 &-1694196423294595945
+PluginBuildInfo:
+  m_RuntimePlugins:
+  - Unity.Burst.Unsafe
+  - System.Runtime.CompilerServices.Unsafe
+  - nunit.framework
+  - ffx_a
+  - ffx_cas
+  - ffx_lpm
+  - Newtonsoft.Json
+  m_EditorPlugins:
+  - Mono.Cecil
+  - Mono.Cecil.Rocks
+  - Mono.Cecil.Mdb
+  - AppleEventIntegration
+  - Mono.Cecil.Pdb
+  - ICSharpCode.NRefactory
+--- !u!1125 &1
+BuildReport:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Build_2020-25-Mar-10-10-26
+  m_Summary:
+    buildStartTime:
+      serializedVersion: 2
+      ticks: 637207422129368625
+    buildGUID: 01928c68fff81774aacb361ff197f600
+    platformName: Win64
+    platformGroupName: Standalone
+    options: 8
+    assetBundleOptions: 0
+    outputPath: C:/Users/Suzune/Documents/GitHub/Phos/Builds/Phos.exe
+    crc: 0
+    totalSize: 0
+    totalTimeTicks: 130638656
+    totalErrors: 2
+    totalWarnings: 4
+    buildType: 1
+    buildResult: 2
+  m_Files: []
+  m_BuildSteps:
+  - stepName: Build player
+    durationTicks: 130638656
+    depth: 0
+    messages: []
+  - stepName: Compile scripts
+    durationTicks: 94752257
+    depth: 1
+    messages:
+    - type: 0
+      content: 'Assets\Scripts\Game Logic\UI\InteractionUI.cs(207,26): error CS1061:
+        ''EntityManager'' does not contain a definition for ''GetName'' and no accessible
+        extension method ''GetName'' accepting a first argument of type ''EntityManager''
+        could be found (are you missing a using directive or an assembly reference?)'
+    - type: 2
+      content: 'Assets\Scripts\Game Logic\Systems\HealthBarSystem.cs(48,41): warning
+        CS0649: Field ''HealthBarSystem.UpdateBarRotation.cmd'' is never assigned
+        to, and will always have its default value '
+    - type: 2
+      content: 'Assets\Scripts\Game Logic\UI\UI Elements\UIExpandable.cs(22,22):
+        warning CS0067: The event ''UIExpandable.OnExpand'' is never used'
+    - type: 2
+      content: 'Assets\Scripts\Game Logic\UI\UI Elements\UIExpandable.cs(24,22):
+        warning CS0067: The event ''UIExpandable.OnContract'' is never used'
+    - type: 2
+      content: 'Assets\Scripts\Camera\CameraController.cs(31,21): warning CS0414:
+        The field ''CameraController._state'' is assigned but its value is never
+        used'
+    - type: 0
+      content: Error building Player because scripts had compiler errors
+  m_Appendices:
+  - {fileID: -1694196423294595945}
+  - {fileID: 4217238010191394391}
+--- !u!641289076 &4217238010191394391
+AudioBuildInfo:
+  m_IsAudioDisabled: 0
+  m_AudioClipCount: 0
+  m_AudioMixerCount: 0
