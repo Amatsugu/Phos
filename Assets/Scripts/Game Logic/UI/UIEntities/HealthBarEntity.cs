@@ -3,7 +3,6 @@ using System.Linq;
 
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 
 using UnityEngine;
 
@@ -11,15 +10,13 @@ using UnityEngine;
 public class HealthBarEntity : MeshEntityRotatable
 {
 	[Header("HealthBar")]
-	public bool isFill;
+	public float2 size;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
 		var c = base.GetComponents().Concat(new ComponentType[]{
 			typeof(HealthBar),
 		});
-		if (isFill)
-			c.Append(typeof(HealthBarFillTag));
 		return c;
 	}
 
@@ -28,11 +25,18 @@ public class HealthBarEntity : MeshEntityRotatable
 		base.PrepareDefaultComponentData(entity);
 	}
 
-	public Entity Instantiate(Entity target)
+	public Entity Instantiate(Entity target, HealthBar.BarType type, float3 offset)
 	{
-		var e = Instantiate(0, 0, quaternion.identity);
-		Map.EM.SetComponentData(e, new HealthBar { target = target });
+		var e = Instantiate(float3.zero, new float3(size,1), quaternion.identity);
+		Map.EM.SetComponentData(e, new HealthBar
+		{
+			target = target,
+			type = type,
+			offset = offset,
+			size = size
+		});
+		if (type != HealthBar.BarType.BG)
+			Map.EM.AddComponent<HealthBarFillTag>(e);
 		return e;
 	}
-
 }

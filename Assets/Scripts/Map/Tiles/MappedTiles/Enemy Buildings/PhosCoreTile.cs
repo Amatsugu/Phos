@@ -1,14 +1,16 @@
-﻿using System.Numerics;
-using Tiles.EnemyBuildings;
+﻿using Tiles.EnemyBuildings;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
+
 using UnityEngine;
 
 public class PhosCoreTile : EnemyBuildingTile
 {
-
 	private Entity _ringEntity;
 	private readonly PhosCoreTileInfo _phosInfo;
+
 	public PhosCoreTile(HexCoords coords, float height, PhosCoreTileInfo tInfo) : base(coords, height, tInfo)
 	{
 		_isBuilt = true;
@@ -37,16 +39,16 @@ public class PhosCoreTile : EnemyBuildingTile
 		});
 	}
 
-	public override void Show(bool isShown)
+	public override void OnShow()
 	{
-		if (IsShown != isShown)
-		{
-			if (isShown)
-				Map.EM.RemoveComponent<FrozenRenderSceneTag>(_ringEntity);
-			else
-				Map.EM.AddComponent<FrozenRenderSceneTag>(_ringEntity);
-		}
-		base.Show(isShown);
+		base.OnShow();
+		Map.EM.RemoveComponent<FrozenRenderSceneTag>(_ringEntity);
+	}
+
+	public override void OnHide()
+	{
+		base.OnHide();
+		Map.EM.AddComponent<FrozenRenderSceneTag>(_ringEntity);
 	}
 
 	public override void Destroy()

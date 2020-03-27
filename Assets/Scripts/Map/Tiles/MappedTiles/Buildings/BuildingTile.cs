@@ -1,5 +1,7 @@
-﻿using Unity.Entities;
+﻿using Unity.Collections;
+using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -14,6 +16,7 @@ public class BuildingTile : Tile
 	private Entity _building;
 	private Entity _offshorePlatform;
 	protected bool _isBuilt;
+	private NativeArray<Entity> _healthBars;
 
 	public BuildingTile(HexCoords coords, float height, BuildingTileEntity tInfo) : base(coords, height, tInfo)
 	{
@@ -54,27 +57,33 @@ public class BuildingTile : Tile
 				Map.EM.DestroyEntity(_building);
 			if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
 				Map.EM.DestroyEntity(_offshorePlatform);
+			if (_healthBars.IsCreated)
+			{
+				Map.EM.DestroyEntity(_healthBars);
+				_healthBars.Dispose();
+			}
 		}
 		catch
 		{
 		}
 	}
 
-	public override void Show(bool isShown)
+	public override void OnHide()
 	{
-		if (IsShown != isShown)
-		{
-			if (!Map.EM.Exists(_building))
-			{
-				base.Show(isShown);
-				return;
-			}
-			if (isShown)
-				Map.EM.RemoveComponent(_building, typeof(Frozen));
-			else
-				Map.EM.AddComponent(_building, typeof(Frozen));
-		}
-		base.Show(isShown);
+		base.OnHide();
+		if (buildingInfo.buildingMesh != null)
+			Map.EM.AddComponent(_building, typeof(FrozenRenderSceneTag));
+		if (_healthBars.IsCreated)
+			Map.EM.AddComponent<FrozenRenderSceneTag>(_healthBars);
+	}
+
+	public override void OnShow()
+	{
+		base.OnShow();
+		if (buildingInfo.buildingMesh != null)
+			Map.EM.RemoveComponent(_building, typeof(FrozenRenderSceneTag));
+		if (_healthBars.IsCreated)
+			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_healthBars);
 	}
 
 	protected virtual quaternion GetBuildingRotation() => quaternion.identity;
@@ -146,8 +155,21 @@ public class BuildingTile : Tile
 
 			Map.EM.AddSharedComponentData(entity, cData);
 		}
-		//Map.EM.RemoveComponent<BuildingOffTag>(entity);
+		if (Map.EM.HasComponent<Health>(entity))
+			Map.EM.SetComponentData(entity, new Health
+			{
+				maxHealth = buildingInfo.maxHealth,
+				Value = buildingInfo.maxHealth
+			});
+		else
+			Map.EM.AddComponentData(entity, new Health
+			{
+				maxHealth = buildingInfo.maxHealth,
+				Value = buildingInfo.maxHealth
+			});
 		Map.EM.AddComponent(entity, typeof(FirstTickTag));
+		if (buildingInfo.healthBar != null)
+			_healthBars = buildingInfo.healthBar.Instantiate(entity, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
 	}
 
 	public override void OnPlaced()

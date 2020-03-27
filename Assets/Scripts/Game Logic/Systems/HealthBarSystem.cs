@@ -25,13 +25,14 @@ public class HealthBarSystem : JobComponentSystem
 			var bar = chunk.GetNativeArray(barType);
 			for (int i = 0; i < chunk.Count; i++)
 			{
-				if(!healthSrc.Exists(bar[i].target))
+				var hBar = bar[i];
+				if (!healthSrc.Exists(hBar.target))
 					continue;
-				var health = healthSrc[bar[i].target];
+				var health = healthSrc[hBar.target];
 				var fill = health.Value > 0 ? health.Value / health.maxHealth : 0f;
 				scale[i] = new NonUniformScale
 				{
-					Value = new float3(fill, 1, 1)
+					Value = new float3(hBar.size.x * fill, hBar.size.y, 1)
 				};
 			}
 		}
@@ -41,7 +42,6 @@ public class HealthBarSystem : JobComponentSystem
 	private struct UpdateBarRotation : IJobChunk
 	{
 		[ReadOnly] public ArchetypeChunkComponentType<HealthBar> barType;
-		[ReadOnly] public ArchetypeChunkComponentType<HealthBarFillTag> fillType;
 		[ReadOnly] public ComponentDataFromEntity<CenterOfMass> posSrc;
 		public ArchetypeChunkComponentType<Translation> translationType;
 		public ArchetypeChunkComponentType<Rotation> rotationType;
@@ -54,11 +54,11 @@ public class HealthBarSystem : JobComponentSystem
 			var rotations = chunk.GetNativeArray(rotationType);
 			var bar = chunk.GetNativeArray(barType);
 			var pos = chunk.GetNativeArray(translationType);
-			var offset = new float3(-0.5f, 1, 0);
-			offset += chunk.HasChunkComponent(fillType) ? camFwd * -0.1f : float3.zero;
+			var layerOffset = camFwd * -0.01f;
 			for (int i = 0; i < chunk.Count; i++)
 			{
-				if(!posSrc.Exists(bar[i].target))
+				var healthBar = bar[i];
+				if(!posSrc.Exists(healthBar.target))
 				{
 					continue;
 				}
@@ -66,9 +66,10 @@ public class HealthBarSystem : JobComponentSystem
 				{
 					Value = camRot
 				};
+				var centerOffset = new float3((healthBar.size / -2f), 0);
 				pos[i] = new Translation
 				{
-					Value = posSrc[bar[i].target].Value + offset
+					Value = (posSrc[healthBar.target].Value + (layerOffset * (int)healthBar.type) + healthBar.offset) + centerOffset
 				};
 			}
 		}
@@ -98,11 +99,7 @@ public class HealthBarSystem : JobComponentSystem
 			{
 				typeof(Translation),
 				typeof(Rotation),
-			},
-			Any = new ComponentType[]
-			{
 				ComponentType.ReadOnly<HealthBar>(),
-				ComponentType.ReadOnly<HealthBarFillTag>()
 			}
 		};
 		_barQuery = GetEntityQuery(barDesc);
@@ -118,7 +115,6 @@ public class HealthBarSystem : JobComponentSystem
 			posSrc = GetComponentDataFromEntity<CenterOfMass>(true),
 			rotationType = GetArchetypeChunkComponentType<Rotation>(false),
 			translationType = GetArchetypeChunkComponentType<Translation>(false),
-			fillType = GetArchetypeChunkComponentType<HealthBarFillTag>(true),
 			barType = hBarType,
 		};
 		inputDeps = rotJob.Schedule(_barQuery, inputDeps);
@@ -136,6 +132,15 @@ public class HealthBarSystem : JobComponentSystem
 
 public struct HealthBar : IComponentData
 {
+	public enum BarType
+	{
+		BG,
+		DecayFill,
+		Fill,
+	};
+	public BarType type;
+	public float3 offset;
+	public float2 size;
 	public Entity target;
 }
 

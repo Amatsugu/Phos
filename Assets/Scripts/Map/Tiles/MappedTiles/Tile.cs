@@ -165,19 +165,23 @@ public class Tile
 		}
 	}
 
-	public virtual void Show(bool isShown)
+	public void Show(bool isShown)
 	{
 		IsShown = isShown;
 		if (isShown)
-		{
-			//Map.EM.RemoveComponent(_decor, typeof(Frozen));
-			Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
-		}
+			OnShow();
 		else
-		{
-			//Map.EM.AddComponent(_decor, typeof(Frozen));
-			Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
-		}
+			OnHide();
+	}
+
+	public virtual void OnShow()
+	{
+		Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
+	}
+
+	public virtual void OnHide()
+	{
+		Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
 	}
 
 	public virtual TileEntity GetMeshEntity()

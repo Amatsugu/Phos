@@ -1,5 +1,7 @@
-﻿using Unity.Entities;
+﻿using Unity.Collections;
+using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -22,20 +24,19 @@ public class MobileUnit
 
 	public Entity Entity;
 	public Entity HeadEntity;
+	public Vector3 _position;
 	public bool IsRendered { get; protected set; }
 
-	protected int _chunk;
 	private bool _isShown;
 	private Faction _faction;
-	public Vector3 _position;
+	private NativeArray<Entity> _healhBar;
 
-	public MobileUnit(int id, MobileUnitEntity info, Tile tile, int chunkId, Faction faction)
+	public MobileUnit(int id, MobileUnitEntity info, Tile tile, Faction faction)
 	{
 		this.id = id;
 		this.info = info;
 		_position = tile.SurfacePoint;
 		Coords = tile.Coords;
-		_chunk = chunkId;
 		_faction = faction;
 	}
 
@@ -48,6 +49,8 @@ public class MobileUnit
 		if (info.head != null)
 			HeadEntity = info.head.Instantiate(_position, new float3(1, 1, 1), Quaternion.identity);
 		Map.EM.SetComponentData(Entity, new FactionId { Value = _faction });
+		if(info.healthBar != null)
+			_healhBar = info.healthBar.Instantiate(Entity, info.centerOfMassOffset + info.healthBarOffset);
 		return Entity;
 	}
 
@@ -57,21 +60,24 @@ public class MobileUnit
 		Coords = HexCoords.FromPosition(pos, Map.ActiveMap.tileEdgeLength);
 	}
 
-	public void UpdateChunk()
-	{
-		var newChunk = Coords.GetChunkIndex(Map.ActiveMap.width);
-		Map.ActiveMap.MoveUnit(id, _chunk, newChunk);
-		_chunk = newChunk;
-	}
-
 	public void Show(bool isShown)
 	{
 		if (isShown == _isShown)
 			return;
 		if (_isShown = isShown)
-			Map.EM.RemoveComponent(Entity, typeof(Frozen));
+		{
+			Map.EM.RemoveComponent(Entity, typeof(FrozenRenderSceneTag));
+			Map.EM.RemoveComponent(HeadEntity, typeof(FrozenRenderSceneTag));
+			if(_healhBar.IsCreated)
+				Map.EM.RemoveComponent(_healhBar, typeof(FrozenRenderSceneTag));
+		}
 		else
-			Map.EM.AddComponent(Entity, typeof(Frozen));
+		{
+			Map.EM.AddComponent(Entity, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(HeadEntity, typeof(FrozenRenderSceneTag));
+			if(_healhBar.IsCreated)
+				Map.EM.AddComponent(_healhBar, typeof(FrozenRenderSceneTag));
+		}
 	}
 
 	public void MoveTo(Vector3 pos)
@@ -90,7 +96,6 @@ public class MobileUnit
 
 	public virtual void Die()
 	{
-		Map.ActiveMap.unitLocations[_chunk].Remove(id);
 		Map.ActiveMap.units.Remove(id);
 		Destroy();
 		//TODO: Death Effect
@@ -107,5 +112,7 @@ public class MobileUnit
 			Map.EM.DestroyEntity(Entity);
 		if (Map.EM.Exists(HeadEntity))
 			Map.EM.DestroyEntity(HeadEntity);
+		if (_healhBar.IsCreated)
+			Map.EM.DestroyEntity(_healhBar);
 	}
 }

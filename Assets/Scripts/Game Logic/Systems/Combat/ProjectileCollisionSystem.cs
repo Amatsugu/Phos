@@ -26,7 +26,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 	private void DealDamage(Entity src, Entity tgt)
 	{
 		//cmb.AddComponent(src.Index, src, new TimedDeathSystem.DeathTime { Value = time } ); //TODO: Collision Effect
-		cmb.DestroyEntity(src.Index, src);
+		//cmb.DestroyEntity(src.Index, src);
 		if (!health.HasComponent(tgt))
 			return;
 		var h = health[tgt];

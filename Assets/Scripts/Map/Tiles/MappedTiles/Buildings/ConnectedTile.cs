@@ -69,16 +69,16 @@ public class ConnectedTile : PoweredBuildingTile
 		}
 	}
 
-	public override void Show(bool isShown)
+	public override void OnShow()
 	{
-		if (IsShown != isShown)
-		{
-			if (isShown)
-				Map.EM.RemoveComponent(_connections, typeof(Frozen));
-			else
-				Map.EM.AddComponent(_connections, typeof(Frozen));
-		}
-		base.Show(isShown);
+		base.OnShow();
+		Map.EM.RemoveComponent(_connections, typeof(Frozen));
+	}
+
+	public override void OnHide()
+	{
+		base.OnHide();
+		Map.EM.AddComponent(_connections, typeof(Frozen));
 	}
 
 	public void UpdateConnections()

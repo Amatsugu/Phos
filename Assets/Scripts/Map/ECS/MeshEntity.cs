@@ -26,7 +26,7 @@ public class MeshEntity : ScriptableObject
 		var em = Map.EM;
 		if (_entity == null || !em.Exists(_entity))
 		{
-			UnityEngine.Debug.Log($"<b>Create Entity:</b> {name}");
+			UnityEngine.Debug.Log($"<b>Create Entity:</b> {name} [{GetType().Name}]");
 			var architype = GetArchetype();
 
 			_entity = em.CreateEntity(architype);

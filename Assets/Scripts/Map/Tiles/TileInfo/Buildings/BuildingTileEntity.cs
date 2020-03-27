@@ -40,6 +40,9 @@ public class BuildingTileEntity : TileEntity
 	[Header("Building Info")]
 	public PlacementMode placementMode = PlacementMode.Single;
 	public float maxHealth;
+	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/UI/HealthBar", typeof(HealthBarDefination))]
+	public HealthBarDefination healthBar;
+	public float3 healthBarOffset;
 	public Faction faction;
 
 	public BuildingIdentifier upgradeTarget;

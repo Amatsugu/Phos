@@ -22,8 +22,9 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 	public float3 centerOfMassOffset;
 	public MeshEntityRotatable head;
 	public MeshEntityRotatable projectile;
-	public MeshEntityRotatable healthBar;
-	public MeshEntityRotatable healthBarFill;
+	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/UI/HealthBar", typeof(HealthBarDefination))]
+	public HealthBarDefination healthBar;
+	public float3 healthBarOffset;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
@@ -85,11 +86,6 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 			}, collisionFilter, physMat)
 		});
 
-		var bar = healthBar.Instantiate(pos);
-		Map.EM.AddComponentData(bar, new HealthBar { target = e });
-		var fill = healthBarFill.Instantiate(pos);
-		Map.EM.AddComponentData(fill, new HealthBar { target = e }); ;
-		Map.EM.AddComponent<HealthBarFillTag>(fill);
 		return e;
 	}
 }

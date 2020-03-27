@@ -36,7 +36,12 @@ MonoBehaviour:
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
-  maxHealth: 0
+  maxHealth: 5000
+  healthBar: {fileID: 11400000, guid: 3317aed0931304741a95dd00306aea98, type: 2}
+  healthBarOffset:
+    x: 0
+    y: 4
+    z: 0
   faction: 2
   upgradeTarget:
     id: -1
