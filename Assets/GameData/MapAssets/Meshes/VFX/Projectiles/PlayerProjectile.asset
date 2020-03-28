@@ -20,8 +20,10 @@ MonoBehaviour:
   nonUniformScale: 0
   enableCollision: 1
   colliderRadius: 0.2
+  isKenematic: 0
   gravity: 1
   gravityFactor: 1
   mass: 1
   faction: 3
+  friendlyFire: 0
   damage: 10

@@ -109,8 +109,8 @@ public class UnitAttackSystem : ComponentSystem
 		int range = 20;
 		Entities.WithNone<Disabled, AttackTarget>().ForEach((Entity e, ref Translation t, ref FactionId faction, ref AttackSpeed atkSpeed) =>
 		{
-			if (atkSpeed.NextAttackTime > Time.ElapsedTime)
-				return;
+			/*if (atkSpeed.NextAttackTime > Time.ElapsedTime)
+				return;*/
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//Get Objects in Rect Range
 			_physicsWorld.AABBCast(t.Value, new float3(range, range, range), new CollisionFilter

@@ -11,7 +11,7 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 {
 	[Header("Projectile Settings")]
 	public Faction faction;
-
+	public bool friendlyFire;
 	public float damage;
 
 	public override IEnumerable<ComponentType> GetComponents()
@@ -27,7 +27,8 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		base.PrepareDefaultComponentData(entity);
 		Map.EM.SetComponentData(entity, new Damage
 		{
-			Value = damage
+			Value = damage,
+			friendlyFire = friendlyFire
 		});
 		Map.EM.SetComponentData(entity, new FactionId
 		{
@@ -47,11 +48,6 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		var rot = (velocity.Equals(default) ? quaternion.identity : quaternion.LookRotation(velocity, new float3(0, 1, 0)));
 		var e = BufferedInstantiate(cmb, position, rot, scale, velocity, angularVelocity);
 		return e;
-	}
-
-	protected override PhysicsMass GetMass()
-	{
-		return PhysicsMass.CreateKinematic(MassProperties.UnitSphere);
 	}
 
 	protected override CollisionFilter GetFilter() => new CollisionFilter

@@ -9,4 +9,5 @@ public struct Health : IComponentData
 public struct Damage : IComponentData
 {
 	public float Value;
+	public bool friendlyFire;
 }

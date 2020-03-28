@@ -43,7 +43,7 @@ public class TileEntity : MeshEntityRotatable
 		var colFilter = new CollisionFilter
 		{
 			CollidesWith = ~0u,
-			BelongsTo = 1u << (int)Faction.Tile,
+			BelongsTo = (1u << (int)Faction.Tile),
 			GroupIndex = 0
 		};
 #if false

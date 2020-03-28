@@ -3,7 +3,6 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using UnityEngine;
 
 [RequireComponentTag(TagComponents = new[] { typeof(FactionId) })]
 [BurstCompile]
@@ -12,6 +11,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 	public ComponentDataFromEntity<Health> health;
 	public ComponentDataFromEntity<FactionId> faction;
 	public ComponentDataFromEntity<Damage> damage;
+	public ComponentDataFromEntity<DeathTime> deathTime;
 	public EntityCommandBuffer.Concurrent cmb;
 	public double time;
 
@@ -25,18 +25,19 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 
 	private void DealDamage(Entity src, Entity tgt)
 	{
-		//cmb.AddComponent(src.Index, src, new TimedDeathSystem.DeathTime { Value = time } ); //TODO: Collision Effect
-		//cmb.DestroyEntity(src.Index, src);
+		//deathTime[src] = new DeathTime { Value = time };
 		if (!health.HasComponent(tgt))
 			return;
+		var dmg = damage[src];
+		if (!dmg.friendlyFire && faction.HasComponent(src) && faction.HasComponent(tgt) && faction[src] == faction[tgt])
+			return;
 		var h = health[tgt];
-		h.Value -= damage[src].Value;
+		h.Value -= dmg.Value;
 		health[tgt] = h;
 	}
 }
 
 [BurstCompile]
-[UpdateAfter(typeof(StepPhysicsWorld))]
 public class ProjectileCollisionSystem : JobComponentSystem
 {
 	private BuildPhysicsWorld _physicsWorld;
@@ -52,12 +53,12 @@ public class ProjectileCollisionSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-
 		var job = new ProjectileCollisionJob
 		{
 			damage = GetComponentDataFromEntity<Damage>(true),
 			health = GetComponentDataFromEntity<Health>(false),
 			faction = GetComponentDataFromEntity<FactionId>(true),
+			deathTime = GetComponentDataFromEntity<DeathTime>(false),
 			cmb = _endSimSystem.CreateCommandBuffer().ToConcurrent(),
 			time = Time.ElapsedTime
 		};

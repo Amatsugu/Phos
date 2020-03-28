@@ -71,7 +71,7 @@ public class BuildingTile : Tile
 	public override void OnHide()
 	{
 		base.OnHide();
-		if (buildingInfo.buildingMesh != null)
+		if (buildingInfo.buildingMesh.mesh != null)
 			Map.EM.AddComponent(_building, typeof(FrozenRenderSceneTag));
 		if (_healthBars.IsCreated)
 			Map.EM.AddComponent<FrozenRenderSceneTag>(_healthBars);
@@ -80,7 +80,7 @@ public class BuildingTile : Tile
 	public override void OnShow()
 	{
 		base.OnShow();
-		if (buildingInfo.buildingMesh != null)
+		if (buildingInfo.buildingMesh.mesh != null)
 			Map.EM.RemoveComponent(_building, typeof(FrozenRenderSceneTag));
 		if (_healthBars.IsCreated)
 			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_healthBars);

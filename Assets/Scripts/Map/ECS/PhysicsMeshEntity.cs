@@ -38,7 +38,7 @@ public class PhysicsMeshEntity : MeshEntityRotatable
 		base.PrepareDefaultComponentData(entity);
 		Map.EM.SetComponentData(entity, new PhysicsGravityFactor
 		{
-			Value = gravity ? 0 : gravityFactor
+			Value = gravity ? gravityFactor : 0
 		});
 		Map.EM.AddComponentData(entity, GetMass());
 		Map.EM.SetComponentData(entity, GetCollider());

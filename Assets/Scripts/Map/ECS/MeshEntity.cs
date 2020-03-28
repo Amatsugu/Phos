@@ -33,6 +33,9 @@ public class MeshEntity : ScriptableObject
 			PrepareDefaultComponentData(_entity);
 			return _entity;
 		}
+#if DEBUG
+		PrepareDefaultComponentData(_entity);
+#endif
 		return _entity;
 	}
 

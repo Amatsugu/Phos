@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
@@ -108,11 +109,16 @@ public class MobileUnit
 
 	public void Destroy()
 	{
-		if (Map.EM.Exists(Entity))
+		try
+		{
 			Map.EM.DestroyEntity(Entity);
-		if (Map.EM.Exists(HeadEntity))
-			Map.EM.DestroyEntity(HeadEntity);
-		if (_healhBar.IsCreated)
-			Map.EM.DestroyEntity(_healhBar);
+			if (info.head != null)
+				Map.EM.DestroyEntity(HeadEntity);
+			if (_healhBar.IsCreated)
+				Map.EM.DestroyEntity(_healhBar);
+		}catch(Exception e)
+		{
+			Debug.LogWarning(e);
+		}
 	}
 }
