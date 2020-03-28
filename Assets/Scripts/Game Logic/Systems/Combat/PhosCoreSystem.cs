@@ -7,13 +7,14 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 [BurstCompile]
-[UpdateAfter(typeof(BuildPhysicsWorld))]
+[UpdateBefore(typeof(BuildPhysicsWorld))]
 public class PhosCoreSystem : ComponentSystem
 {
 	private int _state = 0;
@@ -139,7 +140,7 @@ public class PhosCoreSystem : ComponentSystem
 }
 
 [BurstCompile]
-[UpdateAfter(typeof(BuildPhysicsWorld))]
+[UpdateAfter(typeof(PhosCoreSystem))]
 public class PhosProjectileSystem : JobComponentSystem
 {
 	[BurstCompile]
@@ -181,7 +182,8 @@ public class PhosProjectileSystem : JobComponentSystem
 			},
 			None = new ComponentType[]
 			{
-				typeof(Disabled)
+				typeof(Disabled),
+				typeof(FrozenRenderSceneTag)
 			}
 		};
 		entityQuery = GetEntityQuery(desc);

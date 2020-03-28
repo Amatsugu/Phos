@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a28301a30433c4e41a83503a7fa1a6eb, type: 3}
   m_Name: EnemyProjectile
   m_EditorClassIdentifier: 
-  mesh: {fileID: 8929111303131502281, guid: 9510d43d68c718a4a9a2a4585252a5f2, type: 3}
+  mesh: {fileID: -7859401362885015629, guid: 2632746049f52834099932ed311a813e, type: 3}
   material: {fileID: 2100000, guid: 8086d3ccad5f02b4b83f3f348adb3cca, type: 2}
   castShadows: 1
   receiveShadows: 1
@@ -20,7 +20,7 @@ MonoBehaviour:
   nonUniformScale: 0
   enableCollision: 1
   colliderRadius: 0.2
-  isKenematic: 0
+  isKenematic: 1
   gravity: 0
   gravityFactor: 1
   mass: 1

@@ -5,6 +5,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -90,6 +91,11 @@ public class HealthBarSystem : JobComponentSystem
 				typeof(NonUniformScale),
 				ComponentType.ReadOnly<HealthBar>(),
 				ComponentType.ReadOnly<HealthBarFillTag>(),
+			},
+			None = new ComponentType[]
+			{
+				typeof(FrozenRenderSceneTag),
+				typeof(Disabled)
 			}
 		};
 		_fillQuery = GetEntityQuery(fillDesc);
@@ -100,6 +106,11 @@ public class HealthBarSystem : JobComponentSystem
 				typeof(Translation),
 				typeof(Rotation),
 				ComponentType.ReadOnly<HealthBar>(),
+			},
+			None = new ComponentType[]
+			{
+				typeof(FrozenRenderSceneTag),
+				typeof(Disabled)
 			}
 		};
 		_barQuery = GetEntityQuery(barDesc);

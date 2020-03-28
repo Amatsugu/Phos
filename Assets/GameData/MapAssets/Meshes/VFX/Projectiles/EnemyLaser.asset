@@ -20,7 +20,7 @@ MonoBehaviour:
   nonUniformScale: 0
   enableCollision: 1
   colliderRadius: 0.2
-  isKenematic: 0
+  isKenematic: 1
   gravity: 0
   gravityFactor: 1
   mass: 1

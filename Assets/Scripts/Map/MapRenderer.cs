@@ -49,12 +49,14 @@ public class MapRenderer : MonoBehaviour
 		map = generator.GenerateMap(transform);
 		generator.GenerateFeatures(map);
 		map.Render(_entityManager);
+		/*
 		var col = Cartographer.RenderMap(map, mapRes);
 		var tex = new Texture2D(map.totalWidth * mapRes, map.totalHeight * mapRes, TextureFormat.RGBA32, false);
 		tex.SetPixels(col);
 		tex.Apply();
-		var sprite = Sprite.Create(tex, new Rect(Vector2.zero, new Vector2(tex.width, tex.height)), Vector2.zero);
+		(var sprite = Sprite.Create(tex, new Rect(Vector2.zero, new Vector2(tex.width, tex.height)), Vector2.zero);
 		img.sprite = sprite;
+		*/
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
 		pos.y = map.seaLevel;
