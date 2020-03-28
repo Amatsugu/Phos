@@ -16,13 +16,14 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 8086d3ccad5f02b4b83f3f348adb3cca, type: 2}
   castShadows: 1
   receiveShadows: 1
-  isStatic: 1
+  isStatic: 0
   nonUniformScale: 0
   enableCollision: 1
   colliderRadius: 0.2
   isKenematic: 0
-  gravity: 1
+  gravity: 0
   gravityFactor: 1
   mass: 1
   faction: 4
-  damage: 10
+  friendlyFire: 0
+  damage: 20

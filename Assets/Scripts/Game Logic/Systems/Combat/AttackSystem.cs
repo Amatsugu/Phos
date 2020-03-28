@@ -99,8 +99,8 @@ public class UnitAttackSystem : ComponentSystem
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
 			dir = math.normalize(dir) * -20;
-			var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.5f, velocity: dir);
-			PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 10 });
+			var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.2f, velocity: dir);
+			PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 3 });
 		});
 	}
 

@@ -20,7 +20,7 @@ MonoBehaviour:
   nonUniformScale: 1
   centerOfMassOffset:
     x: 0
-    y: 4
+    y: 3
     z: 0
   radius: 2
   height: 4.5

@@ -3,6 +3,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Rendering;
 
 [RequireComponentTag(TagComponents = new[] { typeof(FactionId) })]
 [BurstCompile]
@@ -25,12 +26,18 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 
 	private void DealDamage(Entity src, Entity tgt)
 	{
-		//deathTime[src] = new DeathTime { Value = time };
+		deathTime[src] = new DeathTime { Value = time };
+		//cmb.AddComponent(src.Index, src, ComponentType.ReadWrite<FrozenRenderSceneTag>());
+		cmb.RemoveComponent<PhysicsVelocity>(src.Index, src);
+		//cmb.DestroyEntity(src.Index, src);
 		if (!health.HasComponent(tgt))
 			return;
 		var dmg = damage[src];
-		if (!dmg.friendlyFire && faction.HasComponent(src) && faction.HasComponent(tgt) && faction[src] == faction[tgt])
-			return;
+		if (!dmg.friendlyFire && faction.HasComponent(src) && faction.HasComponent(tgt))
+		{
+			if(faction[src] == faction[tgt])
+				return;
+		}
 		var h = health[tgt];
 		h.Value -= dmg.Value;
 		health[tgt] = h;
@@ -38,6 +45,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 }
 
 [BurstCompile]
+[UpdateBefore(typeof(TimedDeathSystem))]
 public class ProjectileCollisionSystem : JobComponentSystem
 {
 	private BuildPhysicsWorld _physicsWorld;
