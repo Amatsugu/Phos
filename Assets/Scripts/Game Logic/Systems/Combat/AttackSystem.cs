@@ -86,7 +86,7 @@ public class UnitAttackSystem : ComponentSystem
 		{
 			if (!EntityManager.Exists(atkTarget.Value))
 				return;
-			var pos = EntityManager.GetComponentData<Translation>(atkTarget.Value).Value + EntityManager.GetComponentData<CenterOfMassOffset>(atkTarget.Value).Value;
+			var pos = EntityManager.GetComponentData<CenterOfMass>(atkTarget.Value).Value;
 			var dir = t.Value - pos;
 			var dist = math.lengthsq(dir);
 			if (dist > 20 * 20)

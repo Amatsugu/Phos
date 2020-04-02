@@ -1,16 +1,12 @@
-﻿using Amatsugu.Phos.ECS.Jobs.Pathfinder;
-
-using DataStore.ConduitGraph;
+﻿using DataStore.ConduitGraph;
 
 using Effects.Lines;
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 using TMPro;
 
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Systems;
@@ -19,23 +15,21 @@ using Unity.Transforms;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Profiling;
 using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
-using Random = UnityEngine.Random;
 
 public class BuildUI : MonoBehaviour
 {
 	[Header("Buildings")]
 	public BuildingDatabase buildings;
+
 	public HQTileInfo HQTile;
 	public MeshEntityRotatable landingMesh;
-
 
 	/*	UI	*/
 
 	[Header("UI")]
 	public UIInfoBanner infoBanner;
+
 	public RectTransform unitUIPrefab;
 	public GameObject buildWindow;
 	public RectTransform scrollContent;
@@ -63,13 +57,15 @@ public class BuildUI : MonoBehaviour
 
 	[Header("Config")]
 	public int poweredTileDisplayRange;
+
 	public float inidcatorOffset = .5f;
 
 	//State
 	public BuildState State { get => _state; }
-	public event System.Action OnBuildWindowOpen;
-	public event System.Action OnBuildWindowClose;
 
+	public event System.Action OnBuildWindowOpen;
+
+	public event System.Action OnBuildWindowClose;
 
 	private List<UIUnitIcon> _activeUnits;
 	private BuildingTileEntity _selectedBuilding;
@@ -105,7 +101,7 @@ public class BuildUI : MonoBehaviour
 		enabled = false;
 	}
 
-	void Init()
+	private void Init()
 	{
 		enabled = true;
 		UnityEngine.Debug.Log($"BuildUI Init");
@@ -138,7 +134,6 @@ public class BuildUI : MonoBehaviour
 		});
 		_poweredTileRangeSq = HexCoords.TileToWorldDist(poweredTileDisplayRange, Map.ActiveMap.innerRadius);
 		_poweredTileRangeSq *= _poweredTileRangeSq;
-
 	}
 
 	private bool InvalidPlacementSelector(Tile t) => (_selectedBuilding.offshoreOnly ? !t.IsUnderwater : (t.IsUnderwater && !_selectedBuilding.isOffshore)) || t is BuildingTile || (t is ResourceTile && !t.IsUnderwater);
@@ -158,7 +153,7 @@ public class BuildUI : MonoBehaviour
 		};
 		var results = new List<RaycastResult>();
 		raycaster.Raycast(pointerData, results);
-		if(results.Count > 0)
+		if (results.Count > 0)
 		{
 			if (_state > BuildState.Idle)
 			{
@@ -166,7 +161,8 @@ public class BuildUI : MonoBehaviour
 				_state = BuildState.Idle;
 				HideAllIndicators();
 			}
-		}else
+		}
+		else
 		{
 			if (_state == BuildState.Idle)
 			{
@@ -198,6 +194,11 @@ public class BuildUI : MonoBehaviour
 
 	private void UpdatePlacementUI(Vector2 mousePos)
 	{
+		if (_selectedBuilding == null)
+		{
+			_state = _prevState = BuildState.Idle;
+			HideAllIndicators();
+		}
 		Tile selectedTile = null;//Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
 		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
 		var ray = _cam.ScreenPointToRay(mousePos);

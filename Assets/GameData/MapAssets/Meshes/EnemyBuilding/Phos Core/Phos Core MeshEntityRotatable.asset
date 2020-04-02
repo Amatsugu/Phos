@@ -17,10 +17,10 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0
   centerOfMassOffset:
     x: 0
-    y: 3
+    y: 3.5
     z: 0
   radius: 2
   height: 4.5

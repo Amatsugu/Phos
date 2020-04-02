@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   count:
     x: 16
-    y: 32
+    y: 24
   tile: {fileID: 11400000, guid: 345658ca8afa8e14195c332196239802, type: 2}
-  minDist: 50
+  minDist: 90
   altitudeRange:
     x: 5
     y: 10

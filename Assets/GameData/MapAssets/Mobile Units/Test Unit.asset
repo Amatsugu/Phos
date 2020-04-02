@@ -28,7 +28,7 @@ MonoBehaviour:
     z: 0
   head: {fileID: 11400000, guid: 68cb1fd3b1861fd4880a15223d7f5b63, type: 2}
   projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
-  healthBar: {fileID: 11400000, guid: 64264ba37fb009140b7237d68e6e4e60, type: 2}
+  healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 1
