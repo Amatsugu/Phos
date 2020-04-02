@@ -2,20 +2,20 @@
 
 public static class Cartographer
 {
-	public static Color[] RenderChunk(Map.Chunk chunk, int res = 4)
+	public static Color[] RenderChunk(MapChunk chunk, int res = 4)
 	{
-		int size = Map.Chunk.SIZE * res;
+		int size = MapChunk.SIZE * res;
 		var colors = new Color[size * size];
 		for (int y = 0; y < size; y += res)
 		{
 			for (int x = 0; x < size; x += res)
 			{
 				int cX = x / res, cY = y / res;
-				var tile1 = chunk.Tiles[cX + cY * Map.Chunk.SIZE];
+				var tile1 = chunk.Tiles[cX + cY * MapChunk.SIZE];
 				var color = tile1.info.material.color;
 				if (!tile1.IsUnderwater && cY - 1 >= 0)
 				{
-					var tile2 = chunk.Tiles[cX + (cY - 1) * Map.Chunk.SIZE];
+					var tile2 = chunk.Tiles[cX + (cY - 1) * MapChunk.SIZE];
 					var tileDelta = tile1.Height - tile2.Height;
 					if (tileDelta < -.3f)
 						color *= 1.2f;

@@ -28,9 +28,8 @@ public struct HexCoords : IEquatable<HexCoords>
 	public readonly Vector2 worldXY;
 
 	//Offsets
-	public readonly int offsetX;
+	public readonly int2 offsetCoords;
 
-	public readonly int offsetZ;
 	public readonly bool isCreated;
 
 	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null) : this(x, y, -x - y, edgeLength, innerRadius)
@@ -44,11 +43,11 @@ public struct HexCoords : IEquatable<HexCoords>
 		this.z = z;
 		this.edgeLength = edgeLength;
 		var innerR = (innerRadius ?? Mathf.Sqrt(3f) / 2f * this.edgeLength);
-		offsetX = x + y / 2;
-		offsetZ = y;
+		offsetCoords.x = x + y / 2;
+		offsetCoords.y = y;
 		//worldX = (offsetX + offsetZ * .5f - offsetZ / 2) * (innerRadius * 2f);
 		//worldZ = offsetZ * (this.edgeLength * 1.5f);
-		(worldX, worldZ) = OffsetToWorldPos(offsetX, offsetZ, innerR, edgeLength);
+		(worldX, worldZ) = OffsetToWorldPos(offsetCoords.x, offsetCoords.y, innerR, edgeLength);
 
 		worldXZ = new Vector3(worldX, 0, worldZ);
 		worldXY = new Vector2(worldX, worldZ);
@@ -94,11 +93,11 @@ public struct HexCoords : IEquatable<HexCoords>
 		return ToChunkLocalCoord(x, z);
 	}
 
-	public HexCoords TranslateOffset(int x, int z) => FromOffsetCoords(offsetX + x, offsetZ + z, edgeLength);
+	public HexCoords TranslateOffset(int x, int z) => FromOffsetCoords(offsetCoords.x + x, offsetCoords.y + z, edgeLength);
 
-	public HexCoords ToChunkLocalCoord(int chunkX, int chunkZ) => FromOffsetCoords(offsetX - (chunkX * Map.Chunk.SIZE), offsetZ - (chunkZ * Map.Chunk.SIZE), edgeLength);
+	public HexCoords ToChunkLocalCoord(int chunkX, int chunkZ) => FromOffsetCoords(offsetCoords.x - (chunkX * MapChunk.SIZE), offsetCoords.y - (chunkZ * MapChunk.SIZE), edgeLength);
 
-	public (int chunkX, int chunkZ) GetChunkPos() => (Mathf.FloorToInt((float)offsetX / Map.Chunk.SIZE), Mathf.FloorToInt((float)offsetZ / Map.Chunk.SIZE));
+	public (int chunkX, int chunkZ) GetChunkPos() => (Mathf.FloorToInt((float)offsetCoords.x / MapChunk.SIZE), Mathf.FloorToInt((float)offsetCoords.y / MapChunk.SIZE));
 
 	public int GetChunkIndex(int width)
 	{
@@ -248,9 +247,9 @@ public struct HexCoords : IEquatable<HexCoords>
 
 	public bool IsInBounds(int height, int widht)
 	{
-		if (0 > offsetZ || height <= offsetZ)
+		if (0 > offsetCoords.y || height <= offsetCoords.y)
 			return false;
-		if (0 > offsetX || widht <= offsetX)
+		if (0 > offsetCoords.x || widht <= offsetCoords.x)
 			return false;
 		return true;
 	}
@@ -260,8 +259,8 @@ public struct HexCoords : IEquatable<HexCoords>
 	public override int GetHashCode()
 	{
 		int hash = 23;
-		hash = hash * prime + offsetX;
-		hash = hash * prime + offsetZ;
+		hash = hash * prime + offsetCoords.x;
+		hash = hash * prime + offsetCoords.y;
 		return hash;
 	}
 

@@ -31,7 +31,7 @@ public class TreeDecorator : TileDecorator
 			_filter = NoiseFilterFactory.CreateNoiseFilter(this.noise, Map.ActiveMap.Seed);
 			_rand = new System.Random(Map.ActiveMap.Seed);
 		}
-		var noise = Mathf.Pow(Mathf.PerlinNoise(tile.Coords.offsetX / noiseScale, tile.Coords.offsetZ / noiseScale), densityPower);
+		var noise = Mathf.Pow(Mathf.PerlinNoise(tile.Coords.offsetCoords.x / noiseScale, tile.Coords.offsetCoords.y / noiseScale), densityPower);
 		noise = MathUtils.Remap(Mathf.Clamp(noise, 0, 1), 0, 1, minPerTile, maxPerTile);
 		return Mathf.RoundToInt(noise * densityMulti);
 	}

@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
-
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class MapRenderer : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class MapRenderer : MonoBehaviour
 
 	[HideInInspector]
 	public Vector3 min, max;
+	public SerializedMap serializedMap;
 
 	private Transform _ocean;
 	private Camera _cam;
@@ -24,6 +26,7 @@ public class MapRenderer : MonoBehaviour
 	private Quaternion _lastCamRot;
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
+	private Map map2;
 
 	private void Start()
 	{
@@ -47,7 +50,10 @@ public class MapRenderer : MonoBehaviour
 	{
 		_entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 		map = generator.GenerateMap(transform);
+		Map.ActiveMap = map;
 		generator.GenerateFeatures(map);
+		//serializedMap = map.Serialize();
+		//map2 = serializedMap.Deserialize();
 		map.Render(_entityManager);
 		/*
 		var col = Cartographer.RenderMap(map, mapRes);
@@ -68,6 +74,12 @@ public class MapRenderer : MonoBehaviour
 
 	private void LateUpdate()
 	{
+		if (Input.GetKeyUp(KeyCode.K))
+		{
+			map.Destroy();
+			map2.Render(_entityManager);
+			Map.ActiveMap = map2;
+		}
 		var camPos = _cam.transform.position;
 		var camRot = _cam.transform.rotation;
 		if (_lastCamPos != camPos || _lastCamRot != camRot)

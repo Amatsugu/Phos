@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -195,6 +196,29 @@ public class Tile
 		_isRendered = true;
 		_tileEntity = GetMeshEntity().Instantiate(Coords, Height);
 		return _tileEntity;
+	}
+
+	public SeializedTile Serialize()
+	{
+		var t = new SeializedTile
+		{
+			assetReference = new UnityEngine.AddressableAssets.AssetReference(info.assetGuid),
+			height = Height,
+			pos = Coords,
+			tileData = new Dictionary<string, string>()
+		};
+		OnSerialize(t.tileData);
+		return t;
+	}
+
+	public virtual void OnSerialize(Dictionary<string, string> tileData)
+	{
+
+	}
+
+	public virtual void OnDeSerialized(Dictionary<string, string> tileData)
+	{
+
 	}
 
 	public virtual void RenderDecorators()

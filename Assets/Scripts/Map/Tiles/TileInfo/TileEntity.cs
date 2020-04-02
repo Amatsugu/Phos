@@ -5,19 +5,20 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Authoring;
-
+using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.AddressableAssets;
 using BoxCollider = Unity.Physics.BoxCollider;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
-public class TileEntity : MeshEntityRotatable
+public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 {
 	[Header("Tile Info")]
 	public string description;
-
 	public TileDecorator[] decorators;
 	public bool isTraverseable = true;
+	[HideInInspector]
+	public string assetGuid;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
@@ -89,5 +90,15 @@ public class TileEntity : MeshEntityRotatable
 	public virtual Tile CreateTile(HexCoords pos, float height)
 	{
 		return new Tile(pos, height, this);
+	}
+#if DEBUG
+	public void OnBeforeSerialize()
+	{
+		assetGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(this));	
+	}
+#endif
+
+	public void OnAfterDeserialize()
+	{
 	}
 }

@@ -91,8 +91,8 @@ public class MapGeneratorUI : Editor
 		{
 			for (int x = 0; x < w; x++)
 			{
-				var sX = MathUtils.Remap(x, 0, w, 0, creator.Size.x * Map.Chunk.SIZE);
-				var sZ = MathUtils.Remap(z, 0, h, 0, creator.Size.y * Map.Chunk.SIZE);
+				var sX = MathUtils.Remap(x, 0, w, 0, creator.Size.x * MapChunk.SIZE);
+				var sZ = MathUtils.Remap(z, 0, h, 0, creator.Size.y * MapChunk.SIZE);
 				var sample = creator.GenerateHeight(sX, sZ);
 				if (sample > max)
 					max = sample;

@@ -31,168 +31,33 @@ public class Map : IDisposable
 	public float seaLevel;
 	public int Seed { get; private set; }
 
-	public Chunk[] Chunks { get; }
+	public MapChunk[] Chunks { get; }
 
 	public HQTile HQ;
 	public ConduitGraph conduitGraph;
 	public Dictionary<int, MobileUnit> units;
 	private int _nextId = 1;
 
-	public Map(int height, int width, int seed, float edgeLength = 1)
+	public Map(int height, int width, int seed, float edgeLength = 1, bool setActive = true)
 	{
 		this.width = width;
 		this.height = height;
-		totalWidth = width * Chunk.SIZE;
-		totalHeight = height * Chunk.SIZE;
+		totalWidth = width * MapChunk.SIZE;
+		totalHeight = height * MapChunk.SIZE;
 		Seed = seed;
 		UnityEngine.Random.InitState(seed);
 		length = width * height;
-		Chunks = new Chunk[length];
+		Chunks = new MapChunk[length];
 		tileEdgeLength = edgeLength;
 		innerRadius = Mathf.Sqrt(3f) / 2f * tileEdgeLength;
 		shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
 		longDiagonal = 2 * tileEdgeLength;
 		units = new Dictionary<int, MobileUnit>(500);
-		ActiveMap = this;
+		if(setActive)
+			ActiveMap = this;
 	}
 
-	public struct Chunk
-	{
-		public const int SIZE = 32;
-		public Tile[] Tiles;
-		public bool isShown;
-		public bool isCreated;
-		public bool isRendered;
-
-		internal Bounds Bounds => _bounds;
-
-		private Bounds _bounds;
-		private NativeArray<Entity> _chunkTiles;
-
-		public Chunk(int offsetX, int offsetZ)
-		{
-			isShown = false;
-			isRendered = false;
-			isCreated = true;
-			Tiles = new Tile[SIZE * SIZE];
-			var worldCoord = HexCoords.FromOffsetCoords(offsetX * SIZE, offsetZ * SIZE, ActiveMap.tileEdgeLength);
-			_bounds = new Bounds
-			{
-				min = worldCoord.worldXZ,
-				max = worldCoord.worldXZ + new Vector3(SIZE * ActiveMap.shortDiagonal, 100, SIZE * 1.5f)
-			};
-			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-		}
-
-		public Tile this[HexCoords coord]
-		{
-			get
-			{
-				return Tiles[coord.ToIndex(SIZE)];
-			}
-
-			set => Tiles[coord.ToIndex(SIZE)] = value;
-		}
-
-		public bool InView(Plane[] camPlanes)
-		{
-			var inView = GeometryUtility.TestPlanesAABB(camPlanes, _bounds);
-			var color = inView ? Color.red : Color.blue;
-			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, 0, _bounds.max.z), color);
-			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.max.z), color);
-			UnityEngine.Debug.DrawLine(new Vector3(_bounds.max.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
-			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
-			UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, SIZE, _bounds.min.z), color);
-			return inView;
-		}
-
-		public void Destroy()
-		{
-			try
-			{
-				if (!isRendered)
-				{
-					foreach (var tile in _chunkTiles)
-						EM.DestroyEntity(tile);
-				}
-			}
-			catch
-			{
-			}
-			finally
-			{
-				if (_chunkTiles.IsCreated)
-					_chunkTiles.Dispose();
-			}
-			for (int i = 0; i < Tiles.Length; i++)
-				Tiles[i].Destroy();
-		}
-
-		public bool Show(bool shown)
-		{
-			if (!isRendered && shown)
-			{
-				Render();
-				return true;
-			}
-			if (!isRendered)
-				return false;
-			if (shown == isShown)
-				return false;
-			for (int i = 0; i < Tiles.Length; i++)
-				Tiles[i].Show(shown);
-			if (shown)
-				EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
-			else
-				EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
-			isShown = shown;
-			return true;
-		}
-
-		internal void Render()
-		{
-			isShown = true;
-			isRendered = true;
-			if (!_chunkTiles.IsCreated)
-				_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-			var renderBounds = new AABB
-			{
-				Center = Bounds.center,
-				Extents = Bounds.extents
-			};
-			for (int i = 0; i < SIZE * SIZE; i++)
-			{
-				_chunkTiles[i] = Tiles[i].Render();
-				EM.SetComponentData(_chunkTiles[i], new ChunkWorldRenderBounds
-				{
-					Value = renderBounds
-				});
-				Tiles[i].RenderDecorators();
-			}
-		}
-
-		internal void RenderDecorators()
-		{
-			for (int i = 0; i < Tiles.Length; i++)
-			{
-				Tiles[i].RenderDecorators();
-			}
-		}
-
-		public Tile ReplaceTile(HexCoords chunkCoord, TileEntity newTile)
-		{
-			if (!isRendered)
-				Render();
-			var tile = this[chunkCoord];
-			var n = newTile.CreateTile(tile.Coords, tile.Height);
-			n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
-			n.originalTile = tile.info;
-			this[chunkCoord] = n;
-			_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
-			return n;
-		}
-	}
-
+	
 	/// <summary>
 	/// Get a tile the given HexCoords position
 	/// </summary>
@@ -217,7 +82,7 @@ public class Map : IDisposable
 			var (chunkX, chunkZ) = coord.GetChunkPos();
 			var chunk = Chunks[chunkX + chunkZ * width];
 			if (!chunk.isCreated)
-				chunk = new Chunk(chunkX, chunkZ);
+				chunk = new MapChunk(chunkX, chunkZ, tileEdgeLength, shortDiagonal);
 			chunk[coord.ToChunkLocalCoord(chunkX, chunkZ)] = value;
 			Chunks[chunkX + chunkZ * width] = chunk;
 		}
@@ -436,25 +301,25 @@ public class Map : IDisposable
 	{
 		var selection = new List<Tile>();
 		int xMin, xMax, zMin, zMax;
-		if (left.offsetX < right.offsetX)
+		if (left.offsetCoords.x < right.offsetCoords.x)
 		{
-			xMin = left.offsetX;
-			xMax = right.offsetX;
+			xMin = left.offsetCoords.x;
+			xMax = right.offsetCoords.x;
 		}
 		else
 		{
-			xMax = left.offsetX;
-			xMin = right.offsetX;
+			xMax = left.offsetCoords.x;
+			xMin = right.offsetCoords.x;
 		}
-		if (left.offsetZ < right.offsetZ)
+		if (left.offsetCoords.y < right.offsetCoords.y)
 		{
-			zMin = left.offsetZ;
-			zMax = right.offsetZ;
+			zMin = left.offsetCoords.y;
+			zMax = right.offsetCoords.y;
 		}
 		else
 		{
-			zMax = left.offsetZ;
-			zMin = right.offsetZ;
+			zMax = left.offsetCoords.y;
+			zMin = right.offsetCoords.y;
 		}
 		for (int z = zMin; z < zMax; z++)
 		{
@@ -725,6 +590,30 @@ public class Map : IDisposable
 		return (max < seaLevel) ? seaLevel : max;
 	}
 
+	public SerializedMap Serialize()
+	{
+		var map = new SerializedMap
+		{
+			height = height,
+			width = width,
+			name = Name,
+			seaLevel = seaLevel,
+			seed = Seed,
+			tileEdgeLength = tileEdgeLength,
+			tiles = new SeializedTile[length * MapChunk.SIZE * MapChunk.SIZE]
+		};
+		int k = 0;
+		for (int i = 0; i < Chunks.Length; i++)
+		{
+			for (int j = 0; j < Chunks[i].Tiles.Length; j++)
+			{
+				var curT = Chunks[i].Tiles[j];
+				map.tiles[k++] = curT.Serialize();
+			}
+		}
+		return map;
+	}
+
 	public void Destroy()
 	{
 		if (!IsRendered)
@@ -769,4 +658,141 @@ public class Map : IDisposable
 	}
 
 	#endregion IDisposable Support
+}
+
+public struct MapChunk
+{
+	public const int SIZE = 32;
+	public Tile[] Tiles;
+	public bool isShown;
+	public bool isCreated;
+	public bool isRendered;
+
+	internal Bounds Bounds => _bounds;
+
+	private Bounds _bounds;
+	private NativeArray<Entity> _chunkTiles;
+
+	public MapChunk(int offsetX, int offsetZ, float tileEdgeLength, float shortDiagonal)
+	{
+		isShown = false;
+		isRendered = false;
+		isCreated = true;
+		Tiles = new Tile[SIZE * SIZE];
+		var worldCoord = HexCoords.FromOffsetCoords(offsetX * SIZE, offsetZ * SIZE, tileEdgeLength);
+		_bounds = new Bounds
+		{
+			min = worldCoord.worldXZ,
+			max = worldCoord.worldXZ + new Vector3(SIZE * shortDiagonal, 100, SIZE * 1.5f)
+		};
+		_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+	}
+
+	public Tile this[HexCoords coord]
+	{
+		get
+		{
+			return Tiles[coord.ToIndex(SIZE)];
+		}
+
+		set => Tiles[coord.ToIndex(SIZE)] = value;
+	}
+
+	public bool InView(Plane[] camPlanes)
+	{
+		var inView = GeometryUtility.TestPlanesAABB(camPlanes, _bounds);
+		var color = inView ? Color.red : Color.blue;
+		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, 0, _bounds.max.z), color);
+		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.max.z), color);
+		UnityEngine.Debug.DrawLine(new Vector3(_bounds.max.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, SIZE, _bounds.min.z), color);
+		return inView;
+	}
+
+	public void Destroy()
+	{
+		try
+		{
+			if (!isRendered)
+			{
+				foreach (var tile in _chunkTiles)
+					Map.EM.DestroyEntity(tile);
+			}
+		}
+		catch
+		{
+		}
+		finally
+		{
+			if (_chunkTiles.IsCreated)
+				_chunkTiles.Dispose();
+		}
+		for (int i = 0; i < Tiles.Length; i++)
+			Tiles[i].Destroy();
+	}
+
+	public bool Show(bool shown)
+	{
+		if (!isRendered && shown)
+		{
+			Render();
+			return true;
+		}
+		if (!isRendered)
+			return false;
+		if (shown == isShown)
+			return false;
+		for (int i = 0; i < Tiles.Length; i++)
+			Tiles[i].Show(shown);
+		if (shown)
+			Map.EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+		else
+			Map.EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+		isShown = shown;
+		return true;
+	}
+
+	internal void Render()
+	{
+		isShown = true;
+		isRendered = true;
+		if (!_chunkTiles.IsCreated)
+			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+		var renderBounds = new AABB
+		{
+			Center = Bounds.center,
+			Extents = Bounds.extents
+		};
+		for (int i = 0; i < SIZE * SIZE; i++)
+		{
+			_chunkTiles[i] = Tiles[i].Render();
+			Map.EM.SetComponentData(_chunkTiles[i], new ChunkWorldRenderBounds
+			{
+				Value = renderBounds
+			});
+			Tiles[i].RenderDecorators();
+		}
+	}
+
+	internal void RenderDecorators()
+	{
+		for (int i = 0; i < Tiles.Length; i++)
+		{
+			Tiles[i].RenderDecorators();
+		}
+	}
+
+	public Tile ReplaceTile(HexCoords chunkCoord, TileEntity newTile)
+	{
+		if (!isRendered)
+			Render();
+		var tile = this[chunkCoord];
+		var n = newTile.CreateTile(tile.Coords, tile.Height);
+		n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
+		n.originalTile = tile.info;
+		this[chunkCoord] = n;
+		_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
+		return n;
+	}
 }

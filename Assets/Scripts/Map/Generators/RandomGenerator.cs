@@ -164,8 +164,8 @@ public class RandomGenerator : MapGenerator
 			}
 		}
 		var borderT = 1f;
-		var w = (int)Size.x * Map.Chunk.SIZE;
-		var h = (int)Size.y * Map.Chunk.SIZE;
+		var w = (int)Size.x * MapChunk.SIZE;
+		var h = (int)Size.y * MapChunk.SIZE;
 		if (x <= borderSize)
 		{
 			borderT *= MathUtils.Remap(x, 0, borderSize, 0, 1);

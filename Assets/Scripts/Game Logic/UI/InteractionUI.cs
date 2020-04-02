@@ -263,8 +263,8 @@ public class InteractionUI : MonoBehaviour
 	{
 		//Drag Select
 		var p0 = _start.Coords.worldXZ;
-		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetX, _start.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
-		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetX, _end.Coords.offsetZ, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetCoords.x, _start.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetCoords.x, _end.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
 		var p3 = _end.Coords.worldXZ;
 #if DEBUG
 		p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
