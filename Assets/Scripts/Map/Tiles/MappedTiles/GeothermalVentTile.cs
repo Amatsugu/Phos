@@ -22,8 +22,8 @@ public class GeothermalVentTile : ResourceTile
 
 	public override Entity Render()
 	{
-		_core = ventInfo.core.Instantiate(new Vector3(Coords.worldX, Height, Coords.worldZ));
-		_gyser = GameObject.Instantiate(ventInfo.gyser, new Vector3(Coords.worldX, Height, Coords.worldZ), Quaternion.identity);
+		_core = ventInfo.core.Instantiate(new Vector3(Coords.world.x, Height, Coords.world.z));
+		_gyser = GameObject.Instantiate(ventInfo.gyser, new Vector3(Coords.world.x, Height, Coords.world.z), Quaternion.identity);
 		return base.Render();
 	}
 
@@ -68,7 +68,7 @@ public class GeothermalVentShellTile : ResourceTile
 
 	public override Entity Render()
 	{
-		_shell = ventInfo.shell.Instantiate(new Vector3(Coords.worldX, Height, Coords.worldZ), Vector3.one, Quaternion.Euler(0, angle - 60, 0));
+		_shell = ventInfo.shell.Instantiate(new Vector3(Coords.world.x, Height, Coords.world.z), Vector3.one, Quaternion.Euler(0, angle - 60, 0));
 		return base.Render();
 	}
 

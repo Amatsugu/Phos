@@ -4,53 +4,44 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
+[Serializable]
 public struct HexCoords : IEquatable<HexCoords>
 {
 	//Position
 	[SerializeField]
-	public readonly int x;
+	public readonly int X;
 
 	[SerializeField]
-	public readonly int y;
+	public readonly int Y;
 
 	[SerializeField]
-	public readonly int z;
+	public int Z => -X - Y;
 
 	//Hex info
 	[HideInInspector]
 	public readonly float edgeLength;
 
 	//World Pos
-	public readonly float worldX;
-
-	public readonly float worldZ;
-	public readonly Vector3 worldXZ;
-	public readonly Vector2 worldXY;
+	public readonly float3 world;
 
 	//Offsets
 	public readonly int2 offsetCoords;
 
 	public readonly bool isCreated;
 
-	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null) : this(x, y, -x - y, edgeLength, innerRadius)
+	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null)
 	{
-	}
-
-	public HexCoords(int x, int y, int z, float edgeLength, float? innerRadius = null)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.X = x;
+		this.Y = y;
 		this.edgeLength = edgeLength;
 		var innerR = (innerRadius ?? Mathf.Sqrt(3f) / 2f * this.edgeLength);
 		offsetCoords.x = x + y / 2;
 		offsetCoords.y = y;
 		//worldX = (offsetX + offsetZ * .5f - offsetZ / 2) * (innerRadius * 2f);
 		//worldZ = offsetZ * (this.edgeLength * 1.5f);
-		(worldX, worldZ) = OffsetToWorldPos(offsetCoords.x, offsetCoords.y, innerR, edgeLength);
+		var (worldX, worldZ) = OffsetToWorldPos(offsetCoords.x, offsetCoords.y, innerR, edgeLength);
 
-		worldXZ = new Vector3(worldX, 0, worldZ);
-		worldXY = new Vector2(worldX, worldZ);
+		world = new float3(worldX, 0, worldZ);
 		isCreated = true;
 	}
 
@@ -107,13 +98,13 @@ public struct HexCoords : IEquatable<HexCoords>
 
 	public static int GetChunkIndex(int chunkX, int chunkZ, int width) => chunkX + chunkZ * width;
 
-	public int ToIndex(int mapWidth) => x + y * mapWidth + y / 2;
+	public int ToIndex(int mapWidth) => X + Y * mapWidth + Y / 2;
 
-	public int Distance(HexCoords b) => (math.abs(x - b.x) + math.abs(y - b.y) + math.abs(z - b.z)) / 2;
+	public int Distance(HexCoords b) => (math.abs(X - b.X) + math.abs(Y - b.Y) + math.abs(Z - b.Z)) / 2;
 
-	public float DistanceToSq(HexCoords b) => (worldXZ - b.worldXZ).sqrMagnitude;
+	public float DistanceToSq(HexCoords b) => math.lengthsq(world - b.world);
 
-	public static float DistanceSq(HexCoords a, HexCoords b) => (a.worldXZ - b.worldXZ).sqrMagnitude;
+	public static float DistanceSq(HexCoords a, HexCoords b) => math.lengthsq(a.world - b.world);
 
 	public static (float X, float Z) OffsetToWorldPos(int x, int z, float innerRadius, float edgeLength)
 	{
@@ -132,7 +123,7 @@ public struct HexCoords : IEquatable<HexCoords>
 
 	public static int WorldToTileDist(float dist, float innerRadius) => Mathf.RoundToInt(dist / (2 * innerRadius));
 
-	public override string ToString() => $"({x}, {y}, {z})";
+	public override string ToString() => $"({X}, {Y}, {Z})";
 
 	public static int GetTileCount(int r) => (1 + 3 * (r + 1) * (r));
 
@@ -166,7 +157,7 @@ public struct HexCoords : IEquatable<HexCoords>
 			for (int x = xMin; x <= xMax; x++)
 			{
 				int z = -x - y;
-				var coord = new HexCoords(center.x + x, center.y + y, center.edgeLength);
+				var coord = new HexCoords(center.X + x, center.Y + y, center.edgeLength);
 				if (excludeCenter && coord == center)
 					continue;
 				selection[i++] = coord;
@@ -228,13 +219,13 @@ public struct HexCoords : IEquatable<HexCoords>
 	public HexCoords Scale(int dir, int radius, float? innerRadius = null)
 	{
 		var s = DIRECTIONS[dir] * radius;
-		return new HexCoords(x + s.x, y + s.y, edgeLength, innerRadius);
+		return new HexCoords(X + s.x, Y + s.y, edgeLength, innerRadius);
 	}
 
 	public HexCoords GetNeighbor(int dir, float? innerRadius = null)
 	{
 		var d = DIRECTIONS[dir];
-		return new HexCoords(x + d.x, y + d.y, edgeLength, innerRadius);
+		return new HexCoords(X + d.x, Y + d.y, edgeLength, innerRadius);
 	}
 
 	public static HexCoords[] GetNeighbors(HexCoords center, float? innerRadius = null)
@@ -284,5 +275,5 @@ public struct HexCoords : IEquatable<HexCoords>
 		return this.Equals(h);
 	}
 
-	public bool Equals(HexCoords other) => x == other.x && y == other.y && z == other.z;
+	public bool Equals(HexCoords other) => X == other.X && Y == other.Y && Z == other.Z;
 }

@@ -26,6 +26,7 @@ public class MapRenderer : MonoBehaviour
 	private Quaternion _lastCamRot;
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
+	[HideInInspector]
 	private Map map2;
 
 	private void Start()
@@ -52,8 +53,8 @@ public class MapRenderer : MonoBehaviour
 		map = generator.GenerateMap(transform);
 		Map.ActiveMap = map;
 		generator.GenerateFeatures(map);
-		//serializedMap = map.Serialize();
-		//map2 = serializedMap.Deserialize();
+		serializedMap = map.Serialize();
+		map2 = serializedMap.Deserialize();
 		map.Render(_entityManager);
 		/*
 		var col = Cartographer.RenderMap(map, mapRes);

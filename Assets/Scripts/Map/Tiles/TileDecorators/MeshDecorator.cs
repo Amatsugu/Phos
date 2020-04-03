@@ -35,7 +35,7 @@ public class MeshDecorator : TileDecorator
 	public override Entity[] Render(Tile tile)
 	{
 		var rot = rotation;
-		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f).Remap(0, 1, randomRotMin, randomRotMax);
+		rot.y = Mathf.PerlinNoise(tile.Coords.world.x / 10f, tile.Coords.world.z / 10f).Remap(0, 1, randomRotMin, randomRotMax);
 		var e = meshEntity.Instantiate(tile.SurfacePoint + offset, Vector3.one, Quaternion.Euler(rot));
 		return new Entity[] { e };
 	}

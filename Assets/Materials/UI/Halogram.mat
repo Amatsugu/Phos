@@ -68,6 +68,7 @@ Material:
     - Color_9478C33E: {r: 1, g: 0, b: 0.39215687, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!114 &4487489810471705779
 MonoBehaviour:
   m_ObjectHideFlags: 11

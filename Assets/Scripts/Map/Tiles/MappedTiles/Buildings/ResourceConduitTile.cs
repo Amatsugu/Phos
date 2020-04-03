@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 
 using UnityEngine;
@@ -42,14 +43,14 @@ public class ResourceConduitTile : PoweredBuildingTile
 		if (!Map.ActiveMap.conduitGraph.ContainsNode(Coords))
 			return;
 		var cNode = Map.ActiveMap.conduitGraph.GetNode(Coords);
-		var thisHeight = Coords.worldXZ + new Vector3(0, cNode.height, 0);
+		var thisHeight = Coords.world + new float3(0, cNode.height, 0);
 		for (int i = 0; i < lines.Length; i++)
 		{
 			if (Map.ActiveMap.conduitGraph.ContainsNode(lines[i]))
 			{
 				var curNode = Map.ActiveMap.conduitGraph.GetNode(lines[i]);
 				var a = thisHeight;
-				var b = curNode.conduitPos.worldXZ + new Vector3(0, curNode.height, 0);
+				var b = curNode.conduitPos.world + new float3(0, curNode.height, 0);
 				if (_switchLines)
 				{
 					Map.EM.DestroyEntity(_conduitLines[lines[i]]);
@@ -117,8 +118,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 			thisNode.ConnectTo(closest[i]);
 
 			//var tile = Map.ActiveMap[closest[i].conduitPos];
-			var a = closest[i].conduitPos.worldXZ + new Vector3(0, closest[i].height, 0);
-			var b = Coords.worldXZ + new Vector3(0, thisNode.height, 0);
+			var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
+			var b = Coords.world + new float3(0, thisNode.height, 0);
 			var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
 			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			if (thisNode.IsFull)
@@ -169,8 +170,8 @@ public class ResourceConduitTile : PoweredBuildingTile
 			var tile = Map.ActiveMap[closest[i].conduitPos];
 			if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
 				conduit.OnHQConnected();
-			var a = closest[i].conduitPos.worldXZ + new Vector3(0, closest[i].height, 0);
-			var b = Coords.worldXZ + new Vector3(0, curNode.height, 0);
+			var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
+			var b = Coords.world + new float3(0, curNode.height, 0);
 			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
 			if (curNode.IsFull)
 				break;

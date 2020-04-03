@@ -153,12 +153,12 @@ public class Map : IDisposable
 	public Tile[] GetNeighbors(HexCoords coords)
 	{
 		Tile[] neighbors = new Tile[6];
-		neighbors[0] = this[coords.x - 1, coords.y]; //Left
-		neighbors[1] = this[coords.x - 1, coords.y + 1]; //Top Left
-		neighbors[2] = this[coords.x, coords.y + 1]; //Top Right
-		neighbors[3] = this[coords.x + 1, coords.y]; //Right
-		neighbors[4] = this[coords.x + 1, coords.y - 1]; //Bottom Right
-		neighbors[5] = this[coords.x, coords.y - 1]; //Bottom Left
+		neighbors[0] = this[coords.X - 1, coords.Y]; //Left
+		neighbors[1] = this[coords.X - 1, coords.Y + 1]; //Top Left
+		neighbors[2] = this[coords.X, coords.Y + 1]; //Top Right
+		neighbors[3] = this[coords.X + 1, coords.Y]; //Right
+		neighbors[4] = this[coords.X + 1, coords.Y - 1]; //Bottom Right
+		neighbors[5] = this[coords.X, coords.Y - 1]; //Bottom Left
 		return neighbors;
 	}
 
@@ -173,7 +173,7 @@ public class Map : IDisposable
 			increment = innerRadius;
 		for (float i = 0; i < distance; i += increment)
 		{
-			var p = ray.GetPoint(i);
+			var p = (float3)ray.GetPoint(i);
 			var t = this[HexCoords.FromPosition(p)];
 			if (t == null)
 				continue;
@@ -181,13 +181,13 @@ public class Map : IDisposable
 				continue;
 			if (p.y <= t.Height && p.y >= 0)
 			{
-				var a = t.Coords.worldXZ;
+				var a = t.Coords.world;
 				var b = p;
 				b.y = 0;
-				if ((a - b).sqrMagnitude <= tileEdgeLength * tileEdgeLength)
+				if (math.lengthsq(a - b) <= tileEdgeLength * tileEdgeLength)
 					return t;
 			}
-			if (((Vector3)t.SurfacePoint - p).sqrMagnitude <= tileEdgeLength * tileEdgeLength)
+			if (math.lengthsq(t.SurfacePoint - p) <= tileEdgeLength * tileEdgeLength)
 				return t;
 		}
 		return null;
@@ -258,7 +258,7 @@ public class Map : IDisposable
 				xMax = radius - y;
 			for (int x = xMin; x <= xMax; x++)
 			{
-				var t = this[center.x + x, center.y + y];
+				var t = this[center.X + x, center.Y + y];
 				if (t == null)
 					continue;
 				if (excludeCenter && t.Coords == center)
@@ -284,8 +284,8 @@ public class Map : IDisposable
 		{
 			for (float z = -radius; z < radius; z++)
 			{
-				var p = HexCoords.FromPosition(new Vector3(x + center.worldX, 0, z + center.worldZ), innerRadius);
-				var d = Mathf.Pow(p.worldX - center.worldX, 2) + Mathf.Pow(p.worldZ - center.worldZ, 2);
+				var p = HexCoords.FromPosition(new Vector3(x + center.world.x, 0, z + center.world.z), innerRadius);
+				var d = Mathf.Pow(p.world.x - center.world.x, 2) + Mathf.Pow(p.world.z - center.world.z, 2);
 				if (d <= radius * radius)
 				{
 					var t = this[p];
@@ -357,10 +357,10 @@ public class Map : IDisposable
 		var outerSelection = CircularSelect(center, outerRadius).Except(innerSelection);
 		foreach (var tile in outerSelection)
 		{
-			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
+			var d = math.pow(center.world.x - tile.Coords.world.x, 2) + math.pow(center.world.z - tile.Coords.world.z, 2);
 			d -= innerRadius * innerRadius;
 			d = MathUtils.Remap(d, 0, (outerRadius * outerRadius) - (innerRadius * innerRadius), 0, 1);
-			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
+			tile.UpdateHeight(math.lerp(tile.Height, height, 1 - d));
 		}
 	}
 
@@ -386,10 +386,10 @@ public class Map : IDisposable
 			outerSelection = outerSelection.Where(t => !t.IsUnderwater);
 		foreach (var tile in outerSelection)
 		{
-			var d = Mathf.Pow(center.worldX - tile.Coords.worldX, 2) + Mathf.Pow(center.worldZ - tile.Coords.worldZ, 2);
+			var d = math.pow(center.world.x - tile.Coords.world.x, 2) + Mathf.Pow(center.world.z - tile.Coords.world.z, 2);
 			d -= innerRadius * innerRadius * longDiagonal;
 			d = MathUtils.Remap(d, 0, (outerRadius * outerRadius * longDiagonal) - (innerRadius * innerRadius * longDiagonal), 0, 1);
-			tile.UpdateHeight(Mathf.Lerp(tile.Height, height, 1 - d));
+			tile.UpdateHeight(math.lerp(tile.Height, height, 1 - d));
 		}
 	}
 
@@ -418,7 +418,7 @@ public class Map : IDisposable
 
 	public int GetDistance(HexCoords a, HexCoords b)
 	{
-		var dst = (a.worldXZ - b.worldXZ).magnitude;
+		var dst = math.length(a.world - b.world);
 		var tileDist = Mathf.RoundToInt(dst / (innerRadius * 2));
 		return tileDist;
 	}
@@ -682,8 +682,8 @@ public struct MapChunk
 		var worldCoord = HexCoords.FromOffsetCoords(offsetX * SIZE, offsetZ * SIZE, tileEdgeLength);
 		_bounds = new Bounds
 		{
-			min = worldCoord.worldXZ,
-			max = worldCoord.worldXZ + new Vector3(SIZE * shortDiagonal, 100, SIZE * 1.5f)
+			min = worldCoord.world,
+			max = worldCoord.world + new float3(SIZE * shortDiagonal, 100, SIZE * 1.5f)
 		};
 		_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 	}

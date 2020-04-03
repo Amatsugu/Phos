@@ -34,13 +34,13 @@ public class Tile
 		info = tInfo;
 		if (height < Map.ActiveMap.seaLevel)
 		{
-			SurfacePoint = new float3(Coords.worldX, Map.ActiveMap.seaLevel, Coords.worldZ);
+			SurfacePoint = new float3(Coords.world.x, Map.ActiveMap.seaLevel, Coords.world.z);
 			IsUnderwater = true;
 		}
 		else
 		{
 			IsUnderwater = false;
-			SurfacePoint = new float3(Coords.worldX, Height, Coords.worldZ);
+			SurfacePoint = new float3(Coords.world.x, Height, Coords.world.z);
 		}
 	}
 
@@ -85,13 +85,13 @@ public class Tile
 		Height = height;
 		if (height < Map.ActiveMap.seaLevel)
 		{
-			SurfacePoint = new Vector3(Coords.worldX, Map.ActiveMap.seaLevel, Coords.worldZ);
+			SurfacePoint = new Vector3(Coords.world.x, Map.ActiveMap.seaLevel, Coords.world.z);
 			IsUnderwater = true;
 		}
 		else
 		{
 			IsUnderwater = false;
-			SurfacePoint = new Vector3(Coords.worldX, Height, Coords.worldZ);
+			SurfacePoint = new Vector3(Coords.world.x, Height, Coords.world.z);
 		}
 		OnHeightChanged();
 		UpdateDecorations();
@@ -202,7 +202,7 @@ public class Tile
 	{
 		var t = new SeializedTile
 		{
-			assetReference = new UnityEngine.AddressableAssets.AssetReference(info.assetGuid),
+			assetReference = info.assetGuid,
 			height = Height,
 			pos = Coords,
 			tileData = new Dictionary<string, string>()

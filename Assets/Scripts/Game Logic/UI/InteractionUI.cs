@@ -262,10 +262,10 @@ public class InteractionUI : MonoBehaviour
 	private void DisplaySelectionRect()
 	{
 		//Drag Select
-		var p0 = _start.Coords.worldXZ;
+		var p0 = _start.Coords.world;
 		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetCoords.x, _start.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
 		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetCoords.x, _end.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
-		var p3 = _end.Coords.worldXZ;
+		var p3 = _end.Coords.world;
 #if DEBUG
 		p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
 		UnityEngine.Debug.DrawLine(p0, p1, Color.white);

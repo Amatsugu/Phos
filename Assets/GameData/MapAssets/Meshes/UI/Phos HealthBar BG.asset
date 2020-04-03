@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86005638f0d4f7a47b51240defaeaed4, type: 3}
-  m_Name: Large HealthBar Fill
+  m_Name: Phos HealthBar BG
   m_EditorClassIdentifier: 
   mesh: {fileID: -7963287049206491953, guid: 6cf0bf2b630b3bf47a9a44b9d8c2ddfd, type: 3}
-  material: {fileID: 2100000, guid: 1422b0aeaaaefcb4ea5925b91df9698d, type: 2}
+  material: {fileID: 2100000, guid: d93654b3f278174438ceab7ced789940, type: 2}
   castShadows: 0
   receiveShadows: 0
   isStatic: 0

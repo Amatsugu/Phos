@@ -438,7 +438,7 @@ public class BuildUI : MonoBehaviour
 				if (i >= _renderedEntities[line])
 					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[line][i]);
 
-				var pos = nodes[j].conduitPos.worldXZ + new Vector3(0, nodes[j].height, 0);
+				var pos = nodes[j].conduitPos.world + new float3(0, nodes[j].height, 0);
 				LineFactory.UpdateStaticLine(_indicatorEntities[line][i], src, pos, thiccness);
 				c++;
 			}

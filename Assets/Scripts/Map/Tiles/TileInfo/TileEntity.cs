@@ -81,7 +81,7 @@ public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 
 	public virtual Entity Instantiate(HexCoords pos, float height)
 	{
-		var e = Instantiate(new Vector3(pos.worldX, height, pos.worldZ), pos.edgeLength);
+		var e = Instantiate(new float3(pos.world.x, height, pos.world.z), pos.edgeLength);
 		Map.EM.SetComponentData(e, new HexPosition { coords = pos });
 		
 		return e;

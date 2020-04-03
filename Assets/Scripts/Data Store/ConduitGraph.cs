@@ -303,7 +303,7 @@ namespace DataStore.ConduitGraph
 			List<Vector3> path = new List<Vector3>();
 			do
 			{
-				var cPos = cur.node.conduitPos.worldXZ;
+				var cPos = cur.node.conduitPos.world;
 				cPos.y = cur.node.height;
 				path.Add(cPos);
 				cur = cur.src;
