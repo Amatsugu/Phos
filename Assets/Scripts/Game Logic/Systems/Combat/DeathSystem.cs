@@ -8,12 +8,21 @@ public class DeathSystem : ComponentSystem
 {
 	protected override void OnUpdate()
 	{
-		Entities.ForEach((Entity e, ref Health health, ref UnitId id) =>
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref Health health, ref UnitId id) =>
 		{
-			if (health.Value > 0)
+			if (health.Value > 0 && health.maxHealth != 0)
 				return;
-			UnityEngine.Debug.Log($"Killing {id.Value}");
+			Debug.Log($"Unit [{id.Value}] dying");
 			Map.ActiveMap.units[id.Value].Die();
+		});
+		Entities.WithNone<Disabled>().WithAll<BuildingId>().ForEach((Entity e, ref Health health, ref HexPosition pos) =>
+		{
+			if (!pos.Value.isCreated)
+				return;
+			if (health.Value > 0 && health.maxHealth != 0)
+				return;
+			Debug.Log($"Building {pos.Value} dying");
+			((BuildingTile)Map.ActiveMap[pos.Value]).Die();
 		});
 	}
 }

@@ -21,7 +21,7 @@ MonoBehaviour:
   description: 
   decorators: []
   isTraverseable: 0
-  faction: 1
+  assetGuid: 6e4e32dbf880de14d96237eda527fc63
   buildingMesh: {fileID: 11400000, guid: 4003adb5d5058724989a66c81432f080, type: 2}
   centerOfMassOffset:
     x: 0
@@ -37,7 +37,15 @@ MonoBehaviour:
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
-  maxHealth: 0
+  maxHealth: 1000000
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   upgradeTarget:
     id: -1
   icon: {fileID: 0}

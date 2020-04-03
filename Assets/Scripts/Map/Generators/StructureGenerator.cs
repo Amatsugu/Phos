@@ -50,10 +50,10 @@ public class StructureGenerator : FeatureGenerator
 		{
 			if (!coordsToGen[i].isCreated)
 				break;
-			//var origTile = map[coordsToGen[i]];
-			map[coordsToGen[i]] = tile.CreateTile(coordsToGen[i], map[coordsToGen[i]].Height);
-			/*if(tile.preserveGroundTile)
-				map[coordsToGen[i]].originalTile = origTile.info;*/
+			var origTile = map[coordsToGen[i]];
+			map[coordsToGen[i]] = tile.CreateTile(coordsToGen[i], origTile.Height);
+			//if(tile.preserveGroundTile)
+			map[coordsToGen[i]].originalTile = origTile.info;
 		}
 	}
 }

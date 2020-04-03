@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
@@ -183,9 +184,8 @@ public class CameraController : MonoBehaviour
 		_thisTransform.rotation = Quaternion.Euler(rot);
 	}
 
-	public void FocusTile(Tile tile)
+	public void FocusPoint(float3 targetPos)
 	{
-		Vector3 targetPos = tile.SurfacePoint;
 		var height = _targetHeight - targetPos.y;
 		var d = height / Mathf.Sin(_thisTransform.localEulerAngles.x * Mathf.Deg2Rad);
 		var ray = new Ray(targetPos, _thisTransform.forward);
@@ -196,5 +196,6 @@ public class CameraController : MonoBehaviour
 		_focusTime = 0;
 	}
 
-	public static void FocusOnTile(Tile tile) => GameRegistry.CameraController.FocusTile(tile);
+	public static void FocusOnTile(HexCoords tile) => GameRegistry.CameraController.FocusPoint(Map.ActiveMap[tile].SurfacePoint);
+	public static void FocusOnTile(float3 position) => GameRegistry.CameraController.FocusPoint(position);
 }

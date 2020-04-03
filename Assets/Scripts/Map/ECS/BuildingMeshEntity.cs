@@ -25,7 +25,8 @@ public class BuildingMeshEntity : MeshEntityRotatable
 			typeof(BuildingOffTag),
 			typeof(CenterOfMassOffset),
 			typeof(CenterOfMass),
-			typeof(PhysicsCollider)
+			typeof(PhysicsCollider),
+			typeof(HexPosition)
 		});
 	}
 

@@ -2,5 +2,5 @@
 
 public struct HexPosition : IComponentData
 {
-	public HexCoords coords;
+	public HexCoords Value;
 }

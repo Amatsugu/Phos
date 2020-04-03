@@ -19,7 +19,7 @@ MonoBehaviour:
   isStatic: 0
   nonUniformScale: 0
   moveSpeed: 10
-  attackSpeed: 1
+  attackSpeed: 10
   maxHealth: 100
   size: 0
   centerOfMassOffset:

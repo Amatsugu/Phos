@@ -61,7 +61,7 @@ public class NotificationsUI : UIHover
 		public string message;
 		public NotifTargetType type;
 		public UIPanel panel;
-		public Tile tile;
+		public HexCoords tile;
 
 		public PendingNotification(Sprite sprite, string title, string message)
 		{
@@ -70,7 +70,7 @@ public class NotificationsUI : UIHover
 			this.message = message;
 		}
 
-		public PendingNotification(Sprite sprite, string title, string message, Tile tile) : this(sprite, title, message)
+		public PendingNotification(Sprite sprite, string title, string message, HexCoords tile) : this(sprite, title, message)
 		{
 			type = NotifTargetType.Tile;
 			this.tile = tile;
@@ -233,7 +233,7 @@ public class NotificationsUI : UIHover
 
 	private void CreateNotification(Sprite icon, string title, string message) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message));
 
-	private void CreateNotification(Sprite icon, string title, string message, Tile tile) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message, tile));
+	private void CreateNotification(Sprite icon, string title, string message, HexCoords tile) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message, tile));
 
 	private void CreateNotification(Sprite icon, string title, string message, UIPanel panel) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message, panel));
 
@@ -255,7 +255,7 @@ public class NotificationsUI : UIHover
 		}
 	}
 
-	private void CreateNotification(NotifType type, string title, string message, Tile tile)
+	private void CreateNotification(NotifType type, string title, string message, HexCoords tile)
 	{
 		switch (type)
 		{
@@ -295,11 +295,11 @@ public class NotificationsUI : UIHover
 
 	public static void Notify(NotifType type, string title, string message = null) => INST.CreateNotification(type, title, message);
 
-	public static void NotifyWithTarget(NotifType type, string title, Tile tile, string message = null) => INST.CreateNotification(type, title, message, tile);
+	public static void NotifyWithTarget(NotifType type, string title, HexCoords tile, string message = null) => INST.CreateNotification(type, title, message, tile);
 
 	public static void NotifyWithTarget(NotifType type, string title, UIPanel panel, string message = null) => INST.CreateNotification(type, title, message, panel);
 
-	public static void NotifyWithTarget(Sprite icon, string title, Tile tile, string message = null) => INST.CreateNotification(icon, title, message, tile);
+	public static void NotifyWithTarget(Sprite icon, string title, HexCoords tile, string message = null) => INST.CreateNotification(icon, title, message, tile);
 
 	public static void NotifyWithTarget(Sprite icon, string title, UIPanel panel, string message = null) => INST.CreateNotification(icon, title, message, panel);
 }

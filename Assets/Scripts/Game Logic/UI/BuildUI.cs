@@ -218,7 +218,7 @@ public class BuildUI : MonoBehaviour
 			{
 				var e = col.Bodies[hit.RigidBodyIndex].Entity;
 				if (Map.EM.HasComponent<HexPosition>(e))
-					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).coords];
+					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).Value];
 			}
 		}
 		UnityEngine.Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: Military Sub HQ MeshEntityRotatable
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
+  mesh: {fileID: 1973893103929547111, guid: f53e96367bb0f614ab9612660e3ac1ad, type: 3}
+  material: {fileID: 2100000, guid: 832fbd138ec579349bf6a61bd9431c40, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
@@ -22,3 +22,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

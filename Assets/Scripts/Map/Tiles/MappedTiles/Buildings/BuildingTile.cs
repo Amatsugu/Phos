@@ -120,7 +120,8 @@ public class BuildingTile : Tile
 		{
 			Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
 		});
-			*/
+		*/
+		Map.EM.SetComponentData(entity, new HexPosition { Value = Coords });
 		var production = buildingInfo.production;
 		var consumption = buildingInfo.consumption;
 		if (production.Length > 0)
@@ -155,21 +156,25 @@ public class BuildingTile : Tile
 
 			Map.EM.AddSharedComponentData(entity, cData);
 		}
-		if (Map.EM.HasComponent<Health>(entity))
-			Map.EM.SetComponentData(entity, new Health
-			{
-				maxHealth = buildingInfo.maxHealth,
-				Value = buildingInfo.maxHealth
-			});
-		else
-			Map.EM.AddComponentData(entity, new Health
-			{
-				maxHealth = buildingInfo.maxHealth,
-				Value = buildingInfo.maxHealth
-			});
+		Map.EM.SetComponentData(entity, new Health
+		{
+			maxHealth = buildingInfo.maxHealth,
+			Value = buildingInfo.maxHealth
+		});
 		Map.EM.AddComponent(entity, typeof(FirstTickTag));
 		if (buildingInfo.healthBar != null)
 			_healthBars = buildingInfo.healthBar.Instantiate(entity, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
+	}
+
+	public void Die()
+	{
+		OnDeath();
+		Map.ActiveMap.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
+	}
+
+	public virtual void OnDeath()
+	{
+		NotificationsUI.NotifyWithTarget(NotifType.Warning, $"Building Destroyed: {buildingInfo.name}", Coords);
 	}
 
 	public override void OnPlaced()
@@ -186,7 +191,7 @@ public class BuildingTile : Tile
 
 	protected virtual void OnBuilt()
 	{
-		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.name}", this);
+		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.name}", Coords);
 	}
 }
 

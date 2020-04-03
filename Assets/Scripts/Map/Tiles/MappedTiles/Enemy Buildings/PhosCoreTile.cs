@@ -51,6 +51,11 @@ public class PhosCoreTile : EnemyBuildingTile
 		Map.EM.AddComponent<FrozenRenderSceneTag>(_ringEntity);
 	}
 
+	public override void OnDeath()
+	{
+		//base.OnDeath();
+	}
+
 	public override void Destroy()
 	{
 		base.Destroy();

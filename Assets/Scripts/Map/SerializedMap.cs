@@ -18,28 +18,7 @@ public class SerializedMap
 	public Map Deserialize()
 	{
 		var map = new Map(height, width, seed, tileEdgeLength, false);
-		LoadTile(map);
-		/*bool isDone = false;
-		while(!isDone)
-		{
-			isDone = true;
-			for (int i = 0; i < ops.Length; i++)
-			{
-				if (!ops[i].IsDone)
-				{
-					isDone = false;
-					break;
-				}
-			}
-		}*/
-		for (int i = 0; i < tiles.Length; i++)
-		{
-			var asset = new AssetReference(tiles[i].assetReference);
-			asset.LoadAssetAsync<TileEntity>().Completed += e =>
-			{
-				Debug.Log($"<color=red>[!]</color>Loaded {e.Result.name}");
-			};
-		}
+		Debug.LogWarning("Map deserializtion not implemented");
 		return map;
 	}
 
