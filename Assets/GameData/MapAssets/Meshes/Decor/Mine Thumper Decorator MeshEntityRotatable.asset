@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Mine Thumper Decorator MeshEntityRotatable
   m_EditorClassIdentifier: 
   mesh: {fileID: -5860461106285324468, guid: 775c906f29e05414fab8e1a2af823638, type: 3}
-  material: {fileID: 2100000, guid: 691ada38dc6cea649b1fa292e387714a, type: 2}
+  material: {fileID: 2100000, guid: e9e9f54899c81054a92531ef2835f0eb, type: 2}
   castShadows: 1
   receiveShadows: 1
-  isStatic: 1
+  isStatic: 0
+  nonUniformScale: 0

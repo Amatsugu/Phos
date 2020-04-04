@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Thumper Mine Mesh
   m_EditorClassIdentifier: 
   mesh: {fileID: 1161684036882113374, guid: 775c906f29e05414fab8e1a2af823638, type: 3}
-  material: {fileID: 2100000, guid: 5d2e962ac64003447b7d010aec100863, type: 2}
+  material: {fileID: 2100000, guid: e9e9f54899c81054a92531ef2835f0eb, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

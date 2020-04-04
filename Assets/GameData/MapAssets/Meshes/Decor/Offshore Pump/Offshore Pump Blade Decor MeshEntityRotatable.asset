@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Offshore Pump Blade Decor MeshEntityRotatable
   m_EditorClassIdentifier: 
   mesh: {fileID: 2121735762094594528, guid: dc0222c239a0a1f4bb36429def27f201, type: 3}
-  material: {fileID: 2100000, guid: 5d2e962ac64003447b7d010aec100863, type: 2}
+  material: {fileID: 2100000, guid: e9e9f54899c81054a92531ef2835f0eb, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0

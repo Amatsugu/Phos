@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wind Turbine Base
   m_EditorClassIdentifier: 
   mesh: {fileID: 1469786835458036586, guid: 9226256ecc419b645ade0645c8d04a53, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  material: {fileID: 2100000, guid: f2bca93419fcbaf4d8c2e9b7f6506023, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
@@ -22,3 +22,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

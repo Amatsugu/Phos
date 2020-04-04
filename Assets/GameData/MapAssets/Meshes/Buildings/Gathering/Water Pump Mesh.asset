@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Water Pump Mesh
   m_EditorClassIdentifier: 
   mesh: {fileID: 3909233067320746374, guid: f53e96367bb0f614ab9612660e3ac1ad, type: 3}
-  material: {fileID: -876546973899608171, guid: f53e96367bb0f614ab9612660e3ac1ad,
-    type: 3}
+  material: {fileID: 2100000, guid: e9e9f54899c81054a92531ef2835f0eb, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
@@ -23,3 +22,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

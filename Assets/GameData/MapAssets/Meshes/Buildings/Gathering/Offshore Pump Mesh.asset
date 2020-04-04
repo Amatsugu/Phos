@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Offshore Pump Mesh
   m_EditorClassIdentifier: 
   mesh: {fileID: -1108167557709096070, guid: dc0222c239a0a1f4bb36429def27f201, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  material: {fileID: 2100000, guid: e9e9f54899c81054a92531ef2835f0eb, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: Offshore Platform
   m_EditorClassIdentifier: 
   mesh: {fileID: 4787724565339465756, guid: 461d3d81333036a4194f785acb976a46, type: 3}
-  material: {fileID: -876546973899608171, guid: 461d3d81333036a4194f785acb976a46,
-    type: 3}
+  material: {fileID: 2100000, guid: e417e60197ec29e49a9d19ebd363e06d, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0
