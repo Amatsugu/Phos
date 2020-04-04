@@ -25,10 +25,10 @@ MonoBehaviour:
     type: 0
     strength: 1
     layerCount: 2
-    baseRoughness: 2
-    roughness: 8
-    persistence: 0.8
+    baseRoughness: 1.86
+    roughness: 7.74
+    persistence: 0.58
     minValue: 0.5
     center: {x: 0, y: 0, z: 0}
     weightMultiplier: 0
-  noiseScale: 5
+  noiseScale: 7.44

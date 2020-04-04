@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
-  m_Name: Random Generator
+  m_Name: Tiny Map
   m_EditorClassIdentifier: 
-  Size: {x: 16, y: 16}
+  Size: {x: 4, y: 4}
   tileMapper: {fileID: 0}
   seaLevel: 4.9
   edgeLength: 1
@@ -25,7 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bf240f7bcb2cf5548a75889870e26969, type: 2}
   useJobs: 0
   Regen: 0
-  borderSize: 64
+  borderSize: 16
   borderCurve:
     serializedVersion: 2
     m_Curve:
@@ -107,7 +107,7 @@ MonoBehaviour:
       weightMultiplier: 4.57
   useSeed: 0
   useSeedDev: 1
-  seed: -197375031
-  landSeaRatio: 0.35
+  seed: -197374998
+  landSeaRatio: 0.2
   biomeFold: 1
   preview: 1

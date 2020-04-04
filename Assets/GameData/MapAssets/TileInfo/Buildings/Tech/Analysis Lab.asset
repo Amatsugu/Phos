@@ -17,7 +17,7 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0
   description: Unlocks research relating to resource gathering
   decorators: []
   isTraverseable: 0
@@ -50,6 +50,7 @@ MonoBehaviour:
     id: -1
   icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 0
+  validator: {fileID: 0}
   cost:
   - id: 1
     ammount: 16

@@ -98,6 +98,7 @@ public class BuildUI : MonoBehaviour
 		GameRegistry.SetBuildingDatabase(buildings);
 		GameEvents.OnGameReady += Init;
 		enabled = false;
+		GameEvents.OnMapRegen += OnRegen;
 	}
 
 	private void Init()
@@ -105,19 +106,19 @@ public class BuildUI : MonoBehaviour
 		enabled = true;
 		UnityEngine.Debug.Log($"BuildUI Init");
 		GameEvents.OnGameReady -= Init;
+		_indicatorManager = _indicatorManager ?? new IndicatorManager(Map.EM, inidcatorOffset);
+		_activeUnits = _activeUnits ?? new List<UIUnitIcon>();
+		HideBuildWindow();
+		infoBanner.SetText("Place HQ Building");
+		_prevState = _state = BuildState.HQPlacement;
+		_selectedBuilding = HQTile;
 	}
 
 	private void Start()
 	{
 		UnityEngine.Debug.Log("Build UI Start");
 		_errors = new List<string>();
-		_indicatorManager = new IndicatorManager(Map.EM, inidcatorOffset);
-		_activeUnits = new List<UIUnitIcon>();
 		_cam = GameRegistry.Camera;
-		HideBuildWindow();
-		_state = BuildState.HQPlacement;
-		_selectedBuilding = HQTile;
-		infoBanner.SetText("Place HQ Building");
 		/*_pendingBuildOrders.Values.Any(o => o.dstTile == t) ||*/
 
 		if (selectIndicatorEntity.mesh == null || selectIndicatorEntity.material == null)
@@ -131,6 +132,11 @@ public class BuildUI : MonoBehaviour
 		});
 		_poweredTileRangeSq = HexCoords.TileToWorldDist(poweredTileDisplayRange, Map.ActiveMap.innerRadius);
 		_poweredTileRangeSq *= _poweredTileRangeSq;
+	}
+
+	private void OnRegen()
+	{
+		GameEvents.OnGameReady += Init;
 	}
 
 	private bool InvalidPlacementSelector(Tile t) => (_selectedBuilding.offshoreOnly ? !t.IsUnderwater : (t.IsUnderwater && !_selectedBuilding.isOffshore)) || t is BuildingTile || (t is ResourceTile && !t.IsUnderwater);

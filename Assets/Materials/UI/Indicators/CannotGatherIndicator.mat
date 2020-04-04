@@ -267,6 +267,7 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
     - _UnlitColor: {r: 1, g: 0, b: 0, a: 0.2509804}
+  m_BuildTextureStacks: []
 --- !u!114 &4911842522780007455
 MonoBehaviour:
   m_ObjectHideFlags: 11

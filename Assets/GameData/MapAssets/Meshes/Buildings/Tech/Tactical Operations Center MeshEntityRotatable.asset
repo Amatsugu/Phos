@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: Tactical Operations Center MeshEntityRotatable
   m_EditorClassIdentifier: 
-  mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 3}
+  mesh: {fileID: 1469786835458036586, guid: 9226256ecc419b645ade0645c8d04a53, type: 3}
   material: {fileID: 2100000, guid: 2866af085bdcb3e4083ccd811b041108, type: 2}
   castShadows: 1
   receiveShadows: 1
@@ -22,3 +22,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

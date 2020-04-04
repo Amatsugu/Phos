@@ -10,7 +10,7 @@ public class DeathSystem : ComponentSystem
 	{
 		Entities.WithNone<Disabled>().ForEach((Entity e, ref Health health, ref UnitId id) =>
 		{
-			if (health.Value > 0 && health.maxHealth != 0)
+			if (health.Value > 0 || health.maxHealth == 0)
 				return;
 			Debug.Log($"Unit [{id.Value}] dying");
 			Map.ActiveMap.units[id.Value].Die();
@@ -19,7 +19,7 @@ public class DeathSystem : ComponentSystem
 		{
 			if (!pos.Value.isCreated)
 				return;
-			if (health.Value > 0 && health.maxHealth != 0)
+			if (health.Value > 0 || health.maxHealth == 0)
 				return;
 			Debug.Log($"Building {pos.Value} dying");
 			((BuildingTile)Map.ActiveMap[pos.Value]).Die();

@@ -88,18 +88,16 @@ public class MapRenderer : MonoBehaviour
 
 		if (generator.Regen)
 		{
+			GameEvents.InvokeOnMapRegen();
 			generator.Regen = false;
-			map.Destroy();
-			Destroy(_ocean.gameObject);
-			Init();
 		}
 	}
 
 	public void Regenerate()
 	{
 		map.Destroy();
+		Destroy(_ocean.gameObject);
 		Init();
 		_lastCamPos = Vector3.zero;
-		GameObject.Destroy(_ocean);
 	}
 }

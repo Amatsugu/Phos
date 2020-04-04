@@ -126,7 +126,7 @@ public class ResourceSystem : ComponentSystem
 		GameRegistry.INST.resourceSystem = this;
 		InitCounts();
 		GameEvents.OnMapLoaded -= InitResSystem;
-		GameEvents.OnMapDestroyed += InitCounts;
+		GameEvents.OnMapRegen += InitCounts;
 		nextTic = Time.ElapsedTime + (1 / ticRate);
 	}
 
@@ -136,7 +136,7 @@ public class ResourceSystem : ComponentSystem
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i] = new ResourceTransactionRecord(i);
 		resCount = new int[ResourceDatabase.ResourceCount];
-		maxStorage = 1000;
+		maxStorage = 9999;
 	}
 
 	protected override void OnUpdate()

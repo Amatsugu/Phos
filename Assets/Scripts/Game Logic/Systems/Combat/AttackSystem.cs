@@ -50,15 +50,27 @@ public class UnitAttackSystem : ComponentSystem
 		_healthData = GetComponentDataFromEntity<Health>();
 
 		GameEvents.OnMapLoaded -= InitAttackSystem;
+		GameEvents.OnMapRegen += OnRegen;
 		GameEvents.OnMapDestroyed += Destroy;
+	}
+
+	private void OnRegen()
+	{
+		GameEvents.OnMapLoaded += InitAttackSystem;
 	}
 
 	protected void Destroy()
 	{
-		base.OnDestroy();
 		_castHits.Dispose();
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		GameEvents.OnMapRegen -= OnRegen;
 		GameEvents.OnMapDestroyed -= Destroy;
 	}
+
 
 	protected override void OnUpdate()
 	{

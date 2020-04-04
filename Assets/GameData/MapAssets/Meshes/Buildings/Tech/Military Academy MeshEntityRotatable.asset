@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: Military Academy MeshEntityRotatable
   m_EditorClassIdentifier: 
-  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 3}
+  mesh: {fileID: 2783041483048503563, guid: 5c1438f23ca0b5b4e823fff7258133e5, type: 3}
   material: {fileID: 2100000, guid: b824d87df7a1bb8488bd5c60dcf9dbd0, type: 2}
   castShadows: 1
   receiveShadows: 1
@@ -22,3 +22,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

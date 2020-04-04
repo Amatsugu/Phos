@@ -57,6 +57,12 @@ public class InteractionUI : MonoBehaviour
 	private void Awake()
 	{
 		GameRegistry.INST.interactionUI = this;
+		GameEvents.OnMapRegen += OnRegen;
+	}
+
+	void OnRegen()
+	{
+		interactionPanel.HidePanel();
 	}
 
 	private void Start()
@@ -394,5 +400,6 @@ public class InteractionUI : MonoBehaviour
 	private void OnDestroy()
 	{
 		_castHits.Dispose();
+		GameEvents.OnMapRegen -= OnRegen;
 	}
 }
