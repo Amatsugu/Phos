@@ -70,9 +70,7 @@ public class BuildUI : MonoBehaviour
 	private List<UIUnitIcon> _activeUnits;
 	private BuildingTileEntity _selectedBuilding;
 	private Camera _cam;
-	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
-	private Dictionary<MeshEntity, int> _renderedEntities;
-	private EntityManager _EM;
+	
 
 	private Tile _startPoint;
 	private List<Tile> _buildPath;
@@ -84,6 +82,7 @@ public class BuildUI : MonoBehaviour
 	private List<string> _errors;
 	private BuildState _state;
 	private BuildState _prevState;
+	private IndicatorManager _indicatorManager;
 
 	public enum BuildState
 	{
@@ -112,11 +111,9 @@ public class BuildUI : MonoBehaviour
 	{
 		UnityEngine.Debug.Log("Build UI Start");
 		_errors = new List<string>();
-		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
-		_renderedEntities = new Dictionary<MeshEntity, int>();
+		_indicatorManager = new IndicatorManager(Map.EM, inidcatorOffset);
 		_activeUnits = new List<UIUnitIcon>();
 		_cam = GameRegistry.Camera;
-		_EM = World.DefaultGameObjectInjectionWorld.EntityManager;
 		HideBuildWindow();
 		_state = BuildState.HQPlacement;
 		_selectedBuilding = HQTile;
@@ -159,7 +156,7 @@ public class BuildUI : MonoBehaviour
 			{
 				_prevState = _state;
 				_state = BuildState.Idle;
-				HideAllIndicators();
+				_indicatorManager.HideAllIndicators();
 			}
 		}
 		else
@@ -197,7 +194,7 @@ public class BuildUI : MonoBehaviour
 		if (_selectedBuilding == null)
 		{
 			_state = _prevState = BuildState.Idle;
-			HideAllIndicators();
+			_indicatorManager.HideAllIndicators();
 		}
 		Tile selectedTile = null;//Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
 		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
@@ -229,7 +226,7 @@ public class BuildUI : MonoBehaviour
 
 		if (selectedTile == null)
 		{
-			HideAllIndicators();
+			_indicatorManager.HideAllIndicators();
 			return;
 		}
 		_errors.Clear();
@@ -237,18 +234,24 @@ public class BuildUI : MonoBehaviour
 		_suffientFunds = true;
 		var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
 		ValidatePathPlacement(selectedTile);
-		ValidatePlacement(tilesToOccupy);
-		ShowPoweredTiles(selectedTile);
-		switch (_selectedBuilding)
-		{
-			case ResourceConduitTileInfo conduit:
-				ValidateResourceConduit(selectedTile, conduit);
-				break;
+		/*if (_selectedBuilding.validator != null)
+			_validPlacement = _selectedBuilding.validator.ValidatePlacement(Map.ActiveMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
+		else
+		{*/
 
-			case ResourceGatheringBuildingEntity building:
-				ValidateResourceGatheringBuilding(selectedTile, tilesToOccupy, building);
-				break;
-		}
+			ValidatePlacement(tilesToOccupy);
+			ShowPoweredTiles(selectedTile);
+			switch (_selectedBuilding)
+			{
+				case ResourceConduitTileInfo conduit:
+					ValidateResourceConduit(selectedTile, conduit);
+					break;
+
+				case ResourceGatheringBuildingEntity building:
+					ValidateResourceGatheringBuilding(selectedTile, tilesToOccupy, building);
+					break;
+			}
+		//}
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 			PlaceBuilding(selectedTile);
 	}
@@ -266,7 +269,7 @@ public class BuildUI : MonoBehaviour
 			//Target tile is valid?
 			if (InvalidPlacementSelector(selectedTile))
 			{
-				HideIndicator(placementPathIndicatorEntity);
+				_indicatorManager.HideIndicator(placementPathIndicatorEntity);
 				_buildPath = null;
 			}
 			if (!(selectedTile is ResourceTile))
@@ -280,14 +283,14 @@ public class BuildUI : MonoBehaviour
 				if (_buildPath.Any(t => t.IsUnderwater))
 				{
 					var invalidTiles = _buildPath.Where(t => t.IsUnderwater);
-					ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
-					ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
+					_indicatorManager.ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
+					_indicatorManager.ShowIndicators(selectIndicatorEntity, _buildPath.Except(invalidTiles).ToList());
 					_validPlacement = false;
 				}
 				else
 				{
-					HideIndicator(errorIndicatorEntity);
-					ShowIndicators(placementPathIndicatorEntity, _buildPath);
+					_indicatorManager.HideIndicator(errorIndicatorEntity);
+					_indicatorManager.ShowIndicators(placementPathIndicatorEntity, _buildPath);
 					_validPlacement = false;
 				}
 			}
@@ -298,8 +301,8 @@ public class BuildUI : MonoBehaviour
 	{
 		if (!GameRegistry.ResourceSystem.HasAllResources(_selectedBuilding.cost) && _state != BuildState.HQPlacement) //Has Resources
 		{
-			HideIndicator(selectIndicatorEntity);
-			ShowIndicators(errorIndicatorEntity, tilesToOccupy);
+			_indicatorManager.HideIndicator(selectIndicatorEntity);
+			_indicatorManager.ShowIndicators(errorIndicatorEntity, tilesToOccupy);
 			_validPlacement = false;
 			_suffientFunds = false;
 			_errors.Add("Insuffient Resources");
@@ -307,15 +310,15 @@ public class BuildUI : MonoBehaviour
 		else if (tilesToOccupy.Any(InvalidPlacementSelector)) //Valid Placement
 		{
 			var invalidTiles = tilesToOccupy.Where(InvalidPlacementSelector);
-			ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
-			ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
+			_indicatorManager.ShowIndicators(errorIndicatorEntity, invalidTiles.ToList());
+			_indicatorManager.ShowIndicators(selectIndicatorEntity, tilesToOccupy.Except(invalidTiles).ToList());
 			_validPlacement = false;
 			_errors.Add("Cannot place on these tiles.");
 		}
 		else
 		{
-			HideIndicator(errorIndicatorEntity);
-			ShowIndicators(selectIndicatorEntity, tilesToOccupy);
+			_indicatorManager.HideIndicator(errorIndicatorEntity);
+			_indicatorManager.ShowIndicators(selectIndicatorEntity, tilesToOccupy);
 		}
 	}
 
@@ -343,7 +346,7 @@ public class BuildUI : MonoBehaviour
 			if (_state == BuildState.HQPlacement)
 			{
 				_selectedBuilding = null;
-				HideAllIndicators();
+				_indicatorManager.HideAllIndicators();
 				_state = BuildState.Disabled;
 				infoBanner.SetActive(false);
 				void onHide()
@@ -376,7 +379,7 @@ public class BuildUI : MonoBehaviour
 		{
 			_state = BuildState.Idle;
 			_prevState = BuildState.Idle;
-			HideAllIndicators();
+			_indicatorManager.HideAllIndicators();
 		}
 	}
 
@@ -398,13 +401,13 @@ public class BuildUI : MonoBehaviour
 				unPoweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
 		}
 		if (poweredTiles.Count > 0)
-			ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
+			_indicatorManager.ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
 		else
-			HideIndicator(poweredTileIndicatorEntity);
+			_indicatorManager.HideIndicator(poweredTileIndicatorEntity);
 		if (unPoweredTiles.Count > 0)
-			ShowIndicators(unpoweredTileIndicatorEntity, unPoweredTiles.Distinct().ToList());
+			_indicatorManager.ShowIndicators(unpoweredTileIndicatorEntity, unPoweredTiles.Distinct().ToList());
 		else
-			HideIndicator(unpoweredTileIndicatorEntity);
+			_indicatorManager.HideIndicator(unpoweredTileIndicatorEntity);
 	}
 
 	private void ValidateResourceConduit(Tile selectedTile, ResourceConduitTileInfo conduitInfo)
@@ -415,7 +418,7 @@ public class BuildUI : MonoBehaviour
 		while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
 			nodes.RemoveAt(nodes.Count - 1);
 		nodes.RemoveAll(n => n.conduitPos == selectedTile.Coords);
-		ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + new float3(0, conduitInfo.powerLineOffset, 0), nodes);
+		_indicatorManager.ShowLines(resourceConduitPreviewLine, selectedTile.SurfacePoint + new float3(0, conduitInfo.powerLineOffset, 0), nodes);
 #if DEBUG
 		for (int i = 0; i < nodes.Count; i++)
 		{
@@ -424,34 +427,10 @@ public class BuildUI : MonoBehaviour
 #endif
 		//else
 		//	HideIndicator(resourceConduitPreviewLine);
-		ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.poweredRange, true));
+		_indicatorManager.ShowIndicators(powerIndicatorEntity, Map.ActiveMap.HexSelect(selectedTile.Coords, conduitInfo.poweredRange, true));
 	}
 
-	private void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f)
-	{
-		GrowIndicators(line, nodes.Count);
-		int c = 0;
-		for (int i = 0, j = 0; i < _indicatorEntities[line].Count; i++, j++)
-		{
-			if (j < nodes.Count)
-			{
-				if (i >= _renderedEntities[line])
-					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[line][i]);
-
-				var pos = nodes[j].conduitPos.world + new float3(0, nodes[j].height, 0);
-				LineFactory.UpdateStaticLine(_indicatorEntities[line][i], src, pos, thiccness);
-				c++;
-			}
-			else
-			{
-				if (i >= _renderedEntities[line])
-					break;
-				if (i < _renderedEntities[line])
-					_EM.AddComponent(_indicatorEntities[line][i], typeof(FrozenRenderSceneTag));
-			}
-		}
-		_renderedEntities[line] = c;
-	}
+	
 
 	private void ValidateResourceGatheringBuilding(Tile selectedTile, List<Tile> tilesToOccupy, ResourceGatheringBuildingEntity buildingInfo)
 	{
@@ -501,14 +480,15 @@ public class BuildUI : MonoBehaviour
 		if (gatheredTiles.Count > 0)
 		{
 			floatingText.SetText(gatherText);
+			gatheredTiles.Except(tilesToOccupy);
 			var pos = _cam.WorldToScreenPoint(selectedTile.SurfacePoint);
 			pos.y += 20;
 			floatingText.rectTransform.position = pos;
 			floatingText.gameObject.SetActive(true);
-			ShowIndicators(gatheringIndicatorEntity, gatheredTiles);
-			ShowIndicators(cannotGatheringIndicatorEntity, cannotGatherTiles);
+			_indicatorManager.ShowIndicators(gatheringIndicatorEntity, gatheredTiles);
+			_indicatorManager.ShowIndicators(cannotGatheringIndicatorEntity, cannotGatherTiles);
 			if (!InvalidPlacementSelector(selectedTile) && _suffientFunds)
-				HideIndicator(errorIndicatorEntity);
+				_indicatorManager.HideIndicator(errorIndicatorEntity);
 		}
 		else
 		{
@@ -517,83 +497,21 @@ public class BuildUI : MonoBehaviour
 				_errors.Add("Building cannot gather these resources");
 			else
 				_errors.Add("No resources to gather");
-			HideIndicator(gatheringIndicatorEntity);
-			HideIndicator(selectIndicatorEntity);
-			ShowIndicators(errorIndicatorEntity, tilesToOccupy);
-			ShowIndicators(cannotGatheringIndicatorEntity, cannotGatherTiles);
+			_indicatorManager.HideIndicator(gatheringIndicatorEntity);
+			_indicatorManager.HideIndicator(selectIndicatorEntity);
+			_indicatorManager.ShowIndicators(errorIndicatorEntity, tilesToOccupy);
+			_indicatorManager.ShowIndicators(cannotGatheringIndicatorEntity, cannotGatherTiles);
 			floatingText.gameObject.SetActive(false);
 		}
 	}
 
-	private void HideIndicator(MeshEntity indicator)
-	{
-		if (!_indicatorEntities.ContainsKey(indicator))
-			return;
-		for (int i = 0; i < _renderedEntities[indicator]; i++)
-		{
-			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(FrozenRenderSceneTag));
-		}
-		_renderedEntities[indicator] = 0;
-	}
-
-	private void HideAllIndicators()
-	{
-		foreach (var indicators in _indicatorEntities)
-		{
-			HideIndicator(indicators.Key);
-		}
-		floatingText.gameObject.SetActive(false);
-	}
+	
 
 	private void OnDisable()
 	{
 	}
 
-	private void GrowIndicators(MeshEntity indicatorMesh, int count)
-	{
-		List<Entity> entities;
-		if (!_indicatorEntities.ContainsKey(indicatorMesh))
-		{
-			_indicatorEntities.Add(indicatorMesh, entities = new List<Entity>());
-			_renderedEntities.Add(indicatorMesh, 0);
-		}
-		else
-		{
-			entities = _indicatorEntities[indicatorMesh];
-			if (count <= entities.Count)
-				return;
-		}
-		var curSize = entities.Count;
-		for (int i = curSize; i < count; i++)
-		{
-			Entity curEntity;
-			entities.Add(curEntity = indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
-			Map.EM.AddComponent(curEntity, typeof(FrozenRenderSceneTag));
-		}
-	}
-
-	private void ShowIndicators(MeshEntity indicatorMesh, List<Tile> tiles)
-	{
-		GrowIndicators(indicatorMesh, tiles.Count);
-		for (int i = 0; i < _indicatorEntities[indicatorMesh].Count; i++)
-		{
-			if (i < tiles.Count)
-			{
-				if (i >= _renderedEntities[indicatorMesh])
-					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
-
-				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint + new float3(0, inidcatorOffset, 0) });
-			}
-			else
-			{
-				if (i >= _renderedEntities[indicatorMesh])
-					break;
-				if (i < _renderedEntities[indicatorMesh])
-					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(FrozenRenderSceneTag));
-			}
-		}
-		_renderedEntities[indicatorMesh] = tiles.Count;
-	}
+	
 
 	public void ShowBuildWindow(BuildingDatabase.BuildingDefination[] buildings)
 	{
@@ -677,7 +595,7 @@ public class BuildUI : MonoBehaviour
 	public void HideBuildWindow()
 	{
 		OnBuildWindowClose?.Invoke();
-		HideAllIndicators();
+		_indicatorManager.HideAllIndicators();
 		_state = BuildState.Disabled;
 		_lastBuildingCategory = null;
 		_selectedBuilding = null;

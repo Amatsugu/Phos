@@ -47,10 +47,12 @@ public class BuildingTileEntity : TileEntity
 	public bool customDeathTile;
 	[ConditionalHide("customDeathTile")]
 	public TileEntity deathTile;
-
 	public BuildingIdentifier upgradeTarget;
 	public Sprite icon;
 	public bool preserveGroundTile;
+
+	[Header("Validator")]
+	public PlacementValidator validator;
 
 	[Header("Resources")]
 	[SerializeField]

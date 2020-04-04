@@ -75,12 +75,6 @@ public class MapRenderer : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		if (Input.GetKeyUp(KeyCode.K))
-		{
-			map.Destroy();
-			map2.Render(_entityManager);
-			Map.ActiveMap = map2;
-		}
 		var camPos = _cam.transform.position;
 		var camRot = _cam.transform.rotation;
 		if (_lastCamPos != camPos || _lastCamRot != camRot)
