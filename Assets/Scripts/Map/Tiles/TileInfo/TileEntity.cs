@@ -91,12 +91,12 @@ public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 	{
 		return new Tile(pos, height, this);
 	}
-#if DEBUG
 	public void OnBeforeSerialize()
 	{
+#if DEBUG
 		assetGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(this));
-	}
 #endif
+	}
 
 	public void OnAfterDeserialize()
 	{

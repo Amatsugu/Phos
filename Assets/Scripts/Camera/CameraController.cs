@@ -124,9 +124,9 @@ public class CameraController : MonoBehaviour
 			var ray = _cam.ScreenPointToRay(mPos);
 			var height = pos.y - mapRenderer.map.seaLevel;
 			var d = height / Mathf.Sin(_cam.transform.localEulerAngles.x * Mathf.Deg2Rad);
-			if (Input.GetKeyDown(KeyCode.Mouse1))
+			if (Input.GetKeyDown(KeyCode.Mouse2))
 				_lastClickPos = ray.GetPoint(d);
-			if (Input.GetKey(KeyCode.Mouse1))
+			if (Input.GetKey(KeyCode.Mouse2))
 			{
 				_isFocusing = false;
 				_canRotate = false;

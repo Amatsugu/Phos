@@ -32,15 +32,19 @@ public class PlacementValidator : ScriptableObject
 			return outOfBounds;
 		}else
 		{
+			bool isValid = true;
 			for (int i = 0; i < tilesToOccupy.Length; i++)
 			{
 				var tile = map[tilesToOccupy[i]];
 				if (tile is BuildingTile || tile is ResourceTile)
+				{
 					indicatorManager.SetIndicator(tile, errorIndicator);
+					isValid = false;
+				}
 				else
 					indicatorManager.SetIndicator(tile, selectionIndicator);
 			}
+			return isValid;
 		}
-		return true;
 	}
 }

@@ -163,6 +163,7 @@ public class BuildUI : MonoBehaviour
 				_prevState = _state;
 				_state = BuildState.Idle;
 				_indicatorManager.HideAllIndicators();
+				floatingText.gameObject.SetActive(false);
 			}
 		}
 		else
@@ -201,6 +202,7 @@ public class BuildUI : MonoBehaviour
 		{
 			_state = _prevState = BuildState.Idle;
 			_indicatorManager.HideAllIndicators();
+			floatingText.gameObject.SetActive(false);
 		}
 		Tile selectedTile = null;//Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
 		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
@@ -233,6 +235,7 @@ public class BuildUI : MonoBehaviour
 		if (selectedTile == null)
 		{
 			_indicatorManager.HideAllIndicators();
+			floatingText.gameObject.SetActive(false);
 			return;
 		}
 		_errors.Clear();
@@ -240,10 +243,10 @@ public class BuildUI : MonoBehaviour
 		_suffientFunds = true;
 		var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
 		ValidatePathPlacement(selectedTile);
-		/*if (_selectedBuilding.validator != null)
+		if (_selectedBuilding.validator != null)
 			_validPlacement = _selectedBuilding.validator.ValidatePlacement(Map.ActiveMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
 		else
-		{*/
+		{
 
 			ValidatePlacement(tilesToOccupy);
 			ShowPoweredTiles(selectedTile);
@@ -257,7 +260,7 @@ public class BuildUI : MonoBehaviour
 					ValidateResourceGatheringBuilding(selectedTile, tilesToOccupy, building);
 					break;
 			}
-		//}
+		}
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 			PlaceBuilding(selectedTile);
 	}
@@ -353,6 +356,7 @@ public class BuildUI : MonoBehaviour
 			{
 				_selectedBuilding = null;
 				_indicatorManager.HideAllIndicators();
+				floatingText.gameObject.SetActive(false);
 				_state = BuildState.Disabled;
 				infoBanner.SetActive(false);
 				void onHide()
@@ -386,6 +390,7 @@ public class BuildUI : MonoBehaviour
 			_state = BuildState.Idle;
 			_prevState = BuildState.Idle;
 			_indicatorManager.HideAllIndicators();
+			floatingText.gameObject.SetActive(false);
 		}
 	}
 
@@ -606,6 +611,7 @@ public class BuildUI : MonoBehaviour
 		_lastBuildingCategory = null;
 		_selectedBuilding = null;
 		buildWindow.SetActive(false);
+		floatingText.gameObject.SetActive(false);
 		for (int i = 0; i < _activeUnits.Count; i++)
 		{
 			_activeUnits[i]?.gameObject.SetActive(false);
