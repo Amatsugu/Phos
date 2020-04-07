@@ -42,13 +42,13 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 		}, false);
 
 		bool hasRes = false;
+		//Find gatherable resources
 		for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
 		{
 			var res = buildingInfo.resourcesToGather[i];
 			if (!_resInRange.ContainsKey(res.id))
 				continue;
 			//var gatherAmmount = Mathf.FloorToInt(_resInRange[res.id] * res.ammount);
-			//gatheredTiles.AddRange(_resTiles[res.id]);
 			var tiles = _resTiles[res.id];
 			for (int j = 0; j < tiles.Count; j++)
 			{

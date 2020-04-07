@@ -22,7 +22,7 @@ MonoBehaviour:
     remove the additional power cost from disconnected buildings.
   decorators: []
   isTraverseable: 0
-  faction: 1
+  assetGuid: 69df6771048597e47af78e977c2c3909
   buildingMesh: {fileID: 11400000, guid: 1cccbdfb97aeb9f43955b041dd54202c, type: 2}
   centerOfMassOffset:
     x: 0
@@ -39,10 +39,19 @@ MonoBehaviour:
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
   maxHealth: 0
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   upgradeTarget:
     id: -1
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 1
+  validator: {fileID: 11400000, guid: a68c415a210b7dc4da1fd7af40363961, type: 2}
   cost:
   - id: 0
     ammount: 20

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0cf361d48f32224f8cd8cebd68e14ae, type: 3}
+  m_Name: Conduit Placement Validator
+  m_EditorClassIdentifier: 
+  selectionIndicator: {fileID: 11400000, guid: 33177b445fb1df34f9e26941d4a375cb, type: 2}
+  errorIndicator: {fileID: 11400000, guid: 786c4d272c5b71b46ba6741ea64fcce6, type: 2}
+  poweredIndicator: {fileID: 11400000, guid: 7f2dfea71370ca941a2276f223ecb355, type: 2}
+  powerLineIndicator: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85, type: 2}
