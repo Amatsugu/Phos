@@ -39,7 +39,7 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 					}
 				}
 			}
-		}, true);
+		}, false);
 
 		bool hasRes = false;
 		for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
@@ -58,38 +58,35 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 			_resTiles.Remove(res.id);
 		}
 		bool cannotGather = _resInRange.Count > 0;
-		var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size, innerRadius: map.innerRadius);
 		bool cannotPlace = false;
+		var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size, innerRadius: map.innerRadius);
 		foreach (var tiles in _resTiles)
 		{
 			for (int i = 0; i < tiles.Value.Count; i++)
 			{
-				if(tilesToOccupy.Any(t => tiles.Value[i].Coords == t))
+				for (int j = 0; j < tilesToOccupy.Length; j++)
 				{
-					cannotPlace = true;
-					indicatorManager.SetIndicator(tiles.Value[i], errorIndicator);
-				}else
-					indicatorManager.SetIndicator(tiles.Value[i], cannotGatherIndicator);
+					if(tiles.Value[i].Coords == tilesToOccupy[j])
+					{
+						cannotPlace = true;
+						indicatorManager.SetIndicator(tiles.Value[i], errorIndicator);
+					}
+					else
+						indicatorManager.SetIndicator(tiles.Value[i], cannotGatherIndicator);
+				}
+
 			}
 		}
 		if (!hasRes)
 		{
-			for (int i = 0; i < tilesToOccupy.Length; i++)
-			{
-				var tile = map[tilesToOccupy[i]];
-				indicatorManager.SetIndicator(tile, errorIndicator);
-			}
 			if (cannotGather)
 				indicatorManager.LogError("Cannot gatther these resources");
 			else
 				indicatorManager.LogError("No resources to gather");
 		}
-		if(cannotPlace)
-		{
+		if (cannotPlace)
 			indicatorManager.LogError("Cannot place on these tiles");
-			hasRes = false;
-		}
 
-		return hasRes && base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
+		return (hasRes && !cannotPlace) && base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
 	}
 }

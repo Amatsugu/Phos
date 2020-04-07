@@ -275,5 +275,5 @@ public struct HexCoords : IEquatable<HexCoords>
 		return this.Equals(h);
 	}
 
-	public bool Equals(HexCoords other) => X == other.X && Y == other.Y && Z == other.Z;
+	public bool Equals(HexCoords other) => isCreated && other.isCreated && X == other.X && Y == other.Y;
 }
