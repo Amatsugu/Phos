@@ -50,7 +50,7 @@ MonoBehaviour:
     id: -1
   icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 0
-  validator: {fileID: 0}
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
     ammount: 16

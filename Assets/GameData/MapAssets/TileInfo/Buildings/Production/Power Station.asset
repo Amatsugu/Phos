@@ -21,7 +21,7 @@ MonoBehaviour:
   description: Burns fuel to produce power. More efficient than raw carbon.
   decorators: []
   isTraverseable: 0
-  faction: 1
+  assetGuid: fcfbc5a667690e540b3cbcda9dd74c53
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
   centerOfMassOffset:
     x: 0
@@ -38,10 +38,19 @@ MonoBehaviour:
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
   maxHealth: 0
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   upgradeTarget:
     id: -1
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 0
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
     ammount: 80

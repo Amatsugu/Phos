@@ -21,22 +21,36 @@ MonoBehaviour:
   description: Unlocks research relating to resoruce production and refinement
   decorators: []
   isTraverseable: 0
-  faction: 1
+  assetGuid: eff0cbc9ab35c844488d2e6935e178fd
   buildingMesh: {fileID: 11400000, guid: 97ae1174d81cecb4f906ad1824be9cfb, type: 2}
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   tier: 1
   constructionTime: 2
   category: 1
   size: 0
   flattenOuterRange: 0
-  resourceTransferRange: 0
   isOffshore: 0
   offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
   placementMode: 0
+  maxHealth: 100
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   upgradeTarget:
     id: -1
   icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 0
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
     ammount: 16

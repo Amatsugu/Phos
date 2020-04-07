@@ -21,22 +21,36 @@ MonoBehaviour:
   description: Refines Raw Carbon to create carbon nanotubes
   decorators: []
   isTraverseable: 0
-  faction: 1
+  assetGuid: 763826ebcd88b8f44bd20f65c32a52f7
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
   tier: 3
   constructionTime: 2
   category: 3
   size: 0
   flattenOuterRange: 0
-  resourceTransferRange: 0
   isOffshore: 0
   offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
   placementMode: 0
+  maxHealth: 100
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   upgradeTarget:
     id: -1
   icon: {fileID: 756898814474196213, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 0
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
     ammount: 2

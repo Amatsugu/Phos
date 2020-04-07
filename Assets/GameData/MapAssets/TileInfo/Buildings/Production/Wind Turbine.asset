@@ -22,7 +22,7 @@ MonoBehaviour:
   decorators:
   - {fileID: 11400000, guid: 62629b03162655b4c9ff923676582936, type: 2}
   isTraverseable: 0
-  faction: 1
+  assetGuid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb
   buildingMesh: {fileID: 11400000, guid: a028dc4d6993c444ba02febd426ef8c1, type: 2}
   centerOfMassOffset:
     x: 0
@@ -39,10 +39,19 @@ MonoBehaviour:
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
   maxHealth: 0
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   upgradeTarget:
     id: -1
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 1
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
     ammount: 60

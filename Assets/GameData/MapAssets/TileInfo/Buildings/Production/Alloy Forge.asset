@@ -21,7 +21,7 @@ MonoBehaviour:
   description: Produces electrum
   decorators: []
   isTraverseable: 0
-  faction: 1
+  assetGuid: d02481ac5a9ada04faab17721ee4fe04
   buildingMesh: {fileID: 11400000, guid: bb526751acb0ed94ca342bebcb471cb7, type: 2}
   centerOfMassOffset:
     x: 0
@@ -38,10 +38,19 @@ MonoBehaviour:
   offshorePlatformMesh: {fileID: 0}
   placementMode: 0
   maxHealth: 0
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   upgradeTarget:
     id: -1
   icon: {fileID: -550988092767783048, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   preserveGroundTile: 0
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
     ammount: 2
