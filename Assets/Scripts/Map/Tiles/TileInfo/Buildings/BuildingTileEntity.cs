@@ -61,6 +61,7 @@ public class BuildingTileEntity : TileEntity
 	public ResourceIndentifier[] production;
 	public ResourceIndentifier[] consumption;
 
+
 	public override IEnumerable<ComponentType> GetComponents()
 	{
 		return base.GetComponents().Concat(new ComponentType[] 

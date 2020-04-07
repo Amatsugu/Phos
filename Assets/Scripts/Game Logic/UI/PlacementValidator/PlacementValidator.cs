@@ -28,6 +28,7 @@ public class PlacementValidator : ScriptableObject
 				if (tile != null)
 					indicatorManager.SetIndicator(tile, errorIndicator);
 			}
+			indicatorManager.LogError("Out of map bounds (how?)");
 			return outOfBounds;
 		}else
 		{
@@ -35,14 +36,33 @@ public class PlacementValidator : ScriptableObject
 			for (int i = 0; i < tilesToOccupy.Length; i++)
 			{
 				var tile = map[tilesToOccupy[i]];
-				if (tile is BuildingTile || tile is ResourceTile)
+				if (buildingTile.isOffshore && buildingTile.offshoreOnly)
 				{
-					indicatorManager.SetIndicator(tile, errorIndicator);
-					isValid = false;
+					if (!tile.IsUnderwater || tile is BuildingTile)
+					{
+						indicatorManager.SetIndicator(tile, errorIndicator);
+						isValid = false;
+					}
+					else
+						indicatorManager.SetIndicator(tile, selectionIndicator);
+				} else
+				{
+					if (tile is BuildingTile)
+					{
+						indicatorManager.SetIndicator(tile, errorIndicator);
+						isValid = false;
+					}
+					else if(tile is ResourceTile && !(tile.IsUnderwater && buildingTile.isOffshore))
+					{
+						indicatorManager.SetIndicator(tile, errorIndicator);
+						isValid = false;
+					}
+					else
+						indicatorManager.SetIndicator(tile, selectionIndicator);
 				}
-				else
-					indicatorManager.SetIndicator(tile, selectionIndicator);
 			}
+			if (!isValid)
+				indicatorManager.LogError("Cannot place on these tiles");
 			return isValid;
 		}
 	}

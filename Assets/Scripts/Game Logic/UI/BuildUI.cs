@@ -375,6 +375,7 @@ public class BuildUI : MonoBehaviour
 			for (int i = 0; i < _errors.Count; i++)
 				NotificationsUI.Notify(NotifType.Error, _errors[i]);
 			_errors.Clear();
+			_indicatorManager.PublishAndClearErrors();
 		}
 	}
 

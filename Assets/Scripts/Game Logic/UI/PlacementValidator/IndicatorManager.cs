@@ -18,6 +18,7 @@ public class IndicatorManager
 	private EntityManager _EM;
 	private float3 _offset;
 	private int _nextEntityIndex = 0;
+	private List<string> _errors;
 
 	public IndicatorManager(EntityManager entityManager, float offset)
 	{
@@ -25,6 +26,7 @@ public class IndicatorManager
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
 		_renderedEntities = new Dictionary<MeshEntity, int>();
 		_renderedIndicators = new Dictionary<HexCoords, int>();
+		_errors = new List<string>();
 		_offset = new float3(0, offset, 0);
 		_entities = new NativeArray<Entity>(512, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 	}
@@ -74,7 +76,17 @@ public class IndicatorManager
 	{
 		_EM.DestroyEntity(_entities);
 		_renderedIndicators.Clear();
+		_errors.Clear();
 		_nextEntityIndex = 0;
+	}
+
+	public void LogError(string errorMessage) => _errors.Add(errorMessage);
+
+	public void PublishAndClearErrors()
+	{
+		for (int i = 0; i < _errors.Count; i++)
+			NotificationsUI.Notify(NotifType.Error, _errors[i]);
+		_errors.Clear();
 	}
 
 	public void ShowIndicators(MeshEntity indicatorMesh, List<Tile> tiles)

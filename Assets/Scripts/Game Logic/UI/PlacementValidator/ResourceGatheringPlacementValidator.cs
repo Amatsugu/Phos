@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Validators/Resource Gathering Placement Validator")]
@@ -56,20 +57,37 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 			}
 			_resTiles.Remove(res.id);
 		}
-
+		bool cannotGather = _resInRange.Count > 0;
+		var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size, innerRadius: map.innerRadius);
+		bool cannotPlace = false;
 		foreach (var tiles in _resTiles)
 		{
 			for (int i = 0; i < tiles.Value.Count; i++)
-				indicatorManager.SetIndicator(tiles.Value[i], cannotGatherIndicator);
+			{
+				if(tilesToOccupy.Any(t => tiles.Value[i].Coords == t))
+				{
+					cannotPlace = true;
+					indicatorManager.SetIndicator(tiles.Value[i], errorIndicator);
+				}else
+					indicatorManager.SetIndicator(tiles.Value[i], cannotGatherIndicator);
+			}
 		}
 		if (!hasRes)
 		{
-			var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size, innerRadius: map.innerRadius);
 			for (int i = 0; i < tilesToOccupy.Length; i++)
 			{
 				var tile = map[tilesToOccupy[i]];
 				indicatorManager.SetIndicator(tile, errorIndicator);
 			}
+			if (cannotGather)
+				indicatorManager.LogError("Cannot gatther these resources");
+			else
+				indicatorManager.LogError("No resources to gather");
+		}
+		if(cannotPlace)
+		{
+			indicatorManager.LogError("Cannot place on these tiles");
+			hasRes = false;
 		}
 
 		return hasRes && base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
