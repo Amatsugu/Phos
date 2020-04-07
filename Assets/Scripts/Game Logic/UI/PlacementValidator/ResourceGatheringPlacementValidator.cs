@@ -7,15 +7,18 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 {
 	public MeshEntity gatheringIndicator;
 	public MeshEntity cannotGatherIndicator;
+	private Dictionary<int, int> _resInRange = new Dictionary<int, int>();
+	private Dictionary<int, List<Tile>> _resTiles = new Dictionary<int, List<Tile>>();
 
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
 	{
-		var resBuilding = buildingTile as ResourceGatheringBuildingEntity;
-		if (resBuilding == null)
+		var buildingInfo = buildingTile as ResourceGatheringBuildingEntity;
+		if (buildingInfo == null)
 			throw new System.Exception();
-		var resInRange = new Dictionary<int, int>();
-		var resTiles = new Dictionary<int, List<Tile>>();
-		map.HexSelectForEach(pos, resBuilding.size + resBuilding.gatherRange, t =>
+		_resInRange.Clear();
+		_resTiles.Clear();
+		//Find tiles in range
+		map.HexSelectForEach(pos, buildingInfo.size + buildingInfo.gatherRange, t =>
 		{
 			if(t is ResourceTile rt && !rt.gatherer.isCreated)
 			{
@@ -23,21 +26,52 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 				for (int i = 0; i < yeild.Length; i++)
 				{
 					var yID = yeild[i].id;
-					if (resInRange.ContainsKey(yID))
+					if (_resInRange.ContainsKey(yID))
 					{
-						resInRange[yID]++;
-						resTiles[yID].Add(t);
+						_resInRange[yID]++;
+						_resTiles[yID].Add(t);
 					}
 					else
 					{
-						resInRange.Add(yID, 1);
-						resTiles.Add(yID, new List<Tile> { t });
+						_resInRange.Add(yID, 1);
+						_resTiles.Add(yID, new List<Tile> { t });
 					}
 				}
 			}
 		}, true);
 
+		bool hasRes = false;
+		for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
+		{
+			var res = buildingInfo.resourcesToGather[i];
+			if (!_resInRange.ContainsKey(res.id))
+				continue;
+			//var gatherAmmount = Mathf.FloorToInt(_resInRange[res.id] * res.ammount);
+			//gatheredTiles.AddRange(_resTiles[res.id]);
+			var tiles = _resTiles[res.id];
+			for (int j = 0; j < tiles.Count; j++)
+			{
+				hasRes = true;
+				indicatorManager.SetIndicator(tiles[j], gatheringIndicator);
+			}
+			_resTiles.Remove(res.id);
+		}
 
-		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
+		foreach (var tiles in _resTiles)
+		{
+			for (int i = 0; i < tiles.Value.Count; i++)
+				indicatorManager.SetIndicator(tiles.Value[i], cannotGatherIndicator);
+		}
+		if (!hasRes)
+		{
+			var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size, innerRadius: map.innerRadius);
+			for (int i = 0; i < tilesToOccupy.Length; i++)
+			{
+				var tile = map[tilesToOccupy[i]];
+				indicatorManager.SetIndicator(tile, errorIndicator);
+			}
+		}
+
+		return hasRes && base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
 	}
 }

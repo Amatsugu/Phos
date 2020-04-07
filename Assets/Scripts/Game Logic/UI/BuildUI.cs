@@ -244,7 +244,10 @@ public class BuildUI : MonoBehaviour
 		var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
 		ValidatePathPlacement(selectedTile);
 		if (_selectedBuilding.validator != null)
+		{
+			_indicatorManager.UnSetAllIndicators();
 			_validPlacement = _selectedBuilding.validator.ValidatePlacement(Map.ActiveMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
+		}
 		else
 		{
 
@@ -478,12 +481,9 @@ public class BuildUI : MonoBehaviour
 			var res = buildingInfo.resourcesToGather[i];
 			if (!resInRange.ContainsKey(res.id))
 				continue;
-			if (resInRange.Count > 0)
-			{
-				var gatherAmmount = Mathf.FloorToInt(resInRange[res.id] * res.ammount);
-				gatheredTiles.AddRange(resTiles[res.id]);
-				gatherText.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(res.id)}");
-			}
+			var gatherAmmount = Mathf.FloorToInt(resInRange[res.id] * res.ammount);
+			gatheredTiles.AddRange(resTiles[res.id]);
+			gatherText.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(res.id)}");
 			resTiles.Remove(res.id);
 		}
 		foreach (var tiles in resTiles)
