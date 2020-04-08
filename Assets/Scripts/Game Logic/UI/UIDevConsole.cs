@@ -113,16 +113,20 @@ public class UIDevConsole : MonoBehaviour
 	{
 		consolePanel.OnHide += () =>
 		{
+			/*
 			GameRegistry.BuildUI.enabled = true;
 			GameRegistry.CameraController.enabled = true;
 			GameRegistry.InteractionUI.enabled = true;
+			*/
 		};
 
 		consolePanel.OnShow += () =>
 		{
+			/*
 			GameRegistry.BuildUI.enabled = false;
 			GameRegistry.CameraController.enabled = false;
 			GameRegistry.InteractionUI.enabled = false;
+			*/
 			scrollView.verticalNormalizedPosition = 0;
 			inputBox.ActivateInputField();
 			UpdateConsoleText();

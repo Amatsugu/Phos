@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GameUI : UIHover
+﻿public class GameUI : UIHover
 {
 	private UIInfoPanel _infoPanel;
 	private UIBuildPanel _buildPanel;
@@ -29,11 +25,22 @@ public class GameUI : UIHover
 		_actionsPanel = GetComponentInChildren<UIActionsPanel>();
 		_categoryPanel = GetComponentInChildren<UICategoryPanel>();
 
-
 		_categoryPanel.OnButtonClicked += CategorySelected;
 		_buildPanel.OnHide += OnBuildPanelClosed;
 
+		SettupButtonCallbacks();
+
 		GameEvents.OnGameReady += Init;
+	}
+
+	private void SettupButtonCallbacks()
+	{
+		_categoryPanel.tech.onClick.AddListener(() => CategorySelected(BuildingCategory.Tech));
+		_categoryPanel.gathering.onClick.AddListener(() => CategorySelected(BuildingCategory.Gathering));
+		_categoryPanel.production.onClick.AddListener(() => CategorySelected(BuildingCategory.Production));
+		_categoryPanel.structure.onClick.AddListener(() => CategorySelected(BuildingCategory.Structure));
+		_categoryPanel.military.onClick.AddListener(() => CategorySelected(BuildingCategory.Military));
+		_categoryPanel.defense.onClick.AddListener(() => CategorySelected(BuildingCategory.Defense));
 	}
 
 	private void Init()
@@ -44,7 +51,7 @@ public class GameUI : UIHover
 	private void CategorySelected(BuildingCategory category)
 	{
 		state = UIState.PlaceBuilding;
-		_buildPanel.Show();
+		_buildPanel.Show(category);
 	}
 
 	private void OnBuildPanelClosed()
