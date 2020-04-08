@@ -2,6 +2,7 @@
 using Effects.Lines;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -11,6 +12,8 @@ using UnityEngine;
 
 public class IndicatorManager
 {
+	public TMP_Text floatingText;
+
 	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
 	private Dictionary<MeshEntity, int> _renderedEntities;
 	private Dictionary<HexCoords, int> _renderedIndicators;
@@ -20,7 +23,7 @@ public class IndicatorManager
 	private int _nextEntityIndex = 0;
 	private List<string> _errors;
 
-	public IndicatorManager(EntityManager entityManager, float offset)
+	public IndicatorManager(EntityManager entityManager, float offset, TMP_Text floatingText)
 	{
 		_EM = entityManager;
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
@@ -29,6 +32,7 @@ public class IndicatorManager
 		_errors = new List<string>();
 		_offset = new float3(0, offset, 0);
 		_entities = new NativeArray<Entity>(512, Allocator.Persistent, NativeArrayOptions.ClearMemory);
+		this.floatingText = floatingText;
 	}
 
 	private void GrowIndicators(MeshEntity indicatorMesh, int count)

@@ -99,7 +99,7 @@ public class BuildUI : MonoBehaviour
 		enabled = true;
 		UnityEngine.Debug.Log($"BuildUI Init");
 		GameEvents.OnGameReady -= Init;
-		_indicatorManager = _indicatorManager ?? new IndicatorManager(Map.EM, inidcatorOffset);
+		_indicatorManager = _indicatorManager ?? new IndicatorManager(Map.EM, inidcatorOffset, floatingText);
 		_activeUnits = _activeUnits ?? new List<UIUnitIcon>();
 		HideBuildWindow();
 		infoBanner.SetText("Place HQ Building");
@@ -197,7 +197,7 @@ public class BuildUI : MonoBehaviour
 			_indicatorManager.HideAllIndicators();
 			floatingText.gameObject.SetActive(false);
 		}
-		Tile selectedTile = null;//Map.ActiveMap.GetTileFromRay(_cam.ScreenPointToRay(mousePos), _cam.transform.position.y * 2);
+		Tile selectedTile = null;
 		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
 		var ray = _cam.ScreenPointToRay(mousePos);
 		if (col.CollisionWorld.CastRay(new Unity.Physics.RaycastInput
@@ -219,12 +219,13 @@ public class BuildUI : MonoBehaviour
 					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).Value];
 			}
 		}
-		UnityEngine.Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);
-		UnityEngine.Debug.DrawRay(hit.Position, Vector3.right, Color.red);
-		UnityEngine.Debug.DrawRay(hit.Position, Vector3.forward, Color.blue);
-		UnityEngine.Debug.DrawRay(hit.Position, Vector3.up, Color.green);
-		UnityEngine.Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
-
+#if DEBUG
+		Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);
+		Debug.DrawRay(hit.Position, Vector3.right, Color.red);
+		Debug.DrawRay(hit.Position, Vector3.forward, Color.blue);
+		Debug.DrawRay(hit.Position, Vector3.up, Color.green);
+		Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
+#endif
 		if (selectedTile == null)
 		{
 			_indicatorManager.HideAllIndicators();
@@ -235,6 +236,7 @@ public class BuildUI : MonoBehaviour
 		_validPlacement = true;
 		var tilesToOccupy = Map.ActiveMap.HexSelect(selectedTile.Coords, _selectedBuilding.size);
 		_indicatorManager.UnSetAllIndicators();
+		_indicatorManager.floatingText.gameObject.SetActive(false);
 		_validPlacement = _selectedBuilding.validator.ValidatePlacement(Map.ActiveMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
 		ValidatePlacement(tilesToOccupy);
 		ShowPoweredTiles(selectedTile);
@@ -356,12 +358,6 @@ public class BuildUI : MonoBehaviour
 		else
 			_indicatorManager.HideIndicator(unpoweredTileIndicatorEntity);
 	}
-
-	private void OnDisable()
-	{
-	}
-
-	
 
 	public void ShowBuildWindow(BuildingDatabase.BuildingDefination[] buildings)
 	{

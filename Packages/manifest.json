@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.2d.sprite": "1.0.0",
     "com.unity.addressables": "1.7.5",
     "com.unity.audio.dspgraph": "0.1.0-preview.11",
     "com.unity.build-report-inspector": "0.1.2-preview",

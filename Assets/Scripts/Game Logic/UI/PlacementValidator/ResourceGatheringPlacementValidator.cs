@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Validators/Resource Gathering Placement Validator")]
@@ -42,13 +43,15 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 		}, false);
 
 		bool hasRes = false;
+		var gatherString = new StringBuilder();
 		//Find gatherable resources
 		for (int i = 0; i < buildingInfo.resourcesToGather.Length; i++)
 		{
 			var res = buildingInfo.resourcesToGather[i];
 			if (!_resInRange.ContainsKey(res.id))
 				continue;
-			//var gatherAmmount = Mathf.FloorToInt(_resInRange[res.id] * res.ammount);
+			var gatherAmmount = Mathf.FloorToInt(_resInRange[res.id] * res.ammount);
+			gatherString.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(res.id)}");
 			var tiles = _resTiles[res.id];
 			for (int j = 0; j < tiles.Count; j++)
 			{
@@ -57,6 +60,9 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 			}
 			_resTiles.Remove(res.id);
 		}
+		indicatorManager.floatingText.SetText(gatherString);
+		indicatorManager.floatingText.gameObject.SetActive(true);
+		indicatorManager.floatingText.rectTransform.position = GameRegistry.Camera.WorldToScreenPoint(map[pos].SurfacePoint) + new Vector3(0, 15);
 		bool cannotGather = _resInRange.Count > 0;
 		bool cannotPlace = false;
 		var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size, innerRadius: map.innerRadius);
