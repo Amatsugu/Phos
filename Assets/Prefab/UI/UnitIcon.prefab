@@ -288,9 +288,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHovered: 0
   rTransform: {fileID: 0}
-  floatDist: -10
+  floatDist: 4
+  axis: {x: 0, y: 1, z: 0}
   speed: 10
-  text: {fileID: 7193113062289343559}
+  titleText: {fileID: 7193113062289343559}
+  costText: {fileID: 7509673996616413799}
   icon: {fileID: 7193113062472905230}
 --- !u!1 &7193113062289343553
 GameObject:

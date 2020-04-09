@@ -4,14 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UICategoryPanel : UIPanel
+public class UICategoryPanel : UITabPanel
 {
-	public Button tech;
-	public Button gathering;
-	public Button production;
-	public Button structure;
-	public Button military;
-	public Button defense;
-
 	public event Action<BuildingCategory> OnButtonClicked;
+
+	protected override void OnTabSelected(int tab)
+	{
+		base.OnTabSelected(tab);
+		OnButtonClicked?.Invoke((BuildingCategory)(tab+1));
+	}
+
+	public override void ClearAllEvents()
+	{
+		base.ClearAllEvents();
+		ClearButtonClickedEvent();
+	}
+
+	public void ClearButtonClickedEvent() => OnButtonClicked = null;
+
 }

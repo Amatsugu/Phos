@@ -145,7 +145,7 @@ public class UIInfoPopup : UIExpandable
 		}
 	}
 
-	public override void OnDisable()
+	protected override void OnDisable()
 	{
 		base.OnDisable();
 		try

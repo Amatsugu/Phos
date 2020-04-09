@@ -2,8 +2,9 @@
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UIHover : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	[HideInInspector]
 	public bool isHovered;
@@ -15,7 +16,7 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	[HideInInspector]
 	public RectTransform rTransform;
 
-	public bool IsActive => gameObject.activeInHierarchy;
+	//public bool IsActive => gameObject.activeInHierarchy;
 
 	public void Blur()
 	{
@@ -49,31 +50,32 @@ public class UIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 		ClearHoverEvents();
 	}
 
-	public virtual void OnDisable()
+	protected override void OnDisable()
 	{
+		base.OnDisable();
 		OnBlur?.Invoke();
 	}
 
-	public virtual void OnEnable()
+	protected override void OnEnable()
 	{
+		base.OnEnable();
 		rTransform = rTransform ?? GetComponent<RectTransform>();
 	}
 
-	protected virtual void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
 		rTransform = GetComponent<RectTransform>();
-	}
-
-	protected virtual void Start()
-	{
 	}
 
 	protected virtual void Update()
 	{
+
 	}
 
 	protected virtual void LateUpdate()
 	{
+
 	}
 
 	public virtual void SetActive(bool active)

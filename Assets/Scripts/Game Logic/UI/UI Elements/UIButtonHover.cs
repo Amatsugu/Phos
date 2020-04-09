@@ -1,17 +1,31 @@
 ﻿using Unity.Mathematics;
 
 using UnityEngine;
+using UnityEngine.UI;
 
-public class UIButtonHover : UIHover
+public class UIButtonHover : UIHover, ILayoutSelfController
 {
 	public float floatDist = -5;
+	public Vector3 axis;
 	public float speed = 1;
 
 	private float _curTime;
+	private Vector3 _basePos;
 
-	protected override void Awake()
+	public void SetLayoutHorizontal()
 	{
-		base.Awake();
+		_basePos.x = rTransform.localPosition.x;
+	}
+
+	public void SetLayoutVertical()
+	{
+		_basePos.y = rTransform.localPosition.y;
+	}
+
+	protected override void OnValidate()
+	{
+		base.OnValidate();
+		axis = math.normalizesafe(axis);
 	}
 
 	protected override void Update()
@@ -22,11 +36,9 @@ public class UIButtonHover : UIHover
 		else
 			_curTime -= Time.unscaledDeltaTime * speed;
 		_curTime = math.clamp(_curTime, 0, 1);
-		var pos = rTransform.localPosition;
 		var t = 1 - _curTime;
 		t *= t;
 		t = 1 - t;
-		pos.z = math.lerp(0, floatDist, t);
-		rTransform.localPosition = pos;
+		rTransform.localPosition = _basePos + (axis * math.lerp(0, floatDist, t));
 	}
 }

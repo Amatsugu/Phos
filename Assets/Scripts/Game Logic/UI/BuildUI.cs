@@ -390,7 +390,7 @@ public class BuildUI : MonoBehaviour
 #endif
 			_activeUnits[i].gameObject.SetActive(true);
 			activeCount++;
-			_activeUnits[i].text.SetText(building.name);
+			_activeUnits[i].costText.SetText(building.name);
 			_activeUnits[i].ClearAllEvents();
 			_activeUnits[i].OnClick += () =>
 			{

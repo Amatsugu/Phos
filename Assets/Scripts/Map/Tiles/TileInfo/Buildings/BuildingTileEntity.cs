@@ -103,7 +103,7 @@ public class BuildingTileEntity : TileEntity
 		{
 			costString += $"{ResourceDatabase.GetResourceString(production[i].id)} +{production[i].ammount}/t";
 			if (i < production.Length - 1)
-				costString += "\n";
+				costString += " ";
 		}
 		return costString;
 	}
@@ -119,15 +119,15 @@ public class BuildingTileEntity : TileEntity
 				curCost = $"<color=#ff0000>{curCost}</color>";
 			costString += curCost;
 			if (i != cost.Length - 1)
-				costString += "\n";
+				costString += " ";
 		}
 		if (consumption.Length > 0)
-			costString += "\n";
+			costString += " ";
 		for (int i = 0; i < consumption.Length; i++)
 		{
 			costString += $"{ResourceDatabase.GetResourceString(consumption[i].id)} -{consumption[i].ammount}/t";
 			if (i < consumption.Length - 1)
-				costString += "\n";
+				costString += " ";
 		}
 		return costString;
 	}

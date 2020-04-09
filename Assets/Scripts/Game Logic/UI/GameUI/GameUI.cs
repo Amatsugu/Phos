@@ -28,20 +28,12 @@
 		_categoryPanel.OnButtonClicked += CategorySelected;
 		_buildPanel.OnHide += OnBuildPanelClosed;
 
-		SettupButtonCallbacks();
+		_buildPanel.infoPanel = _infoPanel;
 
 		GameEvents.OnGameReady += Init;
 	}
 
-	private void SettupButtonCallbacks()
-	{
-		_categoryPanel.tech.onClick.AddListener(() => CategorySelected(BuildingCategory.Tech));
-		_categoryPanel.gathering.onClick.AddListener(() => CategorySelected(BuildingCategory.Gathering));
-		_categoryPanel.production.onClick.AddListener(() => CategorySelected(BuildingCategory.Production));
-		_categoryPanel.structure.onClick.AddListener(() => CategorySelected(BuildingCategory.Structure));
-		_categoryPanel.military.onClick.AddListener(() => CategorySelected(BuildingCategory.Military));
-		_categoryPanel.defense.onClick.AddListener(() => CategorySelected(BuildingCategory.Defense));
-	}
+
 
 	private void Init()
 	{

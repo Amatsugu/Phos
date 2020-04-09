@@ -8,7 +8,8 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 {
 	public event System.Action OnClick;
 
-	public TMP_Text text;
+	public TMP_Text titleText;
+	public TMP_Text costText;
 	public Image icon;
 
 	protected override void Awake()
@@ -19,7 +20,7 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 
 	public void OnTick()
 	{
-		if (IsActive && isHovered)
+		if (IsActive() && isHovered)
 			Hover();
 	}
 
