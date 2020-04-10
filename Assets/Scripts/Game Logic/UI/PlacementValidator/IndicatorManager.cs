@@ -23,7 +23,7 @@ public class IndicatorManager
 	private int _nextEntityIndex = 0;
 	private List<string> _errors;
 
-	public IndicatorManager(EntityManager entityManager, float offset, TMP_Text floatingText)
+	public IndicatorManager(EntityManager entityManager, float offset, TMP_Text floatingText, int maxIndicator = 1024)
 	{
 		_EM = entityManager;
 		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
@@ -31,7 +31,7 @@ public class IndicatorManager
 		_renderedIndicators = new Dictionary<HexCoords, int>();
 		_errors = new List<string>();
 		_offset = new float3(0, offset, 0);
-		_entities = new NativeArray<Entity>(512, Allocator.Persistent, NativeArrayOptions.ClearMemory);
+		_entities = new NativeArray<Entity>(maxIndicator, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 		this.floatingText = floatingText;
 	}
 

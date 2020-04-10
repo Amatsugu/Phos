@@ -50,4 +50,11 @@
 	{
 		state = UIState.Idle;
 	}
+
+	protected override void Update()
+	{
+		base.Update();
+		if(!isHovered)
+			_buildPanel.UpdateState();
+	}
 }

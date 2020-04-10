@@ -101,9 +101,11 @@ public class NotificationsUI : UIHover
 		}
 	}
 
-	private void OnValidate()
+	protected override void OnValidate()
 	{
-		_notificationQueue = new Queue<PendingNotification>();
+		base.OnValidate();
+		if(Application.isPlaying)
+			_notificationQueue = new Queue<PendingNotification>();
 	}
 
 	protected override void Update()
