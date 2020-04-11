@@ -28,12 +28,12 @@ public class UnitAttackSystem : ComponentSystem
 	{
 		base.OnCreate();
 		GameEvents.OnMapLoaded += InitAttackSystem;
+		_castHits = new NativeList<int>(Allocator.Persistent);
 	}
 
 	protected void InitAttackSystem()
 	{
 		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
-		_castHits = new NativeList<int>(Allocator.Persistent);
 		var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerProjectile");
 		op.Completed += e =>
 		{
@@ -51,7 +51,6 @@ public class UnitAttackSystem : ComponentSystem
 
 		GameEvents.OnMapLoaded -= InitAttackSystem;
 		GameEvents.OnMapRegen += OnRegen;
-		GameEvents.OnMapDestroyed += Destroy;
 	}
 
 	private void OnRegen()
@@ -59,16 +58,11 @@ public class UnitAttackSystem : ComponentSystem
 		GameEvents.OnMapLoaded += InitAttackSystem;
 	}
 
-	protected void Destroy()
-	{
-		_castHits.Dispose();
-	}
-
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
 		GameEvents.OnMapRegen -= OnRegen;
-		GameEvents.OnMapDestroyed -= Destroy;
+		_castHits.Dispose();
 	}
 
 

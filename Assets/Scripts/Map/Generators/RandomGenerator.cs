@@ -22,6 +22,7 @@ public class RandomGenerator : MapGenerator
 	public float noiseScale = .5f;
 	public NoiseLayer[] noiseLayers;
 	public bool useSeed;
+	public bool useDecorators = true;
 #if DEBUG
 	public bool useSeedDev;
 #endif
@@ -55,7 +56,7 @@ public class RandomGenerator : MapGenerator
 			seed = startTime.GetHashCode();
 #endif
 		InitFilters();
-		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength)
+		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength, useDecorators: useDecorators)
 		{
 			seaLevel = seaLevel
 		};

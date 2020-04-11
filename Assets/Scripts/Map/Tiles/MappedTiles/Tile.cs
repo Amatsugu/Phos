@@ -26,6 +26,7 @@ public class Tile
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
 	protected bool _isRendered;
+	private bool _decorRendered;
 
 	public Tile(HexCoords coords, float height, TileEntity tInfo = null)
 	{
@@ -225,6 +226,9 @@ public class Tile
 	{
 		if (info.decorators.Length == 0)
 			return;
+		if (_decorRendered)
+			return;
+		_decorRendered = true;
 		_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent);
 		int lastIndex = 0;
 		for (int i = 0; i < info.decorators.Length; i++)

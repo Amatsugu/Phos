@@ -9,7 +9,6 @@ public class MapRenderer : MonoBehaviour
 	public MapGenerator generator;
 	public GameObject oceanPlane;
 	public MeshEntityRotatable line;
-	public bool batched;
 	public UnityEngine.UI.Image img;
 	public int mapRes = 4;
 

@@ -37,8 +37,9 @@ public class Map : IDisposable
 	public ConduitGraph conduitGraph;
 	public Dictionary<int, MobileUnit> units;
 	private int _nextId = 1;
+	public bool useDecorators;
 
-	public Map(int height, int width, int seed, float edgeLength = 1, bool setActive = true)
+	public Map(int height, int width, int seed, float edgeLength = 1, bool setActive = true, bool useDecorators = true)
 	{
 		this.width = width;
 		this.height = height;
@@ -52,6 +53,7 @@ public class Map : IDisposable
 		innerRadius = Mathf.Sqrt(3f) / 2f * tileEdgeLength;
 		shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
 		longDiagonal = 2 * tileEdgeLength;
+		this.useDecorators = useDecorators;
 		units = new Dictionary<int, MobileUnit>(500);
 		if(setActive)
 			ActiveMap = this;
