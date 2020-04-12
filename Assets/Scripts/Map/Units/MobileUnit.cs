@@ -7,7 +7,7 @@ using Unity.Transforms;
 
 using UnityEngine;
 
-public class MobileUnit
+public class MobileUnit : IMoveable, IAttackState
 {
 	public int id;
 	public MobileUnitEntity info;
@@ -81,7 +81,7 @@ public class MobileUnit
 		}
 	}
 
-	public void MoveTo(Vector3 pos)
+	public void MoveTo(float3 pos)
 	{
 		if (!Map.EM.HasComponent<Destination>(Entity))
 		{
@@ -120,5 +120,13 @@ public class MobileUnit
 		{
 			Debug.LogWarning(e);
 		}
+	}
+
+	public void SetState(UnitState.State state)
+	{
+		if (Map.EM.HasComponent<UnitState>(Entity))
+			Map.EM.SetComponentData(Entity, new UnitState { Value = state });
+		else
+			Map.EM.AddComponentData(Entity, new UnitState { Value = state });
 	}
 }
