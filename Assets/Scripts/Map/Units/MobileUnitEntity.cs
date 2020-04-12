@@ -38,6 +38,7 @@ public partial class MobileUnitEntity : MeshEntityRotatable
 			typeof(FactionId),
 			typeof(UnitClass),
 			typeof(UnitDomain),
+			typeof(UnitState),
 			typeof(PhysicsCollider),
 			typeof(PhysicsMass),
 			typeof(CenterOfMassOffset),

@@ -7,7 +7,7 @@ using Unity.Transforms;
 
 using UnityEngine;
 
-public class MobileUnit : IMoveable, IAttackState
+public class MobileUnit : IMoveable, IAttackState, IAttack, IGroundFire, IGuard, IRepairable
 {
 	public int id;
 	public MobileUnitEntity info;
@@ -128,5 +128,39 @@ public class MobileUnit : IMoveable, IAttackState
 			Map.EM.SetComponentData(Entity, new UnitState { Value = state });
 		else
 			Map.EM.AddComponentData(Entity, new UnitState { Value = state });
+	}
+
+	public void Attack(Entity target)
+	{
+		if (Map.EM.HasComponent<AttackTarget>(Entity))
+			Map.EM.SetComponentData(Entity, new AttackTarget { Value = target });
+		else
+			Map.EM.AddComponentData(Entity, new AttackTarget { Value = target });
+	}
+
+	public void GoundFire(HexCoords pos)
+	{
+		throw new NotImplementedException();
+	}
+
+	public void Guard(Entity target)
+	{
+		throw new NotImplementedException();
+	}
+
+	public void Repair()
+	{
+		var cost = GetRepairCost();
+		ResourceSystem.ConsumeResourses(cost);
+		Map.EM.SetComponentData(Entity, new Health
+		{
+			Value = info.maxHealth
+		});
+
+	}
+
+	public ResourceIndentifier[] GetRepairCost()
+	{
+		throw new NotImplementedException();
 	}
 }

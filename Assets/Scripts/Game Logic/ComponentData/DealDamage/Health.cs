@@ -6,6 +6,11 @@ public struct Health : IComponentData
 	public float maxHealth;
 }
 
+public struct HealthRegen : IComponentData
+{
+	public float Value;
+}
+
 public struct Damage : IComponentData
 {
 	public float Value;

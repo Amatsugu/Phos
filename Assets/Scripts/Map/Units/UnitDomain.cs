@@ -54,8 +54,8 @@ public struct UnitState : IComponentData
 {
 	public enum State
 	{
+		AttackOnSight,
 		HoldFire,
-		AttackOnSight
 	}
 
 	public State Value;

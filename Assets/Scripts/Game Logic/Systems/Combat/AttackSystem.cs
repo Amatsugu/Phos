@@ -113,8 +113,10 @@ public class UnitAttackSystem : ComponentSystem
 	private void SelectTarget()
 	{
 		int range = 20;
-		Entities.WithNone<Disabled, AttackTarget>().ForEach((Entity e, ref Translation t, ref FactionId faction, ref AttackSpeed atkSpeed) =>
+		Entities.WithNone<Disabled, AttackTarget>().ForEach((Entity e, ref Translation t, ref UnitState state, ref FactionId faction, ref AttackSpeed atkSpeed) =>
 		{
+			if (state.Value != UnitState.State.AttackOnSight)
+				return;
 			/*if (atkSpeed.NextAttackTime > Time.ElapsedTime)
 				return;*/
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
