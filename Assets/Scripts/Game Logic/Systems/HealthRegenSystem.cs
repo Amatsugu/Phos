@@ -3,7 +3,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-public class HealthRegen : JobComponentSystem
+public class HealthRegenSystem : JobComponentSystem
 {
 	private struct RegenJob : IJobChunk
 	{

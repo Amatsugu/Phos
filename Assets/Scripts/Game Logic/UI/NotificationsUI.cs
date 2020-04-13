@@ -100,13 +100,14 @@ public class NotificationsUI : UIHover
 			_notifsMin[i] = Instantiate(notifMin, rTransform);
 		}
 	}
-
+#if DEBUG
 	protected override void OnValidate()
 	{
 		base.OnValidate();
 		if(Application.isPlaying)
 			_notificationQueue = new Queue<PendingNotification>();
 	}
+#endif
 
 	protected override void Update()
 	{

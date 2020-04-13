@@ -11,12 +11,13 @@ public class UITabPanel : UIPanel
 	private ColorBlock[] _baseColors;
 	private ColorBlock[] _selectedColors;
 
-
+#if DEBUG
 	protected override void OnValidate()
 	{
 		base.OnValidate();
 		selectedTab = math.clamp(selectedTab, 0, tabs.Length - 1);
 	}
+#endif
 
 	protected override void Awake()
 	{

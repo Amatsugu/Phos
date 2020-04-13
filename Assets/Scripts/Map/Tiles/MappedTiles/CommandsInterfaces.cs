@@ -41,3 +41,10 @@ public interface IMoveable
 {
 	void MoveTo(float3 pos);
 }
+
+public interface IPartolable
+{
+	void AddWayPoint(HexCoords pos);
+
+	void ClearPatrol();
+}

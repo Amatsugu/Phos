@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,11 +23,13 @@ public class UIButtonHover : UIHover, ILayoutSelfController
 		_basePos.y = rTransform.localPosition.y;
 	}
 
+#if DEBUG
 	protected override void OnValidate()
 	{
 		base.OnValidate();
 		axis = math.normalizesafe(axis);
 	}
+#endif
 
 	protected override void Update()
 	{
@@ -41,4 +44,5 @@ public class UIButtonHover : UIHover, ILayoutSelfController
 		t = 1 - t;
 		rTransform.localPosition = _basePos + (axis * math.lerp(0, floatDist, t));
 	}
+
 }

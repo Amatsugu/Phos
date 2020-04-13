@@ -13,6 +13,7 @@ public class UIBuildPanel : UITabPanel
 	[HideInInspector]
 	public UIInfoPanel infoPanel;
 	public TMP_Text floatingText;
+	public UIInfoBanner banner;
 	public float inidcatorOffset = .5f;
 	public HQTileInfo hQTile;
 	public MeshEntityRotatable dropPod;
@@ -248,7 +249,7 @@ public class UIBuildPanel : UITabPanel
 			floatingText.gameObject.SetActive(false);
 			state = BuildState.Disabled;
 			_indicatorManager.HideAllIndicators();
-			//infoBanner.SetActive(false);
+			banner.SetActive(false);
 		}
 		_indicatorManager.UnSetAllIndicators();
 	}
