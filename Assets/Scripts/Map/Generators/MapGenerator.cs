@@ -2,12 +2,13 @@
 
 public abstract class MapGenerator : ScriptableObject
 {
+	[Header("Shape")]
 	public Vector2 Size = new Vector2(20, 20);
 	public TileMapper tileMapper;
 	public float seaLevel = 4;
 	public float edgeLength = 1;
+	[Header("Sub Generators")]
 	public FeatureGenerator[] featureGenerators;
-	public bool useJobs = true;
 
 	[HideInInspector]
 	public bool Regen;

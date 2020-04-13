@@ -14,20 +14,22 @@ public class RandomGenerator : MapGenerator
 		public bool useFirstLayerAsMask;
 		public NoiseSettings noiseSettings;
 	}
-
+	[Header("Map Border")]
 	public int borderSize = 16;
 	public AnimationCurve borderCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-	public BiomePainter biomePainter;
-
+	[Header("Noise")]
 	public float noiseScale = .5f;
 	public NoiseLayer[] noiseLayers;
+	public BiomePainter biomePainter;
+	[Header("Seed")]
 	public bool useSeed;
-	public bool useDecorators = true;
 #if DEBUG
 	public bool useSeedDev;
 #endif
 	public int seed = 11;
+	[Header("Misc")]
 	public float landSeaRatio = .4f;
+	public bool useDecorators = true;
 
 	[HideInInspector]
 	public bool biomeFold;
