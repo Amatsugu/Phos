@@ -6,6 +6,24 @@ using System.Threading.Tasks;
 using Unity.Entities;
 using Unity.Mathematics;
 
+public enum CommandActions
+{
+	Move = 0,
+	Attack = 1,
+	Deconstruct = 2,
+	Guard = 4,
+	GroundFire = 8,
+	Repair = 16,
+	Patrol = 32,
+	AttackState = 64, 
+	Halt = 128
+}
+
+public interface ICommandable
+{
+	CommandActions GetSupportedCommands();
+}
+
 public interface IDeconstructable
 {
 	void Deconstruct();
@@ -47,4 +65,9 @@ public interface IPartolable
 	void AddWayPoint(HexCoords pos);
 
 	void ClearPatrol();
+}
+
+public interface IHaltable
+{
+	void Halt();
 }

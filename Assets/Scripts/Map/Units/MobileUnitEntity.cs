@@ -8,7 +8,7 @@ using Unity.Physics;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
-public partial class MobileUnitEntity : MeshEntityRotatable
+public class MobileUnitEntity : MeshEntityRotatable
 {
 	[Header("Stats")]
 	public float moveSpeed = 1;

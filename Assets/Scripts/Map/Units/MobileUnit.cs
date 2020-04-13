@@ -7,7 +7,7 @@ using Unity.Transforms;
 
 using UnityEngine;
 
-public class MobileUnit : IMoveable, IAttackState, IAttack, IGroundFire, IGuard, IRepairable
+public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroundFire, IGuard, IRepairable, IHaltable
 {
 	public int id;
 	public MobileUnitEntity info;
@@ -32,6 +32,10 @@ public class MobileUnit : IMoveable, IAttackState, IAttack, IGroundFire, IGuard,
 	private Faction _faction;
 	private NativeArray<Entity> _healhBar;
 
+#if DEBUG
+	private static bool hasVerified;
+#endif
+
 	public MobileUnit(int id, MobileUnitEntity info, Tile tile, Faction faction)
 	{
 		this.id = id;
@@ -39,7 +43,36 @@ public class MobileUnit : IMoveable, IAttackState, IAttack, IGroundFire, IGuard,
 		_position = tile.SurfacePoint;
 		Coords = tile.Coords;
 		_faction = faction;
+#if DEBUG
+		if(!hasVerified)
+			ValidateCommands();
+#endif
 	}
+
+#if DEBUG
+	void ValidateCommands()
+	{
+		Debug.Log(GetSupportedCommands());
+		ValidateCommad<IAttack>(CommandActions.Attack);	
+		ValidateCommad<IMoveable>(CommandActions.Move);	
+		ValidateCommad<IGuard>(CommandActions.Guard);	
+		ValidateCommad<IAttackState>(CommandActions.AttackState);	
+		ValidateCommad<IPartolable>(CommandActions.Patrol);	
+		ValidateCommad<IRepairable>(CommandActions.Repair);
+		ValidateCommad<IDeconstructable>(CommandActions.Deconstruct);
+		ValidateCommad<IHaltable>(CommandActions.Halt);
+		ValidateCommad<IGroundFire>(CommandActions.GroundFire);
+		hasVerified = true;
+	}
+
+	void ValidateCommad<T>(CommandActions command)
+	{
+		var cmds = GetSupportedCommands();
+		if (cmds.HasFlag(command) && !(this is T))
+			Debug.LogError($"<b>{GetType()}</b> reports command support for <b>{command}</b> but does not implement <b>{typeof(T).Name}</b>");
+	}
+
+#endif
 
 	public Entity Render()
 	{
@@ -162,5 +195,20 @@ public class MobileUnit : IMoveable, IAttackState, IAttack, IGroundFire, IGuard,
 	public ResourceIndentifier[] GetRepairCost()
 	{
 		throw new NotImplementedException();
+	}
+
+	public void Halt()
+	{
+
+	}
+
+	public CommandActions GetSupportedCommands()
+	{
+		return CommandActions.Attack |
+			CommandActions.AttackState |
+			CommandActions.Move |
+			CommandActions.Guard |
+			CommandActions.GroundFire |
+			CommandActions.Repair;
 	}
 }
