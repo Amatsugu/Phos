@@ -22,6 +22,8 @@ public enum CommandActions
 public interface ICommandable
 {
 	CommandActions GetSupportedCommands();
+
+	string GetName();
 }
 
 public interface IDeconstructable

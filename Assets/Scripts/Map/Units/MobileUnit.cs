@@ -211,4 +211,6 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 			CommandActions.GroundFire |
 			CommandActions.Repair;
 	}
+
+	public string GetName() => info.name;
 }

@@ -37,10 +37,14 @@ public class GameUI : UIHover
 		base.Awake();
 		_castHits = new NativeList<int>(Allocator.Persistent);
 		selectionBox.gameObject.SetActive(false);
-		_infoPanel = GetComponentInChildren<UIInfoPanel>();
-		_buildPanel = GetComponentInChildren<UIBuildPanel>();
-		_actionsPanel = GetComponentInChildren<UIActionsPanel>();
-		_categoryPanel = GetComponentInChildren<UICategoryPanel>();
+		_infoPanel = GetComponentInChildren<UIInfoPanel>(true);
+		_infoPanel.enabled = true;
+		_buildPanel = GetComponentInChildren<UIBuildPanel>(true);
+		_buildPanel.enabled = true;
+		_actionsPanel = GetComponentInChildren<UIActionsPanel>(true);
+		_actionsPanel.enabled = true;
+		_categoryPanel = GetComponentInChildren<UICategoryPanel>(true);
+		_categoryPanel.enabled = true;
 
 		_categoryPanel.OnButtonClicked += CategorySelected;
 		_buildPanel.OnHide += OnBuildPanelClosed;

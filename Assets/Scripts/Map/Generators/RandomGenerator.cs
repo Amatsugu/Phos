@@ -62,6 +62,7 @@ public class RandomGenerator : MapGenerator
 		{
 			seaLevel = seaLevel
 		};
+		//Generate heightmap
 		var heightMap = new float[map.totalWidth * map.totalHeight];
 		var landToSeaRatio = 0f;
 		float min = float.MaxValue, max = float.MinValue;
@@ -87,17 +88,19 @@ public class RandomGenerator : MapGenerator
 			if (reject < 10)
 				goto Start;
 			else
-				UnityEngine.Debug.LogWarning("Unalble to find satisfactory level");
+				Debug.LogWarning("Unalble to find satisfactory level");
 		}
-		UnityEngine.Debug.Log($"Generate HightMap... {(DateTime.Now - startTime).TotalMilliseconds}ms {reject} Rejects");
+		Debug.Log($"Generated HightMap... {(DateTime.Now - startTime).TotalMilliseconds}ms {reject} Rejects");
 		startTime = DateTime.Now;
+		//Generate Temp map
 		var tempMap = biomePainter.GetTempMap(map.totalWidth, map.totalHeight, heightMap, min, max, seaLevel);
-		UnityEngine.Debug.Log($"Generate Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		Debug.Log($"Generated Temp map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		startTime = DateTime.Now;
+		//Generate Moisture map
 		var moistureMap = biomePainter.GetMoistureMap(map.totalWidth, map.totalHeight, noiseFilters[0], noiseScale);
-		UnityEngine.Debug.Log($"Generate Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
-		//SaveBiomeMaps(tempMap, moistureMap, map.totalWidth, map.totalHeight);
+		Debug.Log($"Generated Mouseture map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
 		startTime = DateTime.Now;
+		//Assign Tiles
 		for (int z = 0; z < map.totalWidth; z++)
 		{
 			for (int x = 0; x < map.totalHeight; x++)
@@ -109,8 +112,8 @@ public class RandomGenerator : MapGenerator
 				map[coord] = tInfo.CreateTile(coord, height).SetBiome(biomeId, moistureMap[i], tempMap[i]);
 			}
 		}
-		UnityEngine.Debug.Log($"Paint map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
-		UnityEngine.Debug.Log($"Done... {(DateTime.Now - totalStartTime).TotalMilliseconds}ms");
+		Debug.Log($"Painted map... {(DateTime.Now - startTime).TotalMilliseconds}ms");
+		Debug.Log($"Done... {(DateTime.Now - totalStartTime).TotalMilliseconds}ms");
 		return map;
 	}
 
@@ -151,6 +154,7 @@ public class RandomGenerator : MapGenerator
 		float elevation = 0;
 		float firstLayer = 0;
 		var point = new Vector3(x, 0, z) / noiseScale;
+		//Sample noise filters
 		if (noiseFilters.Length > 0)
 		{
 			firstLayer = noiseFilters[0].Evaluate(point);
@@ -166,6 +170,7 @@ public class RandomGenerator : MapGenerator
 				elevation += noiseFilters[i].Evaluate(point) * mask;
 			}
 		}
+		//Apply border
 		var borderT = 1f;
 		var w = (int)Size.x * MapChunk.SIZE;
 		var h = (int)Size.y * MapChunk.SIZE;
