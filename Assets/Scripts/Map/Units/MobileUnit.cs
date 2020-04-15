@@ -212,5 +212,5 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 			CommandActions.Repair;
 	}
 
-	public string GetName() => info.name;
+	public ScriptableObject GetInfo() => info;
 }

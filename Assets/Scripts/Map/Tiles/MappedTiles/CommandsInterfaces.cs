@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 
 public enum CommandActions
 {
@@ -23,7 +24,7 @@ public interface ICommandable
 {
 	CommandActions GetSupportedCommands();
 
-	string GetName();
+	ScriptableObject GetInfo();
 }
 
 public interface IDeconstructable
