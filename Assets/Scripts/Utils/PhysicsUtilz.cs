@@ -28,4 +28,30 @@ public static class PhysicsUtilz
 
 		}, ref castHits);
 	}
+
+	public static bool GetTileFromRay(this BuildPhysicsWorld world, UnityEngine.Ray ray, float dist, CollisionFilter filter, out HexCoords tilePos)
+	{
+		if(world.PhysicsWorld.CastRay(new RaycastInput
+		{
+			Start = ray.origin,
+			End = ray.GetPoint(dist),
+			Filter = filter
+		}, out var hit))
+		{
+			tilePos = HexCoords.FromPosition(hit.Position);
+			return true;
+		}
+		tilePos = default;
+		return false;
+	}
+
+	public static bool GetTileFromRay(this BuildPhysicsWorld world, UnityEngine.Ray ray, float dist, out HexCoords tilePos)
+	{
+		return world.GetTileFromRay(ray, dist, new Unity.Physics.CollisionFilter
+		{
+			GroupIndex = 0,
+			BelongsTo = (1u << (int)Faction.Tile),
+			CollidesWith = (1u << (int)Faction.Tile)
+		}, out tilePos);
+	}
 }

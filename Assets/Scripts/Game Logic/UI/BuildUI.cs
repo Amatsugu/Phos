@@ -76,6 +76,7 @@ public class BuildUI : MonoBehaviour
 	private List<string> _errors;
 	private BuildState _prevState;
 	private IndicatorManager _indicatorManager;
+	private BuildPhysicsWorld _physWorld;
 
 	public enum BuildState
 	{
@@ -92,6 +93,7 @@ public class BuildUI : MonoBehaviour
 		GameEvents.OnGameReady += Init;
 		enabled = false;
 		GameEvents.OnMapRegen += OnRegen;
+		_physWorld = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>();
 	}
 
 	private void Init()
@@ -198,32 +200,12 @@ public class BuildUI : MonoBehaviour
 			floatingText.gameObject.SetActive(false);
 		}
 		Tile selectedTile = null;
-		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
+		var col = _physWorld.PhysicsWorld;
 		var ray = _cam.ScreenPointToRay(mousePos);
-		if (col.CollisionWorld.CastRay(new Unity.Physics.RaycastInput
-		{
-			Start = ray.origin,
-			End = ray.GetPoint(_cam.transform.position.y * 2),
-			Filter = new Unity.Physics.CollisionFilter
-			{
-				GroupIndex = 0,
-				BelongsTo = (1u << (int)Faction.Tile),
-				CollidesWith = (1u << (int)Faction.Tile)
-			}
-		}, out var hit))
-		{
-			if (hit.RigidBodyIndex != -1)
-			{
-				var e = col.Bodies[hit.RigidBodyIndex].Entity;
-				if (Map.EM.HasComponent<HexPosition>(e))
-					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).Value];
-			}
-		}
+		var hasTile = _physWorld.GetTileFromRay(ray, _cam.transform.position.y * 2, out var pos);
+		if (hasTile)
+			selectedTile = Map.ActiveMap[pos];
 #if DEBUG
-		Debug.DrawRay(hit.Position, hit.SurfaceNormal * 5, Color.cyan);
-		Debug.DrawRay(hit.Position, Vector3.right, Color.red);
-		Debug.DrawRay(hit.Position, Vector3.forward, Color.blue);
-		Debug.DrawRay(hit.Position, Vector3.up, Color.green);
 		Debug.DrawLine(ray.origin, ray.GetPoint(_cam.transform.position.y * 2));
 #endif
 		if (selectedTile == null)

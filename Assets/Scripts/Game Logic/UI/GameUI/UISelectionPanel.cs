@@ -10,6 +10,8 @@ public class UISelectionPanel : UIPanel
 {
 	public RectTransform selectionIconPrefab;
 	public Transform selectionBox;
+	[HideInInspector]
+	public UIActionsPanel actionsPanel;
 
 	private Dictionary<int, int> _selectionGroups;
 	private List<List<ICommandable>> _selectionItems;
@@ -19,6 +21,7 @@ public class UISelectionPanel : UIPanel
 	private NativeList<int> _castHits;
 	private Tile _start;
 	private Tile _end;
+	private List<ICommandable> _selection;
 
 
 
@@ -26,6 +29,7 @@ public class UISelectionPanel : UIPanel
 	{
 		base.Awake();
 		_castHits = new NativeList<int>(Allocator.Persistent);
+		_selection = new List<ICommandable>();
 		selectionBox.gameObject.SetActive(false);
 		_selectionGroups = new Dictionary<int, int>();
 		_selectionItems = new List<List<ICommandable>>();
@@ -54,7 +58,6 @@ public class UISelectionPanel : UIPanel
 				_selectionGroupInfo.Add(info);
 			}
 		}
-
 		Show();
 	}
 
@@ -63,7 +66,6 @@ public class UISelectionPanel : UIPanel
 		for (int i = 0; i < _selectionItems.Count; i++)
 		{
 			var unitInfo = (MobileUnitEntity)_selectionGroupInfo[i];
-
 		}
 	}
 
@@ -72,7 +74,6 @@ public class UISelectionPanel : UIPanel
 		for (int i = 0; i < _selectionItems.Count; i++)
 		{
 			var tileInfo = (TileEntity)_selectionGroupInfo[i];
-
 		}
 	}
 
@@ -80,23 +81,24 @@ public class UISelectionPanel : UIPanel
 	{
 		var mousePos = Input.mousePosition;
 		var cam = GameRegistry.Camera;
+		var ray = cam.ScreenPointToRay(mousePos);
+		var hasTile = _buildPhysicsWorld.GetTileFromRay(ray, cam.transform.position.y * 2, out var pos);
+		if (!hasTile)
+			return;
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 		{
-			var ray = cam.ScreenPointToRay(mousePos);
-			_start = Map.ActiveMap.GetTileFromRay(ray);
+			_start = Map.ActiveMap[pos];
 		}
 		if (Input.GetKey(KeyCode.Mouse0))
 		{
-			var ray = cam.ScreenPointToRay(mousePos);
-			_end = Map.ActiveMap.GetTileFromRay(ray);
+			_end = Map.ActiveMap[pos];
 			if (_start != _end && _start != null && _end != null)
 				DisplaySelectionRect();
 		}
 		if (Input.GetKeyUp(KeyCode.Mouse0))
 		{
 			selectionBox.gameObject.SetActive(false);
-			var ray = cam.ScreenPointToRay(mousePos);
-			_end = Map.ActiveMap.GetTileFromRay(ray);
+			_end = Map.ActiveMap[pos];
 			if (_start != null && _end != null)
 			{
 				var bounds = MathUtils.PhysicsBounds(_start.SurfacePoint, _end.SurfacePoint);
@@ -111,16 +113,20 @@ public class UISelectionPanel : UIPanel
 				}, ref _castHits);
 				if (_castHits.Length > 0)
 				{
-					var selection = new List<MobileUnit>();
+					_selection.Clear();
 					for (int i = 0; i < _castHits.Length; i++)
 					{
 						var entity = _buildPhysicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
 						if (Map.EM.HasComponent<UnitId>(entity))
-							selection.Add(Map.ActiveMap.units[Map.EM.GetComponentData<UnitId>(entity).Value]);
+						{
+							var e = Map.ActiveMap.units[Map.EM.GetComponentData<UnitId>(entity).Value];
+							_selection.Add(e);
+							actionsPanel.ShowButtons(e);
+						}
 					}
-					//_actionsPanel.ShowApplicableButtons(selection.ToArray());
+					actionsPanel.Show();
+					//actionsPanel.ShowApplicableButtons(_selection);
 				}
-				//_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
 			}
 		}
 	}

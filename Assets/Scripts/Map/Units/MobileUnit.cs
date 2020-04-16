@@ -128,6 +128,11 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 		Map.EM.SetComponentData(Entity, new Destination { Value = pos });
 	}
 
+	public int GetSize()
+	{
+		return info.size;
+	}
+
 	public virtual void Die()
 	{
 		Map.ActiveMap.units.Remove(id);

@@ -61,6 +61,8 @@ public interface IAttackState
 public interface IMoveable
 {
 	void MoveTo(float3 pos);
+
+	int GetSize();
 }
 
 public interface IPartolable

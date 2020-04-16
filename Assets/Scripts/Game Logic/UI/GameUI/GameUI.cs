@@ -47,6 +47,7 @@ public class GameUI : UIHover
 		_buildPanel.OnHide += OnBuildPanelClosed;
 
 		_buildPanel.infoPanel = _infoPanel;
+		_selectionPanel.actionsPanel = _actionsPanel;
 
 		GameEvents.OnGameReady += Init;
 	}

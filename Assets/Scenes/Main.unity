@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 317.947, g: 364.88358, b: 390.8411, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3532,7 +3532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
-  generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
+  generator: {fileID: 11400000, guid: 7ea0b8ec61a971e4d9ca4e0f301b4639, type: 2}
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
   line: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
   img: {fileID: 0}
@@ -11883,6 +11883,7 @@ MonoBehaviour:
   hideOnBlur: 1
   hideInEditor: 0
   selectionIconPrefab: {fileID: 0}
+  selectionBox: {fileID: 0}
 --- !u!1 &711993246
 GameObject:
   m_ObjectHideFlags: 0
@@ -15126,7 +15127,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1054516753
+--- !u!114 &1063467356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15147,13 +15148,13 @@ MonoBehaviour:
     max: 360
   skyIntensityMode:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 1
   exposure:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 14.5
   multiplier:
     m_OverrideState: 0
-    m_Value: 1
+    m_Value: 4060.4
     min: 0
   upperHemisphereLuxValue:
     m_OverrideState: 0
@@ -15164,7 +15165,7 @@ MonoBehaviour:
     m_Value: {x: 0, y: 0, z: 0}
   desiredLuxValue:
     m_OverrideState: 0
-    m_Value: 20000
+    m_Value: 2258
   updateMode:
     m_OverrideState: 0
     m_Value: 0
@@ -16111,7 +16112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Profile: {fileID: 11400000, guid: e005348d1405c7d4cb06990d11fee520, type: 2}
   m_StaticLightingSkyUniqueID: 1
-  m_SkySettings: {fileID: 1054516753}
+  m_SkySettings: {fileID: 1063467356}
   m_SkySettingsFromProfile: {fileID: 728660333024492319, guid: e005348d1405c7d4cb06990d11fee520,
     type: 2}
 --- !u!4 &1128826315
@@ -25646,7 +25647,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHovered: 0
   rTransform: {fileID: 1802015228}
-  selectionBox: {fileID: 156281963}
 --- !u!1 &1805093805
 GameObject:
   m_ObjectHideFlags: 0
