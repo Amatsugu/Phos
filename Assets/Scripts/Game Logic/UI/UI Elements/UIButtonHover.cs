@@ -6,19 +6,13 @@ using UnityEngine.UI;
 
 public class UIButtonHover : UIHover
 {
-	public float floatDist = -5;
-	public Vector3 axis;
-	public float speed = 1;
+	public float floatDist = 4;
+	public Vector3 axis = Vector3.up;
+	public float speed = 10;
 
 	private float _curTime;
 	private Vector3 _basePos;
 	private Vector3 _lastPos;
-
-	protected override void OnRectTransformDimensionsChange()
-	{
-		_basePos.x = rTransform.localPosition.x;
-		base.OnRectTransformDimensionsChange();
-	}
 
 #if DEBUG
 	protected override void OnValidate()

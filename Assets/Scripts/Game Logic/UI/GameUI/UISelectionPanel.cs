@@ -8,7 +8,8 @@ using UnityEngine;
 
 public class UISelectionPanel : UIPanel
 {
-	public RectTransform selectionIconPrefab;
+	public UISelectedEntity selectionIconPrefab;
+	public RectTransform iconGrid;
 	public Transform selectionBox;
 	[HideInInspector]
 	public UIActionsPanel actionsPanel;
@@ -22,6 +23,7 @@ public class UISelectionPanel : UIPanel
 	private Tile _start;
 	private Tile _end;
 	private List<ICommandable> _selection;
+	private List<UISelectedEntity> _activeIcons;
 
 
 
@@ -34,19 +36,21 @@ public class UISelectionPanel : UIPanel
 		_selectionGroups = new Dictionary<int, int>();
 		_selectionItems = new List<List<ICommandable>>();
 		_selectionGroupInfo = new List<ScriptableObject>();
+		_buildPhysicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
+		_activeIcons = new List<UISelectedEntity>();
 	}
 
 	protected override void Start()
 	{
 		base.Start();
-		_buildPhysicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
 	}
 
-	public void Show(ICommandable[] units)
+	public void Show(List<ICommandable> units)
 	{
 		_selectionGroups.Clear();
 		_selectionItems.Clear();
-		for (int i = 0; i < units.Length; i++)
+		_selectionGroupInfo.Clear();
+		for (int i = 0; i < units.Count; i++)
 		{
 			var info = units[i].GetInfo();
 			if (_selectionGroups.ContainsKey(info.GetInstanceID()))
@@ -58,7 +62,23 @@ public class UISelectionPanel : UIPanel
 				_selectionGroupInfo.Add(info);
 			}
 		}
+		if (units[0] is MobileUnit)
+			RenderUnits();
+		else
+			RenderTiles();
 		Show();
+		actionsPanel.Show();
+		Debug.Log("selection open");
+	}
+
+	public override void Hide()
+	{
+		base.Hide();
+		_start = _end = null;
+		_selection.Clear();
+		_selectionGroups.Clear();
+		_selectionItems.Clear();
+		_selectionGroupInfo.Clear();
 	}
 
 	private void RenderUnits()
@@ -66,6 +86,11 @@ public class UISelectionPanel : UIPanel
 		for (int i = 0; i < _selectionItems.Count; i++)
 		{
 			var unitInfo = (MobileUnitEntity)_selectionGroupInfo[i];
+			if(_activeIcons.Count <= i)
+				_activeIcons.Add(Instantiate(selectionIconPrefab, iconGrid, false));
+			_activeIcons[i].nameText.SetText(unitInfo.name);
+			_activeIcons[i].icon.sprite = default; //TODO: Add Icon
+			_activeIcons[i].countText.SetText(_selectionItems[i].Count.ToString());
 		}
 	}
 
@@ -73,7 +98,12 @@ public class UISelectionPanel : UIPanel
 	{
 		for (int i = 0; i < _selectionItems.Count; i++)
 		{
-			var tileInfo = (TileEntity)_selectionGroupInfo[i];
+			var tileInfo = (BuildingTileEntity)_selectionGroupInfo[i];
+			if (_activeIcons.Count <= i)
+				_activeIcons.Add(Instantiate(selectionIconPrefab, iconGrid, false));
+			_activeIcons[i].nameText.SetText(tileInfo.name);
+			_activeIcons[i].icon.sprite = tileInfo.icon; 
+			_activeIcons[i].countText.SetText(_selectionItems[i].Count.ToString());
 		}
 	}
 
@@ -85,6 +115,11 @@ public class UISelectionPanel : UIPanel
 		var hasTile = _buildPhysicsWorld.GetTileFromRay(ray, cam.transform.position.y * 2, out var pos);
 		if (!hasTile)
 			return;
+		if (Input.GetKeyUp(KeyCode.Escape))
+		{
+			Hide();
+			return;
+		}
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 		{
 			_start = Map.ActiveMap[pos];
@@ -101,6 +136,7 @@ public class UISelectionPanel : UIPanel
 			_end = Map.ActiveMap[pos];
 			if (_start != null && _end != null)
 			{
+				_castHits.Clear();
 				var bounds = MathUtils.PhysicsBounds(_start.SurfacePoint, _end.SurfacePoint);
 				bounds.Max.y = 50;
 				bounds.Min.y = 0;
@@ -111,9 +147,10 @@ public class UISelectionPanel : UIPanel
 					BelongsTo = 1u << (int)Faction.Player,
 					CollidesWith = 1u << (int)Faction.Unit
 				}, ref _castHits);
+				_selection.Clear();
+				actionsPanel.ResetSelection();
 				if (_castHits.Length > 0)
 				{
-					_selection.Clear();
 					for (int i = 0; i < _castHits.Length; i++)
 					{
 						var entity = _buildPhysicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
@@ -121,12 +158,14 @@ public class UISelectionPanel : UIPanel
 						{
 							var e = Map.ActiveMap.units[Map.EM.GetComponentData<UnitId>(entity).Value];
 							_selection.Add(e);
-							actionsPanel.ShowButtons(e);
+							actionsPanel.AddSelectedEntity(e);
 						}
 					}
-					actionsPanel.Show();
-					//actionsPanel.ShowApplicableButtons(_selection);
 				}
+				if (_selection.Count > 0)
+					Show(_selection);
+				else
+					Hide();
 			}
 		}
 	}

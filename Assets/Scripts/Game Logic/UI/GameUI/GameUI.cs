@@ -23,6 +23,7 @@ public class GameUI : UIHover
 	{
 		Disabled,
 		Idle,
+		HQPlacement,
 		PlaceBuilding,
 		PlaceUnit,
 		BuildingsSelected,
@@ -43,18 +44,26 @@ public class GameUI : UIHover
 		_selectionPanel = GetComponentInChildren<UISelectionPanel>(true);
 		_selectionPanel.gameObject.SetActive(true);
 
-		_categoryPanel.OnButtonClicked += CategorySelected;
-		_buildPanel.OnHide += OnBuildPanelClosed;
 
-		_buildPanel.infoPanel = _infoPanel;
 		_selectionPanel.actionsPanel = _actionsPanel;
+		_buildPanel.infoPanel = _infoPanel;
+
+		_categoryPanel.OnButtonClicked += CategorySelected;
 
 		GameEvents.OnGameReady += Init;
+		GameEvents.OnHQPlaced += OnHQPlaced;
+	}
+
+	private void OnHQPlaced()
+	{
+		state = UIState.Idle;
 	}
 
 	private void Init()
 	{
-		state = UIState.PlaceBuilding;
+		state = UIState.HQPlacement;
+		_selectionPanel.OnHide += OnSelectionClosed;
+		_buildPanel.OnHide += OnBuildPanelClosed;
 	}
 
 	private void CategorySelected(BuildingCategory category)
@@ -65,16 +74,39 @@ public class GameUI : UIHover
 
 	private void OnBuildPanelClosed()
 	{
+		if (state == UIState.HQPlacement)
+			return;
 		state = UIState.Idle;
+	}
+
+	private void OnSelectionClosed()
+	{
+		if (state == UIState.HQPlacement)
+			return;
+		state = UIState.Idle;
+		Debug.Log("Selection Closed");
+		_actionsPanel.Hide();
 	}
 
 	protected override void Update()
 	{
 		base.Update();
-		if (!isHovered)
-			_buildPanel.UpdateState();
-		if (state == UIState.Idle)
-			_selectionPanel.UpdateState();
+		if (isHovered)
+			return;
+		switch(state)
+		{
+			case UIState.Idle:
+				_selectionPanel.UpdateState();
+				_actionsPanel.UpdateState();
+				break;
+			case UIState.PlaceBuilding:
+				_buildPanel.UpdateState();
+				break;
+			case UIState.HQPlacement:
+				_buildPanel.UpdateState();
+				break;
+		}
+		
 	}
 
 

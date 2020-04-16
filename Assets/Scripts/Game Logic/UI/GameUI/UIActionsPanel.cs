@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.Entities;
 using Unity.Physics.Systems;
 using UnityEngine;
 using UnityEngine.Events;
@@ -50,15 +51,10 @@ public class UIActionsPanel : UIPanel
 	{
 		base.Awake();
 		_activeButtons = new HashSet<Button>();
-		attackCommand.gameObject.SetActive(false);
-		moveCommand.gameObject.SetActive(false);
-		attackStateCommand.gameObject.SetActive(false);
-		groundFireCommand.gameObject.SetActive(false);
-		guardCommand.gameObject.SetActive(false);
-		repairCommand.gameObject.SetActive(false);
-		deconstructCommand.gameObject.SetActive(false);
-		patrolCommand.gameObject.SetActive(false);
-		haltCommand.gameObject.SetActive(false);
+		HideAllButtons();
+
+		_physicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
+		_selectedEntities = new List<ICommandable>();
 		SetupCallbacks();
 	}
 
@@ -83,8 +79,11 @@ public class UIActionsPanel : UIPanel
 
 	private void SetState(CommandActions command)
 	{
+		if (!IsOpen)
+			return;
 		_actionState = ActionState.IssueCommand;
 		_selectedCommand = command;
+		Debug.Log($"State: {command}");
 	}
 
 	public void UpdateState()
@@ -147,6 +146,8 @@ public class UIActionsPanel : UIPanel
 
 	private void UpdateMove()
 	{
+		if (!Input.GetKeyUp(KeyCode.Mouse1))
+			return;
 		GetTile();
 		if (_selectedTile.info.isTraverseable)
 			IssueMoveOrder(_selectedTile);
@@ -160,7 +161,7 @@ public class UIActionsPanel : UIPanel
 			tilesNeeded += HexCoords.GetTileCount((_selectedEntities[i] as IMoveable).GetSize());
 		}
 		var r = HexCoords.CalculateRadius(tilesNeeded) + 1;
-		var orderedUnits = _selectedEntities.OrderBy(u => ((IMoveable)u).GetSize()).Reverse().ToArray();
+		var orderedUnits = _selectedEntities.OrderBy(u => ((IMoveable)u).GetSize()).Reverse().Select(u => u as IMoveable).ToArray();
 
 		var occupiedSet = new HashSet<HexCoords>();
 		var openSet = new HashSet<HexCoords>();
@@ -177,6 +178,7 @@ public class UIActionsPanel : UIPanel
 				{
 					for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
+					orderedUnits[i].MoveTo(Map.ActiveMap[openTiles[j]].SurfacePoint);
 					/*var order = new MoveOrder
 					{
 						unit = orderedUnits[i],
@@ -251,59 +253,74 @@ public class UIActionsPanel : UIPanel
 	public override void Show()
 	{
 		base.Show();
-		foreach (var item in _activeButtons)
-		{
-			item.gameObject.SetActive(false);
-			//item.onClick.RemoveAllListeners();
-		}
-		Show();
+		SetState(CommandActions.Move);
 	}
 
-	public void ShowButtons(ICommandable entity)
+	public void ResetSelection()
 	{
+		_selectedEntities.Clear();
+	}
+
+	public void AddSelectedEntity(ICommandable entity)
+	{
+		_selectedEntities.Add(entity);
 		var supportedCommands = entity.GetSupportedCommands();
 		if (supportedCommands.HasFlag(CommandActions.Attack))
-			Showbutton(attackCommand, () => { });
+			Showbutton(attackCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Move))
-				Showbutton(moveCommand, () => { });
+				Showbutton(moveCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.AttackState))
-				Showbutton(attackStateCommand, () => { });
+				Showbutton(attackStateCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Guard))
-			Showbutton(guardCommand, () => { });
+			Showbutton(guardCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Repair))
-			Showbutton(repairCommand, () => { });
+			Showbutton(repairCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Deconstruct))
-			Showbutton(deconstructCommand, () => { });
+			Showbutton(deconstructCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.GroundFire))
-			Showbutton(groundFireCommand, () => { });
+			Showbutton(groundFireCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Patrol))
-			Showbutton(patrolCommand, () => { });
+			Showbutton(patrolCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Halt))
-			Showbutton(haltCommand, () => { });
+			Showbutton(haltCommand);
 	}
 
-	private void Showbutton(Button button, UnityAction callback)
+	private void Showbutton(Button button)
 	{
 		if (!_activeButtons.Contains(button))
+		{
 			button.gameObject.SetActive(true);
-		button.onClick.AddListener(callback);
+			_activeButtons.Add(button);
+		}
 	}
 
 	public override void Hide()
 	{
 		base.Hide();
-		foreach (var item in _activeButtons)
-		{
-			item.gameObject.SetActive(false);
-			item.onClick.RemoveAllListeners();
-		}
+		HideAllButtons();
+		_activeButtons.Clear();
+		_selectedEntities.Clear();
+		_actionState = ActionState.Disabled;
+	}
+
+	private void HideAllButtons()
+	{
+		attackCommand.gameObject.SetActive(false);
+		moveCommand.gameObject.SetActive(false);
+		attackStateCommand.gameObject.SetActive(false);
+		groundFireCommand.gameObject.SetActive(false);
+		guardCommand.gameObject.SetActive(false);
+		repairCommand.gameObject.SetActive(false);
+		deconstructCommand.gameObject.SetActive(false);
+		patrolCommand.gameObject.SetActive(false);
+		haltCommand.gameObject.SetActive(false);
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
@@ -47,13 +47,13 @@ public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 			BelongsTo = (1u << (int)Faction.Tile),
 			GroupIndex = 0
 		};
-#if false
+#if true
 		var verts = new NativeArray<float3>(mesh.vertices.Select(v => (float3)v).ToArray(), Allocator.Temp);
-		var collider = ConvexCollider.Create(default, new ConvexHullGenerationParameters
+		var collider = ConvexCollider.Create(verts, new ConvexHullGenerationParameters
 		{
 			BevelRadius = 0
-		}, CollisionFilter.Default, Unity.Physics.Material.Default); ;
-		//verts.Dispose();
+		}, colFilter, physMat); ;
+		verts.Dispose();
 #else
 		var collider = BoxCollider.Create(new BoxGeometry
 		{
