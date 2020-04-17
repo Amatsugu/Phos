@@ -88,16 +88,19 @@ public class UnitAttackSystem : ComponentSystem
 
 	private void RotateTurretAndShootAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((Entity e, ref Translation t, ref AttackSpeed atkSpeed, ref AttackTarget atkTarget) =>
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref Translation t, ref AttackSpeed atkSpeed, ref AttackRange range, ref AttackTarget atkTarget) =>
 		{
 			if (!EntityManager.Exists(atkTarget.Value))
+			{
+				PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 				return;
+			}
 			var pos = EntityManager.GetComponentData<CenterOfMass>(atkTarget.Value).Value;
 			var dir = t.Value - pos;
 			var dist = math.lengthsq(dir);
-			if (dist > 20 * 20)
+			if (dist > range.ValueSq)
 			{
-				PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+				//PostUpdateCommands.AddComponent<MoveToTarget>(e);
 				return;
 			}
 			if (atkSpeed.NextAttackTime > Time.ElapsedTime)
@@ -112,8 +115,7 @@ public class UnitAttackSystem : ComponentSystem
 
 	private void SelectTarget()
 	{
-		int range = 20;
-		Entities.WithNone<Disabled, AttackTarget>().ForEach((Entity e, ref Translation t, ref UnitState state, ref FactionId faction, ref AttackSpeed atkSpeed) =>
+		Entities.WithNone<Disabled, AttackTarget>().ForEach((Entity e, ref Translation t, ref UnitState state, ref FactionId faction, ref AttackSpeed atkSpeed, ref AttackRange range) =>
 		{
 			if (state.Value != UnitState.State.AttackOnSight)
 				return;
@@ -121,7 +123,7 @@ public class UnitAttackSystem : ComponentSystem
 				return;*/
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//Get Objects in Rect Range
-			_physicsWorld.AABBCast(t.Value, new float3(range, range, range), new CollisionFilter
+			_physicsWorld.AABBCast(t.Value, range.Value, new CollisionFilter
 			{
 				BelongsTo = 1u << (int)faction.Value,
 				CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
@@ -140,7 +142,7 @@ public class UnitAttackSystem : ComponentSystem
 				var pos = EntityManager.GetComponentData<CenterOfMass>(target).Value;
 				var dir = t.Value - pos;
 				var dist = math.lengthsq(dir);
-				if (dist <= range * range)
+				if (dist <= range.ValueSq)
 				{
 					var turretDir = dir;
 					turretDir.y = 0;
@@ -181,9 +183,26 @@ public class UnitAttackSystem : ComponentSystem
 	}
 }
 
+public struct MoveToTarget : IComponentData
+{
+
+}
+
 public struct AttackTarget : IComponentData
 {
 	public Entity Value;
+}
+
+public struct AttackRange : IComponentData
+{
+	public AttackRange(float range)
+	{
+		Value = range;
+		ValueSq = range * range;
+	}
+
+	public float Value;
+	public float ValueSq;
 }
 
 public struct AttackSpeed : IComponentData, IEquatable<AttackSpeed>

@@ -35,8 +35,9 @@ public class UIInfoPopup : UIExpandable
 	private int[] _ids;
 	private int _nextId = 0;
 
-	private void OnValidate()
+	protected override void OnValidate()
 	{
+		base.OnValidate();
 		if (iconRects == null)
 			iconRects = new UIHover[MAX_NOTIFS];
 		else if (iconRects.Length != MAX_NOTIFS)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
+using Unity.Physics;
 using Unity.Physics.Systems;
 using UnityEngine;
 using UnityEngine.Events;
@@ -34,19 +35,7 @@ public class UIActionsPanel : UIPanel
 		Disabled,
 		IssueCommand
 	}
-
-	private struct MoveOrder
-	{
-		public Vector3 dst;
-		public MobileUnit unit;
-		public float cost;
-
-		public void Complete()
-		{
-			unit.MoveTo(dst);
-		}
-	}
-
+	
 	protected override void Awake()
 	{
 		base.Awake();
@@ -136,7 +125,33 @@ public class UIActionsPanel : UIPanel
 
 	private void UpdateAttack()
 	{
+		if (!Input.GetKeyUp(KeyCode.Mouse1))
+			return;
+		var ray = _cam.ScreenPointToRay(_mousePos);
+		var hasHit = _physicsWorld.PhysicsWorld.CastRay(new RaycastInput
+		{
+			Start = ray.origin,
+			End = ray.GetPoint(_cam.transform.position.y * 2),
+			Filter = new CollisionFilter
+			{
+				CollidesWith = 1u << (int)Faction.Phos,
+				BelongsTo = ~0u
+			}
+		}, out var hit);
+		Debug.Log(hasHit);
+		if(hasHit)
+		{
+			Debug.Log(Map.EM.GetName(hit.Entity));
+			IssueAttackOrder(hit.Entity);
+		}
+	}
 
+	private void IssueAttackOrder(Entity target)
+	{
+		for (int i = 0; i < _selectedEntities.Count; i++)
+		{
+			((IAttack)_selectedEntities[i]).Attack(target);
+		}
 	}
 
 	private void UpdateAttackState()

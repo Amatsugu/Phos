@@ -46,7 +46,6 @@ public class HealthBarSystem : JobComponentSystem
 		[ReadOnly] public ComponentDataFromEntity<CenterOfMass> posSrc;
 		public ArchetypeChunkComponentType<Translation> translationType;
 		public ArchetypeChunkComponentType<Rotation> rotationType;
-		public EntityCommandBuffer.Concurrent cmd;
 		public quaternion camRot;
 		public float3 camFwd;
 

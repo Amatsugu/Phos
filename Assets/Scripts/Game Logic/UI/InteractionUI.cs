@@ -6,6 +6,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Profiling;
@@ -229,7 +230,8 @@ public class InteractionUI : MonoBehaviour
 			if (!Map.ActiveMap.units.ContainsKey(_selectedUnits[i]))
 				continue;
 			var unit = Map.ActiveMap.units[_selectedUnits[i]];
-			Debug.DrawRay(unit.Position, Vector3.up, Color.white);
+			var pos = Map.EM.GetComponentData<Translation>(unit.Entity).Value;
+			Debug.DrawRay(pos, Vector3.up, Color.white);
 		}
 #endif
 
@@ -310,7 +312,7 @@ public class InteractionUI : MonoBehaviour
 				var footprint = HexCoords.SpiralSelect(openTiles[j], orderedUnits[i].info.size);
 				if (IsValidFootPrint(footprint, openSet, occupiedSet))
 				{
-					for (int x = 0; x < footprint.Length; x++)
+					/*for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
 					var order = new MoveOrder
 					{
@@ -320,7 +322,7 @@ public class InteractionUI : MonoBehaviour
 					order.cost = (order.dst - order.unit.Position).sqrMagnitude;
 					UnityEngine.Debug.DrawRay(order.dst, Vector3.up, Color.magenta, 1);
 					_moveOrderQueue.Enqueue(order);
-
+					*/
 					break;
 				}
 			}

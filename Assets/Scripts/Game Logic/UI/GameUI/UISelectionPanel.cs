@@ -140,8 +140,7 @@ public class UISelectionPanel : UIPanel
 				var bounds = MathUtils.PhysicsBounds(_start.SurfacePoint, _end.SurfacePoint);
 				bounds.Max.y = 50;
 				bounds.Min.y = 0;
-				DebugUtilz.DrawCrosshair(bounds.Min, 50, Color.cyan, 0);
-				DebugUtilz.DrawCrosshair(bounds.Max, 50, Color.cyan, 0);
+				DebugUtilz.DrawBounds(bounds, Color.cyan);
 				_buildPhysicsWorld.AABBCast(bounds, new CollisionFilter
 				{
 					BelongsTo = 1u << (int)Faction.Player,

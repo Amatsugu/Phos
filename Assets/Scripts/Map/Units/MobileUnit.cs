@@ -12,25 +12,25 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	public int id;
 	public MobileUnitEntity info;
 
-	public HexCoords Coords { get; protected set; }
+	//public HexCoords Coords { get; protected set; }
 
-	public Vector3 Position
+	/*public Vector3 Position
 	{
 		get => Map.EM.GetComponentData<Translation>(Entity).Value;
 		set
 		{
 			UpdatePos(value);
 		}
-	}
+	}*/
 
 	public Entity Entity;
 	public Entity HeadEntity;
-	public Vector3 _position;
 	public bool IsRendered { get; protected set; }
 
 	private bool _isShown;
 	private Faction _faction;
 	private NativeArray<Entity> _healhBar;
+	private Vector3 _startPos;
 
 #if DEBUG
 	private static bool hasVerified;
@@ -40,8 +40,8 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	{
 		this.id = id;
 		this.info = info;
-		_position = tile.SurfacePoint;
-		Coords = tile.Coords;
+		_startPos = tile.SurfacePoint;
+		//Coords = tile.Coords;
 		_faction = faction;
 #if DEBUG
 		if(!hasVerified)
@@ -79,19 +79,13 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 		if (IsRendered)
 			return Entity;
 		IsRendered = _isShown = true;
-		Entity = info.Instantiate(_position, Quaternion.identity, id, _faction);
+		Entity = info.Instantiate(_startPos, Quaternion.identity, id, _faction);
 		if (info.head != null)
-			HeadEntity = info.head.Instantiate(_position, new float3(1, 1, 1), Quaternion.identity);
+			HeadEntity = info.head.Instantiate(_startPos, new float3(1, 1, 1), Quaternion.identity);
 		Map.EM.SetComponentData(Entity, new FactionId { Value = _faction });
 		if(info.healthBar != null)
 			_healhBar = info.healthBar.Instantiate(Entity, info.centerOfMassOffset + info.healthBarOffset);
 		return Entity;
-	}
-
-	public void UpdatePos(Vector3 pos)
-	{
-		_position = pos;
-		Coords = HexCoords.FromPosition(pos, Map.ActiveMap.tileEdgeLength);
 	}
 
 	public void Show(bool isShown)
@@ -116,6 +110,8 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 
 	public void MoveTo(float3 pos)
 	{
+		if (Map.EM.HasComponent<MoveToTarget>(Entity))
+			Map.EM.RemoveComponent<MoveToTarget>(Entity);
 		if (!Map.EM.HasComponent<Destination>(Entity))
 		{
 			Map.EM.AddComponent(Entity, typeof(Destination));
@@ -170,6 +166,8 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 
 	public void Attack(Entity target)
 	{
+		if(!Map.EM.HasComponent<MoveToTarget>(Entity))
+			Map.EM.AddComponent<MoveToTarget>(Entity);
 		if (Map.EM.HasComponent<AttackTarget>(Entity))
 			Map.EM.SetComponentData(Entity, new AttackTarget { Value = target });
 		else

@@ -12,6 +12,7 @@ public class MobileUnitEntity : MeshEntityRotatable
 {
 	[Header("Stats")]
 	public float moveSpeed = 1;
+	public float attackRange = 20;
 	public float attackSpeed = 1;
 	public float maxHealth;
 	public int size;
@@ -42,7 +43,8 @@ public class MobileUnitEntity : MeshEntityRotatable
 			typeof(PhysicsCollider),
 			typeof(PhysicsMass),
 			typeof(CenterOfMassOffset),
-			typeof(CenterOfMass)
+			typeof(CenterOfMass),
+			typeof(AttackRange)
 		});
 	}
 
@@ -58,6 +60,7 @@ public class MobileUnitEntity : MeshEntityRotatable
 		Map.EM.SetComponentData(entity, new UnitClass { Value = unitClass.Value });
 		Map.EM.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
 		Map.EM.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
+		Map.EM.SetComponentData(entity, new AttackRange(attackRange));
 	}
 
 	public Entity Instantiate(float3 pos, Quaternion rotation, int id, Faction faction = Faction.None)

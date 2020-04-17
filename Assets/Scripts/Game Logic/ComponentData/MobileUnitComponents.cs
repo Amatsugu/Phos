@@ -24,6 +24,11 @@ public struct UnitId : IComponentData
 	public int Value;
 }
 
+public struct UnitHead : IComponentData
+{
+	public Entity Value;
+}
+
 public struct NextTile : IComponentData
 {
 	public float3 Value;

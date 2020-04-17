@@ -107,7 +107,7 @@ public class BuildingTile : Tile
 		RenderDecorators();
 	}
 
-	protected virtual Entity GetBuildingEntity()
+	public virtual Entity GetBuildingEntity()
 	{
 		return buildingInfo.buildingMesh.mesh != null ? _building : _tileEntity;
 	}

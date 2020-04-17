@@ -72,17 +72,60 @@ public class UnitMovementSystem : ComponentSystem
 	{
 		if (!_ready)
 			return;
+		///Caluclate Paths
 		Entities.WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
 		{
 			var p = GetPath(t.Value, d.Value, ref _navData, Map.ActiveMap.innerRadius, ref _open, ref _closed, ref _nodePairs);
 			if (p == null)
+			{
+				Debug.LogWarning("Path Null");
 				return;
+			}
 			PostUpdateCommands.AddSharedComponent(e, new Path { Value = p });
 			PostUpdateCommands.AddComponent(e, new PathProgress
 			{
 				Progress = p.Count - 1
 			});
 		});
+
+		//Move to Target
+		Entities.WithNone<Path>().ForEach((Entity e, ref Translation c, ref MoveToTarget m, ref AttackTarget t, ref AttackRange range) =>
+		{
+			var tPos = EntityManager.GetComponentData<CenterOfMass>(t.Value);
+			var distSq = math.lengthsq(c.Value - tPos.Value);
+			if (distSq <= range.ValueSq)
+				return;
+			if(EntityManager.HasComponent<Destination>(e))
+			{
+				PostUpdateCommands.SetComponent(e, new Destination { Value = tPos.Value });
+			}else
+				PostUpdateCommands.AddComponent(e, new Destination { Value = tPos.Value });
+		});
+
+		//Follow path to Target
+		Entities.WithAll<MoveToTarget>().ForEach((Entity e, ref Translation t, ref AttackRange range, ref AttackTarget tgt, ref PathProgress pathId, ref Destination d) =>
+		{
+			var tPos = EntityManager.GetComponentData<CenterOfMass>(tgt.Value);
+			if(!tPos.Value.Equals(d.Value))
+			{
+				PostUpdateCommands.RemoveComponent<PathProgress>(e);
+				PostUpdateCommands.RemoveComponent<Path>(e);
+				PostUpdateCommands.SetComponent(e, new Destination { Value = tPos.Value });
+				Debug.Log($"<b>{nameof(UnitMovementSystem)}</b>: Target Moved, Recalculating Path");
+				return;
+			}
+			var dst = math.lengthsq(t.Value - tPos.Value);
+			Debug.Log(dst);
+			if (dst <= range.ValueSq)
+			{
+				PostUpdateCommands.RemoveComponent<PathProgress>(e);
+				PostUpdateCommands.RemoveComponent<Path>(e);
+				PostUpdateCommands.RemoveComponent<Destination>(e);
+				Debug.Log($"<b>{nameof(UnitMovementSystem)}</b>: Target in Range");
+			}
+		});
+
+		//Follow Paths
 		Entities.ForEach((Entity e, Path path, ref UnitId id, ref Rotation rot, ref Translation t, ref PathProgress pathId, ref MoveSpeed speed) =>
 		{
 
@@ -101,8 +144,7 @@ public class UnitMovementSystem : ComponentSystem
 
 			var unit = Map.ActiveMap.units[id.Value];
 			PostUpdateCommands.SetComponent(unit.HeadEntity, t);
-			t.Value.y = Map.ActiveMap[unit.Coords].Height;
-			unit.UpdatePos(t.Value);
+			t.Value.y = Map.ActiveMap[HexCoords.FromPosition(t.Value)].Height;
 			//Next Point
 			if (t.Value.Equals(dst))
 			{
