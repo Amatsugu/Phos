@@ -141,7 +141,6 @@ public class UIActionsPanel : UIPanel
 		Debug.Log(hasHit);
 		if(hasHit)
 		{
-			Debug.Log(Map.EM.GetName(hit.Entity));
 			IssueAttackOrder(hit.Entity);
 		}
 	}

@@ -78,6 +78,13 @@ public class UIHover : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	}
 
+#if !DEBUG
+	protected virtual void OnValidate()
+	{
+
+	}
+#endif
+
 	public virtual void SetActive(bool active)
 	{
 		rTransform = rTransform ?? GetComponent<RectTransform>();
