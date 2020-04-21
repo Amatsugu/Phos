@@ -17,6 +17,8 @@ public struct CloudsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUni
 	public ArchetypeChunkComponentType<NonUniformScale> scaleType;
 
 	public float3 camPos;
+	public float3 camCenteringOffset;
+	public quaternion camRot;
 	public float3 rawCamPos;
 	public float disolveDist;
 	public float disolveUpper;
@@ -70,7 +72,7 @@ public struct CloudsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUni
 			var pos = translations[i];
 			var scale = scales[i];
 
-			pos.Value = cloud.pos + camPos;
+			pos.Value = math.rotate(camRot, cloud.pos) + camPos - camCenteringOffset;
 
 			var cloudSize = field[cloud.index].x;
 			var cloudHeight = field[cloud.index].y;
@@ -119,6 +121,8 @@ public struct CloudShadowsJob : IJobChunk //IJobForEach<CloudData, Translation, 
 	public NativeArray<float2> field;
 
 	public float3 camPos;
+	public float3 camCenteringOffset;
+	public quaternion camRot;
 
 	[ReadOnly] public ArchetypeChunkComponentType<CloudData> cloudType;
 	public ArchetypeChunkComponentType<Translation> translationType;
@@ -135,7 +139,7 @@ public struct CloudShadowsJob : IJobChunk //IJobForEach<CloudData, Translation, 
 			var c = shadows[i];
 			var t = translations[i];
 			var s = scales[i];
-			t.Value = c.pos + camPos;
+			t.Value = math.rotate(camRot, c.pos) + camPos - camCenteringOffset;
 
 			var cloudSize = field[c.index].x;
 			var cloudHeight = field[c.index].y;

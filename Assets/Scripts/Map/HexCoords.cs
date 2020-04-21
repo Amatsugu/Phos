@@ -45,7 +45,7 @@ public struct HexCoords : IEquatable<HexCoords>
 		isCreated = true;
 	}
 
-	public static Vector3 SnapToGrid(Vector3 worldPos, float innerRadius, float edgeLength)
+	public static float3 SnapToGrid(Vector3 worldPos, float innerRadius, float edgeLength)
 	{
 		float x = worldPos.x / (innerRadius * 2f);
 		float z = -x;

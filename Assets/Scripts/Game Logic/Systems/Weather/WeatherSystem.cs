@@ -20,7 +20,7 @@ public class WeatherSystem : JobComponentSystem
 
 	private float _shortDiag;
 	private Vector3 _offset;
-	private float _cloudFieldNormalizedWidth;
+	private float _cloudFieldNormalizedHalfWidth;
 	private Vector3 _windDir;
 	private Transform _cam;
 	private float _maxNoiseValue;
@@ -47,6 +47,8 @@ public class WeatherSystem : JobComponentSystem
 	public struct GenerateFieldJob : IJobParallelFor
 	{
 		public float3 camPos;
+		public float3 camCenteringOffset;
+		public quaternion camRot;
 		public int gridSize;
 		public float innerRadius;
 		public int fieldWidth;
@@ -61,7 +63,7 @@ public class WeatherSystem : JobComponentSystem
 
 		public void Execute(int i)
 		{
-			var pos = cloudPos[i] + camPos;
+			var pos = math.rotate(camRot, cloudPos[i]) + camPos - camCenteringOffset;
 			var cloudSize = cloudFilter.Evaluate(pos / 50f + offset, cloudDensity);
 
 			cloudSize = math.max(0, cloudSize);
@@ -125,7 +127,7 @@ public class WeatherSystem : JobComponentSystem
 		noiseSettings = _init.noiseSettings;
 		cloudFilter = NoiseFilterFactory.CreateNoiseFilter(noiseSettings, 1);
 		_windDir = UnityEngine.Random.insideUnitSphere;
-		_cloudFieldNormalizedWidth = (_init.fieldWidth * _shortDiag) / 2f;
+		_cloudFieldNormalizedHalfWidth = (_init.fieldWidth * _shortDiag) / 2f;
 		_maxNoiseValue = 1 - noiseSettings.minValue;
 		if (_cloudField.IsCreated)
 			_cloudField.Dispose();
@@ -160,11 +162,15 @@ public class WeatherSystem : JobComponentSystem
 		var cloudType = GetArchetypeChunkComponentType<CloudData>(true);
 		var translationType = GetArchetypeChunkComponentType<Translation>(false);
 		var scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false);
-		var job = new CloudsJob
+		var camRot = quaternion.RotateY(math.radians(_cam.eulerAngles.y));
+		var camCenteringOffset = math.rotate(camRot, new float3(_cloudFieldNormalizedHalfWidth, 0, 0));
+		var cloudJob = new CloudsJob
 		{
 			size = cloudSize,
 			field = _cloudField,
-			camPos = new float3(pos.x - _cloudFieldNormalizedWidth, 0, pos.z),
+			camPos = new float3(pos.x, 0, pos.z),
+			camCenteringOffset = camCenteringOffset,
+			camRot = camRot,
 			disolveDist = _init.camDisolveDist * _init.camDisolveDist,
 			rawCamPos = _cam.position + (_cam.forward * _init.disolveOffsetDist),
 			disolveLower = _init.disolveLowerBound,
@@ -173,13 +179,15 @@ public class WeatherSystem : JobComponentSystem
 			translationType = translationType,
 			scaleType = scaleType
 		};
-		var dep = job.Schedule(_cloudQuery, inputDeps);
+		var dep = cloudJob.Schedule(_cloudQuery, inputDeps);
 
 		var cloudShadowJob = new CloudShadowsJob
 		{
 			size = cloudSize,
 			field = _cloudField,
-			camPos = job.camPos,
+			camPos = cloudJob.camPos,
+			camCenteringOffset = camCenteringOffset,
+			camRot = camRot,
 			cloudType = cloudType,
 			translationType = translationType,
 			scaleType = scaleType
@@ -307,9 +315,13 @@ public class WeatherSystem : JobComponentSystem
 	public void GenerateCloudField()
 	{
 		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
+		var camRot = quaternion.RotateY(math.radians(_cam.eulerAngles.y));
+		var camCenteringOffset = math.rotate(camRot, new float3(_cloudFieldNormalizedHalfWidth, 0, 0));
 		var generate = new GenerateFieldJob
 		{
-			camPos = new float3(pos.x - _cloudFieldNormalizedWidth, 0, pos.z),
+			camPos = new float3(pos.x, 0, pos.z),
+			camCenteringOffset = camCenteringOffset,
+			camRot = quaternion.RotateY(math.radians(_cam.eulerAngles.y)),
 			cloudDensity = 1 - _curWeatherState.cloudDensity,
 			cloudField = _cloudField,
 			cloudPos = _cloudPos,
