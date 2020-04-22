@@ -761,18 +761,9 @@ public struct MapChunk
 		isRendered = true;
 		if (!_chunkTiles.IsCreated)
 			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-		var renderBounds = new AABB
-		{
-			Center = Bounds.center,
-			Extents = Bounds.extents
-		};
 		for (int i = 0; i < SIZE * SIZE; i++)
 		{
 			_chunkTiles[i] = Tiles[i].Render();
-			Map.EM.SetComponentData(_chunkTiles[i], new ChunkWorldRenderBounds
-			{
-				Value = renderBounds
-			});
 			Tiles[i].RenderDecorators();
 		}
 	}

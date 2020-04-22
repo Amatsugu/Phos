@@ -23,7 +23,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 473d589591da6e14e9845fd435ad0948, type: 2}
   - {fileID: 11400000, guid: 49d667b9a1e019b44aefa15fb7241d53, type: 2}
   - {fileID: 11400000, guid: bf240f7bcb2cf5548a75889870e26969, type: 2}
-  useJobs: 0
   Regen: 0
   borderSize: 64
   borderCurve:
@@ -50,7 +49,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
   noiseScale: 350
   noiseLayers:
   - name: Shape
@@ -105,10 +103,11 @@ MonoBehaviour:
       minValue: 0
       center: {x: 0, y: 0, z: 0}
       weightMultiplier: 4.57
-  useSeed: 0
-  useDecorators: 1
+  biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
+  useSeed: 1
   useSeedDev: 1
   seed: 1223939288
   landSeaRatio: 0.35
+  useDecorators: 1
   biomeFold: 0
   preview: 1
