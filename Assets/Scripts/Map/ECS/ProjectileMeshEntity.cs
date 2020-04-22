@@ -36,24 +36,17 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		});
 	}
 
-	public Entity Instantiate(float3 position, float3 scale, float3 velocity = default, float3 angularVelocity = default)
+	public Entity Instantiate(float3 position, float scale, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var rot = (velocity.Equals(default) ? quaternion.identity : quaternion.LookRotation(velocity, new float3(0, 1, 0)));
 		var e = Instantiate(position, rot, scale, velocity, angularVelocity);
 		return e;
 	}
 
-	public Entity BufferedInstantiate(EntityCommandBuffer cmb, float3 position, float3 scale, float3 velocity = default, float3 angularVelocity = default)
+	public Entity BufferedInstantiate(EntityCommandBuffer cmb, float3 position, float scale, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var rot = (velocity.Equals(default) ? quaternion.identity : quaternion.LookRotation(velocity, new float3(0, 1, 0)));
 		var e = BufferedInstantiate(cmb, position, rot, scale, velocity, angularVelocity);
-		return e;
-	}
-
-	public Entity ConcurrentInstantiate(EntityCommandBuffer.Concurrent cmb, int jobIndex, float3 position, float3 scale, float3 velocity = default, float3 angularVelocity = default)
-	{
-		var rot = (velocity.Equals(default) ? quaternion.identity : quaternion.LookRotation(velocity, new float3(0, 1, 0)));
-		var e = ConcurrentInstantiate(cmb, jobIndex, position, rot, scale, velocity, angularVelocity);
 		return e;
 	}
 

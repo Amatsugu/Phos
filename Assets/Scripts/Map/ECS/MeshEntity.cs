@@ -75,6 +75,8 @@ public class MeshEntity : ScriptableObject
 			nonUniformScale ? typeof(NonUniformScale) : typeof(Scale),
 			typeof(RenderMesh),
 			typeof(PerInstanceCullingTag),
+			typeof(WorldRenderBounds),
+			typeof(ChunkWorldRenderBounds),
 			typeof(Disabled),
 			typeof(RenderBounds)
 		};
@@ -95,20 +97,19 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
-	public Entity ConcurrentInstantiate(EntityCommandBuffer.Concurrent commandBuffer, int jobIndex, float3 position, float3 scale)
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale)
 	{
-		var e = commandBuffer.Instantiate(jobIndex, GetEntity());
-		commandBuffer.RemoveComponent(jobIndex, e, typeof(Disabled));
-		commandBuffer.SetComponent(jobIndex, e, new Translation { Value = position });
-
+		var e = commandBuffer.Instantiate(GetEntity());
+		commandBuffer.RemoveComponent(e, typeof(Disabled));
+		commandBuffer.SetComponent(e, new Translation { Value = position });
 		if (nonUniformScale)
-			commandBuffer.SetComponent(jobIndex, e, new NonUniformScale { Value = scale });
+			commandBuffer.SetComponent(e, new NonUniformScale { Value = new float3(scale, scale, scale) });
 		else
-			commandBuffer.SetComponent(jobIndex, e, new Scale { Value = scale.x });
+			commandBuffer.SetComponent(e, new Scale { Value = scale });
 		return e;
 	}
 
-	public Entity Instantiate(float3 position, float3 scale)
+	public Entity Instantiate(Vector3 position, Vector3 scale)
 	{
 		var em = Map.EM;
 		var e = em.Instantiate(GetEntity());
@@ -117,6 +118,19 @@ public class MeshEntity : ScriptableObject
 			em.SetComponentData(e, new NonUniformScale { Value = scale });
 		else
 			em.SetComponentData(e, new Scale { Value = scale.x });
+		em.RemoveComponent<Disabled>(e);
+		return e;
+	}
+
+	public Entity Instantiate(Vector3 position, float scale)
+	{
+		var em = Map.EM;
+		var e = em.Instantiate(GetEntity());
+		em.SetComponentData(e, new Translation { Value = position });
+		if (nonUniformScale)
+			em.SetComponentData(e, new NonUniformScale { Value = new float3(scale, scale, scale) });
+		else
+			em.SetComponentData(e, new Scale { Value = scale });
 		em.RemoveComponent<Disabled>(e);
 		return e;
 	}

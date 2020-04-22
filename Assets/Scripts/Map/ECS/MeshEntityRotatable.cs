@@ -32,11 +32,18 @@ public class MeshEntityRotatable : MeshEntity
 		return e;
 	}
 
-	public Entity ConcurrentInstantiate(EntityCommandBuffer.Concurrent commandBuffer, int jobIndex, float3 position, float3 scale, quaternion rotation)
+	public Entity Instantiate(float3 position, float scale, quaternion rotation)
 	{
-		var e = ConcurrentInstantiate(commandBuffer, jobIndex, position, scale);
-		commandBuffer.SetComponent(jobIndex, e, new Translation { Value = position });
-		commandBuffer.SetComponent(jobIndex, e, new Rotation { Value = rotation });
+		var e = Instantiate(position, scale);
+		Map.EM.SetComponentData(e, new Rotation { Value = rotation });
+		return e;
+	}
+
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale, quaternion rotation)
+	{
+		var e = BufferedInstantiate(commandBuffer, position, scale);
+		commandBuffer.SetComponent(e, new Translation { Value = position });
+		commandBuffer.SetComponent(e, new Rotation { Value = rotation });
 		return e;
 	}
 

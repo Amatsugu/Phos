@@ -45,7 +45,7 @@ public class PhysicsMeshEntity : MeshEntityRotatable
 
 	}
 
-	public virtual Entity Instantiate(float3 position, quaternion rotation, float3 scale, float3 velocity = default, float3 angularVelocity = default)
+	public virtual Entity Instantiate(float3 position, quaternion rotation, float scale = 1, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var e = Instantiate(position, scale, rotation);
 		var em = Map.EM;
@@ -57,21 +57,10 @@ public class PhysicsMeshEntity : MeshEntityRotatable
 		return e;
 	}
 
-	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Quaternion rotation, float3 scale, float3 velocity = default, float3 angularVelocity = default)
+	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, Vector3 position, Quaternion rotation, float scale = 1, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var e = BufferedInstantiate(commandBuffer, position, scale, rotation);
 		commandBuffer.SetComponent(e, new PhysicsVelocity
-		{
-			Linear = velocity,
-			Angular = angularVelocity
-		});
-		return e;
-	}
-
-	public Entity ConcurrentInstantiate(EntityCommandBuffer.Concurrent commandBuffer, int jobIndex, Vector3 position, Quaternion rotation, float3 scale, float3 velocity = default, float3 angularVelocity = default)
-	{
-		var e = ConcurrentInstantiate(commandBuffer, jobIndex, position, scale, rotation);
-		commandBuffer.SetComponent(jobIndex, e, new PhysicsVelocity
 		{
 			Linear = velocity,
 			Angular = angularVelocity
