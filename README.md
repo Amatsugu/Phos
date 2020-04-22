@@ -1,6 +1,6 @@
 # Phos
 
-Phos is an RTS Base building game where you play as an AI that is tasked with exploiting a planet of its resources in order to send energy back to the mother planet. You will be tasked with setting up a base on the planet, harvest it's resources, fend off the natives on the planet. Eventually you will establish and defend the infrastructure to produce and send energy to the home planet.
+You play as a robot colonizer that has been sent out to an alien planet with one goal. Harvest its resources and send them back home. To accomplish this you must build a base on the planet. As your base develops you will be able to build more advanced structures to harvest at an increased scale. And eventually you will be able to accomplish your goal of sending resources back to your mother planet. But your invasion wont go unchallenged. The native inhabitants of the planet won’t sit idly by as you strip their world of its resources.
 
 Join the game's discord server to keep up to date with development.
 https://discord.gg/gsSpnV6
