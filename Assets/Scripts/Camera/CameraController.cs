@@ -59,16 +59,80 @@ public class CameraController : MonoBehaviour
 		{
 			enabled = true;
 		});
+		_state = CameraMode.Panning;
 	}
 
 	// Update is called once per frame
 	private void Update()
 	{
-#if DEBUG
-		if (mapRenderer == null)
-			mapRenderer = FindObjectOfType<MapRenderer>();
-#endif
+		if (Input.GetKeyUp(KeyCode.F3))
+		{
+			_state = CameraMode.Free;
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+		}
+		if (Input.GetKeyUp(KeyCode.F2))
+		{
+			_state = CameraMode.Panning;
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+		}
+		switch (_state)
+		{
+			case CameraMode.Locked:
+				break;
+			case CameraMode.Panning:
+				PanningCam();
+				break;
+			case CameraMode.Free:
+				FreeCam();
+				break;
+		}
+		
+	}
 
+	private void FreeCam()
+	{
+		var camRot = _thisTransform.eulerAngles;
+		var camPos = _thisTransform.position;
+
+		var move = Vector3.zero;
+
+		if (Input.GetKey(KeyCode.W))
+			move.z += moveSpeed;
+		else if (Input.GetKey(KeyCode.S))
+			move.z -= moveSpeed;
+
+		if (Input.GetKey(KeyCode.A))
+			move.x -= moveSpeed;
+		else if (Input.GetKey(KeyCode.D))
+			move.x += moveSpeed;
+
+		if (Input.GetKey(KeyCode.LeftShift))
+			move.y -= moveSpeed;
+		else if (Input.GetKey(KeyCode.Space))
+			move.y += moveSpeed;
+
+		var mX = Input.GetAxis("Mouse X");
+		var mY = Input.GetAxis("Mouse Y");
+
+		camRot.y += mX;
+		camRot.x -= mY;
+
+		if (camRot.x > 90 && camRot.x < 180)
+			camRot.x = 90;
+		if (camRot.x < 270 && camRot.x > 180)
+			camRot.x = 270;
+
+		var camQ = Quaternion.Euler(camRot);
+		camPos += camQ * move * Time.deltaTime;
+		_thisTransform.position = camPos;
+		_thisTransform.rotation = camQ;
+
+	}
+
+	private void PanningCam()
+	{
 		_canRotate = true;
 		if (Input.GetKeyDown(KeyCode.X))
 		{

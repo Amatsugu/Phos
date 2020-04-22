@@ -23,42 +23,8 @@ public struct CloudsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUni
 	public float disolveDist;
 	public float disolveUpper;
 	public float disolveLower;
-
-	public void Execute(ref CloudData c, ref Translation t, ref NonUniformScale s)
-	{
-		t.Value = c.pos + camPos;
-
-		var cloudSize = field[c.index].x;
-		var cloudHeight = field[c.index].y;
-
-		var vDist = t.Value.y - rawCamPos.y;
-		var disolve = Vector3.SqrMagnitude(new float3(t.Value.x, 0, t.Value.z) - new float3(rawCamPos.x, 0, rawCamPos.z)) / disolveDist;
-		if (disolve <= 1)
-		{
-			if (vDist > -disolveLower && vDist < 0)
-			{
-				vDist = -vDist;
-				var dT = vDist / disolveLower;
-				dT = math.pow(dT, 8);
-				disolve = math.lerp(disolve, 1, dT);
-			}
-			else if (vDist < disolveUpper && vDist >= 0)
-			{
-				var dT = (vDist / disolveUpper);
-				dT = dT.Pow(8);
-				disolve = math.lerp(disolve, 1, dT);
-			}
-			else
-				disolve = 1;
-			disolve -= .5f;
-			disolve = math.clamp(disolve, 0, 1);
-			disolve *= 2;
-			disolve = disolve * disolve * disolve;
-			cloudSize = math.lerp(0, cloudSize, disolve);
-			cloudHeight = math.lerp(0, cloudHeight, disolve);
-		}
-		s.Value = new float3(size * cloudSize, cloudHeight, size * cloudSize);
-	}
+	internal int gridSize;
+	internal float innerRadius;
 
 	public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 	{
@@ -72,7 +38,7 @@ public struct CloudsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUni
 			var pos = translations[i];
 			var scale = scales[i];
 
-			pos.Value = math.rotate(camRot, cloud.pos) + camPos - camCenteringOffset;
+			pos.Value = math.rotate(camRot, cloud.pos) + HexCoords.SnapToGrid(camPos - camCenteringOffset, innerRadius, gridSize);
 
 			var cloudSize = field[cloud.index].x;
 			var cloudHeight = field[cloud.index].y;
@@ -127,6 +93,8 @@ public struct CloudShadowsJob : IJobChunk //IJobForEach<CloudData, Translation, 
 	[ReadOnly] public ArchetypeChunkComponentType<CloudData> cloudType;
 	public ArchetypeChunkComponentType<Translation> translationType;
 	public ArchetypeChunkComponentType<NonUniformScale> scaleType;
+	internal float innerRadius;
+	internal int gridSize;
 
 	public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 	{
@@ -139,7 +107,7 @@ public struct CloudShadowsJob : IJobChunk //IJobForEach<CloudData, Translation, 
 			var c = shadows[i];
 			var t = translations[i];
 			var s = scales[i];
-			t.Value = math.rotate(camRot, c.pos) + camPos - camCenteringOffset;
+			t.Value = math.rotate(camRot, c.pos) + HexCoords.SnapToGrid(camPos - camCenteringOffset, innerRadius, gridSize);
 
 			var cloudSize = field[c.index].x;
 			var cloudHeight = field[c.index].y;

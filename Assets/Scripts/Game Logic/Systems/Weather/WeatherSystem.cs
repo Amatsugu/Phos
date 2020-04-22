@@ -63,7 +63,7 @@ public class WeatherSystem : JobComponentSystem
 
 		public void Execute(int i)
 		{
-			var pos = math.rotate(camRot, cloudPos[i]) + camPos - camCenteringOffset;
+			var pos = math.rotate(camRot, cloudPos[i]) + HexCoords.SnapToGrid(camPos - camCenteringOffset, innerRadius, gridSize);
 			var cloudSize = cloudFilter.Evaluate(pos / 50f + offset, cloudDensity);
 
 			cloudSize = math.max(0, cloudSize);
@@ -158,7 +158,7 @@ public class WeatherSystem : JobComponentSystem
 		if (_init == null)
 			return inputDeps;
 		SimulateWeather();
-		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
+		var pos = _cam.position; //HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var cloudType = GetArchetypeChunkComponentType<CloudData>(true);
 		var translationType = GetArchetypeChunkComponentType<Translation>(false);
 		var scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false);
@@ -177,7 +177,9 @@ public class WeatherSystem : JobComponentSystem
 			disolveUpper = _init.disolveUpperBound,
 			cloudType = cloudType,
 			translationType = translationType,
-			scaleType = scaleType
+			scaleType = scaleType,
+			innerRadius = _innerRadius,
+			gridSize = gridSize
 		};
 		var dep = cloudJob.Schedule(_cloudQuery, inputDeps);
 
@@ -190,7 +192,9 @@ public class WeatherSystem : JobComponentSystem
 			camRot = camRot,
 			cloudType = cloudType,
 			translationType = translationType,
-			scaleType = scaleType
+			scaleType = scaleType,
+			innerRadius = _innerRadius,
+			gridSize = gridSize
 		};
 
 		_rainTransform.position = new Vector3(_cam.position.x, _init.clouldHeight, _cam.position.z);
@@ -314,7 +318,7 @@ public class WeatherSystem : JobComponentSystem
 
 	public void GenerateCloudField()
 	{
-		var pos = HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
+		var pos = _cam.position; //HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var camRot = quaternion.RotateY(math.radians(_cam.eulerAngles.y));
 		var camCenteringOffset = math.rotate(camRot, new float3(_cloudFieldNormalizedHalfWidth, 0, 0));
 		var generate = new GenerateFieldJob
