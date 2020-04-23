@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Name: Scout Station
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 0}
+  material: {fileID: 0}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 0
+  description: 
+  decorators:
+  - {fileID: 11400000, guid: c809c9ac0e413dd47a44f98b0dcd583d, type: 2}
+  isTraverseable: 1
+  assetGuid: 951c1c66f8993ae4fa65857920f371fa
+  buildingMesh: {fileID: 11400000, guid: 1bb61aafcae21db428eb6e6582caecf7, type: 2}
+  centerOfMassOffset:
+    x: 0
+    y: 1.3
+    z: 0
+  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  tier: 1
+  constructionTime: 2
+  category: 5
+  size: 0
+  flattenOuterRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
+  placementMode: 0
+  maxHealth: 100
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 5
+    z: 0
+  faction: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
+  upgradeTarget:
+    id: -1
+  icon: {fileID: -2688619866867525803, guid: 8df9403ac353d2f4db5b3953202d5581, type: 3}
+  preserveGroundTile: 1
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
+  cost:
+  - id: 1
+    ammount: 50
+  production: []
+  consumption:
+  - id: 0
+    ammount: 5

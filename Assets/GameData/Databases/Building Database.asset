@@ -109,4 +109,7 @@ MonoBehaviour:
   - id: 33
     info: {fileID: 11400000, guid: 74972f4338262c245b3f0a0d8d3a93f1, type: 2}
     category: 2
-  _nextId: 34
+  - id: 34
+    info: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
+    category: 5
+  _nextId: 35
