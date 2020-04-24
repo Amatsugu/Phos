@@ -18,7 +18,6 @@ public class TurbineHeadDecorator : TileDecorator
 	{
 		var entities = new Entity[1];
 		entities[0] = meshEntity.Instantiate(tile.SurfacePoint);
-		Debug.Log(tile.SurfacePoint);
 		Map.EM.AddComponentData(entities[0], new RotateAxis { Value = Vector3.up });
 		Map.EM.AddComponentData(entities[0], new RotateSpeed { Value = math.radians(-40) });
 		return entities;

@@ -18,7 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
-  description: 
+  description: Allows for the production of basic scout units. It also increases
+    the attack range of nearby buildings.(NYI)
   decorators:
   - {fileID: 11400000, guid: c809c9ac0e413dd47a44f98b0dcd583d, type: 2}
   isTraverseable: 1

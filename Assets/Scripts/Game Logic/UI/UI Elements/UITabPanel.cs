@@ -29,6 +29,7 @@ public class UITabPanel : UIPanel
 			_baseColors[i] = tabs[i].colors;
 			_selectedColors[i] = tabs[i].colors;
 			_selectedColors[i].normalColor = _selectedColors[i].selectedColor;
+			_selectedColors[i].highlightedColor = _selectedColors[i].selectedColor;
 			int tab = i;
 			tabs[i].onClick.AddListener(() => OnTabSelected(tab));
 		}
@@ -45,5 +46,11 @@ public class UITabPanel : UIPanel
 			else
 				tabs[i].colors = _baseColors[i];
 		}
+	}
+
+	public virtual void DeselectAll()
+	{
+		for (int i = 0; i < tabs.Length; i++)
+			tabs[i].colors = _baseColors[i];
 	}
 }

@@ -28,7 +28,8 @@ public class UIExpandable : UIHover
 	protected override void Start()
 	{
 		base.Start();
-		expandTarget = expandTarget ?? rTransform;
+		if(expandTarget == null)
+			expandTarget = rTransform;
 		if (!overrideBaseSize)
 			baseSize = expandTarget.rect.size;
 		if (expandOnHover)

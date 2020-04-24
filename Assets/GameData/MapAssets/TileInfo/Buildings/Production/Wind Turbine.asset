@@ -54,8 +54,10 @@ MonoBehaviour:
   validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
-    ammount: 60
+    ammount: 100
+  - id: 0
+    ammount: 90
   production:
   - id: 0
-    ammount: 5
+    ammount: 3
   consumption: []

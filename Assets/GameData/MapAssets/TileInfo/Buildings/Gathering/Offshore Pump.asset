@@ -30,7 +30,7 @@ MonoBehaviour:
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  tier: 1
+  tier: 2
   constructionTime: 2
   category: 2
   size: 0
@@ -55,14 +55,14 @@ MonoBehaviour:
   preserveGroundTile: 1
   validator: {fileID: 11400000, guid: 2d5689ae04aaec24bbaad56647312b4a, type: 2}
   cost:
-  - id: 1
+  - id: 4
     ammount: 60
   - id: 0
     ammount: 20
   production: []
   consumption:
   - id: 0
-    ammount: 2
+    ammount: 20
   resourcesToGather:
   - id: 3
     ammount: 1

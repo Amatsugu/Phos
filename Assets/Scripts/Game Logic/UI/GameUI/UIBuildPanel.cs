@@ -72,6 +72,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		state = BuildState.HQPlacement;
 		_selectedBuilding = hQTile;
+		GameEvents.OnGameTick += OnTick;
 	}
 
 	protected override void OnTabSelected(int tab)
@@ -79,6 +80,46 @@ public class UIBuildPanel : UITabPanel
 		base.OnTabSelected(tab);
 		_tier = tab + 1;
 		Show(_lastCategory);
+	}
+
+	private void OnTick()
+	{
+		if (state == BuildState.Disabled || state == BuildState.HQPlacement)
+			return;
+		var buildings = buildingDatabase[_lastCategory];
+		for (int i = 0, j = 0; i < _icons.Length; i++)
+		{
+			if (_icons[i] == null)
+			{
+				_icons[i] = Instantiate(iconPrefab, contentArea, false);
+				_icons[i].OnBlur += infoPanel.Hide;
+			}
+			if (j < buildings.Length)
+			{
+				if (buildings[j].info.tier == _tier)
+				{
+					_icons[i].SetActive(false);
+					_icons[i].ClearHoverEvents();
+					_icons[i].ClearClickEvents();
+					_icons[i].titleText.text = buildings[j].info.name;
+					_icons[i].costText.text = buildings[j].info.GetCostString();
+					_icons[i].icon.sprite = buildings[j].info.icon;
+					var b = buildings[j];
+					_icons[i].OnHover += () => infoPanel.ShowInfo(b);
+					_icons[i].OnClick += () =>
+					{
+						state = BuildState.Placement;
+						_selectedBuilding = b.info;
+					};
+					_icons[i].SetActive(true);
+				}
+				else
+					i--;
+				j++;
+			}
+			else
+				_icons[i].SetActive(false);
+		}
 	}
 
 	public void Show(BuildingCategory category)

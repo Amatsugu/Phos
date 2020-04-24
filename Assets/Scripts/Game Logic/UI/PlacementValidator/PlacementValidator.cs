@@ -61,6 +61,16 @@ public class PlacementValidator : ScriptableObject
 						indicatorManager.SetIndicator(tile, selectionIndicator);
 				}
 			}
+			for (int i = 0; i < buildingTile.cost.Length; i++)
+			{
+				if (!ResourceSystem.HasResource(buildingTile.cost[i]))
+				{
+					indicatorManager.LogError("Insuffient resources");
+					for (int j = 0; j < tilesToOccupy.Length; j++)
+						indicatorManager.SetIndicator(map[tilesToOccupy[j]], errorIndicator);
+					return false;
+				}
+			}
 			if (!isValid)
 				indicatorManager.LogError("Cannot place on these tiles");
 			return isValid;

@@ -89,25 +89,25 @@ MonoBehaviour:
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 8
-    m_Scale: 1
+    m_Scale: 1.5
     m_Name: Deuterium
     m_HashCode: -714592186
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 9
-    m_Scale: 1
+    m_Scale: 1.5
     m_Name: Tritium
     m_HashCode: -797410582
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 10
-    m_Scale: 1
+    m_Scale: 1.5
     m_Name: Carbon Nanotube
     m_HashCode: -356027749
   - m_ElementType: 2
     m_Unicode: 0
     m_GlyphIndex: 11
-    m_Scale: 1
+    m_Scale: 1.5
     m_Name: Electrum
     m_HashCode: 1403172177
   m_SpriteGlyphTable:
@@ -116,7 +116,7 @@ MonoBehaviour:
       m_Width: 512
       m_Height: 512
       m_HorizontalBearingX: 0
-      m_HorizontalBearingY: 366.11
+      m_HorizontalBearingY: 386.8
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
       m_Width: 512
       m_Height: 512
       m_HorizontalBearingX: 0
-      m_HorizontalBearingY: 366.11
+      m_HorizontalBearingY: 384.3
       m_HorizontalAdvance: 512
     m_GlyphRect:
       m_X: 512
@@ -258,7 +258,7 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 512
       m_Height: 512
-      m_HorizontalBearingX: 75.5
+      m_HorizontalBearingX: -12.5
       m_HorizontalBearingY: 366.11
       m_HorizontalAdvance: 512
     m_GlyphRect:

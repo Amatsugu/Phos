@@ -52,11 +52,13 @@ public class GameUI : UIHover
 
 		GameEvents.OnGameReady += Init;
 		GameEvents.OnHQPlaced += OnHQPlaced;
+		_categoryPanel.SetInteractable(false);
 	}
 
 	private void OnHQPlaced()
 	{
 		state = UIState.Idle;
+		_categoryPanel.SetInteractable(true);
 	}
 
 	private void Init()
@@ -77,6 +79,7 @@ public class GameUI : UIHover
 		if (state == UIState.HQPlacement)
 			return;
 		state = UIState.Idle;
+		_categoryPanel.DeselectAll();
 	}
 
 	private void OnSelectionClosed()

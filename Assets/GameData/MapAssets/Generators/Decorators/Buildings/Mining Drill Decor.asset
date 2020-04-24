@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b545c6da26973b648afc9aa1f547c25f, type: 3}
+  m_Script: {fileID: 11500000, guid: a30ce35580e5cb947838fd9998d63f5f, type: 3}
   m_Name: Mining Drill Decor
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: b81bdab9143fd604b961255a567e3683, type: 2}
   densityMulti: 1
-  bladeOffset:
+  rotationAxis:
     x: 0
-    y: 0
+    y: 1
     z: 0
+  rotateSpeed: 60
