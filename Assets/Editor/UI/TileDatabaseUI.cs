@@ -37,7 +37,7 @@ public class TileDatabaseUI : Editor
 				typeString += ", Building";
 			if (tileDef.type.HasFlag(TileDatabase.TileType.Resource))
 				typeString += ", Resource";
-			EditorGUILayout.LabelField($"[{tileDef.Id}]\t {tileDef.tile.name}:\t ({typeString})");
+			EditorGUILayout.LabelField($"[{tileDef.id}]\t {tileDef.tile.name}:\t ({typeString})");
 		}
 	}
 

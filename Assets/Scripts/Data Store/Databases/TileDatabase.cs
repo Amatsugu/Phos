@@ -41,7 +41,7 @@ public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 	[Serializable]
 	public struct TileDefination
 	{
-		public int Id => tile.GetInstanceID();
+		public int id;
 		public TileType type;
 		public TileEntity tile;
 	}
@@ -52,6 +52,7 @@ public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 			throw new ArgumentException("Tile is already in database");
 		var tileDef = new TileDefination
 		{
+			id = tile.GetInstanceID(),
 			tile = tile,
 			type = TileType.Tile
 		};
@@ -60,7 +61,7 @@ public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 		if (tile is ResourceTileInfo)
 			tileDef.type |= TileType.Resource;
 
-		tileEntites.Add(tileDef.Id, tileDef);
+		tileEntites.Add(tileDef.id, tileDef);
 
 		return tileDef;
 	}

@@ -23,13 +23,13 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 	[Serializable]
 	public class BuildingDefination
 	{
-		public int Id => info.GetInstanceID();
+		public int id;
 		public BuildingTileEntity info;
 		public BuildingCategory category;
 
 		public override int GetHashCode()
 		{
-			return Id;
+			return id;
 		}
 	}
 
@@ -52,7 +52,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 		buildings = new Dictionary<int, BuildingDefination>();
 		for (int i = 0; i < _buildingValues.Length; i++)
 		{
-			buildings.Add(_buildingValues[i].Id, _buildingValues[i]);
+			buildings.Add(_buildingValues[i].id, _buildingValues[i]);
 		}
 
 		var tmp = new Dictionary<BuildingCategory, List<int>>();
@@ -61,7 +61,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 		{
 			if (!tmp.ContainsKey(building.category))
 				tmp.Add(building.category, new List<int>());
-			tmp[building.category].Add(building.Id);
+			tmp[building.category].Add(building.id);
 		}
 		foreach (var key in tmp.Keys)
 			buildingCategories.Add(key, tmp[key].ToArray());

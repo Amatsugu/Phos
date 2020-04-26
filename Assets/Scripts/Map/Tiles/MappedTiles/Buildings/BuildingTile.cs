@@ -98,7 +98,7 @@ public class BuildingTile : Tile
 		if (buildingInfo.buildingMesh.mesh == null)
 			UnityEngine.Debug.LogWarning($"No Building Assigned for {base.GetName()}");
 		else
-			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, GetBuildingRotation(), GameRegistry.BuildingDatabase.GetId(buildingInfo), buildingInfo.maxHealth, buildingInfo.faction);
+			_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, GetBuildingRotation(), buildingInfo.GetInstanceID(), buildingInfo.maxHealth, buildingInfo.faction);
 
 		if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
 			_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);

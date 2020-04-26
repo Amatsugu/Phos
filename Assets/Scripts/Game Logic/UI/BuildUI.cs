@@ -357,7 +357,7 @@ public class BuildUI : MonoBehaviour
 		var activeCount = 0;
 		for (int i = 0; i < buildings.Length; i++)
 		{
-			if (!GameRegistry.IsBuildingUnlocked(buildings[i].Id))
+			if (!GameRegistry.IsBuildingUnlocked(buildings[i].id))
 			{
 				_activeUnits[i].gameObject.SetActive(false);
 				continue;
