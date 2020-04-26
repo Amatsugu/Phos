@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a30ce35580e5cb947838fd9998d63f5f, type: 3}
-  m_Name: Scout Dish Decor
+  m_Script: {fileID: 11500000, guid: 5b2861df5cbac734495157715652db79, type: 3}
+  m_Name: Test Effect
   m_EditorClassIdentifier: 
-  meshEntity: {fileID: 11400000, guid: c8e7522b0b56ee54e815d0c3c1750cc5, type: 2}
-  densityMulti: 1
-  rotationAxis:
-    x: 0
-    y: 1
-    z: 0
-  rotateSpeed: 90
+  bonusDefinations:
+  - building:
+      id: 3
+    bonuses:
+    - id: 2
+      ammount: 0
+    - id: 0
+      ammount: 0

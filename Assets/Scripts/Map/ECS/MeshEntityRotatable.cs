@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Unity.Entities;
@@ -8,6 +9,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ECS/Rotatable Mesh Enity")]
+[Serializable]
 public class MeshEntityRotatable : MeshEntity
 {
 	public override IEnumerable<ComponentType> GetComponents()

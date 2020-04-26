@@ -20,19 +20,16 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 	[SerializeField]
 	private BuildingDefination[] _buildingValues;
 
-	[SerializeField]
-	private int _nextId = 0;
-
 	[Serializable]
 	public class BuildingDefination
 	{
-		public int id;
+		public int Id => info.GetInstanceID();
 		public BuildingTileEntity info;
 		public BuildingCategory category;
 
 		public override int GetHashCode()
 		{
-			return id;
+			return Id;
 		}
 	}
 
@@ -40,23 +37,9 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 	{
 		buildings = new Dictionary<int, BuildingDefination>();
 		buildingCategories = new Dictionary<BuildingCategory, int[]>();
-		_nextId = 0;
 	}
 
-	public int GetNextId()
-	{
-		return _nextId++;
-	}
-
-	public int GetId(BuildingTileEntity building)
-	{
-		foreach (var b in buildings.Values)
-		{
-			if (b.info == building)
-				return b.id;
-		}
-		return -1;
-	}
+	public int GetId(BuildingTileEntity building) => building.GetInstanceID();
 
 	public void OnBeforeSerialize()
 	{
@@ -66,13 +49,10 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 
 	public void OnAfterDeserialize()
 	{
-		_nextId = 0;
 		buildings = new Dictionary<int, BuildingDefination>();
 		for (int i = 0; i < _buildingValues.Length; i++)
 		{
-			buildings.Add(_buildingValues[i].id, _buildingValues[i]);
-			if (_nextId <= _buildingValues[i].id)
-				_nextId = _buildingValues[i].id + 1;
+			buildings.Add(_buildingValues[i].Id, _buildingValues[i]);
 		}
 
 		var tmp = new Dictionary<BuildingCategory, List<int>>();
@@ -81,7 +61,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 		{
 			if (!tmp.ContainsKey(building.category))
 				tmp.Add(building.category, new List<int>());
-			tmp[building.category].Add(building.id);
+			tmp[building.category].Add(building.Id);
 		}
 		foreach (var key in tmp.Keys)
 			buildingCategories.Add(key, tmp[key].ToArray());

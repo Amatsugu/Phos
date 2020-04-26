@@ -17,41 +17,29 @@ public class SerializedMap
 
 	public Map Deserialize()
 	{
-		var map = new Map(height, width, seed, tileEdgeLength, false);
 		Debug.LogWarning("Map deserializtion not implemented");
-		return map;
+		var datbaseHandle = Addressables.LoadAssetAsync<TileDatabase>("Tile Database");
+		var db = datbaseHandle.Task.GetAwaiter().GetResult();
+		return LoadMap(db);
 	}
 
-	private void LoadTile(Map map, int i = 0)
+	private Map LoadMap(TileDatabase db)
 	{
-		if (i >= tiles.Length)
-			return;
-		var curTile = tiles[i];
-		/*Addressables.LoadAssetsAsync<TileEntity>(tiles.Select(t => t.assetReference).Distinct().ToArray(), te =>
+		var map = new Map(height, width, seed, tileEdgeLength, true);
+		for (int i = 0; i < tiles.Length; i++)
 		{
-			Debug.Log($"<color=red>[!]</color>Loaded {te.name}");
-		}, Addressables.MergeMode.None);*/
-		/*
-		var tileEntity = new AssetReference(curTile.assetReference).LoadAssetAsync<TileEntity>();
-		tileEntity.Completed += e =>
-		{
-			//LoadTile(map, i++);
-			if (e.Status == AsyncOperationStatus.Succeeded)
-			{
-				map[curTile.pos] = e.Result.CreateTile(curTile.pos, curTile.height);
-				map[curTile.pos].OnDeSerialized(curTile.tileData);
-			}
-			else
-				Debug.LogWarning($"Failed to load tile: [{curTile.pos}] ({curTile.assetReference})");
-		};
-		*/
+			var curTile = tiles[i];
+			map[curTile.pos] = db.tileEntites[curTile.tileId].tile.CreateTile(curTile.pos, curTile.height);
+			map[curTile.pos].OnDeSerialized(curTile.tileData);
+		}
+		return map;
 	}
 }
 
 //[Serializable]
 public struct SeializedTile
 {
-	public string assetReference;
+	public int tileId;
 	public float height;
 	public HexCoords pos;
 	public Dictionary<string, string> tileData;

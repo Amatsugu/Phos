@@ -53,7 +53,7 @@ public class GameRegistry : MonoBehaviour
 		{
 			if (buildings[i].info.tier == 1)
 			{
-				INST._unlockedBuildings.Add(buildings[i].id);
+				INST._unlockedBuildings.Add(buildings[i].Id);
 			}
 		}
 	}

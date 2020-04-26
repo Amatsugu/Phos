@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
@@ -7,10 +8,9 @@ using Unity.Physics;
 using Unity.Physics.Authoring;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using BoxCollider = Unity.Physics.BoxCollider;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
+[Serializable]
 public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 {
 	[Header("Tile Info")]

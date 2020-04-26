@@ -252,7 +252,7 @@ public class BuildUI : MonoBehaviour
 
 	private void PlaceBuilding(Tile selectedTile)
 	{
-		if (_validPlacement || _selectedBuilding.placementMode == PlacementMode.Path)
+		if (_validPlacement)
 		{
 			if (State == BuildState.Placement)
 				ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
@@ -357,7 +357,7 @@ public class BuildUI : MonoBehaviour
 		var activeCount = 0;
 		for (int i = 0; i < buildings.Length; i++)
 		{
-			if (!GameRegistry.IsBuildingUnlocked(buildings[i].id))
+			if (!GameRegistry.IsBuildingUnlocked(buildings[i].Id))
 			{
 				_activeUnits[i].gameObject.SetActive(false);
 				continue;

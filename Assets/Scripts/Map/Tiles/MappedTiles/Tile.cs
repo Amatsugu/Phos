@@ -203,7 +203,7 @@ public class Tile
 	{
 		var t = new SeializedTile
 		{
-			assetReference = info.assetGuid,
+			tileId = info.GetInstanceID(),
 			height = Height,
 			pos = Coords,
 			tileData = new Dictionary<string, string>()

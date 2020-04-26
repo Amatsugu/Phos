@@ -16,14 +16,12 @@ public class BuildingIdentifierDrawer : PropertyDrawer
 		var db = AssetDatabase.LoadAssetAtPath<BuildingDatabase>(assetPath);
 		var buildings = db.buildings.Values.Where(b => b != null);
 		var names = buildings.Select(b => $" [{b.info.category}] T{b.info.tier} {b.info.name}").Prepend("--Select Building--").ToArray();
-		var ids = buildings.Select(b => b.id + 1).Prepend(0).ToArray();
+		var ids = buildings.Select(b => b.Id + 1).Prepend(0).ToArray();
 		EditorGUI.BeginProperty(position, label, property);
 		var sProp = property.FindPropertyRelative("id");
-		position.width = EditorGUIUtility.labelWidth;
-		GUI.Label(position, label);
-		position.x += position.width;
-		position.width = EditorGUIUtility.fieldWidth;
-		var selection =  EditorGUI.IntPopup(position, sProp.intValue + 1, names, ids) - 1;
+		position = EditorGUI.PrefixLabel(position, label);
+		var resPos = new Rect(position.x - 15, position.y, position.width, position.height);
+		var selection =  EditorGUI.IntPopup(resPos, sProp.intValue + 1, names, ids) - 1;
 		sProp.intValue = selection;
 		EditorGUI.EndProperty();
 

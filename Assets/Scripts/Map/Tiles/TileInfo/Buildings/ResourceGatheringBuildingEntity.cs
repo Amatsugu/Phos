@@ -3,6 +3,7 @@
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building/Resoruce Gathering")]
 public class ResourceGatheringBuildingEntity : BuildingTileEntity
 {
+	[Header("Gathering")]
 	public ResourceIndentifier[] resourcesToGather;
 	public int gatherRange = 3;
 

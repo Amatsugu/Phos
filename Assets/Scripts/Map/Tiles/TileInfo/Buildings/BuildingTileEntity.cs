@@ -14,16 +14,19 @@ public enum PlacementMode
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
 public class BuildingTileEntity : TileEntity
 {
-	[Header("Mesh")]
+	[Header("Rendering")]
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(BuildingMeshEntity))]
 	public BuildingMeshEntity buildingMesh;
 	public float3 centerOfMassOffset;
 	public MeshEntityRotatable constructionMesh;
+	public bool preserveGroundTile;
+	public bool customDeathTile;
+	[ConditionalHide("customDeathTile")]
+	public TileEntity deathTile;
 
 	[Header("Stats")]
 	[Range(1, 6)]
 	public int tier = 1;
-
 	public float constructionTime = 2;
 	public BuildingCategory category;
 	public int size = 0;
@@ -38,18 +41,13 @@ public class BuildingTileEntity : TileEntity
 	public MeshEntityRotatable offshorePlatformMesh;
 
 	[Header("Building Info")]
-	public PlacementMode placementMode = PlacementMode.Single;
+	public Sprite icon;
+	public Faction faction;
+	[Header("Health")]
 	public float maxHealth = 100;
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/UI/HealthBar", typeof(HealthBarDefination))]
 	public HealthBarDefination healthBar;
 	public float3 healthBarOffset;
-	public Faction faction;
-	public bool customDeathTile;
-	[ConditionalHide("customDeathTile")]
-	public TileEntity deathTile;
-	public BuildingIdentifier upgradeTarget;
-	public Sprite icon;
-	public bool preserveGroundTile;
 
 	[Header("Validator")]
 	public PlacementValidator validator;
@@ -57,9 +55,11 @@ public class BuildingTileEntity : TileEntity
 	[Header("Resources")]
 	[SerializeField]
 	public ResourceIndentifier[] cost;
-
 	public ResourceIndentifier[] production;
 	public ResourceIndentifier[] consumption;
+
+	[Header("Adjacency Bonuses")]
+	public AdjacencyEffect[] adjacencyEffects;
 
 
 	public override IEnumerable<ComponentType> GetComponents()

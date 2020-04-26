@@ -91,16 +91,15 @@ public class BuildingDatabaseUI : Editor
 			{
 				existingB = new BuildingDatabase.BuildingDefination
 				{
-					id = database.GetNextId(),
 					info = b,
 					category = b.category
 				};
-				database.buildings.Add(existingB.id, existingB);
+				database.buildings.Add(existingB.Id, existingB);
 			}else
 			{
 				existingB.category = b.category;
 			}
-			database.buildingCategories[category][i] = existingB.id;
+			database.buildingCategories[category][i] = existingB.Id;
 		}
 	}
 
@@ -110,7 +109,7 @@ public class BuildingDatabaseUI : Editor
 		foreach (var bd in database.buildings.Values)
 		{
 			if (bd.info == null)
-				deleteIds.Add(bd.id);
+				deleteIds.Add(bd.Id);
 		}
 		for (int i = 0; i < deleteIds.Count; i++)
 		{

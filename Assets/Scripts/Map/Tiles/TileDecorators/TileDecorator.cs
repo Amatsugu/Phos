@@ -1,9 +1,11 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
 using UnityEngine;
 
+[Serializable]
 public abstract class TileDecorator : ScriptableObject
 {
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Decor", typeof(MeshEntityRotatable))]
