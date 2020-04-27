@@ -9,6 +9,7 @@ public class MapRenderer : MonoBehaviour
 	public MapGenerator generator;
 	public GameObject oceanPlane;
 	public MeshEntityRotatable line;
+	public TileDatabase tileDatabase;
 	public UnityEngine.UI.Image img;
 	public int mapRes = 4;
 
@@ -53,9 +54,10 @@ public class MapRenderer : MonoBehaviour
 		Map.ActiveMap = map;
 		generator.GenerateFeatures(map);
 		serializedMap = map.Serialize();
-		//map2 = serializedMap.Deserialize();
+		//map2 = serializedMap.Deserialize(tileDatabase);
+		//map.Render(_entityManager);
+		//map = Map.ActiveMap = map2;
 		map.Render(_entityManager);
-		//map2.Render(_entityManager);
 		/*
 		var col = Cartographer.RenderMap(map, mapRes);
 		var tex = new Texture2D(map.totalWidth * mapRes, map.totalHeight * mapRes, TextureFormat.RGBA32, false);

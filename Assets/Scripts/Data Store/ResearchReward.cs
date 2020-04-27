@@ -71,15 +71,3 @@ public abstract class CustomResearchAction : ScriptableObject
 
 	public abstract string GetRewardMessage();
 }
-
-[System.Serializable]
-public class BuildingIdentifier
-{
-	public int id = -1;
-}
-
-[System.Serializable]
-public struct UnitIdentifier
-{
-	public MobileUnitEntity unit;
-}

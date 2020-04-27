@@ -52,7 +52,6 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 #if DEBUG
 	void ValidateCommands()
 	{
-		Debug.Log(GetSupportedCommands());
 		ValidateCommad<IAttack>(CommandActions.Attack);	
 		ValidateCommad<IMoveable>(CommandActions.Move);	
 		ValidateCommad<IGuard>(CommandActions.Guard);	

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Unity.Entities;
@@ -12,6 +13,7 @@ public enum PlacementMode
 }
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Building")]
+[Serializable]
 public class BuildingTileEntity : TileEntity
 {
 	[Header("Rendering")]

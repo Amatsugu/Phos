@@ -22,11 +22,10 @@ public class HQTile : BuildingTile
 #endif
 		Map.ActiveMap.HQ = this;
 		Map.ActiveMap.conduitGraph = new ConduitGraph(Coords, Height + 3);
-		var info = this.info as HQTileInfo;
 		var tilesToReplace = Map.ActiveMap.GetNeighbors(Coords);
 		for (int i = 0; i < tilesToReplace.Length; i++)
 		{
-			Map.ActiveMap.ReplaceTile(tilesToReplace[i], info.subHQTiles[i]);
+			Map.ActiveMap.ReplaceTile(tilesToReplace[i], hqInfo.subHQTiles[i]);
 		}
 		GameRegistry.BaseNameUI.panel.Show();
 		GameEvents.InvokeOnHQPlaced();

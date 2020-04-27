@@ -204,6 +204,7 @@ public class Tile
 		var t = new SeializedTile
 		{
 			tileId = info.GetInstanceID(),
+			origTile = (originalTile == null) ? -1 : originalTile.GetInstanceID(),
 			height = Height,
 			pos = Coords,
 			tileData = new Dictionary<string, string>()

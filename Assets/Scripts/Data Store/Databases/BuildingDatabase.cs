@@ -39,8 +39,6 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 		buildingCategories = new Dictionary<BuildingCategory, int[]>();
 	}
 
-	public int GetId(BuildingTileEntity building) => building.GetInstanceID();
-
 	public void OnBeforeSerialize()
 	{
 		_buildingValues = buildings.Values.ToArray();
@@ -80,7 +78,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 				return output;
 			}
 			else
-				return new BuildingDefination[0];
+				return Array.Empty<BuildingDefination>();
 		}
 	}
 

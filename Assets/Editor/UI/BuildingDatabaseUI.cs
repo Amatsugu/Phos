@@ -45,7 +45,7 @@ public class BuildingDatabaseUI : Editor
 		};
 		foreach (var categories in database.buildingCategories)
 		{
-			GUILayout.Label($"{categories.Key.ToString()} ({categories.Value.Length})", guiStyle);
+			GUILayout.Label($"{categories.Key} ({categories.Value.Length})", guiStyle);
 			foreach (var buildingID in categories.Value)
 			{
 				var building = database.buildings[buildingID].info;

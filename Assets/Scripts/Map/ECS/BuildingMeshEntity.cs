@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
@@ -7,6 +8,7 @@ using Unity.Physics;
 using UnityEngine;
 using CapsuleCollider = Unity.Physics.CapsuleCollider;
 
+[Serializable]
 public class BuildingMeshEntity : MeshEntityRotatable
 {
 	[Header("Center of Mass")]
