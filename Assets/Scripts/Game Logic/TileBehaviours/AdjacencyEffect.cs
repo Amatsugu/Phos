@@ -8,19 +8,27 @@ public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
 {
 	public BonusDefination[] bonusDefinations;
 
-	private Dictionary<BuildingIdentifier, ResourceIndentifier[]> _bonuses;
+	private Dictionary<int, BonusDefination> _bonuses;
 
-	public virtual List<string> GetAdjacencyEffectsString(BuildingTileEntity building, Tile[] neighbors)
+	public virtual void GetAdjacencyEffectsString(BuildingTileEntity building, Tile[] neighbors, ref List<string> effectsString)
 	{
-		var effects = new List<string>();
+		var productionBonus = 0f;
+		var consumtionBonus = 0f;
 		for (int i = 0; i < neighbors.Length; i++)
 		{
 			if(neighbors[i] is BuildingTile b)
 			{
-				
+				var bonusID = b.info.GetInstanceID();
+				if (_bonuses.ContainsKey(bonusID))
+				{
+					var bonus = _bonuses[bonusID];
+					productionBonus += bonus.productionMultiplier;
+					consumtionBonus += bonus.consumptionMultiplier;
+				}
 			}
 		}
-		return effects;
+		effectsString.Add($"+{productionBonus}x Production Rate");
+		effectsString.Add($"-{consumtionBonus}x Consumption Rate");
 	}
 
 	public virtual void ApplyEffects(BuildingTileEntity building, Tile[] neighbors)
@@ -34,9 +42,9 @@ public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
 
 	public void OnAfterDeserialize()
 	{
-		_bonuses = new Dictionary<BuildingIdentifier, ResourceIndentifier[]>();
+		_bonuses = new Dictionary<int, BonusDefination>();
 		for (int i = 0; i < bonusDefinations.Length; i++)
-			_bonuses.Add(bonusDefinations[i].building, bonusDefinations[i].bonuses);
+			_bonuses.Add(bonusDefinations[i].building.id, bonusDefinations[i]);
 	}
 }
 
@@ -44,5 +52,6 @@ public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
 public struct BonusDefination
 {
 	public BuildingIdentifier building;
-	public ResourceIndentifier[] bonuses;
+	public float productionMultiplier;
+	public float consumptionMultiplier;
 }

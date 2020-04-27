@@ -240,6 +240,16 @@ public class UIBuildPanel : UITabPanel
 		if (selectedTile == null)
 			return;
 		bool isValid = _selectedBuilding.validator.ValidatePlacement(Map.ActiveMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
+		var neighbors = Map.ActiveMap.GetNeighbors(selectedTile.Coords);
+		var effects = new List<string>();
+		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
+			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(_selectedBuilding, neighbors, ref effects);
+
+		Debug.Log("--Effects--");
+		for (int i = 0; i < effects.Count; i++)
+			Debug.Log(effects[i]);
+		Debug.Log("-----------");
+
 		ShowPoweredTiles(selectedTile);
 		if(Input.GetKeyUp(KeyCode.Mouse0))
 		{
