@@ -5,6 +5,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 
 public class BuildingTile : Tile
 {
@@ -104,9 +105,7 @@ public class BuildingTile : Tile
 			_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
 		PrepareEntity();
 		OnBuilt();
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
-		for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
-			buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
+		ApplyBonuses();
 		RenderDecorators();
 	}
 
@@ -197,6 +196,25 @@ public class BuildingTile : Tile
 	protected virtual void OnBuilt()
 	{
 		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.name}", Coords);
+	}
+
+	public override void TileUpdated(Tile src, TileUpdateType updateType)
+	{
+		base.TileUpdated(src, updateType);
+		ApplyBonuses();
+	}
+
+	protected virtual void ApplyBonuses()
+	{
+		if (!IsBuilt)
+			return;
+		Debug.Log("Apply Bonus");
+		var entity = GetBuildingEntity();
+		Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
+		Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
+			buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
 	}
 }
 

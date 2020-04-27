@@ -29,6 +29,9 @@ MonoBehaviour:
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  preserveGroundTile: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   tier: 1
   constructionTime: 2
   category: 2
@@ -37,20 +40,14 @@ MonoBehaviour:
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
-  placementMode: 0
+  icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  faction: 1
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 0
     z: 0
-  faction: 1
-  customDeathTile: 0
-  deathTile: {fileID: 0}
-  upgradeTarget:
-    id: -1
-  icon: {fileID: 2647467648574043659, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  preserveGroundTile: 1
   validator: {fileID: 11400000, guid: 2d5689ae04aaec24bbaad56647312b4a, type: 2}
   cost:
   - id: 1
@@ -61,6 +58,8 @@ MonoBehaviour:
   consumption:
   - id: 0
     ammount: 2
+  adjacencyEffects:
+  - {fileID: 11400000, guid: c9e71ebdd7d6a4d4cbefb6843099607c, type: 2}
   resourcesToGather:
   - id: 1
     ammount: 0.5

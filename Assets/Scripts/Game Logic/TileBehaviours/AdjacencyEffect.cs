@@ -1,31 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 [CreateAssetMenu(menuName = "Adjacency Effects/Basic")]
 [Serializable]
-public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
+public class AdjacencyEffect : ScriptableObject
 {
 	public BonusDefination[] bonusDefinations;
-
-	private Dictionary<int, BonusDefination> _bonuses;
 
 	public virtual void GetAdjacencyEffectsString(BuildingTileEntity building, Tile[] neighbors, ref List<string> effectsString)
 	{
 		var (prod, cons) = CalculateBonuses(neighbors);
-		effectsString.Add($"+{cons}x Production Rate");
-		effectsString.Add($"-{prod}x Consumption Rate");
+		effectsString.Add($"+{prod}x Production Rate");
+		effectsString.Add($"-{cons}x Consumption Rate");
 	}
 
 	public virtual void ApplyEffects(BuildingTile building, Tile[] neighbors)
 	{
 		var (prod, cons) = CalculateBonuses(neighbors);
 		var e = building.GetBuildingEntity();
-		if (prod > 0)
-		{
-		}
+		var prodMulti = Map.EM.GetComponentData<ProductionMulti>(e);
+		var consMulti = Map.EM.GetComponentData<ConsumptionMulti>(e);
+		prodMulti.Value += prod;
+		consMulti.Value += cons;
+		Map.EM.SetComponentData(e, prodMulti);
+		Map.EM.SetComponentData(e, consMulti);
 	}
 
 	private (float prodBonus, float consBonus) CalculateBonuses(Tile[] neighbors)
@@ -36,35 +38,41 @@ public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
 		{
 			if (neighbors[i] is BuildingTile b)
 			{
-				Debug.Log(b.info);
-				var bonusID = b.info.GetInstanceID();
-				if (_bonuses.ContainsKey(bonusID))
+				var building = b.info.GetInstanceID();
+				for (int j = 0; j < bonusDefinations.Length; j++)
 				{
-					var bonus = _bonuses[bonusID];
-					productionBonus += bonus.productionMultiplier;
-					consumtionBonus += bonus.consumptionMultiplier;
+					if(bonusDefinations[j].buildingsSet.Contains(building))
+					{
+						var bonus = bonusDefinations[j];
+						productionBonus += bonus.productionMultiplier;
+						consumtionBonus += bonus.consumptionMultiplier;
+					}
+
 				}
 			}
 		}
 		return (productionBonus, consumtionBonus);
 	}
+}
+
+[Serializable]
+public struct BonusDefination : ISerializationCallbackReceiver
+{
+	public BuildingIdentifier[] buildings;
+	public HashSet<int> buildingsSet;
+	public float productionMultiplier;
+	public float consumptionMultiplier;
+
+	public void OnAfterDeserialize()
+	{
+		if (buildings == null)
+			return;
+		buildingsSet = new HashSet<int>();
+		for (int i = 0; i < buildings.Length; i++)
+			buildingsSet.Add(buildings[i].id);
+	}
 
 	public void OnBeforeSerialize()
 	{
 	}
-
-	public void OnAfterDeserialize()
-	{
-		_bonuses = new Dictionary<int, BonusDefination>();
-		for (int i = 0; i < bonusDefinations.Length; i++)
-			_bonuses.Add(bonusDefinations[i].building.id, bonusDefinations[i]);
-	}
-}
-
-[Serializable]
-public struct BonusDefination
-{
-	public BuildingIdentifier building;
-	public float productionMultiplier;
-	public float consumptionMultiplier;
 }
