@@ -12,161 +12,161 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0cdaa0450a88e49b9517794e967501, type: 3}
   m_Name: Tile Database
   m_EditorClassIdentifier: 
-  tileIds: 4a620000666200004662000048620000f6610000ee610000ec600000f4610000f0610000f2610000ec610000686200003a6200003662000040620000426200003c6200003e6200003862000044620000646200004c6200004e62000050620000566200005c6200005e6200005a62000060620000546200005262000062620000586200001e630000d668000040640000446400004c640000426400004e6400003a64000048640000386400004a64000046640000166300001c630000186300003c640000146300001a6300003e640000
+  tileIds: 00620000026200000462000006620000ea610000e2610000de600000e8610000e4610000e6610000e0610000086200000a6200000c6200000e62000010620000126200001462000016620000186200001a6200001c6200001e62000020620000226200002462000026620000286200002a6200002c6200002e62000030620000326200003462000036620000386200003a6200003c6200003e62000040620000426200004462000046620000486200004a6200004c6200004e6200005062000052620000546200005662000058620000
   tileDefs:
-  - id: 25162
+  - id: 25088
     type: 2
     tile: {fileID: 11400000, guid: ba0f6b1eb8dc15140b1a78d6d5193a76, type: 2}
-  - id: 25190
+  - id: 25090
     type: 2
     tile: {fileID: 11400000, guid: 74972f4338262c245b3f0a0d8d3a93f1, type: 2}
-  - id: 25158
+  - id: 25092
     type: 2
     tile: {fileID: 11400000, guid: 0ef12f3aada833948909acbc675a5953, type: 2}
-  - id: 25160
+  - id: 25094
     type: 2
     tile: {fileID: 11400000, guid: 255a5856c262ab942bead534bc36634b, type: 2}
-  - id: 25078
+  - id: 25066
     type: 2
     tile: {fileID: 11400000, guid: 6e4e32dbf880de14d96237eda527fc63, type: 2}
-  - id: 25070
+  - id: 25058
     type: 2
     tile: {fileID: 11400000, guid: 25fcb05707ae26c42b41d05913a69c7e, type: 2}
-  - id: 24812
+  - id: 24798
     type: 2
     tile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
-  - id: 25076
+  - id: 25064
     type: 2
     tile: {fileID: 11400000, guid: e06933dfdc394b44a8d7dd66a08bd22c, type: 2}
-  - id: 25072
+  - id: 25060
     type: 2
     tile: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}
-  - id: 25074
+  - id: 25062
     type: 2
     tile: {fileID: 11400000, guid: d966e12209bf2fa4c9378e52af7fd189, type: 2}
-  - id: 25068
+  - id: 25056
     type: 2
     tile: {fileID: 11400000, guid: 83b9fc58865dd7b4395a139fcbc8b5a7, type: 2}
-  - id: 25192
+  - id: 25096
     type: 2
     tile: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
-  - id: 25146
+  - id: 25098
     type: 2
     tile: {fileID: 11400000, guid: d02481ac5a9ada04faab17721ee4fe04, type: 2}
-  - id: 25142
+  - id: 25100
     type: 2
     tile: {fileID: 11400000, guid: c6dc8c018e7494742882468f5336e6b0, type: 2}
-  - id: 25152
+  - id: 25102
     type: 2
     tile: {fileID: 11400000, guid: 763826ebcd88b8f44bd20f65c32a52f7, type: 2}
-  - id: 25154
+  - id: 25104
     type: 2
     tile: {fileID: 11400000, guid: b960653cf9a46154a84d6f0acf1f1f5f, type: 2}
-  - id: 25148
+  - id: 25106
     type: 2
     tile: {fileID: 11400000, guid: 806da794f6c07bb419f217c1384051b6, type: 2}
-  - id: 25150
+  - id: 25108
     type: 2
     tile: {fileID: 11400000, guid: 2e4734b90a718294d9106a9cd2c5f510, type: 2}
-  - id: 25144
+  - id: 25110
     type: 2
     tile: {fileID: 11400000, guid: fcfbc5a667690e540b3cbcda9dd74c53, type: 2}
-  - id: 25156
+  - id: 25112
     type: 2
     tile: {fileID: 11400000, guid: 42be3b3def01a054285a788e34bee865, type: 2}
-  - id: 25188
+  - id: 25114
     type: 2
     tile: {fileID: 11400000, guid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb, type: 2}
-  - id: 25164
+  - id: 25116
     type: 2
     tile: {fileID: 11400000, guid: 5992627ac9514d44ca66f9db77676ba0, type: 2}
-  - id: 25166
+  - id: 25118
     type: 2
     tile: {fileID: 11400000, guid: 313432d6adc1b3d4899355519612998c, type: 2}
-  - id: 25168
+  - id: 25120
     type: 2
     tile: {fileID: 11400000, guid: d89c88f38fcaf034b904d59a1cf8fc24, type: 2}
-  - id: 25174
+  - id: 25122
     type: 2
     tile: {fileID: 11400000, guid: 69df6771048597e47af78e977c2c3909, type: 2}
-  - id: 25180
+  - id: 25124
     type: 2
     tile: {fileID: 11400000, guid: 05a7a88a94688f4449231ec4e132441d, type: 2}
-  - id: 25182
+  - id: 25126
     type: 2
     tile: {fileID: 11400000, guid: 0ef40f19d9b634a4382340a8aae1e9a0, type: 2}
-  - id: 25178
+  - id: 25128
     type: 2
     tile: {fileID: 11400000, guid: eff0cbc9ab35c844488d2e6935e178fd, type: 2}
-  - id: 25184
+  - id: 25130
     type: 2
     tile: {fileID: 11400000, guid: 58492fffc93cd66479b3ff8d5fe16cb9, type: 2}
-  - id: 25172
+  - id: 25132
     type: 2
     tile: {fileID: 11400000, guid: baf5151406270f649a0cded5e679cc9c, type: 2}
-  - id: 25170
+  - id: 25134
     type: 2
     tile: {fileID: 11400000, guid: f229b54f71dfb364ebe347dd10929aa0, type: 2}
-  - id: 25186
+  - id: 25136
     type: 2
     tile: {fileID: 11400000, guid: 4cf2d7c361cb572479674c0f8f82fcb7, type: 2}
-  - id: 25176
+  - id: 25138
     type: 2
     tile: {fileID: 11400000, guid: 120733ddc07b94848ad3f5f028b356d6, type: 2}
-  - id: 25374
+  - id: 25140
     type: 2
     tile: {fileID: 11400000, guid: 345658ca8afa8e14195c332196239802, type: 2}
-  - id: 26838
+  - id: 25142
     type: 2
     tile: {fileID: 11400000, guid: acbbe86fe400ff747a45db1f5d6cba26, type: 2}
-  - id: 25664
+  - id: 25144
     type: 0
     tile: {fileID: 11400000, guid: e1aad5cf5998f104ab3436a7be0e85d6, type: 2}
-  - id: 25668
+  - id: 25146
     type: 0
     tile: {fileID: 11400000, guid: 924d6fd564bc2794ca9d46c7f1609b20, type: 2}
-  - id: 25676
+  - id: 25148
     type: 0
     tile: {fileID: 11400000, guid: fd1b8e3f589fd76439b6181c154b96dc, type: 2}
-  - id: 25666
+  - id: 25150
     type: 0
     tile: {fileID: 11400000, guid: c24e58ddad3ec62478f1d6dc66af159f, type: 2}
-  - id: 25678
+  - id: 25152
     type: 0
     tile: {fileID: 11400000, guid: c83d097128f7c7e42ae539c3e9b53171, type: 2}
-  - id: 25658
+  - id: 25154
     type: 0
     tile: {fileID: 11400000, guid: f998f30b51bed924bbcfcf0266a9321b, type: 2}
-  - id: 25672
+  - id: 25156
     type: 0
     tile: {fileID: 11400000, guid: 37bc7b51e94de2c4da847c5adc1e1f20, type: 2}
-  - id: 25656
+  - id: 25158
     type: 0
     tile: {fileID: 11400000, guid: a45b2388e4f92d044936a1d2865af49a, type: 2}
-  - id: 25674
+  - id: 25160
     type: 0
     tile: {fileID: 11400000, guid: 930d73699a0289e4e9a271d243bf8c57, type: 2}
-  - id: 25670
+  - id: 25162
     type: 0
     tile: {fileID: 11400000, guid: bfeefccfe04fe9540b4dc2b4a0e529eb, type: 2}
-  - id: 25366
+  - id: 25164
     type: 1
     tile: {fileID: 11400000, guid: b5c46715dc3c516429087c81d7a495fa, type: 2}
-  - id: 25372
+  - id: 25166
     type: 1
     tile: {fileID: 11400000, guid: 79d7ad44c4c042d4abe740c3a82df4dc, type: 2}
-  - id: 25368
+  - id: 25168
     type: 1
     tile: {fileID: 11400000, guid: 5f2425752e5adba4cb465b4a23a554fc, type: 2}
-  - id: 25660
+  - id: 25170
     type: 1
     tile: {fileID: 11400000, guid: 563ec7c58ba6a1b4199d96ade0befd29, type: 2}
-  - id: 25364
+  - id: 25172
     type: 1
     tile: {fileID: 11400000, guid: f4d2241316f0691489c48ccb750796d1, type: 2}
-  - id: 25370
+  - id: 25174
     type: 1
     tile: {fileID: 11400000, guid: 9aff72993e7e56042a67d5091984d80d, type: 2}
-  - id: 25662
+  - id: 25176
     type: 1
     tile: {fileID: 11400000, guid: d4a3ff8957a53be4e876d0a79d7e2008, type: 2}

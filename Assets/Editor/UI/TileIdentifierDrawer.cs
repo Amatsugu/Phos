@@ -15,7 +15,7 @@ public class TileIdentifierDrawer : PropertyDrawer
 		var assetPath = AssetDatabase.GUIDToAssetPath(asset);
 		var db = AssetDatabase.LoadAssetAtPath<TileDatabase>(assetPath);
 		var tiles = db.tileEntites.Values;
-		var names = tiles.Select(t => $" [{t.type}] {t.tile.name}").Prepend("--Select Tile--").ToArray();
+		var names = tiles.Select(t => $" [{t.id}, {t.type}] {t.tile.name}").Prepend("--Select Tile--").ToArray();
 		var ids = tiles.Select(b => b.id + 1).Prepend(0).ToArray();
 		EditorGUI.BeginProperty(position, label, property);
 		var sProp = property.FindPropertyRelative("id");

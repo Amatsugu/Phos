@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
@@ -6,6 +7,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ECS/UI/Health Bar")]
+[Serializable]
 public class HealthBarDefination : ScriptableObject
 {
 	public HealthBarEntity healthBarBg;

@@ -13,102 +13,102 @@ MonoBehaviour:
   m_Name: Building Database
   m_EditorClassIdentifier: 
   _buildingValues:
-  - id: 25158
+  - id: 25092
     info: {fileID: 11400000, guid: 0ef12f3aada833948909acbc675a5953, type: 2}
     category: 2
-  - id: 25160
+  - id: 25094
     info: {fileID: 11400000, guid: 255a5856c262ab942bead534bc36634b, type: 2}
     category: 2
-  - id: 25162
+  - id: 25088
     info: {fileID: 11400000, guid: ba0f6b1eb8dc15140b1a78d6d5193a76, type: 2}
     category: 2
-  - id: 25190
+  - id: 25090
     info: {fileID: 11400000, guid: 74972f4338262c245b3f0a0d8d3a93f1, type: 2}
     category: 2
-  - id: 25078
+  - id: 25066
     info: {fileID: 11400000, guid: 6e4e32dbf880de14d96237eda527fc63, type: 2}
     category: 0
-  - id: 25070
+  - id: 25058
     info: {fileID: 11400000, guid: 25fcb05707ae26c42b41d05913a69c7e, type: 2}
     category: 0
-  - id: 25076
+  - id: 25064
     info: {fileID: 11400000, guid: e06933dfdc394b44a8d7dd66a08bd22c, type: 2}
     category: 0
-  - id: 25072
+  - id: 25060
     info: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}
     category: 0
-  - id: 25074
+  - id: 25062
     info: {fileID: 11400000, guid: d966e12209bf2fa4c9378e52af7fd189, type: 2}
     category: 0
-  - id: 25068
+  - id: 25056
     info: {fileID: 11400000, guid: 83b9fc58865dd7b4395a139fcbc8b5a7, type: 2}
     category: 0
-  - id: 24812
+  - id: 24798
     info: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
     category: 0
-  - id: 25192
+  - id: 25096
     info: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
     category: 5
-  - id: 25142
+  - id: 25100
     info: {fileID: 11400000, guid: c6dc8c018e7494742882468f5336e6b0, type: 2}
     category: 3
-  - id: 25188
+  - id: 25114
     info: {fileID: 11400000, guid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb, type: 2}
     category: 3
-  - id: 25146
+  - id: 25098
     info: {fileID: 11400000, guid: d02481ac5a9ada04faab17721ee4fe04, type: 2}
     category: 3
-  - id: 25148
+  - id: 25106
     info: {fileID: 11400000, guid: 806da794f6c07bb419f217c1384051b6, type: 2}
     category: 3
-  - id: 25150
+  - id: 25108
     info: {fileID: 11400000, guid: 2e4734b90a718294d9106a9cd2c5f510, type: 2}
     category: 3
-  - id: 25144
+  - id: 25110
     info: {fileID: 11400000, guid: fcfbc5a667690e540b3cbcda9dd74c53, type: 2}
     category: 3
-  - id: 25152
+  - id: 25102
     info: {fileID: 11400000, guid: 763826ebcd88b8f44bd20f65c32a52f7, type: 2}
     category: 3
-  - id: 25154
+  - id: 25104
     info: {fileID: 11400000, guid: b960653cf9a46154a84d6f0acf1f1f5f, type: 2}
     category: 3
-  - id: 25156
+  - id: 25112
     info: {fileID: 11400000, guid: 42be3b3def01a054285a788e34bee865, type: 2}
     category: 3
-  - id: 25174
+  - id: 25122
     info: {fileID: 11400000, guid: 69df6771048597e47af78e977c2c3909, type: 2}
     category: 4
-  - id: 25164
+  - id: 25116
     info: {fileID: 11400000, guid: 5992627ac9514d44ca66f9db77676ba0, type: 2}
     category: 4
-  - id: 25166
+  - id: 25118
     info: {fileID: 11400000, guid: 313432d6adc1b3d4899355519612998c, type: 2}
     category: 4
-  - id: 25168
+  - id: 25120
     info: {fileID: 11400000, guid: d89c88f38fcaf034b904d59a1cf8fc24, type: 2}
     category: 4
-  - id: 25180
+  - id: 25124
     info: {fileID: 11400000, guid: 05a7a88a94688f4449231ec4e132441d, type: 2}
     category: 1
-  - id: 25182
+  - id: 25126
     info: {fileID: 11400000, guid: 0ef40f19d9b634a4382340a8aae1e9a0, type: 2}
     category: 1
-  - id: 25178
+  - id: 25128
     info: {fileID: 11400000, guid: eff0cbc9ab35c844488d2e6935e178fd, type: 2}
     category: 1
-  - id: 25184
+  - id: 25130
     info: {fileID: 11400000, guid: 58492fffc93cd66479b3ff8d5fe16cb9, type: 2}
     category: 1
-  - id: 25186
+  - id: 25136
     info: {fileID: 11400000, guid: 4cf2d7c361cb572479674c0f8f82fcb7, type: 2}
     category: 1
-  - id: 25176
+  - id: 25138
     info: {fileID: 11400000, guid: 120733ddc07b94848ad3f5f028b356d6, type: 2}
     category: 1
-  - id: 25170
+  - id: 25134
     info: {fileID: 11400000, guid: f229b54f71dfb364ebe347dd10929aa0, type: 2}
     category: 1
-  - id: 25172
+  - id: 25132
     info: {fileID: 11400000, guid: baf5151406270f649a0cded5e679cc9c, type: 2}
     category: 1

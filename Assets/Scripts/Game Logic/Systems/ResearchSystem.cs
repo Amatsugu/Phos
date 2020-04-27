@@ -89,7 +89,7 @@ public class ResearchSystem : ComponentSystem
 			researchProgress[rId].lastTickProgress = new int[researchProgress[rId].resources.Length];
 		}
 
-		Entities.WithNone<ConsumptionDebuff, InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
+		Entities.WithNone<ConsumptionMulti, InactiveBuildingTag, BuildingOffTag, FirstTickTag>()
 			.ForEach((Entity e, ref ResearchBuildingCategory c, ref ResearchConsumptionMulti m, ref BuildingId id) =>
 		{
 			ProcessResearch(c.Value, m.Value, id.Value);

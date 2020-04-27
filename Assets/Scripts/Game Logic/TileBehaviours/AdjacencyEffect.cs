@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [CreateAssetMenu(menuName = "Adjacency Effects/Basic")]
+[Serializable]
 public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
 {
 	public BonusDefination[] bonusDefinations;
@@ -12,12 +14,29 @@ public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
 
 	public virtual void GetAdjacencyEffectsString(BuildingTileEntity building, Tile[] neighbors, ref List<string> effectsString)
 	{
+		var (prod, cons) = CalculateBonuses(neighbors);
+		effectsString.Add($"+{cons}x Production Rate");
+		effectsString.Add($"-{prod}x Consumption Rate");
+	}
+
+	public virtual void ApplyEffects(BuildingTile building, Tile[] neighbors)
+	{
+		var (prod, cons) = CalculateBonuses(neighbors);
+		var e = building.GetBuildingEntity();
+		if (prod > 0)
+		{
+		}
+	}
+
+	private (float prodBonus, float consBonus) CalculateBonuses(Tile[] neighbors)
+	{
 		var productionBonus = 0f;
 		var consumtionBonus = 0f;
 		for (int i = 0; i < neighbors.Length; i++)
 		{
-			if(neighbors[i] is BuildingTile b)
+			if (neighbors[i] is BuildingTile b)
 			{
+				Debug.Log(b.info);
 				var bonusID = b.info.GetInstanceID();
 				if (_bonuses.ContainsKey(bonusID))
 				{
@@ -27,13 +46,7 @@ public class AdjacencyEffect : ScriptableObject, ISerializationCallbackReceiver
 				}
 			}
 		}
-		effectsString.Add($"+{productionBonus}x Production Rate");
-		effectsString.Add($"-{consumtionBonus}x Consumption Rate");
-	}
-
-	public virtual void ApplyEffects(BuildingTileEntity building, Tile[] neighbors)
-	{
-
+		return (productionBonus, consumtionBonus);
 	}
 
 	public void OnBeforeSerialize()

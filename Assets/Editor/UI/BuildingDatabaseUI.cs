@@ -59,6 +59,7 @@ public class BuildingDatabaseUI : Editor
 
 	public void Refresh()
 	{
+		database.Reset();
 		var bd = new Dictionary<BuildingCategory, List<BuildingTileEntity>>();
 		var assets = AssetDatabase.FindAssets($"t:{nameof(BuildingTileEntity)}", new[] { "Assets/GameData/MapAssets/TileInfo/Buildings" });
 		foreach (var asset in assets)

@@ -60,6 +60,36 @@ public static class MathUtils
 		return value.EaseIn(power) * value.EaseOut(power);
 	}
 
+	public static string Abbreviate(this int value) => Abbreviate((float)value);
+
+	public static string Abbreviate(this float value)
+	{
+		char suffix = default;
+		float n = value;
+		if (value >= 1_000_000_000)
+		{
+			suffix = 'B';
+			n /= 1_000_000_000;
+		}
+		else if (value >= 1_000_000)
+		{
+			suffix = 'M';
+			n /= 1_000_000;
+		}
+		else if (value >= 1_000)
+		{
+			suffix = 'K';
+			n /= 1000;
+		}
+		return $"{n.Round(1)}{suffix}";
+	}
+
+	public static float Round(this float value, int places)
+	{
+		var n = math.pow(10, places);
+		return ((int)(value * n)) / n;
+	}
+
 	public static Aabb PhysicsBounds(float3 a, float3 b)
 	{
 		float3 min = default, max = default;

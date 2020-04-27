@@ -79,10 +79,10 @@ public class UIResourceDisplay : UIHover
 
 	public void SetInfo(int stored, int income, int consumption, int netIncome, bool atMax = false)
 	{
-		storedText.SetText(stored.ToString());
-		incomeText.SetText(income.ToString());
-		consumeText.SetText(consumption.ToString());
-		netText.SetText(Mathf.Abs(netIncome).ToString());
+		storedText.SetText(stored.Abbreviate());
+		incomeText.SetText(income.Abbreviate());
+		consumeText.SetText(consumption.Abbreviate());
+		netText.SetText(Mathf.Abs(netIncome).Abbreviate());
 		if (netIncome == 0)
 		{
 			netText.color = warningColor;

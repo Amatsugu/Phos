@@ -134,11 +134,6 @@ public class CameraController : MonoBehaviour
 	private void PanningCam()
 	{
 		_canRotate = true;
-		if (Input.GetKeyDown(KeyCode.X))
-		{
-			this.enabled = false;
-			GetComponent<Orbit>().enabled = true;
-		}
 		//Panning
 		var pos = _thisTransform.position;
 		var rot = _thisTransform.eulerAngles;

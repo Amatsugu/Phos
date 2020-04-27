@@ -245,10 +245,8 @@ public class UIBuildPanel : UITabPanel
 		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
 			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(_selectedBuilding, neighbors, ref effects);
 
-		Debug.Log("--Effects--");
 		for (int i = 0; i < effects.Count; i++)
 			Debug.Log(effects[i]);
-		Debug.Log("-----------");
 
 		ShowPoweredTiles(selectedTile);
 		if(Input.GetKeyUp(KeyCode.Mouse0))

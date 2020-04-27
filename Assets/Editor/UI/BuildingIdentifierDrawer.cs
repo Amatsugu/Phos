@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Entities.UniversalDelegates;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ public class BuildingIdentifierDrawer : PropertyDrawer
 		var assetPath = AssetDatabase.GUIDToAssetPath(asset);
 		var db = AssetDatabase.LoadAssetAtPath<BuildingDatabase>(assetPath);
 		var buildings = db.buildings.Values.Where(b => b != null);
-		var names = buildings.Select(b => $" [{b.info.category}] T{b.info.tier} {b.info.name}").Prepend("--Select Building--").ToArray();
+		var names = buildings.Select(b => $" [{b.info.category}] T{b.info.tier} {b.info.name}\t {b.id}").Prepend("--Select Building--").ToArray();
 		var ids = buildings.Select(b => b.id + 1).Prepend(0).ToArray();
 		EditorGUI.BeginProperty(position, label, property);
 		var sProp = property.FindPropertyRelative("id");

@@ -2,7 +2,7 @@
 
 using Unity.Burst;
 using Unity.Entities;
-
+using Unity.Mathematics;
 using UnityEngine;
 
 [BurstCompile]
@@ -136,7 +136,7 @@ public class ResourceSystem : ComponentSystem
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i] = new ResourceTransactionRecord(i);
 		resCount = new int[ResourceDatabase.ResourceCount];
-		maxStorage = 9999;
+		maxStorage = (int)math.pow(10,9);
 	}
 
 	protected override void OnUpdate()
@@ -152,7 +152,7 @@ public class ResourceSystem : ComponentSystem
 		GameEvents.InvokeOnGameTick();
 
 		//Consumption
-		Entities.WithNone<BuildingOffTag, ConsumptionDebuff>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>
+		/*Entities.WithNone<BuildingOffTag, ConsumptionMulti>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>
 		{
 			if (HasAllResources(c.resourceIds, c.rates, demandSrc: id.Value))
 			{
@@ -165,14 +165,14 @@ public class ResourceSystem : ComponentSystem
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
 			}
-		});
+		});*/
 
-		//Debuffed Consumption
-		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ConsumptionData c, ref ConsumptionDebuff d, ref BuildingId id) =>
+		//Consumption
+		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ConsumptionData c, ref ConsumptionMulti multi, ref BuildingId id) =>
 		{
-			if (HasAllResources(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi, id.Value))
+			if (HasAllResources(c.resourceIds, c.rates, multi.Value, id.Value))
 			{
-				ConsumeResourses(c.resourceIds, c.rates, d.distance * ConsumptionDebuff.multi, id.Value);
+				ConsumeResourses(c.resourceIds, c.rates, multi.Value, id.Value);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
 			}
@@ -184,18 +184,19 @@ public class ResourceSystem : ComponentSystem
 		});
 
 		//Production
-		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach((Entity e, ProductionData p, ref BuildingId id) =>
+		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach((Entity e, ProductionData p, ref ProductionMulti multi, ref BuildingId id) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{
 				int res = p.resourceIds[i];
+				int rate = (int)(p.rates[i] * multi.Value);
 				if (resCount[res] == maxStorage)
 				{
-					LogExcess(res, p.rates[i], id.Value);
+					LogExcess(res, rate, id.Value);
 					continue;
 				}
-				LogProduction(res, p.rates[i], id.Value);
-				resCount[res] += p.rates[i];
+				LogProduction(res, rate, id.Value);
+				resCount[res] += rate;
 				if (resCount[res] > maxStorage)
 					resCount[res] = maxStorage;
 			}

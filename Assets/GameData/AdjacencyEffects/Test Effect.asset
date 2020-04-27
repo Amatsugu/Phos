@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusDefinations:
   - building:
-      id: 25188
+      id: 25114
     productionMultiplier: 0.14
     consumptionMultiplier: 0

@@ -104,6 +104,9 @@ public class BuildingTile : Tile
 			_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
 		PrepareEntity();
 		OnBuilt();
+		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
+			buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
 		RenderDecorators();
 	}
 
@@ -161,6 +164,8 @@ public class BuildingTile : Tile
 			maxHealth = buildingInfo.maxHealth,
 			Value = buildingInfo.maxHealth
 		});
+		Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
+		Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
 		Map.EM.AddComponent(entity, typeof(FirstTickTag));
 		if (buildingInfo.healthBar != null)
 			_healthBars = buildingInfo.healthBar.Instantiate(entity, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
@@ -208,7 +213,7 @@ public class PoweredBuildingTile : BuildingTile
 	public override string GetDescription()
 	{
 		return base.GetDescription() + "\n" +
-			$"Has HQ Connection: {HasHQConnection} {Map.EM.HasComponent<ConsumptionDebuff>(_tileEntity)}";
+			$"Has HQ Connection: {HasHQConnection} {Map.EM.HasComponent<ConsumptionMulti>(_tileEntity)}";
 	}
 
 	public override void OnPlaced()
@@ -248,7 +253,7 @@ public class PoweredBuildingTile : BuildingTile
 			if (HasHQConnection)
 				return;
 			if (!HasHQConnection)
-				Map.EM.RemoveComponent<ConsumptionDebuff>(GetBuildingEntity());
+				Map.EM.RemoveComponent<BuildingOffTag>(GetBuildingEntity());
 		}
 		HasHQConnection = true;
 		InfoPopupUI.HidePopup(Coords);
@@ -269,10 +274,10 @@ public class PoweredBuildingTile : BuildingTile
 				return;
 		}
 		var e = GetBuildingEntity();
-		if (!Map.EM.HasComponent<ConsumptionDebuff>(e))
-			Map.EM.AddComponentData(e, new ConsumptionDebuff { distance = distanceToHQ });
+		if (!Map.EM.HasComponent<BuildingOffTag>(e))
+			Map.EM.AddComponent<BuildingOffTag>(e);
 		HasHQConnection = false;
-		InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and results in a consumtion penalty.");
+		InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and cannot opperate");
 	}
 
 	public override void OnRemoved()
