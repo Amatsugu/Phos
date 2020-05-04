@@ -243,7 +243,7 @@ public class UIBuildPanel : UITabPanel
 		var neighbors = Map.ActiveMap.GetNeighbors(selectedTile.Coords);
 		var effects = new List<string>();
 		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
-			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(_selectedBuilding, neighbors, ref effects);
+			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(selectedTile, neighbors, ref effects);
 
 		for (int i = 0; i < effects.Count; i++)
 			Debug.Log(effects[i]);

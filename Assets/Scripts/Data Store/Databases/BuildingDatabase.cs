@@ -7,6 +7,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game Data/Building Database")]
 public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 {
+	public TileDatabase tileDatabase;
+
 	private void OnEnable()
 	{
 		if (buildings == null)
@@ -18,6 +20,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 	public Dictionary<int, BuildingDefination> buildings;
 
 	[SerializeField]
+	[HideInInspector]
 	private BuildingDefination[] _buildingValues;
 
 	[Serializable]

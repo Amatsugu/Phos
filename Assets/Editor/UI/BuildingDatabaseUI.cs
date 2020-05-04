@@ -27,7 +27,9 @@ public class BuildingDatabaseUI : Editor
 
 	public override void OnInspectorGUI()
 	{
+		base.OnInspectorGUI();
 		GUI.enabled = !Application.isPlaying;
+		GUI.enabled = database.tileDatabase != null;
 		if(GUILayout.Button("Refresh"))
 		{
 			Refresh();
@@ -93,7 +95,7 @@ public class BuildingDatabaseUI : Editor
 				existingB = new BuildingDatabase.BuildingDefination
 				{
 					info = b,
-					id = b.GetInstanceID(),
+					id = database.tileDatabase.entityIds[b],
 					category = b.category
 				};
 				database.buildings.Add(existingB.id, existingB);

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Effects.Lines;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -10,10 +12,11 @@ using UnityEngine.Rendering;
 public class AdjacencyEffect : ScriptableObject
 {
 	public BonusDefination[] bonusDefinations;
+	public MeshEntityRotatable line;
 
-	public virtual void GetAdjacencyEffectsString(BuildingTileEntity building, Tile[] neighbors, ref List<string> effectsString)
+	public virtual void GetAdjacencyEffectsString(Tile tile, Tile[] neighbors, ref List<string> effectsString)
 	{
-		var (prod, cons) = CalculateBonuses(neighbors);
+		var (prod, cons) = CalculateBonuses(neighbors, tile);
 		effectsString.Add($"+{prod}x Production Rate");
 		effectsString.Add($"-{cons}x Consumption Rate");
 	}
@@ -30,20 +33,25 @@ public class AdjacencyEffect : ScriptableObject
 		Map.EM.SetComponentData(e, consMulti);
 	}
 
-	private (float prodBonus, float consBonus) CalculateBonuses(Tile[] neighbors)
+	private (float prodBonus, float consBonus) CalculateBonuses(Tile[] neighbors, Tile building = null)
 	{
+		var pos = new List<float3>();
+		var height = 0f;
 		var productionBonus = 0f;
 		var consumtionBonus = 0f;
 		for (int i = 0; i < neighbors.Length; i++)
 		{
 			if (neighbors[i] is BuildingTile b)
 			{
-				var building = b.info.GetInstanceID();
+				var bId = GameRegistry.TileDatabase.entityIds[b.info];
 				for (int j = 0; j < bonusDefinations.Length; j++)
 				{
-					if(bonusDefinations[j].buildingsSet.Contains(building))
+					if(bonusDefinations[j].buildingsSet.Contains(bId))
 					{
 						var bonus = bonusDefinations[j];
+						pos.Add(b.SurfacePoint);
+						if (b.Height > height)
+							height = b.Height;
 						productionBonus += bonus.productionMultiplier;
 						consumtionBonus += bonus.consumptionMultiplier;
 					}
@@ -51,7 +59,26 @@ public class AdjacencyEffect : ScriptableObject
 				}
 			}
 		}
+		if (building != null)
+		{
+			for (int i = 0; i < pos.Count; i++)
+			{
+				RenderLine(building.SurfacePoint, pos[i], height);
+			}
+		}
 		return (productionBonus, consumtionBonus);
+	}
+
+	private void RenderLine(float3 a, float3 b, float height)
+	{
+		var a2 = new float3(a.x, height + 2, a.z);
+		var b2 = new float3(b.x, height + 2, b.z);
+		var e1 = LineFactory.CreateStaticLine(line, a, a2, 0.05f);
+		var e2 = LineFactory.CreateStaticLine(line, a2, b2, 0.05f);
+		var e3 = LineFactory.CreateStaticLine(line, b2, b, 0.05f);
+		Map.EM.AddComponentData(e1, new DeathTime { Value = Time.time });
+		Map.EM.AddComponentData(e2, new DeathTime { Value = Time.time });
+		Map.EM.AddComponentData(e3, new DeathTime { Value = Time.time });
 	}
 }
 

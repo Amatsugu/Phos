@@ -28,6 +28,7 @@ public class GameRegistry : MonoBehaviour
 	public static ResearchDatabase ResearchDatabase => INST.researchDatabase;
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
 	public static ResearchSystem ResearchSystem => INST.researchSystem;
+	public static TileDatabase TileDatabase => INST.tileDatabase;
 
 	public BuildUI buildUI;
 	public InteractionUI interactionUI;
@@ -39,6 +40,7 @@ public class GameRegistry : MonoBehaviour
 	public ResearchDatabase researchDatabase;
 	public ResourceSystem resourceSystem;
 	public ResearchSystem researchSystem;
+	public TileDatabase tileDatabase;
 
 	private BuildingDatabase _buildingDatabase;
 

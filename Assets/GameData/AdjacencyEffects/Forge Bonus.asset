@@ -10,10 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b2861df5cbac734495157715652db79, type: 3}
-  m_Name: Test Effect
+  m_Name: Forge Bonus
   m_EditorClassIdentifier: 
   bonusDefinations:
-  - buildings: []
-    productionMultiplier: 0.14
+  - buildings:
+    - id: 25110
+    - id: 25114
+    - id: 25100
+    productionMultiplier: 0
+    consumptionMultiplier: -0.1
+  - buildings:
+    - id: 25092
+    - id: 25088
+    productionMultiplier: 0.1
     consumptionMultiplier: 0
   line: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85, type: 2}

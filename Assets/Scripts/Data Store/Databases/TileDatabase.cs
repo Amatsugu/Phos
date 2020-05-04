@@ -7,20 +7,26 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game Data/Tile Database")]
 public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 {
-	[SerializeField]
 	[HideInInspector]
 	public Dictionary<int, TileDefination> tileEntites;
+	[HideInInspector]
+	public Dictionary<TileEntity, int> entityIds;
 
 	[SerializeField]
 	private int[] tileIds;
 	[SerializeField]
 	private TileDefination[] tileDefs;
+	private int nextId = 0;
 
 	public void OnAfterDeserialize()
 	{
 		tileEntites = new Dictionary<int, TileDefination>();
+		entityIds = new Dictionary<TileEntity, int>();
 		for (int i = 0; i < tileIds.Length; i++)
+		{
 			tileEntites.Add(tileIds[i], tileDefs[i]);
+			entityIds.Add(tileDefs[i].tile, tileIds[i]);
+		}
 	}
 
 	public void OnBeforeSerialize()
@@ -46,13 +52,16 @@ public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 		public TileEntity tile;
 	}
 
-	public TileDefination RegisterTile(TileEntity tile)
+	public bool RegisterTile(TileEntity tile, out TileDefination tileDef)
 	{
-		if (tileEntites.ContainsKey(tile.GetInstanceID()))
-			throw new ArgumentException("Tile is already in database");
-		var tileDef = new TileDefination
+		if (entityIds.ContainsKey(tile))
 		{
-			id = tile.GetInstanceID(),
+			tileDef = default;
+			return false;
+		}
+		tileDef = new TileDefination
+		{
+			id = nextId++,
 			tile = tile,
 			type = TileType.Tile
 		};
@@ -62,7 +71,7 @@ public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 			tileDef.type |= TileType.Resource;
 
 		tileEntites.Add(tileDef.id, tileDef);
-
-		return tileDef;
+		entityIds.Add(tile, tileDef.id);
+		return true;
 	}
 }

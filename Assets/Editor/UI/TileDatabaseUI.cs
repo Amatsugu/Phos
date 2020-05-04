@@ -44,12 +44,13 @@ public class TileDatabaseUI : Editor
 	public void Refresh()
 	{
 		var assets = AssetDatabase.FindAssets($"t:{nameof(TileEntity)}", new[] { "Assets/GameData/MapAssets/TileInfo" });
-		database.tileEntites.Clear();
+		//database.tileEntites.Clear();
+		//database.tileEntites.Clear();
 		foreach (var asset in assets)
 		{
 			var assetPath = AssetDatabase.GUIDToAssetPath(asset);
 			var tileAsset = AssetDatabase.LoadAssetAtPath<TileEntity>(assetPath);
-			database.RegisterTile(tileAsset);
+			database.RegisterTile(tileAsset, out _);
 		}
 	}
 }
