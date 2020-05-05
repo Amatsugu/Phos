@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusDefinations:
   - buildings:
-    - id: 25122
+    - id: 81
     productionMultiplier: 0.15
     consumptionMultiplier: 0
   line: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85, type: 2}

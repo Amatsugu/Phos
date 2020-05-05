@@ -58,4 +58,4 @@ MonoBehaviour:
   - id: 2
     ammount: 2
   adjacencyEffects:
-  - {fileID: 11400000, guid: c9e71ebdd7d6a4d4cbefb6843099607c, type: 2}
+  - {fileID: 11400000, guid: 6983612a86089b24aa51f5b539fed83e, type: 2}

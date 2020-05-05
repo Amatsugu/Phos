@@ -12,103 +12,104 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcbb3f8873decc44e94fe77b14242482, type: 3}
   m_Name: Building Database
   m_EditorClassIdentifier: 
+  tileDatabase: {fileID: 11400000, guid: f973b4e22fe4f24429859b2a7732f9b3, type: 2}
   _buildingValues:
-  - id: 25092
+  - id: 59
     info: {fileID: 11400000, guid: 0ef12f3aada833948909acbc675a5953, type: 2}
     category: 2
-  - id: 25094
+  - id: 60
     info: {fileID: 11400000, guid: 255a5856c262ab942bead534bc36634b, type: 2}
     category: 2
-  - id: 25088
+  - id: 57
     info: {fileID: 11400000, guid: ba0f6b1eb8dc15140b1a78d6d5193a76, type: 2}
     category: 2
-  - id: 25090
+  - id: 58
     info: {fileID: 11400000, guid: 74972f4338262c245b3f0a0d8d3a93f1, type: 2}
     category: 2
-  - id: 25066
+  - id: 61
     info: {fileID: 11400000, guid: 6e4e32dbf880de14d96237eda527fc63, type: 2}
     category: 0
-  - id: 25058
+  - id: 62
     info: {fileID: 11400000, guid: 25fcb05707ae26c42b41d05913a69c7e, type: 2}
     category: 0
-  - id: 25064
+  - id: 64
     info: {fileID: 11400000, guid: e06933dfdc394b44a8d7dd66a08bd22c, type: 2}
     category: 0
-  - id: 25060
+  - id: 65
     info: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}
     category: 0
-  - id: 25062
+  - id: 66
     info: {fileID: 11400000, guid: d966e12209bf2fa4c9378e52af7fd189, type: 2}
     category: 0
-  - id: 25056
+  - id: 67
     info: {fileID: 11400000, guid: 83b9fc58865dd7b4395a139fcbc8b5a7, type: 2}
     category: 0
-  - id: 24798
+  - id: 63
     info: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
     category: 0
-  - id: 25096
+  - id: 68
     info: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
     category: 5
-  - id: 25100
+  - id: 70
     info: {fileID: 11400000, guid: c6dc8c018e7494742882468f5336e6b0, type: 2}
     category: 3
-  - id: 25114
+  - id: 77
     info: {fileID: 11400000, guid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb, type: 2}
     category: 3
-  - id: 25098
+  - id: 69
     info: {fileID: 11400000, guid: d02481ac5a9ada04faab17721ee4fe04, type: 2}
     category: 3
-  - id: 25106
+  - id: 73
     info: {fileID: 11400000, guid: 806da794f6c07bb419f217c1384051b6, type: 2}
     category: 3
-  - id: 25108
+  - id: 74
     info: {fileID: 11400000, guid: 2e4734b90a718294d9106a9cd2c5f510, type: 2}
     category: 3
-  - id: 25110
+  - id: 75
     info: {fileID: 11400000, guid: fcfbc5a667690e540b3cbcda9dd74c53, type: 2}
     category: 3
-  - id: 25102
+  - id: 71
     info: {fileID: 11400000, guid: 763826ebcd88b8f44bd20f65c32a52f7, type: 2}
     category: 3
-  - id: 25104
+  - id: 72
     info: {fileID: 11400000, guid: b960653cf9a46154a84d6f0acf1f1f5f, type: 2}
     category: 3
-  - id: 25112
+  - id: 76
     info: {fileID: 11400000, guid: 42be3b3def01a054285a788e34bee865, type: 2}
     category: 3
-  - id: 25122
+  - id: 81
     info: {fileID: 11400000, guid: 69df6771048597e47af78e977c2c3909, type: 2}
     category: 4
-  - id: 25116
+  - id: 78
     info: {fileID: 11400000, guid: 5992627ac9514d44ca66f9db77676ba0, type: 2}
     category: 4
-  - id: 25118
+  - id: 79
     info: {fileID: 11400000, guid: 313432d6adc1b3d4899355519612998c, type: 2}
     category: 4
-  - id: 25120
+  - id: 80
     info: {fileID: 11400000, guid: d89c88f38fcaf034b904d59a1cf8fc24, type: 2}
     category: 4
-  - id: 25124
+  - id: 82
     info: {fileID: 11400000, guid: 05a7a88a94688f4449231ec4e132441d, type: 2}
     category: 1
-  - id: 25126
+  - id: 83
     info: {fileID: 11400000, guid: 0ef40f19d9b634a4382340a8aae1e9a0, type: 2}
     category: 1
-  - id: 25128
+  - id: 84
     info: {fileID: 11400000, guid: eff0cbc9ab35c844488d2e6935e178fd, type: 2}
     category: 1
-  - id: 25130
+  - id: 85
     info: {fileID: 11400000, guid: 58492fffc93cd66479b3ff8d5fe16cb9, type: 2}
     category: 1
-  - id: 25136
+  - id: 88
     info: {fileID: 11400000, guid: 4cf2d7c361cb572479674c0f8f82fcb7, type: 2}
     category: 1
-  - id: 25138
+  - id: 89
     info: {fileID: 11400000, guid: 120733ddc07b94848ad3f5f028b356d6, type: 2}
     category: 1
-  - id: 25134
+  - id: 87
     info: {fileID: 11400000, guid: f229b54f71dfb364ebe347dd10929aa0, type: 2}
     category: 1
-  - id: 25132
+  - id: 86
     info: {fileID: 11400000, guid: baf5151406270f649a0cded5e679cc9c, type: 2}
     category: 1

@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusDefinations:
   - buildings:
-    - id: 25110
-    - id: 25114
-    - id: 25100
+    - id: 70
+    - id: 77
+    - id: 75
     productionMultiplier: 0
     consumptionMultiplier: -0.1
   - buildings:
-    - id: 25092
-    - id: 25088
+    - id: 57
+    - id: 59
     productionMultiplier: 0.1
     consumptionMultiplier: 0
   line: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85, type: 2}

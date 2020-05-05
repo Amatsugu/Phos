@@ -72,6 +72,7 @@ public class GameUI : UIHover
 	{
 		state = UIState.PlaceBuilding;
 		_buildPanel.Show(category);
+		_selectionPanel.Hide();
 	}
 
 	private void OnBuildPanelClosed()
