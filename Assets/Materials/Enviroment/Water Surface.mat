@@ -152,13 +152,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_109C3B5C: 1.2
+    - Vector1_109C3B5C: 0.63
     - Vector1_189230DD: 1.16
     - Vector1_1D0AAF17: 1
-    - Vector1_2FF6240A: 0.101
+    - Vector1_2FF6240A: 0.034
     - Vector1_7126143: 21
     - Vector1_9A166AB3: 0.718
-    - Vector1_A8C4976A: 5
+    - Vector1_A8C4976A: 4.06
     - Vector1_ACEC88AB: 1.53
     - Vector1_BBFE5044: 0.06
     - Vector1_C4602B0E: 0.406
@@ -319,7 +319,7 @@ Material:
     - Color_8C4BEE20: {r: 0, g: 0.32573858, b: 0.42452827, a: 1}
     - Color_A48DD5AA: {r: 0.13995194, g: 0.8018868, b: 0.6837788, a: 1}
     - Color_DCB81BC3: {r: 1, g: 1, b: 1, a: 1}
-    - Color_DF5C56BD: {r: 0.028746892, g: 0.2042119, b: 0.3584906, a: 0}
+    - Color_DF5C56BD: {r: 0.027450979, g: 0.15529455, b: 0.35686275, a: 1}
     - Color_E3EF202: {r: 0.6556604, g: 0.9454478, b: 1, a: 0.5176471}
     - _BaseColor: {r: 0, g: 0.7693863, b: 1, a: 0.81960785}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
@@ -337,6 +337,7 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!114 &3071835045105573694
 MonoBehaviour:
   m_ObjectHideFlags: 11
