@@ -42,7 +42,8 @@ public class UIBuildPanel : UITabPanel
 		Disabled = 0,
 		Idle,
 		HQPlacement,
-		Placement
+		Placement,
+		Deconstruct
 	}
 
 	protected override void Awake()
@@ -86,6 +87,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.Disabled || state == BuildState.HQPlacement)
 			return;
+
 		var buildings = buildingDatabase[_lastCategory];
 		for (int i = 0, j = 0; i < _icons.Length; i++)
 		{
@@ -166,6 +168,8 @@ public class UIBuildPanel : UITabPanel
 
 	public void UpdateState()
 	{
+		if (state == BuildState.Idle && !isHovered && Input.GetKeyDown(KeyCode.Mouse0))
+			Hide();
 		switch(state)
 		{
 			case BuildState.Disabled:
@@ -181,14 +185,29 @@ public class UIBuildPanel : UITabPanel
 				ValidatePlacement();
 				ReadBackInput();
 				break;
+			case BuildState.Deconstruct:
+				DeconstructLogic();
+				ReadBackInput();
+				break;
 		}
+	}
+
+	void DeconstructLogic()
+	{
+		_indicatorManager.UnSetAllIndicators();
+		var selectedTile = GetTileUnderCursor() as BuildingTile;
+		if (selectedTile == null)
+			return;
+		_indicatorManager.SetIndicator(selectedTile, poweredTileIndicatorEntity);
+		if (Input.GetKeyUp(KeyCode.Mouse0))
+			Map.ActiveMap.RevertTile(selectedTile);
 	}
 
 	void ReadBackInput()
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			if(state == BuildState.Placement)
+			if(state == BuildState.Placement || state == BuildState.Deconstruct)
 			{
 				state = BuildState.Idle;
 				HideIndicators();	

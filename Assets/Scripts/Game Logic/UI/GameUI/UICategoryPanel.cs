@@ -7,7 +7,14 @@ using UnityEngine.UI;
 public class UICategoryPanel : UITabPanel
 {
 	public event Action<BuildingCategory> OnButtonClicked;
+	public event Action OnDeconstructClick;
+	public Button deconstructButton;
 
+	protected override void Awake()
+	{
+		base.Awake();
+		deconstructButton.onClick.AddListener(() => OnDeconstructClick?.Invoke());
+	}
 
 	protected override void OnTabSelected(int tab)
 	{

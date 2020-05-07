@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using TMPro.EditorUtilities;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
@@ -28,6 +28,7 @@ public class GameUI : UIHover
 		PlaceUnit,
 		BuildingsSelected,
 		UnitsSelected,
+		Deconstruct
 	}
 
 	protected override void Awake()
@@ -49,6 +50,7 @@ public class GameUI : UIHover
 		_buildPanel.infoPanel = _infoPanel;
 
 		_categoryPanel.OnButtonClicked += CategorySelected;
+		_categoryPanel.OnDeconstructClick += EnterDeconstructMode;
 
 		GameEvents.OnGameReady += Init;
 		GameEvents.OnHQPlaced += OnHQPlaced;
@@ -70,9 +72,17 @@ public class GameUI : UIHover
 
 	private void CategorySelected(BuildingCategory category)
 	{
+		_selectionPanel.Hide();
 		state = UIState.PlaceBuilding;
 		_buildPanel.Show(category);
-		_selectionPanel.Hide();
+	}
+
+	private void EnterDeconstructMode()
+	{
+		_buildPanel.Hide();
+		_categoryPanel.DeselectAll();
+		state = UIState.Deconstruct;
+		_buildPanel.state = UIBuildPanel.BuildState.Deconstruct;
 	}
 
 	private void OnBuildPanelClosed()
@@ -107,6 +117,9 @@ public class GameUI : UIHover
 				_buildPanel.UpdateState();
 				break;
 			case UIState.HQPlacement:
+				_buildPanel.UpdateState();
+				break;
+			case UIState.Deconstruct:
 				_buildPanel.UpdateState();
 				break;
 		}
