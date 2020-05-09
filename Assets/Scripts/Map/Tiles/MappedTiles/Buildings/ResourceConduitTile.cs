@@ -13,14 +13,14 @@ using UnityEngine;
 
 public class ResourceConduitTile : PoweredBuildingTile
 {
-	public ResourceConduitTileInfo conduitInfo;
+	public ResourceConduitTileEntity conduitInfo;
 	private readonly float _poweredRangeSq;
 	private readonly float _connectRangeSq;
 	private readonly Dictionary<HexCoords, Entity> _conduitLines;
 	private bool _switchLines;
 	private Entity _energyPacket;
 
-	public ResourceConduitTile(HexCoords coords, float height, Map map, ResourceConduitTileInfo tInfo) : base(coords, height, map, tInfo)
+	public ResourceConduitTile(HexCoords coords, float height, Map map, ResourceConduitTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		conduitInfo = tInfo;
 		_poweredRangeSq = HexCoords.TileToWorldDist(conduitInfo.poweredRange, map.innerRadius);
@@ -127,7 +127,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 		}
 		if (connectionsMade == 0)
 		{
-			OnHQDisconnected();
+			HQDisconnected();
 		}
 		else
 		{
@@ -141,12 +141,12 @@ public class ResourceConduitTile : PoweredBuildingTile
 						continue;
 					var tile = map[disconnectedNodesStart[i].conduitPos];
 					if (tile is ResourceConduitTile conduit)
-						conduit.OnHQConnected();
+						conduit.HQConnected();
 				}
-				OnHQConnected();
+				HQConnected();
 			}
 			else
-				OnHQDisconnected();
+				HQDisconnected();
 		}
 		_connectionInit = true;
 	}
@@ -169,7 +169,7 @@ public class ResourceConduitTile : PoweredBuildingTile
 			curNode.ConnectTo(closest[i]);
 			var tile = map[closest[i].conduitPos];
 			if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
-				conduit.OnHQConnected();
+				conduit.HQConnected();
 			var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
 			var b = Coords.world + new float3(0, curNode.height, 0);
 			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
@@ -185,15 +185,15 @@ public class ResourceConduitTile : PoweredBuildingTile
 		var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
 		for (int i = 0; i < disconnectedNodes.Length; i++)
 		{
-			(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).OnHQDisconnected();
+			(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).HQDisconnected();
 			PowerTransferEffectSystem.RemoveNode(disconnectedNodes[i]);
 		}
-		OnHQDisconnected();
+		HQDisconnected();
 		UpdateConnections(connections, TileUpdateType.Removed);
 		base.OnRemoved();
 	}
 
-	public override void OnHQConnected()
+	public override void HQConnected()
 	{
 		if (_connectionInit && HasHQConnection)
 			return;
@@ -212,11 +212,12 @@ public class ResourceConduitTile : PoweredBuildingTile
 			if (t is ResourceConduitTile)
 				return;
 			if (t is PoweredBuildingTile pb)
-				pb.OnHQConnected();
+				pb.HQConnected();
 		}, true);
+		OnConnected();
 	}
 
-	public override void OnHQDisconnected()
+	public override void HQDisconnected()
 	{
 		if (_connectionInit && !HasHQConnection)
 			return;
@@ -228,8 +229,9 @@ public class ResourceConduitTile : PoweredBuildingTile
 			if (t is ResourceConduitTile)
 				return;
 			if (t is PoweredBuildingTile pb)
-				pb.OnHQDisconnected();
+				pb.HQDisconnected();
 		}, true);
+		OnDisconnected();
 	}
 
 	public bool IsInPoweredRange(HexCoords tile)

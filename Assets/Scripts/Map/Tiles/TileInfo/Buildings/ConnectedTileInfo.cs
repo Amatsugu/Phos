@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if false
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Connected Tile")]
 public class ConnectedTileInfo : BuildingTileEntity
@@ -12,3 +13,4 @@ public class ConnectedTileInfo : BuildingTileEntity
 		return new ConnectedTile(pos, height, map, this);
 	}
 }
+#endif

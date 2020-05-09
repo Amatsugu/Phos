@@ -11,7 +11,7 @@ public class ConduitPlacementValidator : PlacementValidator
 
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
 	{
-		var conduitInfo = buildingTile as ResourceConduitTileInfo;
+		var conduitInfo = buildingTile as ResourceConduitTileEntity;
 		if (conduitInfo == null)
 		{
 			throw new System.Exception("This tile type cannot use this validator");

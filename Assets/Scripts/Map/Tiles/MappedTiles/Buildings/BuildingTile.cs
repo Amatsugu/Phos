@@ -268,21 +268,21 @@ public class PoweredBuildingTile : BuildingTile
 	{
 		var closestConduit = map.conduitGraph.GetClosestConduitNode(Coords);
 		if (closestConduit == null)
-			OnHQDisconnected();
+			HQDisconnected();
 		else
 		{
 			var conduit = (map[closestConduit.conduitPos] as ResourceConduitTile);
 			if (!conduit.HasHQConnection)
-				OnHQDisconnected();
+				HQDisconnected();
 			else if (conduit.IsInPoweredRange(Coords))
-				OnHQConnected();
+				HQConnected();
 			else
-				OnHQDisconnected();
+				HQDisconnected();
 		}
 		_connectionInit = true;
 	}
 
-	public virtual void OnHQConnected()
+	public virtual void HQConnected()
 	{
 		if (_connectionInit)
 		{
@@ -293,9 +293,10 @@ public class PoweredBuildingTile : BuildingTile
 		}
 		HasHQConnection = true;
 		InfoPopupUI.HidePopup(Coords);
+		OnConnected();
 	}
 
-	public virtual void OnHQDisconnected()
+	public virtual void HQDisconnected()
 	{
 		if (_connectionInit)
 		{
@@ -313,7 +314,18 @@ public class PoweredBuildingTile : BuildingTile
 		if (!Map.EM.HasComponent<BuildingOffTag>(e))
 			Map.EM.AddComponent<BuildingOffTag>(e);
 		HasHQConnection = false;
+		OnDisconnected();
 		InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and cannot opperate");
+	}
+
+	public virtual void OnConnected()
+	{
+
+	}
+
+	public virtual void OnDisconnected()
+	{
+
 	}
 
 	public override void OnRemoved()

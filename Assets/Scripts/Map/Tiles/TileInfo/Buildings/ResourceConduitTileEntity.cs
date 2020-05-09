@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Resource Conduit")]
-public class ResourceConduitTileInfo : BuildingTileEntity
+public class ResourceConduitTileEntity : BuildingTileEntity
 {
 	public int poweredRange;
 	public int connectionRange;

@@ -6,4 +6,15 @@
 	{
 		turbineInfo = tInfo;
 	}
+
+	public override void OnDisconnected()
+	{
+		base.OnDisconnected();
+
+	}
+
+	public override void OnConnected()
+	{
+		base.OnConnected();
+	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Sub HQ")]
-public class SubHQTileInfo : BuildingTileEntity
+public class SubHQTileEntity : BuildingTileEntity
 {
 	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{

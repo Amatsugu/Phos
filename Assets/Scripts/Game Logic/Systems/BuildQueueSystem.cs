@@ -54,7 +54,7 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="dropPod">The mesh entity that will be used as a drop pod</param>
 	private void QueueBuilding(Tile tile, BuildingTileEntity building, MeshEntityRotatable dropPod)
 	{
-		var hqMode = building is HQTileInfo;
+		var hqMode = building is HQTileEntity;
 		var callback = tile.Coords.ToString().GetHashCode();
 		_pendingBuildOrders.Add(callback, new BuildOrder
 		{

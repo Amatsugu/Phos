@@ -15,7 +15,7 @@ public class UIBuildPanel : UITabPanel
 	public TMP_Text floatingText;
 	public UIInfoBanner banner;
 	public float inidcatorOffset = .5f;
-	public HQTileInfo hQTile;
+	public HQTileEntity hQTile;
 	public MeshEntityRotatable dropPod;
 	public RectTransform contentArea;
 	public float showPowerRange = 20;

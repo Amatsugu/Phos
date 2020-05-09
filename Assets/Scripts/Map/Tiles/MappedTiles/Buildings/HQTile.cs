@@ -7,9 +7,9 @@ using UnityEngine;
 
 public class HQTile : BuildingTile
 {
-	public readonly HQTileInfo hqInfo;
+	public readonly HQTileEntity hqInfo;
 
-	public HQTile(HexCoords coords, float height, Map map, HQTileInfo tInfo) : base(coords, height, map, tInfo)
+	public HQTile(HexCoords coords, float height, Map map, HQTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		hqInfo = tInfo;
 	}
@@ -68,7 +68,7 @@ public class HQTile : BuildingTile
 
 public class SubHQTile : PoweredBuildingTile
 {
-	public SubHQTile(HexCoords coords, float height, Map map, SubHQTileInfo tInfo) : base(coords, height, map, tInfo)
+	public SubHQTile(HexCoords coords, float height, Map map, SubHQTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		HasHQConnection = true;
 	}
@@ -83,11 +83,11 @@ public class SubHQTile : PoweredBuildingTile
 	{
 	}
 
-	public override void OnHQConnected()
+	public override void HQConnected()
 	{
 	}
 
-	public override void OnHQDisconnected()
+	public override void HQDisconnected()
 	{
 	}
 }

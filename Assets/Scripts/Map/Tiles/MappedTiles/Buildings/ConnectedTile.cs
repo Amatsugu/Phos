@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿#if false
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
@@ -41,15 +42,15 @@ public class ConnectedTile : PoweredBuildingTile
 		}
 	}
 
-	public override void OnHQConnected()
+	public override void HQConnected()
 	{
-		base.OnHQConnected();
+		base.HQConnected();
 		UpdateConnections();
 	}
 
-	public override void OnHQDisconnected()
+	public override void HQDisconnected()
 	{
-		base.OnHQDisconnected();
+		base.HQDisconnected();
 		UpdateConnections();
 	}
 
@@ -111,3 +112,4 @@ public class ConnectedTile : PoweredBuildingTile
 		}
 	}
 }
+#endif
