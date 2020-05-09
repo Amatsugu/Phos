@@ -4,8 +4,8 @@ public class InteractiveBuildingTileInfo : BuildingTileEntity
 {
 	public RectTransform UIScreen;
 
-	public override Tile CreateTile(HexCoords pos, float height)
+	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return new InteractiveBuildingTile(pos, height, this);
+		return new InteractiveBuildingTile(pos, height, map, this);
 	}
 }

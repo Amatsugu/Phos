@@ -204,7 +204,7 @@ public class CameraController : MonoBehaviour
 			if (_targetHeight > maxHeight)
 				_targetHeight = maxHeight;
 			_lastCoord = pos;
-			var minHeight = Map.ActiveMap.GetHeight(_lastCoord, 2) + minHeightFromGround;
+			var minHeight = GameRegistry.GameMap.GetHeight(_lastCoord, 2) + minHeightFromGround;
 
 			if (minHeight != _lastHeight)
 			{
@@ -255,6 +255,6 @@ public class CameraController : MonoBehaviour
 		_focusTime = 0;
 	}
 
-	public static void FocusOnTile(HexCoords tile) => GameRegistry.CameraController.FocusPoint(Map.ActiveMap[tile].SurfacePoint);
+	public static void FocusOnTile(HexCoords tile) => GameRegistry.CameraController.FocusPoint(GameRegistry.GameMap[tile].SurfacePoint);
 	public static void FocusOnTile(float3 position) => GameRegistry.CameraController.FocusPoint(position);
 }

@@ -7,8 +7,8 @@ public class ConnectedTileInfo : BuildingTileEntity
 	public bool connectToSelf = false;
 	public MeshEntityRotatable connectionMesh;
 
-	public override Tile CreateTile(HexCoords pos, float height)
+	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return new ConnectedTile(pos, height, this);
+		return new ConnectedTile(pos, height, map, this);
 	}
 }

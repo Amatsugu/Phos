@@ -17,8 +17,6 @@ public class GameRegistry : MonoBehaviour
 
 	private static GameRegistry _inst;
 
-	public static BuildUI BuildUI => INST.buildUI;
-	public static InteractionUI InteractionUI => INST.interactionUI;
 	public static StatusUI StatusUI => INST.statusUI;
 	public static BaseNameWindowUI BaseNameUI => INST.baseNameUI;
 	public static ResearchTreeUI ResearchTreeUI => INST.researchTreeUI;
@@ -29,9 +27,8 @@ public class GameRegistry : MonoBehaviour
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
 	public static ResearchSystem ResearchSystem => INST.researchSystem;
 	public static TileDatabase TileDatabase => INST.tileDatabase;
+	public static Map GameMap => INST.gameMap;
 
-	public BuildUI buildUI;
-	public InteractionUI interactionUI;
 	public StatusUI statusUI;
 	public BaseNameWindowUI baseNameUI;
 	public ResearchTreeUI researchTreeUI;
@@ -45,6 +42,12 @@ public class GameRegistry : MonoBehaviour
 	private BuildingDatabase _buildingDatabase;
 
 	private HashSet<int> _unlockedBuildings;
+	private Map gameMap;
+
+	public static void SetGameMap(Map map)
+	{
+		INST.gameMap = map;
+	}
 
 	public static void SetBuildingDatabase(BuildingDatabase database)
 	{

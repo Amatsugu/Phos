@@ -110,8 +110,8 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="order">The build order cotaining the detials on how to place the building</param>
 	private void PlaceBuilding(BuildOrder order)
 	{
-		Map.ActiveMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
-		Map.ActiveMap.ReplaceTile(order.dstTile, order.building);
+		GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
+		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building);
 		_constructionOrders.Add(new ConstructionOrder
 		{
 			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + order.building.constructionTime,
@@ -129,7 +129,7 @@ public class BuildQueueSystem : ComponentSystem
 			var curOrder = _constructionOrders[i];
 			if (Time.ElapsedTime > curOrder.buildTime)
 			{
-				(Map.ActiveMap[curOrder.building] as BuildingTile).Build();
+				(GameRegistry.GameMap[curOrder.building] as BuildingTile).Build();
 				_removal.Add(i);
 			}
 		}

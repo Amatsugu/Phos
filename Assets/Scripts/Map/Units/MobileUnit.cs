@@ -31,15 +31,17 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	private Faction _faction;
 	private NativeArray<Entity> _healhBar;
 	private Vector3 _startPos;
+	protected Map map;
 
 #if DEBUG
 	private static bool hasVerified;
 #endif
 
-	public MobileUnit(int id, MobileUnitEntity info, Tile tile, Faction faction)
+	public MobileUnit(int id, Map map, MobileUnitEntity info, Tile tile, Faction faction)
 	{
 		this.id = id;
 		this.info = info;
+		this.map = map;
 		_startPos = tile.SurfacePoint;
 		//Coords = tile.Coords;
 		_faction = faction;
@@ -130,7 +132,7 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 
 	public virtual void Die()
 	{
-		Map.ActiveMap.units.Remove(id);
+		map.units.Remove(id);
 		Destroy();
 		//TODO: Death Effect
 	}

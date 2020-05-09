@@ -1,5 +1,6 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -7,7 +8,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
-public class BuildingTile : Tile
+public class BuildingTile : Tile, IDeconstructable
 {
 	public readonly BuildingTileEntity buildingInfo;
 	public int distanceToHQ;
@@ -19,7 +20,7 @@ public class BuildingTile : Tile
 	protected bool _isBuilt;
 	private NativeArray<Entity> _healthBars;
 
-	public BuildingTile(HexCoords coords, float height, BuildingTileEntity tInfo) : base(coords, height, tInfo)
+	public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		buildingInfo = tInfo;
 	}
@@ -50,7 +51,7 @@ public class BuildingTile : Tile
 	public override void Destroy()
 	{
 		base.Destroy();
-		if (!Map.ActiveMap.IsRendered)
+		if (!map.IsRendered)
 			return;
 		try
 		{
@@ -173,7 +174,7 @@ public class BuildingTile : Tile
 	public void Die()
 	{
 		OnDeath();
-		Map.ActiveMap.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
+		map.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
 	}
 
 	public virtual void OnDeath()
@@ -212,9 +213,26 @@ public class BuildingTile : Tile
 		var entity = GetBuildingEntity();
 		Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
 		Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		var neighbors = map.GetNeighbors(Coords);
 		for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
 			buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
+	}
+
+	public void Deconstruct()
+	{
+		
+	}
+
+	public bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;
+
+	public ResourceIndentifier[] GetResourceRefund()
+	{
+		var res = new ResourceIndentifier[buildingInfo.cost.Length];
+		for (int i = 0; i < res.Length; i++)
+		{
+			res[i] = buildingInfo.cost[i] * 0.5f;
+		}
+		return res;
 	}
 }
 
@@ -224,7 +242,7 @@ public class PoweredBuildingTile : BuildingTile
 
 	protected bool _connectionInit;
 
-	public PoweredBuildingTile(HexCoords coords, float height, BuildingTileEntity tInfo) : base(coords, height, tInfo)
+	public PoweredBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 	}
 
@@ -236,7 +254,7 @@ public class PoweredBuildingTile : BuildingTile
 
 	public override void OnPlaced()
 	{
-		distanceToHQ = (int)Vector3.Distance(SurfacePoint, Map.ActiveMap.HQ.SurfacePoint);
+		distanceToHQ = (int)Vector3.Distance(SurfacePoint, map.HQ.SurfacePoint);
 		base.OnPlaced();
 	}
 
@@ -248,12 +266,12 @@ public class PoweredBuildingTile : BuildingTile
 
 	public virtual void FindConduitConnections()
 	{
-		var closestConduit = Map.ActiveMap.conduitGraph.GetClosestConduitNode(Coords);
+		var closestConduit = map.conduitGraph.GetClosestConduitNode(Coords);
 		if (closestConduit == null)
 			OnHQDisconnected();
 		else
 		{
-			var conduit = (Map.ActiveMap[closestConduit.conduitPos] as ResourceConduitTile);
+			var conduit = (map[closestConduit.conduitPos] as ResourceConduitTile);
 			if (!conduit.HasHQConnection)
 				OnHQDisconnected();
 			else if (conduit.IsInPoweredRange(Coords))

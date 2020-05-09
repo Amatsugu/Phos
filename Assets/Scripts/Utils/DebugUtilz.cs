@@ -33,9 +33,9 @@ public static class DebugUtilz
 		float3 e, f, g, h;
 		a = min;
 		b = new float3(max.x, min.yz);
-		c = new float3(min.x, max.yz);
+		c = new float3(max.x, min.y, max.z);
 		d = new float3(min.xy, max.z);
-		c = new float3(min.xy, max.z);
+		//c = new float3(min.xy, max.z);
 		e = new float3(min.x, max.y, min.z);
 		f = new float3(max.x, max.y, min.z);
 		g = max;

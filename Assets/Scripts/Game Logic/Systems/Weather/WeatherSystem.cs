@@ -131,7 +131,7 @@ public class WeatherSystem : JobComponentSystem
 		_maxNoiseValue = 1 - noiseSettings.minValue;
 		if (_cloudField.IsCreated)
 			_cloudField.Dispose();
-		_rand = new System.Random(Map.ActiveMap?.Seed ?? 0);
+		_rand = new System.Random(GameRegistry.GameMap?.Seed ?? 0);
 		_totalWeatherChance = _init.weatherDefinations.Sum(d => d.chance);
 		_rainTransform = _init.rainVfx.transform;
 
@@ -336,6 +336,13 @@ public class WeatherSystem : JobComponentSystem
 			offset = _offset
 		};
 		generate.Schedule(_cloudField.Length, _cloudField.Length / 8).Complete();
+#if UNITY_EDITOR
+		DebugUtilz.DrawBounds(
+			generate.camPos - new float3(_cloudFieldNormalizedHalfWidth, 0, 0), 
+			generate.camPos 
+				+ new float3(_cloudFieldNormalizedHalfWidth, 20, _init.clouldHeight * _shortDiag),
+			Color.red);
+#endif
 	}
 
 	protected override void OnStopRunning()

@@ -1,6 +1,6 @@
 ﻿public class EnemyBuildingTile : BuildingTile
 {
-	public EnemyBuildingTile(HexCoords coords, float height, BuildingTileEntity tInfo) : base(coords, height, tInfo)
+	public EnemyBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		_isBuilt = true;
 	}

@@ -29,6 +29,7 @@ public class UIActionsPanel : UIPanel
 	private Camera _cam;
 	private BuildPhysicsWorld _physicsWorld;
 	private List<ICommandable> _selectedEntities;
+	private Map _map;
 
 	public enum ActionState
 	{
@@ -45,6 +46,12 @@ public class UIActionsPanel : UIPanel
 		_physicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
 		_selectedEntities = new List<ICommandable>();
 		SetupCallbacks();
+		GameEvents.OnMapLoaded += OnMapLoad;
+	}
+
+	private void OnMapLoad()
+	{
+		_map = GameRegistry.GameMap;
 	}
 
 	void SetupCallbacks()
@@ -118,7 +125,7 @@ public class UIActionsPanel : UIPanel
 		var ray = _cam.ScreenPointToRay(_mousePos);
 		var hasTile = _physicsWorld.GetTileFromRay(ray, _cam.transform.position.y * 2, out var pos);
 		if (hasTile)
-			_selectedTile = Map.ActiveMap[pos];
+			_selectedTile = _map[pos];
 		else
 			return;
 	}
@@ -192,11 +199,11 @@ public class UIActionsPanel : UIPanel
 				{
 					for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
-					orderedUnits[i].MoveTo(Map.ActiveMap[openTiles[j]].SurfacePoint);
+					orderedUnits[i].MoveTo(_map[openTiles[j]].SurfacePoint);
 					/*var order = new MoveOrder
 					{
 						unit = orderedUnits[i],
-						dst = Map.ActiveMap[openTiles[j]].SurfacePoint
+						dst = _map[openTiles[j]].SurfacePoint
 					};
 					order.cost = (order.dst - order.unit.Position).sqrMagnitude;
 					UnityEngine.Debug.DrawRay(order.dst, Vector3.up, Color.magenta, 1);
@@ -214,7 +221,7 @@ public class UIActionsPanel : UIPanel
 		for (int i = 0; i < footprint.Length; i++)
 		{
 			var coord = footprint[i];
-			if (Map.ActiveMap[coord].IsUnderwater)
+			if (_map[coord].IsUnderwater)
 			{
 				isValid = false;
 				break;

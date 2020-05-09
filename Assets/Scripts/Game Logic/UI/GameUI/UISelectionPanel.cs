@@ -24,8 +24,7 @@ public class UISelectionPanel : UIPanel
 	private Tile _end;
 	private List<ICommandable> _selection;
 	private List<UISelectedEntity> _activeIcons;
-
-
+	private Map _map;
 
 	protected override void Awake()
 	{
@@ -38,6 +37,12 @@ public class UISelectionPanel : UIPanel
 		_selectionGroupInfo = new List<ScriptableObject>();
 		_buildPhysicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
 		_activeIcons = new List<UISelectedEntity>();
+		GameEvents.OnMapLoaded += OnMapLoaded;
+	}
+
+	private void OnMapLoaded()
+	{
+		_map = GameRegistry.GameMap;
 	}
 
 	protected override void Start()
@@ -122,18 +127,18 @@ public class UISelectionPanel : UIPanel
 		}
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 		{
-			_start = Map.ActiveMap[pos];
+			_start = _map[pos];
 		}
 		if (Input.GetKey(KeyCode.Mouse0))
 		{
-			_end = Map.ActiveMap[pos];
+			_end = _map[pos];
 			if (_start != _end && _start != null && _end != null)
 				DisplaySelectionRect();
 		}
 		if (Input.GetKeyUp(KeyCode.Mouse0))
 		{
 			selectionBox.gameObject.SetActive(false);
-			_end = Map.ActiveMap[pos];
+			_end = _map[pos];
 			if (_start != null && _end != null)
 			{
 				_castHits.Clear();
@@ -155,7 +160,7 @@ public class UISelectionPanel : UIPanel
 						var entity = _buildPhysicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
 						if (Map.EM.HasComponent<UnitId>(entity))
 						{
-							var e = Map.ActiveMap.units[Map.EM.GetComponentData<UnitId>(entity).Value];
+							var e = _map.units[Map.EM.GetComponentData<UnitId>(entity).Value];
 							_selection.Add(e);
 							actionsPanel.AddSelectedEntity(e);
 						}
@@ -173,8 +178,8 @@ public class UISelectionPanel : UIPanel
 	{
 		//Drag Select
 		var p0 = _start.Coords.world;
-		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetCoords.x, _start.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
-		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetCoords.x, _end.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetCoords.x, _start.Coords.offsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
+		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetCoords.x, _end.Coords.offsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
 		var p3 = _end.Coords.world;
 #if DEBUG
 		p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;

@@ -28,13 +28,13 @@ public class VentGenerator : FeatureGenerator
 				if (n.Any(t => t == null || t is GeothermalVentTile || t is GeothermalVentShellTile))
 					continue;
 				var h = center.Height;
-				map[coord] = tileInfo.CreateTile(coord, h);
+				map[coord] = tileInfo.CreateTile(map, coord, h);
 				map[coord].originalTile = center.info;
 				//map.CircularFlatten(coord, 1, 3);
 				for (int i = 0; i < n.Length; i++)
 				{
 					var orig = n[i].info;
-					map[n[i].Coords] = new GeothermalVentShellTile(n[i].Coords, h, i * 60, tileInfo);
+					map[n[i].Coords] = new GeothermalVentShellTile(n[i].Coords, h, i * 60, map, tileInfo);
 					map[n[i].Coords].originalTile = orig;
 				}
 				vents++;

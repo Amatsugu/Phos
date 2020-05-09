@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.ECS.Jobs.Pathfinder;
+﻿#if false
+using Amatsugu.Phos.ECS.Jobs.Pathfinder;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -35,6 +36,7 @@ public class InteractionUI : MonoBehaviour
 	private NativeHashMap<HexCoords, float> _navData;
 	private BuildPhysicsWorld _buildPhysicsWorld;
 	private NativeList<int> _castHits;
+	private Map _map;
 
 	private enum InteractionState
 	{
@@ -64,6 +66,7 @@ public class InteractionUI : MonoBehaviour
 	void OnRegen()
 	{
 		interactionPanel.HidePanel();
+		_map = GameRegistry.GameMap;
 	}
 
 	private void Start()
@@ -99,7 +102,7 @@ public class InteractionUI : MonoBehaviour
 			UnityEngine.Debug.Log("Build Closed");
 			_curState = InteractionState.Inspect;
 		};
-		_navData = Map.ActiveMap.GenerateNavData();
+		_navData = _map.GenerateNavData();
 	}
 
 	private void OnValidate()
@@ -110,7 +113,7 @@ public class InteractionUI : MonoBehaviour
 	private void DestroyTile()
 	{
 		var t = _selectedTile as BuildingTile;
-		Map.ActiveMap.RevertTile(t);
+		_map.RevertTile(t);
 		ResourceSystem.AddResources(t.buildingInfo.cost, .5f);
 		interactionPanel.HidePanel();
 	}
@@ -157,7 +160,7 @@ public class InteractionUI : MonoBehaviour
 		if (Input.GetKeyUp(KeyCode.Mouse1) && _selectedUnits.Count > 0)
 		{
 			var ray = _cam.ScreenPointToRay(mousePos);
-			var tile = Map.ActiveMap.GetTileFromRay(ray);
+			var tile = _map.GetTileFromRay(ray);
 			if (tile != null)
 			{
 				InstructUnitMovement(tile);
@@ -172,13 +175,13 @@ public class InteractionUI : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.Mouse0))
 			{
 				var ray = _cam.ScreenPointToRay(mousePos);
-				_start = Map.ActiveMap.GetTileFromRay(ray);
+				_start = _map.GetTileFromRay(ray);
 				HidePanel();
 			}
 			if (Input.GetKey(KeyCode.Mouse0))
 			{
 				var ray = _cam.ScreenPointToRay(mousePos);
-				_end = Map.ActiveMap.GetTileFromRay(ray);
+				_end = _map.GetTileFromRay(ray);
 				if (_start != _end && _start != null && _end != null)
 					DisplaySelectionRect();
 			}
@@ -186,7 +189,7 @@ public class InteractionUI : MonoBehaviour
 			{
 				selectionBox.gameObject.SetActive(false);
 				var ray = _cam.ScreenPointToRay(mousePos);
-				_end = Map.ActiveMap.GetTileFromRay(ray);
+				_end = _map.GetTileFromRay(ray);
 				if (_start != null && _end != null)
 				{
 					_selectedUnits.Clear();
@@ -214,7 +217,7 @@ public class InteractionUI : MonoBehaviour
 								_selectedUnits.Add(Map.EM.GetComponentData<UnitId>(entity).Value);
 							}
 						}
-						//_selectedUnits.AddRange(Map.ActiveMap.SelectUnits(_start.Coords, _end.Coords));
+						//_selectedUnits.AddRange(_map.SelectUnits(_start.Coords, _end.Coords));
 
 					}
 				}
@@ -227,9 +230,9 @@ public class InteractionUI : MonoBehaviour
 #if DEBUG
 		for (int i = 0; i < _selectedUnits.Count; i++)
 		{
-			if (!Map.ActiveMap.units.ContainsKey(_selectedUnits[i]))
+			if (!_map.units.ContainsKey(_selectedUnits[i]))
 				continue;
-			var unit = Map.ActiveMap.units[_selectedUnits[i]];
+			var unit = _map.units[_selectedUnits[i]];
 			var pos = Map.EM.GetComponentData<Translation>(unit.Entity).Value;
 			Debug.DrawRay(pos, Vector3.up, Color.white);
 		}
@@ -271,8 +274,8 @@ public class InteractionUI : MonoBehaviour
 	{
 		//Drag Select
 		var p0 = _start.Coords.world;
-		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetCoords.x, _start.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
-		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetCoords.x, _end.Coords.offsetCoords.y, Map.ActiveMap.innerRadius, Map.ActiveMap.tileEdgeLength);
+		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetCoords.x, _start.Coords.offsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
+		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetCoords.x, _end.Coords.offsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
 		var p3 = _end.Coords.world;
 #if DEBUG
 		p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
@@ -293,11 +296,11 @@ public class InteractionUI : MonoBehaviour
 		var tilesNeeded = 0;
 		for (int i = 0; i < _selectedUnits.Count; i++)
 		{
-			if(Map.ActiveMap.units.ContainsKey(_selectedUnits[i]))
-				tilesNeeded += HexCoords.GetTileCount(Map.ActiveMap.units[_selectedUnits[i]].info.size);
+			if(_map.units.ContainsKey(_selectedUnits[i]))
+				tilesNeeded += HexCoords.GetTileCount(_map.units[_selectedUnits[i]].info.size);
 		}
 		var r = HexCoords.CalculateRadius(tilesNeeded) + 1;
-		var orderedUnits = _selectedUnits.Select(uId => Map.ActiveMap.units[uId]).OrderBy(u => u.info.size).Reverse().ToArray();
+		var orderedUnits = _selectedUnits.Select(uId => _map.units[uId]).OrderBy(u => u.info.size).Reverse().ToArray();
 
 		var occupiedSet = new HashSet<HexCoords>();
 		var openSet = new HashSet<HexCoords>();
@@ -317,7 +320,7 @@ public class InteractionUI : MonoBehaviour
 					var order = new MoveOrder
 					{
 						unit = orderedUnits[i],
-						dst = Map.ActiveMap[openTiles[j]].SurfacePoint
+						dst = _map[openTiles[j]].SurfacePoint
 					};
 					order.cost = (order.dst - order.unit.Position).sqrMagnitude;
 					UnityEngine.Debug.DrawRay(order.dst, Vector3.up, Color.magenta, 1);
@@ -335,7 +338,7 @@ public class InteractionUI : MonoBehaviour
 		for (int i = 0; i < footprint.Length; i++)
 		{
 			var coord = footprint[i];
-			if (Map.ActiveMap[coord].IsUnderwater)
+			if (GameRegistry.GameMap[coord].IsUnderwater)
 			{
 				isValid = false;
 				break;
@@ -405,3 +408,4 @@ public class InteractionUI : MonoBehaviour
 		GameEvents.OnMapRegen -= OnRegen;
 	}
 }
+#endif

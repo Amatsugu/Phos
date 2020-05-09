@@ -41,7 +41,7 @@ public class UIDevConsole : MonoBehaviour
 		AddCommand(new Command("quit", () => Application.Quit(0), "Quits the Game"));
 		AddCommand(new HelpCommand());
 		//Info
-		AddCommand(new Command("seed", () => AddConsoleMessage(Map.ActiveMap.Seed.ToString()), "Displays the current map seed"));
+		AddCommand(new Command("seed", () => AddConsoleMessage(GameRegistry.GameMap.Seed.ToString()), "Displays the current map seed"));
 		//Cheats
 		AddCommand(new Command("instantBuild", () =>
 		{

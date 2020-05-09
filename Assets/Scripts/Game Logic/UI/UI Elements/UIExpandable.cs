@@ -57,10 +57,12 @@ public class UIExpandable : UIHover
 	public virtual void Expand()
 	{
 		isExpanded = true;
+		OnExpand?.Invoke();
 	}
 
 	public virtual void Contract()
 	{
 		isExpanded = false;
+		OnContract?.Invoke();
 	}
 }

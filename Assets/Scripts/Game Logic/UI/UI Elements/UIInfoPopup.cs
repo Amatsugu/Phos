@@ -82,10 +82,10 @@ public class UIInfoPopup : UIExpandable
 	public void Init(HexCoords coords)
 	{
 		SetActive(true);
-		_notifPos = Map.ActiveMap[coords].SurfacePoint + offset;
+		_notifPos = GameRegistry.GameMap[coords].SurfacePoint + offset;
 		rTransform.position = _notifPos;
 		rTransform.rotation = GameRegistry.Camera.transform.rotation;
-		_line = LineFactory.CreateStaticLine(line, Map.ActiveMap[coords].SurfacePoint, _notifPos);
+		_line = LineFactory.CreateStaticLine(line, GameRegistry.GameMap[coords].SurfacePoint, _notifPos);
 	}
 
 	public int AddNotif(Sprite icon, string title, string message)

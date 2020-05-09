@@ -9,8 +9,8 @@ public class VentTileInfo : ResourceTileInfo
 	public MeshEntityRotatable shell;
 	public GameObject gyser;
 
-	public override Tile CreateTile(HexCoords pos, float height)
+	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return new GeothermalVentTile(pos, height, this);
+		return new GeothermalVentTile(pos, height, map, this);
 	}
 }

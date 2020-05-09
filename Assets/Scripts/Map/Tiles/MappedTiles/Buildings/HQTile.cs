@@ -9,7 +9,7 @@ public class HQTile : BuildingTile
 {
 	public readonly HQTileInfo hqInfo;
 
-	public HQTile(HexCoords coords, float height, HQTileInfo tInfo) : base(coords, height, tInfo)
+	public HQTile(HexCoords coords, float height, Map map, HQTileInfo tInfo) : base(coords, height, map, tInfo)
 	{
 		hqInfo = tInfo;
 	}
@@ -17,15 +17,15 @@ public class HQTile : BuildingTile
 	public override void OnPlaced()
 	{
 #if DEBUG
-		if (Map.ActiveMap.HQ != null)
+		if (map.HQ != null)
 			throw new Exception("Second HQ added");
 #endif
-		Map.ActiveMap.HQ = this;
-		Map.ActiveMap.conduitGraph = new ConduitGraph(Coords, Height + 3);
-		var tilesToReplace = Map.ActiveMap.GetNeighbors(Coords);
+		map.HQ = this;
+		map.conduitGraph = new ConduitGraph(Coords, Height + 3);
+		var tilesToReplace = map.GetNeighbors(Coords);
 		for (int i = 0; i < tilesToReplace.Length; i++)
 		{
-			Map.ActiveMap.ReplaceTile(tilesToReplace[i], hqInfo.subHQTiles[i]);
+			map.ReplaceTile(tilesToReplace[i], hqInfo.subHQTiles[i]);
 		}
 		GameRegistry.BaseNameUI.panel.Show();
 		GameEvents.InvokeOnHQPlaced();
@@ -33,7 +33,7 @@ public class HQTile : BuildingTile
 
 	protected override void OnBuilt()
 	{
-		var spawnTiles = Map.ActiveMap.HexSelect(Coords, 2);
+		var spawnTiles = map.HexSelect(Coords, 2);
 		for (int i = 0; i < spawnTiles.Count; i++)
 		{
 			if (!(spawnTiles[i] is BuildingTile))
@@ -41,7 +41,7 @@ public class HQTile : BuildingTile
 				var b = spawnTiles[i].SurfacePoint;
 				b.y = SurfacePoint.y;
 				var fwd = SurfacePoint - b;
-				var unit = Map.ActiveMap.AddUnit(hqInfo.unitInfo, spawnTiles[i], hqInfo.faction);
+				var unit = map.AddUnit(hqInfo.unitInfo, spawnTiles[i], hqInfo.faction);
 				var rot = new Rotation
 				{
 					Value = quaternion.LookRotation(fwd, Vector3.up)
@@ -50,14 +50,14 @@ public class HQTile : BuildingTile
 				Map.EM.SetComponentData(unit.HeadEntity, rot);
 			}
 		}
-		//PowerTransferEffectSystem.AddNode(Map.ActiveMap.conduitGraph.GetNode(Coords));
+		//PowerTransferEffectSystem.AddNode(map.conduitGraph.GetNode(Coords));
 		ResourceSystem.AddResources(hqInfo.startingResources);
 	}
 
 	public override void OnHeightChanged()
 	{
 		base.OnHeightChanged();
-		var foundation = Map.ActiveMap.HexSelect(Coords, buildingInfo.size);
+		var foundation = map.HexSelect(Coords, buildingInfo.size);
 		for (int i = 0; i < foundation.Count; i++)
 		{
 			if (foundation[i] != this)
@@ -68,7 +68,7 @@ public class HQTile : BuildingTile
 
 public class SubHQTile : PoweredBuildingTile
 {
-	public SubHQTile(HexCoords coords, float height, SubHQTileInfo tInfo) : base(coords, height, tInfo)
+	public SubHQTile(HexCoords coords, float height, Map map, SubHQTileInfo tInfo) : base(coords, height, map, tInfo)
 	{
 		HasHQConnection = true;
 	}

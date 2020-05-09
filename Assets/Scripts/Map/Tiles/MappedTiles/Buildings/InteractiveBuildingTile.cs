@@ -2,7 +2,7 @@
 {
 	public InteractiveBuildingTileInfo uiInfo;
 
-	public InteractiveBuildingTile(HexCoords coords, float height, InteractiveBuildingTileInfo tInfo) : base(coords, height, tInfo)
+	public InteractiveBuildingTile(HexCoords coords, float height, Map map, InteractiveBuildingTileInfo tInfo) : base(coords, height, map, tInfo)
 	{
 		uiInfo = tInfo;
 	}

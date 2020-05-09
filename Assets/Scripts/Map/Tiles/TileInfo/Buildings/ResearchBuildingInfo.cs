@@ -11,9 +11,9 @@ public class ResearchBuildingInfo : BuildingTileEntity
 	public BuildingCategory researchCategory;
 	public float consumptionMuli = 2;
 
-	public override Tile CreateTile(HexCoords pos, float height)
+	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return new ResearchBuildingTile(pos, height, this);
+		return new ResearchBuildingTile(pos, height, map, this);
 	}
 
 	public override string GetProductionString()

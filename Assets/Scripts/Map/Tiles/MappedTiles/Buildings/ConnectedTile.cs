@@ -10,7 +10,7 @@ public class ConnectedTile : PoweredBuildingTile
 
 	private NativeArray<Entity> _connections;
 
-	public ConnectedTile(HexCoords coords, float height, ConnectedTileInfo tInfo = null) : base(coords, height, tInfo)
+	public ConnectedTile(HexCoords coords, float height, Map map, ConnectedTileInfo tInfo) : base(coords, height, map, tInfo)
 	{
 		connectedTileInfo = tInfo;
 		_connections = new NativeArray<Entity>(6, Allocator.Persistent);
@@ -92,7 +92,7 @@ public class ConnectedTile : PoweredBuildingTile
 			}
 			return;
 		}
-		var neighbors = Map.ActiveMap.GetNeighbors(Coords);
+		var neighbors = map.GetNeighbors(Coords);
 		for (int i = 0; i < neighbors.Length; i++)
 		{
 			var n = neighbors[i];

@@ -2,7 +2,7 @@
 {
 	public ResearchBuildingInfo researchInfo;
 
-	public ResearchBuildingTile(HexCoords coords, float height, ResearchBuildingInfo tInfo) : base(coords, height, tInfo)
+	public ResearchBuildingTile(HexCoords coords, float height, Map map, ResearchBuildingInfo tInfo) : base(coords, height, map, tInfo)
 	{
 		researchInfo = tInfo;
 	}

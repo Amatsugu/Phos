@@ -28,8 +28,8 @@ public class TreeDecorator : TileDecorator
 	{
 		if (_filter == null)
 		{
-			_filter = NoiseFilterFactory.CreateNoiseFilter(this.noise, Map.ActiveMap.Seed);
-			_rand = new System.Random(Map.ActiveMap.Seed);
+			_filter = NoiseFilterFactory.CreateNoiseFilter(this.noise, tile.map.Seed);
+			_rand = new System.Random(tile.map.Seed);
 		}
 		var noise = Mathf.Pow(Mathf.PerlinNoise(tile.Coords.offsetCoords.x / noiseScale, tile.Coords.offsetCoords.y / noiseScale), densityPower);
 		noise = MathUtils.Remap(Mathf.Clamp(noise, 0, 1), 0, 1, minPerTile, maxPerTile);
@@ -44,7 +44,7 @@ public class TreeDecorator : TileDecorator
 		{
 			var size = _rand.Range(minSize, maxSize);
 			var height = _rand.Range(minHeight, maxHeight);
-			var pos = new float3(_rand.NextFloat(), 0, _rand.NextFloat()) * (Map.ActiveMap.innerRadius);
+			var pos = new float3(_rand.NextFloat(), 0, _rand.NextFloat()) * (tile.map.innerRadius);
 			entities[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size), Quaternion.Euler(0, _rand.Range(0, 360), 0));
 		}
 		return entities;

@@ -16,6 +16,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 	private HashSet<int> _removalList;
 	private static PowerTransferEffectSystem _INST;
 	private bool _removeAll;
+	private Map _map;
 
 	protected override void OnCreate()
 	{
@@ -28,6 +29,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 	protected void Init()
 	{
 		base.OnStartRunning();
+		_map = GameRegistry.GameMap;
 		GameEvents.OnHQPlaced += OnHQ;
 		GameEvents.OnMapDestroyed += DestroyAll;
 		_effectPaths = new Dictionary<int, List<Vector3>>();
@@ -37,7 +39,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 
 	private void OnHQ()
 	{
-		_conduitGraph = Map.ActiveMap.conduitGraph;
+		_conduitGraph = _map.conduitGraph;
 		_conduitGraph.OnNodeRemoved += OnNodeRemoved;
 		GameEvents.OnHQPlaced -= OnHQ;
 	}

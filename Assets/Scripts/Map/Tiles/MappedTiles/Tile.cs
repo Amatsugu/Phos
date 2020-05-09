@@ -22,20 +22,22 @@ public class Tile
 	public int biomeId;
 	public bool IsShown { get; private set; }
 	public TileEntity originalTile;
+	public readonly Map map;
 
 	protected Entity _tileEntity;
 	private NativeArray<Entity> _decor;
 	protected bool _isRendered;
 	private bool _decorRendered;
 
-	public Tile(HexCoords coords, float height, TileEntity tInfo = null)
+	public Tile(HexCoords coords, float height, Map map, TileEntity tInfo = null)
 	{
 		Coords = coords;
 		Height = height;
 		info = tInfo;
-		if (height < Map.ActiveMap.seaLevel)
+		this.map = map;
+		if (height < map.seaLevel)
 		{
-			SurfacePoint = new float3(Coords.world.x, Map.ActiveMap.seaLevel, Coords.world.z);
+			SurfacePoint = new float3(Coords.world.x, map.seaLevel, Coords.world.z);
 			IsUnderwater = true;
 		}
 		else
@@ -84,9 +86,9 @@ public class Tile
 	public void UpdateHeight(float height)
 	{
 		Height = height;
-		if (height < Map.ActiveMap.seaLevel)
+		if (height < map.seaLevel)
 		{
-			SurfacePoint = new Vector3(Coords.world.x, Map.ActiveMap.seaLevel, Coords.world.z);
+			SurfacePoint = new Vector3(Coords.world.x, map.seaLevel, Coords.world.z);
 			IsUnderwater = true;
 		}
 		else
@@ -134,7 +136,7 @@ public class Tile
 
 	public virtual void SendTileUpdate(TileUpdateType type)
 	{
-		var neighbors = Map.ActiveMap.GetNeighbors(this);
+		var neighbors = map.GetNeighbors(this);
 		for (int i = 0; i < 6; i++)
 			neighbors[i]?.TileUpdated(this, type);
 	}

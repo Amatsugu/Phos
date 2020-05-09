@@ -42,7 +42,7 @@ MonoBehaviour:
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   faction: 1
-  maxHealth: 0
+  maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
     ammount: 90
   production:
   - id: 0
-    ammount: 3
+    ammount: 500
   consumption: []
   adjacencyEffects:
   - {fileID: 11400000, guid: 6983612a86089b24aa51f5b539fed83e, type: 2}

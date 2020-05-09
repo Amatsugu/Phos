@@ -87,9 +87,9 @@ public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 		return e;
 	}
 
-	public virtual Tile CreateTile(HexCoords pos, float height)
+	public virtual Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return new Tile(pos, height, this);
+		return new Tile(pos, height, map, this);
 	}
 	public void OnBeforeSerialize()
 	{

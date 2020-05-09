@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Test Effect
   m_EditorClassIdentifier: 
   bonusDefinations:
-  - buildings: []
+  - buildings:
+    - id: 57
+    - id: 70
     productionMultiplier: 0.14
     consumptionMultiplier: 0
   line: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85, type: 2}

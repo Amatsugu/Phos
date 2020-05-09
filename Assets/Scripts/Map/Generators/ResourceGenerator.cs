@@ -73,11 +73,11 @@ public class ResourceGenerator : FeatureGenerator
 				if (map[pos] is ResourceTile)
 					continue;
 				var h = map[pos].Height;
-				if (h < Map.ActiveMap.seaLevel)
+				if (h < map.seaLevel)
 					continue;
 				if (resourceMap[x + z * map.totalWidth] == 0)
 				{
-					var res = resource.CreateTile(pos, h);
+					var res = resource.CreateTile(map, pos, h);
 					res.originalTile = map[pos].info;
 					map[pos] = res;
 				}

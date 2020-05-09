@@ -43,6 +43,7 @@ public class BuildingTileEntity : TileEntity
 	public MeshEntityRotatable offshorePlatformMesh;
 
 	[Header("Building Info")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2235:Mark all non-serializable fields", Justification = "Seraialized by Unity")]
 	public Sprite icon;
 	public Faction faction;
 	[Header("Health")]
@@ -90,12 +91,12 @@ public class BuildingTileEntity : TileEntity
 		return e;
 	}
 
-	public override Tile CreateTile(HexCoords pos, float height)
+	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
 		if (consumption.Length != 0 || production.Any(p => p.id == 0))
-			return new PoweredBuildingTile(pos, height, this);
+			return new PoweredBuildingTile(pos, height, map, this);
 		else
-			return new BuildingTile(pos, height, this);
+			return new BuildingTile(pos, height, map, this);
 	}
 
 	public virtual string GetProductionString()

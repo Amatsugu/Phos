@@ -13,7 +13,7 @@ public class DeathSystem : ComponentSystem
 			if (health.Value > 0 || health.maxHealth == 0)
 				return;
 			Debug.Log($"Unit [{id.Value}] dying");
-			Map.ActiveMap.units[id.Value].Die();
+			GameRegistry.GameMap.units[id.Value].Die();
 		});
 		Entities.WithNone<Disabled>().WithAll<BuildingId>().ForEach((Entity e, ref Health health, ref HexPosition pos) =>
 		{
@@ -22,7 +22,7 @@ public class DeathSystem : ComponentSystem
 			if (health.Value > 0 || health.maxHealth == 0)
 				return;
 			Debug.Log($"Building {pos.Value} dying");
-			((BuildingTile)Map.ActiveMap[pos.Value]).Die();
+			((BuildingTile)GameRegistry.GameMap[pos.Value]).Die();
 		});
 	}
 }

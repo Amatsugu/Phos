@@ -30,6 +30,10 @@ public interface ICommandable
 public interface IDeconstructable
 {
 	void Deconstruct();
+
+	bool CanDeconstruct(Faction faction);
+
+	ResourceIndentifier[] GetResourceRefund();
 }
 
 public interface IRepairable

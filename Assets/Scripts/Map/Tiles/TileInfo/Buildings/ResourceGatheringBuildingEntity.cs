@@ -7,9 +7,9 @@ public class ResourceGatheringBuildingEntity : BuildingTileEntity
 	public ResourceIndentifier[] resourcesToGather;
 	public int gatherRange = 3;
 
-	public override Tile CreateTile(HexCoords pos, float height)
+	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return new GatheringBuildingTile(pos, height, this);
+		return new GatheringBuildingTile(pos, height, map, this);
 	}
 
 	public override string GetProductionString()

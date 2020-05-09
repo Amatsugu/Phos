@@ -21,7 +21,7 @@ public class SerializedMap
 		for (int i = 0; i < tiles.Length; i++)
 		{
 			var curTile = tiles[i];
-			map[curTile.pos] = db.tileEntites[curTile.tileId].tile.CreateTile(curTile.pos, curTile.height);
+			map[curTile.pos] = db.tileEntites[curTile.tileId].tile.CreateTile(map, curTile.pos, curTile.height);
 			if (curTile.origTile != -1)
 				map[curTile.pos].originalTile = db.tileEntites[curTile.origTile].tile;
 			map[curTile.pos].OnDeSerialized(curTile.tileData);

@@ -7,7 +7,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 {
 	public ResourceGatheringBuildingEntity gatherInfo;
 
-	public GatheringBuildingTile(HexCoords coords, float height, ResourceGatheringBuildingEntity tInfo) : base(coords, height, tInfo)
+	public GatheringBuildingTile(HexCoords coords, float height, Map map, ResourceGatheringBuildingEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		gatherInfo = tInfo;
 	}
@@ -19,7 +19,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
 		var resInRange = new Dictionary<int, int>();
 		var resTiles = new Dictionary<int, List<ResourceTile>>();
-		Map.ActiveMap.HexSelectForEach(Coords, fullRange, t =>
+		map.HexSelectForEach(Coords, fullRange, t =>
 		{
 			if (t is ResourceTile rt && !rt.gatherer.isCreated)
 			{
@@ -83,7 +83,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	{
 		base.OnRemoved();
 		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
-		var tilesInRange = Map.ActiveMap.HexSelect(Coords, fullRange, true);
+		var tilesInRange = map.HexSelect(Coords, fullRange, true);
 		foreach (var tile in tilesInRange)
 		{
 			if (tile is ResourceTile rt)
@@ -92,7 +92,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 					rt.gatherer = default;
 			}
 		}
-		var tiles = Map.ActiveMap.HexSelect(Coords, fullRange * 2, true);
+		var tiles = map.HexSelect(Coords, fullRange * 2, true);
 		foreach (var tile in tiles)
 		{
 			if (tile is GatheringBuildingTile gb)

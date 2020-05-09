@@ -3,7 +3,7 @@
 	public readonly ResourceTileInfo resInfo;
 	public HexCoords gatherer;
 
-	public ResourceTile(HexCoords coords, float height, ResourceTileInfo tInfo = null) : base(coords, height, tInfo)
+	public ResourceTile(HexCoords coords, float height, Map map, ResourceTileInfo tInfo) : base(coords, height, map, tInfo)
 	{
 		resInfo = tInfo;
 	}

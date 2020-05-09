@@ -195,12 +195,15 @@ public class UIBuildPanel : UITabPanel
 	void DeconstructLogic()
 	{
 		_indicatorManager.UnSetAllIndicators();
-		var selectedTile = GetTileUnderCursor() as BuildingTile;
+		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
 		_indicatorManager.SetIndicator(selectedTile, poweredTileIndicatorEntity);
+		var deconstructable = selectedTile as IDeconstructable;
+		if (deconstructable == null)
+			return;
 		if (Input.GetKeyUp(KeyCode.Mouse0))
-			Map.ActiveMap.RevertTile(selectedTile);
+			deconstructable.Deconstruct();
 	}
 
 	void ReadBackInput()
@@ -240,7 +243,7 @@ public class UIBuildPanel : UITabPanel
 			{
 				var e = col.Bodies[hit.RigidBodyIndex].Entity;
 				if (Map.EM.HasComponent<HexPosition>(e))
-					selectedTile = Map.ActiveMap[Map.EM.GetComponentData<HexPosition>(e).Value];
+					selectedTile = GameRegistry.GameMap[Map.EM.GetComponentData<HexPosition>(e).Value];
 			}
 		}
 		return selectedTile;
@@ -258,8 +261,8 @@ public class UIBuildPanel : UITabPanel
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		bool isValid = _selectedBuilding.validator.ValidatePlacement(Map.ActiveMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
-		var neighbors = Map.ActiveMap.GetNeighbors(selectedTile.Coords);
+		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
+		var neighbors = GameRegistry.GameMap.GetNeighbors(selectedTile.Coords);
 		var effects = new List<string>();
 		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
 			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(selectedTile, neighbors, ref effects);
@@ -285,16 +288,16 @@ public class UIBuildPanel : UITabPanel
 			return;
 		var poweredTiles = new List<Tile>(250);
 		var unPoweredTiles = new List<Tile>(250);
-		var conduitsInRange = Map.ActiveMap.conduitGraph.GetNodesInRange(selectedTile.Coords, _poweredTileRangeSq, false);
+		var conduitsInRange = GameRegistry.GameMap.conduitGraph.GetNodesInRange(selectedTile.Coords, _poweredTileRangeSq, false);
 		for (int i = 0; i < conduitsInRange.Count; i++)
 		{
-			var conduit = (Map.ActiveMap[conduitsInRange[i].conduitPos] as ResourceConduitTile);
+			var conduit = (GameRegistry.GameMap[conduitsInRange[i].conduitPos] as ResourceConduitTile);
 			if (conduit == null)
 				continue;
 			if (conduit.HasHQConnection)
-				poweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
+				poweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
 			else
-				unPoweredTiles.AddRange(Map.ActiveMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
+				unPoweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
 		}
 		if (poweredTiles.Count > 0)
 			_indicatorManager.ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());

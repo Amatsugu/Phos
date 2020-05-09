@@ -109,7 +109,7 @@ public class RandomGenerator : MapGenerator
 				var i = x + z * map.totalWidth;
 				var height = heightMap[i];
 				var (tInfo, biomeId) = biomePainter.GetTile(moistureMap[i], tempMap[i], height, seaLevel);
-				map[coord] = tInfo.CreateTile(coord, height).SetBiome(biomeId, moistureMap[i], tempMap[i]);
+				map[coord] = tInfo.CreateTile(map, coord, height).SetBiome(biomeId, moistureMap[i], tempMap[i]);
 			}
 		}
 		Debug.Log($"Painted map... {(DateTime.Now - startTime).TotalMilliseconds}ms");

@@ -10,9 +10,9 @@ public class HQTileInfo : BuildingTileEntity
 	public SubHQTileInfo[] subHQTiles;
 	public MobileUnitEntity unitInfo;
 
-	public override Tile CreateTile(HexCoords pos, float height)
+	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return new HQTile(pos, height, this);
+		return new HQTile(pos, height, map, this);
 	}
 
 	private void OnValidate()

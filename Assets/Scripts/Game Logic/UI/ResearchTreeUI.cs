@@ -52,14 +52,10 @@ public class ResearchTreeUI : UIPanel
 		_totalOffset = _nodeSize + nodeSpacing;
 		OnShow += () =>
 		{
-			GameRegistry.BuildUI.gameObject.SetActive(false);
-			GameRegistry.InteractionUI.enabled = false;
 			GameRegistry.CameraController.enabled = false;
 		};
 		OnHide += () =>
 		{
-			GameRegistry.BuildUI.gameObject.SetActive(true);
-			GameRegistry.InteractionUI.enabled = true;
 			GameRegistry.CameraController.enabled = true;
 		};
 	}

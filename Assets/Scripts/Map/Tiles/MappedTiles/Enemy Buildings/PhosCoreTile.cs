@@ -11,7 +11,7 @@ public class PhosCoreTile : EnemyBuildingTile
 	private Entity _ringEntity;
 	private readonly PhosCoreTileInfo _phosInfo;
 
-	public PhosCoreTile(HexCoords coords, float height, PhosCoreTileInfo tInfo) : base(coords, height, tInfo)
+	public PhosCoreTile(HexCoords coords, float height, Map map, PhosCoreTileInfo tInfo) : base(coords, height, map, tInfo)
 	{
 		_isBuilt = true;
 		_phosInfo = tInfo;

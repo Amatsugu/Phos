@@ -18,7 +18,6 @@ using UnityEngine.AddressableAssets;
 public class PhosCoreSystem : ComponentSystem
 {
 	private int _state = 0;
-	private Map _map;
 	private ProjectileMeshEntity projectile;
 	private ProjectileMeshEntity laser;
 	private BuildPhysicsWorld buildPhysics;
@@ -34,7 +33,6 @@ public class PhosCoreSystem : ComponentSystem
 
 	protected void Init()
 	{
-		_map = Map.ActiveMap;
 		var projLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyProjectile");
 		var laserLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyLaser");
 		_inRangeList = new NativeList<int>(Allocator.Persistent);

@@ -16,10 +16,10 @@ public class ConduitPlacementValidator : PlacementValidator
 		{
 			throw new System.Exception("This tile type cannot use this validator");
 		}
-		var rangeSqr = HexCoords.TileToWorldDist(conduitInfo.connectionRange, Map.ActiveMap.innerRadius);
+		var rangeSqr = HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius);
 		rangeSqr *= rangeSqr;
-		var nodes = Map.ActiveMap.conduitGraph.GetNodesInRange(pos, rangeSqr);
-		while (nodes.Count > Map.ActiveMap.conduitGraph.maxConnections)
+		var nodes = map.conduitGraph.GetNodesInRange(pos, rangeSqr);
+		while (nodes.Count > map.conduitGraph.maxConnections)
 			nodes.RemoveAt(nodes.Count - 1);
 		nodes.RemoveAll(n => n.conduitPos == pos);
 		var selectedSurface = map[pos].SurfacePoint;
@@ -27,12 +27,12 @@ public class ConduitPlacementValidator : PlacementValidator
 #if DEBUG
 		for (int i = 0; i < nodes.Count; i++)
 		{
-			UnityEngine.Debug.DrawLine(selectedSurface, Map.ActiveMap[nodes[i].conduitPos].SurfacePoint, Color.cyan);
+			UnityEngine.Debug.DrawLine(selectedSurface, map[nodes[i].conduitPos].SurfacePoint, Color.cyan);
 		}
 #endif
 		//else
 		//	HideIndicator(resourceConduitPreviewLine);
-		Map.ActiveMap.HexSelectForEach(pos, conduitInfo.poweredRange, t =>
+		map.HexSelectForEach(pos, conduitInfo.poweredRange, t =>
 		{
 			indicatorManager.SetIndicator(t, poweredIndicator);
 		}, true);
