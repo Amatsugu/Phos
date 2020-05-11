@@ -28,9 +28,6 @@ public class TechBuildingTile : PoweredBuildingTile
         if (!IsBuilt || !HasHQConnection)
             return;
         for (int i = 0; i < techInfo.buildingsToUnlock.Length; i++)
-        {
-
-        }
-
+            GameRegistry.UnlockBuilding(techInfo.buildingsToUnlock[i]);
     }
 }

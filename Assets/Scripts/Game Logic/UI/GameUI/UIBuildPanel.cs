@@ -3,13 +3,13 @@ using System.Linq;
 using TMPro;
 using Unity.Entities;
 using Unity.Physics.Systems;
+using UnityEditor.Build.Pipeline.Injector;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIBuildPanel : UITabPanel
 {
 	public UIUnitIcon iconPrefab;
-	public BuildingDatabase buildingDatabase;
 	[HideInInspector]
 	public UIInfoPanel infoPanel;
 	public TMP_Text floatingText;
@@ -36,6 +36,7 @@ public class UIBuildPanel : UITabPanel
 	private IndicatorManager _indicatorManager;
 	private float _poweredTileRangeSq;
 	private Camera _cam;
+	private BuildingDatabase _buildingDatabase;
 
 	public enum BuildState
 	{
@@ -48,7 +49,6 @@ public class UIBuildPanel : UITabPanel
 
 	protected override void Awake()
 	{
-		GameRegistry.SetBuildingDatabase(buildingDatabase);
 		OnHide += () =>
 		{
 			if (state == BuildState.HQPlacement)
@@ -59,6 +59,7 @@ public class UIBuildPanel : UITabPanel
 		_icons = new UIUnitIcon[8];
 		GameEvents.OnGameReady += OnGameReady;
 		_poweredTileRangeSq = showPowerRange * showPowerRange;
+		_buildingDatabase = GameRegistry.BuildingDatabase;
 		base.Awake();
 	}
 
@@ -74,6 +75,7 @@ public class UIBuildPanel : UITabPanel
 		state = BuildState.HQPlacement;
 		_selectedBuilding = hQTile;
 		GameEvents.OnGameTick += OnTick;
+		GameEvents.OnBuildingUnlocked += OnTick;
 	}
 
 	protected override void OnTabSelected(int tab)
@@ -88,7 +90,7 @@ public class UIBuildPanel : UITabPanel
 		if (state == BuildState.Disabled || state == BuildState.HQPlacement)
 			return;
 
-		var buildings = buildingDatabase[_lastCategory];
+		var buildings = _buildingDatabase[_lastCategory];
 		for (int i = 0, j = 0; i < _icons.Length; i++)
 		{
 			if (_icons[i] == null)
@@ -98,25 +100,24 @@ public class UIBuildPanel : UITabPanel
 			}
 			if (j < buildings.Length)
 			{
-				if (buildings[j].info.tier == _tier)
+				if (buildings[j].info.tier != _tier)
+					continue;
+				if (!GameRegistry.IsBuildingUnlocked(buildings[j].id))
+					continue;
+				_icons[i].SetActive(false);
+				_icons[i].ClearHoverEvents();
+				_icons[i].ClearClickEvents();
+				_icons[i].titleText.text = buildings[j].info.name;
+				_icons[i].costText.text = buildings[j].info.GetCostString();
+				_icons[i].icon.sprite = buildings[j].info.icon;
+				var b = buildings[j];
+				_icons[i].OnHover += () => infoPanel.ShowInfo(b);
+				_icons[i].OnClick += () =>
 				{
-					_icons[i].SetActive(false);
-					_icons[i].ClearHoverEvents();
-					_icons[i].ClearClickEvents();
-					_icons[i].titleText.text = buildings[j].info.name;
-					_icons[i].costText.text = buildings[j].info.GetCostString();
-					_icons[i].icon.sprite = buildings[j].info.icon;
-					var b = buildings[j];
-					_icons[i].OnHover += () => infoPanel.ShowInfo(b);
-					_icons[i].OnClick += () =>
-					{
-						state = BuildState.Placement;
-						_selectedBuilding = b.info;
-					};
-					_icons[i].SetActive(true);
-				}
-				else
-					i--;
+					state = BuildState.Placement;
+					_selectedBuilding = b.info;
+				};
+				_icons[i].SetActive(true);
 				j++;
 			}
 			else
@@ -130,7 +131,7 @@ public class UIBuildPanel : UITabPanel
 			return;
 		state = BuildState.Idle;
 		_lastCategory = category;
-		var buildings = buildingDatabase[category];
+		var buildings = _buildingDatabase[category];
 		for (int i = 0, j = 0; i < _icons.Length; i++)
 		{
 			if (_icons[i] == null)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Map Asset/Tile/Tech Building")]
 public class TechBuildingEntity : BuildingTileEntity
 {
 	[Header("Tech Up")]

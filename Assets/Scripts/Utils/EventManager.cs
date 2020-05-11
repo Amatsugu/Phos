@@ -5,18 +5,6 @@ using UnityEngine;
 
 public enum GameEvent
 {
-	OnMapLoaded = 1805809122,
-	OnGameReady = 1859452432,
-	OnMapRegen = -1290680596,
-	OnWeatherInit = -1795000521,
-	OnHQPlaced = 347355883,
-	OnMapDestroyed = -904577914,
-	OnGameSaving = -43491477,
-	OnGameStart = -89447245,
-	OnGameTick = -998220040,
-	OnBuildingUnlocked = 2117215534,
-	OnBuildWindowOpen = 1968727591,
-	OnBuildWindowClose = -1653997983,
 	OnResearchComplete = -1721594843,
 }
 
@@ -156,6 +144,14 @@ public class GameEvents
 	}
 	public static void InvokeOnGameLoaded() => INST._onGameGameLoaded?.Invoke();
 
+	public static event Action OnBuildingUnlocked
+	{
+		add => INST._onBuildingUnlocked += value;
+		remove => INST._onBuildingUnlocked -= value;
+	}
+
+	public static void InvokeOnBuildingUnlocked() => INST._onBuildingUnlocked?.Invoke();
+
 	private event Action _onMapLoaded;
 	private event Action _onGameReady;
 	private event Action _onMapRegen;
@@ -166,5 +162,6 @@ public class GameEvents
 	private event Action _onGameTick;
 	private event Action _onGameSaving;
 	private event Action _onGameGameLoaded;
+	private event Action _onBuildingUnlocked;
 
 }

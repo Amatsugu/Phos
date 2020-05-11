@@ -51,7 +51,7 @@ public class MapRenderer : MonoBehaviour
 	{
 		_entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 		map = generator.GenerateMap(transform);
-		GameRegistry.SetGameMap(map);
+		GameRegistry.InitGame(map);
 		generator.GenerateFeatures(map);
 		serializedMap = map.Serialize();
 		//map2 = serializedMap.Deserialize(tileDatabase);

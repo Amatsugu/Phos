@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
@@ -16,8 +15,6 @@ public class GameUI : UIHover
 	private UISelectionPanel _selectionPanel;
 
 	private UIState state;
-
-	
 
 	private enum UIState
 	{
