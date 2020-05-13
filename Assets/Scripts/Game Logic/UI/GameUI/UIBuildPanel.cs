@@ -18,6 +18,7 @@ public class UIBuildPanel : UITabPanel
 	public HQTileEntity hQTile;
 	public MeshEntityRotatable dropPod;
 	public RectTransform contentArea;
+	public GameObject nothingUnlockedText;
 	public float showPowerRange = 20;
 
 	[Header("Indicators")]
@@ -75,7 +76,7 @@ public class UIBuildPanel : UITabPanel
 		state = BuildState.HQPlacement;
 		_selectedBuilding = hQTile;
 		GameEvents.OnGameTick += OnTick;
-		GameEvents.OnBuildingUnlocked += OnTick;
+		GameEvents.OnBuildingUnlocked += () => Show(_lastCategory);
 	}
 
 	protected override void OnTabSelected(int tab)
@@ -132,6 +133,7 @@ public class UIBuildPanel : UITabPanel
 		state = BuildState.Idle;
 		_lastCategory = category;
 		var buildings = _buildingDatabase[category];
+		bool hasIcons = false;
 		for (int i = 0, j = 0; i < _icons.Length; i++)
 		{
 			if (_icons[i] == null)
@@ -141,8 +143,8 @@ public class UIBuildPanel : UITabPanel
 			}
 			if (j < buildings.Length)
 			{
-				if (buildings[j].info.tier == _tier)
-				{
+				if (buildings[j].info.tier == _tier && GameRegistry.IsBuildingUnlocked(buildings[j].id))
+				{	
 					_icons[i].SetActive(false);
 					_icons[i].ClearHoverEvents();
 					_icons[i].ClearClickEvents();
@@ -157,6 +159,7 @@ public class UIBuildPanel : UITabPanel
 						_selectedBuilding = b.info;
 					};
 					_icons[i].SetActive(true);
+					hasIcons = true;
 				}
 				else
 					i--;
@@ -164,6 +167,7 @@ public class UIBuildPanel : UITabPanel
 			}else
 				_icons[i].SetActive(false);
 		}
+		nothingUnlockedText.SetActive(!hasIcons);
 		Show();
 	}
 
