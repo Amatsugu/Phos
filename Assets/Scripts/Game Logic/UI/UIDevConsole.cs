@@ -60,9 +60,9 @@ public class UIDevConsole : MonoBehaviour
 		}, "Toggles resource cost"));
 		AddCommand(new Command("unlockAll", () =>
 		{
-			foreach (var building in GameRegistry.BuildingDatabase.buildings.Keys)
+			foreach (var building in GameRegistry.BuildingDatabase.buildings.Values)
 			{
-				GameRegistry.UnlockBuilding(new BuildingIdentifier { id = building });
+				GameRegistry.UnlockBuilding(new BuildingIdentifier { id = building.id });
 			}
 			AddConsoleMessage("Unlocked All Buildings");
 		}, "Unlocks All Buildings"));

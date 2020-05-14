@@ -26,7 +26,10 @@ public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 		{
 			tileEntites.Add(tileIds[i], tileDefs[i]);
 			entityIds.Add(tileDefs[i].tile, tileIds[i]);
+			if(tileIds[i] > nextId)
+				nextId = tileIds[i];
 		}
+		nextId++;
 	}
 
 	public void OnBeforeSerialize()

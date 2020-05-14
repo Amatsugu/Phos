@@ -29,6 +29,15 @@ public class TileDatabaseUI : Editor
 			EditorUtility.SetDirty(database);
 			Undo.RecordObject(database, "Tile Database");
 		}
+		if (GUILayout.Button("Reset"))
+		{
+			database.tileEntites.Clear();
+			database.tileEntites.Clear();
+			Refresh();
+			serializedObject.ApplyModifiedProperties();
+			EditorUtility.SetDirty(database);
+			Undo.RecordObject(database, "Tile Database");
+		}
 		GUI.enabled = true;
 		foreach (var tileDef in database.tileEntites.Values)
 		{
@@ -37,7 +46,7 @@ public class TileDatabaseUI : Editor
 				typeString += ", Building";
 			if (tileDef.type.HasFlag(TileDatabase.TileType.Resource))
 				typeString += ", Resource";
-			EditorGUILayout.LabelField($"[{tileDef.id}]\t {tileDef.tile.name}:\t ({typeString})");
+			EditorGUILayout.LabelField($"[{tileDef.id}]\t {(tileDef.tile == null ? "Null" : tileDef.tile.name)}:\t ({typeString})");
 		}
 	}
 

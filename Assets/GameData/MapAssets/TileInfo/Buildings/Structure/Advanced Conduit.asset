@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dce1f248ec013df4693b191f7fcbf51c, type: 3}
-  m_Name: Resource Conduit
+  m_Name: Advanced Conduit
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
@@ -22,8 +22,8 @@ MonoBehaviour:
     remove the additional power cost from disconnected buildings.
   decorators: []
   isTraverseable: 0
-  assetGuid: 69df6771048597e47af78e977c2c3909
-  buildingMesh: {fileID: 11400000, guid: 1cccbdfb97aeb9f43955b041dd54202c, type: 2}
+  assetGuid: 09aba4acb75565341b194434483ffed7
+  buildingMesh: {fileID: 11400000, guid: 6fb955bd788f37f4fba4bde28f58597a, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -32,14 +32,15 @@ MonoBehaviour:
   preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
-  tier: 1
+  tier: 2
   constructionTime: 2
   category: 4
   size: 0
   flattenOuterRange: 0
-  isOffshore: 0
+  isOffshore: 1
   offshoreOnly: 0
-  offshorePlatformMesh: {fileID: 0}
+  offshorePlatformMesh: {fileID: 11400000, guid: 32ec38dc99914484daabc1918acca5b6,
+    type: 2}
   icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   faction: 1
   maxHealth: 0
@@ -50,13 +51,15 @@ MonoBehaviour:
     z: 0
   validator: {fileID: 11400000, guid: a68c415a210b7dc4da1fd7af40363961, type: 2}
   cost:
-  - id: 1
-    ammount: 25
+  - id: 4
+    ammount: 20
+  - id: 2
+    ammount: 10
   production: []
   consumption: []
   adjacencyEffects: []
-  poweredRange: 3
-  connectionRange: 8
+  poweredRange: 6
+  connectionRange: 12
   lineEntity: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
   lineEntityInactive: {fileID: 11400000, guid: c7c93174831cb88429bc7e5a33ff5238, type: 2}
   energyPacket: {fileID: 11400000, guid: 387055346b29e1f4890789816ea8cee3, type: 2}
