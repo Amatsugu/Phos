@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Gathering Sub HQ MeshEntityRotatable
   m_EditorClassIdentifier: 
   mesh: {fileID: 2783041483048503563, guid: 5c1438f23ca0b5b4e823fff7258133e5, type: 3}
-  material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
+  material: {fileID: 2100000, guid: e9e9f54899c81054a92531ef2835f0eb, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
@@ -22,3 +22,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

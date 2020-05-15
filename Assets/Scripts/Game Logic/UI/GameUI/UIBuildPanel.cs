@@ -76,7 +76,13 @@ public class UIBuildPanel : UITabPanel
 		state = BuildState.HQPlacement;
 		_selectedBuilding = hQTile;
 		GameEvents.OnGameTick += OnTick;
-		GameEvents.OnBuildingUnlocked += () => Show(_lastCategory);
+		GameEvents.OnBuildingUnlocked += b =>
+		{
+			if(IsOpen)
+				Show(_lastCategory);
+
+			NotificationsUI.Notify(b.icon, "Building Unlocked", $"<b>{b.name}</b>\n {b.description}", 10);
+		};
 	}
 
 	protected override void OnTabSelected(int tab)

@@ -10,6 +10,6 @@ public class TechBuildingEntity : BuildingTileEntity
 
 	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
-		return base.CreateTile(map, pos, height);
+		return new TechBuildingTile(pos, height, map, this);
 	}
 }

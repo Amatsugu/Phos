@@ -135,7 +135,7 @@ public class Map : IDisposable
 		if (IsRendered)
 			return;
 		IsRendered = true;
-		if (EM == null)
+		if (EM == default)
 			EM = entityManager;
 		/*
 		for (int i = 0; i < Chunks.Length; i++)

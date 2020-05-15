@@ -32,6 +32,17 @@ public class TileDatabase : ScriptableObject, ISerializationCallbackReceiver
 		nextId++;
 	}
 
+	public void Reset()
+	{
+		if (Application.isPlaying)
+			return;
+		nextId = 0;
+		tileEntites.Clear();
+		entityIds.Clear();
+		tileDefs = null;
+		tileIds = null;
+	}
+
 	public void OnBeforeSerialize()
 	{
 		if (tileEntites == null)

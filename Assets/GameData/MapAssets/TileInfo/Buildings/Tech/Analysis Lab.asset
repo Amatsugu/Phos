@@ -57,5 +57,5 @@ MonoBehaviour:
   consumption: []
   adjacencyEffects: []
   buildingsToUnlock:
-  - id: 57
-  - id: 58
+  - id: 0
+  - id: 1

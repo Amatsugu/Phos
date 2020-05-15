@@ -31,8 +31,7 @@ public class TileDatabaseUI : Editor
 		}
 		if (GUILayout.Button("Reset"))
 		{
-			database.tileEntites.Clear();
-			database.tileEntites.Clear();
+			database.Reset();
 			Refresh();
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(database);
@@ -53,8 +52,6 @@ public class TileDatabaseUI : Editor
 	public void Refresh()
 	{
 		var assets = AssetDatabase.FindAssets($"t:{nameof(TileEntity)}", new[] { "Assets/GameData/MapAssets/TileInfo" });
-		//database.tileEntites.Clear();
-		//database.tileEntites.Clear();
 		foreach (var asset in assets)
 		{
 			var assetPath = AssetDatabase.GUIDToAssetPath(asset);

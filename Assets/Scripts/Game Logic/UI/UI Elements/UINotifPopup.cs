@@ -37,24 +37,25 @@ public class UINotifPopup : MonoBehaviour
 			_mC = message.color;
 	}
 
-	public void Init(NotificationsUI.PendingNotification notification, float notifTime)
+	public void Init(NotificationsUI.PendingNotification notification)
 	{
 		Show(true);
 		SetOpacity(0);
 		icon.sprite = notification.sprite;
 		title.SetText(notification.title);
-		endTime = Time.unscaledTime + notifTime;
+		endTime = Time.unscaledTime + notification.duration;
 		_button.onClick.RemoveAllListeners();
-		if (notification.type == NotifTargetType.Tile)
+		switch(notification.type)
 		{
-			var tile = notification.tile;
-			if (tile != null)
-				_button.onClick.AddListener(() => CameraController.FocusOnTile(tile));
-		}
-		else
-		{
-			var panel = notification.panel;
-			_button.onClick.AddListener(() => panel.Show());
+			case NotifTargetType.Tile:
+				var tile = notification.tile;
+				if (tile != null)
+					_button.onClick.AddListener(() => CameraController.FocusOnTile(tile));
+				break;
+			case NotifTargetType.UI:
+				var panel = notification.panel;
+				_button.onClick.AddListener(() => panel.Show());
+				break;
 		}
 		message?.SetText(notification.message);
 	}

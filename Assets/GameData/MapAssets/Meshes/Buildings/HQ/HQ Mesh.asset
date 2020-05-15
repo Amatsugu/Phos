@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HQ Mesh
   m_EditorClassIdentifier: 
   mesh: {fileID: -2330811082474218924, guid: b31f81e59581b1b41a4c035345dfd3be, type: 3}
-  material: {fileID: 2100000, guid: 35a04e127e679c04c80227b9afb3a19d, type: 2}
+  material: {fileID: 2100000, guid: e5ca756b9dab2814d836707a2dbd5673, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
@@ -22,3 +22,5 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0

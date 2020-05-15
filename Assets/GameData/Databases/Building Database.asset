@@ -14,84 +14,84 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileDatabase: {fileID: 11400000, guid: f973b4e22fe4f24429859b2a7732f9b3, type: 2}
   _buildingValues:
-  - id: 263
+  - id: 2
     info: {fileID: 11400000, guid: 0ef12f3aada833948909acbc675a5953, type: 2}
     category: 2
-  - id: 264
+  - id: 3
     info: {fileID: 11400000, guid: 255a5856c262ab942bead534bc36634b, type: 2}
     category: 2
-  - id: 261
+  - id: 0
     info: {fileID: 11400000, guid: ba0f6b1eb8dc15140b1a78d6d5193a76, type: 2}
     category: 2
-  - id: 262
+  - id: 1
     info: {fileID: 11400000, guid: 74972f4338262c245b3f0a0d8d3a93f1, type: 2}
     category: 2
-  - id: 265
+  - id: 4
     info: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
     category: 5
-  - id: 267
+  - id: 6
     info: {fileID: 11400000, guid: c6dc8c018e7494742882468f5336e6b0, type: 2}
     category: 3
-  - id: 275
+  - id: 14
     info: {fileID: 11400000, guid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb, type: 2}
     category: 3
-  - id: 266
+  - id: 5
     info: {fileID: 11400000, guid: d02481ac5a9ada04faab17721ee4fe04, type: 2}
     category: 3
-  - id: 270
+  - id: 9
     info: {fileID: 11400000, guid: 806da794f6c07bb419f217c1384051b6, type: 2}
     category: 3
-  - id: 271
+  - id: 10
     info: {fileID: 11400000, guid: 2e4734b90a718294d9106a9cd2c5f510, type: 2}
     category: 3
-  - id: 273
+  - id: 12
     info: {fileID: 11400000, guid: fcfbc5a667690e540b3cbcda9dd74c53, type: 2}
     category: 3
-  - id: 268
+  - id: 7
     info: {fileID: 11400000, guid: 763826ebcd88b8f44bd20f65c32a52f7, type: 2}
     category: 3
-  - id: 269
+  - id: 8
     info: {fileID: 11400000, guid: b960653cf9a46154a84d6f0acf1f1f5f, type: 2}
     category: 3
-  - id: 274
+  - id: 13
     info: {fileID: 11400000, guid: 42be3b3def01a054285a788e34bee865, type: 2}
     category: 3
-  - id: 272
+  - id: 11
     info: {fileID: 11400000, guid: f229b54f71dfb364ebe347dd10929aa0, type: 2}
     category: 3
-  - id: 280
+  - id: 19
     info: {fileID: 11400000, guid: 69df6771048597e47af78e977c2c3909, type: 2}
     category: 4
-  - id: 276
+  - id: 15
     info: {fileID: 11400000, guid: 09aba4acb75565341b194434483ffed7, type: 2}
     category: 4
-  - id: 277
+  - id: 16
     info: {fileID: 11400000, guid: 5992627ac9514d44ca66f9db77676ba0, type: 2}
     category: 4
-  - id: 278
+  - id: 17
     info: {fileID: 11400000, guid: 313432d6adc1b3d4899355519612998c, type: 2}
     category: 4
-  - id: 279
+  - id: 18
     info: {fileID: 11400000, guid: d89c88f38fcaf034b904d59a1cf8fc24, type: 2}
     category: 4
-  - id: 281
+  - id: 20
     info: {fileID: 11400000, guid: 05a7a88a94688f4449231ec4e132441d, type: 2}
     category: 1
-  - id: 282
+  - id: 21
     info: {fileID: 11400000, guid: 0ef40f19d9b634a4382340a8aae1e9a0, type: 2}
     category: 1
-  - id: 283
+  - id: 22
     info: {fileID: 11400000, guid: eff0cbc9ab35c844488d2e6935e178fd, type: 2}
     category: 1
-  - id: 284
+  - id: 23
     info: {fileID: 11400000, guid: 58492fffc93cd66479b3ff8d5fe16cb9, type: 2}
     category: 1
-  - id: 286
+  - id: 25
     info: {fileID: 11400000, guid: 4cf2d7c361cb572479674c0f8f82fcb7, type: 2}
     category: 1
-  - id: 287
+  - id: 26
     info: {fileID: 11400000, guid: 120733ddc07b94848ad3f5f028b356d6, type: 2}
     category: 1
-  - id: 285
+  - id: 24
     info: {fileID: 11400000, guid: baf5151406270f649a0cded5e679cc9c, type: 2}
     category: 1

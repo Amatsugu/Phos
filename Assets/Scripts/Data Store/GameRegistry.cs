@@ -61,7 +61,7 @@ public class GameRegistry : MonoBehaviour
 		if (!_inst.gameState.unlockedBuildings.Contains(building.id))
 		{
 			_inst.gameState.unlockedBuildings.Add(building.id);
-			GameEvents.InvokeOnBuildingUnlocked();
+			GameEvents.InvokeOnBuildingUnlocked(BuildingDatabase[building].info);
 		}
 	}
 

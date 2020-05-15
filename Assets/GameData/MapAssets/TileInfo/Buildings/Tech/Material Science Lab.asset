@@ -17,7 +17,7 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0
   description: Unlocks research relating to resoruce production and refinement
   decorators: []
   isTraverseable: 0
@@ -57,5 +57,6 @@ MonoBehaviour:
   consumption: []
   adjacencyEffects: []
   buildingsToUnlock:
-  - id: 69
-  - id: 73
+  - id: 10
+  - id: 5
+  - id: 9

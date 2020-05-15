@@ -144,13 +144,13 @@ public class GameEvents
 	}
 	public static void InvokeOnGameLoaded() => INST._onGameGameLoaded?.Invoke();
 
-	public static event Action OnBuildingUnlocked
+	public static event Action<BuildingTileEntity> OnBuildingUnlocked
 	{
 		add => INST._onBuildingUnlocked += value;
 		remove => INST._onBuildingUnlocked -= value;
 	}
 
-	public static void InvokeOnBuildingUnlocked() => INST._onBuildingUnlocked?.Invoke();
+	public static void InvokeOnBuildingUnlocked(BuildingTileEntity unlockedBuilding) => INST._onBuildingUnlocked?.Invoke(unlockedBuilding);
 
 	private event Action _onMapLoaded;
 	private event Action _onGameReady;
@@ -162,6 +162,6 @@ public class GameEvents
 	private event Action _onGameTick;
 	private event Action _onGameSaving;
 	private event Action _onGameGameLoaded;
-	private event Action _onBuildingUnlocked;
+	private event Action<BuildingTileEntity> _onBuildingUnlocked;
 
 }

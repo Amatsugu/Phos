@@ -11,8 +11,9 @@ public enum NotifType
 
 public enum NotifTargetType
 {
+	None,
+	UI,
 	Tile,
-	UI
 }
 
 public class NotificationsUI : UIHover
@@ -62,21 +63,23 @@ public class NotificationsUI : UIHover
 		public NotifTargetType type;
 		public UIPanel panel;
 		public HexCoords tile;
+		public float duration;
 
-		public PendingNotification(Sprite sprite, string title, string message)
+		public PendingNotification(Sprite sprite, string title, string message, float duration)
 		{
 			this.sprite = sprite;
 			this.title = title;
 			this.message = message;
+			this.duration = duration;
 		}
 
-		public PendingNotification(Sprite sprite, string title, string message, HexCoords tile) : this(sprite, title, message)
+		public PendingNotification(Sprite sprite, string title, string message, HexCoords tile, float duration = -1) : this(sprite, title, message, duration)
 		{
 			type = NotifTargetType.Tile;
 			this.tile = tile;
 		}
 
-		public PendingNotification(Sprite sprite, string title, string message, UIPanel panel) : this(sprite, title, message)
+		public PendingNotification(Sprite sprite, string title, string message, UIPanel panel, float duration = -1) : this(sprite, title, message, duration)
 		{
 			type = NotifTargetType.UI;
 			this.panel = panel;
@@ -112,7 +115,7 @@ public class NotificationsUI : UIHover
 	protected override void Update()
 	{
 		base.Update();
-
+		//Create notif popups
 		for (int i = 0; i < _activeNotifs.Length; i++)
 		{
 			if (_notificationQueue.Count == 0 || _activeCount == maxNotifs)
@@ -133,12 +136,14 @@ public class NotificationsUI : UIHover
 				}
 				_activeNotifs[i] = id;
 				_activeCount++;
-				popup.Init(notif, notifTime);
+				popup.Init(notif);
 				popup.rectTransform.anchoredPosition = basePos;
 				_animTime = 0;
 			}
 		}
 
+
+		//Animate popups
 		var curOffset = 0f;
 		if (_animTime < 1)
 		{
@@ -234,75 +239,78 @@ public class NotificationsUI : UIHover
 		}
 	}
 
-	private void CreateNotification(Sprite icon, string title, string message) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message));
+	private void CreateNotification(Sprite icon, string title, string message, float duration = -1) => 
+		_notificationQueue.Enqueue(new PendingNotification(icon, title, message, duration == -1 ? notifTime : duration));
 
-	private void CreateNotification(Sprite icon, string title, string message, HexCoords tile) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message, tile));
+	private void CreateNotification(Sprite icon, string title, string message, HexCoords tile, float duration = -1) => 
+		_notificationQueue.Enqueue(new PendingNotification(icon, title, message, tile, duration == -1 ? notifTime : duration));
 
-	private void CreateNotification(Sprite icon, string title, string message, UIPanel panel) => _notificationQueue.Enqueue(new PendingNotification(icon, title, message, panel));
+	private void CreateNotification(Sprite icon, string title, string message, UIPanel panel, float duration = -1) => 
+		_notificationQueue.Enqueue(new PendingNotification(icon, title, message, panel, duration == -1 ? notifTime : duration));
 
-	private void CreateNotification(NotifType type, string title, string message)
+	private void CreateNotification(NotifType type, string title, string message, float duration = -1)
 	{
 		switch (type)
 		{
 			case NotifType.Info:
-				CreateNotification(infoIcon, title, message);
+				CreateNotification(infoIcon, title, message, duration);
 				break;
 
 			case NotifType.Warning:
-				CreateNotification(warningIcon, title, message);
+				CreateNotification(warningIcon, title, message, duration);
 				break;
 
 			case NotifType.Error:
-				CreateNotification(errorIcon, title, message);
+				CreateNotification(errorIcon, title, message, duration);
 				break;
 		}
 	}
 
-	private void CreateNotification(NotifType type, string title, string message, HexCoords tile)
+	private void CreateNotification(NotifType type, string title, string message, HexCoords tile, float duration = -1)
 	{
 		switch (type)
 		{
 			case NotifType.Info:
-				CreateNotification(infoIcon, title, message, tile);
+				CreateNotification(infoIcon, title, message, tile, duration);
 				break;
 
 			case NotifType.Warning:
-				CreateNotification(warningIcon, title, message, tile);
+				CreateNotification(warningIcon, title, message, tile, duration);
 				break;
 
 			case NotifType.Error:
-				CreateNotification(errorIcon, title, message, tile);
+				CreateNotification(errorIcon, title, message, tile, duration);
 				break;
 		}
 	}
 
-	private void CreateNotification(NotifType type, string title, string message, UIPanel panel)
+	private void CreateNotification(NotifType type, string title, string message, UIPanel panel, float duration = -1)
 	{
 		switch (type)
 		{
 			case NotifType.Info:
-				CreateNotification(infoIcon, title, message, panel);
+				CreateNotification(infoIcon, title, message, panel, duration);
 				break;
 
 			case NotifType.Warning:
-				CreateNotification(warningIcon, title, message, panel);
+				CreateNotification(warningIcon, title, message, panel, duration);
 				break;
 
 			case NotifType.Error:
-				CreateNotification(errorIcon, title, message, panel);
+				CreateNotification(errorIcon, title, message, panel, duration);
 				break;
 		}
 	}
 
-	public static void Notify(Sprite icon, string title, string message = null) => INST.CreateNotification(icon, title, message);
+	public static void Notify(Sprite icon, string title, string message = null, float duration = -1) => INST.CreateNotification(icon, title, message, duration);
 
-	public static void Notify(NotifType type, string title, string message = null) => INST.CreateNotification(type, title, message);
+	public static void Notify(NotifType type, string title, string message = null, float duration = -1) => INST.CreateNotification(type, title, message, duration);
 
-	public static void NotifyWithTarget(NotifType type, string title, HexCoords tile, string message = null) => INST.CreateNotification(type, title, message, tile);
+	public static void NotifyWithTarget(NotifType type, string title, HexCoords tile, string message = null, float duration = -1) => INST.CreateNotification(type, title, message, tile, duration);
 
-	public static void NotifyWithTarget(NotifType type, string title, UIPanel panel, string message = null) => INST.CreateNotification(type, title, message, panel);
+	public static void NotifyWithTarget(NotifType type, string title, UIPanel panel, string message = null, float duration = -1) => INST.CreateNotification(type, title, message, panel, duration);
 
-	public static void NotifyWithTarget(Sprite icon, string title, HexCoords tile, string message = null) => INST.CreateNotification(icon, title, message, tile);
+	public static void NotifyWithTarget(Sprite icon, string title, HexCoords tile, string message = null, float duration = -1) => INST.CreateNotification(icon, title, message, tile, duration);
 
-	public static void NotifyWithTarget(Sprite icon, string title, UIPanel panel, string message = null) => INST.CreateNotification(icon, title, message, panel);
+	public static void NotifyWithTarget(Sprite icon, string title, UIPanel panel, string message = null, float duration = -1) => INST.CreateNotification(icon, title, message, panel, duration);
 }
