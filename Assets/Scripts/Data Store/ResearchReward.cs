@@ -23,7 +23,7 @@ public class ResearchReward : ScriptableObject
 			case RewardType.Building:
 				GameRegistry.UnlockBuilding(building);
 				var buildingInfo = GameRegistry.BuildingDatabase[building].info;
-				NotificationsUI.Notify(NotifType.Info, $"Unlocked Building: {buildingInfo.name}", buildingInfo.description);
+				NotificationsUI.Notify(NotifType.Info, $"Unlocked Building: {buildingInfo.GetNameString()}", buildingInfo.description);
 				break;
 
 			case RewardType.Unit:
@@ -33,7 +33,7 @@ public class ResearchReward : ScriptableObject
 			case RewardType.BuildingUpgrade:
 				GameRegistry.UnlockBuilding(building);
 				var upgradeInfo = GameRegistry.BuildingDatabase[building].info;
-				NotificationsUI.Notify(NotifType.Info, $"Unlocked Upgrade: {upgradeInfo.name}", upgradeInfo.description);
+				NotificationsUI.Notify(NotifType.Info, $"Unlocked Upgrade: {upgradeInfo.GetNameString()}", upgradeInfo.description);
 				break;
 
 			case RewardType.Custom:
@@ -47,7 +47,7 @@ public class ResearchReward : ScriptableObject
 		switch (type)
 		{
 			case RewardType.Building:
-				return $"Unlocks Building: {GameRegistry.BuildingDatabase[building].info.name}";
+				return $"Unlocks Building: {GameRegistry.BuildingDatabase[building].info.GetNameString()}";
 
 			case RewardType.Unit:
 				//TODO: Implement unlocking unit

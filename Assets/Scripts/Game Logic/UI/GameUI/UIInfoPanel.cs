@@ -10,7 +10,7 @@ public class UIInfoPanel : UIPanel
 
 	public void ShowInfo(BuildingDatabase.BuildingDefination building)
 	{
-		titleText.SetText(building.info.name);
+		titleText.SetText(building.info.GetNameString());
 		descriptionText.SetText(building.info.description);
 		productionText.SetText(building.info.GetProductionString());
 		SetActive(true);

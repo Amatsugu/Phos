@@ -72,7 +72,7 @@ public class ResourceBreakdownUI : UIHover
 			var info = building.Value;
 			if (info.production == 0)
 				continue;
-			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.name;
+			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.GetNameString();
 			text += $"+{ResourceDatabase.GetResourceString(resId)}{info.production}/t \t{info.productionCount}x {buildingName}\n";
 		}
 		return text;
@@ -87,7 +87,7 @@ public class ResourceBreakdownUI : UIHover
 			var info = building.Value;
 			if (info.demand == 0)
 				continue;
-			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.name;
+			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.GetNameString();
 			text += $"-{ResourceDatabase.GetResourceString(resId)}{info.demand}/t \t{info.demandCount}x {buildingName}\n";
 		}
 		return text;
@@ -102,7 +102,7 @@ public class ResourceBreakdownUI : UIHover
 			var info = building.Value;
 			if (info.satisfaction == 0)
 				continue;
-			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.name;
+			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.GetNameString();
 			text += $"{ResourceDatabase.GetResourceString(resId)}{info.satisfaction}/t \t{info.satisfactionCount}x {buildingName}\n";
 		}
 		return text;
@@ -117,7 +117,7 @@ public class ResourceBreakdownUI : UIHover
 			var info = building.Value;
 			if (info.excess == 0)
 				continue;
-			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.name;
+			var buildingName = GameRegistry.BuildingDatabase.buildings[building.Key].info.GetNameString();
 			text += $"{ResourceDatabase.GetResourceString(resId)}{info.excess}/t \t{info.excessCount}x {buildingName}\n";
 		}
 		return text;

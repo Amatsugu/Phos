@@ -29,6 +29,7 @@ public class GameRegistry : MonoBehaviour
 	public static ResearchSystem ResearchSystem => INST.researchSystem;
 	public static TileDatabase TileDatabase => INST.tileDatabase;
 	public static Map GameMap => INST.gameState.map;
+	public static RarityColors RarityColors => INST.rarityColors;
 
 	public StatusUI statusUI;
 	public BaseNameWindowUI baseNameUI;
@@ -41,6 +42,7 @@ public class GameRegistry : MonoBehaviour
 	public TileDatabase tileDatabase;
 	public GameState gameState;
 	public BuildingDatabase buildingDatabase;
+	public RarityColors rarityColors;
 
 
 	public static void InitGame(Map map)
@@ -56,12 +58,13 @@ public class GameRegistry : MonoBehaviour
 		}
 	}
 
-	public static void UnlockBuilding(BuildingIdentifier building)
+	public static void UnlockBuilding(BuildingIdentifier building, bool notify = true)
 	{
 		if (!_inst.gameState.unlockedBuildings.Contains(building.id))
 		{
 			_inst.gameState.unlockedBuildings.Add(building.id);
-			GameEvents.InvokeOnBuildingUnlocked(BuildingDatabase[building].info);
+			if(notify)
+				GameEvents.InvokeOnBuildingUnlocked(BuildingDatabase[building].info);
 		}
 	}
 

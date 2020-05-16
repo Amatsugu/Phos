@@ -57,7 +57,7 @@ public class Tile
 
 	public virtual string GetName()
 	{
-		return $"{info.name} {Coords}";
+		return info.GetNameString();
 	}
 
 	public virtual string GetDescription()

@@ -57,7 +57,8 @@ public class UINotifPopup : MonoBehaviour
 				_button.onClick.AddListener(() => panel.Show());
 				break;
 		}
-		message?.SetText(notification.message);
+		if(message != null)
+			message.SetText(notification.message);
 	}
 
 	public void Show(bool isShown)

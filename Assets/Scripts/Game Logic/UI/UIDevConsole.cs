@@ -62,7 +62,7 @@ public class UIDevConsole : MonoBehaviour
 		{
 			foreach (var building in GameRegistry.BuildingDatabase.buildings.Values)
 			{
-				GameRegistry.UnlockBuilding(new BuildingIdentifier { id = building.id });
+				GameRegistry.UnlockBuilding(new BuildingIdentifier { id = building.id }, false);
 			}
 			AddConsoleMessage("Unlocked All Buildings");
 		}, "Unlocks All Buildings"));

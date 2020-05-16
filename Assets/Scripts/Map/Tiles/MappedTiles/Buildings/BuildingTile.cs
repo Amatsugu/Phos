@@ -179,7 +179,7 @@ public class BuildingTile : Tile, IDeconstructable
 
 	public virtual void OnDeath()
 	{
-		NotificationsUI.NotifyWithTarget(NotifType.Warning, $"Building Destroyed: {buildingInfo.name}", Coords);
+		NotificationsUI.NotifyWithTarget(NotifType.Warning, $"Building Destroyed: {buildingInfo.GetNameString()}", Coords);
 	}
 
 	public override void OnPlaced()
@@ -196,7 +196,7 @@ public class BuildingTile : Tile, IDeconstructable
 
 	protected virtual void OnBuilt()
 	{
-		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.name}", Coords);
+		NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
 	}
 
 	public override void TileUpdated(Tile src, TileUpdateType updateType)

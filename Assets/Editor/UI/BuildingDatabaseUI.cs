@@ -52,7 +52,7 @@ public class BuildingDatabaseUI : Editor
 			{
 				var building = database.buildings[buildingID].info;
 				if(building != null)
-					GUILayout.Label($"[ID:{buildingID}] \tT{(building.tier)} : {building?.name}");
+					GUILayout.Label(new GUIContent($"[ID:{buildingID}] \tT{(building.tier)} : {building?.name}"));
 				else
 					GUILayout.Label($"[ID:{buildingID}] \tT<missing/deleted asset>");
 			}

@@ -8,6 +8,7 @@ using Unity.Physics;
 using Unity.Physics.Authoring;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
 [Serializable]
@@ -96,6 +97,11 @@ public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 #if DEBUG
 		assetGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(this));
 #endif
+	}
+
+	public virtual string GetNameString()
+	{
+		return name;
 	}
 
 	public void OnAfterDeserialize()

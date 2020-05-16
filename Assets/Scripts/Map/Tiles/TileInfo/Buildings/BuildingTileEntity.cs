@@ -134,4 +134,9 @@ public class BuildingTileEntity : TileEntity
 		}
 		return costString;
 	}
+
+	public override string GetNameString()
+	{
+		return $"<color=#{ColorUtility.ToHtmlStringRGB(GameRegistry.RarityColors.Colors[tier])}>{name}</color>";
+	}
 }

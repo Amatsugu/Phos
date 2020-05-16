@@ -81,7 +81,7 @@ public class UIBuildPanel : UITabPanel
 			if(IsOpen)
 				Show(_lastCategory);
 
-			NotificationsUI.Notify(b.icon, "Building Unlocked", $"<b>{b.name}</b>\n {b.description}", 10);
+			NotificationsUI.Notify(b.icon, "Building Unlocked", $"<b>{b.GetNameString()}</b>\n<size=-1>{b.description}</size>", 10);
 		};
 	}
 
@@ -96,7 +96,6 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.Disabled || state == BuildState.HQPlacement)
 			return;
-
 		var buildings = _buildingDatabase[_lastCategory];
 		for (int i = 0, j = 0; i < _icons.Length; i++)
 		{
@@ -111,24 +110,12 @@ public class UIBuildPanel : UITabPanel
 					continue;
 				if (!GameRegistry.IsBuildingUnlocked(buildings[j].id))
 					continue;
-				_icons[i].SetActive(false);
-				_icons[i].ClearHoverEvents();
-				_icons[i].ClearClickEvents();
-				_icons[i].titleText.text = buildings[j].info.name;
+				_icons[i].titleText.text = buildings[j].info.GetNameString();
 				_icons[i].costText.text = buildings[j].info.GetCostString();
 				_icons[i].icon.sprite = buildings[j].info.icon;
 				var b = buildings[j];
-				_icons[i].OnHover += () => infoPanel.ShowInfo(b);
-				_icons[i].OnClick += () =>
-				{
-					state = BuildState.Placement;
-					_selectedBuilding = b.info;
-				};
-				_icons[i].SetActive(true);
 				j++;
 			}
-			else
-				_icons[i].SetActive(false);
 		}
 	}
 
@@ -154,7 +141,7 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].SetActive(false);
 					_icons[i].ClearHoverEvents();
 					_icons[i].ClearClickEvents();
-					_icons[i].titleText.text = buildings[j].info.name;
+					_icons[i].titleText.text = buildings[j].info.GetNameString();
 					_icons[i].costText.text = buildings[j].info.GetCostString();
 					_icons[i].icon.sprite = buildings[j].info.icon;
 					var b = buildings[j];

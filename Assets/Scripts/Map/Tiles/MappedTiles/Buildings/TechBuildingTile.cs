@@ -30,4 +30,5 @@ public class TechBuildingTile : PoweredBuildingTile
         for (int i = 0; i < techInfo.buildingsToUnlock.Length; i++)
             GameRegistry.UnlockBuilding(techInfo.buildingsToUnlock[i]);
     }
+
 }
