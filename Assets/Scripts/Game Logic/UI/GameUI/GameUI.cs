@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Steamworks;
+using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
@@ -52,6 +53,11 @@ public class GameUI : UIHover
 		GameEvents.OnGameReady += Init;
 		GameEvents.OnHQPlaced += OnHQPlaced;
 		_categoryPanel.SetInteractable(false);
+	}
+
+	protected override void Start()
+	{
+		base.Start();
 	}
 
 	private void OnHQPlaced()

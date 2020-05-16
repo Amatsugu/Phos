@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Amatsugu.Phos.UnitComponents;
+using System;
 using System.Collections.Generic;
-
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;

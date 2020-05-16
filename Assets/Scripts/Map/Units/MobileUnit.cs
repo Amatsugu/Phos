@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Amatsugu.Phos.UnitComponents;
+using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;

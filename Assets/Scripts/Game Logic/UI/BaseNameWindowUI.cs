@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Steamworks;
+using TMPro;
 
 using UnityEngine;
 
@@ -17,6 +18,7 @@ public class BaseNameWindowUI : MonoBehaviour
 		GameRegistry.INST.baseNameUI = this;
 		panel.OnShow += () =>
 		{
+			text.text = $"{SteamFriends.GetPersonaName()}'s Base";
 			EventManager.InvokeEvent("nameWindowOpen");
 		};
 		panel.OnHide += () =>

@@ -1,4 +1,5 @@
-﻿using Unity.Burst;
+﻿using Amatsugu.Phos.UnitComponents;
+using Unity.Burst;
 using Unity.Entities;
 
 using UnityEngine;
