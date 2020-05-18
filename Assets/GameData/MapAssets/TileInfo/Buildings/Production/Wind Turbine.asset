@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: a91ecd3bd8605dd478580f975ea364c7, type: 3}
   m_Name: Wind Turbine
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
@@ -19,8 +19,7 @@ MonoBehaviour:
   isStatic: 1
   nonUniformScale: 1
   description: Produces power
-  decorators:
-  - {fileID: 11400000, guid: 62629b03162655b4c9ff923676582936, type: 2}
+  decorators: []
   isTraverseable: 0
   assetGuid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb
   buildingMesh: {fileID: 11400000, guid: a028dc4d6993c444ba02febd426ef8c1, type: 2}
@@ -60,3 +59,8 @@ MonoBehaviour:
   consumption: []
   adjacencyEffects:
   - {fileID: 11400000, guid: 6983612a86089b24aa51f5b539fed83e, type: 2}
+  maxSpinSpeed: 10
+  efficencyRange:
+    x: 0
+    y: 1
+  turbineBlade: {fileID: 11400000, guid: f5b5966ec5e089d478efabace0666799, type: 2}

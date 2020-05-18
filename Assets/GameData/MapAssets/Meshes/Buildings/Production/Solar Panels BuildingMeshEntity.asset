@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Solar Panels BuildingMeshEntity
   m_EditorClassIdentifier: 
   mesh: {fileID: 2583931747965024622, guid: 1bf0220d534427948a8282617ed94b2d, type: 3}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: f2bca93419fcbaf4d8c2e9b7f6506023, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
