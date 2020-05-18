@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10313bffdc6289d40aea8f1d88454a38, type: 3}
+  m_Name: Solar Panels
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 0}
+  material: {fileID: 0}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 0
+  description: 
+  decorators: []
+  isTraverseable: 0
+  assetGuid: dc79b73a0226f9f49a7335c742c20914
+  buildingMesh: {fileID: 11400000, guid: af50277f603e50346bf17a5c4b35c9f6, type: 2}
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0
+  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  preserveGroundTile: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
+  tier: 2
+  constructionTime: 2
+  category: 0
+  size: 0
+  flattenOuterRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
+  icon: {fileID: 0}
+  faction: 0
+  maxHealth: 100
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  validator: {fileID: 0}
+  cost: []
+  production: []
+  consumption: []
+  adjacencyEffects: []

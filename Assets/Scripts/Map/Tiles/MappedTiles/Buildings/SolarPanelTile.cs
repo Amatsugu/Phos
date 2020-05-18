@@ -1,8 +1,8 @@
-﻿public class SolarPanelTile : TickedTile
+﻿public class SolarPanelTile : TickedBuildingTile
 {
-	public SolarPanelTileInfo solarInfo;
+	public SolarPanelTileEntity solarInfo;
 
-	public SolarPanelTile(HexCoords coords, float height, Map map, SolarPanelTileInfo tInfo) : base(coords, height, map, tInfo)
+	public SolarPanelTile(HexCoords coords, float height, Map map, SolarPanelTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		solarInfo = tInfo;
 	}

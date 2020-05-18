@@ -15,6 +15,8 @@ public class BuildingTile : Tile, IDeconstructable
 	public int upgradeLevel = 0;
 	public bool IsBuilt => _isBuilt;
 
+	protected float prodMulti, consMulti;
+
 	private Entity _building;
 	private Entity _offshorePlatform;
 	protected bool _isBuilt;
@@ -209,13 +211,16 @@ public class BuildingTile : Tile, IDeconstructable
 	{
 		if (!IsBuilt)
 			return;
-		Debug.Log("Apply Bonus");
 		var entity = GetBuildingEntity();
 		Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
 		Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
 		var neighbors = map.GetNeighbors(Coords);
+		//TODO: store the connector entities
 		for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
 			buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
+		//TODO: Improve cachching of multipliers
+		prodMulti = Map.EM.GetComponentData<ProductionMulti>(entity).Value;
+		consMulti = Map.EM.GetComponentData<ConsumptionMulti>(entity).Value;
 	}
 
 	public void Deconstruct()
