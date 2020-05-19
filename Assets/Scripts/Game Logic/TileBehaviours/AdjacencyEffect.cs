@@ -29,18 +29,13 @@ public class AdjacencyEffect : ScriptableObject
 	{
 		var (prod, cons) = CalculateBonuses(neighbors, out var selection);
 		var e = building.GetBuildingEntity();
-		var prodMulti = Map.EM.GetComponentData<ProductionMulti>(e);
-		var consMulti = Map.EM.GetComponentData<ConsumptionMulti>(e);
-		var connectors = new NativeArray<Entity>(selection.Count * 3, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-		prodMulti.Value += prod;
-		consMulti.Value += cons;
-		Map.EM.SetComponentData(e, prodMulti);
-		Map.EM.SetComponentData(e, consMulti);
+		var connectors = new NativeArray<Entity>(selection.Count * 3, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+		building.AddProductionMulti(prod);
+		building.AddConsumptionMulti(cons);
 		for (int i = 0; i < selection.Count; i++)
 		{
 			RenderConnectionLine(building.SurfacePoint, selection[i].SurfacePoint, connectors.Slice(i * 3, 3));
 		}
-
 		return connectors;
 
 	}

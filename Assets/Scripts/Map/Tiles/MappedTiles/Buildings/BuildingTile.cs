@@ -21,6 +21,8 @@ public class BuildingTile : Tile, IDeconstructable
 	private Entity _offshorePlatform;
 	protected bool _isBuilt;
 	private NativeArray<Entity> _healthBars;
+	private NativeArray<Entity> _adjacencyConnectors;
+	private int _connectorCount;
 
 	public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
@@ -216,11 +218,25 @@ public class BuildingTile : Tile, IDeconstructable
 		Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
 		var neighbors = map.GetNeighbors(Coords);
 		//TODO: store the connector entities
-		for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
-			buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
-		//TODO: Improve cachching of multipliers
-		prodMulti = Map.EM.GetComponentData<ProductionMulti>(entity).Value;
-		consMulti = Map.EM.GetComponentData<ConsumptionMulti>(entity).Value;
+		if (!_adjacencyConnectors.IsCreated)
+			_adjacencyConnectors = new NativeArray<Entity>(6 * 3, Allocator.Persistent);
+		for (int i = 0, j = 0; i < buildingInfo.adjacencyEffects.Length; i++)
+		{
+			//TODO: Create connectors here
+			var c = buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
+		}
+	}
+
+	public void AddProductionMulti(float ammount)
+	{
+		prodMulti += ammount;
+		Map.EM.SetComponentData(GetBuildingEntity(), new ProductionMulti { Value = prodMulti });
+	}
+
+	public void AddConsumptionMulti(float ammount)
+	{
+		consMulti += ammount;
+		Map.EM.SetComponentData(GetBuildingEntity(), new ConsumptionMulti { Value = prodMulti });
 	}
 
 	public void Deconstruct()
