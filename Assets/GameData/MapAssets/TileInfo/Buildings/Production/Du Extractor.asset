@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
-  m_Name: Alloy Forge
+  m_Name: Du Extractor
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
@@ -18,11 +18,11 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  description: Produces electrum
+  description: 
   decorators: []
   isTraverseable: 0
-  assetGuid: d02481ac5a9ada04faab17721ee4fe04
-  buildingMesh: {fileID: 11400000, guid: bb526751acb0ed94ca342bebcb471cb7, type: 2}
+  assetGuid: b960653cf9a46154a84d6f0acf1f1f5f
+  buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -39,9 +39,9 @@ MonoBehaviour:
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
-  icon: {fileID: -550988092767783048, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
   faction: 1
-  maxHealth: 0
+  maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
@@ -52,14 +52,11 @@ MonoBehaviour:
   - id: 1
     ammount: 2
   production:
-  - id: 8
-    ammount: 4
+  - id: 9
+    ammount: 2
   consumption:
   - id: 0
-    ammount: 5
-  - id: 6
-    ammount: 6
-  - id: 7
-    ammount: 2
-  adjacencyEffects:
-  - {fileID: 11400000, guid: 688a51a32a30fe743a6df2629f95fd9a, type: 2}
+    ammount: 30
+  - id: 3
+    ammount: 10
+  adjacencyEffects: []

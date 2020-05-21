@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
-  m_Name: Deuterium Processing Plant
+  m_Name: Lithium Evaporator
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
   material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
@@ -21,13 +21,16 @@ MonoBehaviour:
   description: 
   decorators: []
   isTraverseable: 0
-  assetGuid: b960653cf9a46154a84d6f0acf1f1f5f
+  assetGuid: 52df003c6d446274cae82bca6aebc945
   buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  preserveGroundTile: 0
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   tier: 3
   constructionTime: 2
   category: 3
@@ -36,29 +39,28 @@ MonoBehaviour:
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
-  placementMode: 0
+  icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  faction: 1
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 0
     z: 0
-  faction: 1
-  customDeathTile: 0
-  deathTile: {fileID: 0}
-  upgradeTarget:
-    id: -1
-  icon: {fileID: -1554024534391354863, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  preserveGroundTile: 0
   validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 1
     ammount: 2
+  - id: 3
+    ammount: 2
   production:
-  - id: 9
+  - id: 16
     ammount: 2
   consumption:
   - id: 0
     ammount: 30
-  - id: 3
+  - id: 9
+    ammount: 3
+  - id: 16
     ammount: 10
+  adjacencyEffects: []

@@ -3,7 +3,16 @@ guid: 9b936cc80a414424e9bb00833d28a8a0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - mesh: {instanceID: 0}
+  - material: {instanceID: 0}
+  - buildingMesh: {instanceID: 0}
+  - constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  - deathTile: {instanceID: 0}
+  - offshorePlatformMesh: {instanceID: 0}
+  - icon: {instanceID: 0}
+  - healthBar: {instanceID: 0}
+  - validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Name: '[PH] Basic Factory'
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 0}
+  material: {fileID: 0}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 1
+  description: 
+  decorators: []
+  isTraverseable: 1
+  assetGuid: 7679b2dd491795a4db3514c4ee90243c
+  buildingMesh: {fileID: 0}
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0
+  constructionMesh: {fileID: 0}
+  preserveGroundTile: 0
+  customDeathTile: 0
+  deathTile: {fileID: 0}
+  tier: 2
+  constructionTime: 2
+  category: 5
+  size: 0
+  flattenOuterRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
+  icon: {fileID: 0}
+  faction: 0
+  maxHealth: 100
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  validator: {fileID: 0}
+  cost: []
+  production: []
+  consumption: []
+  adjacencyEffects: []
