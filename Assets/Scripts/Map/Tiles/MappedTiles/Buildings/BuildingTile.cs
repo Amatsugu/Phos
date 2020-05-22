@@ -68,6 +68,8 @@ public class BuildingTile : Tile, IDeconstructable
 				Map.EM.DestroyEntity(_healthBars);
 				_healthBars.Dispose();
 			}
+			if (_connectorCount > 0)
+				Map.EM.DestroyEntity(_adjacencyConnectors);
 		}
 		catch
 		{
@@ -81,6 +83,14 @@ public class BuildingTile : Tile, IDeconstructable
 			Map.EM.AddComponent(_building, typeof(FrozenRenderSceneTag));
 		if (_healthBars.IsCreated)
 			Map.EM.AddComponent<FrozenRenderSceneTag>(_healthBars);
+		if (_connectorCount > 0)
+		{
+			for (int i = 0; i < _adjacencyConnectors.Length; i++)
+			{
+				if(Map.EM.Exists(_adjacencyConnectors[i]))
+					Map.EM.AddComponent<FrozenRenderSceneTag>(_adjacencyConnectors);
+			}
+		}
 	}
 
 	public override void OnShow()
@@ -90,6 +100,14 @@ public class BuildingTile : Tile, IDeconstructable
 			Map.EM.RemoveComponent(_building, typeof(FrozenRenderSceneTag));
 		if (_healthBars.IsCreated)
 			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_healthBars);
+		if (_connectorCount > 0)
+		{
+			for (int i = 0; i < _adjacencyConnectors.Length; i++)
+			{
+				if (Map.EM.Exists(_adjacencyConnectors[i]))
+					Map.EM.RemoveComponent<FrozenRenderSceneTag>(_adjacencyConnectors);
+			}
+		}
 	}
 
 	protected virtual quaternion GetBuildingRotation() => quaternion.identity;
@@ -220,10 +238,22 @@ public class BuildingTile : Tile, IDeconstructable
 		//TODO: store the connector entities
 		if (!_adjacencyConnectors.IsCreated)
 			_adjacencyConnectors = new NativeArray<Entity>(6 * 3, Allocator.Persistent);
-		for (int i = 0, j = 0; i < buildingInfo.adjacencyEffects.Length; i++)
+		if(_connectorCount > 0)
 		{
-			//TODO: Create connectors here
-			var c = buildingInfo.adjacencyEffects[i].ApplyEffects(this, neighbors);
+			Map.EM.DestroyEntity(_adjacencyConnectors);
+		}
+		for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
+		{
+			var effect = buildingInfo.adjacencyEffects[i];
+			for (int n = 0; n < neighbors.Length; n++)
+			{
+				if(effect.ApplyBonus(this, neighbors[n]))
+				{
+					var slice = _adjacencyConnectors.Slice(n * 3, 3);
+					effect.RenderConnectionLine(SurfacePoint, neighbors[n].SurfacePoint, ref slice);
+					_connectorCount += 3;
+				}
+			}
 		}
 	}
 
@@ -241,7 +271,7 @@ public class BuildingTile : Tile, IDeconstructable
 
 	public void Deconstruct()
 	{
-		
+		map.RevertTile(this);
 	}
 
 	public bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;

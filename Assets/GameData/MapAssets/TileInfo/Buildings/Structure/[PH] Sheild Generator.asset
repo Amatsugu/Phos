@@ -22,7 +22,7 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 0
   assetGuid: c963cf3bbe88b954593e4b945e96c779
-  buildingMesh: {fileID: 11400000, guid: 6fb955bd788f37f4fba4bde28f58597a, type: 2}
+  buildingMesh: {fileID: 11400000, guid: 7ba8426dc69dda54e87b8279e736504a, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  validator: {fileID: 11400000, guid: a68c415a210b7dc4da1fd7af40363961, type: 2}
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost:
   - id: 4
     ammount: 20

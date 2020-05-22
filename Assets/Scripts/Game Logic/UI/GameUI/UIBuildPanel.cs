@@ -24,7 +24,6 @@ public class UIBuildPanel : UITabPanel
 	public MeshEntity poweredTileIndicatorEntity;
 	public MeshEntity unpoweredTileIndicatorEntity;
 
-	[HideInInspector]
 	public BuildState state;
 
 

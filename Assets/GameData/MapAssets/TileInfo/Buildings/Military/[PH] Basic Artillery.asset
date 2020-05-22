@@ -22,13 +22,13 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 1
   assetGuid: 74905fa5284c3d84c89b3cae3e36c7e2
-  buildingMesh: {fileID: 0}
+  buildingMesh: {fileID: 11400000, guid: f77c86339dd504143ab88535f24cac60, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
   constructionMesh: {fileID: 0}
-  preserveGroundTile: 0
+  preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 2
@@ -47,7 +47,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  validator: {fileID: 0}
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost: []
   production: []
   consumption: []

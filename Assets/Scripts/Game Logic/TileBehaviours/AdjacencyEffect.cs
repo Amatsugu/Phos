@@ -34,7 +34,8 @@ public class AdjacencyEffect : ScriptableObject
 		building.AddConsumptionMulti(cons);
 		for (int i = 0; i < selection.Count; i++)
 		{
-			RenderConnectionLine(building.SurfacePoint, selection[i].SurfacePoint, connectors.Slice(i * 3, 3));
+			var slice = connectors.Slice(i * 3, 3);
+			RenderConnectionLine(building.SurfacePoint, selection[i].SurfacePoint, ref slice);
 		}
 		return connectors;
 
@@ -66,7 +67,27 @@ public class AdjacencyEffect : ScriptableObject
 		return (productionBonus, consumtionBonus);
 	}
 
-	private void RenderConnectionLine(float3 a, float3 b, NativeSlice<Entity> entities)
+	public bool ApplyBonus(BuildingTile srcBuilding, Tile otherTile)
+	{
+		var otherBuilding = otherTile as BuildingTile;
+		if (otherBuilding == null)
+			return false;
+		var bId = GameRegistry.TileDatabase.entityIds[otherBuilding.info];
+		bool hasBonus = false;
+		for (int j = 0; j < bonusDefinations.Length; j++)
+		{
+			if (bonusDefinations[j].buildingsSet.Contains(bId))
+			{
+				var bonus = bonusDefinations[j];
+				hasBonus = true;
+				otherBuilding.AddConsumptionMulti(bonus.consumptionMultiplier);
+				otherBuilding.AddProductionMulti(bonus.productionMultiplier);
+			}
+		}
+		return hasBonus;
+	}
+
+	public void RenderConnectionLine(float3 a, float3 b, ref NativeSlice<Entity> entities)
 	{
 		a.y += 0.01f;
 		b.y += 0.01f;

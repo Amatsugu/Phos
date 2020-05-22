@@ -407,7 +407,7 @@ public class Map : IDisposable
 		return nT;
 	}
 
-	public void RevertTile(BuildingTile tile)
+	public void RevertTile(Tile tile)
 	{
 		if (tile.originalTile != null)
 			ReplaceTile(tile, tile.originalTile);

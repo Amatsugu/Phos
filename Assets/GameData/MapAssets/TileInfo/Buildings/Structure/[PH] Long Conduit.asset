@@ -23,7 +23,7 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 0
   assetGuid: 8c1dab4101235b9458c23b9795692a16
-  buildingMesh: {fileID: 11400000, guid: 6fb955bd788f37f4fba4bde28f58597a, type: 2}
+  buildingMesh: {fileID: 11400000, guid: c70641b9bf0f92148995b9885d4fc9d7, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
