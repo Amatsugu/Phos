@@ -23,6 +23,7 @@ public class UIBuildPanel : UITabPanel
 	[Header("Indicators")]
 	public MeshEntity poweredTileIndicatorEntity;
 	public MeshEntity unpoweredTileIndicatorEntity;
+	public MeshEntity destructionIndicatorEntity;
 
 	public BuildState state;
 
@@ -194,7 +195,7 @@ public class UIBuildPanel : UITabPanel
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		_indicatorManager.SetIndicator(selectedTile, poweredTileIndicatorEntity);
+		_indicatorManager.SetIndicator(selectedTile, destructionIndicatorEntity);
 		var deconstructable = selectedTile as IDeconstructable;
 		if (deconstructable == null)
 			return;
@@ -263,8 +264,6 @@ public class UIBuildPanel : UITabPanel
 		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
 			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(selectedTile, neighbors, ref effects);
 
-		for (int i = 0; i < effects.Count; i++)
-			Debug.Log(effects[i]);
 
 		ShowPoweredTiles(selectedTile);
 		if(Input.GetKeyUp(KeyCode.Mouse0))

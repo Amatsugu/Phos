@@ -132,7 +132,7 @@ public class BuildingTile : Tile, IDeconstructable
 		RenderDecorators();
 	}
 
-	public virtual Entity GetBuildingEntity()
+	protected virtual Entity GetBuildingEntity()
 	{
 		return buildingInfo.buildingMesh.mesh != null ? _building : _tileEntity;
 	}
@@ -223,8 +223,12 @@ public class BuildingTile : Tile, IDeconstructable
 
 	public override void TileUpdated(Tile src, TileUpdateType updateType)
 	{
+#if UNITY_EDITOR
+		Debug.Log($"[{updateType}] {info.name} received tile update from {src.info.name}");
+#endif
 		base.TileUpdated(src, updateType);
-		ApplyBonuses();
+		if(updateType == TileUpdateType.Placed || updateType == TileUpdateType.Removed)
+			ApplyBonuses();
 	}
 
 	protected virtual void ApplyBonuses()
@@ -266,7 +270,7 @@ public class BuildingTile : Tile, IDeconstructable
 	public void AddConsumptionMulti(float ammount)
 	{
 		consMulti += ammount;
-		Map.EM.SetComponentData(GetBuildingEntity(), new ConsumptionMulti { Value = prodMulti });
+		Map.EM.SetComponentData(GetBuildingEntity(), new ConsumptionMulti { Value = consMulti });
 	}
 
 	public void Deconstruct()

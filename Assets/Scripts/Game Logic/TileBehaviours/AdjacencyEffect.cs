@@ -25,22 +25,6 @@ public class AdjacencyEffect : ScriptableObject
 		effectsString.Add($"-{cons}x Consumption Rate");
 	}
 
-	public virtual NativeArray<Entity> ApplyEffects(BuildingTile building, Tile[] neighbors)
-	{
-		var (prod, cons) = CalculateBonuses(neighbors, out var selection);
-		var e = building.GetBuildingEntity();
-		var connectors = new NativeArray<Entity>(selection.Count * 3, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
-		building.AddProductionMulti(prod);
-		building.AddConsumptionMulti(cons);
-		for (int i = 0; i < selection.Count; i++)
-		{
-			var slice = connectors.Slice(i * 3, 3);
-			RenderConnectionLine(building.SurfacePoint, selection[i].SurfacePoint, ref slice);
-		}
-		return connectors;
-
-	}
-
 	private (float prodBonus, float consBonus) CalculateBonuses(Tile[] neighbors, out List<BuildingTile> buildings)
 	{
 		var productionBonus = 0f;
@@ -80,8 +64,8 @@ public class AdjacencyEffect : ScriptableObject
 			{
 				var bonus = bonusDefinations[j];
 				hasBonus = true;
-				otherBuilding.AddConsumptionMulti(bonus.consumptionMultiplier);
-				otherBuilding.AddProductionMulti(bonus.productionMultiplier);
+				srcBuilding.AddConsumptionMulti(bonus.consumptionMultiplier);
+				srcBuilding.AddProductionMulti(bonus.productionMultiplier);
 			}
 		}
 		return hasBonus;
