@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileDatabase: {fileID: 11400000, guid: f973b4e22fe4f24429859b2a7732f9b3, type: 2}
   _buildingValues:
-  - id: 48
+  - id: 75
     info: {fileID: 11400000, guid: a5eace77a4b1371449d3767bbe091f9d, type: 2}
     category: 6
-  - id: 49
+  - id: 76
     info: {fileID: 11400000, guid: 8d7afbe3607d9b84393ee19fd6a8df64, type: 2}
     category: 6
-  - id: 47
+  - id: 74
     info: {fileID: 11400000, guid: 974cb405ea677da4db3fdea4e99aad2d, type: 2}
     category: 6
   - id: 2
@@ -38,16 +38,16 @@ MonoBehaviour:
   - id: 4
     info: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
     category: 5
-  - id: 51
+  - id: 78
     info: {fileID: 11400000, guid: 74905fa5284c3d84c89b3cae3e36c7e2, type: 2}
     category: 5
-  - id: 52
+  - id: 79
     info: {fileID: 11400000, guid: 7679b2dd491795a4db3514c4ee90243c, type: 2}
     category: 5
-  - id: 50
+  - id: 77
     info: {fileID: 11400000, guid: 84b3e30a3534ba84da2e7befd1cb54db, type: 2}
     category: 5
-  - id: 53
+  - id: 80
     info: {fileID: 11400000, guid: 74a3bdda4b0721241adb17ea4ac87aa1, type: 2}
     category: 5
   - id: 6
@@ -74,7 +74,7 @@ MonoBehaviour:
   - id: 8
     info: {fileID: 11400000, guid: b960653cf9a46154a84d6f0acf1f1f5f, type: 2}
     category: 3
-  - id: 54
+  - id: 81
     info: {fileID: 11400000, guid: 52df003c6d446274cae82bca6aebc945, type: 2}
     category: 3
   - id: 13
@@ -83,7 +83,7 @@ MonoBehaviour:
   - id: 11
     info: {fileID: 11400000, guid: f229b54f71dfb364ebe347dd10929aa0, type: 2}
     category: 3
-  - id: 55
+  - id: 82
     info: {fileID: 11400000, guid: dc79b73a0226f9f49a7335c742c20914, type: 2}
     category: 0
   - id: 19
@@ -92,10 +92,10 @@ MonoBehaviour:
   - id: 15
     info: {fileID: 11400000, guid: 09aba4acb75565341b194434483ffed7, type: 2}
     category: 4
-  - id: 56
+  - id: 83
     info: {fileID: 11400000, guid: 8c1dab4101235b9458c23b9795692a16, type: 2}
     category: 4
-  - id: 57
+  - id: 84
     info: {fileID: 11400000, guid: c963cf3bbe88b954593e4b945e96c779, type: 2}
     category: 4
   - id: 16
@@ -121,9 +121,6 @@ MonoBehaviour:
     category: 1
   - id: 25
     info: {fileID: 11400000, guid: 4cf2d7c361cb572479674c0f8f82fcb7, type: 2}
-    category: 1
-  - id: 26
-    info: {fileID: 11400000, guid: 120733ddc07b94848ad3f5f028b356d6, type: 2}
     category: 1
   - id: 24
     info: {fileID: 11400000, guid: baf5151406270f649a0cded5e679cc9c, type: 2}

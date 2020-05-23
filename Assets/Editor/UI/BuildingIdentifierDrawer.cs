@@ -12,10 +12,10 @@ public class BuildingIdentifierDrawer : PropertyDrawer
 {
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 	{
-		var asset = AssetDatabase.FindAssets("t:BuildingDatabase").First();
+		var asset = AssetDatabase.FindAssets($"t:{nameof(BuildingDatabase)}").First();
 		var assetPath = AssetDatabase.GUIDToAssetPath(asset);
 		var db = AssetDatabase.LoadAssetAtPath<BuildingDatabase>(assetPath);
-		var buildings = db.buildings.Values.Where(b => b != null);
+		var buildings = db.buildings.Values.Where(b => b != null && b.info != null);
 		var names = buildings.Select(b => $" [{b.info.category}] T{b.info.tier} {b.info.name}\t {b.id}").Prepend("--Select Building--").ToArray();
 		var ids = buildings.Select(b => b.id + 1).Prepend(0).ToArray();
 		EditorGUI.BeginProperty(position, label, property);
