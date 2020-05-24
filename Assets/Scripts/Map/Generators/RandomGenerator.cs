@@ -58,7 +58,7 @@ public class RandomGenerator : MapGenerator
 			seed = startTime.GetHashCode();
 #endif
 		InitFilters();
-		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength, useDecorators: useDecorators)
+		Map map = new Map((int)Size.x, (int)Size.y, seed, edgeLength)
 		{
 			seaLevel = seaLevel
 		};

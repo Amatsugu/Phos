@@ -28,7 +28,7 @@ MonoBehaviour:
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  preserveGroundTile: 0
+  preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 1
@@ -57,5 +57,5 @@ MonoBehaviour:
   consumption: []
   adjacencyEffects: []
   buildingsToUnlock:
-  - id: 51
-  - id: 52
+  - id: 78
+  - id: 79

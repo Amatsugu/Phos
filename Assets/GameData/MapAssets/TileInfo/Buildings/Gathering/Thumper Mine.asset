@@ -18,7 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  description: A basic mine. It can only mine Iron and Coal at a moderate range.
+  description: Slams a heavy mass into veins of ore in order to harvest them. Only
+    capable of mining  Iron and  Carbon.
   decorators:
   - {fileID: 11400000, guid: 1572bf99efb7943449614f9ea5afe96e, type: 2}
   isTraverseable: 1

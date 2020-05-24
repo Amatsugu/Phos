@@ -18,7 +18,7 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
-  description: A beach based water pump that collects ocean water.
+  description: Pumps water from adjacent bodies of water.
   decorators:
   - {fileID: 11400000, guid: 72063786533f25b47820950ccb955d05, type: 2}
   - {fileID: 11400000, guid: 8b4d0175b07d887469cfb748f5a84dd3, type: 2}
@@ -30,6 +30,9 @@ MonoBehaviour:
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  preserveGroundTile: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   tier: 1
   constructionTime: 2
   category: 2
@@ -38,20 +41,14 @@ MonoBehaviour:
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
-  placementMode: 0
+  icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  faction: 1
   maxHealth: 0
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 0
     z: 0
-  faction: 1
-  customDeathTile: 0
-  deathTile: {fileID: 0}
-  upgradeTarget:
-    id: -1
-  icon: {fileID: -7748967718012387419, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  preserveGroundTile: 1
   validator: {fileID: 11400000, guid: 2d5689ae04aaec24bbaad56647312b4a, type: 2}
   cost:
   - id: 1
@@ -62,6 +59,7 @@ MonoBehaviour:
   consumption:
   - id: 0
     ammount: 2
+  adjacencyEffects: []
   resourcesToGather:
   - id: 3
     ammount: 1

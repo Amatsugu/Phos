@@ -136,7 +136,10 @@ public struct MapChunk
 		var tile = this[chunkCoord];
 		var n = newTile.CreateTile(map, tile.Coords, tile.Height);
 		n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
-		n.originalTile = tile.info;
+		if (tile.originalTile == null)
+			n.originalTile = tile.info;
+		else
+			n.originalTile = tile.originalTile;
 		this[chunkCoord] = n;
 		_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
 		return n;

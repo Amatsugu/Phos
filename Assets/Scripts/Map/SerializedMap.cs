@@ -17,7 +17,7 @@ public class SerializedMap
 
 	public Map Deserialize(TileDatabase db)
 	{
-		var map = new Map(height, width, seed, tileEdgeLength, false);
+		var map = new Map(height, width, seed, tileEdgeLength);
 		for (int i = 0; i < tiles.Length; i++)
 		{
 			var curTile = tiles[i];

@@ -18,7 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
-  description: Unlocks research relating to resource gathering
+  description: Analyzes the composition of the resources available on the planet
+    allowing for more advanced resource gathering.
   decorators: []
   isTraverseable: 0
   assetGuid: 05a7a88a94688f4449231ec4e132441d
@@ -28,7 +29,7 @@ MonoBehaviour:
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  preserveGroundTile: 0
+  preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 1
@@ -54,7 +55,9 @@ MonoBehaviour:
   - id: 2
     ammount: 8
   production: []
-  consumption: []
+  consumption:
+  - id: 0
+    ammount: 20
   adjacencyEffects: []
   buildingsToUnlock:
   - id: 0

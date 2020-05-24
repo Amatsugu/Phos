@@ -18,7 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  description: Unlocks defense research
+  description: Establish a tactical presence allowing for the construction of defensive
+    structures.
   decorators: []
   isTraverseable: 0
   assetGuid: 4cf2d7c361cb572479674c0f8f82fcb7
@@ -28,7 +29,7 @@ MonoBehaviour:
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
-  preserveGroundTile: 0
+  preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 1
@@ -54,8 +55,10 @@ MonoBehaviour:
   - id: 2
     ammount: 8
   production: []
-  consumption: []
+  consumption:
+  - id: 0
+    ammount: 20
   adjacencyEffects: []
   buildingsToUnlock:
-  - id: 48
-  - id: 49
+  - id: 75
+  - id: 76

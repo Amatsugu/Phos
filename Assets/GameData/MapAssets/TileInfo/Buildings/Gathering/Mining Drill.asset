@@ -18,9 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
-  description: 'An Improved mining laser that not only has a higher range but also
-    mines at a higher efficiency, producing more resources per tile. In Addition
-    it can also mine Silver and Gold. '
+  description: Drills deep into the soil. Capable to extracting at a higher efficiency
+    and capable of mining  Gold and  Silver
   decorators:
   - {fileID: 11400000, guid: 98a486c948c9bc2499b5ec4a2c469a8c, type: 2}
   isTraverseable: 1
@@ -31,6 +30,9 @@ MonoBehaviour:
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  preserveGroundTile: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   tier: 2
   constructionTime: 2
   category: 2
@@ -39,20 +41,14 @@ MonoBehaviour:
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
-  placementMode: 0
+  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  faction: 1
   maxHealth: 0
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 0
     z: 0
-  faction: 1
-  customDeathTile: 0
-  deathTile: {fileID: 0}
-  upgradeTarget:
-    id: -1
-  icon: {fileID: -2202851767225367483, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  preserveGroundTile: 1
   validator: {fileID: 11400000, guid: 2d5689ae04aaec24bbaad56647312b4a, type: 2}
   cost:
   - id: 1
@@ -65,6 +61,7 @@ MonoBehaviour:
   consumption:
   - id: 0
     ammount: 6
+  adjacencyEffects: []
   resourcesToGather:
   - id: 1
     ammount: 1
