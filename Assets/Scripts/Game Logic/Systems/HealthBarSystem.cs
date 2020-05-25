@@ -82,7 +82,6 @@ public class HealthBarSystem : JobComponentSystem
 	protected override void OnStartRunning()
 	{
 		base.OnStartRunning();
-		_cam = GameRegistry.Camera.transform;
 		var fillDesc = new EntityQueryDesc
 		{
 			All = new ComponentType[]
@@ -113,10 +112,20 @@ public class HealthBarSystem : JobComponentSystem
 			}
 		};
 		_barQuery = GetEntityQuery(barDesc);
+		GameEvents.OnGameReady += Init;
+	}
+
+	private void Init()
+	{
+		_cam = GameRegistry.Camera.transform;
+		GameEvents.OnGameReady -= Init;
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
+		if (_cam == null)
+			return inputDeps;
+
 		var hBarType = GetArchetypeChunkComponentType<HealthBar>(true);
 		var rotJob = new UpdateBarRotation
 		{

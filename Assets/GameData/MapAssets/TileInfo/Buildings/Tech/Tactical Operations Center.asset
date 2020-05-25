@@ -60,5 +60,5 @@ MonoBehaviour:
     ammount: 20
   adjacencyEffects: []
   buildingsToUnlock:
-  - id: 75
-  - id: 76
+  - id: 2
+  - id: 1

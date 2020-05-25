@@ -16,6 +16,7 @@ public class BuildQueueSystem : ComponentSystem
 	private List<int> _removal;
 
 	private static BuildQueueSystem _INST;
+	private bool _isReady;
 
 	protected override void OnCreate()
 	{
@@ -25,6 +26,7 @@ public class BuildQueueSystem : ComponentSystem
 	private void InitBuildQueue()
 	{
 		_INST = this;
+		_isReady = true;
 		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
 		_readyToBuildOrders = new List<int>();
 		_constructionOrders = new List<ConstructionOrder>();
@@ -34,6 +36,8 @@ public class BuildQueueSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
+		if (!_isReady)
+			return;
 		PlaceReadyBuildings();
 		ProcessConstructionOrders();
 	}
