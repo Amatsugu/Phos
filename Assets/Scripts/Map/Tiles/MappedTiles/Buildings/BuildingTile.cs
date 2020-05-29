@@ -1,4 +1,6 @@
-﻿using Unity.Collections;
+﻿using Amatsugu.Phos.DataStore;
+
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
@@ -15,7 +17,7 @@ public class BuildingTile : Tile, IDeconstructable
 	public int upgradeLevel = 0;
 	public bool IsBuilt => _isBuilt;
 
-	protected float prodMulti = 1, consMulti = 1;
+	protected StatsBuffs buffs;
 
 	private Entity _building;
 	private Entity _offshorePlatform;
@@ -27,6 +29,7 @@ public class BuildingTile : Tile, IDeconstructable
 	public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 	{
 		buildingInfo = tInfo;
+		buffs = default;
 	}
 
 	public override Entity Render()
@@ -223,9 +226,6 @@ public class BuildingTile : Tile, IDeconstructable
 
 	public override void TileUpdated(Tile src, TileUpdateType updateType)
 	{
-#if UNITY_EDITOR
-		Debug.Log($"[{updateType}] {info.name} received tile update from {src.info.name}");
-#endif
 		base.TileUpdated(src, updateType);
 		if(updateType == TileUpdateType.Placed || updateType == TileUpdateType.Removed)
 			ApplyBonuses();
@@ -261,16 +261,16 @@ public class BuildingTile : Tile, IDeconstructable
 		}
 	}
 
-	public void AddProductionMulti(float ammount)
+	public virtual void AddProductionMulti(float ammount)
 	{
-		prodMulti += ammount;
-		Map.EM.SetComponentData(GetBuildingEntity(), new ProductionMulti { Value = prodMulti });
+		buffs.productionMulti += ammount;
+		Map.EM.SetComponentData(GetBuildingEntity(), new ProductionMulti { Value = buffs.productionMulti });
 	}
 
-	public void AddConsumptionMulti(float ammount)
+	public virtual void AddConsumptionMulti(float ammount)
 	{
-		consMulti += ammount;
-		Map.EM.SetComponentData(GetBuildingEntity(), new ConsumptionMulti { Value = consMulti });
+		buffs.consumptionMulti += ammount;
+		Map.EM.SetComponentData(GetBuildingEntity(), new ConsumptionMulti { Value = buffs.consumptionMulti });
 	}
 
 	public void Deconstruct()

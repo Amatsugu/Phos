@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Amatsugu.Phos.DataStore;
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -9,6 +11,7 @@ public class TechBuildingEntity : BuildingTileEntity
 	[Header("Tech")]
 	public BuildingIdentifier[] buildingsToUnlock;
 	public int effectRange = 4;
+	public StatsBuffs StatsBuffs;
 
 	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{

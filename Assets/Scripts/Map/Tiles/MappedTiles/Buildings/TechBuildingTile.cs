@@ -6,7 +6,7 @@ public class TechBuildingTile : PoweredBuildingTile
 {
 	private readonly TechBuildingEntity techInfo;
 
-	private HashSet<HexCoords> _buffedTiles;
+	private readonly HashSet<HexCoords> _buffedTiles;
 
 	public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingEntity tInfo) : base(coords, height, map, tInfo)
 	{

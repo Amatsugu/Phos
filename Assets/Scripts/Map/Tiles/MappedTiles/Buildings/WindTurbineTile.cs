@@ -28,9 +28,9 @@ public class WindTurbileTile : TickedBuildingTile
 	{
 		base.OnTick();
 		var windSpeed = math.length(_weatherSystem.windDir);
-		var eff = windSpeed.Remap(0, 10, turbineInfo.efficencyRange.x, turbineInfo.efficencyRange.y);
+		var eff = windSpeed.Remap(0, 20, turbineInfo.efficencyRange.x, turbineInfo.efficencyRange.y);
 		var building = GetBuildingEntity();
-		Map.EM.SetComponentData(building, new ProductionMulti { Value = prodMulti * eff });
+		Map.EM.SetComponentData(building, new ProductionMulti { Value = buffs.productionMulti * eff });
 		Map.EM.SetComponentData(_blade, new RotateSpeed { Value = turbineInfo.maxSpinSpeed * eff });
 	}
 
