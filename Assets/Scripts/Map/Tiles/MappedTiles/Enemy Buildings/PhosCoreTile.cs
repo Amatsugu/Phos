@@ -1,6 +1,5 @@
 ﻿
-using Tiles.EnemyBuildings;
-
+using Amatsugu.Phos.TileEntities;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;

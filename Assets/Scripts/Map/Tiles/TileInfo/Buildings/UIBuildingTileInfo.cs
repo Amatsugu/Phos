@@ -2,12 +2,15 @@
 
 using UnityEngine;
 
-public class InteractiveBuildingTileInfo : BuildingTileEntity
+namespace Amatsugu.Phos.TileEntities
 {
-	public RectTransform UIScreen;
-
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	public class InteractiveBuildingTileInfo : BuildingTileEntity
 	{
-		return new InteractiveBuildingTile(pos, height, map, this);
+		public RectTransform UIScreen;
+
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new InteractiveBuildingTile(pos, height, map, this);
+		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace Amatsugu.Phos.Tiles
+﻿using Amatsugu.Phos.TileEntities;
+
+namespace Amatsugu.Phos.Tiles
 {
 	public class InteractiveBuildingTile : PoweredBuildingTile
 	{

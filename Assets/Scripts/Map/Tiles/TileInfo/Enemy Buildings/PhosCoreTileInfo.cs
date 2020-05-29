@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Tiles.EnemyBuildings
+namespace Amatsugu.Phos.TileEntities
 {
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Enemy Building/Phos Core")]
 	public class PhosCoreTileInfo : BuildingTileEntity

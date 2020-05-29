@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Amatsugu.Phos.TileEntities;
+
+using System.Linq;
 
 using Unity.Mathematics;
 
