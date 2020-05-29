@@ -1,27 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using Amatsugu.Phos.Tiles;
+
+using System.Collections.Generic;
 using System.Linq;
 
 using Unity.Entities;
 
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile/Research Building")]
-public class ResearchBuildingInfo : BuildingTileEntity
+namespace Amatsugu.Phos.TileEntities
 {
-	public BuildingCategory researchCategory;
-	public float consumptionMuli = 2;
-
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	[CreateAssetMenu(menuName = "Map Asset/Tile/Research Building")]
+	public class ResearchBuildingInfo : BuildingTileEntity
 	{
-		return new ResearchBuildingTile(pos, height, map, this);
-	}
+		public BuildingCategory researchCategory;
+		public float consumptionMuli = 2;
 
-	public override string GetProductionString()
-	{
-		var b = base.GetProductionString();
-		if (b.Length > 0)
-			b += "\n";
-		b += $"Unlocks {researchCategory} Research";
-		return b;
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new ResearchBuildingTile(pos, height, map, this);
+		}
+
+		public override string GetProductionString()
+		{
+			var b = base.GetProductionString();
+			if (b.Length > 0)
+				b += "\n";
+			b += $"Unlocks {researchCategory} Research";
+			return b;
+		}
 	}
 }

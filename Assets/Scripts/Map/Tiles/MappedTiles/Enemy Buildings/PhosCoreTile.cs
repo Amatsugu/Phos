@@ -1,4 +1,6 @@
-﻿using Tiles.EnemyBuildings;
+﻿
+using Tiles.EnemyBuildings;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -6,64 +8,67 @@ using Unity.Rendering;
 
 using UnityEngine;
 
-public class PhosCoreTile : EnemyBuildingTile
+namespace Amatsugu.Phos.Tiles
 {
-	private Entity _ringEntity;
-	private readonly PhosCoreTileInfo _phosInfo;
-
-	public PhosCoreTile(HexCoords coords, float height, Map map, PhosCoreTileInfo tInfo) : base(coords, height, map, tInfo)
+	public class PhosCoreTile : EnemyBuildingTile
 	{
-		_isBuilt = true;
-		_phosInfo = tInfo;
-	}
+		private Entity _ringEntity;
+		private readonly PhosCoreTileInfo _phosInfo;
 
-	protected override void PrepareEntity()
-	{
-		base.PrepareEntity();
-		var e = GetBuildingEntity();
-		Map.EM.AddComponentData(e, new PhosCoreData
+		public PhosCoreTile(HexCoords coords, float height, Map map, PhosCoreTileInfo tInfo) : base(coords, height, map, tInfo)
 		{
-			ring = _ringEntity = _phosInfo.ring.Instantiate(SurfacePoint, 1),
-			laser = _phosInfo.laser.GetEntity(),
-			projectile = _phosInfo.projectile.GetEntity()
-		});
-		Map.EM.AddComponentData(e, new PhosCore
+			_isBuilt = true;
+			_phosInfo = tInfo;
+		}
+
+		protected override void PrepareEntity()
 		{
-			fireRate = 1f / _phosInfo.fireRate,
-			spinRate = _phosInfo.spinRate,
-			nextVolleyTime = Time.time,
-			projectileSpeed = _phosInfo.projectileSpeed,
-			targetingRangeSq = _phosInfo.targetingRange * _phosInfo.targetingRange,
-			targetingRange = _phosInfo.targetingRange,
-			targetDelay = _phosInfo.targetingDelay,
-		});
-	}
+			base.PrepareEntity();
+			var e = GetBuildingEntity();
+			Map.EM.AddComponentData(e, new PhosCoreData
+			{
+				ring = _ringEntity = _phosInfo.ring.Instantiate(SurfacePoint, 1),
+				laser = _phosInfo.laser.GetEntity(),
+				projectile = _phosInfo.projectile.GetEntity()
+			});
+			Map.EM.AddComponentData(e, new PhosCore
+			{
+				fireRate = 1f / _phosInfo.fireRate,
+				spinRate = _phosInfo.spinRate,
+				nextVolleyTime = Time.time,
+				projectileSpeed = _phosInfo.projectileSpeed,
+				targetingRangeSq = _phosInfo.targetingRange * _phosInfo.targetingRange,
+				targetingRange = _phosInfo.targetingRange,
+				targetDelay = _phosInfo.targetingDelay,
+			});
+		}
 
-	public override void OnShow()
-	{
-		base.OnShow();
-		Map.EM.RemoveComponent<FrozenRenderSceneTag>(_ringEntity);
-	}
+		public override void OnShow()
+		{
+			base.OnShow();
+			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_ringEntity);
+		}
 
-	public override void OnHide()
-	{
-		base.OnHide();
-		Map.EM.AddComponent<FrozenRenderSceneTag>(_ringEntity);
-	}
+		public override void OnHide()
+		{
+			base.OnHide();
+			Map.EM.AddComponent<FrozenRenderSceneTag>(_ringEntity);
+		}
 
-	public override void OnDeath()
-	{
-		//base.OnDeath();
-	}
+		public override void OnDeath()
+		{
+			//base.OnDeath();
+		}
 
-	public override void Destroy()
-	{
-		base.Destroy();
-		Map.EM.DestroyEntity(_ringEntity);
-	}
+		public override void Destroy()
+		{
+			base.Destroy();
+			Map.EM.DestroyEntity(_ringEntity);
+		}
 
-	protected override void OnBuilt()
-	{
-		//base.OnBuilt();
+		protected override void OnBuilt()
+		{
+			//base.OnBuilt();
+		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.TileEntities;
+
+using UnityEngine;
 
 public abstract class TileMapper : ScriptableObject
 {

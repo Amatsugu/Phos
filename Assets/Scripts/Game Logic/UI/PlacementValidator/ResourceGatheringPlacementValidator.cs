@@ -1,7 +1,11 @@
-﻿using System.Collections;
+﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Validators/Resource Gathering Placement Validator")]

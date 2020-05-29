@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿using Amatsugu.Phos.TileEntities;
+
+using System.Collections;
 using System.Collections.Generic;
+
 using Unity.Mathematics;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Validators/Conduit Placement Validator")]

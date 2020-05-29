@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.Tiles;
+
+using UnityEngine;
 
 public class InteractiveBuildingTileInfo : BuildingTileEntity
 {

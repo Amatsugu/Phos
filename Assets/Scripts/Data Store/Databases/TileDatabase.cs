@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Amatsugu.Phos.TileEntities;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game Data/Tile Database")]

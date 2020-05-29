@@ -1,12 +1,15 @@
-﻿public class EnemyBuildingTile : BuildingTile
+﻿namespace Amatsugu.Phos.Tiles
 {
-	public EnemyBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+	public class EnemyBuildingTile : BuildingTile
 	{
-		_isBuilt = true;
-	}
+		public EnemyBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+		{
+			_isBuilt = true;
+		}
 
-	protected override void OnBuilt()
-	{
-		//base.OnBuilt();
+		protected override void OnBuilt()
+		{
+			//base.OnBuilt();
+		}
 	}
 }

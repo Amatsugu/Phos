@@ -1,12 +1,17 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.Tiles;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile/Resource Tile Info")]
-public class ResourceTileInfo : TileEntity
+using UnityEngine;
+
+namespace Amatsugu.Phos.TileEntities
 {
-	public ResourceIndentifier[] resourceYields;
-
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	[CreateAssetMenu(menuName = "Map Asset/Tile/Resource Tile Info")]
+	public class ResourceTileInfo : TileEntity
 	{
-		return new ResourceTile(pos, height, map, this);
+		public ResourceIndentifier[] resourceYields;
+
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new ResourceTile(pos, height, map, this);
+		}
 	}
 }

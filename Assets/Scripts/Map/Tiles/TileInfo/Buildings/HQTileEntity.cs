@@ -1,23 +1,28 @@
-﻿using System;
+﻿using Amatsugu.Phos.Tiles;
+
+using System;
 
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile/HQ")]
-public class HQTileEntity : BuildingTileEntity
+namespace Amatsugu.Phos.TileEntities
 {
-	public ResourceIndentifier[] startingResources;
-
-	public SubHQTileEntity[] subHQTiles;
-	public MobileUnitEntity unitInfo;
-
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	[CreateAssetMenu(menuName = "Map Asset/Tile/HQ")]
+	public class HQTileEntity : BuildingTileEntity
 	{
-		return new HQTile(pos, height, map, this);
-	}
+		public ResourceIndentifier[] startingResources;
 
-	private void OnValidate()
-	{
-		if (subHQTiles?.Length != 6)
-			Array.Resize(ref subHQTiles, 6);
+		public SubHQTileEntity[] subHQTiles;
+		public MobileUnitEntity unitInfo;
+
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new HQTile(pos, height, map, this);
+		}
+
+		private void OnValidate()
+		{
+			if (subHQTiles?.Length != 6)
+				Array.Resize(ref subHQTiles, 6);
+		}
 	}
 }

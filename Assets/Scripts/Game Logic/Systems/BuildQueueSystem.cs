@@ -1,4 +1,7 @@
-﻿using AnimationSystem.AnimationData;
+﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
+
+using AnimationSystem.AnimationData;
 using AnimationSystem.Animations;
 
 using System.Collections.Generic;

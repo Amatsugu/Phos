@@ -1,15 +1,21 @@
-﻿using Unity.Mathematics;
+﻿using Amatsugu.Phos.Tiles;
+
+using Unity.Mathematics;
+
 using UnityEngine;
 
-public class WindTurbineTileEntity : BuildingTileEntity
+namespace Amatsugu.Phos.TileEntities
 {
-	[Header("Wind Turbine")]
-	public float maxSpinSpeed = 10;
-	public float2 efficencyRange;
-	public MeshEntityRotatable turbineBlade;
-
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	public class WindTurbineTileEntity : BuildingTileEntity
 	{
-		return new WindTurbileTile(pos, height, map, this);
+		[Header("Wind Turbine")]
+		public float maxSpinSpeed = 10;
+		public float2 efficencyRange;
+		public MeshEntityRotatable turbineBlade;
+
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new WindTurbileTile(pos, height, map, this);
+		}
 	}
 }

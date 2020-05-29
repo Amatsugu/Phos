@@ -1,17 +1,22 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.Tiles;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile/Resource Conduit")]
-public class ResourceConduitTileEntity : BuildingTileEntity
+using UnityEngine;
+
+namespace Amatsugu.Phos.TileEntities
 {
-	public int poweredRange;
-	public int connectionRange;
-	public MeshEntityRotatable lineEntity;
-	public MeshEntityRotatable lineEntityInactive;
-	public MeshEntityRotatable energyPacket;
-	public float powerLineOffset;
-
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	[CreateAssetMenu(menuName = "Map Asset/Tile/Resource Conduit")]
+	public class ResourceConduitTileEntity : BuildingTileEntity
 	{
-		return new ResourceConduitTile(pos, height, map, this);
+		public int poweredRange;
+		public int connectionRange;
+		public MeshEntityRotatable lineEntity;
+		public MeshEntityRotatable lineEntityInactive;
+		public MeshEntityRotatable energyPacket;
+		public float powerLineOffset;
+
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new ResourceConduitTile(pos, height, map, this);
+		}
 	}
 }

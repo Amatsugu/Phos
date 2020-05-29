@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.TileEntities;
+
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile Mapper/Stacked")]
 public class StackedTileMapper : TileMapper

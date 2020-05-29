@@ -1,27 +1,31 @@
-﻿using Unity.Collections;
+﻿
+using Unity.Collections;
 using Unity.Entities;
 
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile Decorators/Ice")]
-public class IceDecorator : TileDecorator
+namespace Amatsugu.Phos.Tiles
 {
-	public float height;
-
-	public override int GetDecorEntityCount(Tile tile)
+	[CreateAssetMenu(menuName = "Map Asset/Tile Decorators/Ice")]
+	public class IceDecorator : TileDecorator
 	{
-		return 0;
-	}
+		public float height;
 
-	public override Entity[] Render(Tile tile)
-	{
-		var e = new Entity[0];
-		//Map.EM.SetComponentData(parent, new NonUniformScale { Value = new Vector3(1, Map.ActiveMap.seaLevel + height, 1) });
-		return e;
-	}
+		public override int GetDecorEntityCount(Tile tile)
+		{
+			return 0;
+		}
 
-	public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile)
-	{
-		//Map.EM.SetComponentData(parent, new NonUniformScale { Value = new Vector3(1, Map.ActiveMap.seaLevel + height, 1) });
+		public override Entity[] Render(Tile tile)
+		{
+			var e = new Entity[0];
+			//Map.EM.SetComponentData(parent, new NonUniformScale { Value = new Vector3(1, Map.ActiveMap.seaLevel + height, 1) });
+			return e;
+		}
+
+		public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile)
+		{
+			//Map.EM.SetComponentData(parent, new NonUniformScale { Value = new Vector3(1, Map.ActiveMap.seaLevel + height, 1) });
+		}
 	}
 }

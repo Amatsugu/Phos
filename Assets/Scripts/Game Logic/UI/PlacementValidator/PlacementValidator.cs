@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Amatsugu.Phos.Tiles;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Validators/Placement Validator")]

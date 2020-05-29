@@ -1,4 +1,6 @@
-﻿using DataStore.ConduitGraph;
+﻿using Amatsugu.Phos.Tiles;
+
+using DataStore.ConduitGraph;
 using Effects.Lines;
 using System.Collections;
 using System.Collections.Generic;

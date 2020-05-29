@@ -1,63 +1,93 @@
-﻿using System.Collections;
+﻿using Amatsugu.Phos.TileEntities;
+
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-public class TechBuildingTile : PoweredBuildingTile
+namespace Amatsugu.Phos.Tiles
 {
-	private readonly TechBuildingEntity techInfo;
-
-	private readonly HashSet<HexCoords> _buffedTiles;
-
-	public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingEntity tInfo) : base(coords, height, map, tInfo)
+	public class TechBuildingTile : PoweredBuildingTile
 	{
-		techInfo = tInfo;
-		_buffedTiles = new HashSet<HexCoords>(HexCoords.SpiralSelect(coords, tInfo.effectRange, true));
-	}
+		private readonly TechBuildingEntity techInfo;
 
-	public override void OnConnected()
-	{
-		base.OnConnected();
-		UnlockBuildings();
-	}
+		private readonly HashSet<HexCoords> _buffedTiles;
 
-	protected override void OnBuilt()
-	{
-		base.OnBuilt();
-		UnlockBuildings();	
-	}
-
-	protected override void OnBuiltAndPowered()
-	{
-		base.OnBuiltAndPowered();
-		map.HexSelectForEach(Coords, techInfo.effectRange, t =>
+		public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingEntity tInfo) : base(coords, height, map, tInfo)
 		{
-			if (t is BuildingTile b)
-				ApplyBuff(b);
-		}, true);
-		map.OnTilePlaced += OnBuffedTileChanged;
+			techInfo = tInfo;
+			_buffedTiles = new HashSet<HexCoords>(HexCoords.SpiralSelect(coords, tInfo.effectRange, true));
+		}
+
+		public override void OnConnected()
+		{
+			base.OnConnected();
+			UnlockBuildings();
+		}
+
+		protected override void OnBuilt()
+		{
+			base.OnBuilt();
+			UnlockBuildings();
+		}
+
+		protected override void OnBuiltAndPowered()
+		{
+			base.OnBuiltAndPowered();
+			map.HexSelectForEach(Coords, techInfo.effectRange, t =>
+			{
+				if (t is BuildingTile b)
+					ApplyAOEBuff(b);
+			}, true);
+			map.OnTilePlaced += OnBuffedTileChanged;
+
+		}
+
+		private void OnBuffedTileChanged(HexCoords coords)
+		{
+			if (!_buffedTiles.Contains(coords))
+				return;
+			if (map[coords] is BuildingTile b)
+				ApplyAOEBuff(b);
+		}
+
+		protected virtual void ApplyAOEBuff(BuildingTile building)
+		{
+			building.AddBuff(techInfo.StatsBuffs);
+		}
+
+		protected virtual void RemoveAOEBuff(BuildingTile building)
+		{
+			building.RemoveBuff(techInfo.StatsBuffs);
+		}
+
+		public override void OnRemoved()
+		{
+			base.OnRemoved();
+			map.HexSelectForEach(Coords, techInfo.effectRange, t =>
+			{
+				if (t is BuildingTile b)
+					RemoveAOEBuff(b);
+			}, true);
+		}
+
+		public override void OnDisconnected()
+		{
+			base.OnDisconnected();
+			map.HexSelectForEach(Coords, techInfo.effectRange, t =>
+			{
+				if (t is BuildingTile b)
+					RemoveAOEBuff(b);
+			}, true);
+		}
+
+		private void UnlockBuildings()
+		{
+			if (!IsBuilt || !HasHQConnection)
+				return;
+			for (int i = 0; i < techInfo.buildingsToUnlock.Length; i++)
+				GameRegistry.UnlockBuilding(techInfo.buildingsToUnlock[i]);
+		}
 
 	}
-
-	private void OnBuffedTileChanged(HexCoords coords)
-	{
-		if (!_buffedTiles.Contains(coords))
-			return;
-		if (map[coords] is BuildingTile b)
-			ApplyBuff(b);
-	}
-
-	protected virtual void ApplyBuff(BuildingTile building)
-	{
-		//TODO: Apply buffs
-		Debug.Log($"A buff would be applied to {info.name}>{building.info.name}");
-	}
-
-	private void UnlockBuildings()
-	{
-		if (!IsBuilt || !HasHQConnection)
-			return;
-		for (int i = 0; i < techInfo.buildingsToUnlock.Length; i++)
-			GameRegistry.UnlockBuilding(techInfo.buildingsToUnlock[i]);
-	}
-
 }

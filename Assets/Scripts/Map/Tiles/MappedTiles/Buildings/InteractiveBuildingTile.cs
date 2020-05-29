@@ -1,9 +1,12 @@
-﻿public class InteractiveBuildingTile : PoweredBuildingTile
+﻿namespace Amatsugu.Phos.Tiles
 {
-	public InteractiveBuildingTileInfo uiInfo;
-
-	public InteractiveBuildingTile(HexCoords coords, float height, Map map, InteractiveBuildingTileInfo tInfo) : base(coords, height, map, tInfo)
+	public class InteractiveBuildingTile : PoweredBuildingTile
 	{
-		uiInfo = tInfo;
+		public InteractiveBuildingTileInfo uiInfo;
+
+		public InteractiveBuildingTile(HexCoords coords, float height, Map map, InteractiveBuildingTileInfo tInfo) : base(coords, height, map, tInfo)
+		{
+			uiInfo = tInfo;
+		}
 	}
 }

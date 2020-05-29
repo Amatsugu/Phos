@@ -1,8 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
+
+using System.Collections.Generic;
 using System.Linq;
+
 using TMPro;
+
 using Unity.Entities;
 using Unity.Physics.Systems;
+
 using UnityEngine;
 using UnityEngine.UI;
 

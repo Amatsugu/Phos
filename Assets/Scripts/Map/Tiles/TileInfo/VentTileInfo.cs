@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
+
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Tile/Vent Tile Info")]
 public class VentTileInfo : ResourceTileInfo

@@ -1,32 +1,38 @@
-﻿using Amatsugu.Phos.DataStore;
+﻿
+using Amatsugu.Phos.DataStore;
+using Amatsugu.Phos.Tiles;
 
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile/Tech Building")]
-public class TechBuildingEntity : BuildingTileEntity
+namespace Amatsugu.Phos.TileEntities
 {
-	[Header("Tech")]
-	public BuildingIdentifier[] buildingsToUnlock;
-	public int effectRange = 4;
-	public StatsBuffs StatsBuffs;
-
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	[CreateAssetMenu(menuName = "Map Asset/Tile/Tech Building")]
+	public class TechBuildingEntity : BuildingTileEntity
 	{
-		return new TechBuildingTile(pos, height, map, this);
-	}
+		[Header("Tech")]
+		public BuildingIdentifier[] buildingsToUnlock;
+		public int effectRange = 4;
+		public StatsBuffs StatsBuffs;
 
-	public override string GetProductionString()
-	{
-		var prod = new StringBuilder();
-		prod.AppendLine("Unlocks Buildings:");
-		for (int i = 0; i < buildingsToUnlock.Length; i++)
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{
-			prod.Append("\t");
-			prod.AppendLine(GameRegistry.BuildingDatabase[buildingsToUnlock[i]].info.GetNameString());
+			return new TechBuildingTile(pos, height, map, this);
 		}
-		return prod.ToString();
+
+		public override string GetProductionString()
+		{
+			var prod = new StringBuilder();
+			prod.AppendLine("Unlocks Buildings:");
+			for (int i = 0; i < buildingsToUnlock.Length; i++)
+			{
+				prod.Append("\t");
+				prod.AppendLine(GameRegistry.BuildingDatabase[buildingsToUnlock[i]].info.GetNameString());
+			}
+			return prod.ToString();
+		}
 	}
 }

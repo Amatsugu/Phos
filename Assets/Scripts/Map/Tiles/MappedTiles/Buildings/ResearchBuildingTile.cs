@@ -1,23 +1,28 @@
-﻿public class ResearchBuildingTile : PoweredBuildingTile
+﻿using Amatsugu.Phos.TileEntities;
+
+namespace Amatsugu.Phos.Tiles
 {
-	public ResearchBuildingInfo researchInfo;
-
-	public ResearchBuildingTile(HexCoords coords, float height, Map map, ResearchBuildingInfo tInfo) : base(coords, height, map, tInfo)
+	public class ResearchBuildingTile : PoweredBuildingTile
 	{
-		researchInfo = tInfo;
-	}
+		public ResearchBuildingInfo researchInfo;
 
-	protected override void PrepareEntity()
-	{
-		base.PrepareEntity();
-		var e = GetBuildingEntity();
-		Map.EM.AddComponentData(e, new ResearchBuildingCategory { Value = researchInfo.researchCategory });
-		Map.EM.AddComponentData(e, new ResearchConsumptionMulti { Value = researchInfo.consumptionMuli });
-	}
+		public ResearchBuildingTile(HexCoords coords, float height, Map map, ResearchBuildingInfo tInfo) : base(coords, height, map, tInfo)
+		{
+			researchInfo = tInfo;
+		}
 
-	protected override void OnBuilt()
-	{
-		base.OnBuilt();
-		ResearchSystem.UnlockCategory(researchInfo.researchCategory);
+		protected override void PrepareEntity()
+		{
+			base.PrepareEntity();
+			var e = GetBuildingEntity();
+			Map.EM.AddComponentData(e, new ResearchBuildingCategory { Value = researchInfo.researchCategory });
+			Map.EM.AddComponentData(e, new ResearchConsumptionMulti { Value = researchInfo.consumptionMuli });
+		}
+
+		protected override void OnBuilt()
+		{
+			base.OnBuilt();
+			ResearchSystem.UnlockCategory(researchInfo.researchCategory);
+		}
 	}
 }

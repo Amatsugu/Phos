@@ -1,4 +1,7 @@
-﻿using DataStore.ConduitGraph;
+﻿
+using Amatsugu.Phos.TileEntities;
+
+using DataStore.ConduitGraph;
 
 using Effects.Lines;
 
@@ -11,286 +14,289 @@ using Unity.Rendering;
 
 using UnityEngine;
 
-public class ResourceConduitTile : PoweredBuildingTile
+namespace Amatsugu.Phos.Tiles
 {
-	public ResourceConduitTileEntity conduitInfo;
-	private readonly float _poweredRangeSq;
-	private readonly float _connectRangeSq;
-	private readonly Dictionary<HexCoords, Entity> _conduitLines;
-	private bool _switchLines;
-	private Entity _energyPacket;
-
-	public ResourceConduitTile(HexCoords coords, float height, Map map, ResourceConduitTileEntity tInfo) : base(coords, height, map, tInfo)
+	public class ResourceConduitTile : PoweredBuildingTile
 	{
-		conduitInfo = tInfo;
-		_poweredRangeSq = HexCoords.TileToWorldDist(conduitInfo.poweredRange, map.innerRadius);
-		_poweredRangeSq *= _poweredRangeSq;
-		_connectRangeSq = HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius);
-		_connectRangeSq *= _connectRangeSq;
-		_conduitLines = new Dictionary<HexCoords, Entity>();
-	}
+		public ResourceConduitTileEntity conduitInfo;
+		private readonly float _poweredRangeSq;
+		private readonly float _connectRangeSq;
+		private readonly Dictionary<HexCoords, Entity> _conduitLines;
+		private bool _switchLines;
+		private Entity _energyPacket;
 
-	public override void OnHeightChanged()
-	{
-		base.OnHeightChanged();
-		UpdateLines();
-		UpdateConnections(map.conduitGraph.GetConnections(Coords), TileUpdateType.Height);
-	}
-
-	public void UpdateLines()
-	{
-		var lines = _conduitLines.Keys.ToArray();
-		if (!map.conduitGraph.ContainsNode(Coords))
-			return;
-		var cNode = map.conduitGraph.GetNode(Coords);
-		var thisHeight = Coords.world + new float3(0, cNode.height, 0);
-		for (int i = 0; i < lines.Length; i++)
+		public ResourceConduitTile(HexCoords coords, float height, Map map, ResourceConduitTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
-			if (map.conduitGraph.ContainsNode(lines[i]))
+			conduitInfo = tInfo;
+			_poweredRangeSq = HexCoords.TileToWorldDist(conduitInfo.poweredRange, map.innerRadius);
+			_poweredRangeSq *= _poweredRangeSq;
+			_connectRangeSq = HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius);
+			_connectRangeSq *= _connectRangeSq;
+			_conduitLines = new Dictionary<HexCoords, Entity>();
+		}
+
+		public override void OnHeightChanged()
+		{
+			base.OnHeightChanged();
+			UpdateLines();
+			UpdateConnections(map.conduitGraph.GetConnections(Coords), TileUpdateType.Height);
+		}
+
+		public void UpdateLines()
+		{
+			var lines = _conduitLines.Keys.ToArray();
+			if (!map.conduitGraph.ContainsNode(Coords))
+				return;
+			var cNode = map.conduitGraph.GetNode(Coords);
+			var thisHeight = Coords.world + new float3(0, cNode.height, 0);
+			for (int i = 0; i < lines.Length; i++)
 			{
-				var curNode = map.conduitGraph.GetNode(lines[i]);
-				var a = thisHeight;
-				var b = curNode.conduitPos.world + new float3(0, curNode.height, 0);
-				if (_switchLines)
+				if (map.conduitGraph.ContainsNode(lines[i]))
 				{
-					Map.EM.DestroyEntity(_conduitLines[lines[i]]);
-					var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
-					_conduitLines[lines[i]] = LineFactory.CreateStaticLine(line, a, b);
+					var curNode = map.conduitGraph.GetNode(lines[i]);
+					var a = thisHeight;
+					var b = curNode.conduitPos.world + new float3(0, curNode.height, 0);
+					if (_switchLines)
+					{
+						Map.EM.DestroyEntity(_conduitLines[lines[i]]);
+						var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
+						_conduitLines[lines[i]] = LineFactory.CreateStaticLine(line, a, b);
+					}
+					else
+						LineFactory.UpdateStaticLine(_conduitLines[lines[i]], a, b);
 				}
 				else
-					LineFactory.UpdateStaticLine(_conduitLines[lines[i]], a, b);
-			}
-			else
-			{
-				Map.EM.DestroyEntity(_conduitLines[lines[i]]);
-				_conduitLines.Remove(lines[i]);
-			}
-		}
-		_switchLines = false;
-	}
-
-	public override void OnHide()
-	{
-		base.OnHide();
-		var lines = _conduitLines.Values.ToArray();
-		for (int i = 0; i < lines.Length; i++)
-			Map.EM.AddComponent<FrozenRenderSceneTag>(lines[i]);
-	}
-
-	public override void OnShow()
-	{
-		base.OnShow();
-		var lines = _conduitLines.Values.ToArray();
-		for (int i = 0; i < lines.Length; i++)
-			Map.EM.RemoveComponent<FrozenRenderSceneTag>(lines[i]);
-	}
-
-	public override void OnPlaced()
-	{
-		base.OnPlaced();
-		UnityEngine.Debug.Log("Node Added");
-		map.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
-	}
-
-	public override void FindConduitConnections()
-	{
-		var disconnectedNodesStart = map.conduitGraph.GetDisconectedNodes();
-		var closest = map.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
-		var gotConnectedNode = closest.Any(n => (map[n.conduitPos] is HQTile || (map[n.conduitPos] as ResourceConduitTile).HasHQConnection));
-
-		var thisNode = map.conduitGraph.GetNode(Coords);
-
-		//Find connections
-		var connectionsMade = 0;
-		for (int i = 0; i < closest.Count; i++)
-		{
-			if (closest[i] == thisNode)
-				continue;
-			if (closest[i].IsFull)
-				continue;
-			if (closest[i].IsConnectedTo(thisNode))
-				continue;
-			if (!(map[closest[i].conduitPos] as BuildingTile).IsBuilt)
-				continue;
-
-			connectionsMade++;
-
-			thisNode.ConnectTo(closest[i]);
-
-			//var tile = map[closest[i].conduitPos];
-			var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
-			var b = Coords.world + new float3(0, thisNode.height, 0);
-			var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
-			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
-			if (thisNode.IsFull)
-				break;
-		}
-		if (connectionsMade == 0)
-		{
-			HQDisconnected();
-		}
-		else
-		{
-			//Propagate Connection
-			if (gotConnectedNode)
-			{
-				var disconnectedNodesEnd = map.conduitGraph.GetDisconectedNodesSet();
-				for (int i = 0; i < disconnectedNodesStart.Length; i++)
 				{
-					if (disconnectedNodesEnd.Contains(disconnectedNodesStart[i]))
-						continue;
-					var tile = map[disconnectedNodesStart[i].conduitPos];
-					if (tile is ResourceConduitTile conduit)
-						conduit.HQConnected();
+					Map.EM.DestroyEntity(_conduitLines[lines[i]]);
+					_conduitLines.Remove(lines[i]);
 				}
-				HQConnected();
+			}
+			_switchLines = false;
+		}
+
+		public override void OnHide()
+		{
+			base.OnHide();
+			var lines = _conduitLines.Values.ToArray();
+			for (int i = 0; i < lines.Length; i++)
+				Map.EM.AddComponent<FrozenRenderSceneTag>(lines[i]);
+		}
+
+		public override void OnShow()
+		{
+			base.OnShow();
+			var lines = _conduitLines.Values.ToArray();
+			for (int i = 0; i < lines.Length; i++)
+				Map.EM.RemoveComponent<FrozenRenderSceneTag>(lines[i]);
+		}
+
+		public override void OnPlaced()
+		{
+			base.OnPlaced();
+			Debug.Log("Node Added");
+			map.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
+		}
+
+		public override void FindConduitConnections()
+		{
+			var disconnectedNodesStart = map.conduitGraph.GetDisconectedNodes();
+			var closest = map.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
+			var gotConnectedNode = closest.Any(n => map[n.conduitPos] is HQTile || (map[n.conduitPos] as ResourceConduitTile).HasHQConnection);
+
+			var thisNode = map.conduitGraph.GetNode(Coords);
+
+			//Find connections
+			var connectionsMade = 0;
+			for (int i = 0; i < closest.Count; i++)
+			{
+				if (closest[i] == thisNode)
+					continue;
+				if (closest[i].IsFull)
+					continue;
+				if (closest[i].IsConnectedTo(thisNode))
+					continue;
+				if (!(map[closest[i].conduitPos] as BuildingTile).IsBuilt)
+					continue;
+
+				connectionsMade++;
+
+				thisNode.ConnectTo(closest[i]);
+
+				//var tile = map[closest[i].conduitPos];
+				var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
+				var b = Coords.world + new float3(0, thisNode.height, 0);
+				var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
+				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
+				if (thisNode.IsFull)
+					break;
+			}
+			if (connectionsMade == 0)
+			{
+				HQDisconnected();
 			}
 			else
-				HQDisconnected();
-		}
-		_connectionInit = true;
-	}
-
-	private void AddNewConnections() //TODO: Work this out
-	{
-		var curNode = map.conduitGraph.GetNode(Coords);
-		if (curNode.IsFull)
-			return;
-		var closest = map.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
-		for (int i = 0; i < closest.Count; i++)
-		{
-			if (closest[i] == curNode)
-				continue;
-			if (curNode.IsConnectedTo(closest[i]))
-				continue;
-			if (!(map[closest[i].conduitPos] as BuildingTile).IsBuilt)
-				continue;
-
-			curNode.ConnectTo(closest[i]);
-			var tile = map[closest[i].conduitPos];
-			if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
-				conduit.HQConnected();
-			var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
-			var b = Coords.world + new float3(0, curNode.height, 0);
-			_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
-			if (curNode.IsFull)
-				break;
-		}
-	}
-
-	public override void OnRemoved()
-	{
-		var connections = map.conduitGraph.GetConnections(Coords);
-		map.conduitGraph.RemoveNode(Coords);
-		var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
-		for (int i = 0; i < disconnectedNodes.Length; i++)
-		{
-			(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).HQDisconnected();
-			PowerTransferEffectSystem.RemoveNode(disconnectedNodes[i]);
-		}
-		HQDisconnected();
-		UpdateConnections(connections, TileUpdateType.Removed);
-		base.OnRemoved();
-	}
-
-	public override void HQConnected()
-	{
-		if (_connectionInit && HasHQConnection)
-			return;
-		_energyPacket = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .15f);
-		var cNode = map.conduitGraph.GetNode(Coords);
-		Map.EM.AddComponentData(_energyPacket, new EnergyPacket
-		{
-			id = cNode.id,
-			progress = -1,
-		});
-		PowerTransferEffectSystem.AddNode(cNode);
-		_switchLines = HasHQConnection = true;
-		UpdateLines();
-		map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
-		{
-			if (t is ResourceConduitTile)
-				return;
-			if (t is PoweredBuildingTile pb)
-				pb.HQConnected();
-		}, true);
-		OnConnected();
-	}
-
-	public override void HQDisconnected()
-	{
-		if (_connectionInit && !HasHQConnection)
-			return;
-		HasHQConnection = false;
-		_switchLines = true;
-		UpdateLines();
-		map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
-		{
-			if (t is ResourceConduitTile)
-				return;
-			if (t is PoweredBuildingTile pb)
-				pb.HQDisconnected();
-		}, true);
-		OnDisconnected();
-	}
-
-	public bool IsInPoweredRange(HexCoords tile)
-	{
-		bool inRange = false;
-		map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
-		{
-			if (t.Coords == tile)
 			{
-				inRange = true;
-				return false;
+				//Propagate Connection
+				if (gotConnectedNode)
+				{
+					var disconnectedNodesEnd = map.conduitGraph.GetDisconectedNodesSet();
+					for (int i = 0; i < disconnectedNodesStart.Length; i++)
+					{
+						if (disconnectedNodesEnd.Contains(disconnectedNodesStart[i]))
+							continue;
+						var tile = map[disconnectedNodesStart[i].conduitPos];
+						if (tile is ResourceConduitTile conduit)
+							conduit.HQConnected();
+					}
+					HQConnected();
+				}
+				else
+					HQDisconnected();
 			}
-			return true;
-		});
-		return inRange;
-	}
+			_connectionInit = true;
+		}
 
-	public bool IsInConnectionRange(HexCoords tile) => Coords.DistanceToSq(tile) <= _connectRangeSq;
+		private void AddNewConnections() //TODO: Work this out
+		{
+			var curNode = map.conduitGraph.GetNode(Coords);
+			if (curNode.IsFull)
+				return;
+			var closest = map.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
+			for (int i = 0; i < closest.Count; i++)
+			{
+				if (closest[i] == curNode)
+					continue;
+				if (curNode.IsConnectedTo(closest[i]))
+					continue;
+				if (!(map[closest[i].conduitPos] as BuildingTile).IsBuilt)
+					continue;
 
-	public override void TileUpdated(Tile src, TileUpdateType updateType)
-	{
-		base.TileUpdated(src, updateType);
-		if (_conduitLines.ContainsKey(src.Coords))
+				curNode.ConnectTo(closest[i]);
+				var tile = map[closest[i].conduitPos];
+				if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
+					conduit.HQConnected();
+				var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
+				var b = Coords.world + new float3(0, curNode.height, 0);
+				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
+				if (curNode.IsFull)
+					break;
+			}
+		}
+
+		public override void OnRemoved()
+		{
+			var connections = map.conduitGraph.GetConnections(Coords);
+			map.conduitGraph.RemoveNode(Coords);
+			var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
+			for (int i = 0; i < disconnectedNodes.Length; i++)
+			{
+				(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).HQDisconnected();
+				PowerTransferEffectSystem.RemoveNode(disconnectedNodes[i]);
+			}
+			HQDisconnected();
+			UpdateConnections(connections, TileUpdateType.Removed);
+			base.OnRemoved();
+		}
+
+		public override void HQConnected()
+		{
+			if (_connectionInit && HasHQConnection)
+				return;
+			_energyPacket = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .15f);
+			var cNode = map.conduitGraph.GetNode(Coords);
+			Map.EM.AddComponentData(_energyPacket, new EnergyPacket
+			{
+				id = cNode.id,
+				progress = -1,
+			});
+			PowerTransferEffectSystem.AddNode(cNode);
+			_switchLines = HasHQConnection = true;
 			UpdateLines();
-		else
-			AddNewConnections();
-	}
-
-	public void UpdateConnections(ConduitNode[] connections, TileUpdateType updateType)
-	{
-		if (connections == null)
-			return;
-		for (int i = 0; i < connections.Length; i++)
-		{
-			if (connections[i] == null)
-				continue;
-			map[connections[i].conduitPos].TileUpdated(this, updateType);
+			map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
+			{
+				if (t is ResourceConduitTile)
+					return;
+				if (t is PoweredBuildingTile pb)
+					pb.HQConnected();
+			}, true);
+			OnConnected();
 		}
-	}
 
-	public override string GetDescription()
-	{
-		return base.GetDescription() + $"\nConnections Lines: {_conduitLines.Count}" +
-			$"\nConnected Nodes: {map.conduitGraph.GetNode(Coords).ConnectionCount}/{map.conduitGraph.maxConnections}" +
-			$"\nRange {_poweredRangeSq} {HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius)}";
-	}
+		public override void HQDisconnected()
+		{
+			if (_connectionInit && !HasHQConnection)
+				return;
+			HasHQConnection = false;
+			_switchLines = true;
+			UpdateLines();
+			map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
+			{
+				if (t is ResourceConduitTile)
+					return;
+				if (t is PoweredBuildingTile pb)
+					pb.HQDisconnected();
+			}, true);
+			OnDisconnected();
+		}
 
-	public override void Destroy()
-	{
-		try
+		public bool IsInPoweredRange(HexCoords tile)
 		{
-			var lines = _conduitLines.Values.ToArray();
-			foreach (var line in _conduitLines)
-				Map.EM.DestroyEntity(line.Value);
+			bool inRange = false;
+			map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
+			{
+				if (t.Coords == tile)
+				{
+					inRange = true;
+					return false;
+				}
+				return true;
+			});
+			return inRange;
 		}
-		catch
+
+		public bool IsInConnectionRange(HexCoords tile) => Coords.DistanceToSq(tile) <= _connectRangeSq;
+
+		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
+			base.TileUpdated(src, updateType);
+			if (_conduitLines.ContainsKey(src.Coords))
+				UpdateLines();
+			else
+				AddNewConnections();
 		}
-		Map.EM.DestroyEntity(_energyPacket);
-		base.Destroy();
+
+		public void UpdateConnections(ConduitNode[] connections, TileUpdateType updateType)
+		{
+			if (connections == null)
+				return;
+			for (int i = 0; i < connections.Length; i++)
+			{
+				if (connections[i] == null)
+					continue;
+				map[connections[i].conduitPos].TileUpdated(this, updateType);
+			}
+		}
+
+		public override string GetDescription()
+		{
+			return base.GetDescription() + $"\nConnections Lines: {_conduitLines.Count}" +
+				$"\nConnected Nodes: {map.conduitGraph.GetNode(Coords).ConnectionCount}/{map.conduitGraph.maxConnections}" +
+				$"\nRange {_poweredRangeSq} {HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius)}";
+		}
+
+		public override void Destroy()
+		{
+			try
+			{
+				var lines = _conduitLines.Values.ToArray();
+				foreach (var line in _conduitLines)
+					Map.EM.DestroyEntity(line.Value);
+			}
+			catch
+			{
+			}
+			Map.EM.DestroyEntity(_energyPacket);
+			base.Destroy();
+		}
 	}
 }

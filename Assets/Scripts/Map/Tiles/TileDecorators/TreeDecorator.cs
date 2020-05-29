@@ -1,4 +1,6 @@
-﻿using Unity.Entities;
+﻿using Amatsugu.Phos.Tiles;
+
+using Unity.Entities;
 using Unity.Mathematics;
 
 using UnityEngine;

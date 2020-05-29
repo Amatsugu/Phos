@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.Tiles;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile/Building/Solar Panel")]
-public class SolarPanelTileEntity : BuildingTileEntity
+using UnityEngine;
+
+namespace Amatsugu.Phos.TileEntities
 {
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	[CreateAssetMenu(menuName = "Map Asset/Tile/Building/Solar Panel")]
+	public class SolarPanelTileEntity : BuildingTileEntity
 	{
-		return new SolarPanelTile(pos, height, map, this);
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new SolarPanelTile(pos, height, map, this);
+		}
 	}
 }

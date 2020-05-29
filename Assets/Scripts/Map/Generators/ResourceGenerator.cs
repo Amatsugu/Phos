@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
+
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Map Asset/Generator/Feature/Resource")]
 public class ResourceGenerator : FeatureGenerator

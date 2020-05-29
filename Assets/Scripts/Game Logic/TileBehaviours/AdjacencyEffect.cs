@@ -1,4 +1,6 @@
-﻿using Effects.Lines;
+﻿using Amatsugu.Phos.Tiles;
+
+using Effects.Lines;
 using System;
 using System.Collections;
 using System.Collections.Generic;

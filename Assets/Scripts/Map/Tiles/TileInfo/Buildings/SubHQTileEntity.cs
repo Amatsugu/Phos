@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos.Tiles;
 
-[CreateAssetMenu(menuName = "Map Asset/Tile/Sub HQ")]
-public class SubHQTileEntity : BuildingTileEntity
+using UnityEngine;
+
+namespace Amatsugu.Phos.TileEntities
 {
-	public override Tile CreateTile(Map map, HexCoords pos, float height)
+	[CreateAssetMenu(menuName = "Map Asset/Tile/Sub HQ")]
+	public class SubHQTileEntity : BuildingTileEntity
 	{
-		return new SubHQTile(pos, height, map, this);
+		public override Tile CreateTile(Map map, HexCoords pos, float height)
+		{
+			return new SubHQTile(pos, height, map, this);
+		}
 	}
 }
