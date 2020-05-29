@@ -15,7 +15,7 @@ public class BuildingTile : Tile, IDeconstructable
 	public int upgradeLevel = 0;
 	public bool IsBuilt => _isBuilt;
 
-	protected float prodMulti, consMulti;
+	protected float prodMulti = 1, consMulti = 1;
 
 	private Entity _building;
 	private Entity _offshorePlatform;
@@ -319,6 +319,10 @@ public class PoweredBuildingTile : BuildingTile
 		FindConduitConnections();
 	}
 
+	protected virtual void OnBuiltAndPowered()
+	{
+
+	}
 	public virtual void FindConduitConnections()
 	{
 		var closestConduit = map.conduitGraph.GetClosestConduitNode(Coords);
@@ -349,6 +353,7 @@ public class PoweredBuildingTile : BuildingTile
 		HasHQConnection = true;
 		InfoPopupUI.HidePopup(Coords);
 		OnConnected();
+		
 	}
 
 	public virtual void HQDisconnected()
@@ -375,7 +380,8 @@ public class PoweredBuildingTile : BuildingTile
 
 	public virtual void OnConnected()
 	{
-
+		if (IsBuilt)
+			OnBuiltAndPowered();
 	}
 
 	public virtual void OnDisconnected()

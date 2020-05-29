@@ -27,6 +27,8 @@ public class Map : IDisposable
 	public readonly float shortDiagonal;
 	public readonly float innerRadius;
 
+	public event Action<HexCoords> OnTilePlaced;
+
 	public float seaLevel;
 	public int Seed { get; private set; }
 
@@ -345,6 +347,7 @@ public class Map : IDisposable
 		nT.OnPlaced();
 		if (nT.info is TechBuildingEntity techB && !_techBuildings.Contains(techB))
 			_techBuildings.Add(techB);
+		OnTilePlaced?.Invoke(coord);
 		return nT;
 	}
 

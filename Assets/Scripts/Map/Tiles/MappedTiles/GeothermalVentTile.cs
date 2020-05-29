@@ -87,6 +87,7 @@ public class GeothermalVentShellTile : ResourceTile
 	public override void Destroy()
 	{
 		base.Destroy();
-		Map.EM.DestroyEntity(_shell);
+		if(Map.EM.Exists(_shell))
+			Map.EM.DestroyEntity(_shell);
 	}
 }

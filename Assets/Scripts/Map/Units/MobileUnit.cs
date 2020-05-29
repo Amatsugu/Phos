@@ -147,7 +147,8 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	{
 		try
 		{
-			Map.EM.DestroyEntity(Entity);
+			if(Map.EM.Exists(Entity))
+				Map.EM.DestroyEntity(Entity);
 			if (info.head != null)
 				Map.EM.DestroyEntity(HeadEntity);
 			if (_healhBar.IsCreated)

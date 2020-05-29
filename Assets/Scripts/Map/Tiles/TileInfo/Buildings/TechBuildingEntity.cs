@@ -6,8 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile/Tech Building")]
 public class TechBuildingEntity : BuildingTileEntity
 {
-	[Header("Tech Up")]
+	[Header("Tech")]
 	public BuildingIdentifier[] buildingsToUnlock;
+	public int effectRange = 4;
 
 	public override Tile CreateTile(Map map, HexCoords pos, float height)
 	{
