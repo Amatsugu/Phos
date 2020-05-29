@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using Amatsugu.Phos.TileEntities;
 
 [CustomEditor(typeof(BuildingDatabase))]
 public class BuildingDatabaseUI : Editor

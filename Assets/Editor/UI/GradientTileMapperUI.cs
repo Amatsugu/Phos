@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Amatsugu.Phos.TileEntities;
 
 [CustomEditor(typeof(GradientTileMapper), true)]
 public class GradientTileMapperUI : Editor
