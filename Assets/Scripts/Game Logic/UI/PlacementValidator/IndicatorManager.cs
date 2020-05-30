@@ -60,6 +60,15 @@ public class IndicatorManager
 		}
 	}
 
+	public void ShowRange(Tile center, int range, MeshEntityRotatable border)
+	{
+		var ring = HexCoords.SelectRing(center.Coords, range, center.map.innerRadius);
+		for (int i = 0; i < ring.Length; i++)
+		{
+			//TODO: Figure out how to render this
+		}
+	}
+
 	public void SetIndicator(Tile tile, MeshEntity indicator)
 	{
 		if (_renderedIndicators.ContainsKey(tile.Coords))

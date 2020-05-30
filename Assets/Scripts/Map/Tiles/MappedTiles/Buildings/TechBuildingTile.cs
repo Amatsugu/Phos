@@ -16,7 +16,7 @@ namespace Amatsugu.Phos.Tiles
 		public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingEntity tInfo) : base(coords, height, map, tInfo)
 		{
 			techInfo = tInfo;
-			_buffedTiles = new HashSet<HexCoords>(HexCoords.SpiralSelect(coords, tInfo.effectRange, true));
+			_buffedTiles = new HashSet<HexCoords>(HexCoords.SpiralSelect(coords, tInfo.effectRange, true, map.innerRadius));
 		}
 
 		public override void OnConnected()

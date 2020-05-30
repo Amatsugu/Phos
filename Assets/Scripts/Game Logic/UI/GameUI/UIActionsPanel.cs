@@ -189,14 +189,14 @@ public class UIActionsPanel : UIPanel
 		var occupiedSet = new HashSet<HexCoords>();
 		var openSet = new HashSet<HexCoords>();
 
-		var openTiles = HexCoords.SpiralSelect(tile.Coords, r);
+		var openTiles = HexCoords.SpiralSelect(tile.Coords, r, innerRadius: _map.innerRadius);
 		for (int i = 0; i < openTiles.Length; i++)
 			openSet.Add(openTiles[i]);
 		for (int i = 0; i < orderedUnits.Length; i++)
 		{
 			for (int j = 0; j < openTiles.Length; j++)
 			{
-				var footprint = HexCoords.SpiralSelect(openTiles[j], ((IMoveable)orderedUnits[i]).GetSize());
+				var footprint = HexCoords.SpiralSelect(openTiles[j], ((IMoveable)orderedUnits[i]).GetSize(), innerRadius: _map.innerRadius);
 				if (IsValidFootPrint(footprint, openSet, occupiedSet))
 				{
 					for (int x = 0; x < footprint.Length; x++)
