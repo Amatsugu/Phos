@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Unity.Entities.UniversalDelegates;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos.DataStore
 {
+	[Serializable]
 	public struct StatsBuffs
 	{
 		public float structureRange;

@@ -3,14 +3,11 @@ using Amatsugu.Phos.TileEntities;
 
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
-using UnityEngine.ResourceManagement.ResourceProviders.Simulation;
 
 namespace Amatsugu.Phos.Tiles
 {
