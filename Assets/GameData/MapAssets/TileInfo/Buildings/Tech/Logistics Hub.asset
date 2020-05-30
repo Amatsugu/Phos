@@ -65,3 +65,15 @@ MonoBehaviour:
   - id: 25
   - id: 23
   - id: 27
+  effectRange: 5
+  StatsBuffs:
+    structureRange: 0
+    unitRange: 0
+    structureAttack: 0
+    unitAttack: 0
+    structureHealth: 0
+    unitHealth: 0
+    buildSpeedMulti: 0
+    buildCostMulti: 0
+    consumptionMulti: -0.25
+    productionMulti: 0

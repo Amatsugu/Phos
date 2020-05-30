@@ -18,7 +18,8 @@ public class BaseNameWindowUI : MonoBehaviour
 		GameRegistry.INST.baseNameUI = this;
 		panel.OnShow += () =>
 		{
-			text.text = $"{SteamFriends.GetPersonaName()}'s Base";
+			if(SteamManager.Initialized)
+				text.text = $"{SteamFriends.GetPersonaName()}'s Base";
 			EventManager.InvokeEvent("nameWindowOpen");
 		};
 		panel.OnHide += () =>

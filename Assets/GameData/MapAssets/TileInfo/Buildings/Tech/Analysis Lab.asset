@@ -61,3 +61,15 @@ MonoBehaviour:
   adjacencyEffects: []
   buildingsToUnlock:
   - id: 3
+  effectRange: 4
+  StatsBuffs:
+    structureRange: 0
+    unitRange: 0
+    structureAttack: 0
+    unitAttack: 0
+    structureHealth: 0
+    unitHealth: 0
+    buildSpeedMulti: 0
+    buildCostMulti: 0
+    consumptionMulti: 0
+    productionMulti: 1

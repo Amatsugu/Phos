@@ -59,3 +59,15 @@ MonoBehaviour:
   buildingsToUnlock:
   - id: 15
   - id: 16
+  effectRange: 4
+  StatsBuffs:
+    structureRange: 0
+    unitRange: 0
+    structureAttack: 0.2
+    unitAttack: 0.5
+    structureHealth: 0
+    unitHealth: 50
+    buildSpeedMulti: 0
+    buildCostMulti: 0
+    consumptionMulti: 0
+    productionMulti: 0
