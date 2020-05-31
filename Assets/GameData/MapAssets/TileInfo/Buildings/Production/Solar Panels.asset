@@ -49,6 +49,8 @@ MonoBehaviour:
     z: 0
   validator: {fileID: 0}
   cost: []
-  production: []
+  production:
+  - id: 0
+    ammount: 2
   consumption: []
   adjacencyEffects: []

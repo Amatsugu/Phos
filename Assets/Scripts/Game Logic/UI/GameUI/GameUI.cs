@@ -101,7 +101,6 @@ public class GameUI : UIHover
 		if (state == UIState.HQPlacement)
 			return;
 		state = UIState.Idle;
-		Debug.Log("Selection Closed");
 		_actionsPanel.Hide();
 	}
 

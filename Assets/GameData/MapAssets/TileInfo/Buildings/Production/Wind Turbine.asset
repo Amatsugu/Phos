@@ -18,7 +18,7 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  description: Produces power
+  description: Produces power by caprutring enegry from the wind.
   decorators: []
   isTraverseable: 0
   assetGuid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb
@@ -55,7 +55,7 @@ MonoBehaviour:
     ammount: 90
   production:
   - id: 0
-    ammount: 500
+    ammount: 5
   consumption: []
   adjacencyEffects:
   - {fileID: 11400000, guid: 6983612a86089b24aa51f5b539fed83e, type: 2}

@@ -24,10 +24,10 @@ namespace Amatsugu.Phos.Tiles
 
 		protected override void OnBuilt()
 		{
-			base.OnBuilt();
 			_blade = turbineInfo.turbineBlade.Instantiate(SurfacePoint);
 			Map.EM.AddComponentData(_blade, new RotateAxis { Value = math.up() });
 			Map.EM.AddComponentData(_blade, new RotateSpeed { Value = 0 });
+			base.OnBuilt();
 		}
 
 		protected override void OnTick()
