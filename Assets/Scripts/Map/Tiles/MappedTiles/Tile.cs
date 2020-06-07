@@ -209,8 +209,8 @@ namespace Amatsugu.Phos.Tiles
 		{
 			var t = new SeializedTile
 			{
-				tileId = info.GetInstanceID(),
-				origTile = (originalTile == null) ? -1 : originalTile.GetInstanceID(),
+				tileId = GameRegistry.TileDatabase.entityIds[info],
+				origTile = (originalTile == null) ? -1 : GameRegistry.TileDatabase.entityIds[originalTile],
 				height = Height,
 				pos = Coords,
 				tileData = new Dictionary<string, string>()

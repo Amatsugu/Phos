@@ -1,5 +1,7 @@
 ﻿using Amatsugu.Phos.TileEntities;
 
+using System;
+
 using Unity.Entities;
 using UnityEditor;
 using UnityEngine;
@@ -26,10 +28,18 @@ public class MapRenderer : MonoBehaviour
 	private Camera _cam;
 	private Vector3 _lastCamPos;
 	private Quaternion _lastCamRot;
+
+
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
-	[HideInInspector]
-	private Map map2;
+
+	internal void SetMap(Map map)
+	{
+		this.map.Dispose();
+		this.map = map;
+		GameRegistry.InitGame(map);
+		map.Render(_entityManager);
+	}
 
 	private void Start()
 	{
@@ -55,10 +65,6 @@ public class MapRenderer : MonoBehaviour
 		map = generator.GenerateMap(transform);
 		GameRegistry.InitGame(map);
 		generator.GenerateFeatures(map);
-		serializedMap = map.Serialize();
-		//map2 = serializedMap.Deserialize(tileDatabase);
-		//map.Render(_entityManager);
-		//map = Map.ActiveMap = map2;
 		map.Render(_entityManager);
 		/*
 		var col = Cartographer.RenderMap(map, mapRes);

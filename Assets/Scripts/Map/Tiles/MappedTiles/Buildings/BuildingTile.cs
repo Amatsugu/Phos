@@ -1,6 +1,8 @@
 ﻿using Amatsugu.Phos.DataStore;
 using Amatsugu.Phos.TileEntities;
 
+using System.Collections.Generic;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -312,6 +314,19 @@ namespace Amatsugu.Phos.Tiles
 			}
 			return res;
 		}
+
+		public override void OnSerialize(Dictionary<string, string> tileData)
+		{
+			if (IsBuilt)
+				tileData.Add("isBuilt", null);
+		}
+
+		public override void OnDeSerialized(Dictionary<string, string> tileData)
+		{
+			if (tileData.ContainsKey("isBuilt"))
+				_isBuilt = true;
+		}
+
 	}
 
 	public class PoweredBuildingTile : BuildingTile
