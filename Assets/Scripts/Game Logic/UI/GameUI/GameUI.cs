@@ -108,7 +108,11 @@ public class GameUI : UIHover
 	{
 		base.Update();
 		if (isHovered)
+		{
+			_buildPanel.indicatorManager.HideAllIndicators();
+			_buildPanel.indicatorManager.UnSetAllIndicators();
 			return;
+		}
 		switch(state)
 		{
 			case UIState.Idle:

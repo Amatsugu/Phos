@@ -32,6 +32,8 @@ public class UIBuildPanel : UITabPanel
 	public MeshEntity destructionIndicatorEntity;
 
 	public BuildState state;
+	[HideInInspector]
+	public IndicatorManager indicatorManager;
 
 
 
@@ -39,7 +41,6 @@ public class UIBuildPanel : UITabPanel
 	private BuildingTileEntity _selectedBuilding;
 	private int _tier = 1;
 	private BuildingCategory _lastCategory;
-	private IndicatorManager _indicatorManager;
 	private float _poweredTileRangeSq;
 	private Camera _cam;
 	private BuildingDatabase _buildingDatabase;
@@ -73,7 +74,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		base.Start();
 		_cam = GameRegistry.Camera;
-		_indicatorManager = new IndicatorManager(Map.EM, inidcatorOffset, floatingText);
+		indicatorManager = new IndicatorManager(Map.EM, inidcatorOffset, floatingText);
 	}
 
 	void OnGameReady()
@@ -197,11 +198,11 @@ public class UIBuildPanel : UITabPanel
 
 	void DeconstructLogic()
 	{
-		_indicatorManager.UnSetAllIndicators();
+		indicatorManager.UnSetAllIndicators();
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		_indicatorManager.SetIndicator(selectedTile, destructionIndicatorEntity);
+		indicatorManager.SetIndicator(selectedTile, destructionIndicatorEntity);
 		var deconstructable = selectedTile as IDeconstructable;
 		if (deconstructable == null)
 			return;
@@ -259,12 +260,12 @@ public class UIBuildPanel : UITabPanel
 			state = BuildState.Idle;
 			return;
 		}
-		_indicatorManager.UnSetAllIndicators();
-		_indicatorManager.HideAllIndicators();
+		indicatorManager.UnSetAllIndicators();
+		indicatorManager.HideAllIndicators();
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, _indicatorManager);
+		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, indicatorManager);
 		var neighbors = GameRegistry.GameMap.GetNeighbors(selectedTile.Coords);
 		var effects = new List<string>();
 		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
@@ -301,13 +302,13 @@ public class UIBuildPanel : UITabPanel
 				unPoweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
 		}
 		if (poweredTiles.Count > 0)
-			_indicatorManager.ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
+			indicatorManager.ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
 		else
-			_indicatorManager.HideIndicator(poweredTileIndicatorEntity);
+			indicatorManager.HideIndicator(poweredTileIndicatorEntity);
 		if (unPoweredTiles.Count > 0)
-			_indicatorManager.ShowIndicators(unpoweredTileIndicatorEntity, unPoweredTiles.Distinct().ToList());
+			indicatorManager.ShowIndicators(unpoweredTileIndicatorEntity, unPoweredTiles.Distinct().ToList());
 		else
-			_indicatorManager.HideIndicator(unpoweredTileIndicatorEntity);
+			indicatorManager.HideIndicator(unpoweredTileIndicatorEntity);
 	}
 
 	private void PlaceBuilding(Tile selectedTile)
@@ -320,16 +321,16 @@ public class UIBuildPanel : UITabPanel
 			_selectedBuilding = null;
 			floatingText.gameObject.SetActive(false);
 			state = BuildState.Disabled;
-			_indicatorManager.HideAllIndicators();
+			indicatorManager.HideAllIndicators();
 			banner.SetActive(false);
 		}
-		_indicatorManager.UnSetAllIndicators();
+		indicatorManager.UnSetAllIndicators();
 	}
 
 	void HideIndicators()
 	{
-		_indicatorManager.HideAllIndicators();
-		_indicatorManager.UnSetAllIndicators();
+		indicatorManager.HideAllIndicators();
+		indicatorManager.UnSetAllIndicators();
 	}
 
 	private void ShowErrors()
@@ -339,7 +340,7 @@ public class UIBuildPanel : UITabPanel
 			NotificationsUI.Notify(NotifType.Error, _errors[i]);
 		_errors.Clear();
 		*/
-		_indicatorManager.PublishAndClearErrors();
+		indicatorManager.PublishAndClearErrors();
 	}
 
 }
