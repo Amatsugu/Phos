@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Amatsugu.Phos.DataStore;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using UnityEditor.Experimental.GraphView;
 
 using UnityEngine;
 
@@ -26,6 +30,30 @@ namespace DataStore.ConduitGraph
 			nodes = new Dictionary<int, ConduitNode>();
 			_coordMap = new Dictionary<HexCoords, int>();
 			_baseNode = CreateNode(baseNode, hqNodeHeight);
+		}
+
+		public ConduitGraph(ConduitNode baseNode, int maxConnections = 6)
+		{
+			this.maxConnections = maxConnections;
+			nodes = new Dictionary<int, ConduitNode>();
+			_coordMap = new Dictionary<HexCoords, int>();
+			_baseNode = baseNode;
+		}
+
+		public SerializedConduitGrapth Serialize()
+		{
+			return new SerializedConduitGrapth
+			{
+				baseNode = _baseNode,
+				curId = _curId,
+				maxConnections = maxConnections,
+				nodes = nodes.Values.ToArray()
+			};
+		}
+
+		internal void SetID(int curId)
+		{
+			_curId = curId;
 		}
 
 		public ConduitNode GetNode(HexCoords nodePos) => nodes[_coordMap[nodePos]];
@@ -313,6 +341,7 @@ namespace DataStore.ConduitGraph
 		}
 	}
 
+	[Serializable]
 	public class ConduitNode
 	{
 		public readonly int maxConnections;

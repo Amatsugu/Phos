@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Amatsugu.Phos.DataStore;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using TMPro;
+
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -14,6 +19,7 @@ public class SerializedMap
 	public float seaLevel;
 	public string name;
 	public SeializedTile[] tiles;
+	public SerializedConduitGrapth conduitGrapth;
 
 	public Map Deserialize(TileDatabase db)
 	{
@@ -26,6 +32,7 @@ public class SerializedMap
 				map[curTile.pos].originalTile = db.tileEntites[curTile.origTile].tile;
 			map[curTile.pos].OnDeSerialized(curTile.tileData);
 		}
+		map.conduitGraph = conduitGrapth.Deserialize();
 		return map;
 	}
 }

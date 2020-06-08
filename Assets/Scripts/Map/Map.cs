@@ -418,7 +418,8 @@ public class Map : IDisposable
 			seaLevel = seaLevel,
 			seed = Seed,
 			tileEdgeLength = tileEdgeLength,
-			tiles = new SeializedTile[length * MapChunk.SIZE * MapChunk.SIZE]
+			tiles = new SeializedTile[length * MapChunk.SIZE * MapChunk.SIZE],
+			conduitGrapth = conduitGraph.Serialize()
 		};
 		int k = 0;
 		for (int i = 0; i < chunks.Length; i++)

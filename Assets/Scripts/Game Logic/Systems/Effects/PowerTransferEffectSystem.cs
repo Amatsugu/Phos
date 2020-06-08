@@ -30,18 +30,17 @@ public class PowerTransferEffectSystem : ComponentSystem
 	{
 		base.OnStartRunning();
 		_map = GameRegistry.GameMap;
-		GameEvents.OnHQPlaced += OnHQ;
+		GameEvents.OnMapLoaded += OnLoad;
 		GameEvents.OnMapDestroyed += DestroyAll;
 		_effectPaths = new Dictionary<int, List<Vector3>>();
 		_removalList = new HashSet<int>();
 		GameEvents.OnMapLoaded -= Init;
 	}
 
-	private void OnHQ()
+	private void OnLoad()
 	{
 		_conduitGraph = _map.conduitGraph;
 		_conduitGraph.OnNodeRemoved += OnNodeRemoved;
-		GameEvents.OnHQPlaced -= OnHQ;
 	}
 
 	private void OnNodeRemoved(ConduitNode node)
