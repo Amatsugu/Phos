@@ -16,15 +16,15 @@ namespace Amatsugu.Phos.Tiles
 	public class BuildingTile : Tile, IDeconstructable
 	{
 		public readonly BuildingTileEntity buildingInfo;
-		public int distanceToHQ;
 		public int upgradeLevel = 0;
-		public bool IsBuilt => _isBuilt;
+		public bool IsBuilt => isBuilt;
 
 		protected StatsBuffs buffs;
+		protected bool isBuilt;
+		protected bool buidlingRendered;
 
 		private Entity _building;
 		private Entity _offshorePlatform;
-		protected bool _isBuilt;
 		private NativeArray<Entity> _healthBars;
 		private NativeArray<Entity> _adjacencyConnectors;
 		private int _connectorCount;
@@ -38,10 +38,10 @@ namespace Amatsugu.Phos.Tiles
 		public override Entity Render()
 		{
 			var e = base.Render();
-			if (_isBuilt)
+			if (isBuilt)
 			{
-				_isBuilt = false;
-				Build();
+				isBuilt = false;
+				RenderBuilding();
 			}
 			return e;
 		}
@@ -120,11 +120,17 @@ namespace Amatsugu.Phos.Tiles
 
 		public void Build()
 		{
-			if (_isBuilt)
+			if (isBuilt)
 				return;
-			_isBuilt = true;
+			isBuilt = true;
 			if (buildingInfo.constructionMesh != null)
 				Map.EM.DestroyEntity(_building);
+			RenderBuilding();
+			OnBuilt();
+		}
+
+		public virtual void RenderBuilding()
+		{
 			if (buildingInfo.buildingMesh.mesh == null)
 				UnityEngine.Debug.LogWarning($"No Building Assigned for {base.GetName()}");
 			else
@@ -133,7 +139,6 @@ namespace Amatsugu.Phos.Tiles
 			if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
 				_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
 			PrepareEntity();
-			OnBuilt();
 			ApplyBonuses();
 			RenderDecorators();
 		}
@@ -319,12 +324,14 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (IsBuilt)
 				tileData.Add("isBuilt", null);
+			base.OnDeSerialized(tileData);
 		}
 
 		public override void OnDeSerialized(Dictionary<string, string> tileData)
 		{
 			if (tileData.ContainsKey("isBuilt"))
-				_isBuilt = true;
+				isBuilt = true;
+			base.OnDeSerialized(tileData);
 		}
 
 	}
@@ -347,14 +354,14 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void OnPlaced()
 		{
-			distanceToHQ = (int)Vector3.Distance(SurfacePoint, map.HQ.SurfacePoint);
 			base.OnPlaced();
 		}
 
 		protected override void OnBuilt()
 		{
 			base.OnBuilt();
-			FindConduitConnections();
+			if(!_connectionInit)
+				FindConduitConnections();
 		}
 
 		protected virtual void OnBuiltAndPowered()
@@ -425,6 +432,20 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void OnDisconnected()
 		{
 
+		}
+
+		public override void OnSerialize(Dictionary<string, string> tileData)
+		{
+			base.OnSerialize(tileData);
+			tileData.Add("connectionInit", null);
+			tileData.Add("hasHQConnection", null);
+		}
+
+		public override void OnDeSerialized(Dictionary<string, string> tileData)
+		{
+			_connectionInit = tileData.ContainsKey("connectionInit");
+			HasHQConnection = tileData.ContainsKey("hasHQConnection");
+			base.OnDeSerialized(tileData);
 		}
 
 		public override void OnRemoved()

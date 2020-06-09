@@ -93,7 +93,6 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnPlaced()
 		{
 			base.OnPlaced();
-			Debug.Log("Node Added");
 			map.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
 		}
 
@@ -122,11 +121,11 @@ namespace Amatsugu.Phos.Tiles
 
 				thisNode.ConnectTo(closest[i]);
 
-				//var tile = map[closest[i].conduitPos];
+				/*//var tile = map[closest[i].conduitPos];
 				var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
 				var b = Coords.world + new float3(0, thisNode.height, 0);
 				var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
-				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));
+				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));*/
 				if (thisNode.IsFull)
 					break;
 			}
@@ -282,6 +281,23 @@ namespace Amatsugu.Phos.Tiles
 			return base.GetDescription() + $"\nConnections Lines: {_conduitLines.Count}" +
 				$"\nConnected Nodes: {map.conduitGraph.GetNode(Coords).ConnectionCount}/{map.conduitGraph.maxConnections}" +
 				$"\nRange {_poweredRangeSq} {HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius)}";
+		}
+
+		public override void RenderBuilding()
+		{
+			base.RenderBuilding();
+			var thisNode = map.conduitGraph.GetNode(Coords);
+			var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
+			var b = Coords.world + new float3(0, thisNode.height, 0);
+			var connections = map.conduitGraph.GetConnections(thisNode);
+			if (connections == null)
+				return;
+			for (int i = 0; i < connections.Length; i++)
+			{
+				var c = connections[i];
+				var a = c.conduitPos.world + new float3(0, c.height, 0);
+				_conduitLines.Add(c.conduitPos, LineFactory.CreateStaticLine(line, a, b));
+			}
 		}
 
 		public override void Destroy()

@@ -24,6 +24,7 @@ public class SerializedMap
 	public Map Deserialize(TileDatabase db)
 	{
 		var map = new Map(height, width, seed, tileEdgeLength);
+		map.conduitGraph = conduitGrapth.Deserialize();
 		for (int i = 0; i < tiles.Length; i++)
 		{
 			var curTile = tiles[i];
@@ -32,7 +33,6 @@ public class SerializedMap
 				map[curTile.pos].originalTile = db.tileEntites[curTile.origTile].tile;
 			map[curTile.pos].OnDeSerialized(curTile.tileData);
 		}
-		map.conduitGraph = conduitGrapth.Deserialize();
 		return map;
 	}
 }

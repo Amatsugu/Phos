@@ -36,6 +36,7 @@ namespace Amatsugu.Phos.UI
 		{
 			Debug.Log("Quick Load");
 			_renderer.SetMap(_map.Deserialize(GameRegistry.TileDatabase));
+			GameEvents.InvokeOnMapLoaded();
 		}
 	}
 }

@@ -91,3 +91,11 @@ The following packages were updated:
   com.unity.addressables from version 1.7.5 to 1.8.3
   com.unity.render-pipelines.high-definition from version 8.0.1 to 8.1.0
   com.unity.scriptablebuildpipeline from version 1.6.5-preview to 1.7.2
+
+=== Tue Jun  9 07:43:20 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.test-framework from version 1.1.13 to 1.1.14

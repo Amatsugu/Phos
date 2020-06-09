@@ -23,10 +23,9 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnPlaced()
 		{
 #if DEBUG
-			if (map.HQ != null)
+			if (map.conduitGraph != null)
 				throw new Exception("Second HQ added");
 #endif
-			map.HQ = this;
 			map.conduitGraph = new ConduitGraph(Coords, Height + 3);
 			var tilesToReplace = map.GetNeighbors(Coords);
 			for (int i = 0; i < tilesToReplace.Length; i++)

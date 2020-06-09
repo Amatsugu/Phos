@@ -16,7 +16,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public PhosCoreTile(HexCoords coords, float height, Map map, PhosCoreTileInfo tInfo) : base(coords, height, map, tInfo)
 		{
-			_isBuilt = true;
+			isBuilt = true;
 			_phosInfo = tInfo;
 		}
 

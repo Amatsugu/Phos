@@ -36,7 +36,6 @@ public class Map : IDisposable
 	public int Seed { get; private set; }
 
 
-	public HQTile HQ;
 	public ConduitGraph conduitGraph;
 	public Dictionary<int, MobileUnit> units;
 	

@@ -26,8 +26,8 @@ namespace Amatsugu.Phos.DataStore
 				var node = nodes[i];
 				g.nodes.Add(node.id, node);
 				g._coordMap.Add(node.conduitPos, node.id);
-				g.SetID(curId);
 			}
+			g.SetID(curId);
 			return g;
 		}
 	}
