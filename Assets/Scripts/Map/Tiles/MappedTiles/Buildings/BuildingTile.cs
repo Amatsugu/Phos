@@ -125,8 +125,8 @@ namespace Amatsugu.Phos.Tiles
 			isBuilt = true;
 			if (buildingInfo.constructionMesh != null)
 				Map.EM.DestroyEntity(_building);
-			RenderBuilding();
 			OnBuilt();
+			RenderBuilding();
 		}
 
 		public virtual void RenderBuilding()

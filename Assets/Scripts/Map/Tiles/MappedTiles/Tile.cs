@@ -205,9 +205,9 @@ namespace Amatsugu.Phos.Tiles
 			return _tileEntity;
 		}
 
-		public SeializedTile Serialize()
+		public SerializedTile Serialize()
 		{
-			var t = new SeializedTile
+			var t = new SerializedTile
 			{
 				tileId = GameRegistry.TileDatabase.entityIds[info],
 				origTile = (originalTile == null) ? -1 : GameRegistry.TileDatabase.entityIds[originalTile],

@@ -19,9 +19,15 @@ MonoBehaviour:
   isStatic: 0
   nonUniformScale: 0
   moveSpeed: 10
+  attackRange: 20
   attackSpeed: 10
   maxHealth: 100
   size: 0
+  tier: 0
+  unitDomain:
+    Value: 0
+  unitClass:
+    Value: 1
   centerOfMassOffset:
     x: 0
     y: 0.5

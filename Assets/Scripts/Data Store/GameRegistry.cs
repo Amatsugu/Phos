@@ -28,6 +28,7 @@ public class GameRegistry : MonoBehaviour
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
 	public static ResearchSystem ResearchSystem => INST.researchSystem;
 	public static TileDatabase TileDatabase => INST.tileDatabase;
+	public static UnitDatabase UnitDatabase => INST.unitDatabase;
 	public static Map GameMap => INST.gameState.map;
 	public static RarityColors RarityColors => INST.rarityColors;
 
@@ -40,6 +41,7 @@ public class GameRegistry : MonoBehaviour
 	public ResourceSystem resourceSystem;
 	public ResearchSystem researchSystem;
 	public TileDatabase tileDatabase;
+	public UnitDatabase unitDatabase;
 	public GameState gameState;
 	public BuildingDatabase buildingDatabase;
 	public RarityColors rarityColors;

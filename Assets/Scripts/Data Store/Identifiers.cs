@@ -12,7 +12,7 @@ public class TileIdenifier
 }
 
 [System.Serializable]
-public struct UnitIdentifier
+public class UnitIdentifier
 {
-	public MobileUnitEntity unit;
+	public int id = -1;
 }

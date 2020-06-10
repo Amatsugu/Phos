@@ -1,5 +1,8 @@
 ﻿using Amatsugu.Phos.TileEntities;
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace Amatsugu.Phos.Tiles
 {
 	public class ResourceTile : Tile
@@ -15,6 +18,21 @@ namespace Amatsugu.Phos.Tiles
 		public override TileEntity GetMeshEntity()
 		{
 			return originalTile ?? info;
+		}
+
+		public override void OnSerialize(Dictionary<string, string> tileData)
+		{
+			base.OnSerialize(tileData);
+			tileData.Add($"{nameof(ResourceTile)}.gatherer.X", gatherer.X.ToString());
+			tileData.Add($"{nameof(ResourceTile)}.gatherer.Y", gatherer.Y.ToString());
+		}
+
+		public override void OnDeSerialized(Dictionary<string, string> tileData)
+		{
+			var x = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.X"]);
+			var y = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.Y"]);
+			gatherer = new HexCoords(x, y, map.tileEdgeLength, map.innerRadius);
+			base.OnDeSerialized(tileData);
 		}
 	}
 }

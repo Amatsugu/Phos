@@ -18,6 +18,7 @@ public class MobileUnitEntity : MeshEntityRotatable
 	public float maxHealth;
 	public int size;
 	[Header("Classification")]
+	public int tier;
 	public UnitDomain unitDomain;
 	public UnitClass unitClass;
 	[Header("Misc")]

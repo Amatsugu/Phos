@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 using System;
 
 using Unity.Mathematics;
@@ -15,6 +17,7 @@ public struct HexCoords : IEquatable<HexCoords>
 	public readonly int Y;
 
 	[SerializeField]
+	[JsonIgnore]
 	public int Z => -X - Y;
 
 	//Hex info

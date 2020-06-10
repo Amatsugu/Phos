@@ -11,6 +11,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
+using Unity.Transforms;
 
 using UnityEngine;
 
@@ -417,7 +418,7 @@ public class Map : IDisposable
 			seaLevel = seaLevel,
 			seed = Seed,
 			tileEdgeLength = tileEdgeLength,
-			tiles = new SeializedTile[length * MapChunk.SIZE * MapChunk.SIZE],
+			tiles = new SerializedTile[length * MapChunk.SIZE * MapChunk.SIZE],
 			conduitGrapth = conduitGraph.Serialize()
 		};
 		int k = 0;
@@ -429,6 +430,15 @@ public class Map : IDisposable
 				map.tiles[k++] = curT.Serialize();
 			}
 		}
+		//TODO: Unit Serialization
+		map.units = units.Select(u =>
+		{
+			return new SerializedUnit
+			{
+				unitId = GameRegistry.UnitDatabase.entityIds[u.Value.info],
+				pos = HexCoords.FromPosition(Map.EM.GetComponentData<Translation>(u.Value.Entity).Value, map.tileEdgeLength),
+			};
+		}).ToArray();
 		return map;
 	}
 

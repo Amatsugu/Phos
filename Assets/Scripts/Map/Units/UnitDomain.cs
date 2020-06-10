@@ -1,6 +1,7 @@
 ﻿using System;
 using Unity.Entities;
 
+[Serializable]
 public struct UnitDomain : IComponentData, IEquatable<UnitDomain>
 {
 	public Domain Value;
@@ -27,6 +28,7 @@ public struct UnitDomain : IComponentData, IEquatable<UnitDomain>
 }
 
 
+[Serializable]
 public struct UnitClass : IComponentData, IEquatable<UnitClass>
 {
 	public Class Value;
