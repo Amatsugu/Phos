@@ -28,9 +28,9 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	public Entity Entity;
 	public Entity HeadEntity;
 	public bool IsRendered { get; protected set; }
+	public Faction Faction { get; protected set; }
 
 	private bool _isShown;
-	private Faction _faction;
 	private NativeArray<Entity> _healhBar;
 	private Vector3 _startPos;
 	protected Map map;
@@ -46,7 +46,7 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 		this.map = map;
 		_startPos = tile.SurfacePoint;
 		//Coords = tile.Coords;
-		_faction = faction;
+		Faction = faction;
 #if DEBUG
 		if(!hasVerified)
 			ValidateCommands();
@@ -82,10 +82,10 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 		if (IsRendered)
 			return Entity;
 		IsRendered = _isShown = true;
-		Entity = info.Instantiate(_startPos, Quaternion.identity, id, _faction);
+		Entity = info.Instantiate(_startPos, Quaternion.identity, id, Faction);
 		if (info.head != null)
 			HeadEntity = info.head.Instantiate(_startPos, new float3(1, 1, 1), Quaternion.identity);
-		Map.EM.SetComponentData(Entity, new FactionId { Value = _faction });
+		Map.EM.SetComponentData(Entity, new FactionId { Value = Faction });
 		if(info.healthBar != null)
 			_healhBar = info.healthBar.Instantiate(Entity, info.centerOfMassOffset + info.healthBarOffset);
 		return Entity;

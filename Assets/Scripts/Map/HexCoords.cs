@@ -16,20 +16,23 @@ public struct HexCoords : IEquatable<HexCoords>
 	[SerializeField]
 	public readonly int Y;
 
-	[SerializeField]
 	[JsonIgnore]
 	public int Z => -X - Y;
 
 	//Hex info
 	[HideInInspector]
+	[SerializeField]
 	public readonly float edgeLength;
 
 	//World Pos
+	[SerializeField]
 	public readonly float3 world;
 
 	//Offsets
+	[SerializeField]
 	public readonly int2 offsetCoords;
 
+	[SerializeField]
 	public readonly bool isCreated;
 
 	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null)

@@ -99,3 +99,12 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.test-framework from version 1.1.13 to 1.1.14
+
+=== Thu Jun 11 09:00:17 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.addressables from version 1.8.3 to 1.8.4
+  com.unity.scriptablebuildpipeline from version 1.7.2 to 1.7.3

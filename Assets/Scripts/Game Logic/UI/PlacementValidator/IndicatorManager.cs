@@ -89,7 +89,14 @@ public class IndicatorManager
 
 	public void UnSetAllIndicators()
 	{
-		_EM.DestroyEntity(_entities);
+		if(_nextEntityIndex != 0)
+		{
+			for (int i = 0; i < _nextEntityIndex; i++)
+			{
+				if(_EM.Exists(_entities[i]))
+					_EM.DestroyEntity(_entities[i]);
+			}
+		}
 		_renderedIndicators.Clear();
 		_errors.Clear();
 		_nextEntityIndex = 0;

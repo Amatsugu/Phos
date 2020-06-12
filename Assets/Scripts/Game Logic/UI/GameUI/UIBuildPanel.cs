@@ -67,6 +67,7 @@ public class UIBuildPanel : UITabPanel
 		GameEvents.OnGameReady += OnGameReady;
 		_poweredTileRangeSq = showPowerRange * showPowerRange;
 		_buildingDatabase = GameRegistry.BuildingDatabase;
+		indicatorManager = new IndicatorManager(World.DefaultGameObjectInjectionWorld.EntityManager, inidcatorOffset, floatingText);
 		base.Awake();
 	}
 
@@ -74,7 +75,6 @@ public class UIBuildPanel : UITabPanel
 	{
 		base.Start();
 		_cam = GameRegistry.Camera;
-		indicatorManager = new IndicatorManager(Map.EM, inidcatorOffset, floatingText);
 	}
 
 	void OnGameReady()
@@ -329,6 +329,8 @@ public class UIBuildPanel : UITabPanel
 
 	void HideIndicators()
 	{
+		if (indicatorManager == null)
+			return;
 		indicatorManager.HideAllIndicators();
 		indicatorManager.UnSetAllIndicators();
 	}

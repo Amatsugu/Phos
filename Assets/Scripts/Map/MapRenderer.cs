@@ -39,15 +39,18 @@ public class MapRenderer : MonoBehaviour
 		this.map = map;
 		GameRegistry.InitGame(map);
 		map.Render(_entityManager);
+		_lastCamPos = default;
+		_lastCamRot = default;
+		GameEvents.InvokeOnMapLoaded();
 	}
 
 	private void Start()
 	{
 		_cam = GameRegistry.Camera;
-		Init();
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
 		min = Vector3.zero;
+		Init();
 		max = new Vector3(map.totalWidth * map.shortDiagonal, 0, map.totalHeight * 1.5f);
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 		GameEvents.OnMapRegen += Regenerate;

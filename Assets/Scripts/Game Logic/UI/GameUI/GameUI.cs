@@ -1,4 +1,6 @@
 ﻿using Steamworks;
+
+using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
@@ -55,6 +57,12 @@ public class GameUI : UIHover
 		_categoryPanel.SetInteractable(false);
 	}
 
+	private void OnMapLoad()
+	{
+		_selectionPanel.Hide();
+		_buildPanel.Hide();
+	}
+
 	protected override void Start()
 	{
 		base.Start();
@@ -71,6 +79,7 @@ public class GameUI : UIHover
 		state = UIState.HQPlacement;
 		_selectionPanel.OnHide += OnSelectionClosed;
 		_buildPanel.OnHide += OnBuildPanelClosed;
+		GameEvents.OnMapLoaded += OnMapLoad;
 	}
 
 	private void CategorySelected(BuildingCategory category)

@@ -6,6 +6,7 @@ using System.Linq;
 
 using TMPro;
 
+using Unity.Mathematics;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -43,7 +44,7 @@ public class SerializedMap
 		for (int i = 0; i < units.Length; i++)
 		{
 			var sUnit = units[i];
-			map.AddUnit(unitDb.unitEntites[sUnit.unitId].unit, map[sUnit.pos], default);
+			map.AddUnit(unitDb.unitEntites[sUnit.unitId].unit, map[HexCoords.FromPosition(sUnit.pos, map.tileEdgeLength)], sUnit.faction);
 		}
 		return map;
 	}
@@ -62,6 +63,6 @@ public struct SerializedTile
 public struct SerializedUnit
 {
 	public int unitId;
-	public HexCoords pos;
+	public float3 pos;
 	public Faction faction;
 }

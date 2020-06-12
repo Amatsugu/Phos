@@ -3,6 +3,8 @@ using Amatsugu.Phos.Tiles;
 
 using DataStore.ConduitGraph;
 
+using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,11 +145,11 @@ public class Map : IDisposable
 		IsRendered = true;
 		if (EM == default)
 			EM = entityManager;
-		/*
-		for (int i = 0; i < Chunks.Length; i++)
+		
+		foreach(var unit in units)
 		{
-			Chunks[i].Render();
-		}*/
+			unit.Value.Render();
+		}
 	}
 
 	/// <summary>
@@ -351,6 +353,7 @@ public class Map : IDisposable
 		if (nT.info is TechBuildingEntity techB && !_techBuildings.Contains(techB))
 			_techBuildings.Add(techB);
 		OnTilePlaced?.Invoke(coord);
+		Debug.Log(JsonConvert.SerializeObject(tile.Coords.world));
 		return nT;
 	}
 
@@ -433,10 +436,12 @@ public class Map : IDisposable
 		//TODO: Unit Serialization
 		map.units = units.Select(u =>
 		{
+			var id = GameRegistry.UnitDatabase.entityIds[u.Value.info];
 			return new SerializedUnit
 			{
-				unitId = GameRegistry.UnitDatabase.entityIds[u.Value.info],
-				pos = HexCoords.FromPosition(Map.EM.GetComponentData<Translation>(u.Value.Entity).Value, map.tileEdgeLength),
+				unitId = id,
+				pos = EM.GetComponentData<Translation>(u.Value.Entity).Value,
+				faction = u.Value.Faction
 			};
 		}).ToArray();
 		return map;
