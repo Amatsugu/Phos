@@ -21,18 +21,14 @@ public struct HexCoords : IEquatable<HexCoords>
 
 	//Hex info
 	[HideInInspector]
-	[SerializeField]
 	public readonly float edgeLength;
 
 	//World Pos
-	[SerializeField]
 	public readonly float3 world;
 
 	//Offsets
-	[SerializeField]
 	public readonly int2 offsetCoords;
 
-	[SerializeField]
 	public readonly bool isCreated;
 
 	public HexCoords(int x, int y, float edgeLength, float? innerRadius = null)

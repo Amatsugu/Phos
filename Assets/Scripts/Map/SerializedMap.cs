@@ -1,4 +1,7 @@
 ﻿using Amatsugu.Phos.DataStore;
+using Amatsugu.Phos.Tiles;
+
+using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
@@ -23,6 +26,7 @@ public class SerializedMap
 	public string name;
 	public SerializedTile[] tiles;
 	public SerializedUnit[] units;
+	[JsonIgnore]
 	public SerializedConduitGrapth conduitGrapth;
 
 	public Map Deserialize(TileDatabase tileDb, UnitDatabase unitDb)
@@ -34,17 +38,18 @@ public class SerializedMap
 		for (int i = 0; i < tiles.Length; i++)
 		{
 			var curTile = tiles[i];
-			map[curTile.pos] = tileDb.tileEntites[curTile.tileId].tile.CreateTile(map, curTile.pos, curTile.height);
+			var pos = new HexCoords(curTile.x, curTile.y, tileEdgeLength, map.innerRadius);
+			map[pos] = tileDb.tileEntites[curTile.tileId].tile.CreateTile(map, pos, curTile.height);
 			if (curTile.origTile != -1)
-				map[curTile.pos].originalTile = tileDb.tileEntites[curTile.origTile].tile;
-			map[curTile.pos].OnDeSerialized(curTile.tileData);
+				map[pos].originalTile = tileDb.tileEntites[curTile.origTile].tile;
+			map[pos].OnDeSerialized(curTile.tileData);
 		}
 		//TODO: Complete serializtion of units
 		map.units = new Dictionary<int, MobileUnit>();
 		for (int i = 0; i < units.Length; i++)
 		{
 			var sUnit = units[i];
-			map.AddUnit(unitDb.unitEntites[sUnit.unitId].unit, map[HexCoords.FromPosition(sUnit.pos, map.tileEdgeLength)], sUnit.faction);
+			map.AddUnit(unitDb.unitEntites[sUnit.unitId].unit, map[new HexCoords(sUnit.x, sUnit.y, tileEdgeLength, map.innerRadius)], sUnit.faction);
 		}
 		return map;
 	}
@@ -56,13 +61,13 @@ public struct SerializedTile
 	public int tileId;
 	public int origTile;
 	public float height;
-	public HexCoords pos;
+	public int x, y;
 	public Dictionary<string, string> tileData;
 }
 
 public struct SerializedUnit
 {
 	public int unitId;
-	public float3 pos;
+	public int x, y;
 	public Faction faction;
 }

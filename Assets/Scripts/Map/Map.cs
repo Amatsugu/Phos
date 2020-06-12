@@ -353,7 +353,6 @@ public class Map : IDisposable
 		if (nT.info is TechBuildingEntity techB && !_techBuildings.Contains(techB))
 			_techBuildings.Add(techB);
 		OnTilePlaced?.Invoke(coord);
-		Debug.Log(JsonConvert.SerializeObject(tile.Coords.world));
 		return nT;
 	}
 
@@ -437,10 +436,12 @@ public class Map : IDisposable
 		map.units = units.Select(u =>
 		{
 			var id = GameRegistry.UnitDatabase.entityIds[u.Value.info];
+			var coords = HexCoords.FromPosition(EM.GetComponentData<Translation>(u.Value.Entity).Value, map.tileEdgeLength);
 			return new SerializedUnit
 			{
 				unitId = id,
-				pos = EM.GetComponentData<Translation>(u.Value.Entity).Value,
+				x = coords.X,
+				y = coords.Y,
 				faction = u.Value.Faction
 			};
 		}).ToArray();

@@ -212,7 +212,8 @@ namespace Amatsugu.Phos.Tiles
 				tileId = GameRegistry.TileDatabase.entityIds[info],
 				origTile = (originalTile == null) ? -1 : GameRegistry.TileDatabase.entityIds[originalTile],
 				height = Height,
-				pos = Coords,
+				x = Coords.X,
+				y = Coords.Y,
 				tileData = new Dictionary<string, string>()
 			};
 			OnSerialize(t.tileData);

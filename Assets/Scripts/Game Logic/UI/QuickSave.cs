@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +33,7 @@ namespace Amatsugu.Phos.UI
 		{
 			Debug.Log("Quick Save");
 			_map = GameRegistry.GameMap.Serialize();
+			File.WriteAllText("quicksave.json", JsonConvert.SerializeObject(_map));
 		}
 
 		void Load()
