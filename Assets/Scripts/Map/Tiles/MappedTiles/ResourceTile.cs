@@ -36,7 +36,7 @@ namespace Amatsugu.Phos.Tiles
 			{
 				var x = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.X"]);
 				var y = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.Y"]);
-				gatherer = new HexCoords(x, y, map.tileEdgeLength, map.innerRadius);
+				gatherer = new HexCoords(x, y, map.tileEdgeLength);
 			}
 			base.OnDeSerialized(tileData);
 		}

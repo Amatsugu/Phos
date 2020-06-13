@@ -106,7 +106,7 @@ public class Map : IDisposable
 	{
 		get
 		{
-			return this[new HexCoords(x, y, tileEdgeLength, innerRadius)];
+			return this[new HexCoords(x, y, tileEdgeLength)];
 		}
 	}
 
@@ -178,7 +178,7 @@ public class Map : IDisposable
 			selection.Add(this[center]);
 			return selection;
 		}
-		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter, innerRadius);
+		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter);
 		for (int i = 0; i < coords.Length; i++)
 			selection.Add(this[coords[i]]);
 
@@ -190,7 +190,7 @@ public class Map : IDisposable
 		radius = Mathf.Abs(radius);
 		if (radius == 0)
 			return;
-		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter, innerRadius);
+		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter);
 		for (int i = 0; i < coords.Length; i++)
 		{
 			var t = this[coords[i]];
@@ -205,7 +205,7 @@ public class Map : IDisposable
 		radius = Mathf.Abs(radius);
 		if (radius == 0)
 			return;
-		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter, innerRadius);
+		var coords = HexCoords.SpiralSelect(center, radius, excludeCenter);
 		for (int i = 0; i < coords.Length; i++)
 		{
 			var t = this[coords[i]];
@@ -260,8 +260,8 @@ public class Map : IDisposable
 		{
 			for (float z = -radius; z < radius; z++)
 			{
-				var p = HexCoords.FromPosition(new Vector3(x + center.world.x, 0, z + center.world.z), innerRadius);
-				var d = Mathf.Pow(p.world.x - center.world.x, 2) + Mathf.Pow(p.world.z - center.world.z, 2);
+				var p = HexCoords.FromPosition(new Vector3(x + center.WorldPos.x, 0, z + center.WorldPos.z), innerRadius);
+				var d = Mathf.Pow(p.WorldPos.x - center.WorldPos.x, 2) + Mathf.Pow(p.WorldPos.z - center.WorldPos.z, 2);
 				if (d <= radius * radius)
 				{
 					var t = this[p];
@@ -300,7 +300,7 @@ public class Map : IDisposable
 		var outerSelection = CircularSelect(center, outerRadius).Except(innerSelection);
 		foreach (var tile in outerSelection)
 		{
-			var d = math.pow(center.world.x - tile.Coords.world.x, 2) + math.pow(center.world.z - tile.Coords.world.z, 2);
+			var d = math.pow(center.WorldPos.x - tile.Coords.WorldPos.x, 2) + math.pow(center.WorldPos.z - tile.Coords.WorldPos.z, 2);
 			d -= innerRadius * innerRadius;
 			d = MathUtils.Remap(d, 0, (outerRadius * outerRadius) - (innerRadius * innerRadius), 0, 1);
 			tile.UpdateHeight(math.lerp(tile.Height, height, 1 - d));
@@ -329,7 +329,7 @@ public class Map : IDisposable
 			outerSelection = outerSelection.Where(t => !t.IsUnderwater);
 		foreach (var tile in outerSelection)
 		{
-			var d = math.pow(center.world.x - tile.Coords.world.x, 2) + Mathf.Pow(center.world.z - tile.Coords.world.z, 2);
+			var d = math.pow(center.WorldPos.x - tile.Coords.WorldPos.x, 2) + Mathf.Pow(center.WorldPos.z - tile.Coords.WorldPos.z, 2);
 			d -= innerRadius * innerRadius * longDiagonal;
 			d = MathUtils.Remap(d, 0, (outerRadius * outerRadius * longDiagonal) - (innerRadius * innerRadius * longDiagonal), 0, 1);
 			tile.UpdateHeight(math.lerp(tile.Height, height, 1 - d));
@@ -366,7 +366,7 @@ public class Map : IDisposable
 
 	public int GetDistance(HexCoords a, HexCoords b)
 	{
-		var dst = math.length(a.world - b.world);
+		var dst = math.length(a.WorldPos - b.WorldPos);
 		var tileDist = Mathf.RoundToInt(dst / (innerRadius * 2));
 		return tileDist;
 	}

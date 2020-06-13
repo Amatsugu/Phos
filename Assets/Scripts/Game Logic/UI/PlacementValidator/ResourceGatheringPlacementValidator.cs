@@ -69,7 +69,7 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 		indicatorManager.floatingText.rectTransform.position = GameRegistry.Camera.WorldToScreenPoint(map[pos].SurfacePoint) + new Vector3(0, 15);
 		bool cannotGather = _resInRange.Count > 0;
 		bool cannotPlace = false;
-		var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size, innerRadius: map.innerRadius);
+		var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size);
 		foreach (var tiles in _resTiles)
 		{
 			for (int i = 0; i < tiles.Value.Count; i++)

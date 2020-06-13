@@ -157,7 +157,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			public PathNode(HexCoords coords, float height, int g, float f = 0)
 			{
 				this.coords = coords;
-				surfacePoint = coords.world;
+				surfacePoint = coords.WorldPos;
 				surfacePoint.y = height;
 				G = g;
 				isCreated = true;
@@ -172,7 +172,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			{
 				for (int i = 0; i < 6; i++)
 				{
-					var n = coords.GetNeighbor(i, innerRadius);
+					var n = coords.GetNeighbor(i);
 					if (navData.ContainsKey(n))
 						neighbors[i] = n;
 					else

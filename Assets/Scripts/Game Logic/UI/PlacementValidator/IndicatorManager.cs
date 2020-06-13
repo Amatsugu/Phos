@@ -62,7 +62,7 @@ public class IndicatorManager
 
 	public void ShowRange(Tile center, int range, MeshEntityRotatable border)
 	{
-		var ring = HexCoords.SelectRing(center.Coords, range, center.map.innerRadius);
+		var ring = HexCoords.SelectRing(center.Coords, range);
 		for (int i = 0; i < ring.Length; i++)
 		{
 			//TODO: Figure out how to render this
@@ -145,7 +145,7 @@ public class IndicatorManager
 				if (i >= _renderedEntities[line])
 					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[line][i]);
 
-				var pos = nodes[j].conduitPos.world + new float3(0, nodes[j].height, 0);
+				var pos = nodes[j].conduitPos.WorldPos + new float3(0, nodes[j].height, 0);
 				LineFactory.UpdateStaticLine(_indicatorEntities[line][i], src, pos, thiccness);
 				c++;
 			}

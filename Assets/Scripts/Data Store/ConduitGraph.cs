@@ -1,5 +1,7 @@
 ﻿using Amatsugu.Phos.DataStore;
 
+using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -331,7 +333,7 @@ namespace DataStore.ConduitGraph
 			List<Vector3> path = new List<Vector3>();
 			do
 			{
-				var cPos = cur.node.conduitPos.world;
+				var cPos = cur.node.conduitPos.WorldPos;
 				cPos.y = cur.node.height;
 				path.Add(cPos);
 				cur = cur.src;
@@ -352,7 +354,9 @@ namespace DataStore.ConduitGraph
 		internal int[] _connections;
 
 		public int ConnectionCount { get; private set; }
+		[JsonIgnore]
 		public bool IsEmpty => ConnectionCount == 0;
+		[JsonIgnore]
 		public bool IsFull => ConnectionCount == maxConnections;
 
 		public ConduitNode(int id, HexCoords pos, float height, int maxConnections = 6)

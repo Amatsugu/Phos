@@ -87,7 +87,7 @@ namespace Amatsugu.Phos.TileEntities
 
 		public virtual Entity Instantiate(HexCoords pos, float height)
 		{
-			var e = Instantiate(new float3(pos.world.x, height, pos.world.z), pos.edgeLength);
+			var e = Instantiate(new float3(pos.WorldPos.x, height, pos.WorldPos.z), pos.edgeLength);
 			Map.EM.SetComponentData(e, new HexPosition { Value = pos });
 
 			return e;

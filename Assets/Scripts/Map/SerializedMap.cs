@@ -26,7 +26,6 @@ public class SerializedMap
 	public string name;
 	public SerializedTile[] tiles;
 	public SerializedUnit[] units;
-	[JsonIgnore] //TODO: solve issues with serialization of float3
 	public SerializedConduitGrapth conduitGrapth;
 
 	public Map Deserialize(TileDatabase tileDb, UnitDatabase unitDb)
@@ -38,7 +37,7 @@ public class SerializedMap
 		for (int i = 0; i < tiles.Length; i++)
 		{
 			var curTile = tiles[i];
-			var pos = new HexCoords(curTile.x, curTile.y, tileEdgeLength, map.innerRadius);
+			var pos = new HexCoords(curTile.x, curTile.y, tileEdgeLength);
 			map[pos] = tileDb.tileEntites[curTile.tileId].tile.CreateTile(map, pos, curTile.height);
 			if (curTile.origTile != -1)
 				map[pos].originalTile = tileDb.tileEntites[curTile.origTile].tile;
@@ -49,7 +48,7 @@ public class SerializedMap
 		for (int i = 0; i < units.Length; i++)
 		{
 			var sUnit = units[i];
-			map.AddUnit(unitDb.unitEntites[sUnit.unitId].unit, map[new HexCoords(sUnit.x, sUnit.y, tileEdgeLength, map.innerRadius)], sUnit.faction);
+			map.AddUnit(unitDb.unitEntites[sUnit.unitId].unit, map[new HexCoords(sUnit.x, sUnit.y, tileEdgeLength)], sUnit.faction);
 		}
 		return map;
 	}

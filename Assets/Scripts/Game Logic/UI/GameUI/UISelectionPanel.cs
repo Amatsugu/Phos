@@ -180,10 +180,10 @@ public class UISelectionPanel : UIPanel
 	private void DisplaySelectionRect()
 	{
 		//Drag Select
-		var p0 = _start.Coords.world;
-		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.offsetCoords.x, _start.Coords.offsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
-		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.offsetCoords.x, _end.Coords.offsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
-		var p3 = _end.Coords.world;
+		var p0 = _start.Coords.WorldPos;
+		var p1 = HexCoords.OffsetToWorldPosXZ(_end.Coords.OffsetCoords.x, _start.Coords.OffsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
+		var p2 = HexCoords.OffsetToWorldPosXZ(_start.Coords.OffsetCoords.x, _end.Coords.OffsetCoords.y, _map.innerRadius, _map.tileEdgeLength);
+		var p3 = _end.Coords.WorldPos;
 #if DEBUG
 		p0.y = p1.y = p2.y = p3.y = (_start.Height + _end.Height) / 2f;
 		Debug.DrawLine(p0, p1, Color.white);

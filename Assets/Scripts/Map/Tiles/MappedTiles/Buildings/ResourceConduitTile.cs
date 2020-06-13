@@ -48,14 +48,14 @@ namespace Amatsugu.Phos.Tiles
 			if (!map.conduitGraph.ContainsNode(Coords))
 				return;
 			var cNode = map.conduitGraph.GetNode(Coords);
-			var thisHeight = Coords.world + new float3(0, cNode.height, 0);
+			var thisHeight = Coords.WorldPos + new float3(0, cNode.height, 0);
 			for (int i = 0; i < lines.Length; i++)
 			{
 				if (map.conduitGraph.ContainsNode(lines[i]))
 				{
 					var curNode = map.conduitGraph.GetNode(lines[i]);
 					var a = thisHeight;
-					var b = curNode.conduitPos.world + new float3(0, curNode.height, 0);
+					var b = curNode.conduitPos.WorldPos + new float3(0, curNode.height, 0);
 					if (_switchLines)
 					{
 						Map.EM.DestroyEntity(_conduitLines[lines[i]]);
@@ -174,8 +174,8 @@ namespace Amatsugu.Phos.Tiles
 				var tile = map[closest[i].conduitPos];
 				if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
 					conduit.HQConnected();
-				var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
-				var b = Coords.world + new float3(0, curNode.height, 0);
+				var a = closest[i].conduitPos.WorldPos + new float3(0, closest[i].height, 0);
+				var b = Coords.WorldPos + new float3(0, curNode.height, 0);
 				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
 				if (curNode.IsFull)
 					break;
@@ -288,14 +288,14 @@ namespace Amatsugu.Phos.Tiles
 			base.RenderBuilding();
 			var thisNode = map.conduitGraph.GetNode(Coords);
 			var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
-			var b = Coords.world + new float3(0, thisNode.height, 0);
+			var b = Coords.WorldPos + new float3(0, thisNode.height, 0);
 			var connections = map.conduitGraph.GetConnections(thisNode);
 			if (connections == null)
 				return;
 			for (int i = 0; i < connections.Length; i++)
 			{
 				var c = connections[i];
-				var a = c.conduitPos.world + new float3(0, c.height, 0);
+				var a = c.conduitPos.WorldPos + new float3(0, c.height, 0);
 				_conduitLines.Add(c.conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			}
 		}

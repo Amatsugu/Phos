@@ -31,8 +31,8 @@ public struct MapChunk
 		var worldCoord = HexCoords.FromOffsetCoords(offsetX * SIZE, offsetZ * SIZE, tileEdgeLength);
 		_bounds = new Bounds
 		{
-			min = worldCoord.world,
-			max = worldCoord.world + new float3(SIZE * shortDiagonal, 100, SIZE * 1.5f)
+			min = worldCoord.WorldPos,
+			max = worldCoord.WorldPos + new float3(SIZE * shortDiagonal, 100, SIZE * 1.5f)
 		};
 		_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 	}

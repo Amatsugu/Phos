@@ -41,13 +41,13 @@ namespace Amatsugu.Phos.Tiles
 			this.map = map;
 			if (height < map.seaLevel)
 			{
-				SurfacePoint = new float3(Coords.world.x, map.seaLevel, Coords.world.z);
+				SurfacePoint = new float3(Coords.WorldPos.x, map.seaLevel, Coords.WorldPos.z);
 				IsUnderwater = true;
 			}
 			else
 			{
 				IsUnderwater = false;
-				SurfacePoint = new float3(Coords.world.x, Height, Coords.world.z);
+				SurfacePoint = new float3(Coords.WorldPos.x, Height, Coords.WorldPos.z);
 			}
 		}
 
@@ -92,13 +92,13 @@ namespace Amatsugu.Phos.Tiles
 			Height = height;
 			if (height < map.seaLevel)
 			{
-				SurfacePoint = new Vector3(Coords.world.x, map.seaLevel, Coords.world.z);
+				SurfacePoint = new Vector3(Coords.WorldPos.x, map.seaLevel, Coords.WorldPos.z);
 				IsUnderwater = true;
 			}
 			else
 			{
 				IsUnderwater = false;
-				SurfacePoint = new Vector3(Coords.world.x, Height, Coords.world.z);
+				SurfacePoint = new Vector3(Coords.WorldPos.x, Height, Coords.WorldPos.z);
 			}
 			OnHeightChanged();
 			UpdateDecorations();

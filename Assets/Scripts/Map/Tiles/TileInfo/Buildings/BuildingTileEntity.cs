@@ -90,7 +90,7 @@ namespace Amatsugu.Phos.TileEntities
 		public override Entity Instantiate(HexCoords pos, float height)
 		{
 			var e = base.Instantiate(pos, height);
-			var p = new float3(pos.world.x, height, pos.world.z);
+			var p = new float3(pos.WorldPos.x, height, pos.WorldPos.z);
 			Map.EM.SetComponentData(e, new CenterOfMass { Value = p + centerOfMassOffset });
 			return e;
 		}
