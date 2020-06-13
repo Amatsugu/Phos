@@ -26,7 +26,7 @@ public class SerializedMap
 	public string name;
 	public SerializedTile[] tiles;
 	public SerializedUnit[] units;
-	[JsonIgnore]
+	[JsonIgnore] //TODO: solve issues with serialization of float3
 	public SerializedConduitGrapth conduitGrapth;
 
 	public Map Deserialize(TileDatabase tileDb, UnitDatabase unitDb)

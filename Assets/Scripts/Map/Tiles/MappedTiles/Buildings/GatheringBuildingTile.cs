@@ -24,7 +24,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		var resTiles = new Dictionary<int, List<ResourceTile>>();
 		map.HexSelectForEach(Coords, fullRange, t =>
 		{
-			if (t is ResourceTile rt && !rt.gatherer.isCreated)
+			if (t is ResourceTile rt && (!rt.gatherer.isCreated || rt.gatherer == Coords))
 			{
 				var yeild = rt.resInfo.resourceYields;
 				for (int i = 0; i < yeild.Length; i++)

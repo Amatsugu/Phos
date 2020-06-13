@@ -97,6 +97,6 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 		if (cannotPlace)
 			indicatorManager.LogError("Cannot place on these tiles");
 
-		return (hasRes && !cannotPlace) && base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
+		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager) && hasRes && (!cannotPlace);
 	}
 }

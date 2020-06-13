@@ -23,15 +23,21 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnSerialize(Dictionary<string, string> tileData)
 		{
 			base.OnSerialize(tileData);
-			tileData.Add($"{nameof(ResourceTile)}.gatherer.X", gatherer.X.ToString());
-			tileData.Add($"{nameof(ResourceTile)}.gatherer.Y", gatherer.Y.ToString());
+			if (gatherer.isCreated)
+			{
+				tileData.Add($"{nameof(ResourceTile)}.gatherer.X", gatherer.X.ToString());
+				tileData.Add($"{nameof(ResourceTile)}.gatherer.Y", gatherer.Y.ToString());
+			}
 		}
 
 		public override void OnDeSerialized(Dictionary<string, string> tileData)
 		{
-			var x = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.X"]);
-			var y = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.Y"]);
-			gatherer = new HexCoords(x, y, map.tileEdgeLength, map.innerRadius);
+			if (tileData.ContainsKey($"{nameof(ResourceTile)}.gatherer.X"))
+			{
+				var x = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.X"]);
+				var y = int.Parse(tileData[$"{nameof(ResourceTile)}.gatherer.Y"]);
+				gatherer = new HexCoords(x, y, map.tileEdgeLength, map.innerRadius);
+			}
 			base.OnDeSerialized(tileData);
 		}
 	}
