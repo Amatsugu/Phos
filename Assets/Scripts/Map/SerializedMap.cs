@@ -54,7 +54,6 @@ public class SerializedMap
 	}
 }
 
-//[Serializable]
 public struct SerializedTile
 {
 	public int tileId;
