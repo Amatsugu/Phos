@@ -162,13 +162,13 @@ Material:
     - Vector1_ACEC88AB: 1.53
     - Vector1_BBFE5044: 0.06
     - Vector1_C4602B0E: 0.406
-    - Vector1_C7DA6486: 0.004
+    - Vector1_C7DA6486: 0.019
     - Vector1_CBD5F7DA: 1
     - Vector1_CF5CC24A: 0.2
     - Vector1_E4B277E8: 1
     - Vector1_E67AA53E: 0.529
     - Vector1_F070807D: 6.551
-    - Vector1_F724FD24: 0.4
+    - Vector1_F724FD24: 0.73
     - Vector1_F80BFA85: 0.44
     - _AORemapMax: 1
     - _AORemapMin: 0
