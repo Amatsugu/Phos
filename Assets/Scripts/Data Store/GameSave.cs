@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,14 +31,27 @@ namespace Amatsugu.Phos.DataStore
 
 		public void Save()
 		{
-			var dir = Application.persistentDataPath;
+			var dir = $"{Application.persistentDataPath}/Saves/{name}";
 			Debug.Log(dir);
+			if(!Directory.Exists(dir))
+			{
+				Directory.CreateDirectory(dir);
+			}
+			File.WriteAllText($"{dir}/gamestate.json", JsonConvert.SerializeObject(gameState));
+			File.WriteAllText($"{dir}/map.json", JsonConvert.SerializeObject(map));
 		}
 
-		public static GameSave Load(string baseDir)
+		public static GameSave Load(string saveName)
 		{
-			GameSave map = default;
-			return map;
+			var dir = $"{Application.persistentDataPath}/Saves/{saveName}";
+			var map = JsonConvert.DeserializeObject<SerializedMap>(File.ReadAllText($"{dir}/map.json"));
+			var state = JsonConvert.DeserializeObject<GameState>(File.ReadAllText($"{dir}/gamestate.json"));
+			GameSave save = new GameSave(saveName)
+			{
+				gameState = state,
+				map = map
+			};
+			return save;
 		}
 	}
 }

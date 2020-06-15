@@ -33,11 +33,12 @@ public class MapRenderer : MonoBehaviour
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
 
-	internal void SetMap(Map map)
+	internal void SetMap(Map map, GameState gameState)
 	{
 		this.map.Dispose();
 		this.map = map;
-		GameRegistry.InitGame(map);
+		gameState.map = map;
+		GameRegistry.InitGame(gameState);
 		map.Render(_entityManager);
 		_lastCamPos = default;
 		_lastCamRot = default;

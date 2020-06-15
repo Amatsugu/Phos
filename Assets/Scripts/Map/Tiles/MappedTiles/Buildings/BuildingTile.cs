@@ -296,16 +296,27 @@ namespace Amatsugu.Phos.Tiles
 		protected virtual void OnBuffRecieved()
 		{
 			var e = GetBuildingEntity();
-			Map.EM.SetComponentData(e, new ProductionMulti { Value = buffs.productionMulti });
-			Map.EM.SetComponentData(e, new ConsumptionMulti { Value = buffs.consumptionMulti });
+			//Production
+			if (!Map.EM.HasComponent<ProductionMulti>(e))
+				Map.EM.AddComponentData(e, new ProductionMulti { Value = buffs.productionMulti });
+			else
+				Map.EM.SetComponentData(e, new ProductionMulti { Value = buffs.productionMulti });
+			//Consumption
+			if(Map.EM.HasComponent<ConsumptionMulti>(e))
+				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = buffs.consumptionMulti });
+			else
+				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = buffs.consumptionMulti });
+			//Health
 			var curHealth = Map.EM.GetComponentData<Health>(e);
 			curHealth.maxHealth = buildingInfo.maxHealth + buffs.structureHealth;
+			curHealth.Value += buffs.structureHealth;
 			Map.EM.SetComponentData(e, curHealth);
 		}
 
 		public void Deconstruct()
 		{
 			map.RevertTile(this);
+			Debug.Log("Destroyed");
 		}
 
 		public bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;
@@ -357,17 +368,17 @@ namespace Amatsugu.Phos.Tiles
 			base.OnPlaced();
 		}
 
-		protected override void OnBuilt()
-		{
-			base.OnBuilt();
-			if(!_connectionInit)
-				FindConduitConnections();
-		}
-
 		protected virtual void OnBuiltAndPowered()
 		{
 
 		}
+
+		protected override void PrepareEntity()
+		{
+			base.PrepareEntity();
+			FindConduitConnections();
+		}
+
 		public virtual void FindConduitConnections()
 		{
 			var closestConduit = map.conduitGraph.GetClosestConduitNode(Coords);

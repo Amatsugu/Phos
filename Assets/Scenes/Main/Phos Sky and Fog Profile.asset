@@ -387,10 +387,10 @@ MonoBehaviour:
     m_Value: 0
   seaLevel:
     m_OverrideState: 1
-    m_Value: -166.7
+    m_Value: 4.9
   planetaryRadius:
-    m_OverrideState: 0
-    m_Value: 6378100
+    m_OverrideState: 1
+    m_Value: 6348808
     min: 0
   planetCenterPosition:
     m_OverrideState: 0
@@ -422,12 +422,12 @@ MonoBehaviour:
     min: 0
   aerosolDensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.063
     min: 0
     max: 1
   aerosolTint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
@@ -491,13 +491,13 @@ MonoBehaviour:
     max: 1
   horizonTint:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0.21301498, b: 0.5019608, a: 1}
+    m_Value: {r: 0.7670471, g: 0.64705884, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0
   zenithTint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.43867922, g: 1, b: 0.9008386, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0

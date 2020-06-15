@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Amatsugu.Phos.DataStore;
+
+using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace Amatsugu.Phos.UI
 {
 	public class QuickSave : MonoBehaviour
 	{
-		private SerializedMap _map;
+		private GameSave gameSave;
 		private MapRenderer _renderer;
 
 		public void Start()
@@ -32,14 +34,16 @@ namespace Amatsugu.Phos.UI
 		void Save()
 		{
 			Debug.Log("Quick Save");
-			_map = GameRegistry.GameMap.Serialize();
-			File.WriteAllText("quicksave.json", JsonConvert.SerializeObject(_map));
+			gameSave = new GameSave("Quick Save");
+			gameSave.SetData(GameRegistry.GameMap.Serialize(), GameRegistry.GameState);
+			gameSave.Save();
 		}
 
 		void Load()
 		{
 			Debug.Log("Quick Load");
-			_renderer.SetMap(_map.Deserialize(GameRegistry.TileDatabase, GameRegistry.UnitDatabase));
+			gameSave = GameSave.Load("Quick Save");
+			_renderer.SetMap(gameSave.map.Deserialize(GameRegistry.TileDatabase, GameRegistry.UnitDatabase), gameSave.gameState);
 		}
 	}
 }

@@ -25,7 +25,13 @@ public class BaseNameWindowUI : MonoBehaviour
 		panel.OnHide += () =>
 		{
 			baseNameText.text = text.text;
+			GameRegistry.SetBaseName(text.text);
 			EventManager.InvokeEvent("nameWindowClose");
+		};
+
+		GameEvents.OnMapLoaded += () =>
+		{
+			baseNameText.text = GameRegistry.GameState.baseName;
 		};
 	}
 }

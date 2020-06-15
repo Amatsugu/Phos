@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using UnityEngine;
@@ -22,12 +23,25 @@ public class GameRegistry : MonoBehaviour
 	public static BaseNameWindowUI BaseNameUI => INST.baseNameUI;
 	public static ResearchTreeUI ResearchTreeUI => INST.researchTreeUI;
 	public static Camera Camera => INST.mainCamera;
+
+	internal static void SetBaseName(string name)
+	{
+		INST.gameState.baseName = name;
+	}
+
 	public static CameraController CameraController => INST.cameraController;
 	public static BuildingDatabase BuildingDatabase => INST.buildingDatabase;
 	public static ResearchDatabase ResearchDatabase => INST.researchDatabase;
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
 	public static ResearchSystem ResearchSystem => INST.researchSystem;
 	public static TileDatabase TileDatabase => INST.tileDatabase;
+
+	internal static void SetState(GameState gameState)
+	{
+		INST.gameState = gameState;
+		ResourceSystem.resCount = gameState.resCount;
+	}
+
 	public static UnitDatabase UnitDatabase => INST.unitDatabase;
 	public static Map GameMap => INST.gameState.map;
 	public static RarityColors RarityColors => INST.rarityColors;
@@ -46,6 +60,12 @@ public class GameRegistry : MonoBehaviour
 	public BuildingDatabase buildingDatabase;
 	public RarityColors rarityColors;
 
+
+	public static void InitGame(GameState gameState)
+	{
+		INST.gameState = gameState;
+		ResourceSystem.resCount = gameState.resCount;
+	}
 
 	public static void InitGame(Map map)
 	{
