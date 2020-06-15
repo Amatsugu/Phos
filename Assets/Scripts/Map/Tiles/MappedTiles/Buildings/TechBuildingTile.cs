@@ -89,5 +89,11 @@ namespace Amatsugu.Phos.Tiles
 				GameRegistry.UnlockBuilding(techInfo.buildingsToUnlock[i]);
 		}
 
+		public override void OnDeSerialized(Dictionary<string, string> tileData)
+		{
+			base.OnDeSerialized(tileData);
+			//UnlockBuildings();
+		}
+
 	}
 }

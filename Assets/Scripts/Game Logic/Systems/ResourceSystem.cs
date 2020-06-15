@@ -182,7 +182,6 @@ public class ResourceSystem : ComponentSystem
 					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
 			}
 		});
-
 		//Production
 		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach((Entity e, ProductionData p, ref ProductionMulti multi, ref BuildingId id) =>
 		{
