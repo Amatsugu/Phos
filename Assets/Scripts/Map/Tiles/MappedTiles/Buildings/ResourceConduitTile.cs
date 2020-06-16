@@ -155,7 +155,7 @@ namespace Amatsugu.Phos.Tiles
 			_connectionInit = true;
 		}
 
-		private void AddNewConnections() //TODO: Work this out
+		private void AddNewConnections()
 		{
 			var curNode = map.conduitGraph.GetNode(Coords);
 			if (curNode.IsFull)

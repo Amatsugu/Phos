@@ -57,7 +57,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			if (resInRange.ContainsKey(res.id))
 			{
 				prodData.resourceIds[i] = res.id;
-				prodData.rates[i] = Mathf.FloorToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
+				prodData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
 				var gatheredTiles = resTiles[res.id];
 				for (int j = 0; j < gatheredTiles.Count; j++)
 				{

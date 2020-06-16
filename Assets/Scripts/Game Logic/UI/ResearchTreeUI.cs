@@ -214,7 +214,6 @@ public class ResearchTreeUI : UIPanel
 		}
 		var lastC = c;
 		var expectedConnectorCount = curTech.Count + (curTech.Count > 1 ? 1 : 0);
-		//TODO: Sort out this calculation
 		if (_curConnectorElem + expectedConnectorCount + 1 >= _uiNodeConnectors.Length)
 			Array.Resize(ref _uiNodeConnectors, _uiNodeConnectors.Length + expectedConnectorCount + 1);
 		for (int i = 0; i < curTech.Count; i++)

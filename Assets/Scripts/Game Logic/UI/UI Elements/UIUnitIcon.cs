@@ -10,6 +10,7 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 
 	public TMP_Text titleText;
 	public TMP_Text costText;
+	public Button button;
 	public Image icon;
 
 	protected override void Awake()

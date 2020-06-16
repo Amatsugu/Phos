@@ -54,7 +54,6 @@ public class ResearchSystem : ComponentSystem
 
 	private void SaveResearchProgress()
 	{
-		//TODO: Save info
 	}
 
 	private void Init()

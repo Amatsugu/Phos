@@ -247,7 +247,6 @@ namespace Amatsugu.Phos.Tiles
 			Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
 			Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
 			var neighbors = map.GetNeighbors(Coords);
-			//TODO: store the connector entities
 			if (!_adjacencyConnectors.IsCreated)
 				_adjacencyConnectors = new NativeArray<Entity>(6 * 3, Allocator.Persistent);
 			if (_connectorCount > 0)
@@ -302,7 +301,7 @@ namespace Amatsugu.Phos.Tiles
 			else
 				Map.EM.SetComponentData(e, new ProductionMulti { Value = buffs.productionMulti });
 			//Consumption
-			if(Map.EM.HasComponent<ConsumptionMulti>(e))
+			if(!Map.EM.HasComponent<ConsumptionMulti>(e))
 				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = buffs.consumptionMulti });
 			else
 				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = buffs.consumptionMulti });

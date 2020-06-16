@@ -410,6 +410,8 @@ public class Map : IDisposable
 		return (max < seaLevel) ? seaLevel : max;
 	}
 
+	public bool HasTechBuilding(TechBuildingEntity techBuilding) => _techBuildings.Contains(techBuilding);
+
 	public SerializedMap Serialize()
 	{
 		var map = new SerializedMap
@@ -432,7 +434,6 @@ public class Map : IDisposable
 				map.tiles[k++] = curT.Serialize();
 			}
 		}
-		//TODO: Unit Serialization
 		map.units = units.Select(u =>
 		{
 			var id = GameRegistry.UnitDatabase.entityIds[u.Value.info];

@@ -27,7 +27,6 @@ public class ResearchReward : ScriptableObject
 				break;
 
 			case RewardType.Unit:
-				//TODO: Implement unlocking unit
 				break;
 
 			case RewardType.BuildingUpgrade:
@@ -50,7 +49,6 @@ public class ResearchReward : ScriptableObject
 				return $"Unlocks Building: {GameRegistry.BuildingDatabase[building].info.GetNameString()}";
 
 			case RewardType.Unit:
-				//TODO: Implement unlocking unit
 				return "";
 
 			case RewardType.BuildingUpgrade:

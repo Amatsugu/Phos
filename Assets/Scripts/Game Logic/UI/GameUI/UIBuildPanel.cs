@@ -147,10 +147,16 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].SetActive(false);
 					_icons[i].ClearHoverEvents();
 					_icons[i].ClearClickEvents();
-					_icons[i].titleText.text = buildings[j].info.GetNameString();
-					_icons[i].costText.text = buildings[j].info.GetCostString();
-					_icons[i].icon.sprite = buildings[j].info.icon;
 					var b = buildings[j];
+					_icons[i].titleText.text = b.info.GetNameString();
+					_icons[i].costText.text = b.info.GetCostString();
+					_icons[i].icon.sprite = b.info.icon;
+					_icons[i].button.interactable = true;
+					if(category == BuildingCategory.Tech)
+					{
+						if (GameRegistry.GameMap.HasTechBuilding(b.info as TechBuildingEntity))
+							_icons[i].button.interactable = false;
+					}	
 					_icons[i].OnHover += () => infoPanel.ShowInfo(b);
 					_icons[i].OnClick += () =>
 					{
@@ -272,6 +278,15 @@ public class UIBuildPanel : UITabPanel
 			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(selectedTile, neighbors, ref effects);
 
 
+		if(_selectedBuilding is TechBuildingEntity b)
+		{
+			if(GameRegistry.GameMap.HasTechBuilding(b))
+			{
+				isValid = false;
+				indicatorManager.LogError("Only one of each tech building is allowed.");
+			}
+		}
+
 		ShowPoweredTiles(selectedTile);
 		if(Input.GetKeyUp(KeyCode.Mouse0))
 		{
@@ -323,6 +338,13 @@ public class UIBuildPanel : UITabPanel
 			state = BuildState.Disabled;
 			indicatorManager.HideAllIndicators();
 			banner.SetActive(false);
+		}
+		if(_selectedBuilding is TechBuildingEntity)
+		{
+			_selectedBuilding = null;
+			floatingText.gameObject.SetActive(false);
+			state = BuildState.Idle;
+			indicatorManager.HideAllIndicators();
 		}
 		indicatorManager.UnSetAllIndicators();
 	}

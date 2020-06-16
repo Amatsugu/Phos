@@ -18,13 +18,24 @@ namespace Amatsugu.Phos.UI
 		private GameSave gameSave;
 		private MapRenderer _renderer;
 
+		private bool canSave = false;
+
 		public void Start()
 		{
 			_renderer = GameObject.FindObjectOfType<MapRenderer>();
+			GameEvents.OnHQPlaced += OnHQ;
+		}
+
+		void OnHQ()
+		{
+			GameEvents.OnHQPlaced -= OnHQ;
+			canSave = true;
 		}
 
 		public void Update()
 		{
+			if (!canSave)
+				return;
 			if (Input.GetKeyUp(KeyCode.F6))
 				Save();
 			if (Input.GetKeyUp(KeyCode.F7))
