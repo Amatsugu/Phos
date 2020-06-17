@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Amatsugu.Phos.UnitComponents;
+
+using System;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -88,7 +90,7 @@ public class UnitAttackSystem : ComponentSystem
 
 	private void RotateTurretAndShootAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((Entity e, ref Translation t, ref AttackSpeed atkSpeed, ref AttackRange range, ref AttackTarget atkTarget) =>
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref Translation t, ref AttackSpeed atkSpeed, ref AttackRange range, ref AttackTarget atkTarget, ref UnitHead head) =>
 		{
 			if (!EntityManager.Exists(atkTarget.Value))
 			{
@@ -97,6 +99,16 @@ public class UnitAttackSystem : ComponentSystem
 			}
 			var pos = EntityManager.GetComponentData<CenterOfMass>(atkTarget.Value).Value;
 			var dir = t.Value - pos;
+			var curRot = EntityManager.GetComponentData<Rotation>(head.Value).Value;
+			var aimDir = new float3(dir.x, 0, dir.z);
+			var desRot = quaternion.LookRotation(aimDir, math.up());
+			var aimRot = Quaternion.RotateTowards(curRot, desRot, 180 * Time.DeltaTime);
+			PostUpdateCommands.SetComponent(head.Value, new Rotation
+			{
+				Value = aimRot
+			});
+			if (aimRot != desRot)
+				return;
 			var dist = math.lengthsq(dir);
 			if (dist > range.ValueSq)
 			{

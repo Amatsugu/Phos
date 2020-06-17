@@ -84,7 +84,10 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 		IsRendered = _isShown = true;
 		Entity = info.Instantiate(_startPos, Quaternion.identity, id, Faction);
 		if (info.head != null)
+		{
 			HeadEntity = info.head.Instantiate(_startPos, new float3(1, 1, 1), Quaternion.identity);
+			Map.EM.AddComponentData(Entity, new UnitHead { Value = HeadEntity });
+		}
 		Map.EM.SetComponentData(Entity, new FactionId { Value = Faction });
 		if(info.healthBar != null)
 			_healhBar = info.healthBar.Instantiate(Entity, info.centerOfMassOffset + info.healthBarOffset);

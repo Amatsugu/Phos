@@ -143,21 +143,27 @@ public class UnitMovementSystem : ComponentSystem
 
 			dst.y = t.Value.y;
 			t.Value = Vector3.MoveTowards(t.Value, dst, Time.DeltaTime * speed.Value);
-
-			var unit = _map.units[id.Value];
-			PostUpdateCommands.SetComponent(unit.HeadEntity, t);
+			if (pathId.Progress > 0)
+			{
+				var pointA = _map[path.Value[pathId.Progress - 1]].SurfacePoint;
+				var pointB = dst;
+				var dir = math.normalizesafe(pointB - pointA);
+				dir.y = 0;
+				var targetRot = quaternion.LookRotation(dir, math.up());
+				rot.Value = Quaternion.RotateTowards(rot.Value, targetRot, 360 * Time.DeltaTime);
+				//PostUpdateCommands.SetComponent(unit.HeadEntity, rot);
+			}
+			if (EntityManager.HasComponent<UnitHead>(e))
+			{
+				var head = EntityManager.GetComponentData<UnitHead>(e).Value;
+				PostUpdateCommands.SetComponent(head, t);
+				PostUpdateCommands.SetComponent(head, rot);
+			}
 			t.Value.y = _map[HexCoords.FromPosition(t.Value)].Height;
 			//Next Point
 			if (t.Value.Equals(dst))
 			{
 				pathId.Progress--;
-				if (pathId.Progress >= 0)
-				{
-					var lc = _map[path.Value[pathId.Progress]].SurfacePoint;
-					lc.y = t.Value.y;
-					rot.Value = quaternion.LookRotation(t.Value - lc, new float3(0, 1, 0));
-					PostUpdateCommands.SetComponent(unit.HeadEntity, rot);
-				}
 			}
 		});
 	}
