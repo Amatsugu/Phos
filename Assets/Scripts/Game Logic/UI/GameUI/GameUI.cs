@@ -17,7 +17,9 @@ public class GameUI : UIHover
 	private UICategoryPanel _categoryPanel;
 	private UISelectionPanel _selectionPanel;
 
-	private UIState state;
+	private UIState _state;
+	private UIState _prevState;
+
 
 	private enum UIState
 	{
@@ -55,6 +57,20 @@ public class GameUI : UIHover
 		GameEvents.OnGameReady += Init;
 		GameEvents.OnHQPlaced += OnHQPlaced;
 		_categoryPanel.SetInteractable(false);
+
+		GameEvents.OnDevConsoleOpen += OnDevOpen;
+		GameEvents.OnDevConsoleClose += OnDevClose;
+	}
+
+	private void OnDevOpen()
+	{
+		_prevState = _state;
+		_state = UIState.Disabled;
+	}
+
+	private void OnDevClose()
+	{
+		_state = _prevState;
 	}
 
 	private void OnMapLoad()
@@ -70,13 +86,13 @@ public class GameUI : UIHover
 
 	private void OnHQPlaced()
 	{
-		state = UIState.Idle;
+		_state = UIState.Idle;
 		_categoryPanel.SetInteractable(true);
 	}
 
 	private void Init()
 	{
-		state = UIState.HQPlacement;
+		_state = UIState.HQPlacement;
 		_selectionPanel.OnHide += OnSelectionClosed;
 		_buildPanel.OnHide += OnBuildPanelClosed;
 		GameEvents.OnMapLoaded += OnMapLoad;
@@ -85,7 +101,7 @@ public class GameUI : UIHover
 	private void CategorySelected(BuildingCategory category)
 	{
 		_selectionPanel.Hide();
-		state = UIState.PlaceBuilding;
+		_state = UIState.PlaceBuilding;
 		_buildPanel.Show(category);
 	}
 
@@ -93,23 +109,23 @@ public class GameUI : UIHover
 	{
 		_buildPanel.Hide();
 		_categoryPanel.DeselectAll();
-		state = UIState.Deconstruct;
+		_state = UIState.Deconstruct;
 		_buildPanel.state = UIBuildPanel.BuildState.Deconstruct;
 	}
 
 	private void OnBuildPanelClosed()
 	{
-		if (state == UIState.HQPlacement)
+		if (_state == UIState.HQPlacement)
 			return;
-		state = UIState.Idle;
+		_state = UIState.Idle;
 		_categoryPanel.DeselectAll();
 	}
 
 	private void OnSelectionClosed()
 	{
-		if (state == UIState.HQPlacement)
+		if (_state == UIState.HQPlacement)
 			return;
-		state = UIState.Idle;
+		_state = UIState.Idle;
 		_actionsPanel.Hide();
 	}
 
@@ -122,7 +138,7 @@ public class GameUI : UIHover
 			_buildPanel.indicatorManager.UnSetAllIndicators();
 			return;
 		}
-		switch(state)
+		switch(_state)
 		{
 			case UIState.Idle:
 				_selectionPanel.UpdateState();
@@ -141,6 +157,12 @@ public class GameUI : UIHover
 		
 	}
 
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		GameEvents.OnDevConsoleClose -= OnDevClose;
+		GameEvents.OnDevConsoleOpen -= OnDevOpen;
+	}
 
-	
+
 }

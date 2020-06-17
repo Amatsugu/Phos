@@ -24,6 +24,20 @@ public class BuildQueueSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		GameEvents.OnMapLoaded += InitBuildQueue;
+		GameEvents.OnAnimationEvent += OnAnimationEvent;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		GameEvents.OnMapLoaded -= InitBuildQueue;
+		GameEvents.OnAnimationEvent -= OnAnimationEvent;
+	}
+
+	private void OnAnimationEvent(int eventId)
+	{
+		if (_pendingBuildOrders.ContainsKey(eventId))
+			_readyToBuildOrders.Add(eventId);
 	}
 
 	private void InitBuildQueue()
@@ -62,8 +76,8 @@ public class BuildQueueSystem : ComponentSystem
 	private void QueueBuilding(Tile tile, BuildingTileEntity building, MeshEntityRotatable dropPod)
 	{
 		var hqMode = building is HQTileEntity;
-		var callback = tile.Coords.ToString().GetHashCode();
-		_pendingBuildOrders.Add(callback, new BuildOrder
+		var orderID = tile.Coords.ToString().GetHashCode();
+		_pendingBuildOrders.Add(orderID, new BuildOrder
 		{
 			building = building,
 			dstTile = tile
@@ -83,17 +97,13 @@ public class BuildQueueSystem : ComponentSystem
 			});
 			EntityManager.AddComponentData(e, new HitFloorCallback
 			{
-				eventId = callback
+				eventId = orderID
 			});
 			EntityManager.AddComponentData(e, new Gravity { Value = 9.8f });
-			EventManager.AddEventListener(callback, () =>
-			{
-				_readyToBuildOrders.Add(callback);
-			});
 		}
 		else
 		{
-			_readyToBuildOrders.Add(callback);
+			_readyToBuildOrders.Add(orderID);
 		}
 	}
 	/// <summary>

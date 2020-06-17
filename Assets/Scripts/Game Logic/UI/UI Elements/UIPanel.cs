@@ -51,6 +51,7 @@ public class UIPanel : UIHover
 
 	public virtual void Show()
 	{
+		Debug.Log($"{name}: show");
 		SetActive(true);
 		OnShow?.Invoke();
 	}
@@ -58,6 +59,7 @@ public class UIPanel : UIHover
 	public virtual void Hide()
 	{
 		SetActive(false);
+		Debug.Log($"{name}: hide");
 		OnHide?.Invoke();
 	}
 

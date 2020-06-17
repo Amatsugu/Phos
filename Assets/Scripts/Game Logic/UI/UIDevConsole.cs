@@ -23,6 +23,7 @@ public class UIDevConsole : MonoBehaviour
 
 	private List<string> _logs;
 	private string _lastCmd;
+	private string _curLog;
 
 	private void Awake()
 	{
@@ -32,7 +33,14 @@ public class UIDevConsole : MonoBehaviour
 		_commands = new Dictionary<string, Command>();
 		_logs = new List<string>();
 		INST = this;
+		_curLog = $"{DateTime.Now.ToString().Replace('/', '-').Replace(':', '.')}";
+		Debug.Log(_curLog);
 		AddDefaultCommands();
+	}
+
+	private void OnApplicationQuit()
+	{
+		Save();	
 	}
 
 	private void AddDefaultCommands()
@@ -113,23 +121,18 @@ public class UIDevConsole : MonoBehaviour
 	{
 		consolePanel.OnHide += () =>
 		{
-			/*
-			GameRegistry.BuildUI.enabled = true;
-			GameRegistry.CameraController.enabled = true;
-			GameRegistry.InteractionUI.enabled = true;
-			*/
+			GameEvents.InvokeOnDevConsoleClose();
+			GameEvents.InvokeOnCameraUnFreeze();
 		};
 
 		consolePanel.OnShow += () =>
 		{
-			/*
-			GameRegistry.BuildUI.enabled = false;
-			GameRegistry.CameraController.enabled = false;
-			GameRegistry.InteractionUI.enabled = false;
-			*/
 			scrollView.verticalNormalizedPosition = 0;
 			inputBox.ActivateInputField();
 			UpdateConsoleText();
+			GameEvents.InvokeOnDevConsoleOpen();
+			GameEvents.InvokeOnCameraFreeze();
+			Save();
 		};
 
 		inputBox.onSubmit.AddListener(s =>
@@ -142,14 +145,14 @@ public class UIDevConsole : MonoBehaviour
 			inputBox.ActivateInputField();
 		});
 
-		inputBox.onValueChanged.AddListener(s =>
+		/*inputBox.onValueChanged.AddListener(s =>
 		{
 			if (inputBox.text == "`")
 			{
 				consolePanel.Hide();
 				inputBox.text = "";
 			}
-		});
+		});*/
 		consolePanel.Show();
 		consolePanel.Hide();
 	}
@@ -196,6 +199,7 @@ public class UIDevConsole : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
 		{
+			Debug.Log(consolePanel.IsOpen);
 			if (consolePanel.IsOpen)
 				consolePanel.Hide();
 			else
@@ -245,7 +249,7 @@ public class UIDevConsole : MonoBehaviour
 
 	private void Save()
 	{
-		File.WriteAllLines("output.log", _logs);
+		File.WriteAllLines($"output - {_curLog}.log", _logs);
 	}
 
 	private void OnDisable()

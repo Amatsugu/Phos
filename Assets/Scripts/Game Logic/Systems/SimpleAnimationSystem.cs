@@ -41,7 +41,7 @@ namespace AnimationSystem
 			{
 				if (t.Value.y <= f.Value)
 				{
-					EventManager.InvokeEvent(floorCallback.eventId);
+					GameEvents.InvokeOnAnimationEvent(floorCallback.eventId);
 					PostUpdateCommands.DestroyEntity(e);
 				}
 			});

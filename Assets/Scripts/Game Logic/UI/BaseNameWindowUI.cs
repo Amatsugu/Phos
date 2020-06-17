@@ -20,13 +20,13 @@ public class BaseNameWindowUI : MonoBehaviour
 		{
 			if(SteamManager.Initialized)
 				text.text = $"{SteamFriends.GetPersonaName()}'s Base";
-			EventManager.InvokeEvent("nameWindowOpen");
+			GameEvents.InvokeOnCameraFreeze();
 		};
 		panel.OnHide += () =>
 		{
 			baseNameText.text = text.text;
 			GameRegistry.SetBaseName(text.text);
-			EventManager.InvokeEvent("nameWindowClose");
+			GameEvents.InvokeOnCameraUnFreeze();
 		};
 
 		GameEvents.OnMapLoaded += () =>

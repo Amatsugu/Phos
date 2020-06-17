@@ -154,6 +154,45 @@ public class GameEvents
 
 	public static void InvokeOnBuildingUnlocked(BuildingTileEntity unlockedBuilding) => INST._onBuildingUnlocked?.Invoke(unlockedBuilding);
 
+	public static event Action OnDevConsoleOpen
+	{
+		add => INST._onDevConsoleOpen += value;
+		remove => INST._onDevConsoleOpen -= value;
+	}
+
+	public static void InvokeOnDevConsoleOpen() => INST._onDevConsoleOpen?.Invoke();
+
+	public static event Action OnDevConsoleClose
+	{
+		add => INST._onDevConsoleClose += value;
+		remove => INST._onDevConsoleClose -= value;
+	}
+	public static void InvokeOnDevConsoleClose() => INST._onDevConsoleClose?.Invoke();
+
+	public static event Action OnCameraFreeze
+	{
+		add => INST._onCameraFreeze += value;
+		remove => INST._onCameraFreeze -= value;
+	}
+
+	public static void InvokeOnCameraFreeze() => INST._onCameraFreeze?.Invoke();
+
+	public static event Action OnCameraUnFreeze
+	{
+		add => INST._onCameraUnFreeze += value;
+		remove => INST._onCameraUnFreeze -= value;
+	}
+
+	public static void InvokeOnCameraUnFreeze() => INST._onCameraUnFreeze?.Invoke();
+
+	public static event Action<int> OnAnimationEvent
+	{
+		add => INST._onAnimationEvent += value;
+		remove => INST._onAnimationEvent -= value;
+	}
+
+	public static void InvokeOnAnimationEvent(int eventID) => INST._onAnimationEvent?.Invoke(eventID);
+
 	private event Action _onMapLoaded;
 	private event Action _onGameReady;
 	private event Action _onMapRegen;
@@ -164,6 +203,11 @@ public class GameEvents
 	private event Action _onGameTick;
 	private event Action _onGameSaving;
 	private event Action _onGameGameLoaded;
+	private event Action _onDevConsoleOpen;
+	private event Action _onDevConsoleClose;
+	private event Action _onCameraFreeze;
+	private event Action _onCameraUnFreeze;
 	private event Action<BuildingTileEntity> _onBuildingUnlocked;
+	private event Action<int> _onAnimationEvent;
 
 }

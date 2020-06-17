@@ -51,15 +51,19 @@ public class CameraController : MonoBehaviour
 		_targetHeight = maxHeight;
 		/*if (Application.isEditor)
 			maxHeight = 500;*/
-		EventManager.AddEventListener("nameWindowOpen", () =>
-		{
-			enabled = false;
-		});
-		EventManager.AddEventListener("nameWindowClose", () =>
-		{
-			enabled = true;
-		});
+		GameEvents.OnCameraFreeze += OnFreeze;
+		GameEvents.OnCameraUnFreeze += OnUnFreeze;
 		_state = CameraMode.Panning;
+	}
+
+	private void OnFreeze()
+	{
+		enabled = false;
+	}
+
+	private void OnUnFreeze()
+	{
+		enabled = true;
 	}
 
 	// Update is called once per frame
@@ -257,4 +261,10 @@ public class CameraController : MonoBehaviour
 
 	public static void FocusOnTile(HexCoords tile) => GameRegistry.CameraController.FocusPoint(GameRegistry.GameMap[tile].SurfacePoint);
 	public static void FocusOnTile(float3 position) => GameRegistry.CameraController.FocusPoint(position);
+
+	private void OnDestroy()
+	{
+		GameEvents.OnCameraFreeze -= OnFreeze;
+		GameEvents.OnCameraUnFreeze -= OnUnFreeze;
+	}
 }
