@@ -22,6 +22,8 @@ public enum CommandActions
 
 public interface ICommandable
 {
+	bool IsDead { get; set; }
+
 	CommandActions GetSupportedCommands();
 
 	ScriptableObject GetInfo();

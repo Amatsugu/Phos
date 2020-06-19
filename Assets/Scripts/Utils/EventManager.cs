@@ -1,9 +1,11 @@
 ﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
 
 using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum GameEvent
 {
@@ -193,6 +195,22 @@ public class GameEvents
 
 	public static void InvokeOnAnimationEvent(int eventID) => INST._onAnimationEvent?.Invoke(eventID);
 
+	public static event Action<MobileUnit> OnUnitDied
+	{
+		add => INST._onUnitDied += value;
+		remove => INST._onUnitDied -= value;
+	}
+
+	public static void InvokeOnUnitDied(MobileUnit unit) => INST._onUnitDied?.Invoke(unit);
+
+	public static event Action<BuildingTile> OnBuildingDied
+	{
+		add => INST._onBuildingDied += value;
+		remove => INST._onBuildingDied -= value;
+	}
+
+	public static void InvokeOnBuildingDied(BuildingTile building) => INST._onBuildingDied?.Invoke(building);
+
 	private event Action _onMapLoaded;
 	private event Action _onGameReady;
 	private event Action _onMapRegen;
@@ -209,5 +227,7 @@ public class GameEvents
 	private event Action _onCameraUnFreeze;
 	private event Action<BuildingTileEntity> _onBuildingUnlocked;
 	private event Action<int> _onAnimationEvent;
+	private event Action<MobileUnit> _onUnitDied;
+	private event Action<BuildingTile> _onBuildingDied;
 
 }

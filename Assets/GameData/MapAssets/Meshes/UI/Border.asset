@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Name: Border
+  m_EditorClassIdentifier: 
+  mesh: {fileID: -8565546730901328957, guid: 1a586cb5bc48b844bab208fff67369fd, type: 3}
+  material: {fileID: 2100000, guid: b9cdc14f684ec594bb6164ca09876ca2, type: 2}
+  castShadows: 0
+  receiveShadows: 0
+  isStatic: 0
+  nonUniformScale: 0

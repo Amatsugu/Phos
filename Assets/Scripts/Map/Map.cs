@@ -169,6 +169,24 @@ public class Map : IDisposable
 		return neighbors;
 	}
 
+	/// <summary>
+	/// Get Neihboring tiles
+	/// </summary>
+	/// <param name="coords">Center tile location</param>
+	/// <param name="neighbors">array to fill with results</param>
+	/// <returns>Neihboring tiles arranged clockwise starting from the left</returns>
+	public void GetNeighbors(HexCoords coords, ref Tile[] neighbors)
+	{
+		if (neighbors.Length < 6)
+			throw new Exception("Provided array is too small");
+		neighbors[0] = this[coords.X - 1, coords.Y]; //Left
+		neighbors[1] = this[coords.X - 1, coords.Y + 1]; //Top Left
+		neighbors[2] = this[coords.X, coords.Y + 1]; //Top Right
+		neighbors[3] = this[coords.X + 1, coords.Y]; //Right
+		neighbors[4] = this[coords.X + 1, coords.Y - 1]; //Bottom Right
+		neighbors[5] = this[coords.X, coords.Y - 1]; //Bottom Left
+	}
+
 	public List<Tile> HexSelect(HexCoords center, int radius, bool excludeCenter = false)
 	{
 		radius = Mathf.Abs(radius);

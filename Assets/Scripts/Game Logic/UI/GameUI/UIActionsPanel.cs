@@ -1,8 +1,10 @@
 ﻿using Amatsugu.Phos.Tiles;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using UnityEngine;
@@ -49,6 +51,12 @@ public class UIActionsPanel : UIPanel
 		_selectedEntities = new List<ICommandable>();
 		SetupCallbacks();
 		GameEvents.OnMapLoaded += OnMapLoad;
+		GameEvents.OnUnitDied += OnUnitDied;
+	}
+
+	private void OnUnitDied(ICommandable unit)
+	{
+		_selectedEntities.Remove(unit);
 	}
 
 	private void OnMapLoad()
@@ -180,9 +188,8 @@ public class UIActionsPanel : UIPanel
 	{
 		var tilesNeeded = 0;
 		for (int i = 0; i < _selectedEntities.Count; i++)
-		{
 			tilesNeeded += HexCoords.GetTileCount((_selectedEntities[i] as IMoveable).GetSize());
-		}
+
 		var r = HexCoords.CalculateRadius(tilesNeeded) + 1;
 		var orderedUnits = _selectedEntities.OrderBy(u => ((IMoveable)u).GetSize()).Reverse().Select(u => u as IMoveable).ToArray();
 
@@ -196,7 +203,7 @@ public class UIActionsPanel : UIPanel
 		{
 			for (int j = 0; j < openTiles.Length; j++)
 			{
-				var footprint = HexCoords.SpiralSelect(openTiles[j], ((IMoveable)orderedUnits[i]).GetSize());
+				var footprint = HexCoords.SpiralSelect(openTiles[j], orderedUnits[i].GetSize());
 				if (IsValidFootPrint(footprint, openSet, occupiedSet))
 				{
 					for (int x = 0; x < footprint.Length; x++)
@@ -292,10 +299,10 @@ public class UIActionsPanel : UIPanel
 			Showbutton(attackCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Move))
-				Showbutton(moveCommand);
+			Showbutton(moveCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.AttackState))
-				Showbutton(attackStateCommand);
+			Showbutton(attackStateCommand);
 
 		if (supportedCommands.HasFlag(CommandActions.Guard))
 			Showbutton(guardCommand);

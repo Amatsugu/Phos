@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 84.56308, g: 188.70863, b: 609.30585, a: 1}
+  m_IndirectSpecularColor: {r: 81.92708, g: 183.99008, b: 590.1547, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12011,6 +12011,7 @@ MonoBehaviour:
   contentArea: {fileID: 212590880}
   nothingUnlockedText: {fileID: 180323678}
   showPowerRange: 30
+  border: {fileID: 11400000, guid: 7323c4401a134b14686c9c1c2da0bc7d, type: 2}
   poweredTileIndicatorEntity: {fileID: 11400000, guid: 7f2dfea71370ca941a2276f223ecb355,
     type: 2}
   unpoweredTileIndicatorEntity: {fileID: 11400000, guid: 773b37c36a3042843a6af5d6a2ae20b1,

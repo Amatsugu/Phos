@@ -30,6 +30,7 @@ public class UIBuildPanel : UITabPanel
 	public MeshEntity poweredTileIndicatorEntity;
 	public MeshEntity unpoweredTileIndicatorEntity;
 	public MeshEntity destructionIndicatorEntity;
+	public MeshEntityRotatable border;
 
 	public BuildState state;
 	[HideInInspector]
@@ -280,6 +281,7 @@ public class UIBuildPanel : UITabPanel
 
 		if(_selectedBuilding is TechBuildingEntity b)
 		{
+			indicatorManager.ShowRange(selectedTile, b.effectRange, border);
 			if(GameRegistry.GameMap.HasTechBuilding(b))
 			{
 				isValid = false;

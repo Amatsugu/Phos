@@ -1,6 +1,8 @@
 ﻿using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 using Amatsugu.Phos.UnitComponents;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
@@ -41,6 +43,14 @@ public class UISelectionPanel : UIPanel
 		_buildPhysicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
 		_activeIcons = new List<UISelectedEntity>();
 		GameEvents.OnMapLoaded += OnMapLoaded;
+		GameEvents.OnUnitDied += OnUnitDied;
+	}
+
+	private void OnUnitDied(ICommandable unit)
+	{
+		var group = _selectionGroups[unit.GetInfo().GetInstanceID()];
+		_selectionItems[group].Remove(unit);
+		RenderUnits();
 	}
 
 	private void OnMapLoaded()
@@ -91,14 +101,19 @@ public class UISelectionPanel : UIPanel
 
 	private void RenderUnits()
 	{
-		for (int i = 0; i < _selectionItems.Count; i++)
+		for (int i = 0, j = 0; i < _selectionItems.Count; i++, j++)
 		{
+			if (_selectionItems[i].Count == 0)
+			{
+				j--;
+				continue;
+			}
 			var unitInfo = (MobileUnitEntity)_selectionGroupInfo[i];
 			if(_activeIcons.Count <= i)
 				_activeIcons.Add(Instantiate(selectionIconPrefab, iconGrid, false));
-			_activeIcons[i].nameText.SetText(unitInfo.name);
-			_activeIcons[i].icon.sprite = default; //TODO: Add Icon
-			_activeIcons[i].countText.SetText(_selectionItems[i].Count.ToString());
+			_activeIcons[j].nameText.SetText(unitInfo.name);
+			_activeIcons[j].icon.sprite = default; //TODO: Add Icon
+			_activeIcons[j].countText.SetText(_selectionItems[i].Count.ToString());
 		}
 	}
 

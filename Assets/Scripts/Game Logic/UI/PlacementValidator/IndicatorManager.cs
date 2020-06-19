@@ -4,9 +4,12 @@ using DataStore.ConduitGraph;
 using Effects.Lines;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 using TMPro;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -63,9 +66,19 @@ public class IndicatorManager
 	public void ShowRange(Tile center, int range, MeshEntityRotatable border)
 	{
 		var ring = HexCoords.SelectRing(center.Coords, range);
+		var neighbors = new Tile[6];
 		for (int i = 0; i < ring.Length; i++)
 		{
-			//TODO: Figure out how to render this
+			var p = ring[i];
+			var s = center.map[p].SurfacePoint;
+			center.map.GetNeighbors(p, ref neighbors);
+			for (int n = 0; n < 6; n++)
+			{
+				if (neighbors[n].Coords.Distance(center.Coords) <= range)
+					continue;
+				var e = border.Instantiate(s, 1, quaternion.RotateY(math.radians((60 * n) + 180)));
+				Map.EM.AddComponentData(e, new DeathTime { Value = Time.time + .01f });
+			}
 		}
 	}
 

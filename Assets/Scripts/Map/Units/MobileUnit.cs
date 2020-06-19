@@ -29,11 +29,13 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	public Entity HeadEntity;
 	public bool IsRendered { get; protected set; }
 	public Faction Faction { get; protected set; }
+	public bool IsDead { get;  set; }
 
 	private bool _isShown;
 	private NativeArray<Entity> _healhBar;
 	private Vector3 _startPos;
 	protected Map map;
+
 
 #if DEBUG
 	private static bool hasVerified;
@@ -51,6 +53,7 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 		if(!hasVerified)
 			ValidateCommands();
 #endif
+		IsDead = false;
 	}
 
 #if DEBUG
@@ -138,6 +141,8 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	public virtual void Die()
 	{
 		map.units.Remove(id);
+		IsDead = true;
+		GameEvents.InvokeOnUnitDied(this);
 		Destroy();
 		//TODO: Death Effect
 	}
@@ -157,6 +162,7 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 				Map.EM.DestroyEntity(HeadEntity);
 			if (_healhBar.IsCreated)
 				Map.EM.DestroyEntity(_healhBar);
+			IsRendered = false;
 		}catch(Exception e)
 		{
 			Debug.LogWarning(e);
