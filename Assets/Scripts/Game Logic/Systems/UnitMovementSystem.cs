@@ -157,7 +157,8 @@ public class UnitMovementSystem : ComponentSystem
 			{
 				var head = EntityManager.GetComponentData<UnitHead>(e).Value;
 				PostUpdateCommands.SetComponent(head, t);
-				PostUpdateCommands.SetComponent(head, rot);
+				if(!EntityManager.HasComponent<AttackTarget>(e))
+					PostUpdateCommands.SetComponent(head, rot);
 			}
 			t.Value.y = _map[HexCoords.FromPosition(t.Value)].Height;
 			//Next Point

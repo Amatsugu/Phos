@@ -21,6 +21,7 @@ public class MobileUnitEntity : MeshEntityRotatable
 	public int tier;
 	public UnitDomain unitDomain;
 	public UnitClass unitClass;
+	public Sprite icon;
 	[Header("Misc")]
 	public float3 centerOfMassOffset;
 	public MeshEntityRotatable head;

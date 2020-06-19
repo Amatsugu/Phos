@@ -14,17 +14,6 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	public int id;
 	public MobileUnitEntity info;
 
-	//public HexCoords Coords { get; protected set; }
-
-	/*public Vector3 Position
-	{
-		get => Map.EM.GetComponentData<Translation>(Entity).Value;
-		set
-		{
-			UpdatePos(value);
-		}
-	}*/
-
 	public Entity Entity;
 	public Entity HeadEntity;
 	public bool IsRendered { get; protected set; }
@@ -229,4 +218,9 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	}
 
 	public ScriptableObject GetInfo() => info;
+
+	public float3 GetPosition()
+	{
+		return Map.EM.GetComponentData<CenterOfMass>(Entity).Value;
+	}
 }

@@ -112,7 +112,7 @@ public class UISelectionPanel : UIPanel
 			if(_activeIcons.Count <= i)
 				_activeIcons.Add(Instantiate(selectionIconPrefab, iconGrid, false));
 			_activeIcons[j].nameText.SetText(unitInfo.name);
-			_activeIcons[j].icon.sprite = default; //TODO: Add Icon
+			_activeIcons[j].icon.sprite = unitInfo.icon; //TODO: Add Icon
 			_activeIcons[j].countText.SetText(_selectionItems[i].Count.ToString());
 		}
 	}

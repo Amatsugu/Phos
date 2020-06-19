@@ -26,6 +26,8 @@ public interface ICommandable
 
 	CommandActions GetSupportedCommands();
 
+	float3 GetPosition();
+
 	ScriptableObject GetInfo();
 }
 

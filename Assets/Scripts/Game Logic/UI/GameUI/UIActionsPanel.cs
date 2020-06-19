@@ -1,12 +1,17 @@
 ﻿using Amatsugu.Phos.Tiles;
 
+using Effects.Lines;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
+using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Transforms;
+
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -15,6 +20,10 @@ public class UIActionsPanel : UIPanel
 {
 	public UIBuildPanel actionButtonPrefab;
 
+	[Header("Indicators")]
+	public MeshEntityRotatable moveLine;
+
+	[Header("Buttons")]
 	public Button attackCommand;
 	public Button moveCommand;
 	public Button attackStateCommand;
@@ -34,6 +43,7 @@ public class UIActionsPanel : UIPanel
 	private BuildPhysicsWorld _physicsWorld;
 	private List<ICommandable> _selectedEntities;
 	private Map _map;
+	private float3 _lastOrderTarget;
 
 	public enum ActionState
 	{
@@ -177,15 +187,44 @@ public class UIActionsPanel : UIPanel
 
 	private void UpdateMove()
 	{
+		if(!_lastOrderTarget.Equals(float3.zero))
+			RenderMove();
+
 		if (!Input.GetKeyUp(KeyCode.Mouse1))
 			return;
 		GetTile();
 		if (_selectedTile.info.isTraverseable)
 			IssueMoveOrder(_selectedTile);
+
+
+	}
+
+	private void RenderMove()
+	{
+		var center = float3.zero;
+		var deathTime = Time.time + 0.01f;
+		for (int i = 0; i < _selectedEntities.Count; i++)
+		{
+			var pos = _selectedEntities[i].GetPosition();
+			center += pos;
+			var ln = LineFactory.CreateStaticLine(moveLine, pos, pos + math.up(), 0.05f);
+			Map.EM.AddComponentData(ln, new DeathTime { Value = deathTime });
+		}
+		center /= _selectedEntities.Count;
+		center += math.up();
+		for (int i = 0; i < _selectedEntities.Count; i++)
+		{
+			var pos = _selectedEntities[i].GetPosition();
+			var ln = LineFactory.CreateStaticLine(moveLine, pos + math.up(), center, 0.05f);
+			Map.EM.AddComponentData(ln, new DeathTime { Value = deathTime });
+		}
+		var ln2 = LineFactory.CreateStaticLine(moveLine, center, _lastOrderTarget + math.up(), 0.05f);
+		Map.EM.AddComponentData(ln2, new DeathTime { Value = deathTime });
 	}
 
 	private void IssueMoveOrder(Tile tile)
 	{
+		_lastOrderTarget = tile.SurfacePoint;
 		var tilesNeeded = 0;
 		for (int i = 0; i < _selectedEntities.Count; i++)
 			tilesNeeded += HexCoords.GetTileCount((_selectedEntities[i] as IMoveable).GetSize());
