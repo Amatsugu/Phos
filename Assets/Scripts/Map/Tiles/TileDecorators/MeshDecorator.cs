@@ -10,6 +10,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Tile Decorators/Mesh")]
 public class MeshDecorator : TileDecorator
 {
+	public bool multiMesh = false;
+	[ConditionalHide("multiMesh")]
+	public MeshEntityRotatable[] meshEntities;
 	public Vector3 rotation;
 	public float3 offset;
 	public float randomRotMin = 0;
@@ -20,25 +23,14 @@ public class MeshDecorator : TileDecorator
 		return 1;
 	}
 
-	/*public override Matrix4x4[] GetTransformMatricies(Tile tile)
-	{
-		var rot = rotation;
-		rot.y = Mathf.PerlinNoise(tile.Coords.worldX / 10f, tile.Coords.worldZ / 10f).Remap(0,1, randomRotMin, randomRotMax);
-		var qRot = Quaternion.Euler(rot);
-		var transforms = new Matrix4x4[GetDecorEntityCount(tile)];
-		for (int i = 0; i < transforms.Length; i++)
-		{
-			transforms[i] = Matrix4x4.TRS(tile.SurfacePoint + offset, qRot, Vector3.one);
-		}
-		return transforms;
-	}
-	*/
-
 	public override Entity[] Render(Tile tile)
 	{
 		var rot = rotation;
+		var mesh = meshEntity;
+		if (multiMesh)
+			mesh = meshEntities[UnityEngine.Random.Range(0, meshEntities.Length)];
 		rot.y = Mathf.PerlinNoise(tile.Coords.WorldPos.x / 10f, tile.Coords.WorldPos.z / 10f).Remap(0, 1, randomRotMin, randomRotMax);
-		var e = meshEntity.Instantiate(tile.SurfacePoint + offset, Vector3.one, Quaternion.Euler(rot));
+		var e = mesh.Instantiate(tile.SurfacePoint + offset, Vector3.one, Quaternion.Euler(rot));
 		return new Entity[] { e };
 	}
 

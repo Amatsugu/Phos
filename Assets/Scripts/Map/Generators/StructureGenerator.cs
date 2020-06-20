@@ -9,10 +9,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Map Asset/Generator/Feature/Structures")]
 public class StructureGenerator : FeatureGenerator
 {
+	[Header("Core")]
 	public int2 count;
 	public BuildingTileEntity tile;
 	public float minDist;
 	public float2 altitudeRange;
+	[Header("Crystal")]
+	public ResourceTileInfo phosCrystal;
+	public int crystalRange = 4;
+	[Range(0,100)]
+	public int density = 50;
 
 	public override void Generate(Map map)
 	{
@@ -52,10 +58,29 @@ public class StructureGenerator : FeatureGenerator
 		{
 			if (!coordsToGen[i].isCreated)
 				break;
-			var origTile = map[coordsToGen[i]];
-			map[coordsToGen[i]] = tile.CreateTile(map, coordsToGen[i], origTile.Height);
-			//if(tile.preserveGroundTile)
-			map[coordsToGen[i]].originalTile = origTile.info;
+			PlaceCore(map, coordsToGen[i], ref rand);
 		}
+	}
+
+	public void PlaceCore(Map map, HexCoords coords, ref Unity.Mathematics.Random rand)
+	{
+		var origTile = map[coords];
+		map[coords] = tile.CreateTile(map, coords, origTile.Height);
+		map[coords].originalTile = origTile.info;
+		var ring = HexCoords.SpiralSelect(coords, crystalRange, true);
+		for (int i = 0; i < ring.Length; i++)
+		{
+			if (rand.NextInt(100) <= density)
+				PlaceCrystal(map, ring[i]);
+		}
+	}
+
+	public void PlaceCrystal(Map map, HexCoords coords)
+	{
+		var origTile = map[coords];
+		if (origTile == null)
+			return;
+		map[coords] = phosCrystal.CreateTile(map, coords, origTile.Height);
+		map[coords].originalTile = origTile.info;
 	}
 }

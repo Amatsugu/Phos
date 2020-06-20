@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 349cd418e960646429bb24fb8abb8192, type: 3}
+  m_Name: Phos Crystal
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
+  material: {fileID: 2100000, guid: 317ace37ee002c64bad3a61e16540797, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 1
+  description: Phos Crystal
+  decorators:
+  - {fileID: 11400000, guid: 9c1b1fe89168b8847b0c60ddd913fd2c, type: 2}
+  isTraverseable: 1
+  assetGuid: d7edb9f03e57aca4e82ee0d3b3db4e7b
+  resourceYields:
+  - id: 14
+    ammount: 1

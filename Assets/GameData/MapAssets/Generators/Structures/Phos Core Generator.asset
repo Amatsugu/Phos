@@ -20,3 +20,6 @@ MonoBehaviour:
   altitudeRange:
     x: 5
     y: 10
+  phosCrystal: {fileID: 11400000, guid: d7edb9f03e57aca4e82ee0d3b3db4e7b, type: 2}
+  crystalRange: 5
+  density: 50
