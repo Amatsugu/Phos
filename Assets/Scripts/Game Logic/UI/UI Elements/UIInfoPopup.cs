@@ -1,4 +1,6 @@
-﻿using Effects.Lines;
+﻿using Amatsugu.Phos.Tiles;
+
+using Effects.Lines;
 
 using System;
 
@@ -24,12 +26,13 @@ public class UIInfoPopup : UIExpandable
 	public UIHover[] iconRects;
 	public Image[] iconImages;
 
+	public int NotifCount { get; private set; } = 0;
+
 	private const int MAX_NOTIFS = 3;
 
 	private Vector3 _notifPos;
 	private Entity _line;
 	private float _spacingTime;
-	private int _curNotifCount = 0;
 	private string[] _titles;
 	private string[] _messages;
 	private int[] _ids;
@@ -79,18 +82,18 @@ public class UIInfoPopup : UIExpandable
 		Update();
 	}
 
-	public void Init(HexCoords coords)
+	public void Init(Tile tile)
 	{
 		SetActive(true);
-		_notifPos = GameRegistry.GameMap[coords].SurfacePoint + offset;
+		_notifPos = tile.SurfacePoint + offset;
 		rTransform.position = _notifPos;
 		rTransform.rotation = GameRegistry.Camera.transform.rotation;
-		_line = LineFactory.CreateStaticLine(line, GameRegistry.GameMap[coords].SurfacePoint, _notifPos);
+		_line = LineFactory.CreateStaticLine(line, tile.SurfacePoint, _notifPos);
 	}
 
 	public int AddNotif(Sprite icon, string title, string message)
 	{
-		var index = _curNotifCount++;
+		var index = NotifCount++;
 		iconRects[index].SetActive(true);
 		_titles[index] = title;
 		_messages[index] = message;
@@ -118,13 +121,13 @@ public class UIInfoPopup : UIExpandable
 		}
 		iconRects[MAX_NOTIFS - 1].SetActive(false);
 		iconRects[MAX_NOTIFS - 1].rTransform.anchoredPosition = Vector2.zero;
-		_curNotifCount--;
+		NotifCount--;
 	}
 
 	public void RemoveAll()
 	{
 		Clear();
-		_curNotifCount = 0;
+		NotifCount = 0;
 	}
 
 	protected override void Update()
@@ -135,9 +138,9 @@ public class UIInfoPopup : UIExpandable
 		else
 			_spacingTime -= Time.deltaTime * 2;
 		_spacingTime = Mathf.Clamp(_spacingTime, 0, 1);
-		for (int i = 0; i < _curNotifCount; i++)
+		for (int i = 0; i < NotifCount; i++)
 		{
-			var offset = i - ((_curNotifCount - 1) / 2f);
+			var offset = i - ((NotifCount - 1) / 2f);
 			var pos = new Vector2
 			{
 				x = (blurSpacing * offset).Lerp(offset * hoverSpacing, _spacingTime.EaseOut())

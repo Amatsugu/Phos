@@ -351,6 +351,7 @@ namespace Amatsugu.Phos.Tiles
 		public bool HasHQConnection { get; protected set; }
 
 		protected bool _connectionInit;
+		private int _connectionNotif = -1;
 
 		public PoweredBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
@@ -406,9 +407,7 @@ namespace Amatsugu.Phos.Tiles
 					Map.EM.RemoveComponent<BuildingOffTag>(GetBuildingEntity());
 			}
 			HasHQConnection = true;
-			InfoPopupUI.HidePopup(Coords);
 			OnConnected();
-
 		}
 
 		public virtual void HQDisconnected()
@@ -430,18 +429,20 @@ namespace Amatsugu.Phos.Tiles
 				Map.EM.AddComponent<BuildingOffTag>(e);
 			HasHQConnection = false;
 			OnDisconnected();
-			InfoPopupUI.ShowPopup(Coords, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and cannot opperate");
 		}
 
 		public virtual void OnConnected()
 		{
 			if (IsBuilt)
 				OnBuiltAndPowered();
+			if (_connectionNotif != -1)
+				InfoPopupUI.RemovePopupNotif(Coords, _connectionNotif);
 		}
 
 		public virtual void OnDisconnected()
 		{
-
+			if(_connectionNotif == -1)
+				_connectionNotif = InfoPopupUI.ShowPopupNotif(this, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and cannot opperate");
 		}
 
 		public override void OnSerialize(Dictionary<string, string> tileData)
@@ -455,6 +456,10 @@ namespace Amatsugu.Phos.Tiles
 		{
 			_connectionInit = tileData.ContainsKey("connectionInit");
 			HasHQConnection = tileData.ContainsKey("hasHQConnection");
+			if (!HasHQConnection)
+				OnDisconnected();
+			else
+				OnConnected();
 			base.OnDeSerialized(tileData);
 		}
 

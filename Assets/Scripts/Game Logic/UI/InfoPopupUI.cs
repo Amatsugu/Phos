@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Amatsugu.Phos.Tiles;
+
+using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
@@ -32,9 +34,10 @@ public class InfoPopupUI : MonoBehaviour
 	{
 	}
 
-	private void AddPopup(HexCoords coords, Sprite icon, string title, string message)
+	private int AddPopup(Tile tile, Sprite icon, string title, string message)
 	{
 		UIInfoPopup popup;
+		//Get new or pooled popup
 		if (_availablePopups.Count == 0)
 			popup = Instantiate(popupPrefab, _rectTransform);
 		else
@@ -42,9 +45,20 @@ public class InfoPopupUI : MonoBehaviour
 			popup = _availablePopups.Last();
 			_availablePopups.RemoveAt(_availablePopups.Count - 1);
 		}
-		popup.Init(coords);
-		popup.AddNotif(icon, title, message);
-		_activePopups.Add(coords, popup);
+		//Init popup
+		popup.Init(tile);
+		_activePopups.Add(tile.Coords, popup);
+		return popup.AddNotif(icon, title, message);
+	}
+
+	public void RemoveNotif(HexCoords coords, int notifId)
+	{
+		if (!_activePopups.ContainsKey(coords))
+			return;
+		if (_activePopups[coords].NotifCount == 1)
+			RemovePopup(coords);
+		else
+			_activePopups[coords].RemoveNotif(notifId);
 	}
 
 	private void RemovePopup(HexCoords coords)
@@ -52,11 +66,14 @@ public class InfoPopupUI : MonoBehaviour
 		if (!_activePopups.ContainsKey(coords))
 			return;
 		_activePopups[coords].SetActive(false);
+		_activePopups[coords].RemoveAll() ;
 		_availablePopups.Add(_activePopups[coords]);
 		_activePopups.Remove(coords);
 	}
 
-	public static void ShowPopup(HexCoords coords, Sprite icon, string title, string message) => _INST.AddPopup(coords, icon, title, message);
+	public static int ShowPopupNotif(Tile tile, Sprite icon, string title, string message) => _INST.AddPopup(tile, icon, title, message);
 
 	public static void HidePopup(HexCoords coords) => _INST.RemovePopup(coords);
+
+	public static void RemovePopupNotif(HexCoords coords, int notifId) => _INST.RemoveNotif(coords, notifId);
 }
