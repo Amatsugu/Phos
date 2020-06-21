@@ -213,7 +213,7 @@ public class UIBuildPanel : UITabPanel
 		var deconstructable = selectedTile as IDeconstructable;
 		if (deconstructable == null)
 			return;
-		if (Input.GetKeyUp(KeyCode.Mouse0))
+		if (Input.GetKeyUp(KeyCode.Mouse0) && deconstructable.CanDeconstruct(Faction.Player))
 			deconstructable.Deconstruct();
 	}
 
