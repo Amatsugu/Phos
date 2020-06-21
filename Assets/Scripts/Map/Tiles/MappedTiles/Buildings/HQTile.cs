@@ -69,6 +69,9 @@ namespace Amatsugu.Phos.Tiles
 					foundation[i].UpdateHeight(Height);
 			}
 		}
+
+		public override bool CanDeconstruct(Faction faction) => false;
+
 	}
 
 	public class SubHQTile : PoweredBuildingTile
@@ -95,5 +98,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void HQDisconnected()
 		{
 		}
+
+		public override bool CanDeconstruct(Faction faction) => false;
 	}
 }

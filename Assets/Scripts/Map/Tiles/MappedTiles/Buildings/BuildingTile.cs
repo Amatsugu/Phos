@@ -318,7 +318,7 @@ namespace Amatsugu.Phos.Tiles
 			Debug.Log("Destroyed");
 		}
 
-		public bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;
+		public virtual bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;
 
 		public ResourceIndentifier[] GetResourceRefund()
 		{

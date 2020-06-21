@@ -13,5 +13,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 			//base.OnBuilt();
 		}
+
 	}
 }
