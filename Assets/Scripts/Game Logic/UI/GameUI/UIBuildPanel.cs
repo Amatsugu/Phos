@@ -117,8 +117,8 @@ public class UIBuildPanel : UITabPanel
 					continue;
 				if (!GameRegistry.IsBuildingUnlocked(buildings[j].id))
 					continue;
-				_icons[i].titleText.text = buildings[j].info.GetNameString();
-				_icons[i].costText.text = buildings[j].info.GetCostString();
+				_icons[i].titleText.SetText(buildings[j].info.GetNameString());
+				_icons[i].costText.SetText(buildings[j].info.GetCostString());
 				_icons[i].icon.sprite = buildings[j].info.icon;
 				var b = buildings[j];
 				j++;
@@ -149,8 +149,8 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].ClearHoverEvents();
 					_icons[i].ClearClickEvents();
 					var b = buildings[j];
-					_icons[i].titleText.text = b.info.GetNameString();
-					_icons[i].costText.text = b.info.GetCostString();
+					_icons[i].titleText.SetText(b.info.GetNameString());
+					_icons[i].costText.SetText(b.info.GetCostString());
 					_icons[i].icon.sprite = b.info.icon;
 					_icons[i].button.interactable = true;
 					if(category == BuildingCategory.Tech)

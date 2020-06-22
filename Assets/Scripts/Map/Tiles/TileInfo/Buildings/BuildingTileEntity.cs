@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 using Unity.Entities;
 using Unity.Mathematics;
@@ -103,40 +104,44 @@ namespace Amatsugu.Phos.TileEntities
 				return new BuildingTile(pos, height, map, this);
 		}
 
-		public virtual string GetProductionString()
+		public virtual StringBuilder GetProductionString()
 		{
-			var costString = "";
+			var prodString = new StringBuilder();
 			for (int i = 0; i < production.Length; i++)
 			{
-				costString += $"{ResourceDatabase.GetResourceString(production[i].id)} +{production[i].ammount}/t";
+				prodString.Append($"+{production[i].ammount}{ResourceDatabase.GetResourceString(production[i].id)}/t");
 				if (i < production.Length - 1)
-					costString += " ";
+					prodString.Append(" ");
+			}
+			return prodString;
+		}
+
+		public virtual StringBuilder GetCostString()
+		{
+			var costString = new StringBuilder();
+			for (int i = 0; i < cost.Length; i++)
+			{
+				var id = cost[i].id;
+				var curCost = $"\u2011{cost[i].ammount}{ResourceDatabase.GetResourceString(id)}";
+				if (ResourceSystem.resCount[id] < cost[i].ammount)
+					curCost = $"<color=#ff0000>{curCost}</color>";
+				costString.Append(curCost);
+				if (i != cost.Length - 1)
+					costString.Append(" ");
 			}
 			return costString;
 		}
 
-		public virtual string GetCostString()
+		public virtual StringBuilder GetUpkeepString()
 		{
-			var costString = "";
-			for (int i = 0; i < cost.Length; i++)
-			{
-				var id = cost[i].id;
-				var curCost = $"{ResourceDatabase.GetResourceString(id)} -{cost[i].ammount}";
-				if (ResourceSystem.resCount[id] < cost[i].ammount)
-					curCost = $"<color=#ff0000>{curCost}</color>";
-				costString += curCost;
-				if (i != cost.Length - 1)
-					costString += " ";
-			}
-			if (consumption.Length > 0)
-				costString += " ";
+			var upkeepString = new StringBuilder();
 			for (int i = 0; i < consumption.Length; i++)
 			{
-				costString += $"{ResourceDatabase.GetResourceString(consumption[i].id)} -{consumption[i].ammount}/t";
+				upkeepString.Append($"\u2011{consumption[i].ammount}{ResourceDatabase.GetResourceString(consumption[i].id)}/t");
 				if (i < consumption.Length - 1)
-					costString += " ";
+					upkeepString.Append(" ");
 			}
-			return costString;
+			return upkeepString;
 		}
 
 		public override string GetNameString()

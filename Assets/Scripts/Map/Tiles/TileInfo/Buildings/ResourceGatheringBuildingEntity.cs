@@ -1,5 +1,7 @@
 ﻿using Amatsugu.Phos.Tiles;
 
+using System.Text;
+
 using UnityEngine;
 
 namespace Amatsugu.Phos.TileEntities
@@ -16,20 +18,23 @@ namespace Amatsugu.Phos.TileEntities
 			return new GatheringBuildingTile(pos, height, map, this);
 		}
 
-		public override string GetProductionString()
+		public override StringBuilder GetProductionString()
 		{
-			var gatherString = "";
+			var gatherString = new StringBuilder();
 			for (int i = 0; i < resourcesToGather.Length; i++)
 			{
 				var curRes = resourcesToGather[i];
-				gatherString += $"+{ResourceDatabase.GetResourceString(curRes.id)} {curRes.ammount}/tile";
+				gatherString.Append($"+{curRes.ammount}{ResourceDatabase.GetResourceString(curRes.id)}/tile");
 				if (i != resourcesToGather.Length - 1)
-					gatherString += "\n";
+					gatherString.Append("\n");
 			}
 			var b = base.GetProductionString();
 			if (b.Length > 0)
-				b += "\n";
-			return b + gatherString;
+			{
+				b.AppendLine();
+				b.Append(gatherString);
+			}
+			return b;
 		}
 	}
 }

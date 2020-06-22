@@ -230,6 +230,7 @@ namespace Amatsugu.Phos.Tiles
 		protected virtual void OnBuilt()
 		{
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
+			map.InvokeOnBuilt(Coords);
 		}
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)

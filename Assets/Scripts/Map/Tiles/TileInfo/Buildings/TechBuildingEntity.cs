@@ -23,7 +23,7 @@ namespace Amatsugu.Phos.TileEntities
 			return new TechBuildingTile(pos, height, map, this);
 		}
 
-		public override string GetProductionString()
+		public override StringBuilder GetProductionString()
 		{
 			var prod = new StringBuilder();
 			prod.AppendLine("Unlocks Buildings:");
@@ -32,7 +32,7 @@ namespace Amatsugu.Phos.TileEntities
 				prod.Append("\t");
 				prod.AppendLine(GameRegistry.BuildingDatabase[buildingsToUnlock[i]].info.GetNameString());
 			}
-			return prod.ToString();
+			return prod;
 		}
 	}
 }

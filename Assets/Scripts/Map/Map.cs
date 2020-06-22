@@ -34,6 +34,7 @@ public class Map : IDisposable
 	public readonly float innerRadius;
 
 	public event Action<HexCoords> OnTilePlaced;
+	public event Action<HexCoords> OnBuildingBuilt;
 
 	public float seaLevel;
 	public int Seed { get; private set; }
@@ -232,6 +233,11 @@ public class Map : IDisposable
 			if (!action(t))
 				break;
 		}
+	}
+
+	internal void InvokeOnBuilt(HexCoords coords)
+	{
+		OnBuildingBuilt?.Invoke(coords);
 	}
 
 	public List<Tile> HexSelectWhere(HexCoords center, int radius, Func<Tile, bool> filter, bool excludeCenter = false)

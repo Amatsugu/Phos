@@ -39,8 +39,7 @@ namespace Amatsugu.Phos.Tiles
 				if (t is BuildingTile b)
 					ApplyAOEBuff(b);
 			}, true);
-			map.OnTilePlaced += OnBuffedTileChanged;
-
+			map.OnBuildingBuilt += OnBuffedTileChanged;
 		}
 
 		private void OnBuffedTileChanged(HexCoords coords)
