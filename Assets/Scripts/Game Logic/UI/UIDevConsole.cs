@@ -14,16 +14,20 @@ public class UIDevConsole : MonoBehaviour
 	public static UIDevConsole INST;
 
 	public UIPanel consolePanel;
-	public TMP_Text consoleOut;
+	public TMP_InputField consoleOut;
+	public TMP_Text cmdPredictText;
 	public TMP_InputField inputBox;
 	public ScrollRect scrollView;
 
 	private StringBuilder _sb;
 	private Dictionary<string, Command> _commands;
+	private List<string> _commandNames;
 
 	private List<string> _logs;
 	private string _lastCmd;
 	private string _curLog;
+	private List<string> _curPredictionItems;
+	private int _curPrediction;
 
 	private void Awake()
 	{
@@ -31,6 +35,7 @@ public class UIDevConsole : MonoBehaviour
 		Application.logMessageReceived += DebugLogMessage;
 		//Application.logMessageReceivedThreaded += DebugLogMessage;
 		_commands = new Dictionary<string, Command>();
+		_commandNames = new List<string>();
 		_logs = new List<string>();
 		INST = this;
 		_curLog = $"{DateTime.Now.ToString().Replace('/', '-').Replace(':', '.')}";
@@ -38,11 +43,53 @@ public class UIDevConsole : MonoBehaviour
 		AddDefaultCommands();
 	}
 
-	private void OnApplicationQuit()
+	// Start is called before the first frame update
+	private void Start()
 	{
-		Save();	
-	}
+		consolePanel.OnHide += () =>
+		{
+			GameEvents.InvokeOnDevConsoleClose();
+			GameEvents.InvokeOnCameraUnFreeze();
+		};
 
+		consolePanel.OnShow += () =>
+		{
+			scrollView.verticalNormalizedPosition = 0;
+			inputBox.ActivateInputField();
+			UpdateConsoleText();
+			GameEvents.InvokeOnDevConsoleOpen();
+			GameEvents.InvokeOnCameraFreeze();
+			Save();
+		};
+
+		inputBox.onSubmit.AddListener(s =>
+		{
+			if (s.Length == 0 || string.IsNullOrWhiteSpace(s))
+				return;
+
+			ParseCommand(inputBox.text);
+			inputBox.text = "";
+			inputBox.ActivateInputField();
+		});
+
+		inputBox.onValueChanged.AddListener(s =>
+		{
+			if (_curPredictionItems != null && s == _curPredictionItems[_curPrediction])
+				return;
+			_curPredictionItems = null;
+			_curPrediction = 0;
+			cmdPredictText.text = "";
+			if (s.Length == 0)
+				return;
+			if (s.Contains(' '))
+				return;
+			var preview = GetCommandSuggestion(s);
+			if(preview.Count >= 1)
+				cmdPredictText.text = preview[0];
+		});
+		consolePanel.Show();
+		consolePanel.Hide();
+	}
 	private void AddDefaultCommands()
 	{
 		AddCommand(new Command("close", () => consolePanel.Hide(), "Closes the console"));
@@ -115,46 +162,54 @@ public class UIDevConsole : MonoBehaviour
 			GameEvents.InvokeOnMapRegen();
 		}, "Destroys and unrenders the map"));
 	}
-
-	// Start is called before the first frame update
-	private void Start()
+	internal void AddCommand(Command command)
 	{
-		consolePanel.OnHide += () =>
+		if (!_commands.ContainsKey(command.name.ToLower()))
 		{
-			GameEvents.InvokeOnDevConsoleClose();
-			GameEvents.InvokeOnCameraUnFreeze();
-		};
+			_commands.Add(command.name.ToLower(), command);
+			_commandNames.Add(command.name);
+		}
+	}
 
-		consolePanel.OnShow += () =>
+	// Update is called once per frame
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
 		{
-			scrollView.verticalNormalizedPosition = 0;
-			inputBox.ActivateInputField();
-			UpdateConsoleText();
-			GameEvents.InvokeOnDevConsoleOpen();
-			GameEvents.InvokeOnCameraFreeze();
-			Save();
-		};
-
-		inputBox.onSubmit.AddListener(s =>
-		{
-			if (s.Length == 0 || string.IsNullOrWhiteSpace(s))
-				return;
-
-			ParseCommand(inputBox.text);
-			inputBox.text = "";
-			inputBox.ActivateInputField();
-		});
-
-		/*inputBox.onValueChanged.AddListener(s =>
-		{
-			if (inputBox.text == "`")
-			{
+			Debug.Log(consolePanel.IsOpen);
+			if (consolePanel.IsOpen)
 				consolePanel.Hide();
-				inputBox.text = "";
+			else
+				consolePanel.Show();
+		}
+
+		if (Input.GetKeyUp(KeyCode.UpArrow) && inputBox.isFocused && inputBox.text != _lastCmd)
+		{
+			inputBox.text = _lastCmd;
+			inputBox.caretPosition = inputBox.text.Length;
+		}
+
+		if(Input.GetKeyUp(KeyCode.Tab))
+		{
+			if (_curPredictionItems == null)
+			{
+				_curPredictionItems = GetCommandSuggestion(inputBox.text);
+				if(_curPredictionItems.Count == 0)
+					_curPredictionItems = null;
+				else
+					inputBox.text = _curPredictionItems[_curPrediction = 0];
+			}else
+			{
+				inputBox.text = _curPredictionItems[_curPrediction = (_curPrediction + 1) % _curPredictionItems.Count];
 			}
-		});*/
-		consolePanel.Show();
-		consolePanel.Hide();
+			cmdPredictText.text = "";
+			inputBox.caretPosition = inputBox.text.Length;
+		}
+
+		if (Input.GetKeyUp(KeyCode.F4))
+		{
+			ScreenCapture.CaptureScreenshot($"{Application.dataPath}/Phos {Time.time}.png");
+		}
 	}
 
 	private void DebugLogMessage(string condition, string stackTrace, LogType type)
@@ -190,31 +245,21 @@ public class UIDevConsole : MonoBehaviour
 
 	public void UpdateConsoleText()
 	{
-		consoleOut.SetText(_sb);
+		consoleOut.text = _sb.ToString();
 		scrollView.verticalNormalizedPosition = 0;
 	}
 
-	// Update is called once per frame
-	private void Update()
+	public List<string> GetCommandSuggestion(string query)
 	{
-		if (Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
+		query = query.ToLower();
+		var result = _commandNames.Where(n =>
 		{
-			Debug.Log(consolePanel.IsOpen);
-			if (consolePanel.IsOpen)
-				consolePanel.Hide();
-			else
-				consolePanel.Show();
-		}
-		if (Input.GetKeyUp(KeyCode.UpArrow) && inputBox.isFocused && inputBox.text != _lastCmd)
-		{
-			inputBox.text = _lastCmd;
-			inputBox.caretPosition = inputBox.text.Length;
-		}
-
-		if (Input.GetKeyUp(KeyCode.F4))
-		{
-			ScreenCapture.CaptureScreenshot($"{Application.dataPath}/Phos {Time.time}.png");
-		}
+			var qL = query.Length;
+			if (n.Length < qL)
+				return false;
+			return (n.ToLower().Substring(0, qL) == query);
+		}).ToList();
+		return result;
 	}
 
 	public static void AddConsoleMessage(string message, bool indent = true)
@@ -240,18 +285,16 @@ public class UIDevConsole : MonoBehaviour
 			AddConsoleMessage($"No such command '{commandSplit[0]}'");
 		}
 	}
-
-	internal void AddCommand(Command command)
-	{
-		if (!_commands.ContainsKey(command.name.ToLower()))
-			_commands.Add(command.name.ToLower(), command);
-	}
-
 	private void Save()
 	{
 #if !UNITY_ENGINE
 		File.WriteAllLines($"output - {_curLog}.log", _logs);
 #endif
+	}
+
+	private void OnApplicationQuit()
+	{
+		Save();
 	}
 
 	private void OnDisable()

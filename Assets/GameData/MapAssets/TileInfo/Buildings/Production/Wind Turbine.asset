@@ -59,8 +59,8 @@ MonoBehaviour:
   consumption: []
   adjacencyEffects:
   - {fileID: 11400000, guid: 6983612a86089b24aa51f5b539fed83e, type: 2}
-  maxSpinSpeed: 10
+  maxSpinSpeed: 4
   efficencyRange:
-    x: 0
-    y: 1
+    x: 0.2
+    y: 2
   turbineBlade: {fileID: 11400000, guid: f5b5966ec5e089d478efabace0666799, type: 2}
