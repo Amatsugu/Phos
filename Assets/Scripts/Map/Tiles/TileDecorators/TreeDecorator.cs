@@ -1,5 +1,6 @@
 ﻿using Amatsugu.Phos.Tiles;
 
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -38,30 +39,15 @@ public class TreeDecorator : TileDecorator
 		return Mathf.RoundToInt(noise * densityMulti);
 	}
 
-	public override Entity[] Render(Tile tile)
+	public override void Render(Tile tile, NativeSlice<Entity> decor)
 	{
 		var count = GetDecorEntityCount(tile);
-		var entities = new Entity[count];
 		for (int i = 0; i < count; i++)
 		{
 			var size = _rand.Range(minSize, maxSize);
 			var height = _rand.Range(minHeight, maxHeight);
 			var pos = new float3(_rand.NextFloat(), 0, _rand.NextFloat()) * (tile.map.innerRadius);
-			entities[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size), Quaternion.Euler(0, _rand.Range(0, 360), 0));
+			decor[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size), Quaternion.Euler(0, _rand.Range(0, 360), 0));
 		}
-		return entities;
 	}
-
-	/*public override Matrix4x4[] GetTransformMatricies(Tile tile)
-	{
-		var transforms = new Matrix4x4[GetDecorEntityCount(tile)];
-		for (int i = 0; i < transforms.Length; i++)
-		{
-			var size = _rand.Range(minSize, maxSize);
-			var height = _rand.Range(minHeight, maxHeight);
-			var pos = new Vector3(_rand.NextFloat(), 0, _rand.NextFloat()) * (Map.ActiveMap.innerRadius);
-			transforms[i] = Matrix4x4.TRS(tile.SurfacePoint + pos, Quaternion.Euler(0, _rand.Range(0, 360), 0), new Vector3(size, height, size));
-		}
-		return transforms;
-	}*/
 }

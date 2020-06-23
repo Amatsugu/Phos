@@ -4,6 +4,7 @@ using AnimationSystem.Animations;
 
 using System;
 
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -25,13 +26,12 @@ public class MineThumperDecorator : TileDecorator
 
 	public override int GetDecorEntityCount(Tile tile) => 2;
 
-	public override Entity[] Render(Tile tile)
+	public override void Render(Tile tile, NativeSlice<Entity> decor)
 	{
-		var e = new Entity[2];
-		for (int i = 0; i < e.Length; i++)
+		for (int i = 0; i < decor.Length; i++)
 		{
-			e[i] = meshEntity.Instantiate(tile.SurfacePoint + offsets[i]);
-			Map.EM.AddSharedComponentData(e[i], new Slider
+			decor[i] = meshEntity.Instantiate(tile.SurfacePoint + offsets[i]);
+			Map.EM.AddSharedComponentData(decor[i], new Slider
 			{
 				duration = 2,
 				animationCurve = curves[i],
@@ -40,6 +40,5 @@ public class MineThumperDecorator : TileDecorator
 				phase = Time.time + ((1 - i) * .1f)
 			});
 		}
-		return e;
 	}
 }

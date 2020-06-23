@@ -61,7 +61,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void Destroy()
 		{
 			base.Destroy();
-			if (!map.IsRendered)
+			if (!_isRendered)
 				return;
 			try
 			{
@@ -316,7 +316,7 @@ namespace Amatsugu.Phos.Tiles
 		public void Deconstruct()
 		{
 			map.RevertTile(this);
-			Debug.Log("Destroyed");
+			Debug.Log("Desconstruct");
 		}
 
 		public virtual bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;

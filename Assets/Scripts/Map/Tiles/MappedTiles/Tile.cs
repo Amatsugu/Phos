@@ -241,12 +241,8 @@ namespace Amatsugu.Phos.Tiles
 			int lastIndex = 0;
 			for (int i = 0; i < info.decorators.Length; i++)
 			{
-				var e = info.decorators[i].Render(this);
 				var count = info.decorators[i].GetDecorEntityCount(this);
-				for (int j = lastIndex; j < count; j++)
-				{
-					_decor[j] = e[j - lastIndex];
-				}
+				info.decorators[i].Render(this, _decor.Slice(lastIndex, count));
 				lastIndex += count;
 			}
 		}

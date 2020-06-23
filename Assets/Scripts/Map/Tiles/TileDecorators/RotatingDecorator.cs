@@ -3,6 +3,8 @@
 using AnimationSystem.Animations;
 using System.Collections;
 using System.Collections.Generic;
+
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -16,13 +18,10 @@ public class RotatingDecorator : TileDecorator
 
     public override int GetDecorEntityCount(Tile tile) => 1;
 
-    public override Entity[] Render(Tile tile)
+    public override void Render(Tile tile, NativeSlice<Entity> decor)
     {
-        var entities = new Entity[1];
-        entities[0] = meshEntity.Instantiate(tile.SurfacePoint);
-        Map.EM.AddComponentData(entities[0], new RotateAxis { Value = rotationAxis });
-        Map.EM.AddComponentData(entities[0], new RotateSpeed { Value = math.radians(rotateSpeed) });
-
-        return entities;
+        decor[0] = meshEntity.Instantiate(tile.SurfacePoint);
+        Map.EM.AddComponentData(decor[0], new RotateAxis { Value = rotationAxis });
+        Map.EM.AddComponentData(decor[0], new RotateSpeed { Value = math.radians(rotateSpeed) });
     }
 }

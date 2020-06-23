@@ -16,11 +16,8 @@ namespace Amatsugu.Phos.Tiles
 			return 0;
 		}
 
-		public override Entity[] Render(Tile tile)
+		public override void Render(Tile tile, NativeSlice<Entity> decor)
 		{
-			var e = new Entity[0];
-			//Map.EM.SetComponentData(parent, new NonUniformScale { Value = new Vector3(1, Map.ActiveMap.seaLevel + height, 1) });
-			return e;
 		}
 
 		public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile)

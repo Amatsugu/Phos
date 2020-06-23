@@ -23,15 +23,14 @@ public class MeshDecorator : TileDecorator
 		return 1;
 	}
 
-	public override Entity[] Render(Tile tile)
+	public override void Render(Tile tile, NativeSlice<Entity> decor)
 	{
 		var rot = rotation;
 		var mesh = meshEntity;
 		if (multiMesh)
 			mesh = meshEntities[UnityEngine.Random.Range(0, meshEntities.Length)];
 		rot.y = Mathf.PerlinNoise(tile.Coords.WorldPos.x / 10f, tile.Coords.WorldPos.z / 10f).Remap(0, 1, randomRotMin, randomRotMax);
-		var e = mesh.Instantiate(tile.SurfacePoint + offset, Vector3.one, Quaternion.Euler(rot));
-		return new Entity[] { e };
+		decor[0] = mesh.Instantiate(tile.SurfacePoint + offset, Vector3.one, Quaternion.Euler(rot));
 	}
 
 	public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile)

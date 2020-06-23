@@ -54,7 +54,7 @@ MonoBehaviour:
     ammount: 80
   - id: 2
     ammount: 40
-  - id: 2
+  - id: 0
     ammount: 20
   production: []
   consumption:

@@ -17,7 +17,7 @@ public abstract class TileDecorator : ScriptableObject
 
 	public abstract int GetDecorEntityCount(Tile tile);
 
-	public abstract Entity[] Render(Tile tile);
+	public abstract void Render(Tile tile, NativeSlice<Entity> decor);
 
 	public virtual void UpdateHeight(NativeSlice<Entity> decor, Tile tile)
 	{

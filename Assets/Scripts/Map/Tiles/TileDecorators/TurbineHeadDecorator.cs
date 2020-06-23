@@ -16,13 +16,11 @@ public class TurbineHeadDecorator : TileDecorator
 
 	public override int GetDecorEntityCount(Tile tile) => 1;
 
-	public override Entity[] Render(Tile tile)
+	public override void Render(Tile tile, NativeSlice<Entity> decor)
 	{
-		var entities = new Entity[1];
-		entities[0] = meshEntity.Instantiate(tile.SurfacePoint);
-		Map.EM.AddComponentData(entities[0], new RotateAxis { Value = Vector3.up });
-		Map.EM.AddComponentData(entities[0], new RotateSpeed { Value = math.radians(-40) });
-		return entities;
+		decor[0] = meshEntity.Instantiate(tile.SurfacePoint);
+		Map.EM.AddComponentData(decor[0], new RotateAxis { Value = Vector3.up });
+		Map.EM.AddComponentData(decor[0], new RotateSpeed { Value = math.radians(-40) });
 	}
 
 	public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile)
