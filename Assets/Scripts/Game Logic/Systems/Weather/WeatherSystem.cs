@@ -15,7 +15,7 @@ public class WeatherSystem : JobComponentSystem
 	public int gridSize = 2;
 	public NoiseSettings noiseSettings;
 	public float noiseScale = 50;
-	public float3 windDir;
+	public float WindSpeed => _curWeatherState.windSpeed;
 
 	public static INoiseFilter cloudFilter;
 
@@ -29,6 +29,7 @@ public class WeatherSystem : JobComponentSystem
 	private NativeArray<float2> _cloudField;
 	private NativeArray<float3> _cloudPos;
 
+	private float3 _windDir;
 	private WeatherDefination _curWeather;
 	private WeatherDefination _nextWeather;
 	private WeatherState _prevWeatherState;
@@ -126,7 +127,7 @@ public class WeatherSystem : JobComponentSystem
 			return;
 		noiseSettings = _init.noiseSettings;
 		cloudFilter = NoiseFilterFactory.CreateNoiseFilter(noiseSettings, 1);
-		windDir = UnityEngine.Random.insideUnitSphere;
+		_windDir = UnityEngine.Random.insideUnitSphere;
 		_cloudFieldNormalizedHalfWidth = (_init.fieldWidth * _shortDiag) / 2f;
 		_maxNoiseValue = 1 - noiseSettings.minValue;
 		if (_cloudField.IsCreated)
@@ -206,11 +207,11 @@ public class WeatherSystem : JobComponentSystem
 	{
 		var windSampleDir = Mathf.PerlinNoise(_offset.x / 50, _offset.z / 50) * Mathf.PI * 4; ;
 		var windSampleStr = Mathf.PerlinNoise(_offset.x / 100 + 100, _offset.z / 100 + 100) * Mathf.PI * 4; ;
-		windDir.x = Mathf.Cos(windSampleDir);
-		windDir.z = Mathf.Sin(windSampleDir);
-		windDir.y = Mathf.Cos(windSampleStr);
-		_init.rainVfx.SetVector3("Wind", windDir * -1);
-		_offset += windDir * Time.DeltaTime * _curWeatherState.windSpeed;
+		_windDir.x = Mathf.Cos(windSampleDir);
+		_windDir.z = Mathf.Sin(windSampleDir);
+		_windDir.y = Mathf.Cos(windSampleStr);
+		_init.rainVfx.SetVector3("Wind", _windDir * -1);
+		_offset += _windDir * Time.DeltaTime * _curWeatherState.windSpeed;
 		GenerateCloudField();
 
 		if (Time.ElapsedTime >= _nextWeatherTime && _nextWeather == null)

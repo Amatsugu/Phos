@@ -6,6 +6,8 @@ using AnimationSystem.Animations;
 using Unity.Entities;
 using Unity.Mathematics;
 
+using UnityEngine;
+
 namespace Amatsugu.Phos.Tiles
 {
 	public class WindTurbileTile : TickedBuildingTile
@@ -33,11 +35,27 @@ namespace Amatsugu.Phos.Tiles
 		protected override void OnTick()
 		{
 			base.OnTick();
-			var windSpeed = math.length(_weatherSystem.windDir);
-			var eff = windSpeed.Remap(0, 20, turbineInfo.efficencyRange.x, turbineInfo.efficencyRange.y);
+			UpdateWind();
+		}
+
+		void UpdateWind()
+		{
+			var windSpeed = math.length(_weatherSystem.WindSpeed);
+			Debug.Log(windSpeed);
+			float eff;
+			if (windSpeed == 0)
+				eff = 0;
+			else
+				eff = windSpeed.Remap(0, .5f, turbineInfo.efficencyRange.x, turbineInfo.efficencyRange.y);
 			var building = GetBuildingEntity();
 			Map.EM.SetComponentData(building, new ProductionMulti { Value = buffs.productionMulti * eff });
 			Map.EM.SetComponentData(_blade, new RotateSpeed { Value = turbineInfo.maxSpinSpeed * eff });
+		}
+
+		protected override void OnBuffRecieved()
+		{
+			base.OnBuffRecieved();
+			UpdateWind();
 		}
 
 		public override void OnDisconnected()

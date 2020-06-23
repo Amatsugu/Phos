@@ -32,7 +32,7 @@ namespace Amatsugu.Phos.Tiles
 		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
 			buildingInfo = tInfo;
-			buffs = default;
+			buffs = StatsBuffs.Default;
 		}
 
 		public override Entity Render()

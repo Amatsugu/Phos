@@ -249,7 +249,9 @@ public class UIDevConsole : MonoBehaviour
 
 	private void Save()
 	{
+#if !UNITY_ENGINE
 		File.WriteAllLines($"output - {_curLog}.log", _logs);
+#endif
 	}
 
 	private void OnDisable()
