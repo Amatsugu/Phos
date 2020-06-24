@@ -141,6 +141,8 @@ namespace Amatsugu.Phos.Tiles
 					var disconnectedNodesEnd = map.conduitGraph.GetDisconectedNodesSet();
 					for (int i = 0; i < disconnectedNodesStart.Length; i++)
 					{
+						if (disconnectedNodesStart[i].conduitPos == Coords)
+							continue;
 						if (disconnectedNodesEnd.Contains(disconnectedNodesStart[i]))
 							continue;
 						var tile = map[disconnectedNodesStart[i].conduitPos];

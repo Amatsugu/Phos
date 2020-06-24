@@ -434,6 +434,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void OnConnected()
 		{
+			Debug.Log($"{info.name}: {Coords} connected");
 			if (IsBuilt)
 				OnBuiltAndPowered();
 			if (_connectionNotif != -1)
@@ -442,6 +443,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void OnDisconnected()
 		{
+			Debug.Log($"{info.name}: {Coords} disconnected");
 			if(_connectionNotif == -1)
 				_connectionNotif = InfoPopupUI.ShowPopupNotif(this, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and cannot opperate");
 		}

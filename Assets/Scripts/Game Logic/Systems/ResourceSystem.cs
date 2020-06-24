@@ -149,7 +149,6 @@ public class ResourceSystem : ComponentSystem
 		nextTic = Time.ElapsedTime + (1 / ticRate);
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i].Clear();
-		GameEvents.InvokeOnGameTick();
 
 		//Consumption
 		/*Entities.WithNone<BuildingOffTag, ConsumptionMulti>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>
@@ -207,6 +206,9 @@ public class ResourceSystem : ComponentSystem
 			if (EntityManager.Exists(e))
 				PostUpdateCommands.RemoveComponent(e, typeof(FirstTickTag));
 		});
+
+		GameEvents.InvokeOnGameTick();
+
 	}
 
 	public void LogDemand(int rId, int rate, int srcBuilding) => resourceRecords[rId].LogDemand(rate, srcBuilding);

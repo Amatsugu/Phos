@@ -33,7 +33,6 @@ public class UIDevConsole : MonoBehaviour
 	{
 		_sb = new StringBuilder();
 		Application.logMessageReceived += DebugLogMessage;
-		//Application.logMessageReceivedThreaded += DebugLogMessage;
 		_commands = new Dictionary<string, Command>();
 		_commandNames = new List<string>();
 		_logs = new List<string>();
@@ -162,7 +161,8 @@ public class UIDevConsole : MonoBehaviour
 			GameEvents.InvokeOnMapRegen();
 		}, "Destroys and unrenders the map"));
 	}
-	internal void AddCommand(Command command)
+	
+	private void AddCommand(Command command)
 	{
 		if (!_commands.ContainsKey(command.name.ToLower()))
 		{
