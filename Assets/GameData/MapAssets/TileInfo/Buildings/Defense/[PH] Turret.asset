@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 93f6de7c742a08b4cadb99176a63d07e, type: 3}
   m_Name: '[PH] Turret'
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
@@ -40,9 +40,9 @@ MonoBehaviour:
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
-  faction: 0
+  faction: 1
   maxHealth: 100
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 11400000, guid: 64264ba37fb009140b7237d68e6e4e60, type: 2}
   healthBarOffset:
     x: 0
     y: 0
@@ -52,3 +52,8 @@ MonoBehaviour:
   production: []
   consumption: []
   adjacencyEffects: []
+  fireRate: 1
+  damage: 10
+  attackRange: 20
+  projectileMesh: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
+  turretHead: {fileID: 11400000, guid: 68cb1fd3b1861fd4880a15223d7f5b63, type: 2}
