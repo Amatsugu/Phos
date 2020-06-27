@@ -64,5 +64,11 @@ namespace Amatsugu.Phos.Tiles
 			base.OnShow();
 			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_turretHead);
 		}
+
+		public override void Destroy()
+		{
+			base.Destroy();
+			Map.EM.DestroyEntity(_turretHead);
+		}
 	}
 }

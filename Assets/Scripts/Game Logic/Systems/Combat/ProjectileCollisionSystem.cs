@@ -35,7 +35,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 		var dmg = damage[src];
 		if (!dmg.friendlyFire && faction.HasComponent(src) && faction.HasComponent(tgt))
 		{
-			if(faction[src] == faction[tgt])
+			if(faction[src].Value == faction[tgt].Value)
 				return;
 		}
 		var h = health[tgt];
