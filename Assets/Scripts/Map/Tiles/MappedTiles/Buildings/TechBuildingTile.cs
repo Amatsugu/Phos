@@ -19,21 +19,10 @@ namespace Amatsugu.Phos.Tiles
 			_buffedTiles = new HashSet<HexCoords>(HexCoords.SpiralSelect(coords, tInfo.effectRange, true));
 		}
 
-		public override void OnConnected()
-		{
-			base.OnConnected();
-			UnlockBuildings();
-		}
-
-		protected override void OnBuilt()
-		{
-			base.OnBuilt();
-			UnlockBuildings();
-		}
-
 		protected override void OnBuiltAndPowered()
 		{
 			base.OnBuiltAndPowered();
+			UnlockBuildings();
 			map.HexSelectForEach(Coords, techInfo.effectRange, t =>
 			{
 				if (t is BuildingTile b)
