@@ -86,9 +86,8 @@ public class UIDevConsole : MonoBehaviour
 			if(preview.Count >= 1)
 				cmdPredictText.text = preview[0];
 		});
-		consolePanel.Show();
-		consolePanel.Hide();
 	}
+
 	private void AddDefaultCommands()
 	{
 		AddCommand(new Command("close", () => consolePanel.Hide(), "Closes the console"));

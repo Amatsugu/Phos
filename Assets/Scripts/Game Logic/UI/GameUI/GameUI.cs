@@ -18,7 +18,7 @@ public class GameUI : UIHover
 	private UISelectionPanel _selectionPanel;
 
 	private UIState _state;
-	private UIState _prevState;
+	private UIState _prevState = UIState.HQPlacement;
 
 
 	private enum UIState
@@ -87,6 +87,7 @@ public class GameUI : UIHover
 	private void OnHQPlaced()
 	{
 		_state = UIState.Idle;
+		_prevState = _state;
 		_categoryPanel.SetInteractable(true);
 	}
 
