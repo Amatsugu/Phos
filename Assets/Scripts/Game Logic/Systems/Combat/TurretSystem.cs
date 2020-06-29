@@ -3,13 +3,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Transforms;
 
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Amatsugu.Phos.ECS
@@ -19,6 +24,11 @@ namespace Amatsugu.Phos.ECS
 
 		private bool _isReady = false;
 		private ProjectileMeshEntity _bullet;
+		private BuildPhysicsWorld _physicsWorld;
+		private StepPhysicsWorld _simWorld;
+		private NativeList<int> _castHits;
+		private CollisionFilter _playerTargetingFilter;
+		private CollisionFilter _phosTargetingFilter;
 
 		protected override void OnCreate()
 		{
@@ -32,6 +42,19 @@ namespace Amatsugu.Phos.ECS
 					_isReady = true;
 				}
 			};
+			_physicsWorld = World.GetExistingSystem<BuildPhysicsWorld>();
+			_simWorld = World.GetExistingSystem<StepPhysicsWorld>();
+			_castHits = new NativeList<int>(Allocator.Persistent);
+			_playerTargetingFilter = new CollisionFilter
+			{
+				BelongsTo = (1u << (int)Faction.Player),
+				CollidesWith = (1u << (int)Faction.Phos)
+			};
+			_phosTargetingFilter = new CollisionFilter
+			{
+				BelongsTo = (1u << (int)Faction.Phos),
+				CollidesWith = (1u << (int)Faction.Player)
+			};
 		}
 
 		protected override void OnUpdate()
@@ -39,22 +62,60 @@ namespace Amatsugu.Phos.ECS
 			if (!_isReady)
 				return;
 
-			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range) =>
+			var world = _physicsWorld.PhysicsWorld;
+			_castHits.Clear();
+
+			//Verify Target
+			Entities.WithAll<Turret>().ForEach((Entity e, ref AttackTarget target) =>
+			{
+				
+			});
+
+			//Aim
+			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
-				r = math.mul(math.normalizesafe(r), quaternion.AxisAngle(math.up(), 10 * Time.DeltaTime));
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value);
+				var desR = quaternion.LookRotation(pos.Value - tgtPos.Value, math.up());
+				desR = Quaternion.RotateTowards(r, desR, 10 * Time.DeltaTime);
 				EntityManager.SetComponentData(t.Head, new Rotation
 				{
-					Value = r
+					Value = desR
 				});
+			});
 
-				var fwd = -math.rotate(r, new float3(0, 0, 1));
+			//Idle
+			Entities.WithAll<Turret>().ForEach((Entity e, ref Translation pos, ref AttackRange range, ref FactionId faction) =>
+			{
+				_physicsWorld.AABBCast(pos.Value, range.Value, faction.Value == Faction.Player ? _playerTargetingFilter : _phosTargetingFilter, ref _castHits);
+				for (int i = 0; i < _castHits.Length; i++)
+				{
+					var tgtE = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
+					var tgtPos = EntityManager.GetComponentData<CenterOfMass>(tgtE).Value;
+					var distSq = math.lengthsq(pos.Value - tgtPos);
+					if(distSq < range.ValueSq)
+					{
+						PostUpdateCommands.AddComponent(e, new AttackTarget { Value = tgtE });
+						break;
+					}
+				}
+			});
 
+			//Shoot
+			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
+			{
+				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value);
+				var dir = math.normalizesafe(pos.Value - tgtPos.Value);
+				var desR = quaternion.LookRotation(dir, math.up());
+				if (!r.value.Equals(desR))
+					return;
+				if (Time.ElapsedTime < speed.NextAttackTime)
+					return;
+				speed.NextAttackTime += speed.Value;
 
-				var b  = _bullet.BufferedInstantiate(PostUpdateCommands, pos.Value + fwd * 2f, 0.1f, fwd * 10);
-
+				var b = _bullet.Instantiate(pos.Value + math.up() * 2, 0.5f, dir * 5);
 				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
-
 			});
 		}
 	}
