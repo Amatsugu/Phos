@@ -80,7 +80,7 @@ public class MobileUnitEntity : MeshEntityRotatable
 		};
 
 		var physMat = Unity.Physics.Material.Default;
-		physMat.Flags |= Unity.Physics.Material.MaterialFlags.EnableCollisionEvents;
+		physMat.CollisionResponse = CollisionResponsePolicy.CollideRaiseCollisionEvents;
 
 		Map.EM.SetComponentData(e, new PhysicsCollider
 		{

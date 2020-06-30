@@ -18,10 +18,10 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 
 	public void Execute(CollisionEvent collisionEvent)
 	{
-		if (damage.HasComponent(collisionEvent.Entities.EntityA))
-			DealDamage(collisionEvent.Entities.EntityA, collisionEvent.Entities.EntityB);
-		else if (damage.HasComponent(collisionEvent.Entities.EntityB))
-			DealDamage(collisionEvent.Entities.EntityB, collisionEvent.Entities.EntityA);
+		if (damage.HasComponent(collisionEvent.EntityA))
+			DealDamage(collisionEvent.EntityA, collisionEvent.EntityB);
+		else if (damage.HasComponent(collisionEvent.EntityB))
+			DealDamage(collisionEvent.EntityB, collisionEvent.EntityA);
 	}
 
 	private void DealDamage(Entity src, Entity tgt)

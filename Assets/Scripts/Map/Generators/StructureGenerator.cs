@@ -81,6 +81,6 @@ public class StructureGenerator : FeatureGenerator
 		if (origTile == null)
 			return;
 		map[coords] = phosCrystal.CreateTile(map, coords, origTile.Height);
-		map[coords].originalTile = origTile.info;
+		map[coords].originalTile = origTile.originalTile != null ? origTile.originalTile : origTile.info;
 	}
 }

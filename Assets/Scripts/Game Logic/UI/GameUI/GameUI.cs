@@ -102,7 +102,7 @@ public class GameUI : UIHover
 	private void CategorySelected(BuildingCategory category)
 	{
 		_selectionPanel.Hide();
-		_state = UIState.PlaceBuilding;
+		_prevState = _state = UIState.PlaceBuilding;
 		_buildPanel.Show(category);
 	}
 
@@ -110,7 +110,7 @@ public class GameUI : UIHover
 	{
 		_buildPanel.Hide();
 		_categoryPanel.DeselectAll();
-		_state = UIState.Deconstruct;
+		_prevState = _state = UIState.Deconstruct;
 		_buildPanel.state = UIBuildPanel.BuildState.Deconstruct;
 	}
 

@@ -77,7 +77,7 @@ public class PhysicsMeshEntity : MeshEntityRotatable
 			Radius = colliderRadius,
 		}, GetFilter(), new Unity.Physics.Material
 		{
-			Flags = Unity.Physics.Material.MaterialFlags.EnableCollisionEvents
+			CollisionResponse = CollisionResponsePolicy.CollideRaiseCollisionEvents
 		})
 	};
 

@@ -75,9 +75,9 @@ public class PhosCoreSystem : ComponentSystem
 
 	private void SimulateAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((Entity e, ref PhosCore core, ref PhosCoreData data, ref Translation t, ref FactionId faction) =>
+		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ref PhosCore core, ref PhosCoreData data, ref Translation t, ref FactionId faction) =>
 		{
-			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2); //Angle of the ring
+			var baseAngle = (((float)Time.ElapsedTime % core.spinRate) / core.spinRate) * (math.PI * 2); //Rotation of the ring
 			PostUpdateCommands.SetComponent(data.ring, new Rotation { Value = quaternion.AxisAngle(Vector3.up, baseAngle + (math.PI * 2) / 12f) });
 			if (core.nextVolleyTime <= Time.ElapsedTime)
 			{
@@ -121,6 +121,8 @@ public class PhosCoreSystem : ComponentSystem
 
 	private void FirePorjectile(float3 startPos, float angle, float3 target, PhosCore core, double targetTime, FactionId team)
 	{
+		if (target.Equals(0))
+			return;
 		var dir = math.rotate(quaternion.RotateY(angle), Vector3.forward);
 		var pos = startPos + (dir * 2.9f) + new float3(0, 4, 0);
 		dir.y = .4f;
@@ -148,12 +150,15 @@ public class PhosProjectileSystem : JobComponentSystem
 		[ReadOnly] public ArchetypeChunkComponentType<PhosProjectile> projectileType;
 		public ArchetypeChunkComponentType<PhysicsVelocity> velocityType;
 		[ReadOnly] public ArchetypeChunkComponentType<Translation> translationType;
+		[ReadOnly] public ArchetypeChunkEntityType entityType;
+		public EntityCommandBuffer.Concurrent CMB;
 
 		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 		{
 			var vel = chunk.GetNativeArray(velocityType);
 			var proj = chunk.GetNativeArray(projectileType);
 			var trans = chunk.GetNativeArray(translationType);
+			var entities = chunk.GetNativeArray(entityType);
 			for (int i = 0; i < chunk.Count; i++)
 			{
 				if (curTime < proj[i].targetTime)
@@ -161,11 +166,13 @@ public class PhosProjectileSystem : JobComponentSystem
 				var v = vel[i];
 				v.Linear = math.normalize(proj[i].target - trans[i].Value) * proj[i].flightSpeed;
 				vel[i] = v;
+				CMB.RemoveComponent<PhosProjectile>(chunkIndex, entities[i]);
 			}
 		}
 	}
 
 	private EntityQuery entityQuery;
+	private EndSimulationEntityCommandBufferSystem endSimulation;
 
 	protected override void OnCreate()
 	{
@@ -185,6 +192,7 @@ public class PhosProjectileSystem : JobComponentSystem
 			}
 		};
 		entityQuery = GetEntityQuery(desc);
+		endSimulation = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -195,10 +203,10 @@ public class PhosProjectileSystem : JobComponentSystem
 			projectileType = GetArchetypeChunkComponentType<PhosProjectile>(true),
 			velocityType = GetArchetypeChunkComponentType<PhysicsVelocity>(false),
 			translationType = GetArchetypeChunkComponentType<Translation>(true),
+			CMB = endSimulation.CreateCommandBuffer().ToConcurrent(),
+			entityType = GetArchetypeChunkEntityType()
 		};
-		////inputDeps = job.Schedule(this, inputDeps);
 		inputDeps = job.ScheduleParallel(entityQuery, inputDeps);
-		inputDeps.Complete();
 		return inputDeps;
 	}
 }

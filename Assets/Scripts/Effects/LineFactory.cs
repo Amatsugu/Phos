@@ -51,10 +51,10 @@ namespace Effects.Lines
 			cmb.SetComponent(index, e, new Rotation { Value = r });
 		}
 
-		public static (float3 translation, float3 scale, Quaternion rotation) PrepareLine(float3 a, float3 b, float thiccness)
+		public static (float3 translation, float3 scale, quaternion rotation) PrepareLine(float3 a, float3 b, float thiccness)
 		{
 			var dir = b - a;
-			return (a, new float3(thiccness, thiccness, Vector3.Magnitude(dir)), Quaternion.LookRotation(dir, Vector3.up));
+			return (a, new float3(thiccness, thiccness, math.length(dir)), quaternion.LookRotationSafe(dir, math.up()));
 		}
 	}
 }

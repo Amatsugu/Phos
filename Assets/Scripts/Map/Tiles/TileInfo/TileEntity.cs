@@ -32,7 +32,6 @@ namespace Amatsugu.Phos.TileEntities
 			return base.GetComponents().Concat(new ComponentType[]{
 			typeof(HexPosition),
 			typeof(PhysicsCollider),
-			typeof(PhysicsDebugDisplayData),
 		});
 		}
 
@@ -41,12 +40,8 @@ namespace Amatsugu.Phos.TileEntities
 			base.PrepareDefaultComponentData(entity);
 			//Map.EM.SetComponentData(entity, new FactionId { Value = faction });
 
-			Map.EM.SetComponentData(entity, new PhysicsDebugDisplayData
-			{
-				DrawColliders = 1
-			});
 			var physMat = Unity.Physics.Material.Default;
-			physMat.Flags |= Unity.Physics.Material.MaterialFlags.EnableCollisionEvents;
+			physMat.CollisionResponse = CollisionResponsePolicy.CollideRaiseCollisionEvents;
 			var colFilter = new CollisionFilter
 			{
 				CollidesWith = ~0u,

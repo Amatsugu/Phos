@@ -57,6 +57,12 @@ namespace Amatsugu.Phos.ECS
 			};
 		}
 
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+			_castHits.Dispose();
+		}
+
 		protected override void OnUpdate()
 		{
 			if (!_isReady)
@@ -75,9 +81,10 @@ namespace Amatsugu.Phos.ECS
 			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
-				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value);
-				var desR = quaternion.LookRotation(pos.Value - tgtPos.Value, math.up());
-				desR = Quaternion.RotateTowards(r, desR, 10 * Time.DeltaTime);
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
+				tgtPos.y = pos.Value.y;
+				var desR = quaternion.LookRotation(pos.Value - tgtPos, math.up());
+				desR = Quaternion.RotateTowards(r, desR, 360 * Time.DeltaTime);
 				EntityManager.SetComponentData(t.Head, new Rotation
 				{
 					Value = desR
@@ -105,16 +112,17 @@ namespace Amatsugu.Phos.ECS
 			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
-				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value);
-				var dir = math.normalizesafe(pos.Value - tgtPos.Value);
-				var desR = quaternion.LookRotation(dir, math.up());
-				if (!r.value.Equals(desR))
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
+				var dir = math.normalizesafe(pos.Value - tgtPos);
+				var flatDir = dir;
+				flatDir.y = 0;
+				var desR = quaternion.LookRotation(flatDir, math.up());
+				if (r.value.Equals(desR.value))
 					return;
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
 				speed.NextAttackTime += speed.Value;
-
-				var b = _bullet.Instantiate(pos.Value + math.up() * 2, 0.5f, dir * 5);
+				var b = _bullet.Instantiate(pos.Value + math.up() * 2, 0.2f, -dir);
 				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
 			});
 		}
