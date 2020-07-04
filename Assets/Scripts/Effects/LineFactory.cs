@@ -58,7 +58,6 @@ namespace Effects.Lines
 			var dirNorm = math.normalize(dir);
 			if(up.Equals(math.abs(dirNorm)))
 			{
-				Debug.Log("fallback");
 				if(dir.y < 0)
 					return (a, new float3(thiccness, thiccness, math.abs(math.length(dir))), quaternion.RotateX(math.radians(90)));
 				else
