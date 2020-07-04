@@ -87,16 +87,24 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 
 			}
 		}
+		if (cannotPlace)
+		{
+			indicatorManager.LogError("Cannot place on these tiles");
+			return false;
+		}
 		if (!hasRes)
 		{
 			if (cannotGather)
 				indicatorManager.LogError("Cannot gatther these resources");
 			else
 				indicatorManager.LogError("No resources to gather");
+			for (int i = 0; i < tilesToOccupy.Length; i++)
+			{
+				indicatorManager.SetIndicator(map[tilesToOccupy[i]], errorIndicator);
+				return false;
+			}
 		}
-		if (cannotPlace)
-			indicatorManager.LogError("Cannot place on these tiles");
 
-		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager) && hasRes && (!cannotPlace);
+		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
 	}
 }

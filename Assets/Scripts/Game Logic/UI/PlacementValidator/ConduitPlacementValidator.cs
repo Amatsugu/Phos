@@ -1,4 +1,5 @@
 ﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ public class ConduitPlacementValidator : PlacementValidator
 {
 	public MeshEntity poweredIndicator;
 	public MeshEntityRotatable powerLineIndicator;
+	public int maxOverlap = 2;
 
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
 	{
@@ -36,10 +38,19 @@ public class ConduitPlacementValidator : PlacementValidator
 #endif
 		//else
 		//	HideIndicator(resourceConduitPreviewLine);
+		var conduitCount = 0;
 		map.HexSelectForEach(pos, conduitInfo.poweredRange, t =>
 		{
 			indicatorManager.SetIndicator(t, poweredIndicator);
+			if (t is ResourceConduitTile)
+				conduitCount++;
 		}, true);
+		if (conduitCount > maxOverlap)
+		{
+			indicatorManager.SetIndicator(map[pos], errorIndicator);
+			indicatorManager.LogError($"Cannot place more than {maxOverlap} overlaping conduits");
+			return false;
+		}
 		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
 	}
 }
