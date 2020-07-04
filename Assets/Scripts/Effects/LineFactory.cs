@@ -23,7 +23,6 @@ namespace Effects.Lines
 		public static Entity CreateStaticLine(MeshEntityRotatable line, Vector3 a, Vector3 b, float thiccness = 0.1f)
 		{
 			var (t, s, r) = PrepareLine(a, b, thiccness);
-			Debug.Log($"t {t} s {s} r {r}");
 			return line.Instantiate(t, s, r);
 		}
 
@@ -55,7 +54,17 @@ namespace Effects.Lines
 		public static (float3 translation, float3 scale, quaternion rotation) PrepareLine(float3 a, float3 b, float thiccness)
 		{
 			var dir = b - a;
-			return (a, new float3(thiccness, thiccness, math.abs(math.length(dir))), quaternion.LookRotation(math.normalizesafe(dir), math.up()));
+			var up = math.up();
+			var dirNorm = math.normalize(dir);
+			if(up.Equals(math.abs(dirNorm)))
+			{
+				Debug.Log("fallback");
+				if(dir.y < 0)
+					return (a, new float3(thiccness, thiccness, math.abs(math.length(dir))), quaternion.RotateX(math.radians(90)));
+				else
+					return (a, new float3(thiccness, thiccness, math.abs(math.length(dir))), quaternion.RotateX(math.radians(-90)));
+			}
+			return (a, new float3(thiccness, thiccness, math.abs(math.length(dir))), quaternion.LookRotationSafe(dir, math.up()));
 		}
 	}
 }

@@ -88,7 +88,8 @@ public class UIInfoPopup : UIExpandable
 		_notifPos = tile.SurfacePoint + offset;
 		rTransform.position = _notifPos;
 		rTransform.rotation = GameRegistry.Camera.transform.rotation;
-		_line = LineFactory.CreateStaticLine(line, tile.SurfacePoint, _notifPos);
+		Debug.DrawLine(tile.SurfacePoint, _notifPos, Color.magenta, 5);
+		_line = LineFactory.CreateStaticLine(line, _notifPos, tile.SurfacePoint);
 	}
 
 	public int AddNotif(Sprite icon, string title, string message)
