@@ -18,8 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  description: Transfers power and resources to buildings. These are required to
-    remove the additional power cost from disconnected buildings.
+  description: Transfers power and resources to buildings. These can be placed on
+    water and have a larger powered area.
   decorators: []
   isTraverseable: 0
   assetGuid: 09aba4acb75565341b194434483ffed7

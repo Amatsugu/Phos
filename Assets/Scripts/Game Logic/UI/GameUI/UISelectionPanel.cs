@@ -146,6 +146,10 @@ public class UISelectionPanel : UIPanel
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 		{
 			_start = _map[pos];
+		}else
+		{
+			if(selectionBox.gameObject.activeInHierarchy)
+				selectionBox.gameObject.SetActive(false);
 		}
 		if (Input.GetKey(KeyCode.Mouse0))
 		{

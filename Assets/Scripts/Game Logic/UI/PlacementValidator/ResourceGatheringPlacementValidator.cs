@@ -54,7 +54,7 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 			var res = buildingInfo.resourcesToGather[i];
 			if (!_resInRange.ContainsKey(res.id))
 				continue;
-			var gatherAmmount = Mathf.FloorToInt(_resInRange[res.id] * res.ammount);
+			var gatherAmmount = Mathf.CeilToInt(_resInRange[res.id] * res.ammount);
 			gatherString.AppendLine($"+{gatherAmmount}{ResourceDatabase.GetResourceString(res.id)}");
 			var tiles = _resTiles[res.id];
 			for (int j = 0; j < tiles.Count; j++)

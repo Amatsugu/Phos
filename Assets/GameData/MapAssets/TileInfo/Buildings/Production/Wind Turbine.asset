@@ -18,7 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  description: Produces power by caprutring enegry from the wind.
+  description: Produces power by caprutring enegry from the wind. Efficeny is affected
+    by the current wind speed.
   decorators: []
   isTraverseable: 0
   assetGuid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb

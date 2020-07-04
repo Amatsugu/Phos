@@ -33,8 +33,10 @@ namespace Amatsugu.Phos.TileEntities
 			{
 				b.AppendLine();
 				b.Append(gatherString);
+				return b;
 			}
-			return b;
+			else
+				return gatherString;
 		}
 	}
 }
