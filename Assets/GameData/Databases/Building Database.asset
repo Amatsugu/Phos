@@ -56,9 +56,6 @@ MonoBehaviour:
   - id: 9
     info: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
     category: 0
-  - id: 28
-    info: {fileID: 11400000, guid: dc79b73a0226f9f49a7335c742c20914, type: 2}
-    category: 0
   - id: 18
     info: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
     category: 5
@@ -88,6 +85,9 @@ MonoBehaviour:
     category: 3
   - id: 27
     info: {fileID: 11400000, guid: fcfbc5a667690e540b3cbcda9dd74c53, type: 2}
+    category: 3
+  - id: 28
+    info: {fileID: 11400000, guid: dc79b73a0226f9f49a7335c742c20914, type: 2}
     category: 3
   - id: 19
     info: {fileID: 11400000, guid: d02481ac5a9ada04faab17721ee4fe04, type: 2}
