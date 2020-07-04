@@ -108,31 +108,23 @@ namespace Amatsugu.Phos.Tiles
 			var connectionsMade = 0;
 			for (int i = 0; i < closest.Count; i++)
 			{
+				if (thisNode.IsFull)
+					break;
 				if (closest[i] == thisNode)
 					continue;
 				if (closest[i].IsFull)
 					continue;
 				if (closest[i].IsConnectedTo(thisNode))
 					continue;
-				if (!(map[closest[i].conduitPos] as BuildingTile).IsBuilt)
+				if ((map[closest[i].conduitPos] as BuildingTile)?.IsBuilt == false)
 					continue;
 
 				connectionsMade++;
 
 				thisNode.ConnectTo(closest[i]);
-
-				/*//var tile = map[closest[i].conduitPos];
-				var a = closest[i].conduitPos.world + new float3(0, closest[i].height, 0);
-				var b = Coords.world + new float3(0, thisNode.height, 0);
-				var line = gotConnectedNode ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
-				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(line, a, b));*/
-				if (thisNode.IsFull)
-					break;
 			}
 			if (connectionsMade == 0)
-			{
 				HQDisconnected();
-			}
 			else
 			{
 				//Propagate Connection
@@ -203,6 +195,8 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (_connectionInit && HasHQConnection)
 				return;
+			if (!isBuilt)
+				return;
 			_energyPacket = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .15f);
 			var cNode = map.conduitGraph.GetNode(Coords);
 			Map.EM.AddComponentData(_energyPacket, new EnergyPacket
@@ -226,6 +220,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void HQDisconnected()
 		{
 			if (_connectionInit && !HasHQConnection)
+				return;
+			if (!isBuilt)
 				return;
 			HasHQConnection = false;
 			_switchLines = true;
@@ -297,6 +293,8 @@ namespace Amatsugu.Phos.Tiles
 			for (int i = 0; i < connections.Length; i++)
 			{
 				var c = connections[i];
+				if (_conduitLines.ContainsKey(c.conduitPos))
+					continue;
 				var a = c.conduitPos.WorldPos + new float3(0, c.height, 0);
 				_conduitLines.Add(c.conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			}
