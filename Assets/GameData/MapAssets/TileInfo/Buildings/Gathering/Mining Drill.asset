@@ -19,7 +19,7 @@ MonoBehaviour:
   isStatic: 1
   nonUniformScale: 0
   description: Drills deep into the soil. Capable to extracting at a higher efficiency
-    and capable of mining  Gold and  Silver
+    and capable of mining  Gold and Silver
   decorators:
   - {fileID: 11400000, guid: 98a486c948c9bc2499b5ec4a2c469a8c, type: 2}
   isTraverseable: 1
@@ -55,7 +55,7 @@ MonoBehaviour:
     ammount: 60
   - id: 4
     ammount: 40
-  - id: 4
+  - id: 0
     ammount: 30
   production: []
   consumption:
