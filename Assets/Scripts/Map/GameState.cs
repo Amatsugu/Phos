@@ -20,6 +20,6 @@ public struct GameState
 		this.map = map;
 		this.unlockedBuildings = unlockedBuildings ?? new HashSet<int>();
 		resCount = new int[ResourceDatabase.ResourceCount];
-		baseName = default;
+		baseName = "Base Name";
 	}
 }

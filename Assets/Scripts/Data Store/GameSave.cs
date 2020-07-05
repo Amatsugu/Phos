@@ -37,8 +37,12 @@ namespace Amatsugu.Phos.DataStore
 			{
 				Directory.CreateDirectory(dir);
 			}
-			File.WriteAllText($"{dir}/gamestate.json", JsonConvert.SerializeObject(gameState));
-			File.WriteAllText($"{dir}/map.json", JsonConvert.SerializeObject(map));
+			var formating = Formatting.None;
+#if UNITY_EDITOR
+			formating = Formatting.Indented;
+#endif
+			File.WriteAllText($"{dir}/gamestate.json", JsonConvert.SerializeObject(gameState, formating));
+			File.WriteAllText($"{dir}/map.json", JsonConvert.SerializeObject(map, formating));
 		}
 
 		public static GameSave Load(string saveName)

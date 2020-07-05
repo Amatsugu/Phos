@@ -32,7 +32,8 @@ public class SerializedMap
 	{
 		var map = new Map(height, width, seed, tileEdgeLength)
 		{
-			conduitGraph = conduitGrapth.Deserialize()
+			conduitGraph = conduitGrapth.Deserialize(),
+			seaLevel = seaLevel
 		};
 		for (int i = 0; i < tiles.Length; i++)
 		{
@@ -43,7 +44,6 @@ public class SerializedMap
 				map[pos].originalTile = tileDb.tileEntites[curTile.origTile].tile;
 			map[pos].OnDeSerialized(curTile.tileData);
 		}
-		//TODO: Complete serializtion of units
 		map.units = new Dictionary<int, MobileUnit>();
 		for (int i = 0; i < units.Length; i++)
 		{

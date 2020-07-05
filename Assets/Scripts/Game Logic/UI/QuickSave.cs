@@ -36,6 +36,8 @@ namespace Amatsugu.Phos.UI
 		{
 			if (!canSave)
 				return;
+			if (GameRegistry.BaseNameUI.panel.IsOpen)
+				return;
 			if (Input.GetKeyUp(KeyCode.F6))
 				Save();
 			if (Input.GetKeyUp(KeyCode.F7))

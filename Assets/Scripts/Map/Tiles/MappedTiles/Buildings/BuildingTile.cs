@@ -40,7 +40,7 @@ namespace Amatsugu.Phos.Tiles
 			var e = base.Render();
 			if (isBuilt)
 			{
-				isBuilt = false;
+				//isBuilt = false;
 				RenderBuilding();
 			}
 			return e;

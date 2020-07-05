@@ -48,7 +48,10 @@ public class UISelectionPanel : UIPanel
 
 	private void OnUnitDied(ICommandable unit)
 	{
-		var group = _selectionGroups[unit.GetInfo().GetInstanceID()];
+		var uId = unit.GetInfo().GetInstanceID();
+		if (!_selectionGroups.ContainsKey(uId))
+			return;
+		var group = _selectionGroups[uId];
 		_selectionItems[group].Remove(unit);
 		RenderUnits();
 	}

@@ -11,6 +11,7 @@ public class BaseNameWindowUI : MonoBehaviour
 
 	[HideInInspector]
 	public UIPanel panel;
+	private bool _firstSet = true;
 
 	private void Awake()
 	{
@@ -18,12 +19,21 @@ public class BaseNameWindowUI : MonoBehaviour
 		GameRegistry.INST.baseNameUI = this;
 		panel.OnShow += () =>
 		{
-			if(SteamManager.Initialized)
+			Debug.Log("Show");
+			if(SteamManager.Initialized && _firstSet)
+			{
+				_firstSet = false;
 				text.text = $"{SteamFriends.GetPersonaName()}'s Base";
+			}
 			GameEvents.InvokeOnCameraFreeze();
 		};
 		panel.OnHide += () =>
 		{
+			if(string.IsNullOrWhiteSpace(text.text))
+			{
+				panel.SetActive(true);
+				return;
+			}
 			baseNameText.text = text.text;
 			GameRegistry.SetBaseName(text.text);
 			GameEvents.InvokeOnCameraUnFreeze();
@@ -31,7 +41,7 @@ public class BaseNameWindowUI : MonoBehaviour
 
 		GameEvents.OnMapLoaded += () =>
 		{
-			baseNameText.text = GameRegistry.GameState.baseName;
+			baseNameText.text = string.IsNullOrWhiteSpace(GameRegistry.GameState.baseName) ? "Base Name" : GameRegistry.GameState.baseName;
 		};
 	}
 }

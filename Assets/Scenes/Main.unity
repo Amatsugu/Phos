@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 94.34034, g: 257.40002, b: 607.9889, a: 1}
+  m_IndirectSpecularColor: {r: 113.96029, g: 300.8547, b: 720.261, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -420,7 +420,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45125134}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -2512,7 +2512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tile: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
-  generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
+  generator: {fileID: 11400000, guid: b4c2241b2b27aac42be4bf8bca0cb37d, type: 2}
   oceanPlane: {fileID: 9732970426910032, guid: 644afa68e48689348a508fc228a622b2, type: 3}
   line: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
   tileDatabase: {fileID: 11400000, guid: f973b4e22fe4f24429859b2a7732f9b3, type: 2}
@@ -5177,7 +5177,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: Base Name
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -6229,7 +6229,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2102994817}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.98450536
+  m_Size: 0.9999887
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7784,7 +7784,7 @@ MonoBehaviour:
   closeButton: {fileID: 1361566512}
   titleText: {fileID: 1295917381}
   hideOnStart: 1
-  hideOnBlur: 1
+  hideOnBlur: 0
   hideInEditor: 0
 --- !u!1 &638017536
 GameObject:
@@ -10412,7 +10412,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u200B"
+  m_text: "Base Name\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a7f0a4d36eb668d4fa2f6f58f9dabafd, type: 2}
   m_sharedMaterial: {fileID: -7928902918832064957, guid: a7f0a4d36eb668d4fa2f6f58f9dabafd,
@@ -18321,8 +18321,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 636739581}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 636739582}
+        m_TargetAssemblyTypeName: UIPanel, Assembly-CSharp
         m_MethodName: Show
         m_Mode: 1
         m_Arguments:
