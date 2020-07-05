@@ -342,6 +342,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (tileData.ContainsKey("isBuilt"))
 				isBuilt = true;
+			Debug.Log(isBuilt);
 			base.OnDeSerialized(tileData);
 		}
 
@@ -438,7 +439,10 @@ namespace Amatsugu.Phos.Tiles
 			if (IsBuilt)
 				OnBuiltAndPowered();
 			if (_connectionNotif != -1)
+			{
 				InfoPopupUI.RemovePopupNotif(Coords, _connectionNotif);
+				_connectionNotif = -1;
+			}
 		}
 
 		public virtual void OnDisconnected()

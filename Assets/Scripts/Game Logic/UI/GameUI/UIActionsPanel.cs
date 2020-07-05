@@ -224,6 +224,8 @@ public class UIActionsPanel : UIPanel
 
 	private void IssueMoveOrder(Tile tile)
 	{
+		if (tile.IsUnderwater)
+			return;
 		_lastOrderTarget = tile.SurfacePoint;
 		var tilesNeeded = 0;
 		for (int i = 0; i < _selectedEntities.Count; i++)

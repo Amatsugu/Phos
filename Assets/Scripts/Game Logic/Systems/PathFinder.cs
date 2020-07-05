@@ -43,16 +43,15 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			closed.Clear();
 			nodePairs.Clear();
 
-			//NativeList<PathNode> open = new NativeList<PathNode>(Allocator.Temp);
-			//NativeHashMap<PathNode, float> closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Temp);
-			//NativeHashMap<PathNode, PathNode> nodePairs = new NativeHashMap<PathNode, PathNode>(navData.Length, Allocator.Temp);
 			open.Add(srcNode);
-			int pathLen = 0;
 			var neighbors = new NativeArray<HexCoords>(6, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
 			while (open.Length > 0)
 			{
 				if (closed.Count() > MAX_PATH_LENGTH)
+				{
+					Debug.LogWarning("Max path length reached, aborting");
 					break;
+				}
 				if (closed.ContainsKey(dstNode))
 					break;
 
@@ -80,7 +79,6 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 					{
 						closed.Add(dstNode = newNode, 0);
 						nodePairs.Add(newNode, best);
-						pathLen = newNode.G;
 						break;
 					}
 					newNode.CacheF(dst);
@@ -103,7 +101,6 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 				//nodePairs.Dispose();
 				return path;
 			}
-			UnityEngine.Debug.LogWarning("No Path");
 			//nodePairs.Dispose();
 			return default;
 		}

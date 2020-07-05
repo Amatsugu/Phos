@@ -81,6 +81,7 @@ public class UnitMovementSystem : ComponentSystem
 			if (p == null)
 			{
 				Debug.LogWarning("Path Null");
+				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
 			PostUpdateCommands.AddSharedComponent(e, new Path { Value = p });
