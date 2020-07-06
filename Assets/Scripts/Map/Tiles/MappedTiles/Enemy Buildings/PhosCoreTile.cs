@@ -20,9 +20,9 @@ namespace Amatsugu.Phos.Tiles
 			_phosInfo = tInfo;
 		}
 
-		protected override void PrepareEntity()
+		protected override void ApplyTileProperites()
 		{
-			base.PrepareEntity();
+			base.ApplyTileProperites();
 			var e = GetBuildingEntity();
 			Map.EM.AddComponentData(e, new PhosCoreData
 			{

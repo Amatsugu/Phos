@@ -95,9 +95,9 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		}
 	}
 
-	protected override void PrepareEntity()
+	protected override void ApplyTileProperites()
 	{
-		base.PrepareEntity();
+		base.ApplyTileProperites();
 		var entity = GetBuildingEntity();
 		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
 		var resInRange = new Dictionary<int, int>();

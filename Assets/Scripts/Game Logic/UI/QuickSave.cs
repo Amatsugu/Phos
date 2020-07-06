@@ -47,9 +47,10 @@ namespace Amatsugu.Phos.UI
 		void Save()
 		{
 			Debug.Log("Quick Save");
-			gameSave = new GameSave("Quick Save");
+			gameSave = new GameSave("Quick Save", "1");
 			gameSave.SetData(GameRegistry.GameMap.Serialize(), GameRegistry.GameState);
 			gameSave.Save();
+			NotificationsUI.Notify(NotifType.Info, "Game Saved");
 		}
 
 		void Load()
@@ -57,6 +58,7 @@ namespace Amatsugu.Phos.UI
 			Debug.Log("Quick Load");
 			gameSave = GameSave.Load("Quick Save");
 			_renderer.SetMap(gameSave.map.Deserialize(GameRegistry.TileDatabase, GameRegistry.UnitDatabase), gameSave.gameState);
+			NotificationsUI.Notify(NotifType.Info, "Game Loaded");
 		}
 	}
 }

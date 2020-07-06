@@ -53,7 +53,7 @@ public class AdjacencyEffect : ScriptableObject
 		return (productionBonus, consumtionBonus);
 	}
 
-	public bool ApplyBonus(BuildingTile srcBuilding, Tile otherTile)
+	public bool AddBonus(BuildingTile srcBuilding, Tile otherTile)
 	{
 		var otherBuilding = otherTile as BuildingTile;
 		if (otherBuilding == null)

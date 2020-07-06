@@ -139,8 +139,9 @@ namespace Amatsugu.Phos.Tiles
 
 			if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
 				_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
-			PrepareEntity();
+			ApplyTileProperites();
 			ApplyBonuses();
+			ApplyBuffs();
 			RenderDecorators();
 		}
 
@@ -149,7 +150,7 @@ namespace Amatsugu.Phos.Tiles
 			return buildingInfo.buildingMesh.mesh != null ? _building : _tileEntity;
 		}
 
-		protected virtual void PrepareEntity()
+		protected virtual void ApplyTileProperites()
 		{
 			var entity = GetBuildingEntity();
 			/*
@@ -242,7 +243,7 @@ namespace Amatsugu.Phos.Tiles
 
 		protected virtual void ApplyBonuses()
 		{
-			if (!IsBuilt)
+			if (!IsBuilt || !_isRendered)
 				return;
 			var entity = GetBuildingEntity();
 			Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
@@ -259,7 +260,7 @@ namespace Amatsugu.Phos.Tiles
 				var effect = buildingInfo.adjacencyEffects[i];
 				for (int n = 0; n < neighbors.Length; n++)
 				{
-					if (effect.ApplyBonus(this, neighbors[n]))
+					if (effect.AddBonus(this, neighbors[n]))
 					{
 						var slice = _adjacencyConnectors.Slice(n * 3, 3);
 						effect.RenderConnectionLine(SurfacePoint, neighbors[n].SurfacePoint, ref slice);
@@ -272,29 +273,31 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void AddProductionMulti(float ammount)
 		{
 			buffs.productionMulti += ammount;
-			OnBuffRecieved();
+			ApplyBuffs();
 		}
 
 		public virtual void AddConsumptionMulti(float ammount)
 		{
 			buffs.consumptionMulti += ammount;
-			OnBuffRecieved();
+			ApplyBuffs();
 		}
 
 		public void AddBuff(StatsBuffs stats)
 		{
 			buffs += stats;
-			OnBuffRecieved();
+			ApplyBuffs();
 		}
 
 		public void RemoveBuff(StatsBuffs stats)
 		{
 			buffs -= stats;
-			OnBuffRecieved();
+			ApplyBuffs();
 		}
 
-		protected virtual void OnBuffRecieved()
+		protected virtual void ApplyBuffs()
 		{
+			if (!isBuilt || !_isRendered)
+				return;
 			var e = GetBuildingEntity();
 			//Production
 			if (!Map.EM.HasComponent<ProductionMulti>(e))
@@ -375,9 +378,9 @@ namespace Amatsugu.Phos.Tiles
 
 		}
 
-		protected override void PrepareEntity()
+		protected override void ApplyTileProperites()
 		{
-			base.PrepareEntity();
+			base.ApplyTileProperites();
 			FindConduitConnections();
 		}
 

@@ -197,14 +197,7 @@ namespace Amatsugu.Phos.Tiles
 				return;
 			if (!isBuilt)
 				return;
-			_energyPacket = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .15f);
-			var cNode = map.conduitGraph.GetNode(Coords);
-			Map.EM.AddComponentData(_energyPacket, new EnergyPacket
-			{
-				id = cNode.id,
-				progress = -1,
-			});
-			PowerTransferEffectSystem.AddNode(cNode);
+			CreateNodeEffect();
 			_switchLines = HasHQConnection = true;
 			UpdateLines();
 			map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
@@ -215,6 +208,18 @@ namespace Amatsugu.Phos.Tiles
 					pb.HQConnected();
 			}, true);
 			OnConnected();
+		}
+
+		private void CreateNodeEffect()
+		{
+			_energyPacket = conduitInfo.energyPacket.Instantiate(SurfacePoint, Vector3.one * .15f);
+			var cNode = map.conduitGraph.GetNode(Coords);
+			Map.EM.AddComponentData(_energyPacket, new EnergyPacket
+			{
+				id = cNode.id,
+				progress = -1,
+			});
+			PowerTransferEffectSystem.AddNode(cNode);
 		}
 
 		public override void HQDisconnected()
@@ -298,6 +303,8 @@ namespace Amatsugu.Phos.Tiles
 				var a = c.conduitPos.WorldPos + new float3(0, c.height, 0);
 				_conduitLines.Add(c.conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			}
+			if(HasHQConnection)
+				CreateNodeEffect();
 		}
 
 		public override void Destroy()

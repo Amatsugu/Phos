@@ -38,9 +38,9 @@ namespace Amatsugu.Phos.Tiles
 		}
 
 
-		protected override void PrepareEntity()
+		protected override void ApplyTileProperites()
 		{
-			base.PrepareEntity();
+			base.ApplyTileProperites();
 			var e = GetBuildingEntity();
 			Map.EM.AddComponentData(e, new AttackRange
 			{

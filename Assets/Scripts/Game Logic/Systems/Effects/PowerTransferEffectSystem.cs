@@ -81,6 +81,7 @@ public class PowerTransferEffectSystem : ComponentSystem
 	/// <param name="node">Node to add</param>
 	private void OnNodeAdded(ConduitNode node)
 	{
+		Debug.Log("Node Added");
 		var path = _conduitGraph.GetPath(node);
 		if (path == null)
 			return;
@@ -147,7 +148,8 @@ public class PowerTransferEffectSystem : ComponentSystem
 
 	void DestroyAll()
 	{
-		_removeAll = false;
+		Debug.Log("Destroy all");
+		_removeAll = true;
 	}
 
 	protected override void OnDestroy()

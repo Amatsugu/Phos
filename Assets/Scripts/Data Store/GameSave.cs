@@ -13,13 +13,17 @@ namespace Amatsugu.Phos.DataStore
 {
 	public class GameSave
 	{
+		[JsonIgnore]
 		public readonly string name;
+		[JsonIgnore]
 		public SerializedMap map;
 		public GameState gameState;
+		public string version;
 
-		public GameSave(string name)
+		public GameSave(string name, string version)
 		{
 			this.name = name;
+			this.version = version;
 		}
 
 		public void SetData(SerializedMap map, GameState gameState)
@@ -31,7 +35,7 @@ namespace Amatsugu.Phos.DataStore
 
 		public void Save()
 		{
-			var dir = $"{Application.persistentDataPath}/Saves/{name}";
+			var dir = $"{Application.dataPath}/Saves/{name}";
 			Debug.Log(dir);
 			if(!Directory.Exists(dir))
 			{
@@ -41,20 +45,18 @@ namespace Amatsugu.Phos.DataStore
 #if UNITY_EDITOR
 			formating = Formatting.Indented;
 #endif
-			File.WriteAllText($"{dir}/gamestate.json", JsonConvert.SerializeObject(gameState, formating));
+			//File.WriteAllText($"{dir}/gamestate.json", JsonConvert.SerializeObject(gameState, formating));
 			File.WriteAllText($"{dir}/map.json", JsonConvert.SerializeObject(map, formating));
+			File.WriteAllText($"{dir}/save.json", JsonConvert.SerializeObject(this, formating));
 		}
 
 		public static GameSave Load(string saveName)
 		{
-			var dir = $"{Application.persistentDataPath}/Saves/{saveName}";
+			var dir = $"{Application.dataPath}/Saves/{saveName}";
+			var save = JsonConvert.DeserializeObject<GameSave>(File.ReadAllText($"{dir}/save.json"));
 			var map = JsonConvert.DeserializeObject<SerializedMap>(File.ReadAllText($"{dir}/map.json"));
-			var state = JsonConvert.DeserializeObject<GameState>(File.ReadAllText($"{dir}/gamestate.json"));
-			GameSave save = new GameSave(saveName)
-			{
-				gameState = state,
-				map = map
-			};
+			//var state = JsonConvert.DeserializeObject<GameState>(File.ReadAllText($"{dir}/gamestate.json"));
+			save.map = map;
 			return save;
 		}
 	}

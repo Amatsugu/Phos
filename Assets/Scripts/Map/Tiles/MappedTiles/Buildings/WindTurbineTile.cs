@@ -52,9 +52,9 @@ namespace Amatsugu.Phos.Tiles
 			Map.EM.SetComponentData(_blade, new RotateSpeed { Value = turbineInfo.maxSpinSpeed * eff });
 		}
 
-		protected override void OnBuffRecieved()
+		protected override void ApplyBuffs()
 		{
-			base.OnBuffRecieved();
+			base.ApplyBuffs();
 			UpdateWind();
 		}
 
