@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: '[PH] Turret BuildingMeshEntity'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 2534964839176971238, guid: 71d31be2f1742ad4e94e50f8ccef23f5, type: 3}
+  mesh: {fileID: 2121735762094594528, guid: dc0222c239a0a1f4bb36429def27f201, type: 3}
   material: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
   castShadows: 1
   receiveShadows: 1

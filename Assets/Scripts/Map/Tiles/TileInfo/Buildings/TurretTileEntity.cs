@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Unity.Entities;
+using Unity.Mathematics;
 
 using UnityEngine;
 
@@ -21,6 +22,7 @@ namespace Amatsugu.Phos.TileEntities
 		public float attackRange;
 		public ProjectileMeshEntity projectileMesh;
 		public MeshEntityRotatable turretHead;
+		public float3 barrelOffset;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

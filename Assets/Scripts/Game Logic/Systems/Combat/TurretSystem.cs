@@ -80,6 +80,11 @@ namespace Amatsugu.Phos.ECS
 			//Aim
 			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
+				if (!EntityManager.Exists(attackTarget.Value))
+				{
+					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+					return;
+				}
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
 				tgtPos.y = pos.Value.y;
@@ -111,6 +116,11 @@ namespace Amatsugu.Phos.ECS
 			//Shoot
 			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
+				if (!EntityManager.Exists(attackTarget.Value))
+				{
+					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+					return;
+				}
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
 				var dir = math.normalizesafe(pos.Value - tgtPos);
@@ -121,8 +131,12 @@ namespace Amatsugu.Phos.ECS
 					return;
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
-				speed.NextAttackTime += speed.Value;
-				var b = _bullet.Instantiate(pos.Value + math.up() * 2, 0.2f, -dir);
+				speed.NextAttackTime = Time.ElapsedTime + speed.Value;
+				Debug.Log("Shooting");
+
+				var shotPos = EntityManager.GetComponentData<Translation>(t.Head).Value + math.rotate(r, t.shotOffset);
+				DebugUtilz.DrawCrosshair(shotPos, 0.1f, Color.magenta, 0.1f);
+				var b = _bullet.Instantiate(shotPos, 0.2f, -dir * 10f);
 				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
 			});
 		}
@@ -131,5 +145,6 @@ namespace Amatsugu.Phos.ECS
 	public struct Turret : IComponentData
 	{
 		internal Entity Head;
+		public float3 shotOffset;
 	}
 }

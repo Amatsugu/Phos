@@ -33,7 +33,8 @@ namespace Amatsugu.Phos.Tiles
 			_turretHead = turretTile.turretHead.Instantiate(SurfacePoint);
 			Map.EM.AddComponentData(e, new Turret
 			{
-				Head = _turretHead
+				Head = _turretHead,
+				shotOffset = turretTile.barrelOffset
 			});
 		}
 
