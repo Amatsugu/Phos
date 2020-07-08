@@ -96,9 +96,12 @@ namespace Amatsugu.Phos.ECS
 				});
 			});
 
-			//Idle
-			Entities.WithAll<Turret>().ForEach((Entity e, ref Translation pos, ref AttackRange range, ref FactionId faction) =>
+			//Idle/Select Target
+			Entities.WithAll<Turret>().ForEach((Entity e, ref Translation pos, ref AttackRange range, ref FactionId faction, ref AttackSpeed speed) =>
 			{
+				if (Time.ElapsedTime < speed.NextAttackTime)
+					return;
+				speed.NextAttackTime = Time.ElapsedTime + speed.Value;
 				_physicsWorld.AABBCast(pos.Value, range.Value, faction.Value == Faction.Player ? _playerTargetingFilter : _phosTargetingFilter, ref _castHits);
 				for (int i = 0; i < _castHits.Length; i++)
 				{
@@ -116,6 +119,8 @@ namespace Amatsugu.Phos.ECS
 			//Shoot
 			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
+				if (Time.ElapsedTime < speed.NextAttackTime)
+					return;
 				if (!EntityManager.Exists(attackTarget.Value))
 				{
 					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
@@ -129,10 +134,6 @@ namespace Amatsugu.Phos.ECS
 				var desR = quaternion.LookRotation(flatDir, math.up());
 				if (r.value.Equals(desR.value))
 					return;
-				if (Time.ElapsedTime < speed.NextAttackTime)
-					return;
-				speed.NextAttackTime = Time.ElapsedTime + speed.Value;
-				Debug.Log("Shooting");
 
 				var shotPos = EntityManager.GetComponentData<Translation>(t.Head).Value + math.rotate(r, t.shotOffset);
 				DebugUtilz.DrawCrosshair(shotPos, 0.1f, Color.magenta, 0.1f);

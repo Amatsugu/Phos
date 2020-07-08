@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -36,7 +37,6 @@ namespace Amatsugu.Phos.DataStore
 		public void Save()
 		{
 			var dir = $"{Application.dataPath}/Saves/{name}";
-			Debug.Log(dir);
 			if(!Directory.Exists(dir))
 			{
 				Directory.CreateDirectory(dir);

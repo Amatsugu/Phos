@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Amatsugu.Phos.UI
 {
@@ -47,9 +48,29 @@ namespace Amatsugu.Phos.UI
 		void Save()
 		{
 			Debug.Log("Quick Save");
+			Profiler.BeginSample("Quick Save");
+#if DEBUG
+			var stopWatch = new System.Diagnostics.Stopwatch();
+			stopWatch.Start();
+			Profiler.BeginSample("Serialize");
+#endif
 			gameSave = new GameSave("Quick Save", "1");
 			gameSave.SetData(GameRegistry.GameMap.Serialize(), GameRegistry.GameState);
+#if DEBUG
+			stopWatch.Stop();
+			Profiler.EndSample();
+			Debug.Log($"Serialzie: {stopWatch.ElapsedMilliseconds}ms");
+			stopWatch.Reset();
+			stopWatch.Start();
+			Profiler.BeginSample("JSON and Write");
+#endif
 			gameSave.Save();
+#if DEBUG
+			stopWatch.Stop();
+			Profiler.EndSample();
+			Debug.Log($"JSON and Write: {stopWatch.ElapsedMilliseconds}ms");
+			Profiler.EndSample();
+#endif
 			NotificationsUI.Notify(NotifType.Info, "Game Saved");
 		}
 
