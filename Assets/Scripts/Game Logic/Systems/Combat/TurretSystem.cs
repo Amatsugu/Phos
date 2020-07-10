@@ -77,7 +77,7 @@ namespace Amatsugu.Phos.ECS
 			});
 
 			//Aim
-			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
+			Entities.WithNone<BuildingOffTag, BuildingDisabledTag > ().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
 				if (!EntityManager.Exists(attackTarget.Value))
 				{
@@ -97,7 +97,7 @@ namespace Amatsugu.Phos.ECS
 			});
 
 			//Idle/Select Target
-			Entities.WithNone<AttackTarget>().WithAll<Turret>().ForEach((Entity e, ref Translation pos, ref AttackRange range, ref FactionId faction, ref AttackSpeed speed) =>
+			Entities.WithNone<AttackTarget, BuildingOffTag, BuildingDisabledTag>().WithAll<Turret>().ForEach((Entity e, ref Translation pos, ref AttackRange range, ref FactionId faction, ref AttackSpeed speed) =>
 			{
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
@@ -116,7 +116,7 @@ namespace Amatsugu.Phos.ECS
 				}
 			});
 
-			Entities.WithNone<AttackTarget>().ForEach((ref Turret t) =>
+			Entities.WithNone<AttackTarget, BuildingOffTag, BuildingDisabledTag>().ForEach((ref Turret t) =>
 			{
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
 				r = math.mul(math.normalizesafe(r), quaternion.AxisAngle(math.up(), math.radians(10) * Time.DeltaTime));

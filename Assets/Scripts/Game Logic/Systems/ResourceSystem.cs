@@ -182,7 +182,7 @@ public class ResourceSystem : ComponentSystem
 			}
 		});
 		//Production
-		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag>().ForEach((Entity e, ProductionData p, ref ProductionMulti multi, ref BuildingId id) =>
+		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag, BuildingDisabledTag>().ForEach((Entity e, ProductionData p, ref ProductionMulti multi, ref BuildingId id) =>
 		{
 			for (int i = 0; i < p.resourceIds.Length; i++)
 			{

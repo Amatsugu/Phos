@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos.Tiles
 {
-	public class TurretTile : BuildingTile
+	public class TurretTile : PoweredBuildingTile
 	{
 		public TurretTileEntity turretInfo;
 

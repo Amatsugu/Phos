@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 1852c72404f4c31468f84418951e687a, type: 3}
   m_Name: '[PH] Wall'
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
@@ -22,12 +22,12 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 1
   assetGuid: 8d7afbe3607d9b84393ee19fd6a8df64
-  buildingMesh: {fileID: 11400000, guid: 85a0829040b6d2541ba9e95742c77801, type: 2}
+  buildingMesh: {fileID: 0}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
-  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  constructionMesh: {fileID: 0}
   preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
@@ -40,15 +40,19 @@ MonoBehaviour:
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
-  faction: 0
+  faction: 1
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 0
     z: 0
-  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
+  validator: {fileID: 0}
   cost: []
   production: []
   consumption: []
   adjacencyEffects: []
+  connectionMesh: {fileID: 0}
+  vertexMesh: {fileID: 0}
+  alwaysShowVertex: 0
+  connectToSelf: 0

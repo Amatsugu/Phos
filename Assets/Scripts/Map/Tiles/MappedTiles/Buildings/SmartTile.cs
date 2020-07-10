@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Amatsugu.Phos.Tiles
 {
-	public class SmartTile : Tile
+	public class SmartTile : BuildingTile
 	{
-		public SmartTile(HexCoords coords, float height, Map map, TileEntity tInfo = null) : base(coords, height, map, tInfo)
+		public SmartTile(HexCoords coords, float height, Map map, SmartTileEntity tInfo = null) : base(coords, height, map, tInfo)
 		{
 
 		}

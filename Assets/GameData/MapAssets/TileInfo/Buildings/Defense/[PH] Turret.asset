@@ -45,7 +45,7 @@ MonoBehaviour:
   healthBar: {fileID: 11400000, guid: 64264ba37fb009140b7237d68e6e4e60, type: 2}
   healthBarOffset:
     x: 0
-    y: 1
+    y: 1.5
     z: 0
   validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost: []

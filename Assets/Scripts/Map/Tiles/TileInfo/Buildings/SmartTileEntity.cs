@@ -6,8 +6,9 @@ using UnityEngine;
 namespace Amatsugu.Phos.TileEntities
 {
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Connected Tile")]
-	public class SmartTileEntity : TileEntity
+	public class SmartTileEntity : BuildingTileEntity
 	{
+		[Header("Wall")]
 		public MeshEntityRotatable connectionMesh;
 		public MeshEntityRotatable vertexMesh;
 		public bool alwaysShowVertex;
