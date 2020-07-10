@@ -54,7 +54,7 @@ MonoBehaviour:
   - id: 0
     ammount: 10
   adjacencyEffects: []
-  fireRate: 2
+  fireRate: 6
   damage: 10
   attackRange: 20
   projectileMesh: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
