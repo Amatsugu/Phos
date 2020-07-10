@@ -9,18 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
-  m_Name: '[PH] Turret BuildingMeshEntity'
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Name: '[PH] Turret Head MeshEntity'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 8896897872104711925, guid: 009dc65bfb46ec14991abaf02526391d, type: 3}
+  mesh: {fileID: -785695392654936613, guid: 009dc65bfb46ec14991abaf02526391d, type: 3}
   material: {fileID: 2100000, guid: b0b3fcb12db8c5143bc1cb0fef51b5b1, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
-  centerOfMassOffset:
-    x: 0
-    y: 1
-    z: 0
-  radius: 0.65
-  height: 1

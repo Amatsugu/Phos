@@ -59,10 +59,10 @@ namespace Amatsugu.Phos.UI
 #if DEBUG
 			stopWatch.Stop();
 			Profiler.EndSample();
-			Debug.Log($"Serialzie: {stopWatch.ElapsedMilliseconds}ms");
+			Debug.Log($"Strip Excess Tile Data: {stopWatch.ElapsedMilliseconds}ms");
 			stopWatch.Reset();
 			stopWatch.Start();
-			Profiler.BeginSample("JSON and Write");
+			Profiler.BeginSample("convert to JSON and Write");
 #endif
 			gameSave.Save();
 #if DEBUG

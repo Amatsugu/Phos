@@ -17,24 +17,24 @@ namespace Amatsugu.Phos.Tiles
 {
 	public class TurretTile : BuildingTile
 	{
-		public TurretTileEntity turretTile;
+		public TurretTileEntity turretInfo;
 
 		private Entity _turretHead;
 
 		public TurretTile(HexCoords coords, float height, Map map, TurretTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
-			turretTile = tInfo;
+			turretInfo = tInfo;
 		}
 
 		public override void RenderBuilding()
 		{
 			base.RenderBuilding();
 			var e = GetBuildingEntity();
-			_turretHead = turretTile.turretHead.Instantiate(SurfacePoint);
+			_turretHead = turretInfo.turretHead.Instantiate(SurfacePoint + turretInfo.headOffset);
 			Map.EM.AddComponentData(e, new Turret
 			{
 				Head = _turretHead,
-				shotOffset = turretTile.barrelOffset
+				shotOffset = turretInfo.barrelOffset
 			});
 		}
 
@@ -45,12 +45,12 @@ namespace Amatsugu.Phos.Tiles
 			var e = GetBuildingEntity();
 			Map.EM.AddComponentData(e, new AttackRange
 			{
-				Value = turretTile.attackRange,
-				ValueSq = turretTile.attackRange * turretTile.attackRange
+				Value = turretInfo.attackRange,
+				ValueSq = turretInfo.attackRange * turretInfo.attackRange
 			});
 			Map.EM.AddComponentData(e, new AttackSpeed
 			{
-				Value = turretTile.fireRate
+				Value = 1f/turretInfo.fireRate
 			});
 		}
 

@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,7 +32,7 @@ namespace Amatsugu.Phos.ECS
 		protected override void OnCreate()
 		{
 			base.OnCreate();
-			var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerProjectile");
+			var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerLaser");
 			op.Completed += e =>
 			{
 				if (e.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
@@ -87,8 +86,9 @@ namespace Amatsugu.Phos.ECS
 				}
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
-				tgtPos.y = pos.Value.y;
-				var desR = quaternion.LookRotation(pos.Value - tgtPos, math.up());
+				var dir = pos.Value - tgtPos;
+				dir.y = 0;
+				var desR = Quaternion.LookRotation(dir, math.up());
 				desR = Quaternion.RotateTowards(r, desR, 360 * Time.DeltaTime);
 				EntityManager.SetComponentData(t.Head, new Rotation
 				{
@@ -97,7 +97,7 @@ namespace Amatsugu.Phos.ECS
 			});
 
 			//Idle/Select Target
-			Entities.WithAll<Turret>().ForEach((Entity e, ref Translation pos, ref AttackRange range, ref FactionId faction, ref AttackSpeed speed) =>
+			Entities.WithNone<AttackTarget>().WithAll<Turret>().ForEach((Entity e, ref Translation pos, ref AttackRange range, ref FactionId faction, ref AttackSpeed speed) =>
 			{
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
@@ -116,11 +116,19 @@ namespace Amatsugu.Phos.ECS
 				}
 			});
 
+			Entities.WithNone<AttackTarget>().ForEach((ref Turret t) =>
+			{
+				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
+				r = math.mul(math.normalizesafe(r), quaternion.AxisAngle(math.up(), math.radians(10) * Time.DeltaTime));
+				PostUpdateCommands.SetComponent(t.Head, new Rotation { Value = r });
+			});
+
 			//Shoot
 			Entities.ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
+				speed.NextAttackTime = Time.ElapsedTime + speed.Value;
 				if (!EntityManager.Exists(attackTarget.Value))
 				{
 					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
@@ -137,7 +145,9 @@ namespace Amatsugu.Phos.ECS
 
 				var shotPos = EntityManager.GetComponentData<Translation>(t.Head).Value + math.rotate(r, t.shotOffset);
 				DebugUtilz.DrawCrosshair(shotPos, 0.1f, Color.magenta, 0.1f);
-				var b = _bullet.Instantiate(shotPos, 0.2f, -dir * 10f);
+				var b = _bullet.Instantiate(shotPos, .2f, -dir * 10f);
+				if(_bullet.nonUniformScale)
+					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = new float3(0.2f, 0.2f, .6f) });
 				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
 			});
 		}

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Amatsugu.Phos.DataStore
 {
@@ -46,8 +47,14 @@ namespace Amatsugu.Phos.DataStore
 			formating = Formatting.Indented;
 #endif
 			//File.WriteAllText($"{dir}/gamestate.json", JsonConvert.SerializeObject(gameState, formating));
-			File.WriteAllText($"{dir}/map.json", JsonConvert.SerializeObject(map, formating));
-			File.WriteAllText($"{dir}/save.json", JsonConvert.SerializeObject(this, formating));
+			Profiler.BeginSample("Convert to JSON");
+			var mapJson = JsonConvert.SerializeObject(map, formating);
+			var saveJson = JsonConvert.SerializeObject(this, formating);
+			Profiler.EndSample();
+			Profiler.BeginSample("Save to Disk");
+			File.WriteAllText($"{dir}/map.json", mapJson);
+			File.WriteAllText($"{dir}/save.json", saveJson);
+			Profiler.EndSample();
 		}
 
 		public static GameSave Load(string saveName)

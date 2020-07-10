@@ -22,6 +22,7 @@ namespace Amatsugu.Phos.TileEntities
 		public float attackRange;
 		public ProjectileMeshEntity projectileMesh;
 		public MeshEntityRotatable turretHead;
+		public float3 headOffset;
 		public float3 barrelOffset;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
