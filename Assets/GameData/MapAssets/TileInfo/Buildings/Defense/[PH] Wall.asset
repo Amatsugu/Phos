@@ -22,7 +22,7 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 1
   assetGuid: 8d7afbe3607d9b84393ee19fd6a8df64
-  buildingMesh: {fileID: 0}
+  buildingMesh: {fileID: 11400000, guid: 85a0829040b6d2541ba9e95742c77801, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -47,12 +47,13 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  validator: {fileID: 0}
+  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost: []
   production: []
   consumption: []
   adjacencyEffects: []
-  connectionMesh: {fileID: 0}
-  vertexMesh: {fileID: 0}
+  connectionMesh: {fileID: 11400000, guid: 8d5a3e6b2de1aff4fa66dfeff297ad38, type: 2}
+  vertexMesh: {fileID: 11400000, guid: c5b63e4604b339544bcca09d9bec1cbc, type: 2}
+  connectTo: []
+  connectToSelf: 1
   alwaysShowVertex: 0
-  connectToSelf: 0

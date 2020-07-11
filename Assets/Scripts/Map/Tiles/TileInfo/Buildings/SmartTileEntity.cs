@@ -11,8 +11,9 @@ namespace Amatsugu.Phos.TileEntities
 		[Header("Wall")]
 		public MeshEntityRotatable connectionMesh;
 		public MeshEntityRotatable vertexMesh;
-		public bool alwaysShowVertex;
+		public BuildingIdentifier[] connectTo;
 		public bool connectToSelf = false;
+		public bool alwaysShowVertex;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

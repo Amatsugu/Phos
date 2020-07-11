@@ -153,12 +153,6 @@ namespace Amatsugu.Phos.Tiles
 		protected virtual void ApplyTileProperites()
 		{
 			var entity = GetBuildingEntity();
-			/*
-			Map.EM.AddComponentData(entity, new BuildingId
-			{
-				Value = GameRegistry.BuildingDatabase.GetId(buildingInfo)
-			});
-			*/
 			Map.EM.SetComponentData(entity, new HexPosition { Value = Coords });
 			var production = buildingInfo.production;
 			var consumption = buildingInfo.consumption;

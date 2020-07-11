@@ -9,18 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
-  m_Name: '[PH] Wall BuildingMeshEntity'
+  m_Script: {fileID: 11500000, guid: 86005638f0d4f7a47b51240defaeaed4, type: 3}
+  m_Name: Wall Section
   m_EditorClassIdentifier: 
-  mesh: {fileID: -8116138440861595531, guid: 64b12e103490a3e418c2258b143e762c, type: 3}
+  mesh: {fileID: 1457737741015888676, guid: 64b12e103490a3e418c2258b143e762c, type: 3}
   material: {fileID: 2100000, guid: b0b3fcb12db8c5143bc1cb0fef51b5b1, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  centerOfMassOffset:
+  size:
     x: 0
     y: 0
-    z: 0
-  radius: 0
-  height: 0
