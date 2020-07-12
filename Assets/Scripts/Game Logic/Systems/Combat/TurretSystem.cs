@@ -84,15 +84,27 @@ namespace Amatsugu.Phos.ECS
 					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 					return;
 				}
-				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
 				var dir = pos.Value - tgtPos;
+				//Barrel
+				if (EntityManager.Exists(t.Barrel))
+				{
+					var bR = EntityManager.GetComponentData<Rotation>(t.Barrel).Value;
+					var barrelR = Quaternion.LookRotation(dir, math.up());
+					barrelR = Quaternion.RotateTowards(bR, barrelR, 360 * Time.DeltaTime);
+					EntityManager.SetComponentData(t.Barrel, new Rotation
+					{
+						Value = barrelR
+					});
+				}
+				//Head
 				dir.y = 0;
-				var desR = Quaternion.LookRotation(dir, math.up());
-				desR = Quaternion.RotateTowards(r, desR, 360 * Time.DeltaTime);
+				var hR = EntityManager.GetComponentData<Rotation>(t.Head).Value;
+				var headR = Quaternion.LookRotation(dir, math.up());
+				headR = Quaternion.RotateTowards(hR, headR, 360 * Time.DeltaTime);
 				EntityManager.SetComponentData(t.Head, new Rotation
 				{
-					Value = desR
+					Value = headR
 				});
 			});
 
@@ -155,7 +167,8 @@ namespace Amatsugu.Phos.ECS
 
 	public struct Turret : IComponentData
 	{
-		internal Entity Head;
+		public Entity Head;
+		public Entity Barrel;
 		public float3 shotOffset;
 	}
 }
