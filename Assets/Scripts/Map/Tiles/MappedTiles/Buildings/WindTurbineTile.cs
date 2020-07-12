@@ -41,7 +41,6 @@ namespace Amatsugu.Phos.Tiles
 		void UpdateWind()
 		{
 			var windSpeed = math.length(_weatherSystem.WindSpeed);
-			Debug.Log(windSpeed);
 			float eff;
 			if (windSpeed == 0)
 				eff = 0;

@@ -54,9 +54,7 @@ namespace Effects.Lines
 		public static (float3 translation, float3 scale, quaternion rotation) PrepareLine(float3 a, float3 b, float thiccness)
 		{
 			var dir = b - a;
-			var up = math.up();
-			var dirNorm = math.normalize(dir);
-			if(up.Equals(math.abs(dirNorm)))
+			if(dir.x == 0 && dir.z == 0)
 			{
 				if(dir.y < 0)
 					return (a, new float3(thiccness, thiccness, math.abs(math.length(dir))), quaternion.RotateX(math.radians(90)));
