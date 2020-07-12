@@ -137,7 +137,7 @@ namespace Amatsugu.Phos.Tiles
 			else
 				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, GetBuildingRotation(), GameRegistry.TileDatabase.entityIds[buildingInfo], buildingInfo.maxHealth, buildingInfo.faction);
 
-			if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
+			if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
 				_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
 			ApplyTileProperites();
 			ApplyBonuses();

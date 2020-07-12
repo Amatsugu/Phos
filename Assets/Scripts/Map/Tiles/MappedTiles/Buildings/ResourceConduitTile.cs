@@ -93,7 +93,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnPlaced()
 		{
 			base.OnPlaced();
-			map.conduitGraph.AddNodeDisconected(Coords, Height + conduitInfo.powerLineOffset);
+			map.conduitGraph.AddNodeDisconected(Coords, SurfacePoint.y + conduitInfo.powerLineOffset);
 		}
 
 		public override void FindConduitConnections()
