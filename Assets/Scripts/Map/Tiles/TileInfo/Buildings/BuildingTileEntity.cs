@@ -37,6 +37,7 @@ namespace Amatsugu.Phos.TileEntities
 		public float constructionTime = 2;
 		public BuildingCategory category;
 		public int size = 0;
+		public StructureFootprint footprint;
 		public int flattenOuterRange = 0;
 
 		[Header("Offshore")]

@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="UnityEngine.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" schemaLocation="UnityEngine.UIElements ../UIElementsSchema/UnityEngine.UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="height: auto;">
+        <ui:Label text="Footprint" style="font-size: 20px; -unity-text-align: middle-left;" />
+    </ui:VisualElement>
+    <ui:VisualElement style="height: 100%;">
+        <ui:Button text="Tile" name="tile_button" style="margin-left: auto; margin-right: auto; width: 100px; height: 100px; margin-top: auto; margin-bottom: auto; background-image: url(&apos;/Assets/Sprites/Cell.psd&apos;); background-color: rgba(228, 228, 228, 0); -unity-background-scale-mode: scale-to-fit; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; position: absolute; top: 76.4px; left: 57.6px; -unity-background-image-tint-color: rgba(164, 164, 164, 255);" />
+        <ui:Button text="Center" name="center_button" style="margin-left: auto; margin-right: auto; width: 100px; height: 100px; margin-top: auto; margin-bottom: auto; background-image: url(&apos;/Assets/Sprites/Cell.psd&apos;); background-color: rgba(228, 228, 228, 0); -unity-background-scale-mode: scale-to-fit; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; position: absolute; top: 153.4px; left: 109.2px;" />
+        <ui:VisualElement>
+            <ui:TextField picking-mode="Ignore" label="Size" value="Footprint size" name="Size" view-data-key="size" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
