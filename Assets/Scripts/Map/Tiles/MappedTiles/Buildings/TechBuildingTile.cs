@@ -51,6 +51,12 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void OnRemoved()
 		{
+			for (int i = 0; i < techInfo.buildingsToUnlock.Length; i++)
+			{
+				GameRegistry.GameState.unlockedBuildings.Remove(techInfo.buildingsToUnlock[i].id);
+				var b = GameRegistry.BuildingDatabase[techInfo.buildingsToUnlock[i]];
+				NotificationsUI.Notify(b.info.icon, $"Building Locked: {b.info.GetNameString()}", $"{info.GetNameString()} was destroyed, rebuild it in order to regain acesss.");
+			}
 			base.OnRemoved();
 			map.HexSelectForEach(Coords, techInfo.effectRange, t =>
 			{

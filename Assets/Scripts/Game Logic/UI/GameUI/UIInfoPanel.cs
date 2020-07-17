@@ -11,7 +11,8 @@ public class UIInfoPanel : UIPanel
 	public void ShowInfo(BuildingDatabase.BuildingDefination building)
 	{
 		titleText.SetText(building.info.GetNameString());
-		descriptionText.SetText($"{building.info.description}\nUpkeep: {building.info.GetUpkeepString()}");
+		var upkeep = building.info.GetUpkeepString();
+		descriptionText.SetText($"{building.info.description}\n{(upkeep.Length > 0 ? $"Upkeep: {upkeep}" : "")}");
 		productionText.SetText(building.info.GetProductionString());
 		SetActive(true);
 	}

@@ -32,7 +32,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHeightChanged()
 		{
 			base.OnHeightChanged();
-			RenderConnections();
+			if(isBuilt)
+				RenderConnections();
 		}
 
 		public override void OnHide()
@@ -58,7 +59,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			base.TileUpdated(src, updateType);
-			RenderConnections();
+			if(isBuilt)
+				RenderConnections();
 		}
 
 		public override void RenderBuilding()

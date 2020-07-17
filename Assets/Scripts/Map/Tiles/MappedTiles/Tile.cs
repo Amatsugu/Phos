@@ -130,6 +130,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void OnRemoved()
 		{
+		
 			SendTileUpdate(TileUpdateType.Removed);
 		}
 
