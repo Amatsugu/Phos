@@ -61,21 +61,21 @@ public class UnitDatabase : ScriptableObject, ISerializationCallbackReceiver
 		public MobileUnitEntity unit;
 	}
 
-	public bool RegisterUnit(MobileUnitEntity tile, out UnitDefination tileDef)
+	public bool RegisterUnit(MobileUnitEntity unit, out UnitDefination unitDef)
 	{
-		if (entityIds.ContainsKey(tile))
+		if (entityIds.ContainsKey(unit))
 		{
-			tileDef = default;
+			unitDef = default;
 			return false;
 		}
-		tileDef = new UnitDefination
+		unitDef = new UnitDefination
 		{
 			id = nextId++,
-			unit = tile,
+			unit = unit,
 		};
 
-		unitEntites.Add(tileDef.id, tileDef);
-		entityIds.Add(tile, tileDef.id);
+		unitEntites.Add(unitDef.id, unitDef);
+		entityIds.Add(unit, unitDef.id);
 		return true;
 	}
 }
