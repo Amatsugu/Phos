@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 93f6de7c742a08b4cadb99176a63d07e, type: 3}
   m_Name: '[PH] Basic Artillery'
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
@@ -35,12 +35,15 @@ MonoBehaviour:
   constructionTime: 2
   category: 5
   size: 0
+  footprint:
+    size: 0
+    footprint: []
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
-  faction: 0
+  faction: 1
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
@@ -52,3 +55,21 @@ MonoBehaviour:
   production: []
   consumption: []
   adjacencyEffects: []
+  fireRate: 2
+  damage: 0
+  attackRange: 20
+  projectileMesh: {fileID: 0}
+  turretHead: {fileID: 11400000, guid: 0a2916d05cb062148b699e3e8a833704, type: 2}
+  turretBarrel: {fileID: 11400000, guid: 390322bc108c1704ab21ecb28d46878e, type: 2}
+  headOffset:
+    x: 0
+    y: 0.259695
+    z: 0
+  barrelOffset:
+    x: 0
+    y: 0.459312
+    z: 0
+  shotOffset:
+    x: 0
+    y: 0.9858
+    z: -0.008084

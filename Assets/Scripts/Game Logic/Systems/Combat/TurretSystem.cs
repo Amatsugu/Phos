@@ -89,7 +89,7 @@ namespace Amatsugu.Phos.ECS
 				//Barrel
 				if (EntityManager.Exists(t.Barrel))
 				{
-					var bR = EntityManager.GetComponentData<Rotation>(t.Barrel).Value;
+					var bR = math.normalize(EntityManager.GetComponentData<Rotation>(t.Barrel).Value);
 					var barrelR = Quaternion.LookRotation(dir, math.up());
 					barrelR = Quaternion.RotateTowards(bR, barrelR, 360 * Time.DeltaTime);
 					EntityManager.SetComponentData(t.Barrel, new Rotation
@@ -99,7 +99,7 @@ namespace Amatsugu.Phos.ECS
 				}
 				//Head
 				dir.y = 0;
-				var hR = EntityManager.GetComponentData<Rotation>(t.Head).Value;
+				var hR = math.normalize(EntityManager.GetComponentData<Rotation>(t.Head).Value);
 				var headR = Quaternion.LookRotation(dir, math.up());
 				headR = Quaternion.RotateTowards(hR, headR, 360 * Time.DeltaTime);
 				EntityManager.SetComponentData(t.Head, new Rotation
@@ -133,6 +133,8 @@ namespace Amatsugu.Phos.ECS
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
 				r = math.mul(math.normalizesafe(r), quaternion.AxisAngle(math.up(), math.radians(10) * Time.DeltaTime));
 				PostUpdateCommands.SetComponent(t.Head, new Rotation { Value = r });
+				if(EntityManager.Exists(t.Barrel))
+					PostUpdateCommands.SetComponent(t.Barrel, new Rotation { Value = r });
 			});
 
 			//Shoot
@@ -146,16 +148,18 @@ namespace Amatsugu.Phos.ECS
 					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 					return;
 				}
-				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
+				bool hasBarrel = EntityManager.Exists(t.Barrel);
+				var r = EntityManager.GetComponentData<Rotation>(hasBarrel ? t.Barrel : t.Head).Value;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
 				var dir = math.normalizesafe(pos.Value - tgtPos);
 				var flatDir = dir;
-				flatDir.y = 0;
+				if(!hasBarrel)
+					flatDir.y = 0;
 				var desR = quaternion.LookRotation(flatDir, math.up());
-				if (r.value.Equals(desR.value))
+				if (!r.value.Equals(desR.value))
 					return;
 
-				var shotPos = EntityManager.GetComponentData<Translation>(t.Head).Value + math.rotate(r, t.shotOffset);
+				var shotPos = EntityManager.GetComponentData<Translation>(hasBarrel ? t.Barrel : t.Head).Value + math.rotate(r, t.shotOffset);
 				DebugUtilz.DrawCrosshair(shotPos, 0.1f, Color.magenta, 0.1f);
 				var b = _bullet.Instantiate(shotPos, .2f, -dir * 10f);
 				if(_bullet.nonUniformScale)

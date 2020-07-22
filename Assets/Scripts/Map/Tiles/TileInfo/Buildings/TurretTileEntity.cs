@@ -21,9 +21,13 @@ namespace Amatsugu.Phos.TileEntities
 		public float damage;
 		public float attackRange;
 		public ProjectileMeshEntity projectileMesh;
+		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 		public MeshEntityRotatable turretHead;
+		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
+		public MeshEntityRotatable turretBarrel;
 		public float3 headOffset;
 		public float3 barrelOffset;
+		public float3 shotOffset;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

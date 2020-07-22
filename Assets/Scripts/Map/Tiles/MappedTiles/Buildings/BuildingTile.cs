@@ -116,7 +116,11 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
-		protected virtual quaternion GetBuildingRotation() => quaternion.identity;
+		protected virtual quaternion GetBuildingRotation()
+		{
+			var rand = new Unity.Mathematics.Random((uint)Coords.GetHashCode());
+			return quaternion.RotateY(math.radians(rand.NextFloat(360)));
+		}
 
 		public void Build()
 		{

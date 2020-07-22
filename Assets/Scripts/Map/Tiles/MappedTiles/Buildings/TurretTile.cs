@@ -20,6 +20,7 @@ namespace Amatsugu.Phos.Tiles
 		public TurretTileEntity turretInfo;
 
 		private Entity _turretHead;
+		private Entity _turretBarrel;
 
 		public TurretTile(HexCoords coords, float height, Map map, TurretTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
@@ -30,11 +31,14 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.RenderBuilding();
 			var e = GetBuildingEntity();
-			_turretHead = turretInfo.turretHead.Instantiate(SurfacePoint + turretInfo.headOffset);
+			_turretHead = turretInfo.turretHead.Instantiate(SurfacePoint + turretInfo.headOffset, 1, GetBuildingRotation());
+			if(turretInfo.turretHead != null)
+				_turretBarrel = turretInfo.turretBarrel.Instantiate(SurfacePoint + turretInfo.barrelOffset, 1, GetBuildingRotation());
 			Map.EM.AddComponentData(e, new Turret
 			{
 				Head = _turretHead,
-				shotOffset = turretInfo.barrelOffset
+				Barrel = _turretBarrel,
+				shotOffset = turretInfo.shotOffset
 			});
 		}
 
