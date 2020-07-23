@@ -115,17 +115,22 @@ namespace Amatsugu.Phos.ECS
 					return;
 				speed.NextAttackTime = Time.ElapsedTime + speed.Value;
 				_physicsWorld.AABBCast(pos.Value, range.Value, faction.Value == Faction.Player ? _playerTargetingFilter : _phosTargetingFilter, ref _castHits);
+				int closest = -1;
+				float closestDist = range.ValueSq;
+				//Find the closest target
 				for (int i = 0; i < _castHits.Length; i++)
 				{
 					var tgtE = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
 					var tgtPos = EntityManager.GetComponentData<CenterOfMass>(tgtE).Value;
 					var distSq = math.lengthsq(pos.Value - tgtPos);
-					if(distSq < range.ValueSq)
+					if(distSq < closestDist)
 					{
-						PostUpdateCommands.AddComponent(e, new AttackTarget { Value = tgtE });
-						break;
+						closest = i;
+						closestDist = distSq;
 					}
 				}
+				if(closest != -1)
+					PostUpdateCommands.AddComponent(e, new AttackTarget { Value = _physicsWorld.PhysicsWorld.Bodies[_castHits[closest]].Entity });
 			});
 
 			Entities.WithNone<AttackTarget, BuildingOffTag, BuildingDisabledTag>().ForEach((ref Turret t) =>
@@ -151,16 +156,15 @@ namespace Amatsugu.Phos.ECS
 				bool hasBarrel = EntityManager.Exists(t.Barrel);
 				var r = EntityManager.GetComponentData<Rotation>(hasBarrel ? t.Barrel : t.Head).Value;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
-				var dir = math.normalizesafe(pos.Value - tgtPos);
+				var dir = pos.Value - tgtPos;
 				var flatDir = dir;
 				if(!hasBarrel)
 					flatDir.y = 0;
 				var desR = quaternion.LookRotation(flatDir, math.up());
-				if (!r.value.Equals(desR.value))
+				if (r.value.Equals(desR.value))
 					return;
-
-				var shotPos = EntityManager.GetComponentData<Translation>(hasBarrel ? t.Barrel : t.Head).Value + math.rotate(r, t.shotOffset);
-				DebugUtilz.DrawCrosshair(shotPos, 0.1f, Color.magenta, 0.1f);
+				var barrelPos = EntityManager.GetComponentData<Translation>(hasBarrel ? t.Barrel : t.Head).Value;
+				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
 				var b = _bullet.Instantiate(shotPos, .2f, -dir * 10f);
 				if(_bullet.nonUniformScale)
 					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = new float3(0.2f, 0.2f, .6f) });

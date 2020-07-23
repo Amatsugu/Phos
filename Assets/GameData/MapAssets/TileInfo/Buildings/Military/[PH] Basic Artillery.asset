@@ -55,7 +55,7 @@ MonoBehaviour:
   production: []
   consumption: []
   adjacencyEffects: []
-  fireRate: 2
+  fireRate: 1
   damage: 0
   attackRange: 20
   projectileMesh: {fileID: 0}
@@ -71,5 +71,5 @@ MonoBehaviour:
     z: 0
   shotOffset:
     x: 0
-    y: 0.9858
-    z: -0.008084
+    y: 0.008084
+    z: -1

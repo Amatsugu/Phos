@@ -119,7 +119,8 @@ namespace Amatsugu.Phos.Tiles
 		protected virtual quaternion GetBuildingRotation()
 		{
 			var rand = new Unity.Mathematics.Random((uint)Coords.GetHashCode());
-			return quaternion.RotateY(math.radians(rand.NextFloat(360)));
+			var r = Coords.GetHashCode() % 360;//rand.NextFloat(360);
+			return quaternion.RotateY(math.radians(r));
 		}
 
 		public void Build()
