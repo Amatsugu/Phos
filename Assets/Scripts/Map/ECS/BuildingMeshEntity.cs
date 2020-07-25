@@ -11,6 +11,15 @@ using CapsuleCollider = Unity.Physics.CapsuleCollider;
 [Serializable]
 public class BuildingMeshEntity : MeshEntityRotatable
 {
+	[Serializable]
+	public struct SubMeshEntry
+	{
+		public float3 offset;
+		public MeshEntityRotatable mesh;
+	}
+
+	[Header("Sub Mesh")]
+	public SubMeshEntry[] subMeshes;
 	[Header("Center of Mass")]
 	public float3 centerOfMassOffset;
 	[Header("Collider")]
@@ -63,6 +72,17 @@ public class BuildingMeshEntity : MeshEntityRotatable
 		{
 			Value = col
 		});
+		return e;
+	}
+
+	public Entity[] InstantiateSubMeshes(float3 position, quaternion rotation)
+	{
+		var e = new Entity[subMeshes.Length];
+		for (int i = 0; i < subMeshes.Length; i++)
+		{
+			var pos = position + math.rotate(rotation, subMeshes[i].offset);
+			e[i] = subMeshes[i].mesh.Instantiate(pos, 1, rotation);
+		}
 		return e;
 	}
 }
