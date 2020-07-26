@@ -84,7 +84,7 @@ public class MeshEntity : ScriptableObject
 
 	public Entity Instantiate(float3 position) => Instantiate(position, Vector3.one);
 
-	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float3 scale)
+	public virtual Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float3 scale)
 	{
 		var e = commandBuffer.Instantiate(GetEntity());
 		commandBuffer.RemoveComponent(e, typeof(Disabled));
@@ -97,7 +97,7 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
-	public Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale)
+	public virtual Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale)
 	{
 		var e = commandBuffer.Instantiate(GetEntity());
 		commandBuffer.RemoveComponent(e, typeof(Disabled));
@@ -109,7 +109,7 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
-	public Entity Instantiate(Vector3 position, Vector3 scale)
+	public virtual Entity Instantiate(float3 position, float3 scale)
 	{
 		var em = Map.EM;
 		var e = em.Instantiate(GetEntity());
@@ -122,20 +122,7 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
-	public Entity Instantiate(Vector3 position, float scale)
-	{
-		var em = Map.EM;
-		var e = em.Instantiate(GetEntity());
-		em.SetComponentData(e, new Translation { Value = position });
-		if (nonUniformScale)
-			em.SetComponentData(e, new NonUniformScale { Value = new float3(scale, scale, scale) });
-		else
-			em.SetComponentData(e, new Scale { Value = scale });
-		em.RemoveComponent<Disabled>(e);
-		return e;
-	}
-
-	public void Instantiate(NativeArray<Entity> output)
+	public virtual void Instantiate(NativeArray<Entity> output)
 	{
 		var em = Map.EM;
 		em.Instantiate(GetEntity(), output);

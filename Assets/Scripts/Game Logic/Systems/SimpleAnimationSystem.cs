@@ -29,11 +29,11 @@ namespace AnimationSystem
 
 			var curTime = UnityEngine.Time.time;
 			//Thumper
-			Entities.ForEach((Slider th, ref Translation t) =>
+			Entities.ForEach((Slider th, ref AnimationPhase phase, ref AnimStartPos start, ref AnimEndPos end,  ref Translation t) =>
 			{
-				var time = ((curTime + th.phase) % th.duration) / th.duration;
+				var time = ((curTime + phase.Value) % th.duration) / th.duration;
 				var p = th.animationCurve.Evaluate(time);
-				t.Value = math.lerp(th.basePos, th.maxPos, p);
+				t.Value = math.lerp(start.Value, end.Value, p);
 			});
 
 			//callbacks
@@ -309,6 +309,12 @@ namespace AnimationSystem
 
 namespace AnimationSystem.AnimationData
 {
+
+	public struct AnimationPhase : IComponentData
+	{
+		public float Value;
+	}
+
 	public struct Gravity : IComponentData
 	{
 		public float Value;
@@ -420,29 +426,30 @@ namespace AnimationSystem.Animations
 	public struct Slider : ISharedComponentData, IEquatable<Slider>
 	{
 		public float duration;
-		public float phase;
 		public AnimationCurve animationCurve;
-		public float3 basePos;
-		public float3 maxPos;
 
 		public bool Equals(Slider other)
 		{
 			return duration == other.duration &&
-				animationCurve.Equals(other.animationCurve) &&
-				basePos.Equals(other.basePos) &&
-				maxPos.Equals(other.maxPos) &&
-				phase == other.phase;
+				animationCurve.Equals(other.animationCurve);
 		}
 
 		public override int GetHashCode()
 		{
 			int hash = 23;
 			hash = hash * 31 + duration.GetHashCode();
-			hash = hash * 31 + basePos.GetHashCode();
-			hash = hash * 31 + maxPos.GetHashCode();
-			hash = hash * 31 + phase.GetHashCode();
 			hash = hash * 31 + animationCurve.GetHashCode();
 			return hash;
 		}
+	}
+
+	public struct AnimStartPos : IComponentData
+	{
+		public float3 Value;
+	}
+
+	public struct AnimEndPos : IComponentData
+	{
+		public float3 Value;
 	}
 }

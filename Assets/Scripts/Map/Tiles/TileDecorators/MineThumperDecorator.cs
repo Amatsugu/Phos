@@ -1,5 +1,6 @@
 ﻿using Amatsugu.Phos.Tiles;
 
+using AnimationSystem.AnimationData;
 using AnimationSystem.Animations;
 
 using System;
@@ -34,10 +35,14 @@ public class MineThumperDecorator : TileDecorator
 			Map.EM.AddSharedComponentData(decor[i], new Slider
 			{
 				duration = 2,
-				animationCurve = curves[i],
-				basePos = tile.SurfacePoint + offsets[i],
-				maxPos = tile.SurfacePoint + offsets[i] + new float3(0, .5f, 0),
-				phase = Time.time + ((1 - i) * .1f)
+				animationCurve = curves[i]
+				//basePos = tile.SurfacePoint + offsets[i],
+				//maxPos = tile.SurfacePoint + offsets[i] + new float3(0, .5f, 0),
+			});
+			
+			Map.EM.AddComponentData(decor[i], new AnimationPhase
+			{
+				Value = Time.time + ((1 - i) * .1f)
 			});
 		}
 	}
