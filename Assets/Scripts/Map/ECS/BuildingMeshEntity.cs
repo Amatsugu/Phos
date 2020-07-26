@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
@@ -75,9 +77,9 @@ public class BuildingMeshEntity : MeshEntityRotatable
 		return e;
 	}
 
-	public Entity[] InstantiateSubMeshes(float3 position, quaternion rotation)
+	public NativeArray<Entity> InstantiateSubMeshes(float3 position, quaternion rotation)
 	{
-		var e = new Entity[subMeshes.Length];
+		var e = new NativeArray<Entity>(subMeshes.Length, Allocator.Persistent);
 		for (int i = 0; i < subMeshes.Length; i++)
 		{
 			var pos = position + math.rotate(rotation, subMeshes[i].offset);

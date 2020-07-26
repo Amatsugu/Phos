@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
-  m_Name: Mine Thumper Decorator MeshEntityRotatable
+  m_Name: Mine Thumper Piston MeshEntityRotatable
   m_EditorClassIdentifier: 
   mesh: {fileID: -5860461106285324468, guid: 775c906f29e05414fab8e1a2af823638, type: 3}
   material: {fileID: 2100000, guid: e9e9f54899c81054a92531ef2835f0eb, type: 2}

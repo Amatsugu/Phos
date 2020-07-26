@@ -28,6 +28,7 @@ namespace Amatsugu.Phos.Tiles
 		private NativeArray<Entity> _healthBars;
 		private NativeArray<Entity> _adjacencyConnectors;
 		private int _connectorCount;
+		private NativeArray<Entity> _subMeshes;
 
 		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
@@ -55,7 +56,15 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnHeightChanged();
 			if (buildingInfo.buildingMesh != null)
+			{
 				Map.EM.SetComponentData(_building, new Translation { Value = SurfacePoint });
+				for (int i = 0; i < _subMeshes.Length; i++)
+				{
+					var h = Map.EM.GetComponentData<Translation>(_subMeshes[i]);
+					h.Value = new float3(h.Value.x, SurfacePoint.y, h.Value.z);
+					Map.EM.SetComponentData(_subMeshes[i], h);
+				}
+			}
 		}
 
 		public override void Destroy()
@@ -76,6 +85,7 @@ namespace Amatsugu.Phos.Tiles
 				}
 				if (_connectorCount > 0)
 					Map.EM.DestroyEntity(_adjacencyConnectors);
+				Map.EM.DestroyEntity(_subMeshes);
 			}
 			catch
 			{
@@ -97,6 +107,7 @@ namespace Amatsugu.Phos.Tiles
 						Map.EM.AddComponent<FrozenRenderSceneTag>(_adjacencyConnectors);
 				}
 			}
+			Map.EM.AddComponent(_subMeshes, typeof(FrozenRenderSceneTag));
 		}
 
 		public override void OnShow()
@@ -114,6 +125,7 @@ namespace Amatsugu.Phos.Tiles
 						Map.EM.RemoveComponent<FrozenRenderSceneTag>(_adjacencyConnectors);
 				}
 			}
+			Map.EM.RemoveComponent(_subMeshes, typeof(FrozenRenderSceneTag));
 		}
 
 		protected virtual quaternion GetBuildingRotation()
@@ -140,7 +152,11 @@ namespace Amatsugu.Phos.Tiles
 			if (buildingInfo.buildingMesh.mesh == null)
 				UnityEngine.Debug.LogWarning($"No Building Assigned for {base.GetName()}");
 			else
-				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, GetBuildingRotation(), GameRegistry.TileDatabase.entityIds[buildingInfo], buildingInfo.maxHealth, buildingInfo.faction);
+			{
+				var rot = GetBuildingRotation();
+				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, rot, GameRegistry.TileDatabase.entityIds[buildingInfo], buildingInfo.maxHealth, buildingInfo.faction);
+				_subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(SurfacePoint, rot);
+			}
 
 			if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
 				_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
