@@ -35,6 +35,9 @@ MonoBehaviour:
   constructionTime: 2
   category: 6
   size: 0
+  footprint:
+    size: 0
+    footprint: []
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
@@ -59,6 +62,9 @@ MonoBehaviour:
   attackRange: 20
   projectileMesh: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
   turretHead: {fileID: 11400000, guid: 0adbf3811e2cbd248bff4ecca6241980, type: 2}
+  turretBarrel: {fileID: 0}
+  unitClass: 1
+  domain: 1
   headOffset:
     x: 0
     y: 1.186558
@@ -67,3 +73,7 @@ MonoBehaviour:
     x: 0
     y: 0.1
     z: -0.7
+  shotOffset:
+    x: 0
+    y: 0
+    z: 0

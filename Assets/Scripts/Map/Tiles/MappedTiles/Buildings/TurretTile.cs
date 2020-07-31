@@ -34,12 +34,13 @@ namespace Amatsugu.Phos.Tiles
 			_turretHead = turretInfo.turretHead.Instantiate(SurfacePoint + turretInfo.headOffset, 1, GetBuildingRotation());
 			if(turretInfo.turretHead != null)
 				_turretBarrel = turretInfo.turretBarrel.Instantiate(SurfacePoint + turretInfo.barrelOffset, 1, GetBuildingRotation());
-			Map.EM.AddComponentData(e, new Turret
+			Map.EM.SetComponentData(e, new Turret
 			{
 				Head = _turretHead,
 				Barrel = _turretBarrel,
 				shotOffset = turretInfo.shotOffset
 			});
+			
 		}
 
 
@@ -47,14 +48,22 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.ApplyTileProperites();
 			var e = GetBuildingEntity();
-			Map.EM.AddComponentData(e, new AttackRange
+			Map.EM.SetComponentData(e, new AttackRange
 			{
 				Value = turretInfo.attackRange,
 				ValueSq = turretInfo.attackRange * turretInfo.attackRange
 			});
-			Map.EM.AddComponentData(e, new AttackSpeed
+			Map.EM.SetComponentData(e, new AttackSpeed
 			{
 				Value = 1f/turretInfo.fireRate
+			});
+			Map.EM.SetComponentData(e, new UnitClass
+			{
+				Value = turretInfo.unitClass
+			});
+			Map.EM.SetComponentData(e, new UnitDomain
+			{
+				Value = turretInfo.domain
 			});
 		}
 

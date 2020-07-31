@@ -19,11 +19,12 @@ public struct UnitDomain : IComponentData, IEquatable<UnitDomain>
 
 	public static bool operator !=(UnitDomain left, UnitDomain right) => !(left == right);
 
+	[Flags]
 	public enum Domain
 	{
-		Land,
-		Air,
-		Naval
+		Land=1,
+		Air=2,
+		Naval=4
 	}
 }
 

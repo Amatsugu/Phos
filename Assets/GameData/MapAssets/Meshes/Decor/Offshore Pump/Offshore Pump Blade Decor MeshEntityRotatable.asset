@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Script: {fileID: 11500000, guid: eeea512ae509a3e4abe05e16324004dd, type: 3}
   m_Name: Offshore Pump Blade Decor MeshEntityRotatable
   m_EditorClassIdentifier: 
   mesh: {fileID: 2121735762094594528, guid: dc0222c239a0a1f4bb36429def27f201, type: 3}
@@ -18,3 +18,20 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
+  animationType: 1
+  duration: 0
+  rotationAxis:
+    x: 0
+    y: 1
+    z: 0
+  rotationSpeed: 10
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxOffset:
+    x: 0
+    y: 0
+    z: 0

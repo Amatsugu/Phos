@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.Tiles;
+﻿using Amatsugu.Phos.ECS;
+using Amatsugu.Phos.Tiles;
 
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,17 @@ namespace Amatsugu.Phos.TileEntities
 		public MeshEntityRotatable turretHead;
 		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 		public MeshEntityRotatable turretBarrel;
+		public UnitClass.Class unitClass;
+		[EnumFlags]
+		public UnitDomain.Domain domain;
 		public float3 headOffset;
 		public float3 barrelOffset;
 		public float3 shotOffset;
+
+		public override IEnumerable<ComponentType> GetComponents()
+		{
+			return base.GetComponents().Concat(new ComponentType[] { typeof(Turret), typeof(UnitDomain), typeof(UnitClass), typeof(AttackSpeed), typeof(AttackRange) });
+		}
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

@@ -61,6 +61,8 @@ MonoBehaviour:
   projectileMesh: {fileID: 0}
   turretHead: {fileID: 11400000, guid: 0a2916d05cb062148b699e3e8a833704, type: 2}
   turretBarrel: {fileID: 11400000, guid: 390322bc108c1704ab21ecb28d46878e, type: 2}
+  unitClass: 2
+  domain: 1
   headOffset:
     x: 0
     y: 0.259695

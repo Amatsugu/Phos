@@ -72,6 +72,10 @@ namespace Amatsugu.Phos.ECS
 					{
 						Value = position + maxOffset
 					});
+					em.SetComponentData(entity, new AnimationPhase
+					{
+						Value = Time.time
+					});
 					break;
 			}
 			return entity;
