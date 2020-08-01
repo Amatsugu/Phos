@@ -16,7 +16,7 @@ public class UnitIdentifierDrawer : PropertyDrawer
 		var assetPath = AssetDatabase.GUIDToAssetPath(asset);
 		var db = AssetDatabase.LoadAssetAtPath<UnitDatabase>(assetPath);
 		var units = db.unitEntites.Values.Where(b => b.unit != null);
-		var names = units.Select(b => $" [{b.unit.unitDomain.Value}|{b.unit.unitClass.Value}] T{b.unit.tier} {b.unit.name}\t {b.id}").Prepend("--Select Unit--").ToArray();
+		var names = units.Select(b => $" [{b.unit.unitDomain}|{b.unit.unitClass}] T{b.unit.tier} {b.unit.name}\t {b.id}").Prepend("--Select Unit--").ToArray();
 		var ids = units.Select(b => b.id + 1).Prepend(0).ToArray();
 		EditorGUI.BeginProperty(position, label, property);
 		var sProp = property.FindPropertyRelative("id");

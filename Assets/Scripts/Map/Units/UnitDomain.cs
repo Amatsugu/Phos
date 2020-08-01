@@ -2,22 +2,14 @@
 using Unity.Entities;
 
 [Serializable]
-public struct UnitDomain : IComponentData, IEquatable<UnitDomain>
+public static class UnitDomain
 {
-	public Domain Value;
-
-	public override bool Equals(object obj)
-	{
-		return obj is UnitDomain domain && Equals(domain);
-	}
-
-	public bool Equals(UnitDomain other) => Value == other.Value;
-
-	public override int GetHashCode() => -1937169414 + Value.GetHashCode();
-
-	public static bool operator ==(UnitDomain left, UnitDomain right) => left.Equals(right);
-
-	public static bool operator !=(UnitDomain left, UnitDomain right) => !(left == right);
+	public struct Air : IComponentData
+	{}
+	public struct Land : IComponentData
+	{ }
+	public struct Naval : IComponentData
+	{ }
 
 	[Flags]
 	public enum Domain
@@ -28,22 +20,19 @@ public struct UnitDomain : IComponentData, IEquatable<UnitDomain>
 	}
 }
 
+public struct TagetingDomain : IComponentData
+{
+	public UnitDomain.Domain Value;
+}
+
 
 [Serializable]
-public struct UnitClass : IComponentData, IEquatable<UnitClass>
+public static class UnitClass 
 {
-	public Class Value;
-
-	public override bool Equals(object obj) => obj is UnitClass @class && Equals(@class);
-
-	public bool Equals(UnitClass other) => Value == other.Value;
-
-	public override int GetHashCode() => -1937169414 + Value.GetHashCode();
-
-	public static bool operator ==(UnitClass left, UnitClass right) => left.Equals(right);
-
-	public static bool operator !=(UnitClass left, UnitClass right) => !(left == right);
-
+	public struct FixedGun : IComponentData{ }
+	public struct Turret : IComponentData{ }
+	public struct Artillery : IComponentData{ }
+	public struct Support : IComponentData{ }
 	public enum Class
 	{
 		FixedGun,

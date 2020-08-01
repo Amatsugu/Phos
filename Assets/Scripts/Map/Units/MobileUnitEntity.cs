@@ -19,8 +19,10 @@ public class MobileUnitEntity : MeshEntityRotatable
 	public int size;
 	[Header("Classification")]
 	public int tier;
-	public UnitDomain unitDomain;
-	public UnitClass unitClass;
+	public UnitDomain.Domain unitDomain;
+	[EnumFlags]
+	public UnitDomain.Domain unitTargetingDomain;
+	public UnitClass.Class unitClass;
 	public Sprite icon;
 	[Header("Misc")]
 	public float3 centerOfMassOffset;
@@ -59,11 +61,44 @@ public class MobileUnitEntity : MeshEntityRotatable
 		Map.EM.SetComponentData(entity, new Projectile { Value = projectile.GetEntity() });
 		Map.EM.SetComponentData(entity, new AttackSpeed { Value = 1f / attackSpeed });
 		Map.EM.SetComponentData(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
-		Map.EM.SetComponentData(entity, new UnitDomain { Value = unitDomain.Value });
-		Map.EM.SetComponentData(entity, new UnitClass { Value = unitClass.Value });
 		Map.EM.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
 		Map.EM.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
 		Map.EM.SetComponentData(entity, new AttackRange(attackRange));
+
+		IComponentData comp = default;
+		switch (unitClass)
+		{
+			case UnitClass.Class.Artillery:
+				comp = new UnitClass.Artillery();
+				break;
+			case UnitClass.Class.Support:
+				comp = new UnitClass.Support();
+				break;
+			case UnitClass.Class.FixedGun:
+				comp = new UnitClass.FixedGun();
+				break;
+			case UnitClass.Class.Turret:
+				comp = new UnitClass.Turret();
+				break;
+		}
+		Map.EM.SetComponentData(entity, comp);
+		switch (unitDomain)
+		{
+			case UnitDomain.Domain.Air:
+				comp = new UnitDomain.Air();
+				break;
+			case UnitDomain.Domain.Land:
+				comp = new UnitDomain.Land();
+				break;
+			case UnitDomain.Domain.Naval:
+				comp = new UnitDomain.Naval();
+				break;
+		}
+		Map.EM.SetComponentData(entity, comp);
+		Map.EM.SetComponentData(entity, new TagetingDomain
+		{
+			Value = unitTargetingDomain
+		});
 	}
 
 	public Entity Instantiate(float3 pos, Quaternion rotation, int id, Faction faction = Faction.None)

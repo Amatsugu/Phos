@@ -42,7 +42,7 @@ public class UnitDatabaseUI : Editor
 		GUI.enabled = true;
 		foreach (var unitDef in database.unitEntites.Values)
 		{
-			EditorGUILayout.LabelField($"[{unitDef.id}]\t {(unitDef.unit == null ? "Null" : unitDef.unit.name)}:\t ({unitDef.unit.unitDomain.Value}|{unitDef.unit.unitClass.Value})");
+			EditorGUILayout.LabelField($"[{unitDef.id}]\t {(unitDef.unit == null ? "Null" : unitDef.unit.name)}:\t ({unitDef.unit.unitDomain}|{unitDef.unit.unitClass})");
 		}
 	}
 

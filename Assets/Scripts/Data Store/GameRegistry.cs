@@ -32,6 +32,10 @@ public class GameRegistry : MonoBehaviour
 	public static BuildingDatabase BuildingDatabase => INST.buildingDatabase;
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
 	public static TileDatabase TileDatabase => INST.tileDatabase;
+	public static UnitDatabase UnitDatabase => INST.unitDatabase;
+	public static ProjectileDatabase ProjectileDatabase => INST.projectileDatabase;
+	public static Map GameMap => INST.gameState.map;
+	public static RarityColors RarityColors => INST.rarityColors;
 
 	internal static void SetState(GameState gameState)
 	{
@@ -39,20 +43,19 @@ public class GameRegistry : MonoBehaviour
 		ResourceSystem.resCount = gameState.resCount;
 	}
 
-	public static UnitDatabase UnitDatabase => INST.unitDatabase;
-	public static Map GameMap => INST.gameState.map;
-	public static RarityColors RarityColors => INST.rarityColors;
 
 	public StatusUI statusUI;
 	public BaseNameWindowUI baseNameUI;
 	public Camera mainCamera;
 	public CameraController cameraController;
 	public ResourceSystem resourceSystem;
+	public GameState gameState;
+	//Databases
+	public RarityColors rarityColors;
 	public TileDatabase tileDatabase;
 	public UnitDatabase unitDatabase;
-	public GameState gameState;
 	public BuildingDatabase buildingDatabase;
-	public RarityColors rarityColors;
+	public ProjectileDatabase projectileDatabase;
 
 
 	public static void InitGame(GameState gameState)

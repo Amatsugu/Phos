@@ -27,8 +27,9 @@ namespace Amatsugu.Phos.TileEntities
 		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 		public MeshEntityRotatable turretBarrel;
 		public UnitClass.Class unitClass;
-		[EnumFlags]
 		public UnitDomain.Domain domain;
+		[EnumFlags]
+		public UnitDomain.Domain targetingDomain;
 		public float3 headOffset;
 		public float3 barrelOffset;
 		public float3 shotOffset;

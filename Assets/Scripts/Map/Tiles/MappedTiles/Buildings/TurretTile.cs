@@ -57,13 +57,39 @@ namespace Amatsugu.Phos.Tiles
 			{
 				Value = 1f/turretInfo.fireRate
 			});
-			Map.EM.SetComponentData(e, new UnitClass
+			IComponentData comp = default;
+			switch(turretInfo.unitClass)
 			{
-				Value = turretInfo.unitClass
-			});
-			Map.EM.SetComponentData(e, new UnitDomain
+				case UnitClass.Class.Artillery:
+					comp = new UnitClass.Artillery();
+					break;
+				case UnitClass.Class.Support:
+					comp = new UnitClass.Support();
+					break;
+				case UnitClass.Class.FixedGun:
+					comp = new UnitClass.FixedGun();
+					break;
+				case UnitClass.Class.Turret:
+					comp = new UnitClass.Turret();
+					break;
+			}
+			Map.EM.SetComponentData(e, comp);
+			switch (turretInfo.domain)
 			{
-				Value = turretInfo.domain
+				case UnitDomain.Domain.Air:
+					comp = new UnitDomain.Air();
+					break;
+				case UnitDomain.Domain.Land:
+					comp = new UnitDomain.Land();
+					break;
+				case UnitDomain.Domain.Naval:
+					comp = new UnitDomain.Naval();
+					break;
+			}
+			Map.EM.SetComponentData(e, comp);
+			Map.EM.SetComponentData(e, new TagetingDomain
+			{
+				Value = turretInfo.targetingDomain
 			});
 		}
 
