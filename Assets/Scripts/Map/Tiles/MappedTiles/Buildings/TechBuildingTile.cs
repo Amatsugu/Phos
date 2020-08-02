@@ -9,11 +9,11 @@ namespace Amatsugu.Phos.Tiles
 {
 	public class TechBuildingTile : PoweredBuildingTile
 	{
-		private readonly TechBuildingEntity techInfo;
+		private readonly TechBuildingTileEntity techInfo;
 
 		private readonly HashSet<HexCoords> _buffedTiles;
 
-		public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingEntity tInfo) : base(coords, height, map, tInfo)
+		public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
 			techInfo = tInfo;
 			_buffedTiles = new HashSet<HexCoords>(HexCoords.SpiralSelect(coords, tInfo.effectRange, true));

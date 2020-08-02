@@ -147,11 +147,11 @@ public class PhosProjectileSystem : JobComponentSystem
 	private struct PhosProjectileJob : IJobChunk //IJobForEachWithEntity<PhosProjectile, PhysicsVelocity, Translation>
 	{
 		public double curTime;
-		[ReadOnly] public ArchetypeChunkComponentType<PhosProjectile> projectileType;
-		public ArchetypeChunkComponentType<PhysicsVelocity> velocityType;
-		[ReadOnly] public ArchetypeChunkComponentType<Translation> translationType;
-		[ReadOnly] public ArchetypeChunkEntityType entityType;
-		public EntityCommandBuffer.Concurrent CMB;
+		[ReadOnly] public ComponentTypeHandle<PhosProjectile> projectileType;
+		public ComponentTypeHandle<PhysicsVelocity> velocityType;
+		[ReadOnly] public ComponentTypeHandle<Translation> translationType;
+		[ReadOnly] public EntityTypeHandle entityType;
+		public EntityCommandBuffer.ParallelWriter CMB;
 
 		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 		{
@@ -200,11 +200,11 @@ public class PhosProjectileSystem : JobComponentSystem
 		var job = new PhosProjectileJob
 		{
 			curTime = Time.ElapsedTime,
-			projectileType = GetArchetypeChunkComponentType<PhosProjectile>(true),
-			velocityType = GetArchetypeChunkComponentType<PhysicsVelocity>(false),
-			translationType = GetArchetypeChunkComponentType<Translation>(true),
-			CMB = endSimulation.CreateCommandBuffer().ToConcurrent(),
-			entityType = GetArchetypeChunkEntityType()
+			projectileType = GetComponentTypeHandle<PhosProjectile>(true),
+			velocityType = GetComponentTypeHandle<PhysicsVelocity>(false),
+			translationType = GetComponentTypeHandle<Translation>(true),
+			CMB = endSimulation.CreateCommandBuffer().AsParallelWriter(),
+			entityType = GetEntityTypeHandle()
 		};
 		inputDeps = job.ScheduleParallel(entityQuery, inputDeps);
 		return inputDeps;

@@ -35,10 +35,10 @@ public class LineReneringSystem : JobComponentSystem
 
 	private struct LineSegmentJob : IJobChunk //IJobForEachWithEntity<LineSegment, Translation, Rotation, NonUniformScale>
 	{
-		[ReadOnly] public ArchetypeChunkComponentType<LineSegment> lineType;
-		public ArchetypeChunkComponentType<Translation> translationType;
-		public ArchetypeChunkComponentType<Rotation> rotationType;
-		public ArchetypeChunkComponentType<NonUniformScale> scaleType;
+		[ReadOnly] public ComponentTypeHandle<LineSegment> lineType;
+		public ComponentTypeHandle<Translation> translationType;
+		public ComponentTypeHandle<Rotation> rotationType;
+		public ComponentTypeHandle<NonUniformScale> scaleType;
 		public uint LastVersion;
 
 
@@ -69,10 +69,10 @@ public class LineReneringSystem : JobComponentSystem
 		var segmentJob = new LineSegmentJob
 		{
 			LastVersion = LastSystemVersion,
-			lineType = GetArchetypeChunkComponentType<LineSegment>(true),
-			rotationType = GetArchetypeChunkComponentType<Rotation>(false),
-			translationType = GetArchetypeChunkComponentType<Translation>(false),
-			scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false),
+			lineType = GetComponentTypeHandle<LineSegment>(true),
+			rotationType = GetComponentTypeHandle<Rotation>(false),
+			translationType = GetComponentTypeHandle<Translation>(false),
+			scaleType = GetComponentTypeHandle<NonUniformScale>(false),
 		};
 		var handle = segmentJob.Schedule(_entityQuery, inputDeps);
 
@@ -106,8 +106,8 @@ public class LineWidthSystem : JobComponentSystem
 
 	private struct LineWidthJob : IJobChunk
 	{
-		[ReadOnly] public ArchetypeChunkComponentType<LineWidth> widthType;
-		public ArchetypeChunkComponentType<NonUniformScale> scaleType;
+		[ReadOnly] public ComponentTypeHandle<LineWidth> widthType;
+		public ComponentTypeHandle<NonUniformScale> scaleType;
 
 		public uint LastVersion;
 
@@ -134,8 +134,8 @@ public class LineWidthSystem : JobComponentSystem
 		var widthJob = new LineWidthJob
 		{
 			LastVersion = LastSystemVersion,
-			widthType = GetArchetypeChunkComponentType<LineWidth>(true),
-			scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false),
+			widthType = GetComponentTypeHandle<LineWidth>(true),
+			scaleType = GetComponentTypeHandle<NonUniformScale>(false),
 		};
 		var handle = widthJob.Schedule(_entityQuery, inputDeps);
 

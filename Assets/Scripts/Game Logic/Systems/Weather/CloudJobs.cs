@@ -12,9 +12,9 @@ public struct CloudsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUni
 
 	[ReadOnly]
 	public NativeArray<float2> field;
-	[ReadOnly] public ArchetypeChunkComponentType<CloudData> cloudType;
-	public ArchetypeChunkComponentType<Translation> translationType;
-	public ArchetypeChunkComponentType<NonUniformScale> scaleType;
+	[ReadOnly] public ComponentTypeHandle<CloudData> cloudType;
+	public ComponentTypeHandle<Translation> translationType;
+	public ComponentTypeHandle<NonUniformScale> scaleType;
 
 	public float3 camPos;
 	public float3 camCenteringOffset;
@@ -90,9 +90,9 @@ public struct CloudShadowsJob : IJobChunk //IJobForEach<CloudData, Translation, 
 	public float3 camCenteringOffset;
 	public quaternion camRot;
 
-	[ReadOnly] public ArchetypeChunkComponentType<CloudData> cloudType;
-	public ArchetypeChunkComponentType<Translation> translationType;
-	public ArchetypeChunkComponentType<NonUniformScale> scaleType;
+	[ReadOnly] public ComponentTypeHandle<CloudData> cloudType;
+	public ComponentTypeHandle<Translation> translationType;
+	public ComponentTypeHandle<NonUniformScale> scaleType;
 	internal float innerRadius;
 	internal int gridSize;
 

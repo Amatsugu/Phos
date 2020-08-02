@@ -7,8 +7,8 @@ public class HealthRegenSystem : JobComponentSystem
 {
 	private struct RegenJob : IJobChunk
 	{
-		public ArchetypeChunkComponentType<Health> healthType;
-		[ReadOnly] public ArchetypeChunkComponentType<HealthRegen> regenType;
+		public ComponentTypeHandle<Health> healthType;
+		[ReadOnly] public ComponentTypeHandle<HealthRegen> regenType;
 		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 		{
 			var healths = chunk.GetNativeArray(healthType);
@@ -34,8 +34,8 @@ public class HealthRegenSystem : JobComponentSystem
 	{
 		var job = new RegenJob
 		{
-			healthType = GetArchetypeChunkComponentType<Health>(false),
-			regenType = GetArchetypeChunkComponentType<HealthRegen>(true)
+			healthType = GetComponentTypeHandle<Health>(false),
+			regenType = GetComponentTypeHandle<HealthRegen>(true)
 		};
 		return job.Schedule(_entityQuery, inputDeps);
 	}

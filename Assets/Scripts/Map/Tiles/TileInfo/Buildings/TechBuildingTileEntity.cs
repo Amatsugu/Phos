@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Amatsugu.Phos.TileEntities
 {
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Tech Building")]
-	public class TechBuildingEntity : BuildingTileEntity
+	public class TechBuildingTileEntity : BuildingTileEntity
 	{
 		[Header("Tech")]
 		public BuildingIdentifier[] buildingsToUnlock;

@@ -55,8 +55,8 @@ namespace AnimationSystem
 		[BurstCompile]
 		public struct GravityJob : IJobChunk
 		{
-			public ArchetypeChunkComponentType<Velocity> velocityType;
-			[ReadOnly] public ArchetypeChunkComponentType<Gravity> gravityType;
+			public ComponentTypeHandle<Velocity> velocityType;
+			[ReadOnly] public ComponentTypeHandle<Gravity> gravityType;
 			public float dt;
 
 			public void Execute(ref Gravity g, ref Velocity v)
@@ -81,8 +81,8 @@ namespace AnimationSystem
 		[BurstCompile]
 		public struct VelocityJob : IJobChunk
 		{
-			public ArchetypeChunkComponentType<Translation> translationType;
-			[ReadOnly] public ArchetypeChunkComponentType<Velocity> velocityType;
+			public ComponentTypeHandle<Translation> translationType;
+			[ReadOnly] public ComponentTypeHandle<Velocity> velocityType;
 			public float dt;
 
 			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
@@ -102,8 +102,8 @@ namespace AnimationSystem
 		[BurstCompile]
 		public struct FloorJob : IJobChunk //IJobForEach<Floor, Translation> //TODO Optimize this
 		{
-			public ArchetypeChunkComponentType<Floor> floorType;
-			public ArchetypeChunkComponentType<Translation> transType;
+			public ComponentTypeHandle<Floor> floorType;
+			public ComponentTypeHandle<Translation> transType;
 
 			public void Execute(ref Floor f, ref Translation t)
 			{
@@ -132,9 +132,9 @@ namespace AnimationSystem
 		public struct RotateJob : IJobChunk //IJobForEach<RotateAxis, RotateSpeed, Rotation>
 		{
 			public float dt;
-			[ReadOnly] public ArchetypeChunkComponentType<RotateAxis> axisType;
-			[ReadOnly] public ArchetypeChunkComponentType<RotateSpeed> speedType;
-			public ArchetypeChunkComponentType<Rotation> rotationType;
+			[ReadOnly] public ComponentTypeHandle<RotateAxis> axisType;
+			[ReadOnly] public ComponentTypeHandle<RotateSpeed> speedType;
+			public ComponentTypeHandle<Rotation> rotationType;
 
 			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 			{
@@ -157,8 +157,8 @@ namespace AnimationSystem
 		public struct AccelerationJob : IJobChunk//IJobForEach<Velocity, Acceleration>
 		{
 
-			public ArchetypeChunkComponentType<Velocity> velocityType;
-			[ReadOnly] public ArchetypeChunkComponentType<Acceleration> accelerationType;
+			public ComponentTypeHandle<Velocity> velocityType;
+			[ReadOnly] public ComponentTypeHandle<Acceleration> accelerationType;
 			public float dt;
 
 			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
@@ -260,11 +260,11 @@ namespace AnimationSystem
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
-			var v = GetArchetypeChunkComponentType<Velocity>(false);
+			var v = GetComponentTypeHandle<Velocity>(false);
 			var gravityJob = new GravityJob 
 			{ 
 				dt = Time.DeltaTime,
-				gravityType = GetArchetypeChunkComponentType<Gravity>(true),
+				gravityType = GetComponentTypeHandle<Gravity>(true),
 				velocityType = v
 			};
 			var dep = gravityJob.Schedule(_gravityQuery, inputDeps);
@@ -272,23 +272,23 @@ namespace AnimationSystem
 			var accelJob = new AccelerationJob 
 			{ 
 				dt = Time.DeltaTime,
-				accelerationType = GetArchetypeChunkComponentType<Acceleration>(true),
+				accelerationType = GetComponentTypeHandle<Acceleration>(true),
 				velocityType = v
 			};
 			dep = accelJob.Schedule(_accelQuery, dep);
 
-			var t = GetArchetypeChunkComponentType<Translation>(false);
+			var t = GetComponentTypeHandle<Translation>(false);
 			var velocityJob = new VelocityJob 
 			{
 				dt = Time.DeltaTime,
-				velocityType = GetArchetypeChunkComponentType<Velocity>(true),
+				velocityType = GetComponentTypeHandle<Velocity>(true),
 				translationType = t
 			};
 			dep = velocityJob.Schedule(_velQuery, dep);
 
 			var floorJob = new FloorJob
 			{
-				floorType = GetArchetypeChunkComponentType<Floor>(true),
+				floorType = GetComponentTypeHandle<Floor>(true),
 				transType = t
 			};
 			dep = floorJob.Schedule(_floorQuery, dep);
@@ -296,9 +296,9 @@ namespace AnimationSystem
 			var rotJob = new RotateJob 
 			{ 
 				dt = Time.DeltaTime,
-				axisType = GetArchetypeChunkComponentType<RotateAxis>(true),
-				speedType = GetArchetypeChunkComponentType<RotateSpeed>(true),
-				rotationType = GetArchetypeChunkComponentType<Rotation>(false),
+				axisType = GetComponentTypeHandle<RotateAxis>(true),
+				speedType = GetComponentTypeHandle<RotateSpeed>(true),
+				rotationType = GetComponentTypeHandle<Rotation>(false),
 			};
 			dep = rotJob.Schedule(_rotateQuery, dep);
 

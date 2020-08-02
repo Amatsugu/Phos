@@ -16,9 +16,9 @@ public class HealthBarSystem : JobComponentSystem
 	[BurstCompile]
 	private struct UpdateBarFillJob : IJobChunk
 	{
-		[ReadOnly] public ArchetypeChunkComponentType<HealthBar> barType;
+		[ReadOnly] public ComponentTypeHandle<HealthBar> barType;
 		[ReadOnly] public ComponentDataFromEntity<Health> healthSrc;
-		public ArchetypeChunkComponentType<NonUniformScale> scaleType;
+		public ComponentTypeHandle<NonUniformScale> scaleType;
 
 		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 		{
@@ -27,7 +27,7 @@ public class HealthBarSystem : JobComponentSystem
 			for (int i = 0; i < chunk.Count; i++)
 			{
 				var hBar = bar[i];
-				if (!healthSrc.Exists(hBar.target))
+				if (!healthSrc.HasComponent(hBar.target))
 					continue;
 				var health = healthSrc[hBar.target];
 				var fill = health.Value > 0 ? health.Value / health.maxHealth : 0f;
@@ -42,10 +42,10 @@ public class HealthBarSystem : JobComponentSystem
 	[BurstCompile]
 	private struct UpdateBarRotation : IJobChunk
 	{
-		[ReadOnly] public ArchetypeChunkComponentType<HealthBar> barType;
+		[ReadOnly] public ComponentTypeHandle<HealthBar> barType;
 		[ReadOnly] public ComponentDataFromEntity<CenterOfMass> posSrc;
-		public ArchetypeChunkComponentType<Translation> translationType;
-		public ArchetypeChunkComponentType<Rotation> rotationType;
+		public ComponentTypeHandle<Translation> translationType;
+		public ComponentTypeHandle<Rotation> rotationType;
 		public quaternion camRot;
 		public float3 camFwd;
 
@@ -58,7 +58,7 @@ public class HealthBarSystem : JobComponentSystem
 			for (int i = 0; i < chunk.Count; i++)
 			{
 				var healthBar = bar[i];
-				if(!posSrc.Exists(healthBar.target))
+				if(!posSrc.HasComponent(healthBar.target))
 				{
 					continue;
 				}
@@ -117,14 +117,14 @@ public class HealthBarSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		var hBarType = GetArchetypeChunkComponentType<HealthBar>(true);
+		var hBarType = GetComponentTypeHandle<HealthBar>(true);
 		var rotJob = new UpdateBarRotation
 		{
 			camRot = _cam.rotation,
 			camFwd = math.normalize(_cam.forward),
 			posSrc = GetComponentDataFromEntity<CenterOfMass>(true),
-			rotationType = GetArchetypeChunkComponentType<Rotation>(false),
-			translationType = GetArchetypeChunkComponentType<Translation>(false),
+			rotationType = GetComponentTypeHandle<Rotation>(false),
+			translationType = GetComponentTypeHandle<Translation>(false),
 			barType = hBarType,
 		};
 		inputDeps = rotJob.Schedule(_barQuery, inputDeps);
@@ -133,7 +133,7 @@ public class HealthBarSystem : JobComponentSystem
 		{
 			healthSrc = GetComponentDataFromEntity<Health>(true),
 			barType = hBarType,
-			scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false)
+			scaleType = GetComponentTypeHandle<NonUniformScale>(false)
 		};
 		inputDeps = fillJob.Schedule(_fillQuery, inputDeps);
 		return inputDeps;

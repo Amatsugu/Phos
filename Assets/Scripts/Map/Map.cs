@@ -43,7 +43,7 @@ public class Map : IDisposable
 	public ConduitGraph conduitGraph;
 	public Dictionary<int, MobileUnit> units;
 	
-	private HashSet<TechBuildingEntity> _techBuildings;
+	private HashSet<TechBuildingTileEntity> _techBuildings;
 	private int _nextUnitId = 1;
 	private MapChunk[] chunks;
 
@@ -62,7 +62,7 @@ public class Map : IDisposable
 		shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
 		longDiagonal = 2 * tileEdgeLength;
 		units = new Dictionary<int, MobileUnit>(500);
-		_techBuildings = new HashSet<TechBuildingEntity>();
+		_techBuildings = new HashSet<TechBuildingTileEntity>();
 	}
 
 	
@@ -371,10 +371,10 @@ public class Map : IDisposable
 		var nT = chunks[index].ReplaceTile(localCoord, newTile);
 		tile.OnRemoved();
 		tile.Destroy();
-		if (tile.info is TechBuildingEntity tb && _techBuildings.Contains(tb))
+		if (tile.info is TechBuildingTileEntity tb && _techBuildings.Contains(tb))
 			_techBuildings.Remove(tb);
 		nT.OnPlaced();
-		if (nT.info is TechBuildingEntity techB && !_techBuildings.Contains(techB))
+		if (nT.info is TechBuildingTileEntity techB && !_techBuildings.Contains(techB))
 			_techBuildings.Add(techB);
 		OnTilePlaced?.Invoke(coord);
 		return nT;
@@ -434,7 +434,7 @@ public class Map : IDisposable
 		return (max < seaLevel) ? seaLevel : max;
 	}
 
-	public bool HasTechBuilding(TechBuildingEntity techBuilding) => _techBuildings.Contains(techBuilding);
+	public bool HasTechBuilding(TechBuildingTileEntity techBuilding) => _techBuildings.Contains(techBuilding);
 
 	public SerializedMap Serialize()
 	{

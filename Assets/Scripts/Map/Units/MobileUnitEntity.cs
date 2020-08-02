@@ -42,13 +42,12 @@ public class MobileUnitEntity : MeshEntityRotatable
 			typeof(AttackSpeed),
 			typeof(Health),
 			typeof(FactionId),
-			typeof(UnitClass),
-			typeof(UnitDomain),
 			typeof(UnitState),
 			typeof(PhysicsCollider),
 			typeof(PhysicsMass),
 			typeof(CenterOfMassOffset),
 			typeof(CenterOfMass),
+			typeof(TargetingDomain),
 			typeof(AttackRange)
 		});
 	}
@@ -65,37 +64,34 @@ public class MobileUnitEntity : MeshEntityRotatable
 		Map.EM.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
 		Map.EM.SetComponentData(entity, new AttackRange(attackRange));
 
-		IComponentData comp = default;
 		switch (unitClass)
 		{
+			case UnitClass.Class.Turret:
+				Map.EM.AddComponentData(entity, new UnitClass.Turret());
+				break;
 			case UnitClass.Class.Artillery:
-				comp = new UnitClass.Artillery();
+				Map.EM.AddComponentData(entity, new UnitClass.Artillery());
 				break;
 			case UnitClass.Class.Support:
-				comp = new UnitClass.Support();
+				Map.EM.AddComponentData(entity, new UnitClass.Support());
 				break;
 			case UnitClass.Class.FixedGun:
-				comp = new UnitClass.FixedGun();
-				break;
-			case UnitClass.Class.Turret:
-				comp = new UnitClass.Turret();
+				Map.EM.AddComponentData(entity, new UnitClass.FixedGun());
 				break;
 		}
-		Map.EM.SetComponentData(entity, comp);
 		switch (unitDomain)
 		{
 			case UnitDomain.Domain.Air:
-				comp = new UnitDomain.Air();
+				Map.EM.AddComponentData(entity, new UnitDomain.Air());
 				break;
 			case UnitDomain.Domain.Land:
-				comp = new UnitDomain.Land();
+				Map.EM.AddComponentData(entity, new UnitDomain.Land());
 				break;
 			case UnitDomain.Domain.Naval:
-				comp = new UnitDomain.Naval();
+				Map.EM.AddComponentData(entity, new UnitDomain.Naval());
 				break;
 		}
-		Map.EM.SetComponentData(entity, comp);
-		Map.EM.SetComponentData(entity, new TagetingDomain
+		Map.EM.SetComponentData(entity, new TargetingDomain
 		{
 			Value = unitTargetingDomain
 		});

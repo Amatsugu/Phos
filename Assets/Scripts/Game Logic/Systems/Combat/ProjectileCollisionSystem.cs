@@ -13,7 +13,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 	public ComponentDataFromEntity<FactionId> faction;
 	public ComponentDataFromEntity<Damage> damage;
 	public ComponentDataFromEntity<DeathTime> deathTime;
-	public EntityCommandBuffer.Concurrent cmb;
+	public EntityCommandBuffer.ParallelWriter cmb;
 	public double time;
 
 	public void Execute(CollisionEvent collisionEvent)
@@ -67,7 +67,7 @@ public class ProjectileCollisionSystem : JobComponentSystem
 			health = GetComponentDataFromEntity<Health>(false),
 			faction = GetComponentDataFromEntity<FactionId>(true),
 			deathTime = GetComponentDataFromEntity<DeathTime>(false),
-			cmb = _endSimSystem.CreateCommandBuffer().ToConcurrent(),
+			cmb = _endSimSystem.CreateCommandBuffer().AsParallelWriter(),
 			time = Time.ElapsedTime
 		};
 		inputDeps = job.Schedule(_sim.Simulation, ref _physicsWorld.PhysicsWorld, inputDeps);

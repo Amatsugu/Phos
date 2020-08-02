@@ -20,7 +20,7 @@ public static class UnitDomain
 	}
 }
 
-public struct TagetingDomain : IComponentData
+public struct TargetingDomain : IComponentData
 {
 	public UnitDomain.Domain Value;
 }

@@ -59,12 +59,13 @@ MonoBehaviour:
   adjacencyEffects: []
   fireRate: 6
   damage: 10
-  attackRange: 20
+  attackRange: 30
   projectileMesh: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
   turretHead: {fileID: 11400000, guid: 0adbf3811e2cbd248bff4ecca6241980, type: 2}
   turretBarrel: {fileID: 0}
   unitClass: 1
   domain: 1
+  targetingDomain: 0
   headOffset:
     x: 0
     y: 1.186558

@@ -43,7 +43,7 @@ namespace Effects.Lines
 			cmb.SetComponent(e, new Rotation { Value = r });
 		}
 
-		public static void UpdateStaticLine(EntityCommandBuffer.Concurrent cmb, int index, Entity e, Vector3 a, Vector3 b, float thiccness = 0.1f)
+		public static void UpdateStaticLine(EntityCommandBuffer.ParallelWriter cmb, int index, Entity e, Vector3 a, Vector3 b, float thiccness = 0.1f)
 		{
 			var (t, s, r) = PrepareLine(a, b, thiccness);
 			cmb.SetComponent(index, e, new Translation { Value = t });

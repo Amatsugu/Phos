@@ -36,7 +36,13 @@ namespace Amatsugu.Phos.TileEntities
 
 		public override IEnumerable<ComponentType> GetComponents()
 		{
-			return base.GetComponents().Concat(new ComponentType[] { typeof(Turret), typeof(UnitDomain), typeof(UnitClass), typeof(AttackSpeed), typeof(AttackRange) });
+			return base.GetComponents().Concat(new ComponentType[] 
+			{ 
+				typeof(Turret), 
+				typeof(TargetingDomain),
+				typeof(AttackSpeed),
+				typeof(AttackRange)
+			});
 		}
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)

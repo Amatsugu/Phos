@@ -13,9 +13,9 @@ public class CenterOfMassSystem : JobComponentSystem
 {
 	public struct CenterOfMassJob : IJobChunk
 	{
-		[ReadOnly] public ArchetypeChunkComponentType<Translation> translationType;
-		[ReadOnly] public ArchetypeChunkComponentType<CenterOfMassOffset> centerOfMassOffsetType;
-		public ArchetypeChunkComponentType<CenterOfMass> centerOfMassType;
+		[ReadOnly] public ComponentTypeHandle<Translation> translationType;
+		[ReadOnly] public ComponentTypeHandle<CenterOfMassOffset> centerOfMassOffsetType;
+		public ComponentTypeHandle<CenterOfMass> centerOfMassType;
 		public uint lastVersion;
 
 		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
@@ -58,9 +58,9 @@ public class CenterOfMassSystem : JobComponentSystem
 	{
 		var job = new CenterOfMassJob
 		{
-			centerOfMassOffsetType = GetArchetypeChunkComponentType<CenterOfMassOffset>(true),
-			translationType = GetArchetypeChunkComponentType<Translation>(true),
-			centerOfMassType = GetArchetypeChunkComponentType<CenterOfMass>(false),
+			centerOfMassOffsetType = GetComponentTypeHandle<CenterOfMassOffset>(true),
+			translationType = GetComponentTypeHandle<Translation>(true),
+			centerOfMassType = GetComponentTypeHandle<CenterOfMass>(false),
 			lastVersion = LastSystemVersion
 		};
 		return job.Schedule(_query, inputDeps);

@@ -32,9 +32,9 @@ namespace Amatsugu.Phos.Tiles
 			base.RenderBuilding();
 			var e = GetBuildingEntity();
 			_turretHead = turretInfo.turretHead.Instantiate(SurfacePoint + turretInfo.headOffset, 1, GetBuildingRotation());
-			if(turretInfo.turretHead != null)
+			if(turretInfo.turretBarrel != null)
 				_turretBarrel = turretInfo.turretBarrel.Instantiate(SurfacePoint + turretInfo.barrelOffset, 1, GetBuildingRotation());
-			Map.EM.SetComponentData(e, new Turret
+			Map.EM.AddComponentData(e, new Turret
 			{
 				Head = _turretHead,
 				Barrel = _turretBarrel,
@@ -48,46 +48,43 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.ApplyTileProperites();
 			var e = GetBuildingEntity();
-			Map.EM.SetComponentData(e, new AttackRange
+			Map.EM.AddComponentData(e, new AttackRange
 			{
 				Value = turretInfo.attackRange,
 				ValueSq = turretInfo.attackRange * turretInfo.attackRange
 			});
-			Map.EM.SetComponentData(e, new AttackSpeed
+			Map.EM.AddComponentData(e, new AttackSpeed
 			{
 				Value = 1f/turretInfo.fireRate
 			});
-			IComponentData comp = default;
 			switch(turretInfo.unitClass)
 			{
+				case UnitClass.Class.Turret:
+					Map.EM.AddComponentData(e, new UnitClass.Turret());
+					break;
 				case UnitClass.Class.Artillery:
-					comp = new UnitClass.Artillery();
+					Map.EM.AddComponentData(e, new UnitClass.Artillery());
 					break;
 				case UnitClass.Class.Support:
-					comp = new UnitClass.Support();
+					Map.EM.AddComponentData(e, new UnitClass.Support());
 					break;
 				case UnitClass.Class.FixedGun:
-					comp = new UnitClass.FixedGun();
-					break;
-				case UnitClass.Class.Turret:
-					comp = new UnitClass.Turret();
+					Map.EM.AddComponentData(e, new UnitClass.FixedGun());
 					break;
 			}
-			Map.EM.SetComponentData(e, comp);
 			switch (turretInfo.domain)
 			{
 				case UnitDomain.Domain.Air:
-					comp = new UnitDomain.Air();
+					Map.EM.AddComponentData(e, new UnitDomain.Air());
 					break;
 				case UnitDomain.Domain.Land:
-					comp = new UnitDomain.Land();
+					Map.EM.AddComponentData(e, new UnitDomain.Land());
 					break;
 				case UnitDomain.Domain.Naval:
-					comp = new UnitDomain.Naval();
+					Map.EM.AddComponentData(e, new UnitDomain.Naval());
 					break;
 			}
-			Map.EM.SetComponentData(e, comp);
-			Map.EM.SetComponentData(e, new TagetingDomain
+			Map.EM.AddComponentData(e, new TargetingDomain
 			{
 				Value = turretInfo.targetingDomain
 			});

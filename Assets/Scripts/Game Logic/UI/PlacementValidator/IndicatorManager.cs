@@ -63,7 +63,7 @@ public class IndicatorManager
 		}
 	}
 
-	public void ShowRange(Tile center, int range, MeshEntityRotatable border)
+	public void ShowHexRange(Tile center, int range, MeshEntityRotatable border)
 	{
 		var ring = HexCoords.SelectRing(center.Coords, range);
 		var neighbors = new Tile[6];

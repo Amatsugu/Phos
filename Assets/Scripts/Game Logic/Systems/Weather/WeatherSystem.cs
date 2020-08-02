@@ -160,9 +160,9 @@ public class WeatherSystem : JobComponentSystem
 			return inputDeps;
 		SimulateWeather();
 		var pos = _cam.position; //HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
-		var cloudType = GetArchetypeChunkComponentType<CloudData>(true);
-		var translationType = GetArchetypeChunkComponentType<Translation>(false);
-		var scaleType = GetArchetypeChunkComponentType<NonUniformScale>(false);
+		var cloudType = GetComponentTypeHandle<CloudData>(true);
+		var translationType = GetComponentTypeHandle<Translation>(false);
+		var scaleType = GetComponentTypeHandle<NonUniformScale>(false);
 		var camRot = quaternion.RotateY(math.radians(_cam.eulerAngles.y));
 		var camCenteringOffset = math.rotate(camRot, new float3(_cloudFieldNormalizedHalfWidth, 0, 0));
 		var cloudJob = new CloudsJob
