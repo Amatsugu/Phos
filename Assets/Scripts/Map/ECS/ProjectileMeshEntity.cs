@@ -50,10 +50,15 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		return e;
 	}
 
-	protected override CollisionFilter GetFilter() => new CollisionFilter
+	protected override CollisionFilter GetFilter() => friendlyFire ? new CollisionFilter
 	{
 		BelongsTo = (1u << (int)faction),
 		CollidesWith = ~((1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.PlayerProjectile)),
+		GroupIndex = 0
+	} : new CollisionFilter
+	{
+		BelongsTo = (1u << (int)Faction.None),
+		CollidesWith = ~((1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)faction)),
 		GroupIndex = 0
 	};
 }
