@@ -17,7 +17,7 @@ public class TechBuildingValidator : PlacementValidator
 		if (techBuilding == null)
 			throw new System.Exception($"This building is not a {nameof(TechBuildingTileEntity)}");
 #endif
-		indicatorManager.ShowHexRange(map[pos], techBuilding.effectRange, borderMesh);
+		IndicatorManager.ShowHexRange(map[pos], techBuilding.effectRange, borderMesh);
 		var canBuild = !map.HasTechBuilding(techBuilding);
 		if (!canBuild)
 			indicatorManager.LogError("Only one tech building of each type can be built");

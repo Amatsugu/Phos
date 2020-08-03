@@ -17,3 +17,4 @@ MonoBehaviour:
   castShadows: 0
   receiveShadows: 0
   isStatic: 1
+  nonUniformScale: 1

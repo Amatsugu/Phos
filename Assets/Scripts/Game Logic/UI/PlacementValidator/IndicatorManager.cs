@@ -2,6 +2,8 @@
 
 using DataStore.ConduitGraph;
 using Effects.Lines;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -63,7 +65,7 @@ public class IndicatorManager
 		}
 	}
 
-	public void ShowHexRange(Tile center, int range, MeshEntityRotatable border)
+	public static void ShowHexRange(Tile center, int range, MeshEntityRotatable border)
 	{
 		var ring = HexCoords.SelectRing(center.Coords, range);
 		var neighbors = new Tile[6];
@@ -80,6 +82,12 @@ public class IndicatorManager
 				Map.EM.AddComponentData(e, new DeathTime { Value = Time.time + .01f });
 			}
 		}
+	}
+
+	public static void ShowRangeSphere(Tile tile, float attackRange, MeshEntity rangeSphere)
+	{
+		var e = rangeSphere.Instantiate(tile.SurfacePoint, attackRange);
+		Map.EM.AddComponentData(e, new DeathTime { Value = Time.time + 0.01f });
 	}
 
 	public void SetIndicator(Tile tile, MeshEntity indicator)

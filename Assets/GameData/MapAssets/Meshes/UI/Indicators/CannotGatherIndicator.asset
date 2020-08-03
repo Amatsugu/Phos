@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15dce6ee827b60949a5c98bab2fea005, type: 3}
-  m_Name: PoweredTileIndicator
+  m_Name: CannotGatherIndicator
   m_EditorClassIdentifier: 
   mesh: {fileID: 4333350756199448746, guid: e36a623d0086e58498aaec5ff9fb118e, type: 3}
-  material: {fileID: 2100000, guid: a4066cb8451ca7e4f9c49a038cf240bb, type: 2}
+  material: {fileID: 2100000, guid: 44ae31a79949e204abc045aef530a413, type: 2}
   castShadows: 0
   receiveShadows: 0
   isStatic: 1
+  nonUniformScale: 1

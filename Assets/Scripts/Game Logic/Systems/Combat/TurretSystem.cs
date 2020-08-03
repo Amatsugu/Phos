@@ -70,22 +70,13 @@ namespace Amatsugu.Phos.ECS
 			var world = _physicsWorld.PhysicsWorld;
 			_castHits.Clear();
 
-			//Verify Target
-			Entities.WithAll<Turret>().ForEach((Entity e, ref Translation t, ref AttackTarget target,  ref AttackRange range) =>
-			{
-				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(target.Value);
-				if (math.length(t.Value - tgtPos.Value) > range.Value)
-					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
-			});
+			
 
 			//Aim
 			Entities.WithNone<BuildingOffTag, BuildingDisabledTag > ().WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
 			{
 				if (!EntityManager.Exists(attackTarget.Value))
-				{
-					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 					return;
-				}
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
 				var dir = pos.Value - tgtPos;
 				//Barrel
@@ -115,6 +106,7 @@ namespace Amatsugu.Phos.ECS
 			{
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
+				
 				_physicsWorld.AABBCast(pos.Value, range.Value, faction.Value == Faction.Player ? _playerTargetingFilter : _phosTargetingFilter, ref _castHits);
 				int closest = -1;
 				float closestDist = range.ValueSq;
@@ -150,10 +142,7 @@ namespace Amatsugu.Phos.ECS
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
 				if (!EntityManager.Exists(attackTarget.Value))
-				{
-					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 					return;
-				}
 				bool hasBarrel = EntityManager.Exists(t.Barrel);
 				var r = EntityManager.GetComponentData<Rotation>(hasBarrel ? t.Barrel : t.Head).Value;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
@@ -166,7 +155,8 @@ namespace Amatsugu.Phos.ECS
 					return;
 				var barrelPos = EntityManager.GetComponentData<Translation>(hasBarrel ? t.Barrel : t.Head).Value;
 				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
-				var b = _bullet.Instantiate(shotPos, .2f, -dir * 10f);
+				DebugUtilz.DrawCrosshair(shotPos, .1f, Color.magenta, 1);
+				var b = _bullet.Instantiate(shotPos, .2f, -math.normalize(dir) * 10f);
 				if(_bullet.nonUniformScale)
 					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = new float3(0.2f, 0.2f, .6f) });
 				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
@@ -185,6 +175,19 @@ namespace Amatsugu.Phos.ECS
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
 				speed.NextAttackTime = Time.ElapsedTime + speed.Value;
+			});
+
+			//Verify Target
+			Entities.WithAll<Turret>().ForEach((Entity e, ref Translation t, ref AttackTarget target, ref AttackRange range) =>
+			{
+				if (!EntityManager.Exists(target.Value))
+				{
+					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
+					return;
+				}
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(target.Value);
+				if (math.length(t.Value - tgtPos.Value) > range.Value)
+					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 			});
 		}
 	}

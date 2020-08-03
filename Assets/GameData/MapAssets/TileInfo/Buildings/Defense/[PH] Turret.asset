@@ -50,14 +50,14 @@ MonoBehaviour:
     x: 0
     y: 1.5
     z: 0
-  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
+  validator: {fileID: 11400000, guid: 1445faee8d0ca2f498c9099fb4e94c4f, type: 2}
   cost: []
   production: []
   consumption:
   - id: 0
     ammount: 10
   adjacencyEffects: []
-  fireRate: 6
+  fireRate: 3
   damage: 10
   attackRange: 30
   projectileMesh: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
@@ -77,4 +77,4 @@ MonoBehaviour:
   shotOffset:
     x: 0
     y: 0
-    z: 0
+    z: -1

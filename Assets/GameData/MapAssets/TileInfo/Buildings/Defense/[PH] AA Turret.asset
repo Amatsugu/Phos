@@ -35,6 +35,9 @@ MonoBehaviour:
   constructionTime: 2
   category: 6
   size: 0
+  footprint:
+    size: 0
+    footprint: []
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
@@ -47,7 +50,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
+  validator: {fileID: 11400000, guid: 1445faee8d0ca2f498c9099fb4e94c4f, type: 2}
   cost: []
   production: []
   consumption: []
