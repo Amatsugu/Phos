@@ -15,3 +15,4 @@ MonoBehaviour:
   selectionIndicator: {fileID: 11400000, guid: 33177b445fb1df34f9e26941d4a375cb, type: 2}
   errorIndicator: {fileID: 11400000, guid: 786c4d272c5b71b46ba6741ea64fcce6, type: 2}
   rangeSphere: {fileID: 11400000, guid: 0ce5216eafde46b4abd5e72abcf4ae89, type: 2}
+  minRangeSphere: {fileID: 11400000, guid: 85346e26d2ff3454e8063c107b1417ff, type: 2}

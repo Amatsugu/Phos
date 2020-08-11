@@ -95,8 +95,7 @@ public class UnitMovementSystem : ComponentSystem
 		Entities.WithNone<Path>().ForEach((Entity e, ref Translation c, ref MoveToTarget m, ref AttackTarget t, ref AttackRange range) =>
 		{
 			var tPos = EntityManager.GetComponentData<CenterOfMass>(t.Value);
-			var distSq = math.lengthsq(c.Value - tPos.Value);
-			if (distSq <= range.ValueSq)
+			if (!range.IsInRange(c.Value, tPos.Value))
 				return;
 			if(EntityManager.HasComponent<Destination>(e))
 			{
@@ -117,9 +116,8 @@ public class UnitMovementSystem : ComponentSystem
 				Debug.Log($"<b>{nameof(UnitMovementSystem)}</b>: Target Moved, Recalculating Path");
 				return;
 			}
-			var dst = math.lengthsq(t.Value - tPos.Value);
-			Debug.Log(dst);
-			if (dst <= range.ValueSq)
+			var dst = math.length(t.Value - tPos.Value);
+			if (range.IsInRange(dst))
 			{
 				PostUpdateCommands.RemoveComponent<PathProgress>(e);
 				PostUpdateCommands.RemoveComponent<Path>(e);

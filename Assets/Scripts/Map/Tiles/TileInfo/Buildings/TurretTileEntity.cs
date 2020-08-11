@@ -21,6 +21,7 @@ namespace Amatsugu.Phos.TileEntities
 		public float fireRate;
 		public float damage;
 		public float attackRange;
+		public float minAttackRange;
 		public ProjectileMeshEntity projectileMesh;
 		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 		public MeshEntityRotatable turretHead;

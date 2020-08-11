@@ -109,8 +109,8 @@ public class UnitAttackSystem : ComponentSystem
 			});
 			if (aimRot != desRot)
 				return;
-			var dist = math.lengthsq(dir);
-			if (dist > range.ValueSq)
+			var dist = math.length(dir);
+			if (dist > range.MaxRange || dist < range.MinRange)
 			{
 				//PostUpdateCommands.AddComponent<MoveToTarget>(e);
 				return;
@@ -135,7 +135,7 @@ public class UnitAttackSystem : ComponentSystem
 				return;*/
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//Get Objects in Rect Range
-			_physicsWorld.AABBCast(t.Value, range.Value, new CollisionFilter
+			_physicsWorld.AABBCast(t.Value, range.MaxRange, new CollisionFilter
 			{
 				BelongsTo = 1u << (int)faction.Value,
 				CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
@@ -153,8 +153,8 @@ public class UnitAttackSystem : ComponentSystem
 
 				var pos = EntityManager.GetComponentData<CenterOfMass>(target).Value;
 				var dir = t.Value - pos;
-				var dist = math.lengthsq(dir);
-				if (dist <= range.ValueSq)
+				var dist = math.length(dir);
+				if (dist <= range.MaxRange && dist >= range.MinRange)
 				{
 					var turretDir = dir;
 					turretDir.y = 0;
@@ -207,14 +207,27 @@ public struct AttackTarget : IComponentData
 
 public struct AttackRange : IComponentData
 {
-	public AttackRange(float range)
+	public AttackRange(float max) : this(0, max)
 	{
-		Value = range;
-		ValueSq = range * range;
+
 	}
 
-	public float Value;
-	public float ValueSq;
+	public AttackRange(float min, float max)
+	{
+		MinRange = min;
+		MaxRange = max;
+	}
+
+	public float MaxRange;
+	public float MinRange;
+
+	public bool IsInRange(float3 a, float3 b)
+	{
+		var dist = math.length(a - b);
+		return IsInRange(dist);
+	}
+
+	public bool IsInRange(float dist) => dist >= MinRange && dist <= MaxRange;
 }
 
 public struct AttackSpeed : IComponentData, IEquatable<AttackSpeed>

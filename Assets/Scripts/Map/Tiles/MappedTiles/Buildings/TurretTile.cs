@@ -50,8 +50,8 @@ namespace Amatsugu.Phos.Tiles
 			var e = GetBuildingEntity();
 			Map.EM.AddComponentData(e, new AttackRange
 			{
-				Value = turretInfo.attackRange,
-				ValueSq = turretInfo.attackRange * turretInfo.attackRange
+				MaxRange = turretInfo.attackRange,
+				MinRange = turretInfo.minAttackRange
 			});
 			Map.EM.AddComponentData(e, new AttackSpeed
 			{

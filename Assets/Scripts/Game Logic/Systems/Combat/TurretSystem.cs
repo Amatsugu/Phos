@@ -77,19 +77,19 @@ namespace Amatsugu.Phos.ECS
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
 				
-				_physicsWorld.AABBCast(pos.Value, range.Value, faction.Value == Faction.Player ? _playerTargetingFilter : _phosTargetingFilter, ref _castHits);
+				_physicsWorld.AABBCast(pos.Value, range.MaxRange, faction.Value == Faction.Player ? _playerTargetingFilter : _phosTargetingFilter, ref _castHits);
 				int closest = -1;
-				float closestDist = range.ValueSq;
+				float closestDist = range.MaxRange;
 				//Find the closest target
 				for (int i = 0; i < _castHits.Length; i++)
 				{
 					var tgtE = _physicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
 					var tgtPos = EntityManager.GetComponentData<CenterOfMass>(tgtE).Value;
-					var distSq = math.lengthsq(pos.Value - tgtPos);
-					if(distSq < closestDist)
+					var dist = math.length(pos.Value - tgtPos);
+					if(dist < closestDist && dist >= range.MinRange)
 					{
 						closest = i;
-						closestDist = distSq;
+						closestDist = dist;
 					}
 				}
 				if(closest != -1)
@@ -97,7 +97,7 @@ namespace Amatsugu.Phos.ECS
 			});
 
 			//Aim
-			Entities.WithNone<BuildingOffTag, BuildingDisabledTag > ().WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackRange range, ref AttackTarget attackTarget) =>
+			Entities.WithNone<BuildingOffTag, BuildingDisabledTag > ().WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
 			{
 				if (!EntityManager.Exists(attackTarget.Value))
 					return;
@@ -186,7 +186,7 @@ namespace Amatsugu.Phos.ECS
 					return;
 				}
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(target.Value);
-				if (math.length(t.Value - tgtPos.Value) > range.Value)
+				if (!range.IsInRange(t.Value, tgtPos.Value))
 					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 			});
 		}
