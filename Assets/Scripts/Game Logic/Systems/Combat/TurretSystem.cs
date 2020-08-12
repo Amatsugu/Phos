@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
@@ -165,7 +166,23 @@ namespace Amatsugu.Phos.ECS
 			//Shoot Artillery 
 			Entities.WithAll<UnitClass.Artillery>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
 			{
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value);
+				var d = math.length(pos.Value - tgtPos.Value);
+				var time = 3f;
+				var h = tgtPos.Value.y - pos.Value.y;
+				var vY = (time * 9.8f)/2f;
+				var vX = (d * 9.8f) / (2 * vY);
+				var v = new float3(0, vY, vX);
 
+				var dir = pos.Value - tgtPos.Value;
+				dir.y = 0;
+				var r = quaternion.LookRotation(-dir, math.up());
+				v = math.rotate(r, v);
+
+				var b = _bullet.Instantiate(pos.Value, .2f, v);
+				if (_bullet.nonUniformScale)
+					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = new float3(0.2f, 0.2f, .6f) });
+				PostUpdateCommands.SetComponent(b, new PhysicsGravityFactor { Value = 1 });
 			});
 
 
