@@ -1,0 +1,63 @@
+<linker>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Mesh" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.ComputeShader" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+  </assembly>
+  <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Amatsugu.Phos.TileEntities.SubHQTileEntity" preserve="all" />
+    <type fullname="MeshEntityRotatable" preserve="all" />
+    <type fullname="TileDatabase" preserve="all" />
+    <type fullname="MobileUnitEntity" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.HQTileEntity" preserve="all" />
+    <type fullname="ProjectileMeshEntity" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.ResourceGatheringBuildingEntity" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.SmartTileEntity" preserve="all" />
+    <type fullname="RotatingDecorator" preserve="all" />
+    <type fullname="ResourceGatheringPlacementValidator" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.TileEntity" preserve="all" />
+    <type fullname="BuildingMeshEntity" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.ResourceTileInfo" preserve="all" />
+    <type fullname="HealthBarEntity" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.ResourceConduitTileEntity" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.BuildingTileEntity" preserve="all" />
+    <type fullname="VentTileInfo" preserve="all" />
+    <type fullname="TurbineHeadDecorator" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.WindTurbineTileEntity" preserve="all" />
+    <type fullname="TreeDecorator" preserve="all" />
+    <type fullname="MeshDecorator" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.TurretTileEntity" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.TechBuildingEntity" preserve="all" />
+    <type fullname="ConduitPlacementValidator" preserve="all" />
+    <type fullname="HealthBarDefination" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.PhosCoreTileInfo" preserve="all" />
+    <type fullname="MineThumperDecorator" preserve="all" />
+    <type fullname="MeshEntity" preserve="all" />
+    <type fullname="PlacementValidator" preserve="all" />
+    <type fullname="AdjacencyEffect" preserve="all" />
+    <type fullname="Amatsugu.Phos.TileEntities.SolarPanelTileEntity" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEditor.MonoScript" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.VFXModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.VFX.VFXRenderer" preserve="all" />
+    <type fullname="UnityEngine.VFX.VisualEffectAsset" preserve="all" />
+    <type fullname="UnityEngine.VFX.VisualEffect" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.LegacyResourcesProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+</linker>

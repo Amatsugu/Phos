@@ -6,6 +6,8 @@ using System.Text;
 
 using TMPro;
 
+using Unity.Entities;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -159,6 +161,21 @@ public class UIDevConsole : MonoBehaviour
 		{
 			GameEvents.InvokeOnMapRegen();
 		}, "Destroys and unrenders the map"));
+
+		AddCommand(new Command("toggleClouds", () =>
+		{
+			var e = Map.EM.GetAllEntities(Unity.Collections.Allocator.Temp);
+			for (int i = 0; i < e.Length; i++)
+			{
+				if(Map.EM.HasComponent<CloudData>(e[i]))
+				{
+					if (Map.EM.HasComponent<Disabled>(e[i]))
+						Map.EM.RemoveComponent<Disabled>(e[i]);
+					else
+						Map.EM.AddComponent<Disabled>(e[i]);
+				}
+			}
+		}, "Toggle cloud visivility"));
 	}
 	
 	private void AddCommand(Command command)
