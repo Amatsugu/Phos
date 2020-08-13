@@ -163,25 +163,52 @@ namespace Amatsugu.Phos.ECS
 				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
 			});
 
+			var hitPoint = float3.zero;
+
+			var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
+			var ray = GameRegistry.Camera.ScreenPointToRay(Input.mousePosition);
+			if (col.CollisionWorld.CastRay(new Unity.Physics.RaycastInput
+			{
+				Start = ray.origin,
+				End = ray.GetPoint(500),
+				Filter = new Unity.Physics.CollisionFilter
+				{
+					GroupIndex = 0,
+					BelongsTo = (1u << (int)Faction.Tile),
+					CollidesWith = (1u << (int)Faction.Tile)
+				}
+			}, out var hit))
+			{
+				hitPoint = hit.Position;
+			}
+
 			//Shoot Artillery 
 			Entities.WithAll<UnitClass.Artillery>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
 			{
-				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value);
-				var d = math.length(pos.Value - tgtPos.Value);
-				var time = 3f;
-				var h = tgtPos.Value.y - pos.Value.y;
-				var vY = (time * 9.8f)/2f;
-				var vX = (d * 9.8f) / (2 * vY);
+				if (Time.ElapsedTime < speed.NextAttackTime)
+					return;
+				if (!EntityManager.Exists(attackTarget.Value))
+					return;
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
+				var d = math.length(pos.Value - tgtPos);
+				var time = 5f;
+				var h = pos.Value.y - tgtPos.y;
+				var g = 9.8f;
+				var vY = ((g * time * time) - (2 * h)) / (2 * time);
+				var vX = d / time;
 				var v = new float3(0, vY, vX);
 
-				var dir = pos.Value - tgtPos.Value;
+				var dir = pos.Value - tgtPos;
 				dir.y = 0;
 				var r = quaternion.LookRotation(-dir, math.up());
 				v = math.rotate(r, v);
 
 				var b = _bullet.Instantiate(pos.Value, .2f, v);
 				if (_bullet.nonUniformScale)
-					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = new float3(0.2f, 0.2f, .6f) });
+				{
+					//PostUpdateCommands.SetComponent(b, new Rotation { Value = quaternion.LookRotation(v, math.up()) });
+					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = 1f });
+				}
 				PostUpdateCommands.SetComponent(b, new PhysicsGravityFactor { Value = 1 });
 			});
 
