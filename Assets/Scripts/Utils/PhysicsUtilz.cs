@@ -54,4 +54,20 @@ public static class PhysicsUtilz
 			CollidesWith = (1u << (int)Faction.Tile)
 		}, out tilePos);
 	}
+
+	public static float3 CalculateProjectileShotVector(float3 start, float3 tgt, float flightTime = 5f)
+	{
+		var d = math.length(start - tgt);
+		var h = start.y - tgt.y;
+		var g = 9.8f;
+		var vY = ((g * flightTime * flightTime) - (2 * h)) / (2 * flightTime);
+		var vX = d / flightTime;
+		var v = new float3(0, vY, vX);
+
+		var dir = start - tgt;
+		dir.y = 0;
+		var r = quaternion.LookRotation(-dir, math.up());
+		v = math.rotate(r, v);
+		return v;
+	}
 }

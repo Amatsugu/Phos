@@ -97,8 +97,8 @@ namespace Amatsugu.Phos.ECS
 					PostUpdateCommands.AddComponent(e, new AttackTarget { Value = _physicsWorld.PhysicsWorld.Bodies[_castHits[closest]].Entity });
 			});
 
-			//Aim
-			Entities.WithNone<BuildingOffTag, BuildingDisabledTag > ().WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
+			//Aim Turret
+			Entities.WithNone<BuildingOffTag, BuildingDisabledTag > ().WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackTarget attackTarget) =>
 			{
 				if (!EntityManager.Exists(attackTarget.Value))
 					return;
@@ -126,17 +126,6 @@ namespace Amatsugu.Phos.ECS
 				});
 			});
 
-
-			//Idle Anim
-			Entities.WithNone<AttackTarget, BuildingOffTag, BuildingDisabledTag>().ForEach((ref Turret t) =>
-			{
-				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
-				r = math.mul(math.normalizesafe(r), quaternion.AxisAngle(math.up(), math.radians(10) * Time.DeltaTime));
-				PostUpdateCommands.SetComponent(t.Head, new Rotation { Value = r });
-				if(EntityManager.Exists(t.Barrel))
-					PostUpdateCommands.SetComponent(t.Barrel, new Rotation { Value = r });
-			});
-
 			//Shoot Turret
 			Entities.WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
 			{
@@ -149,7 +138,7 @@ namespace Amatsugu.Phos.ECS
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
 				var dir = pos.Value - tgtPos;
 				var flatDir = dir;
-				if(!hasBarrel)
+				if (!hasBarrel)
 					flatDir.y = 0;
 				var desR = quaternion.LookRotation(flatDir, math.up());
 				//if (r.value.Equals(desR.value))
@@ -158,29 +147,38 @@ namespace Amatsugu.Phos.ECS
 				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
 				DebugUtilz.DrawCrosshair(shotPos, .1f, Color.magenta, 1);
 				var b = _bullet.Instantiate(shotPos, .2f, -math.normalize(dir) * 15f);
-				if(_bullet.nonUniformScale)
+				if (_bullet.nonUniformScale)
 					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = new float3(0.2f, 0.2f, .6f) });
 				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
 			});
 
-			var hitPoint = float3.zero;
 
-			var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
-			var ray = GameRegistry.Camera.ScreenPointToRay(Input.mousePosition);
-			if (col.CollisionWorld.CastRay(new Unity.Physics.RaycastInput
+			//Aim Artillery
+			Entities.WithNone<BuildingOffTag, BuildingDisabledTag>().WithAll<UnitClass.Artillery>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackTarget attackTarget) =>
 			{
-				Start = ray.origin,
-				End = ray.GetPoint(500),
-				Filter = new Unity.Physics.CollisionFilter
+				if (!EntityManager.Exists(attackTarget.Value))
+					return;
+				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
+				//Barrel
+				var aim = PhysicsUtilz.CalculateProjectileShotVector(pos.Value, tgtPos);
+				var bR = math.normalize(EntityManager.GetComponentData<Rotation>(t.Barrel).Value);
+				var barrelR = Quaternion.LookRotation(-aim, math.up());
+				barrelR = Quaternion.RotateTowards(bR, barrelR, 180 * Time.DeltaTime);
+				EntityManager.SetComponentData(t.Barrel, new Rotation
 				{
-					GroupIndex = 0,
-					BelongsTo = (1u << (int)Faction.Tile),
-					CollidesWith = (1u << (int)Faction.Tile)
-				}
-			}, out var hit))
-			{
-				hitPoint = hit.Position;
-			}
+					Value = barrelR
+				});
+				//Head
+				var dir = pos.Value - tgtPos;
+				dir.y = 0;
+				var hR = math.normalize(EntityManager.GetComponentData<Rotation>(t.Head).Value);
+				var headR = Quaternion.LookRotation(dir, math.up());
+				headR = Quaternion.RotateTowards(hR, headR, 180 * Time.DeltaTime);
+				EntityManager.SetComponentData(t.Head, new Rotation
+				{
+					Value = headR
+				});
+			});
 
 			//Shoot Artillery 
 			Entities.WithAll<UnitClass.Artillery>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
@@ -189,29 +187,27 @@ namespace Amatsugu.Phos.ECS
 					return;
 				if (!EntityManager.Exists(attackTarget.Value))
 					return;
-				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
-				var d = math.length(pos.Value - tgtPos);
-				var time = 5f;
-				var h = pos.Value.y - tgtPos.y;
-				var g = 9.8f;
-				var vY = ((g * time * time) - (2 * h)) / (2 * time);
-				var vX = d / time;
-				var v = new float3(0, vY, vX);
+				var r = EntityManager.GetComponentData<Rotation>(t.Barrel).Value;
+				var barrelPos = EntityManager.GetComponentData<Translation>(t.Barrel).Value;
+				DebugUtilz.DrawCrosshair(barrelPos + t.shotOffset, .2f, Color.cyan, .5f);
+				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
+				DebugUtilz.DrawCrosshair(shotPos, .2f, Color.magenta, .5f);
+				var v = PhysicsUtilz.CalculateProjectileShotVector(shotPos, EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value);
 
-				var dir = pos.Value - tgtPos;
-				dir.y = 0;
-				var r = quaternion.LookRotation(-dir, math.up());
-				v = math.rotate(r, v);
-
-				var b = _bullet.Instantiate(pos.Value, .2f, v);
-				if (_bullet.nonUniformScale)
-				{
-					//PostUpdateCommands.SetComponent(b, new Rotation { Value = quaternion.LookRotation(v, math.up()) });
-					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = 1f });
-				}
+				var b = _bullet.Instantiate(shotPos, .5f, v);
+				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 8 });
 				PostUpdateCommands.SetComponent(b, new PhysicsGravityFactor { Value = 1 });
 			});
 
+			//Idle Anim
+			Entities.WithNone<AttackTarget, BuildingOffTag, BuildingDisabledTag>().ForEach((ref Turret t) =>
+			{
+				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
+				r = math.mul(math.normalizesafe(r), quaternion.AxisAngle(math.up(), math.radians(10) * Time.DeltaTime));
+				PostUpdateCommands.SetComponent(t.Head, new Rotation { Value = r });
+				if (EntityManager.Exists(t.Barrel))
+					PostUpdateCommands.SetComponent(t.Barrel, new Rotation { Value = r });
+			});
 
 			//Timing
 			Entities.ForEach((ref AttackSpeed speed) =>

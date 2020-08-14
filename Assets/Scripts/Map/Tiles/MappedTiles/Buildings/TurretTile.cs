@@ -94,18 +94,24 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnHide();
 			Map.EM.AddComponent<FrozenRenderSceneTag>(_turretHead);
+			if (turretInfo.turretBarrel != null)
+				Map.EM.AddComponent<FrozenRenderSceneTag>(_turretBarrel);
 		}
 
 		public override void OnShow()
 		{
 			base.OnShow();
 			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_turretHead);
+			if(turretInfo.turretBarrel != null)
+				Map.EM.RemoveComponent<FrozenRenderSceneTag>(_turretBarrel);
 		}
 
 		public override void Destroy()
 		{
 			base.Destroy();
 			Map.EM.DestroyEntity(_turretHead);
+			if(turretInfo.turretBarrel != null)
+				Map.EM.DestroyEntity(_turretBarrel);
 		}
 	}
 }
