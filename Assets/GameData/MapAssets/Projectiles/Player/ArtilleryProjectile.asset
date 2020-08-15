@@ -27,3 +27,7 @@ MonoBehaviour:
   faction: 3
   friendlyFire: 0
   damage: 40
+  scale:
+    x: 0.5
+    y: 0.5
+    z: 0.5

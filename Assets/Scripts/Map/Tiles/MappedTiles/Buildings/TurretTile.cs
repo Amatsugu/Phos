@@ -38,7 +38,8 @@ namespace Amatsugu.Phos.Tiles
 			{
 				Head = _turretHead,
 				Barrel = _turretBarrel,
-				shotOffset = turretInfo.shotOffset
+				shotOffset = turretInfo.shotOffset,
+				projectile = turretInfo.projectileMesh.GetEntity()
 			});
 			
 		}

@@ -101,8 +101,8 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 			for (int i = 0; i < tilesToOccupy.Length; i++)
 			{
 				indicatorManager.SetIndicator(map[tilesToOccupy[i]], errorIndicator);
-				return false;
 			}
+			return false;
 		}
 
 		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager);

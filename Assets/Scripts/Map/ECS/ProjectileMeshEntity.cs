@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.Transforms;
 
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 	public Faction faction;
 	public bool friendlyFire;
 	public float damage;
+	public float3 scale = 1;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
@@ -34,6 +36,10 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		{
 			Value = faction
 		});
+		if (nonUniformScale)
+			Map.EM.SetComponentData(entity, new NonUniformScale { Value = scale });
+		else
+			Map.EM.SetComponentData(entity, new Scale { Value = scale.x });
 	}
 
 	public Entity Instantiate(float3 position, float scale, float3 velocity = default, float3 angularVelocity = default)

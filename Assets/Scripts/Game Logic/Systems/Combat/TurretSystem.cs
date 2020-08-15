@@ -19,12 +19,10 @@ using UnityEngine.AddressableAssets;
 
 namespace Amatsugu.Phos.ECS
 {
-	[UpdateAfter(typeof(StepPhysicsWorld))]
 	public class TurretSystem : ComponentSystem
 	{
 
 		private bool _isReady = false;
-		private ProjectileMeshEntity _bullet;
 		private BuildPhysicsWorld _physicsWorld;
 		private StepPhysicsWorld _simWorld;
 		private NativeList<int> _castHits;
@@ -34,15 +32,6 @@ namespace Amatsugu.Phos.ECS
 		protected override void OnCreate()
 		{
 			base.OnCreate();
-			var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerLaser");
-			op.Completed += e =>
-			{
-				if (e.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
-				{
-					_bullet = e.Result;
-					_isReady = true;
-				}
-			};
 			_physicsWorld = World.GetExistingSystem<BuildPhysicsWorld>();
 			_simWorld = World.GetExistingSystem<StepPhysicsWorld>();
 			_castHits = new NativeList<int>(Allocator.Persistent);
@@ -146,11 +135,7 @@ namespace Amatsugu.Phos.ECS
 				//	return;
 				var barrelPos = EntityManager.GetComponentData<Translation>(hasBarrel ? t.Barrel : t.Head).Value;
 				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
-				DebugUtilz.DrawCrosshair(shotPos, .1f, Color.magenta, 1);
-				var b = _bullet.BufferedInstantiate(PostUpdateCommands, shotPos, .2f, -math.normalize(dir) * 15f);
-				if (_bullet.nonUniformScale)
-					PostUpdateCommands.SetComponent(b, new NonUniformScale { Value = new float3(0.2f, 0.2f, .6f) });
-				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 5 });
+				ShootProjectile(t.projectile, shotPos, -math.normalize(dir) * 15f, 5);
 			});
 
 
@@ -190,13 +175,9 @@ namespace Amatsugu.Phos.ECS
 					return;
 				var r = EntityManager.GetComponentData<Rotation>(t.Barrel).Value;
 				var barrelPos = EntityManager.GetComponentData<Translation>(t.Barrel).Value;
-				DebugUtilz.DrawCrosshair(barrelPos + t.shotOffset, .2f, Color.cyan, .5f);
 				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
-				DebugUtilz.DrawCrosshair(shotPos, .2f, Color.magenta, .5f);
 				var v = PhysicsUtilz.CalculateProjectileShotVector(shotPos, EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value);
-				Debug.Log(shotPos);
-				var b = _bullet.BufferedInstantiate(PostUpdateCommands, shotPos, .5f, v);
-				PostUpdateCommands.AddComponent(b, new DeathTime { Value = Time.ElapsedTime + 8 });
+				ShootProjectile(t.projectile, shotPos, v, 20);
 			});
 
 			//Idle Anim
@@ -230,6 +211,17 @@ namespace Amatsugu.Phos.ECS
 					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 			});
 		}
+
+		private void ShootProjectile(Entity e, float3 pos, float3 velocity, float lifeTime)
+		{
+			var proj = PostUpdateCommands.Instantiate(e);
+			PostUpdateCommands.SetComponent(proj, new Translation { Value = pos });
+			PostUpdateCommands.SetComponent(proj, new Rotation { Value = quaternion.LookRotation(velocity, math.up()) });
+			PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + lifeTime });
+			PostUpdateCommands.SetComponent(proj, new PhysicsVelocity { Linear = velocity });
+			PostUpdateCommands.RemoveComponent<Disabled>(proj);
+		}
+
 	}
 
 	public struct Turret : IComponentData
@@ -237,5 +229,6 @@ namespace Amatsugu.Phos.ECS
 		public Entity Head;
 		public Entity Barrel;
 		public float3 shotOffset;
+		public Entity projectile;
 	}
 }
