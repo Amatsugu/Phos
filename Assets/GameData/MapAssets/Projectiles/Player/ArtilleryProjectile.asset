@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28301a30433c4e41a83503a7fa1a6eb, type: 3}
+  m_Name: ArtilleryProjectile
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 8929111303131502281, guid: 9510d43d68c718a4a9a2a4585252a5f2, type: 3}
+  material: {fileID: 2100000, guid: 6a9fc4ad06ad1744f90fad146bfa4282, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 0
+  nonUniformScale: 0
+  enableCollision: 1
+  colliderRadius: 0.1
+  isKenematic: 0
+  gravity: 1
+  gravityFactor: 1
+  mass: 1
+  faction: 3
+  friendlyFire: 0
+  damage: 40
