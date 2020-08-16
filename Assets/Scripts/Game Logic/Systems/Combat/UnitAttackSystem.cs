@@ -10,12 +10,10 @@ using Unity.Physics.Systems;
 using Unity.Transforms;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 [BurstCompile]
 public class UnitAttackSystem : ComponentSystem
 {
-	private ProjectileMeshEntity _bullet;
 	private Unity.Mathematics.Random _rand;
 	private int _state = 0;
 	private BuildPhysicsWorld _physicsWorld;
@@ -36,15 +34,6 @@ public class UnitAttackSystem : ComponentSystem
 	protected void InitAttackSystem()
 	{
 		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
-		var op = Addressables.LoadAssetAsync<ProjectileMeshEntity>("PlayerProjectile");
-		op.Completed += e =>
-		{
-			if (e.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
-			{
-				_bullet = e.Result;
-				_state = 1;
-			}
-		};
 		_rand = new Unity.Mathematics.Random();
 		_rand.InitState();
 
@@ -120,8 +109,8 @@ public class UnitAttackSystem : ComponentSystem
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
 			dir = math.normalize(dir) * -20;
-			var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.2f, velocity: dir);
-			PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 3 });
+			//var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.2f, velocity: dir);
+			//PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 3 });
 		});
 	}
 

@@ -11,15 +11,12 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 [BurstCompile]
 [UpdateBefore(typeof(BuildPhysicsWorld))]
 public class PhosCoreSystem : ComponentSystem
 {
 	private int _state = 0;
-	private ProjectileMeshEntity projectile;
-	private ProjectileMeshEntity laser;
 	private BuildPhysicsWorld buildPhysics;
 	private NativeList<int> _inRangeList;
 	private NativeArray<float3> _curTargets;
@@ -33,23 +30,8 @@ public class PhosCoreSystem : ComponentSystem
 
 	protected void Init()
 	{
-		var projLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyProjectile");
-		var laserLoad = Addressables.LoadAssetAsync<ProjectileMeshEntity>("EnemyLaser");
 		_inRangeList = new NativeList<int>(Allocator.Persistent);
 		_curTargets = new NativeArray<float3>(6, Allocator.Persistent);
-		projLoad.Completed += r =>
-		{
-			if (r.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
-			{
-				projectile = r.Result;
-				_state = 1;
-			}
-		};
-		laserLoad.Completed += r =>
-		{
-			if (r.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
-				laser = r.Result;
-		};
 		GameEvents.OnMapLoaded -= Init;
 	}
 
@@ -127,7 +109,7 @@ public class PhosCoreSystem : ComponentSystem
 		var pos = startPos + (dir * 2.9f) + new float3(0, 4, 0);
 		dir.y = .4f;
 		var vel = dir * core.projectileSpeed;
-		var proj = projectile.BufferedInstantiate(PostUpdateCommands, pos, .5f, vel);
+		/*var proj = projectile.BufferedInstantiate(PostUpdateCommands, pos, .5f, vel);
 		PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 15 });
 
 		PostUpdateCommands.AddComponent(proj, new PhosProjectile
@@ -136,6 +118,7 @@ public class PhosCoreSystem : ComponentSystem
 			target = target,
 			flightSpeed = core.projectileSpeed * 15
 		});
+		*/
 	}
 }
 

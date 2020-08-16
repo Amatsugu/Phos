@@ -15,7 +15,6 @@ using Unity.Physics.Systems;
 using Unity.Transforms;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Amatsugu.Phos.ECS
 {

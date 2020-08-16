@@ -13,8 +13,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
+
 
 //[Serializable]
 public class SerializedMap
