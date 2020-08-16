@@ -37,6 +37,11 @@ MonoBehaviour:
   constructionTime: 2
   category: 5
   size: 0
+  footprint:
+    size: 1
+    footprint:
+    - x: 0
+      y: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0

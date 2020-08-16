@@ -217,6 +217,10 @@ public struct HexCoords : IEquatable<HexCoords>
 		new int3(-1,  0, +1),
 		new int3( 0, -1, +1),
 	};
+	public static HexCoords Zero(float edgeLength)
+	{
+		return new HexCoords(0, 0, edgeLength);
+	}
 
 	public HexCoords Scale(int dir, int radius)
 	{

@@ -10,6 +10,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ECS/Mesh Entity")]
+[System.Serializable]
 public class MeshEntity : ScriptableObject
 {
 	public Mesh mesh;

@@ -16,7 +16,7 @@ public class PlacementValidator : ScriptableObject
 
 	public virtual bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
 	{
-		var tilesToOccupy = HexCoords.SpiralSelect(pos, buildingTile.size);
+		var tilesToOccupy = buildingTile.footprint.GetOccupiedTiles(pos);//HexCoords.SpiralSelect(pos, buildingTile.size);
 		bool outOfBounds = false;
 		for (int i = 0; i < tilesToOccupy.Length; i++)
 		{

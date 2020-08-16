@@ -1,4 +1,6 @@
 ﻿
+using Amatsugu.Phos.Assets.Editor.UI;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +22,19 @@ namespace Amatsugu.Phos.Editor.Drawer
 			//base.OnGUI(position, property, label);
 			EditorGUI.BeginProperty(position, label, property);
 			position = EditorGUI.PrefixLabel(position, label);
-			if(GUI.Button(position, "Edit"))
+			var pos = EditorGUIUtility.GUIToScreenRect(position);
+			var size = property.FindPropertyRelative("size");
+			var fp = property.FindPropertyRelative("footprint");
+			if(fp.arraySize == 0)
+				fp.arraySize = 1;
+			property.serializedObject.ApplyModifiedProperties();
+			if(GUI.Button(position, "Edit Footprint"))
 			{
-				/*var w = EditorWindow.GetWindow<EditFootprintEditorWindow>("Structure Footprint");
-				w.ShowAsDropDown(position, new Vector2(position.width, position.width));
-				w.Init(property);*/
+				var w = EditorWindow.CreateInstance(typeof(FootprintEditorWindow)) as FootprintEditorWindow;
+				w.footprint = property;
+				position.x = Screen.width - 10;
+				w.titleContent = new GUIContent("Footprint");
+				w.ShowAsDropDown(pos, new Vector2(position.width, position.width));
 			}
 			EditorGUI.EndProperty();
 		}
