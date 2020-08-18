@@ -146,7 +146,7 @@ namespace Amatsugu.Phos.Tiles
 				else
 					HQDisconnected();
 			}
-			_connectionInit = true;
+			connectionInit = true;
 		}
 
 		private void AddNewConnections()
@@ -193,7 +193,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void HQConnected()
 		{
-			if (_connectionInit && HasHQConnection)
+			if (connectionInit && HasHQConnection)
 				return;
 			if (!isBuilt)
 				return;
@@ -224,7 +224,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void HQDisconnected()
 		{
-			if (_connectionInit && !HasHQConnection)
+			if (connectionInit && !HasHQConnection)
 				return;
 			if (!isBuilt)
 				return;

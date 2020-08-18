@@ -81,7 +81,6 @@ public class PowerTransferEffectSystem : ComponentSystem
 	/// <param name="node">Node to add</param>
 	private void OnNodeAdded(ConduitNode node)
 	{
-		Debug.Log("Node Added");
 		var path = _conduitGraph.GetPath(node);
 		if (path == null)
 			return;

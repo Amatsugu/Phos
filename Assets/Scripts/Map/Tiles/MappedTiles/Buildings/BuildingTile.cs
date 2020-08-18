@@ -10,6 +10,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Amatsugu.Phos.Tiles
 {
@@ -34,6 +35,8 @@ namespace Amatsugu.Phos.Tiles
 		{
 			buildingInfo = tInfo;
 			buffs = StatsBuffs.Default;
+			
+
 		}
 
 		public override Entity Render()
@@ -297,13 +300,13 @@ namespace Amatsugu.Phos.Tiles
 			ApplyBuffs();
 		}
 
-		public void AddBuff(StatsBuffs stats)
+		public virtual void AddBuff(StatsBuffs stats)
 		{
 			buffs += stats;
 			ApplyBuffs();
 		}
 
-		public void RemoveBuff(StatsBuffs stats)
+		public virtual void RemoveBuff(StatsBuffs stats)
 		{
 			buffs -= stats;
 			ApplyBuffs();
@@ -370,11 +373,15 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public bool HasHQConnection { get; protected set; }
 
-		protected bool _connectionInit;
+		protected bool connectionInit;
+		protected PoweredMetaTile[] metaTiles;
+
 		private int _connectionNotif = -1;
 
 		public PoweredBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
+			if (tInfo.useMetaTiles)
+				metaTiles = new PoweredMetaTile[tInfo.footprint.footprint.Length - 1];
 		}
 
 		public override string GetDescription()
@@ -401,25 +408,50 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void FindConduitConnections()
 		{
+			Profiler.BeginSample("Find Conduit Connections");
 			var closestConduit = map.conduitGraph.GetClosestConduitNode(Coords);
 			if (closestConduit == null)
-				HQDisconnected();
+			{
+				if (MetaTilesHasConnection())
+					HQConnected();
+				else
+					HQDisconnected();
+			}
 			else
 			{
+				
 				var conduit = (map[closestConduit.conduitPos] as ResourceConduitTile);
 				if (!conduit.HasHQConnection)
 					HQDisconnected();
 				else if (conduit.IsInPoweredRange(Coords))
 					HQConnected();
 				else
-					HQDisconnected();
+				{
+					if (MetaTilesHasConnection())
+						HQConnected();
+					else
+						HQDisconnected();
+				}
 			}
-			_connectionInit = true;
+			connectionInit = true;
+			Profiler.EndSample();
+		}
+
+		public virtual bool MetaTilesHasConnection()
+		{
+			if (!buildingInfo.useMetaTiles)
+				return false;
+			for (int i = 0; i < metaTiles.Length; i++)
+			{
+				if (metaTiles[i].HasHQConnection)
+					return true;
+			}
+			return false;
 		}
 
 		public virtual void HQConnected()
 		{
-			if (_connectionInit)
+			if (connectionInit)
 			{
 				if (HasHQConnection)
 					return;
@@ -432,12 +464,12 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void HQDisconnected()
 		{
-			if (_connectionInit)
+			if (connectionInit)
 			{
 				if (HasHQConnection)
 				{
 					HasHQConnection = false;
-					_connectionInit = false;
+					connectionInit = false;
 					FindConduitConnections();
 					return;
 				}
@@ -479,7 +511,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void OnDeSerialized(Dictionary<string, string> tileData)
 		{
-			_connectionInit = tileData.ContainsKey("connectionInit");
+			connectionInit = tileData.ContainsKey("connectionInit");
 			HasHQConnection = tileData.ContainsKey("hasHQConnection");
 			if (!HasHQConnection)
 				OnDisconnected();

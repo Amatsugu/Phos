@@ -38,6 +38,7 @@ namespace Amatsugu.Phos.TileEntities
 		public BuildingCategory category;
 		public int size = 0;
 		public StructureFootprint footprint;
+		public bool useMetaTiles;
 		public int flattenOuterRange = 0;
 
 		[Header("Offshore")]
