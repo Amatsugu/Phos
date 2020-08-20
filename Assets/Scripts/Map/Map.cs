@@ -360,7 +360,9 @@ public class Map : IDisposable
 		}
 	}
 
-	public Tile ReplaceTile(Tile tile, TileEntity newTile)
+	public Tile ReplaceTile(Tile tile, TileEntity newTile) => ReplaceTile(tile, newTile.CreateTile(this, tile.Coords, tile.Height));
+
+	public T ReplaceTile<T>(Tile tile, T newTile) where T : Tile
 	{
 		if (!IsRendered)
 			throw new Exception("Cannot use ReplaceTile for an unrendered map");

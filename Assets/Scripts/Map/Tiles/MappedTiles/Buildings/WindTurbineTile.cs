@@ -47,7 +47,7 @@ namespace Amatsugu.Phos.Tiles
 			else
 				eff = windSpeed.Remap(0, .5f, turbineInfo.efficencyRange.x, turbineInfo.efficencyRange.y);
 			var building = GetBuildingEntity();
-			Map.EM.SetComponentData(building, new ProductionMulti { Value = buffs.productionMulti * eff });
+			Map.EM.SetComponentData(building, new ProductionMulti { Value = totalBuffs.productionMulti * eff });
 			Map.EM.SetComponentData(_blade, new RotateSpeed { Value = turbineInfo.maxSpinSpeed * eff });
 		}
 

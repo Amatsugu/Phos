@@ -1,6 +1,7 @@
 ﻿using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,8 @@ namespace Amatsugu.Phos.TileEntities
 	{
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{
-			return new MetaTile(pos, height, map, this);
+			throw new NotImplementedException();
+			//return new MetaTile(pos, height, map, this);
 		}
 	}
 }

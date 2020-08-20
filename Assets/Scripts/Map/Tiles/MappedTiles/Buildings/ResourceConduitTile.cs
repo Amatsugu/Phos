@@ -261,6 +261,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			base.TileUpdated(src, updateType);
+			if (!isBuilt)
+				return;
 			if (_conduitLines.ContainsKey(src.Coords))
 				UpdateLines();
 			else

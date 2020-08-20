@@ -39,14 +39,14 @@ namespace Amatsugu.Phos.Tiles
 				ApplyAOEBuff(b);
 		}
 
-		protected virtual void ApplyAOEBuff(BuildingTile building)
+		protected virtual void ApplyAOEBuff(BuildingTile tgtBuilding)
 		{
-			building.AddBuff(techInfo.StatsBuffs);
+			tgtBuilding.AddBuff(Coords, techInfo.StatsBuffs);
 		}
 
-		protected virtual void RemoveAOEBuff(BuildingTile building)
+		protected virtual void RemoveAOEBuff(BuildingTile tgtBuilding)
 		{
-			building.RemoveBuff(techInfo.StatsBuffs);
+			tgtBuilding.RemoveBuff(Coords);
 		}
 
 		public override void OnRemoved()

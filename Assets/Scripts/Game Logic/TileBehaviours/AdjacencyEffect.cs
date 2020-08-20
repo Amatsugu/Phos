@@ -55,8 +55,7 @@ public class AdjacencyEffect : ScriptableObject
 
 	public bool AddBonus(BuildingTile srcBuilding, Tile otherTile)
 	{
-		var otherBuilding = otherTile as BuildingTile;
-		if (otherBuilding == null)
+		if (!(otherTile is BuildingTile otherBuilding))
 			return false;
 		var bId = GameRegistry.TileDatabase.entityIds[otherBuilding.info];
 		bool hasBonus = false;
@@ -66,8 +65,11 @@ public class AdjacencyEffect : ScriptableObject
 			{
 				var bonus = bonusDefinations[j];
 				hasBonus = true;
-				srcBuilding.AddConsumptionMulti(bonus.consumptionMultiplier);
-				srcBuilding.AddProductionMulti(bonus.productionMultiplier);
+				srcBuilding.AddBuff(otherTile.Coords, new Amatsugu.Phos.DataStore.StatsBuffs
+				{
+					consumptionMulti = bonus.consumptionMultiplier,
+					productionMulti = bonus.productionMultiplier
+				});
 			}
 		}
 		return hasBonus;

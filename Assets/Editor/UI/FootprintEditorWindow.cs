@@ -53,7 +53,7 @@ namespace Amatsugu.Phos.Assets.Editor.UI
 			//Render Hexes
 			for (int i = 0; i < coords.Length; i++)
 			{
-				var curPos = new int2(coords[i].X, -coords[i].Y);
+				var curPos = new int2(coords[i].X, coords[i].Y);
 				var guiPos = coords[i].WorldPos.xz;
 				guiPos.y *= -1;
 				guiPos += windowCenterOffset;
@@ -64,15 +64,18 @@ namespace Amatsugu.Phos.Assets.Editor.UI
 			//Render Checkboxes
 			for (int i = 0; i < coords.Length; i++)
 			{
-				var curPos = new int2(coords[i].X, -coords[i].Y);
+				var curPos = new int2(coords[i].X, coords[i].Y);
 				var guiPos = coords[i].WorldPos.xz;
 				guiPos.y *= -1;
 				guiPos += windowCenterOffset;
 				var posRect = new Rect(guiPos, new Vector2(15, 15));
 				posRect.position += (Vector2)(cellSize/2);
 				posRect.position -= posRect.size/2;
+				if (curPos.Equals(int2.zero))
+					GUI.enabled = false;
 				if (GUI.Toggle(posRect, curActive.Contains(curPos), GUIContent.none))
 					active.Add(curPos);
+				GUI.enabled = true;
 			}
 
 

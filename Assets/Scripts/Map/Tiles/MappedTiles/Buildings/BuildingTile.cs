@@ -2,6 +2,7 @@
 using Amatsugu.Phos.TileEntities;
 
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -9,8 +10,9 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 
+using UnityEditor;
+
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace Amatsugu.Phos.Tiles
 {
@@ -20,9 +22,11 @@ namespace Amatsugu.Phos.Tiles
 		public int upgradeLevel = 0;
 		public bool IsBuilt => isBuilt;
 
-		protected StatsBuffs buffs;
+		protected StatsBuffs totalBuffs;
 		protected bool isBuilt;
 		protected bool buidlingRendered;
+		protected Dictionary<HexCoords, StatsBuffs> buffSources;
+		protected MetaTile[] metaTiles;
 
 		private Entity _building;
 		private Entity _offshorePlatform;
@@ -34,25 +38,31 @@ namespace Amatsugu.Phos.Tiles
 		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
 			buildingInfo = tInfo;
-			buffs = StatsBuffs.Default;
-			
+			totalBuffs = StatsBuffs.Default;
+			if (tInfo.useMetaTiles)
+				metaTiles = new MetaTile[tInfo.footprint.footprint.Length - 1];
 
 		}
-
-		public override Entity Render()
-		{
-			var e = base.Render();
-			if (isBuilt)
-			{
-				//isBuilt = false;
-				RenderBuilding();
-			}
-			return e;
-		}
-
 		public override TileEntity GetMeshEntity()
 		{
 			return buildingInfo.preserveGroundTile ? originalTile : buildingInfo;
+		}
+
+		protected virtual quaternion GetBuildingRotation()
+		{
+			var rand = new Unity.Mathematics.Random((uint)Coords.GetHashCode());
+			var r = Coords.GetHashCode() % 360;//rand.NextFloat(360);
+			return quaternion.RotateY(math.radians(r));
+		}
+
+		public ResourceIndentifier[] GetResourceRefund()
+		{
+			var res = new ResourceIndentifier[buildingInfo.cost.Length];
+			for (int i = 0; i < res.Length; i++)
+			{
+				res[i] = buildingInfo.cost[i] * 0.5f;
+			}
+			return res;
 		}
 
 		public override void OnHeightChanged()
@@ -69,30 +79,29 @@ namespace Amatsugu.Phos.Tiles
 				}
 			}
 		}
-
-		public override void Destroy()
+		public override void OnPlaced()
 		{
-			base.Destroy();
-			if (!_isRendered)
-				return;
-			try
+			base.OnPlaced();
+
+			StartConstruction();
+		}
+
+		protected virtual void StartConstruction()
+		{
+			if (buildingInfo.constructionMesh != null)
+				_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
+			CreateMetaTiles();
+		}
+
+		public override Entity Render()
+		{
+			var e = base.Render();
+			if (isBuilt)
 			{
-				if (buildingInfo.buildingMesh != null)
-					Map.EM.DestroyEntity(_building);
-				if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
-					Map.EM.DestroyEntity(_offshorePlatform);
-				if (_healthBars.IsCreated)
-				{
-					Map.EM.DestroyEntity(_healthBars);
-					_healthBars.Dispose();
-				}
-				if (_connectorCount > 0)
-					Map.EM.DestroyEntity(_adjacencyConnectors);
-				Map.EM.DestroyEntity(_subMeshes);
+				//isBuilt = false;
+				RenderBuilding();
 			}
-			catch
-			{
-			}
+			return e;
 		}
 
 		public override void OnHide()
@@ -130,14 +139,6 @@ namespace Amatsugu.Phos.Tiles
 			}
 			Map.EM.RemoveComponent(_subMeshes, typeof(FrozenRenderSceneTag));
 		}
-
-		protected virtual quaternion GetBuildingRotation()
-		{
-			var rand = new Unity.Mathematics.Random((uint)Coords.GetHashCode());
-			var r = Coords.GetHashCode() % 360;//rand.NextFloat(360);
-			return quaternion.RotateY(math.radians(r));
-		}
-
 		public void Build()
 		{
 			if (isBuilt)
@@ -148,6 +149,12 @@ namespace Amatsugu.Phos.Tiles
 			OnBuilt();
 			RenderBuilding();
 			map.InvokeOnBuilt(Coords);
+		}
+
+		protected virtual void OnBuilt()
+		{
+
+			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
 		}
 
 		public virtual void RenderBuilding()
@@ -167,6 +174,21 @@ namespace Amatsugu.Phos.Tiles
 			ApplyBonuses();
 			ApplyBuffs();
 			RenderDecorators();
+		}
+
+		public virtual void CreateMetaTiles()
+		{
+			if (buildingInfo.useMetaTiles)
+			{
+				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords);
+				for (int i = 0, j = 0 ; i < tiles.Length; i++)
+				{
+					if (tiles[i] == Coords)
+						continue;
+					var tgtTile = map[tiles[i]];
+					metaTiles[j++] = map.ReplaceTile(tgtTile, new MetaTile(tiles[i], tgtTile.Height, map, tgtTile.originalTile, this));
+				}
+			}
 		}
 
 		protected virtual Entity GetBuildingEntity()
@@ -223,35 +245,6 @@ namespace Amatsugu.Phos.Tiles
 			if (buildingInfo.healthBar != null)
 				_healthBars = buildingInfo.healthBar.Instantiate(entity, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
 		}
-
-		public void Die()
-		{
-			OnDeath();
-			map.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
-		}
-
-		public virtual void OnDeath()
-		{
-			NotificationsUI.NotifyWithTarget(NotifType.Warning, $"Building Destroyed: {buildingInfo.GetNameString()}", Coords);
-		}
-
-		public override void OnPlaced()
-		{
-			base.OnPlaced();
-			StartConstruction();
-		}
-
-		protected virtual void StartConstruction()
-		{
-			if (buildingInfo.constructionMesh != null)
-				_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
-		}
-
-		protected virtual void OnBuilt()
-		{
-			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
-		}
-
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			base.TileUpdated(src, updateType);
@@ -288,28 +281,27 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
-		public virtual void AddProductionMulti(float ammount)
+		public virtual void AddBuff(HexCoords src, StatsBuffs buff)
 		{
-			buffs.productionMulti += ammount;
+			if (buffSources.ContainsKey(src))
+			{
+				totalBuffs -= buffSources[src];
+				buffSources[src] = buff;
+			}
+			else
+				buffSources.Add(src, buff);
+			totalBuffs += buff;
 			ApplyBuffs();
 		}
 
-		public virtual void AddConsumptionMulti(float ammount)
+		public virtual void RemoveBuff(HexCoords src)
 		{
-			buffs.consumptionMulti += ammount;
-			ApplyBuffs();
-		}
-
-		public virtual void AddBuff(StatsBuffs stats)
-		{
-			buffs += stats;
-			ApplyBuffs();
-		}
-
-		public virtual void RemoveBuff(StatsBuffs stats)
-		{
-			buffs -= stats;
-			ApplyBuffs();
+			if (buffSources.ContainsKey(src))
+			{
+				totalBuffs -= buffSources[src];
+				buffSources.Remove(src);
+				ApplyBuffs();
+			}
 		}
 
 		protected virtual void ApplyBuffs()
@@ -319,39 +311,31 @@ namespace Amatsugu.Phos.Tiles
 			var e = GetBuildingEntity();
 			//Production
 			if (!Map.EM.HasComponent<ProductionMulti>(e))
-				Map.EM.AddComponentData(e, new ProductionMulti { Value = buffs.productionMulti });
+				Map.EM.AddComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti });
 			else
-				Map.EM.SetComponentData(e, new ProductionMulti { Value = buffs.productionMulti });
+				Map.EM.SetComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti });
 			//Consumption
 			if(!Map.EM.HasComponent<ConsumptionMulti>(e))
-				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = buffs.consumptionMulti });
+				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti });
 			else
-				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = buffs.consumptionMulti });
+				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti });
 			//Health
 			var curHealth = Map.EM.GetComponentData<Health>(e);
-			curHealth.maxHealth = buildingInfo.maxHealth + buffs.structureHealth;
-			curHealth.Value += buffs.structureHealth;
+			curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;
+			curHealth.Value += totalBuffs.structureHealth;
 			Map.EM.SetComponentData(e, curHealth);
 		}
 
-		public void Deconstruct()
+		public virtual void Deconstruct()
 		{
 			map.RevertTile(this);
-			Debug.Log("Desconstruct");
+			if (!buildingInfo.useMetaTiles)
+				return;
+			for (int i = 0; i < metaTiles.Length; i++)
+				map.RevertTile(metaTiles[i]);
 		}
 
 		public virtual bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;
-
-		public ResourceIndentifier[] GetResourceRefund()
-		{
-			var res = new ResourceIndentifier[buildingInfo.cost.Length];
-			for (int i = 0; i < res.Length; i++)
-			{
-				res[i] = buildingInfo.cost[i] * 0.5f;
-			}
-			return res;
-		}
-
 		public override void OnSerialize(Dictionary<string, string> tileData)
 		{
 			if (IsBuilt)
@@ -367,163 +351,47 @@ namespace Amatsugu.Phos.Tiles
 			base.OnDeSerialized(tileData);
 		}
 
-	}
-
-	public class PoweredBuildingTile : BuildingTile
-	{
-		public bool HasHQConnection { get; protected set; }
-
-		protected bool connectionInit;
-		protected PoweredMetaTile[] metaTiles;
-
-		private int _connectionNotif = -1;
-
-		public PoweredBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+		public void Die()
 		{
-			if (tInfo.useMetaTiles)
-				metaTiles = new PoweredMetaTile[tInfo.footprint.footprint.Length - 1];
+			OnDeath();
+			map.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
 		}
 
-		public override string GetDescription()
+		public virtual void OnDeath()
 		{
-			return base.GetDescription() + "\n" +
-				$"Has HQ Connection: {HasHQConnection} {Map.EM.HasComponent<ConsumptionMulti>(_tileEntity)}";
+			NotificationsUI.NotifyWithTarget(NotifType.Warning, $"Building Destroyed: {buildingInfo.GetNameString()}", Coords);
 		}
 
-		public override void OnPlaced()
+		public override void Destroy()
 		{
-			base.OnPlaced();
+			base.Destroy();
+			if (!_isRendered)
+				return;
+			DestroyBuilding();
 		}
 
-		protected virtual void OnBuiltAndPowered()
+		protected virtual void DestroyBuilding()
 		{
-
-		}
-
-		protected override void ApplyTileProperites()
-		{
-			base.ApplyTileProperites();
-			FindConduitConnections();
-		}
-
-		public virtual void FindConduitConnections()
-		{
-			Profiler.BeginSample("Find Conduit Connections");
-			var closestConduit = map.conduitGraph.GetClosestConduitNode(Coords);
-			if (closestConduit == null)
+			try
 			{
-				if (MetaTilesHasConnection())
-					HQConnected();
-				else
-					HQDisconnected();
-			}
-			else
-			{
+				if (buildingInfo.buildingMesh != null)
+					Map.EM.DestroyEntity(_building);
+				if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
+					Map.EM.DestroyEntity(_offshorePlatform);
+				if (_healthBars.IsCreated)
+				{
+					Map.EM.DestroyEntity(_healthBars);
+					_healthBars.Dispose();
+				}
+				if (_connectorCount > 0)
+					Map.EM.DestroyEntity(_adjacencyConnectors);
+				Map.EM.DestroyEntity(_subMeshes);
 				
-				var conduit = (map[closestConduit.conduitPos] as ResourceConduitTile);
-				if (!conduit.HasHQConnection)
-					HQDisconnected();
-				else if (conduit.IsInPoweredRange(Coords))
-					HQConnected();
-				else
-				{
-					if (MetaTilesHasConnection())
-						HQConnected();
-					else
-						HQDisconnected();
-				}
 			}
-			connectionInit = true;
-			Profiler.EndSample();
-		}
-
-		public virtual bool MetaTilesHasConnection()
-		{
-			if (!buildingInfo.useMetaTiles)
-				return false;
-			for (int i = 0; i < metaTiles.Length; i++)
+			catch
 			{
-				if (metaTiles[i].HasHQConnection)
-					return true;
-			}
-			return false;
-		}
-
-		public virtual void HQConnected()
-		{
-			if (connectionInit)
-			{
-				if (HasHQConnection)
-					return;
-				if (!HasHQConnection)
-					Map.EM.RemoveComponent<BuildingOffTag>(GetBuildingEntity());
-			}
-			HasHQConnection = true;
-			OnConnected();
-		}
-
-		public virtual void HQDisconnected()
-		{
-			if (connectionInit)
-			{
-				if (HasHQConnection)
-				{
-					HasHQConnection = false;
-					connectionInit = false;
-					FindConduitConnections();
-					return;
-				}
-				else
-					return;
-			}
-			var e = GetBuildingEntity();
-			if (!Map.EM.HasComponent<BuildingOffTag>(e))
-				Map.EM.AddComponent<BuildingOffTag>(e);
-			HasHQConnection = false;
-			OnDisconnected();
-		}
-
-		public virtual void OnConnected()
-		{
-			Debug.Log($"{info.name}: {Coords} connected");
-			if (IsBuilt)
-				OnBuiltAndPowered();
-			if (_connectionNotif != -1)
-			{
-				InfoPopupUI.RemovePopupNotif(Coords, _connectionNotif);
-				_connectionNotif = -1;
 			}
 		}
 
-		public virtual void OnDisconnected()
-		{
-			Debug.Log($"{info.name}: {Coords} disconnected");
-			if(_connectionNotif == -1)
-				_connectionNotif = InfoPopupUI.ShowPopupNotif(this, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and cannot opperate");
-		}
-
-		public override void OnSerialize(Dictionary<string, string> tileData)
-		{
-			base.OnSerialize(tileData);
-			tileData.Add("connectionInit", null);
-			tileData.Add("hasHQConnection", null);
-		}
-
-		public override void OnDeSerialized(Dictionary<string, string> tileData)
-		{
-			connectionInit = tileData.ContainsKey("connectionInit");
-			HasHQConnection = tileData.ContainsKey("hasHQConnection");
-			if (!HasHQConnection)
-				OnDisconnected();
-			else
-				OnConnected();
-			base.OnDeSerialized(tileData);
-		}
-
-		public override void OnRemoved()
-		{
-			base.OnRemoved();
-			InfoPopupUI.HidePopup(Coords);
-		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos.DataStore;
+using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
 using System.Collections;
@@ -10,32 +11,109 @@ namespace Amatsugu.Phos.Tiles
 {
 	public class MetaTile : PoweredBuildingTile
 	{
-		public PoweredBuildingTile parentTile;
+		private BuildingTile _parent;
+		private PoweredBuildingTile _poweredParent;
+		private bool _isPowered;
 
-		public MetaTile(HexCoords coords, float height, Map map, MetaTileEntity tInfo) : base(coords, height, map, tInfo)
+		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo)
+		{
+			originalTile = tInfo;
+			_parent = parentTile;
+			if (_parent is PoweredBuildingTile powered)
+			{
+				_poweredParent = powered;
+				_isPowered = true;
+			}
+		}
+
+		protected override void StartConstruction()
+		{
+		}
+
+		protected override void OnBuilt()
+		{
+		}
+
+		public override void RenderBuilding()
+		{
+		}
+
+		public override void AddBuff(HexCoords src, StatsBuffs buff)
+		{
+			_parent.AddBuff(src, buff);
+		}
+
+		public override void RemoveBuff(HexCoords src)
+		{
+			_parent.RemoveBuff(src);
+		}
+
+		public override string GetDescription()
+		{
+			return _parent.GetDescription();
+		}
+
+		public override string GetName()
+		{
+			return _parent.GetName();
+		}
+
+		protected override void ApplyTileProperites()
+		{
+		}
+
+		public override void OnDisconnected()
+		{
+			if (_isPowered)
+				_poweredParent.HQDisconnected();
+		}
+
+		public override void OnConnected()
+		{
+			if (_isPowered)
+				_poweredParent.HQConnected();
+		}
+
+		public override void Deconstruct()
+		{
+			_parent.Deconstruct();
+		}
+
+		public override bool CanDeconstruct(Faction faction)
+		{
+			return _parent.CanDeconstruct(faction);
+		}
+
+		protected override void DestroyBuilding()
 		{
 
 		}
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
-			if (src.Coords == parentTile.Coords)
+			//_parent.TileUpdated(src, updateType);
+			Debug.Log($"[META] Received update from {src.Coords} {src.GetName()}");
+		}
+
+		public override void OnSerialize(Dictionary<string, string> tileData)
+		{
+			base.OnSerialize(tileData);
+			tileData.Add("parent.X", _parent.Coords.X.ToString());
+			tileData.Add("parent.Y", _parent.Coords.Y.ToString());
+		}
+
+		public override void OnDeSerialized(Dictionary<string, string> tileData)
+		{
+			base.OnDeSerialized(tileData);
+			var x = int.Parse(tileData["parent.X"]);
+			var y = int.Parse(tileData["parent.Y"]);
+			var coord = new HexCoords(x, y, map.tileEdgeLength);
+			_parent = map[coord] as BuildingTile;
+			if (_parent is PoweredBuildingTile powered)
 			{
-				if (updateType == TileUpdateType.Removed)
-					map.RevertTile(this);
-				return;
+				_isPowered = true;
+				_poweredParent = powered;
 			}
-			parentTile.TileUpdated(src, updateType);
-		}
-
-		public override void HQConnected()
-		{
-			parentTile.HQConnected();
-		}
-
-		public override void HQDisconnected()
-		{
-			parentTile.HQDisconnected();
 		}
 	}
 }

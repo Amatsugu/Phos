@@ -102,7 +102,7 @@ namespace Amatsugu.Phos.Tiles
 			}
 			OnHeightChanged();
 			UpdateDecorations();
-			SendTileUpdate(TileUpdateType.Height);
+			BroadcastTileUpdate(TileUpdateType.Height);
 		}
 
 		public virtual void OnHeightChanged()
@@ -131,15 +131,15 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void OnRemoved()
 		{
 		
-			SendTileUpdate(TileUpdateType.Removed);
+			BroadcastTileUpdate(TileUpdateType.Removed);
 		}
 
 		public virtual void OnPlaced()
 		{
-			SendTileUpdate(TileUpdateType.Placed);
+			BroadcastTileUpdate(TileUpdateType.Placed);
 		}
 
-		public virtual void SendTileUpdate(TileUpdateType type)
+		public virtual void BroadcastTileUpdate(TileUpdateType type)
 		{
 			var neighbors = map.GetNeighbors(this);
 			for (int i = 0; i < 6; i++)

@@ -132,19 +132,18 @@ public struct MapChunk
 		}
 	}
 
-	public Tile ReplaceTile(HexCoords chunkCoord, TileEntity newTile)
+	public T ReplaceTile<T>(HexCoords chunkCoord, T newTile) where T : Tile
 	{
 		if (!isRendered)
 			Render();
 		var tile = this[chunkCoord];
-		var n = newTile.CreateTile(map, tile.Coords, tile.Height);
-		n.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
+		newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 		if (tile.originalTile == null)
-			n.originalTile = tile.info;
+			newTile.originalTile = tile.info;
 		else
-			n.originalTile = tile.originalTile;
-		this[chunkCoord] = n;
-		_chunkTiles[chunkCoord.ToIndex(SIZE)] = n.Render();
-		return n;
+			newTile.originalTile = tile.originalTile;
+		this[chunkCoord] = newTile;
+		_chunkTiles[chunkCoord.ToIndex(SIZE)] = newTile.Render();
+		return newTile;
 	}
 }
