@@ -127,7 +127,7 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="order">The build order cotaining the detials on how to place the building</param>
 	private void PlaceBuilding(BuildOrder order)
 	{
-		GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
+		GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.footprint.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
 		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building);
 		_constructionOrders.Add(new ConstructionOrder
 		{

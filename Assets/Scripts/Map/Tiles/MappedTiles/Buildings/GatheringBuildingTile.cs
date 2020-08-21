@@ -19,7 +19,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 
 	public override void OnPlaced()
 	{
-		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
+		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
 		map.HexSelectForEach(Coords, fullRange, t =>
 		{
 			if (t is ResourceTile rt && (!rt.gatherer.isCreated))
@@ -43,7 +43,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	{
 		var entity = GetBuildingEntity();
 		var resInRange = new Dictionary<int, int>();
-		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
+		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
 		var resTiles = new Dictionary<int, List<ResourceTile>>();
 		map.HexSelectForEach(Coords, fullRange, t =>
 		{
@@ -99,7 +99,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	{
 		base.ApplyTileProperites();
 		var entity = GetBuildingEntity();
-		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
+		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
 		var resInRange = new Dictionary<int, int>();
 		//var resTiles = new Dictionary<int, List<ResourceTile>>();
 		map.HexSelectForEach(Coords, fullRange, t =>
@@ -153,7 +153,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	public override void OnRemoved()
 	{
 		base.OnRemoved();
-		var fullRange = gatherInfo.gatherRange + gatherInfo.size;
+		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
 		map.HexSelectForEach(Coords, fullRange, t =>
 		{
 			if (t is ResourceTile rt)

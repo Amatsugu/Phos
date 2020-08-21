@@ -62,7 +62,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHeightChanged()
 		{
 			base.OnHeightChanged();
-			var foundation = map.HexSelect(Coords, buildingInfo.size);
+			var foundation = map.HexSelect(Coords, buildingInfo.footprint.size);
 			for (int i = 0; i < foundation.Count; i++)
 			{
 				if (foundation[i] != this)

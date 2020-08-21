@@ -24,7 +24,7 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 		_resInRange.Clear();
 		_resTiles.Clear();
 		//Find tiles in range
-		map.HexSelectForEach(pos, buildingInfo.size + buildingInfo.gatherRange, t =>
+		map.HexSelectForEach(pos, buildingInfo.footprint.size + buildingInfo.gatherRange, t =>
 		{
 			if(t is ResourceTile rt && !rt.gatherer.isCreated)
 			{

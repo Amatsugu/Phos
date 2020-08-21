@@ -36,6 +36,8 @@ namespace Amatsugu.Phos.ECS
 			{
 				case AnimationType.Slider:
 					return comps.Concat(new ComponentType[] { typeof(Slider), typeof(AnimationPhase), typeof(AnimStartPos), typeof(AnimEndPos) });
+				case AnimationType.Rotate:
+					return comps.Concat(new ComponentType[] { typeof(RotateAxis), typeof(AnimationPhase), typeof(RotateSpeed)});
 				default:
 					return comps;
 			}
@@ -52,6 +54,16 @@ namespace Amatsugu.Phos.ECS
 					{
 						duration = duration,
 						animationCurve = animationCurve
+					});
+					break;
+				case AnimationType.Rotate:
+					em.SetComponentData(entity, new RotateAxis
+					{
+						Value = rotationAxis
+					});
+					em.SetComponentData(entity, new RotateSpeed
+					{
+						Value = rotationSpeed
 					});
 					break;
 			}
@@ -72,6 +84,12 @@ namespace Amatsugu.Phos.ECS
 					{
 						Value = position + maxOffset
 					});
+					em.SetComponentData(entity, new AnimationPhase
+					{
+						Value = Time.time
+					});
+					break;
+				case AnimationType.Rotate:
 					em.SetComponentData(entity, new AnimationPhase
 					{
 						Value = Time.time

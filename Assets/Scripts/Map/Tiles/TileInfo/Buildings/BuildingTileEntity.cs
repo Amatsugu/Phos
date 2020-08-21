@@ -36,7 +36,6 @@ namespace Amatsugu.Phos.TileEntities
 		public int tier = 1;
 		public float constructionTime = 2;
 		public BuildingCategory category;
-		public int size = 0;
 		public StructureFootprint footprint;
 		public bool useMetaTiles;
 		public int flattenOuterRange = 0;
