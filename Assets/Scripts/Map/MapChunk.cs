@@ -104,6 +104,8 @@ public struct MapChunk
 
 	internal void Render()
 	{
+		if (isRendered)
+			return;
 		isShown = true;
 		isRendered = true;
 		if (!_chunkTiles.IsCreated)

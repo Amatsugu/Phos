@@ -3,6 +3,8 @@
 using System;
 
 using Unity.Entities;
+using Unity.Mathematics;
+
 using UnityEditor;
 using UnityEngine;
 
@@ -16,6 +18,7 @@ public class MapRenderer : MonoBehaviour
 	public TileDatabase tileDatabase;
 	public UnityEngine.UI.Image img;
 	public int mapRes = 4;
+	public int renderDistance = 1;
 
 	[HideInInspector]
 	public Map map;
@@ -43,6 +46,11 @@ public class MapRenderer : MonoBehaviour
 		_lastCamPos = default;
 		_lastCamRot = default;
 		GameEvents.InvokeOnMapLoaded();
+	}
+
+	private void OnValidate()
+	{
+		renderDistance = math.max(1, renderDistance);
 	}
 
 	private void Start()
@@ -91,12 +99,14 @@ public class MapRenderer : MonoBehaviour
 
 	private void LateUpdate()
 	{
+		//return;
 		var camPos = _cam.transform.position;
 		var camRot = _cam.transform.rotation;
 		if (_lastCamPos != camPos || _lastCamRot != camRot)
 		{
 			GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
-			map.UpdateView(_camPlanes);
+			//map.UpdateView(_camPlanes);
+			map.UpdateView(camPos, _camPlanes, renderDistance);
 			_lastCamPos = _cam.transform.position;
 			_lastCamRot = _cam.transform.rotation;
 			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z);

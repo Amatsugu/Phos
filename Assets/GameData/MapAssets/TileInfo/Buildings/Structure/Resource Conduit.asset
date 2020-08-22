@@ -34,17 +34,12 @@ MonoBehaviour:
   tier: 1
   constructionTime: 2
   category: 4
-  size: 0
   footprint:
-    size: 1
+    size: 0
     footprint:
     - x: 0
       y: 0
-    - x: -1
-      y: 0
-    - x: -1
-      y: 1
-  useMetaTiles: 1
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0

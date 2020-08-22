@@ -139,6 +139,32 @@ public class Map : IDisposable
 		}
 	}
 
+	internal void UpdateView(float3 camPos, Plane[] camPlanes, int renderDist = 3)
+	{
+		var coord = HexCoords.FromPosition(camPos, tileEdgeLength);
+		var (cX, cZ) = coord.GetChunkPos();
+		for (int z = 0; z < height; z++)
+		{
+			var zMin = cZ - renderDist;
+			var zMax = cZ + renderDist;
+			for (int x = 0; x < width; x++)
+			{
+				var xMin = cX - renderDist;
+				var xMax = cX + renderDist;
+				//if (x < xMin || x > xMax)
+				//	chunks[x + z * width].Show(false);
+				if ((z < zMin || z > zMax) || (x < xMin || x > xMax))
+					chunks[x + z * width].Show(false);
+				else
+				{
+					var i = x + z * width;
+					chunks[i].Show(chunks[i].InView(camPlanes));
+				}
+
+			}
+		}
+	}
+
 	public void Render(EntityManager entityManager)
 	{
 		if (IsRendered)
@@ -146,11 +172,11 @@ public class Map : IDisposable
 		IsRendered = true;
 		if (EM == default)
 			EM = entityManager;
-		
+		for (int i = 0; i < chunks.Length; i++)
+			chunks[i].Render();
+
 		foreach(var unit in units)
-		{
 			unit.Value.Render();
-		}
 	}
 
 	/// <summary>
