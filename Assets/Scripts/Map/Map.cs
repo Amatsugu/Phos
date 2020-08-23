@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 using Unity.Collections;
@@ -323,11 +324,33 @@ public class Map : IDisposable
 		return selection;
 	}
 
-
 	public enum FlattenMode
 	{
 		Center,
 		Average
+	}
+
+	public void FootprintFlatten(HexCoords[] footprint, int radius, FlattenMode mode = FlattenMode.Center)
+	{
+		var flatten = new Dictionary<HexCoords, int>();
+		var c = this[footprint[0]];
+		float height = c.Height;
+		if (mode == FlattenMode.Average)
+			height = footprint.Average(t => this[t].Height);
+
+		var flattenDist = HexCoords.CalculateInnerRadius(radius);
+		for (int i = 0; i < footprint.Length; i++)
+		{
+			HexSelectForEach(footprint[0], radius, t =>
+			{
+				var h = t.Height;
+				var dist = math.length(footprint[i].WorldPos - t.Coords.WorldPos);
+				var tH = math.lerp(h, height, dist / flattenDist);
+				t.UpdateHeight(tH);
+			}, true);
+		}
+		for (int i = 0; i < footprint.Length; i++)
+			this[footprint[i]].UpdateHeight(height);
 	}
 
 	public void CircularFlatten(HexCoords center, float innerRadius, float outerRadius, FlattenMode mode = FlattenMode.Center)
