@@ -127,9 +127,9 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="order">The build order cotaining the detials on how to place the building</param>
 	private void PlaceBuilding(BuildOrder order)
 	{
-		//var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords);
-		//GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center);
-		GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.footprint.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
+		var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords);
+		GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center);
+		//GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.footprint.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
 		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building);
 		_constructionOrders.Add(new ConstructionOrder
 		{

@@ -305,8 +305,6 @@ namespace Amatsugu.Phos.Tiles
 				var a = c.conduitPos.WorldPos + new float3(0, c.height, 0);
 				_conduitLines.Add(c.conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			}
-			if(HasHQConnection)
-				CreateNodeEffect();
 		}
 
 		public override void Destroy()

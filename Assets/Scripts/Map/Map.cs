@@ -332,22 +332,35 @@ public class Map : IDisposable
 
 	public void FootprintFlatten(HexCoords[] footprint, int radius, FlattenMode mode = FlattenMode.Center)
 	{
-		var flatten = new Dictionary<HexCoords, int>();
 		var c = this[footprint[0]];
 		float height = c.Height;
 		if (mode == FlattenMode.Average)
 			height = footprint.Average(t => this[t].Height);
 
 		var flattenDist = HexCoords.CalculateInnerRadius(radius);
+		var flatten = new Dictionary<HexCoords, float>();
+		var flattenTargets = new List<Tile>();
 		for (int i = 0; i < footprint.Length; i++)
 		{
 			HexSelectForEach(footprint[0], radius, t =>
 			{
 				var h = t.Height;
 				var dist = math.length(footprint[i].WorldPos - t.Coords.WorldPos);
-				var tH = math.lerp(h, height, dist / flattenDist);
-				t.UpdateHeight(tH);
+				var f = (dist / flattenDist);
+				f = 1-math.clamp(math.abs(f), 0, 1);
+				if (flatten.ContainsKey(t.Coords))
+					flatten[t.Coords] = (flatten[t.Coords] + f) / 2f;
+				else
+				{
+					flatten.Add(t.Coords, f);
+					flattenTargets.Add(t);
+				}
 			}, true);
+		}
+		for (int i = 0; i < flattenTargets.Count; i++)
+		{
+			var t = flattenTargets[i];
+			t.UpdateHeight(math.lerp(t.Height, height, flatten[t.Coords]));
 		}
 		for (int i = 0; i < footprint.Length; i++)
 			this[footprint[i]].UpdateHeight(height);
