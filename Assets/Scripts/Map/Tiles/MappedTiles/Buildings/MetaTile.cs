@@ -95,6 +95,11 @@ namespace Amatsugu.Phos.Tiles
 			Debug.Log($"[META] Received update from {src.Coords} {src.GetName()}");
 		}
 
+		public override void OnHeightChanged()
+		{
+			
+		}
+
 		public override void OnSerialize(Dictionary<string, string> tileData)
 		{
 			base.OnSerialize(tileData);

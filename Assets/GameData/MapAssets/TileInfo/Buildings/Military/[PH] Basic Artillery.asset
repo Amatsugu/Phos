@@ -34,13 +34,21 @@ MonoBehaviour:
   tier: 2
   constructionTime: 2
   category: 5
-  size: 0
   footprint:
     size: 1
     footprint:
     - x: 0
       y: 0
-  flattenOuterRange: 0
+    - x: 0
+      y: -1
+    - x: 1
+      y: -1
+    - x: 0
+      y: 1
+    - x: -1
+      y: 1
+  useMetaTiles: 1
+  flattenOuterRange: 2
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
@@ -69,13 +77,13 @@ MonoBehaviour:
   targetingDomain: 0
   headOffset:
     x: 0
-    y: 0.259695
+    y: 0.716867
     z: 0
   barrelOffset:
     x: 0
-    y: 0.459312
+    y: 1.26789
     z: 0
   shotOffset:
     x: 0
     y: 0
-    z: -1
+    z: -2.72122
