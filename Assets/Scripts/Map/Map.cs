@@ -344,6 +344,8 @@ public class Map : IDisposable
 		{
 			HexSelectForEach(footprint[0], radius, t =>
 			{
+				if (t is BuildingTile)
+					return;
 				var h = t.Height;
 				var dist = math.length(footprint[i].WorldPos - t.Coords.WorldPos);
 				var f = (dist / flattenDist);
