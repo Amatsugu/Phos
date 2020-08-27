@@ -1,4 +1,6 @@
 ﻿using Amatsugu.Phos.UnitComponents;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -125,5 +127,15 @@ public class MobileUnitEntity : MeshEntityRotatable
 		});
 
 		return e;
+	}
+
+	internal string GetNameString()
+	{
+		throw new NotImplementedException();
+	}
+
+	internal string GetCostString()
+	{
+		throw new NotImplementedException();
 	}
 }

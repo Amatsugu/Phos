@@ -1,6 +1,8 @@
 ﻿using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
+using Steamworks;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,6 +46,8 @@ public class UIBuildPanel : UITabPanel
 	private float _poweredTileRangeSq;
 	private Camera _cam;
 	private BuildingDatabase _buildingDatabase;
+	private FactoryBuildingTile _selectedFactory;
+	private UnitDatabase _unitDatabase;
 
 	public enum BuildState
 	{
@@ -51,6 +55,7 @@ public class UIBuildPanel : UITabPanel
 		Idle,
 		HQPlacement,
 		Placement,
+		UnitConstruction,
 		Deconstruct
 	}
 
@@ -67,6 +72,7 @@ public class UIBuildPanel : UITabPanel
 		GameEvents.OnGameReady += OnGameReady;
 		_poweredTileRangeSq = showPowerRange * showPowerRange;
 		_buildingDatabase = GameRegistry.BuildingDatabase;
+		_unitDatabase = GameRegistry.UnitDatabase;
 		indicatorManager = new IndicatorManager(World.DefaultGameObjectInjectionWorld.EntityManager, inidcatorOffset, floatingText);
 		base.Awake();
 	}
@@ -95,13 +101,21 @@ public class UIBuildPanel : UITabPanel
 	{
 		base.OnTabSelected(tab);
 		_tier = tab + 1;
-		Show(_lastCategory);
+		if (state == BuildState.UnitConstruction)
+			Show(_selectedFactory);
+		else
+			Show(_lastCategory);
 	}
 
 	private void OnTick()
 	{
 		if (state == BuildState.Disabled || state == BuildState.HQPlacement)
 			return;
+		if(state == BuildState.UnitConstruction)
+		{
+
+			return;
+		}
 		var buildings = _buildingDatabase[_lastCategory];
 		for (int i = 0, j = 0; i < _icons.Length; i++)
 		{
@@ -123,6 +137,52 @@ public class UIBuildPanel : UITabPanel
 				j++;
 			}
 		}
+	}
+
+	public void Show(FactoryBuildingTile factoryTile)
+	{
+		if (state == BuildState.HQPlacement) //This should never happen, but just in case
+			return;
+		state = BuildState.UnitConstruction;
+		_selectedFactory = factoryTile;
+		var units = _selectedFactory.factoryInfo.unitsToBuild;
+		bool hasIcons = false;
+		for (int i = 0, j = 0; i < _icons.Length; i++)
+		{
+			if (_icons[i] == null)
+			{
+				_icons[i] = Instantiate(iconPrefab, contentArea, false);
+				_icons[i].OnBlur += infoPanel.Hide;
+			}
+			if (j < units.Length)
+			{
+				var unit = _unitDatabase.unitEntites[units[i].id].unit;
+				if ( unit.tier == _tier)
+				{
+					_icons[i].SetActive(false);
+					_icons[i].ClearHoverEvents();
+					_icons[i].ClearClickEvents();
+					_icons[i].titleText.SetText(unit.GetNameString());
+					_icons[i].costText.SetText(unit.GetCostString());
+					_icons[i].icon.sprite = unit.icon;
+					_icons[i].button.interactable = true;
+					_icons[i].OnHover += () => infoPanel.ShowInfo(unit);
+					_icons[i].OnClick += () =>
+					{
+						
+					};
+					_icons[i].SetActive(true);
+					hasIcons = true;
+				}
+				else
+					i--;
+				j++;
+			}
+			else
+				_icons[i].SetActive(false);
+		}
+		nothingUnlockedText.SetActive(!hasIcons);
+		Show();
 	}
 
 	public void Show(BuildingCategory category)

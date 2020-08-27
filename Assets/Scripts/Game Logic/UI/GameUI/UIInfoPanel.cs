@@ -16,4 +16,11 @@ public class UIInfoPanel : UIPanel
 		productionText.SetText(building.info.GetProductionString());
 		SetActive(true);
 	}
+
+	public void ShowInfo(MobileUnitEntity unitEntity)
+	{
+		titleText.SetText(unitEntity.GetNameString());
+
+		SetActive(true);
+	}
 }

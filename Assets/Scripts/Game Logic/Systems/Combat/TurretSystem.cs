@@ -21,9 +21,7 @@ namespace Amatsugu.Phos.ECS
 	public class TurretSystem : ComponentSystem
 	{
 
-		private bool _isReady = false;
 		private BuildPhysicsWorld _physicsWorld;
-		private StepPhysicsWorld _simWorld;
 		private NativeList<int> _castHits;
 		private CollisionFilter _playerTargetingFilter;
 		private CollisionFilter _phosTargetingFilter;
@@ -32,7 +30,6 @@ namespace Amatsugu.Phos.ECS
 		{
 			base.OnCreate();
 			_physicsWorld = World.GetExistingSystem<BuildPhysicsWorld>();
-			_simWorld = World.GetExistingSystem<StepPhysicsWorld>();
 			_castHits = new NativeList<int>(Allocator.Persistent);
 			_playerTargetingFilter = new CollisionFilter
 			{
