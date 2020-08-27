@@ -14,6 +14,7 @@ namespace Amatsugu.Phos.Tiles
 		private BuildingTile _parent;
 		private PoweredBuildingTile _poweredParent;
 		private bool _isPowered;
+		private bool _isConduit;
 
 		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo)
 		{
@@ -24,6 +25,7 @@ namespace Amatsugu.Phos.Tiles
 				_poweredParent = powered;
 				_isPowered = true;
 			}
+			_isConduit = _parent is ResourceConduitTile;
 		}
 
 		protected override void StartConstruction()
@@ -36,6 +38,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void RenderBuilding()
 		{
+			hasBuilding = false;
 		}
 
 		public override void AddBuff(HexCoords src, StatsBuffs buff)
@@ -64,13 +67,13 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void OnDisconnected()
 		{
-			if (_isPowered)
+			if (_isPowered && !_isConduit)
 				_poweredParent.HQDisconnected();
 		}
 
 		public override void OnConnected()
 		{
-			if (_isPowered)
+			if (_isPowered && !_isConduit)
 				_poweredParent.HQConnected();
 		}
 
@@ -91,8 +94,8 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
-			//_parent.TileUpdated(src, updateType);
-			Debug.Log($"[META] Received update from {src.Coords} {src.GetName()}");
+			_parent.TileUpdated(src, updateType);
+			Debug.Log($"[META] Received {updateType} update from {src.Coords} {src.GetName()}");
 		}
 
 		public override void OnHeightChanged()

@@ -27,6 +27,7 @@ namespace Amatsugu.Phos.Tiles
 		protected bool buidlingRendered;
 		protected Dictionary<HexCoords, StatsBuffs> buffSources;
 		protected MetaTile[] metaTiles;
+		protected bool hasBuilding;
 
 		private Entity _building;
 		private Entity _offshorePlatform;
@@ -110,7 +111,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHide()
 		{
 			base.OnHide();
-			if (buildingInfo.buildingMesh.mesh != null)
+			if (hasBuilding)
 				Map.EM.AddComponent(_building, typeof(FrozenRenderSceneTag));
 			if (_healthBars.IsCreated)
 				Map.EM.AddComponent<FrozenRenderSceneTag>(_healthBars);
@@ -128,7 +129,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnShow()
 		{
 			base.OnShow();
-			if (buildingInfo.buildingMesh.mesh != null)
+			if (hasBuilding)
 				Map.EM.RemoveComponent(_building, typeof(FrozenRenderSceneTag));
 			if (_healthBars.IsCreated)
 				Map.EM.RemoveComponent<FrozenRenderSceneTag>(_healthBars);
@@ -163,9 +164,12 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void RenderBuilding()
 		{
 			if (buildingInfo.buildingMesh.mesh == null)
-				UnityEngine.Debug.LogWarning($"No Building Assigned for {base.GetName()}");
+			{
+				Debug.LogWarning($"No Building Assigned for {base.GetName()}");
+			}
 			else
 			{
+				hasBuilding = true;
 				var rot = GetBuildingRotation();
 				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, rot, GameRegistry.TileDatabase.entityIds[buildingInfo], buildingInfo.maxHealth, buildingInfo.faction);
 				_subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(SurfacePoint, rot);
@@ -274,7 +278,7 @@ namespace Amatsugu.Phos.Tiles
 				var effect = buildingInfo.adjacencyEffects[i];
 				for (int n = 0; n < neighbors.Length; n++)
 				{
-					if (effect.AddBonus(this, neighbors[n]))
+					if (effect.ApplyBonus(this, neighbors[n]))
 					{
 						var slice = _adjacencyConnectors.Slice(n * 3, 3);
 						effect.RenderConnectionLine(SurfacePoint, neighbors[n].SurfacePoint, ref slice);
@@ -331,11 +335,11 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void Deconstruct()
 		{
-			map.RevertTile(this);
 			if (!buildingInfo.useMetaTiles)
 				return;
 			for (int i = 0; i < metaTiles.Length; i++)
 				map.RevertTile(metaTiles[i]);
+			map.RevertTile(this);
 		}
 
 		public virtual bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;

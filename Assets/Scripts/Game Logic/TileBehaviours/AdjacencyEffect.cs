@@ -53,11 +53,12 @@ public class AdjacencyEffect : ScriptableObject
 		return (productionBonus, consumtionBonus);
 	}
 
-	public bool AddBonus(BuildingTile srcBuilding, Tile otherTile)
+	public bool ApplyBonus(BuildingTile srcBuilding, Tile otherTile)
 	{
 		if (!(otherTile is BuildingTile otherBuilding))
 			return false;
 		var bId = GameRegistry.TileDatabase.entityIds[otherBuilding.info];
+		Console.WriteLine($"Checking for ADJ Bonus on {otherTile.Coords} {otherTile.GetName()}");
 		bool hasBonus = false;
 		for (int j = 0; j < bonusDefinations.Length; j++)
 		{

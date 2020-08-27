@@ -54,8 +54,6 @@ namespace Amatsugu.Phos.ECS
 
 		protected override void OnUpdate()
 		{
-			if (!_isReady)
-				return;
 
 			var world = _physicsWorld.PhysicsWorld;
 			_castHits.Clear();
