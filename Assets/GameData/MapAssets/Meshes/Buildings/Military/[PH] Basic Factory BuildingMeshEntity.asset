@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: '[PH] Basic Factory BuildingMeshEntity'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
+  mesh: {fileID: 5478281656189064722, guid: a7392b4c2d447ef46b807e3b3a7be238, type: 3}
+  material: {fileID: 2100000, guid: c1cf6385221ccd44d8fdf7850f7db345, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
+  subMeshes: []
   centerOfMassOffset:
     x: 0
     y: 0

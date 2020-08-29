@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Amatsugu.Phos.TileEntities;
+
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,12 +10,12 @@ public class UIInfoPanel : UIPanel
 	public TMP_Text descriptionText;
 	public TMP_Text productionText;
 
-	public void ShowInfo(BuildingDatabase.BuildingDefination building)
+	public void ShowInfo(BuildingTileEntity building)
 	{
-		titleText.SetText(building.info.GetNameString());
-		var upkeep = building.info.GetUpkeepString();
-		descriptionText.SetText($"{building.info.description}\n{(upkeep.Length > 0 ? $"Upkeep: {upkeep}" : "")}");
-		productionText.SetText(building.info.GetProductionString());
+		titleText.SetText(building.GetNameString());
+		var upkeep = building.GetUpkeepString();
+		descriptionText.SetText($"{building.description}\n{(upkeep.Length > 0 ? $"Upkeep: {upkeep}" : "")}");
+		productionText.SetText(building.GetProductionString());
 		SetActive(true);
 	}
 

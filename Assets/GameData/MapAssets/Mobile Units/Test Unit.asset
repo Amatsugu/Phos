@@ -23,11 +23,11 @@ MonoBehaviour:
   attackSpeed: 10
   maxHealth: 100
   size: 0
-  tier: 0
-  unitDomain:
-    Value: 0
-  unitClass:
-    Value: 1
+  tier: 1
+  unitDomain: 0
+  unitTargetingDomain: 0
+  unitClass: 0
+  icon: {fileID: 0}
   centerOfMassOffset:
     x: 0
     y: 0.5

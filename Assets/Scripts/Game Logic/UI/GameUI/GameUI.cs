@@ -144,6 +144,7 @@ public class GameUI : UIHover
 			case UIState.Idle:
 				_selectionPanel.UpdateState();
 				_actionsPanel.UpdateState();
+				_buildPanel.UpdateState();
 				break;
 			case UIState.PlaceBuilding:
 				_buildPanel.UpdateState();

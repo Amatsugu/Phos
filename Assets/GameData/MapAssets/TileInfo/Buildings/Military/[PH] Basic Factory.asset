@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 9098ea6ee8539a44e9c1877e35a06261, type: 3}
   m_Name: '[PH] Basic Factory'
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
@@ -34,12 +34,12 @@ MonoBehaviour:
   tier: 2
   constructionTime: 2
   category: 5
-  size: 0
   footprint:
     size: 1
     footprint:
     - x: 0
       y: 0
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
@@ -57,3 +57,6 @@ MonoBehaviour:
   production: []
   consumption: []
   adjacencyEffects: []
+  unitsToBuild:
+  - id: 0
+  - id: 0

@@ -131,11 +131,11 @@ public class MobileUnitEntity : MeshEntityRotatable
 
 	internal string GetNameString()
 	{
-		throw new NotImplementedException();
+		return name;
 	}
 
 	internal string GetCostString()
 	{
-		throw new NotImplementedException();
+		return string.Empty;
 	}
 }

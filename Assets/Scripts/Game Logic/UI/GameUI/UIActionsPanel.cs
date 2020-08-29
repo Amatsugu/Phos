@@ -34,6 +34,8 @@ public class UIActionsPanel : UIPanel
 	public Button patrolCommand;
 	public Button haltCommand;
 
+	
+
 	private HashSet<Button> _activeButtons;
 	private ActionState _actionState;
 	private CommandActions _selectedCommand;
@@ -47,7 +49,7 @@ public class UIActionsPanel : UIPanel
 
 	public enum ActionState
 	{
-		Disabled,
+		Idle,
 		IssueCommand
 	}
 	
@@ -104,7 +106,7 @@ public class UIActionsPanel : UIPanel
 
 	public void UpdateState()
 	{
-		if (_actionState == ActionState.Disabled)
+		if (_actionState == ActionState.Idle)
 			return;
 		_mousePos = Input.mousePosition;
 		
@@ -203,6 +205,8 @@ public class UIActionsPanel : UIPanel
 	{
 		var center = float3.zero;
 		var deathTime = Time.time + 0.01f;
+		
+
 		for (int i = 0; i < _selectedEntities.Count; i++)
 		{
 			var pos = _selectedEntities[i].GetPosition();
@@ -379,7 +383,7 @@ public class UIActionsPanel : UIPanel
 		HideAllButtons();
 		_activeButtons.Clear();
 		_selectedEntities.Clear();
-		_actionState = ActionState.Disabled;
+		_actionState = ActionState.Idle;
 	}
 
 	private void HideAllButtons()

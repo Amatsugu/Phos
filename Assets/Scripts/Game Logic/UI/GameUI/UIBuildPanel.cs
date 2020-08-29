@@ -156,7 +156,7 @@ public class UIBuildPanel : UITabPanel
 			}
 			if (j < units.Length)
 			{
-				var unit = _unitDatabase.unitEntites[units[i].id].unit;
+				var unit = _unitDatabase.unitEntites[units[j].id].unit;
 				if ( unit.tier == _tier)
 				{
 					_icons[i].SetActive(false);
@@ -217,7 +217,7 @@ public class UIBuildPanel : UITabPanel
 						if (GameRegistry.GameMap.HasTechBuilding(b.info as TechBuildingTileEntity))
 							_icons[i].button.interactable = false;
 					}	
-					_icons[i].OnHover += () => infoPanel.ShowInfo(b);
+					_icons[i].OnHover += () => infoPanel.ShowInfo(b.info);
 					_icons[i].OnClick += () =>
 					{
 						state = BuildState.Placement;
@@ -243,7 +243,7 @@ public class UIBuildPanel : UITabPanel
 		switch(state)
 		{
 			case BuildState.Disabled:
-
+				UnitFactoryLogic();
 				break;
 			case BuildState.Idle:
 				ReadBackInput();
@@ -259,7 +259,21 @@ public class UIBuildPanel : UITabPanel
 				DeconstructLogic();
 				ReadBackInput();
 				break;
+			case BuildState.UnitConstruction:
+				ReadBackInput();
+				break;
 		}
+	}
+
+	void UnitFactoryLogic()
+	{
+		infoPanel.Hide();
+		var tile = GetTileUnderCursor();
+		if (tile is BuildingTile b)
+			infoPanel.ShowInfo(b.buildingInfo);
+		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f)
+			Show(f);
+			
 	}
 
 	void DeconstructLogic()
