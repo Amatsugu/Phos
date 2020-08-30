@@ -4,6 +4,8 @@ using Amatsugu.Phos.Tiles;
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+
 using UnityEngine;
 
 
@@ -56,7 +58,7 @@ namespace Amatsugu.Phos.Tiles
 			return _parent.GetDescription();
 		}
 
-		public override string GetName()
+		public override StringBuilder GetName()
 		{
 			return _parent.GetName();
 		}

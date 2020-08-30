@@ -12,6 +12,5 @@ namespace Amatsugu.Phos.Tiles
 			factoryInfo = tInfo;
 		}
 
-
 	}
 }

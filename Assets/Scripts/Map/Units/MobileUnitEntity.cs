@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 using Unity.Entities;
 using Unity.Mathematics;
@@ -129,9 +130,9 @@ public class MobileUnitEntity : MeshEntityRotatable
 		return e;
 	}
 
-	internal string GetNameString()
+	internal StringBuilder GetNameString()
 	{
-		return name;
+		return GameRegistry.RarityColors.Colorize(name, tier);
 	}
 
 	internal string GetCostString()

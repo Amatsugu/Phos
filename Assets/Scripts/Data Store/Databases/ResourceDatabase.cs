@@ -34,9 +34,12 @@ public class ResourceDatabase : MonoBehaviour
 		throw new System.Exception($"Resource '{name}' does not exits");
 	}
 
-	public static string GetResourceName(int id, string locale = "en")
+	public static string GetResourceName(int id, bool color = false, string locale = "en")
 	{
-		return INST.resourceList.resourceDefinations[id].name;
+		var res = INST.resourceList.resourceDefinations[id];
+		if (color)
+			return GameRegistry.RarityColors.ColorizeAsString(res.name, res.tier);
+		return res.name;
 	}
 
 	public static int GetSpriteId(int id)

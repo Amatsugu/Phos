@@ -8,6 +8,7 @@ namespace Amatsugu.Phos.TileEntities
 {
     public class FactoryTileEntity : BuildingTileEntity
     {
+		[Header("Factory")]
         public UnitIdentifier[] unitsToBuild;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)

@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -99,9 +101,9 @@ namespace Amatsugu.Phos.TileEntities
 #endif
 		}
 
-		public virtual string GetNameString()
+		public virtual StringBuilder GetNameString()
 		{
-			return name;
+			return new StringBuilder(name);
 		}
 
 		public void OnAfterDeserialize()

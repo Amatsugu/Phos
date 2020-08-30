@@ -30,7 +30,7 @@ namespace Amatsugu.Phos.TileEntities
 			for (int i = 0; i < buildingsToUnlock.Length; i++)
 			{
 				prod.Append("\t");
-				prod.AppendLine(GameRegistry.BuildingDatabase[buildingsToUnlock[i]].info.GetNameString());
+				prod.AppendLine(GameRegistry.BuildingDatabase[buildingsToUnlock[i]].info.GetNameString().ToString());
 			}
 			return prod;
 		}

@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -59,7 +60,7 @@ namespace Amatsugu.Phos.Tiles
 			return this;
 		}
 
-		public virtual string GetName()
+		public virtual StringBuilder GetName()
 		{
 			return info.GetNameString();
 		}

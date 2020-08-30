@@ -145,9 +145,9 @@ namespace Amatsugu.Phos.TileEntities
 			return upkeepString;
 		}
 
-		public override string GetNameString()
+		public override StringBuilder GetNameString()
 		{
-			return $"<color=#{ColorUtility.ToHtmlStringRGB(GameRegistry.RarityColors.Colors[tier])}>{name}</color>";
+			return GameRegistry.RarityColors.Colorize(name, tier);
 		}
 	}
 }

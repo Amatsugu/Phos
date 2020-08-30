@@ -143,7 +143,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.HQPlacement) //This should never happen, but just in case
 			return;
-		state = BuildState.UnitConstruction;
+		state = BuildState.Idle;
 		_selectedFactory = factoryTile;
 		var units = _selectedFactory.factoryInfo.unitsToBuild;
 		bool hasIcons = false;
@@ -243,7 +243,7 @@ public class UIBuildPanel : UITabPanel
 		switch(state)
 		{
 			case BuildState.Disabled:
-				UnitFactoryLogic();
+				InfoPanelLogic();
 				break;
 			case BuildState.Idle:
 				ReadBackInput();
@@ -265,12 +265,14 @@ public class UIBuildPanel : UITabPanel
 		}
 	}
 
-	void UnitFactoryLogic()
+	void InfoPanelLogic()
 	{
 		infoPanel.Hide();
 		var tile = GetTileUnderCursor();
 		if (tile is BuildingTile b)
 			infoPanel.ShowInfo(b.buildingInfo);
+		else if(tile is ResourceTile r)
+			infoPanel.ShowInfo(r.resInfo);
 		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f)
 			Show(f);
 			
