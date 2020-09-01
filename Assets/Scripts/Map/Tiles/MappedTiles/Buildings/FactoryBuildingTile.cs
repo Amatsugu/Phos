@@ -12,5 +12,15 @@ namespace Amatsugu.Phos.Tiles
 			factoryInfo = tInfo;
 		}
 
+		public virtual void StartConstruction(MobileUnitEntity unitEntity)
+		{
+
+		}
+
+		public virtual void FinishConstruction()
+		{
+
+		}
+
 	}
 }

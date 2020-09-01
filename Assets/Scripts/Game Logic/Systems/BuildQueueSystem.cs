@@ -1,15 +1,9 @@
 ﻿using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
-using AnimationSystem.AnimationData;
-using AnimationSystem.Animations;
-
 using System.Collections.Generic;
 
 using Unity.Entities;
-using Unity.Mathematics;
-
-using Random = UnityEngine.Random;
 
 public class BuildQueueSystem : ComponentSystem
 {
@@ -17,6 +11,8 @@ public class BuildQueueSystem : ComponentSystem
 	private List<int> _readyToBuildOrders;
 	private List<ConstructionOrder> _constructionOrders;
 	private List<int> _removal;
+	private int _curOrderID = 0;
+	private Dictionary<HexCoords, bool> _factoryReady;
 
 	private static BuildQueueSystem _INST;
 	private bool _isReady;
@@ -24,20 +20,12 @@ public class BuildQueueSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		GameEvents.OnMapLoaded += InitBuildQueue;
-		GameEvents.OnAnimationEvent += OnAnimationEvent;
 	}
 
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
 		GameEvents.OnMapLoaded -= InitBuildQueue;
-		GameEvents.OnAnimationEvent -= OnAnimationEvent;
-	}
-
-	private void OnAnimationEvent(int eventId)
-	{
-		if (_pendingBuildOrders.ContainsKey(eventId))
-			_readyToBuildOrders.Add(eventId);
 	}
 
 	private void InitBuildQueue()
@@ -55,7 +43,7 @@ public class BuildQueueSystem : ComponentSystem
 	{
 		if (!_isReady)
 			return;
-		PlaceReadyBuildings();
+		BuildReadyOrders();
 		ProcessConstructionOrders();
 	}
 
@@ -64,61 +52,74 @@ public class BuildQueueSystem : ComponentSystem
 	/// </summary>
 	/// <param name="building">The tile info of the building to build</param>
 	/// <param name="dst">The tile on which the building will be placed</param>
-	/// <param name="dropPod">The mesh entity that will be used as a drop pod</param>
-	public static void QueueBuilding(BuildingTileEntity building, Tile dst, MeshEntityRotatable dropPod) => _INST.QueueBuilding(dst, building, dropPod);
+	public static void QueueBuilding(BuildingTileEntity building, Tile dst) => _INST.QueueBuilding(dst, building);
 
 	/// <summary>
 	/// Add a building to the build queue
 	/// </summary>
 	/// <param name="tile">The tile on which the building will be placed</param>
 	/// <param name="building">The tile info of the building to build</param>
-	/// <param name="dropPod">The mesh entity that will be used as a drop pod</param>
-	private void QueueBuilding(Tile tile, BuildingTileEntity building, MeshEntityRotatable dropPod)
+	private void QueueBuilding(Tile tile, BuildingTileEntity building)
 	{
-		var hqMode = building is HQTileEntity;
-		var orderID = tile.Coords.ToString().GetHashCode();
+		var orderID = _curOrderID++;
 		_pendingBuildOrders.Add(orderID, new BuildOrder
 		{
 			building = building,
 			dstTile = tile
 		});
-		if (hqMode)
-		{
-			var pos = tile.SurfacePoint;
-			pos.y = Random.Range(90, 100);
-			var e = dropPod.Instantiate(pos);
-			EntityManager.AddComponentData(e, new FallAnim
-			{
-				startSpeed = new float3(0, Random.Range(-100, -90), 0)
-			});
-			EntityManager.AddComponentData(e, new Floor
-			{
-				Value = tile.Height
-			});
-			EntityManager.AddComponentData(e, new HitFloorCallback
-			{
-				eventId = orderID
-			});
-			EntityManager.AddComponentData(e, new Gravity { Value = 9.8f });
-		}
-		else
-		{
-			_readyToBuildOrders.Add(orderID);
-		}
+		_readyToBuildOrders.Add(orderID);
 	}
+
+	private void QueueUnit(FactoryBuildingTile factory, UnitIdentifier unit)
+	{
+		var orderId = _curOrderID++;
+		_pendingBuildOrders.Add(orderId, new BuildOrder
+		{
+			factory = factory,
+			unit = unit
+		});
+		if (!_factoryReady.ContainsKey(factory.Coords))
+			_factoryReady.Add(factory.Coords, true);
+	}
+
 	/// <summary>
 	/// Place all buildings that have been marked as ready to place
 	/// </summary>
-	private void PlaceReadyBuildings()
+	private void BuildReadyOrders()
 	{
 		for (int i = 0; i < _readyToBuildOrders.Count; i++)
 		{
 			var orderId = _readyToBuildOrders[i];
-			EventManager.RemoveAllEventListeners(orderId);
-			PlaceBuilding(_pendingBuildOrders[orderId]);
-			_pendingBuildOrders.Remove(orderId);
+			var order = _pendingBuildOrders[orderId];
+			switch (order.orderType)
+			{
+				case OrderType.Building:
+					PlaceBuilding(order);
+					_pendingBuildOrders.Remove(orderId);
+					break;
+
+				case OrderType.Unit:
+					if (_factoryReady.ContainsKey(order.factory.Coords) && _factoryReady[order.factory.Coords]) //Check if can build
+					{
+						StartUnitConstruction(order);
+					}
+					break;
+			}
 		}
 		_readyToBuildOrders.Clear();
+	}
+
+	private void StartUnitConstruction(BuildOrder order)
+	{
+		var unit = GameRegistry.UnitDatabase[order.unit];
+		_factoryReady[order.factory.Coords] = true;
+		order.factory.StartConstruction(unit.info);
+		_constructionOrders.Add(new ConstructionOrder
+		{
+			orderType = OrderType.Unit,
+			targetBuilding = order.factory.Coords,
+			buildTime = unit.info.buildTime
+		});
 	}
 
 	/// <summary>
@@ -134,7 +135,7 @@ public class BuildQueueSystem : ComponentSystem
 		_constructionOrders.Add(new ConstructionOrder
 		{
 			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + order.building.constructionTime,
-			building = order.dstTile.Coords
+			targetBuilding = order.dstTile.Coords
 		});
 	}
 
@@ -148,7 +149,16 @@ public class BuildQueueSystem : ComponentSystem
 			var curOrder = _constructionOrders[i];
 			if (Time.ElapsedTime > curOrder.buildTime)
 			{
-				(GameRegistry.GameMap[curOrder.building] as BuildingTile).Build();
+				switch (curOrder.orderType)
+				{
+					case OrderType.Building:
+						(GameRegistry.GameMap[curOrder.targetBuilding] as BuildingTile).Build();
+						break;
+
+					case OrderType.Unit:
+						(GameRegistry.GameMap[curOrder.targetBuilding] as FactoryBuildingTile).FinishConstruction();
+						break;
+				}
 				_removal.Add(i);
 			}
 		}
@@ -163,10 +173,20 @@ public struct BuildOrder
 {
 	public Tile dstTile;
 	public BuildingTileEntity building;
+	public FactoryBuildingTile factory;
+	public UnitIdentifier unit;
+	public OrderType orderType;
+}
+
+public enum OrderType
+{
+	Building,
+	Unit
 }
 
 public struct ConstructionOrder
 {
 	public double buildTime;
-	public HexCoords building;
+	public HexCoords targetBuilding;
+	public OrderType orderType;
 }

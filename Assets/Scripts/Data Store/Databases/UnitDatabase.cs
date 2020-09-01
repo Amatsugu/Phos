@@ -21,6 +21,9 @@ public class UnitDatabase : ScriptableObject, ISerializationCallbackReceiver
 	private UnitDefination[] _defs;
 	private int nextId = 0;
 
+
+	public UnitDefination this[UnitIdentifier id] => unitEntites[id.id];
+
 	public void OnAfterDeserialize()
 	{
 		unitEntites = new Dictionary<int, UnitDefination>();
@@ -28,7 +31,7 @@ public class UnitDatabase : ScriptableObject, ISerializationCallbackReceiver
 		for (int i = 0; i < _ids.Length; i++)
 		{
 			unitEntites.Add(_ids[i], _defs[i]);
-			entityIds.Add(_defs[i].unit, _ids[i]);
+			entityIds.Add(_defs[i].info, _ids[i]);
 			if(_ids[i] > nextId)
 				nextId = _ids[i];
 		}
@@ -58,7 +61,7 @@ public class UnitDatabase : ScriptableObject, ISerializationCallbackReceiver
 	public struct UnitDefination
 	{
 		public int id;
-		public MobileUnitEntity unit;
+		public MobileUnitEntity info;
 	}
 
 	public bool RegisterUnit(MobileUnitEntity unit, out UnitDefination unitDef)
@@ -71,7 +74,7 @@ public class UnitDatabase : ScriptableObject, ISerializationCallbackReceiver
 		unitDef = new UnitDefination
 		{
 			id = nextId++,
-			unit = unit,
+			info = unit,
 		};
 
 		unitEntites.Add(unitDef.id, unitDef);

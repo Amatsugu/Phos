@@ -156,7 +156,7 @@ public class UIBuildPanel : UITabPanel
 			}
 			if (j < units.Length)
 			{
-				var unit = _unitDatabase.unitEntites[units[j].id].unit;
+				var unit = _unitDatabase.unitEntites[units[j].id].info;
 				if ( unit.tier == _tier)
 				{
 					_icons[i].SetActive(false);

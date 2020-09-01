@@ -34,6 +34,7 @@ public class MobileUnitEntity : MeshEntityRotatable
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/UI/HealthBar", typeof(HealthBarDefination))]
 	public HealthBarDefination healthBar;
 	public float3 healthBarOffset;
+	public float buildTime;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{
