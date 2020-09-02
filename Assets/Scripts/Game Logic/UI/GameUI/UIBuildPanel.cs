@@ -23,7 +23,6 @@ public class UIBuildPanel : UITabPanel
 	public UIInfoBanner banner;
 	public float inidcatorOffset = .5f;
 	public HQTileEntity hQTile;
-	public MeshEntityRotatable dropPod;
 	public RectTransform contentArea;
 	public GameObject nothingUnlockedText;
 	public float showPowerRange = 20;
@@ -48,6 +47,7 @@ public class UIBuildPanel : UITabPanel
 	private BuildingDatabase _buildingDatabase;
 	private FactoryBuildingTile _selectedFactory;
 	private UnitDatabase _unitDatabase;
+	private BuildQueueSystem _buildQueue;
 
 	public enum BuildState
 	{
@@ -74,6 +74,7 @@ public class UIBuildPanel : UITabPanel
 		_buildingDatabase = GameRegistry.BuildingDatabase;
 		_unitDatabase = GameRegistry.UnitDatabase;
 		indicatorManager = new IndicatorManager(World.DefaultGameObjectInjectionWorld.EntityManager, inidcatorOffset, floatingText);
+		_buildQueue = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildQueueSystem>();
 		base.Awake();
 	}
 
@@ -113,7 +114,6 @@ public class UIBuildPanel : UITabPanel
 			return;
 		if(state == BuildState.UnitConstruction)
 		{
-
 			return;
 		}
 		var buildings = _buildingDatabase[_lastCategory];
@@ -143,7 +143,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.HQPlacement) //This should never happen, but just in case
 			return;
-		state = BuildState.Idle;
+		state = BuildState.UnitConstruction;
 		_selectedFactory = factoryTile;
 		var units = _selectedFactory.factoryInfo.unitsToBuild;
 		bool hasIcons = false;
@@ -156,7 +156,8 @@ public class UIBuildPanel : UITabPanel
 			}
 			if (j < units.Length)
 			{
-				var unit = _unitDatabase.unitEntites[units[j].id].info;
+				var unitId = units[j];
+				var unit = _unitDatabase.unitEntites[unitId.id].info;
 				if ( unit.tier == _tier)
 				{
 					_icons[i].SetActive(false);
@@ -169,7 +170,7 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].OnHover += () => infoPanel.ShowInfo(unit);
 					_icons[i].OnClick += () =>
 					{
-						
+						_buildQueue.QueueUnit(factoryTile, unitId);
 					};
 					_icons[i].SetActive(true);
 					hasIcons = true;
@@ -397,7 +398,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.Placement)
 			ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
-		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, dropPod);
+		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile);
 		if (state == BuildState.HQPlacement)
 		{
 			_selectedBuilding = null;

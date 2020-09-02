@@ -30,6 +30,11 @@ public class UnitDatabase : ScriptableObject, ISerializationCallbackReceiver
 		entityIds = new Dictionary<MobileUnitEntity, int>();
 		for (int i = 0; i < _ids.Length; i++)
 		{
+			if(_defs[i].info == null)
+			{
+				Debug.LogError($"Unit failed to deserialize: {_ids[i]}");
+				continue;
+			}
 			unitEntites.Add(_ids[i], _defs[i]);
 			entityIds.Add(_defs[i].info, _ids[i]);
 			if(_ids[i] > nextId)

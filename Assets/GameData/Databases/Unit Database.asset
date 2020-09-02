@@ -15,4 +15,4 @@ MonoBehaviour:
   _ids: 00000000
   _defs:
   - id: 0
-    unit: {fileID: 11400000, guid: 8c4dc19ef577e654494f91bd6a995810, type: 2}
+    info: {fileID: 11400000, guid: 8c4dc19ef577e654494f91bd6a995810, type: 2}

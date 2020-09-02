@@ -20,6 +20,7 @@ public class BuildQueueSystem : ComponentSystem
 	protected override void OnCreate()
 	{
 		GameEvents.OnMapLoaded += InitBuildQueue;
+		_factoryReady = new Dictionary<HexCoords, bool>();
 	}
 
 	protected override void OnDestroy()
@@ -61,23 +62,25 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="building">The tile info of the building to build</param>
 	private void QueueBuilding(Tile tile, BuildingTileEntity building)
 	{
-		var orderID = _curOrderID++;
-		_pendingBuildOrders.Add(orderID, new BuildOrder
+		var orderId = _curOrderID++;
+		_pendingBuildOrders.Add(orderId, new BuildOrder
 		{
 			building = building,
 			dstTile = tile
 		});
-		_readyToBuildOrders.Add(orderID);
+		_readyToBuildOrders.Add(orderId);
 	}
 
-	private void QueueUnit(FactoryBuildingTile factory, UnitIdentifier unit)
+	public void QueueUnit(FactoryBuildingTile factory, UnitIdentifier unit)
 	{
 		var orderId = _curOrderID++;
 		_pendingBuildOrders.Add(orderId, new BuildOrder
 		{
 			factory = factory,
-			unit = unit
+			unit = unit,
+			orderType = OrderType.Unit
 		});
+		_readyToBuildOrders.Add(orderId);
 		if (!_factoryReady.ContainsKey(factory.Coords))
 			_factoryReady.Add(factory.Coords, true);
 	}

@@ -14,7 +14,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void StartConstruction(MobileUnitEntity unitEntity)
 		{
-
+			Debug.Log($"Unit starting construction: {unitEntity.GetNameString()}");
 		}
 
 		public virtual void FinishConstruction()
