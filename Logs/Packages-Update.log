@@ -170,3 +170,11 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.test-framework from version 1.1.14 to 1.1.16
+
+=== Wed Sep  2 18:58:42 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.mathematics from version 1.1.0 to 1.2.1

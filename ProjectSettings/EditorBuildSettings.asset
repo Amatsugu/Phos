@@ -8,15 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: cbfe36cfddfde964d9dfce63a355d5dd
+  - enabled: 0
+    path: Assets/Scenes/Captures.unity
+    guid: 5d8f8208d241f5142bd1afac36e52e89
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: ba32173ee800e0f4e9224baa1c025769
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Scenes/Captures.unity
-    guid: 5d8f8208d241f5142bd1afac36e52e89
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: e7006cab4c49cc84f8dc7392caee8696,
       type: 2}
