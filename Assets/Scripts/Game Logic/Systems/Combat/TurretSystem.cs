@@ -129,7 +129,7 @@ namespace Amatsugu.Phos.ECS
 				//	return;
 				var barrelPos = EntityManager.GetComponentData<Translation>(hasBarrel ? t.Barrel : t.Head).Value;
 				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
-				ShootProjectile(t.projectile, shotPos, -math.normalize(dir) * 15f, 5);
+				ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, t.projectile, shotPos, -math.normalize(dir) * 15f, Time.ElapsedTime + 5);
 			});
 
 
@@ -171,7 +171,7 @@ namespace Amatsugu.Phos.ECS
 				var barrelPos = EntityManager.GetComponentData<Translation>(t.Barrel).Value;
 				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
 				var v = PhysicsUtilz.CalculateProjectileShotVector(shotPos, EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value);
-				ShootProjectile(t.projectile, shotPos, v, 20);
+				ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, t.projectile, shotPos, v, Time.ElapsedTime + 20);
 			});
 
 			//Idle Anim
@@ -205,17 +205,6 @@ namespace Amatsugu.Phos.ECS
 					PostUpdateCommands.RemoveComponent<AttackTarget>(e);
 			});
 		}
-
-		private void ShootProjectile(Entity e, float3 pos, float3 velocity, float lifeTime)
-		{
-			var proj = PostUpdateCommands.Instantiate(e);
-			PostUpdateCommands.SetComponent(proj, new Translation { Value = pos });
-			PostUpdateCommands.SetComponent(proj, new Rotation { Value = quaternion.LookRotation(velocity, math.up()) });
-			PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + lifeTime });
-			PostUpdateCommands.SetComponent(proj, new PhysicsVelocity { Linear = velocity });
-			PostUpdateCommands.RemoveComponent<Disabled>(proj);
-		}
-
 	}
 
 	public struct Turret : IComponentData

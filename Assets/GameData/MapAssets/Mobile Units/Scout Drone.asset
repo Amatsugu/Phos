@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905da5d09f166504b8c1d4df1b43cbad, type: 3}
+  m_Name: Scout Drone
+  m_EditorClassIdentifier: 
+  mesh: {fileID: -4707071215487635230, guid: 4662ab6cf2bd63045bc78266402d79c2, type: 3}
+  material: {fileID: 2100000, guid: e440dce879ca15048ac2ad010ec5f4f3, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 0
+  nonUniformScale: 0
+  moveSpeed: 10
+  attackRange: 20
+  attackSpeed: 10
+  maxHealth: 100
+  size: 0
+  tier: 1
+  unitDomain: 0
+  unitTargetingDomain: 0
+  unitClass: 0
+  icon: {fileID: 0}
+  centerOfMassOffset:
+    x: 0
+    y: 0.5
+    z: 0
+  head: {fileID: 11400000, guid: 68cb1fd3b1861fd4880a15223d7f5b63, type: 2}
+  projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
+  healthBar: {fileID: 11400000, guid: 64264ba37fb009140b7237d68e6e4e60, type: 2}
+  healthBarOffset:
+    x: 0
+    y: 1
+    z: 0
+  buildTime: 0

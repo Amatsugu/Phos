@@ -29,8 +29,10 @@ public class MobileUnitEntity : MeshEntityRotatable
 	public Sprite icon;
 	[Header("Misc")]
 	public float3 centerOfMassOffset;
+	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Units", typeof(MeshEntityRotatable))]
 	public MeshEntityRotatable head;
-	public MeshEntityRotatable projectile;
+	[CreateNewAsset("Assets/GameData/MapAssets/Projectiles", typeof(ProjectileMeshEntity))]
+	public ProjectileMeshEntity projectile;
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/UI/HealthBar", typeof(HealthBarDefination))]
 	public HealthBarDefination healthBar;
 	public float3 healthBarOffset;

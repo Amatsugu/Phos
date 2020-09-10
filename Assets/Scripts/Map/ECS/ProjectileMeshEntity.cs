@@ -56,6 +56,16 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		return e;
 	}
 
+	public static void ShootProjectile(EntityCommandBuffer cmb, Entity projectileEntity, float3 pos, float3 velocity, double deathTime)
+	{
+		var proj = cmb.Instantiate(projectileEntity);
+		cmb.SetComponent(proj, new Translation { Value = pos });
+		cmb.SetComponent(proj, new Rotation { Value = quaternion.LookRotation(velocity, math.up()) });
+		cmb.AddComponent(proj, new DeathTime { Value = deathTime });
+		cmb.SetComponent(proj, new PhysicsVelocity { Linear = velocity });
+		cmb.RemoveComponent<Disabled>(proj);
+	}
+
 	protected override CollisionFilter GetFilter() => friendlyFire ? new CollisionFilter
 	{
 		BelongsTo = (1u << (int)faction),
