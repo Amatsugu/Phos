@@ -13,7 +13,8 @@ namespace Amatsugu.Phos.Tiles
 {
 	public class MetaTile : PoweredBuildingTile
 	{
-		private BuildingTile _parent;
+		public BuildingTile ParentTile { get; private set; }
+
 		private PoweredBuildingTile _poweredParent;
 		private bool _isPowered;
 		private bool _isConduit;
@@ -21,13 +22,13 @@ namespace Amatsugu.Phos.Tiles
 		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo)
 		{
 			originalTile = tInfo;
-			_parent = parentTile;
-			if (_parent is PoweredBuildingTile powered)
+			ParentTile = parentTile;
+			if (ParentTile is PoweredBuildingTile powered)
 			{
 				_poweredParent = powered;
 				_isPowered = true;
 			}
-			_isConduit = _parent is ResourceConduitTile;
+			_isConduit = ParentTile is ResourceConduitTile;
 		}
 
 		protected override void StartConstruction()
@@ -45,22 +46,22 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void AddBuff(HexCoords src, StatsBuffs buff)
 		{
-			_parent.AddBuff(src, buff);
+			ParentTile.AddBuff(src, buff);
 		}
 
 		public override void RemoveBuff(HexCoords src)
 		{
-			_parent.RemoveBuff(src);
+			ParentTile.RemoveBuff(src);
 		}
 
 		public override string GetDescription()
 		{
-			return _parent.GetDescription();
+			return ParentTile.GetDescription();
 		}
 
 		public override StringBuilder GetName()
 		{
-			return _parent.GetName();
+			return ParentTile.GetName();
 		}
 
 		protected override void ApplyTileProperites()
@@ -81,12 +82,12 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void Deconstruct()
 		{
-			_parent.Deconstruct();
+			ParentTile.Deconstruct();
 		}
 
 		public override bool CanDeconstruct(Faction faction)
 		{
-			return _parent.CanDeconstruct(faction);
+			return ParentTile.CanDeconstruct(faction);
 		}
 
 		protected override void DestroyBuilding()
@@ -96,7 +97,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
-			_parent.TileUpdated(src, updateType);
+			ParentTile.TileUpdated(src, updateType);
 			Debug.Log($"[META] Received {updateType} update from {src.Coords} {src.GetName()}");
 		}
 
@@ -108,8 +109,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnSerialize(Dictionary<string, string> tileData)
 		{
 			base.OnSerialize(tileData);
-			tileData.Add("parent.X", _parent.Coords.X.ToString());
-			tileData.Add("parent.Y", _parent.Coords.Y.ToString());
+			tileData.Add("parent.X", ParentTile.Coords.X.ToString());
+			tileData.Add("parent.Y", ParentTile.Coords.Y.ToString());
 		}
 
 		public override void OnDeSerialized(Dictionary<string, string> tileData)
@@ -118,8 +119,8 @@ namespace Amatsugu.Phos.Tiles
 			var x = int.Parse(tileData["parent.X"]);
 			var y = int.Parse(tileData["parent.Y"]);
 			var coord = new HexCoords(x, y, map.tileEdgeLength);
-			_parent = map[coord] as BuildingTile;
-			if (_parent is PoweredBuildingTile powered)
+			ParentTile = map[coord] as BuildingTile;
+			if (ParentTile is PoweredBuildingTile powered)
 			{
 				_isPowered = true;
 				_poweredParent = powered;

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 100.248215, g: 267.88345, b: 601.3805, a: 1}
+  m_IndirectSpecularColor: {r: 97.723366, g: 320.97113, b: 693.9739, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1987,7 +1987,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
@@ -2002,13 +2002,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170076733}
-  m_LocalRotation: {x: 0.18888001, y: -0.801856, z: 0.46295178, w: 0.32714978}
+  m_LocalRotation: {x: -0.2493346, y: -0.6416719, z: 0.68690604, w: -0.23291542}
   m_LocalPosition: {x: 0, y: 3400, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1545681347}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 60, y: -135.61, z: 0}
+  m_LocalEulerAnglesHint: {x: 93.9, y: -219.9, z: 0}
 --- !u!114 &170076737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2055,9 +2055,9 @@ MonoBehaviour:
   m_UseScreenSpaceShadows: 0
   m_InteractsWithSky: 1
   m_AngularDiameter: 5.23
-  m_FlareSize: 1.5
-  m_FlareTint: {r: 0, g: 1, b: 0.96936965, a: 1}
-  m_FlareFalloff: 3.94
+  m_FlareSize: 3.22
+  m_FlareTint: {r: 1, g: 0, b: 0.74210835, a: 1}
+  m_FlareFalloff: 18.2
   m_SurfaceTexture: {fileID: 0}
   m_SurfaceTint: {r: 1, g: 1, b: 1, a: 1}
   m_Distance: 150000000
@@ -6411,7 +6411,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2102994817}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999584
+  m_Size: 0.99996626
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13244,7 +13244,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -442.9867}
+  m_AnchoredPosition: {x: 0, y: -442.9915}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1427279150

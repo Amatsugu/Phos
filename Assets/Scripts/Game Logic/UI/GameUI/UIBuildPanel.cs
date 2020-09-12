@@ -1,8 +1,6 @@
 ﻿using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
-using Steamworks;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,13 +10,14 @@ using Unity.Entities;
 using Unity.Physics.Systems;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIBuildPanel : UITabPanel
 {
 	public UIUnitIcon iconPrefab;
+
 	[HideInInspector]
 	public UIInfoPanel infoPanel;
+
 	public TMP_Text floatingText;
 	public UIInfoBanner banner;
 	public float inidcatorOffset = .5f;
@@ -29,14 +28,14 @@ public class UIBuildPanel : UITabPanel
 
 	[Header("Indicators")]
 	public MeshEntity poweredTileIndicatorEntity;
+
 	public MeshEntity unpoweredTileIndicatorEntity;
 	public MeshEntity destructionIndicatorEntity;
 
 	public BuildState state;
+
 	[HideInInspector]
 	public IndicatorManager indicatorManager;
-
-
 
 	private UIUnitIcon[] _icons;
 	private BuildingTileEntity _selectedBuilding;
@@ -84,14 +83,14 @@ public class UIBuildPanel : UITabPanel
 		_cam = GameRegistry.Camera;
 	}
 
-	void OnGameReady()
+	private void OnGameReady()
 	{
 		state = BuildState.HQPlacement;
 		_selectedBuilding = hQTile;
 		GameEvents.OnGameTick += OnTick;
 		GameEvents.OnBuildingUnlocked += b =>
 		{
-			if(IsOpen)
+			if (IsOpen)
 				Show(_lastCategory);
 
 			NotificationsUI.Notify(b.icon, "Building Unlocked", $"<b>{b.GetNameString()}</b>\n<size=-1>{b.description}</size>", 10);
@@ -112,7 +111,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.Disabled || state == BuildState.HQPlacement)
 			return;
-		if(state == BuildState.UnitConstruction)
+		if (state == BuildState.UnitConstruction)
 		{
 			return;
 		}
@@ -158,7 +157,7 @@ public class UIBuildPanel : UITabPanel
 			{
 				var unitId = units[j];
 				var unit = _unitDatabase.unitEntites[unitId.id].info;
-				if ( unit.tier == _tier)
+				if (unit.tier == _tier)
 				{
 					_icons[i].SetActive(false);
 					_icons[i].ClearHoverEvents();
@@ -204,7 +203,7 @@ public class UIBuildPanel : UITabPanel
 			if (j < buildings.Length)
 			{
 				if (buildings[j].info.tier == _tier && GameRegistry.IsBuildingUnlocked(buildings[j].id))
-				{	
+				{
 					_icons[i].SetActive(false);
 					_icons[i].ClearHoverEvents();
 					_icons[i].ClearClickEvents();
@@ -213,11 +212,11 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].costText.SetText(b.info.GetCostString());
 					_icons[i].icon.sprite = b.info.icon;
 					_icons[i].button.interactable = true;
-					if(category == BuildingCategory.Tech)
+					if (category == BuildingCategory.Tech)
 					{
 						if (GameRegistry.GameMap.HasTechBuilding(b.info as TechBuildingTileEntity))
 							_icons[i].button.interactable = false;
-					}	
+					}
 					_icons[i].OnHover += () => infoPanel.ShowInfo(b.info);
 					_icons[i].OnClick += () =>
 					{
@@ -230,7 +229,8 @@ public class UIBuildPanel : UITabPanel
 				else
 					i--;
 				j++;
-			}else
+			}
+			else
 				_icons[i].SetActive(false);
 		}
 		nothingUnlockedText.SetActive(!hasIcons);
@@ -241,45 +241,49 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.Idle && !isHovered && Input.GetKeyDown(KeyCode.Mouse0))
 			Hide();
-		switch(state)
+		switch (state)
 		{
 			case BuildState.Disabled:
 				InfoPanelLogic();
 				break;
+
 			case BuildState.Idle:
 				ReadBackInput();
 				break;
+
 			case BuildState.HQPlacement:
 				ValidatePlacement();
 				break;
+
 			case BuildState.Placement:
 				ValidatePlacement();
 				ReadBackInput();
 				break;
+
 			case BuildState.Deconstruct:
 				DeconstructLogic();
 				ReadBackInput();
 				break;
+
 			case BuildState.UnitConstruction:
 				ReadBackInput();
 				break;
 		}
 	}
 
-	void InfoPanelLogic()
+	private void InfoPanelLogic()
 	{
 		infoPanel.Hide();
 		var tile = GetTileUnderCursor();
 		if (tile is BuildingTile b)
 			infoPanel.ShowInfo(b.buildingInfo);
-		else if(tile is ResourceTile r)
+		else if (tile is ResourceTile r)
 			infoPanel.ShowInfo(r.resInfo);
-		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f)
+		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f && f.IsBuilt && f.HasHQConnection)
 			Show(f);
-			
 	}
 
-	void DeconstructLogic()
+	private void DeconstructLogic()
 	{
 		indicatorManager.UnSetAllIndicators();
 		var selectedTile = GetTileUnderCursor();
@@ -293,14 +297,14 @@ public class UIBuildPanel : UITabPanel
 			deconstructable.Deconstruct();
 	}
 
-	void ReadBackInput()
+	private void ReadBackInput()
 	{
 		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
 		{
-			if(state == BuildState.Placement || state == BuildState.Deconstruct)
+			if (state == BuildState.Placement || state == BuildState.Deconstruct)
 			{
 				state = BuildState.Idle;
-				HideIndicators();	
+				HideIndicators();
 			}
 			else
 			{
@@ -309,7 +313,7 @@ public class UIBuildPanel : UITabPanel
 		}
 	}
 
-	Tile GetTileUnderCursor()
+	private Tile GetTileUnderCursor()
 	{
 		Tile selectedTile = default;
 		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
@@ -333,12 +337,14 @@ public class UIBuildPanel : UITabPanel
 					selectedTile = GameRegistry.GameMap[Map.EM.GetComponentData<HexPosition>(e).Value];
 			}
 		}
+		if (selectedTile is MetaTile m)
+			selectedTile = m.ParentTile;
 		return selectedTile;
 	}
 
-	void ValidatePlacement()
+	private void ValidatePlacement()
 	{
-		if(_selectedBuilding == null)
+		if (_selectedBuilding == null)
 		{
 			state = BuildState.Idle;
 			return;
@@ -354,16 +360,14 @@ public class UIBuildPanel : UITabPanel
 		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
 			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(selectedTile, neighbors, ref effects);
 
-
 		ShowPoweredTiles(selectedTile);
-		if(Input.GetKeyUp(KeyCode.Mouse0))
+		if (Input.GetKeyUp(KeyCode.Mouse0))
 		{
 			if (isValid)
 				PlaceBuilding(selectedTile);
 			else
 				ShowErrors();
 		}
-
 	}
 
 	//TODO: Optimize this
@@ -407,7 +411,7 @@ public class UIBuildPanel : UITabPanel
 			indicatorManager.HideAllIndicators();
 			banner.SetActive(false);
 		}
-		if(_selectedBuilding is TechBuildingTileEntity)
+		if (_selectedBuilding is TechBuildingTileEntity)
 		{
 			_selectedBuilding = null;
 			floatingText.gameObject.SetActive(false);
@@ -417,7 +421,7 @@ public class UIBuildPanel : UITabPanel
 		indicatorManager.UnSetAllIndicators();
 	}
 
-	void HideIndicators()
+	private void HideIndicators()
 	{
 		if (indicatorManager == null)
 			return;
@@ -434,5 +438,4 @@ public class UIBuildPanel : UITabPanel
 		*/
 		indicatorManager.PublishAndClearErrors();
 	}
-
 }

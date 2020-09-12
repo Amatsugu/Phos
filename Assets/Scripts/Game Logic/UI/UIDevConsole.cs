@@ -44,9 +44,13 @@ public class UIDevConsole : MonoBehaviour
 		AddDefaultCommands();
 	}
 
+
 	// Start is called before the first frame update
 	private void Start()
 	{
+#if UNITY_EDITOR
+			GameEvents.OnGameReady += OnGameReady;
+#endif
 		consolePanel.OnHide += () =>
 		{
 			GameEvents.InvokeOnDevConsoleClose();
@@ -88,6 +92,13 @@ public class UIDevConsole : MonoBehaviour
 			if(preview.Count >= 1)
 				cmdPredictText.text = preview[0];
 		});
+	}
+
+	private void OnGameReady()
+	{
+		ParseCommand("unlockAll");
+		ParseCommand("noResourceCost");
+		GameEvents.OnGameReady -= OnGameReady;
 	}
 
 	private void AddDefaultCommands()

@@ -209,6 +209,14 @@ public class GameEvents
 		remove => INST._onBuildingDied -= value;
 	}
 
+	public static void InvokeOnUnitBuilt(HexCoords factoryCoords) => INST._onUnitBuilt?.Invoke(factoryCoords);
+
+	public static event Action<HexCoords> OnUnitBuilt
+	{
+		add => INST._onUnitBuilt += value;
+		remove => INST._onUnitBuilt -= value;
+	}
+
 	public static void InvokeOnBuildingDied(BuildingTile building) => INST._onBuildingDied?.Invoke(building);
 
 	private event Action _onMapLoaded;
@@ -229,5 +237,6 @@ public class GameEvents
 	private event Action<int> _onAnimationEvent;
 	private event Action<MobileUnit> _onUnitDied;
 	private event Action<BuildingTile> _onBuildingDied;
+	private event Action<HexCoords> _onUnitBuilt;
 
 }

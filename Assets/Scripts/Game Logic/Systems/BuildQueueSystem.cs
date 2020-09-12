@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 using Unity.Entities;
 
+using UnityEngine;
+
 public class BuildQueueSystem : ComponentSystem
 {
 	private Dictionary<int, BuildOrder> _pendingBuildOrders;
@@ -21,12 +23,21 @@ public class BuildQueueSystem : ComponentSystem
 	{
 		GameEvents.OnMapLoaded += InitBuildQueue;
 		_factoryReady = new Dictionary<HexCoords, bool>();
+		GameEvents.OnUnitBuilt += OnUnitBuilt;
+	}
+
+	private void OnUnitBuilt(HexCoords coords)
+	{
+		Debug.Log("Unit built");
+		if(_factoryReady.ContainsKey(coords))
+			_factoryReady[coords] = true;
 	}
 
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
 		GameEvents.OnMapLoaded -= InitBuildQueue;
+		GameEvents.OnUnitBuilt -= OnUnitBuilt;
 	}
 
 	private void InitBuildQueue()
@@ -78,7 +89,7 @@ public class BuildQueueSystem : ComponentSystem
 		{
 			factory = factory,
 			unit = unit,
-			orderType = OrderType.Unit
+			orderType = OrderType.Unit,
 		});
 		_readyToBuildOrders.Add(orderId);
 		if (!_factoryReady.ContainsKey(factory.Coords))
@@ -90,38 +101,42 @@ public class BuildQueueSystem : ComponentSystem
 	/// </summary>
 	private void BuildReadyOrders()
 	{
+		int offset = 0;
 		for (int i = 0; i < _readyToBuildOrders.Count; i++)
 		{
-			var orderId = _readyToBuildOrders[i];
+			var orderId = _readyToBuildOrders[i - offset];
 			var order = _pendingBuildOrders[orderId];
 			switch (order.orderType)
 			{
 				case OrderType.Building:
 					PlaceBuilding(order);
 					_pendingBuildOrders.Remove(orderId);
+					_readyToBuildOrders.RemoveAt(i - offset++);
 					break;
 
 				case OrderType.Unit:
 					if (_factoryReady.ContainsKey(order.factory.Coords) && _factoryReady[order.factory.Coords]) //Check if can build
 					{
 						StartUnitConstruction(order);
+						_pendingBuildOrders.Remove(orderId);
+						_readyToBuildOrders.RemoveAt(i - offset++);
 					}
 					break;
 			}
 		}
-		_readyToBuildOrders.Clear();
+		//_readyToBuildOrders.Clear();
 	}
 
 	private void StartUnitConstruction(BuildOrder order)
 	{
 		var unit = GameRegistry.UnitDatabase[order.unit];
-		_factoryReady[order.factory.Coords] = true;
+		_factoryReady[order.factory.Coords] = false;
 		order.factory.StartConstruction(unit.info);
 		_constructionOrders.Add(new ConstructionOrder
 		{
 			orderType = OrderType.Unit,
 			targetBuilding = order.factory.Coords,
-			buildTime = unit.info.buildTime
+			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + unit.info.buildTime,
 		});
 	}
 
