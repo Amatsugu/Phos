@@ -93,7 +93,12 @@ namespace Amatsugu.Phos.Tiles
 		protected virtual void StartConstruction()
 		{
 			if (buildingInfo.constructionMesh != null)
+			{
 				_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
+				Map.EM.AddComponentData(_building, new ConstructionOffset { Value = SurfacePoint.y });
+				Map.EM.AddComponentData(_building, new ConstructionStart { Value = Time.time });
+				Map.EM.AddComponentData(_building, new ConstructionDuration { Value = buildingInfo.constructionTime });
+			}
 			CreateMetaTiles();
 		}
 

@@ -38,6 +38,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHeightChanged()
 		{
 			base.OnHeightChanged();
+			if (!IsBuilt)
+				return;
 			UpdateLines();
 			UpdateConnections(map.conduitGraph.GetConnections(Coords), TileUpdateType.Height);
 		}

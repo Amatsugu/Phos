@@ -33,7 +33,7 @@ namespace Amatsugu.Phos.TileEntities
 			nonUniformScale = false;
 			return base.GetComponents().Concat(new ComponentType[]{
 			typeof(HexPosition),
-			typeof(PhysicsCollider),
+			typeof(PhysicsCollider)
 		});
 		}
 

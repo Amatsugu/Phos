@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: ConstructionMesh
   m_EditorClassIdentifier: 
-  mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  mesh: {fileID: 3796849389992882926, guid: 5fcf65a851ae6604b82d13ef9a425f71, type: 3}
+  material: {fileID: 2100000, guid: c563be84bc0c87044aa62dc9a80a83b7, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
+  subMeshes: []
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
+  radius: 0
+  height: 0
