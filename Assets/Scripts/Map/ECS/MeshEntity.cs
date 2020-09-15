@@ -72,14 +72,14 @@ public class MeshEntity : ScriptableObject
 	{
 		return new ComponentType[]{
 			typeof(Translation),
-			typeof(LocalToWorld),
 			nonUniformScale ? typeof(NonUniformScale) : typeof(Scale),
 			typeof(RenderMesh),
+			typeof(LocalToWorld),
 			typeof(PerInstanceCullingTag),
 			typeof(WorldRenderBounds),
 			typeof(ChunkWorldRenderBounds),
+			typeof(RenderBounds),
 			typeof(Disabled),
-			typeof(RenderBounds)
 		};
 	}
 

@@ -27,19 +27,19 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  constructionMesh: {fileID: 0}
+  constructionMesh: {fileID: 11400000, guid: b02b98a1576f3fa4b9a3449d64664ceb, type: 2}
   preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 6
   constructionTime: 2
   category: 1
-  size: 0
   footprint:
     size: 1
     footprint:
     - x: 0
       y: 0
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0

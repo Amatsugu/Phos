@@ -19,29 +19,27 @@ MonoBehaviour:
   isStatic: 1
   nonUniformScale: 0
   description: A beach based water pump that collects ocean water.
-  decorators:
-  - {fileID: 11400000, guid: 4f9225b72c8bc7243a85d57424f879da, type: 2}
-  - {fileID: 11400000, guid: b44ded059398c024b95ddba624868d72, type: 2}
-  isTraverseable: 1
+  decorators: []
+  isTraverseable: 0
   assetGuid: 74972f4338262c245b3f0a0d8d3a93f1
   buildingMesh: {fileID: 11400000, guid: a51232047fe9d2645ab754d722f56bc6, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
-  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  constructionMesh: {fileID: 11400000, guid: 8bc85775aff5e6143b96955aa49434ea, type: 2}
   preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 3
   constructionTime: 2
   category: 2
-  size: 0
   footprint:
     size: 1
     footprint:
     - x: 0
       y: 0
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 1
   offshoreOnly: 1

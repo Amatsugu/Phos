@@ -18,9 +18,20 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
+  subMeshes:
+  - offset:
+      x: 0
+      y: 0
+      z: 0
+    mesh: {fileID: 11400000, guid: 03863e6243bdb984caff3865fba8027a, type: 2}
+  - offset:
+      x: 0
+      y: 0
+      z: 0
+    mesh: {fileID: 11400000, guid: 0a9c42795289f414b81aabeefd0c92b5, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
   radius: 0
-  height: 0
+  height: 2

@@ -27,14 +27,13 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  constructionMesh: {fileID: 0}
+  constructionMesh: {fileID: 11400000, guid: ef1363c31498ccb428bb0ab43ab503e2, type: 2}
   preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 2
   constructionTime: 2
   category: 6
-  size: 0
   footprint:
     size: 0
     footprint:

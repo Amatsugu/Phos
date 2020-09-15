@@ -18,9 +18,10 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
+  subMeshes: []
   centerOfMassOffset:
     x: 0
     y: 1
     z: 0
   radius: 0.65
-  height: 1
+  height: 1.8

@@ -25,7 +25,7 @@ namespace Amatsugu.Phos.TileEntities
 		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(BuildingMeshEntity))]
 		public BuildingMeshEntity buildingMesh;
 		public float3 centerOfMassOffset;
-		public MeshEntityRotatable constructionMesh;
+		public ConstructionMeshEntity constructionMesh;
 		public bool preserveGroundTile;
 		public bool customDeathTile;
 		[ConditionalHide("customDeathTile")]

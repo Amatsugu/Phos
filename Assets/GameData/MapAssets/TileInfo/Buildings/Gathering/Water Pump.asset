@@ -19,9 +19,7 @@ MonoBehaviour:
   isStatic: 1
   nonUniformScale: 0
   description: Pumps water from adjacent bodies of water.
-  decorators:
-  - {fileID: 11400000, guid: 72063786533f25b47820950ccb955d05, type: 2}
-  - {fileID: 11400000, guid: 8b4d0175b07d887469cfb748f5a84dd3, type: 2}
+  decorators: []
   isTraverseable: 0
   assetGuid: 255a5856c262ab942bead534bc36634b
   buildingMesh: {fileID: 11400000, guid: 14ef290b9446da7498bcbd830cfe5219, type: 2}
@@ -29,19 +27,19 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  constructionMesh: {fileID: 11400000, guid: 1b10e40d14e7ac547b50229bfb971478, type: 2}
+  constructionMesh: {fileID: 11400000, guid: 8bc85775aff5e6143b96955aa49434ea, type: 2}
   preserveGroundTile: 1
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 1
   constructionTime: 2
   category: 2
-  size: 0
   footprint:
     size: 1
     footprint:
     - x: 0
       y: 0
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0

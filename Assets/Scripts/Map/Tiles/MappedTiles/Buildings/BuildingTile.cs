@@ -94,10 +94,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (buildingInfo.constructionMesh != null)
 			{
-				_building = buildingInfo.constructionMesh.Instantiate(SurfacePoint);
-				Map.EM.AddComponentData(_building, new ConstructionOffset { Value = SurfacePoint.y });
-				Map.EM.AddComponentData(_building, new ConstructionStart { Value = Time.time });
-				Map.EM.AddComponentData(_building, new ConstructionDuration { Value = buildingInfo.constructionTime });
+				buildingInfo.constructionMesh.Instantiate(SurfacePoint, quaternion.identity, buildingInfo.buildingMesh, buildingInfo.constructionTime);
 			}
 			CreateMetaTiles();
 		}
@@ -153,8 +150,6 @@ namespace Amatsugu.Phos.Tiles
 			if (isBuilt)
 				return;
 			isBuilt = true;
-			if (buildingInfo.constructionMesh != null)
-				Map.EM.DestroyEntity(_building);
 			OnBuilt();
 			RenderBuilding();
 			map.InvokeOnBuilt(Coords);
