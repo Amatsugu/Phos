@@ -55,15 +55,15 @@ Material:
     - Vector1_A76B6459: 0.419
     - Vector1_A865A9AC: 4.7
     - Vector1_ACE3B177: 0.618
-    - Vector1_FD454108: 48274
+    - Vector1_FD454108: 59064.37
     - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
     - _BlendMode: 0
     - _ConstructDuration: 1000
-    - _ConstructHeight: 2
-    - _ConstructOffset: 335.3112
-    - _ConstructProgress: 0.68
+    - _ConstructHeight: 3.78
+    - _ConstructOffset: 59064.37
+    - _ConstructProgress: 0
     - _ConstructStart: 130.21
     - _CullMode: 0
     - _CullModeForward: 0

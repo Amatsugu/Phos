@@ -32,10 +32,10 @@ Material:
     MotionVector: User
     RenderType: TransparentCutout
   disabledShaderPasses:
-  - MOTIONVECTORS
+  - TransparentBackface
   - TransparentDepthPrepass
   - TransparentDepthPostpass
-  - TransparentBackface
+  - MOTIONVECTORS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -52,18 +52,18 @@ Material:
     - Vector1_4473BC03: 0.09
     - Vector1_60635AAB: 5.7
     - Vector1_81908D21: 335.3112
-    - Vector1_A76B6459: 0.48
+    - Vector1_A76B6459: 0.525
     - Vector1_A865A9AC: 4.7
-    - Vector1_ACE3B177: 0.525
-    - Vector1_FD454108: 48274
+    - Vector1_ACE3B177: 0.48
+    - Vector1_FD454108: 37640.57
     - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
     - _BlendMode: 0
     - _ConstructDuration: 1000
-    - _ConstructHeight: 2
+    - _ConstructHeight: 3.45
     - _ConstructOffset: 335.3112
-    - _ConstructProgress: 0.68
+    - _ConstructProgress: 0
     - _ConstructStart: 130.21
     - _CullMode: 0
     - _CullModeForward: 0
