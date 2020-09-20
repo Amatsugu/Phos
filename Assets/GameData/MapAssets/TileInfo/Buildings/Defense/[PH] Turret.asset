@@ -64,19 +64,13 @@ MonoBehaviour:
   attackRange: 30
   minAttackRange: 0
   projectileMesh: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
-  turretHead: {fileID: 11400000, guid: 0adbf3811e2cbd248bff4ecca6241980, type: 2}
-  turretBarrel: {fileID: 0}
+  turretHead:
+    id: 0
+  turretBarrel:
+    id: -1
   unitClass: 1
   domain: 1
   targetingDomain: 0
-  headOffset:
-    x: 0
-    y: 1.186558
-    z: 0
-  barrelOffset:
-    x: 0
-    y: 0.1
-    z: -0.7
   shotOffset:
     x: 0
     y: 0

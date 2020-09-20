@@ -21,9 +21,9 @@ public class SubmeshIdentifierDrawer : PropertyDrawer
 		var resPos = new Rect(position.x, position.y, width, position.height);
 		if(property.serializedObject.targetObject is BuildingTileEntity b)
 		{
-			var selection = b.buildingMesh.subMeshes.Select(sb => sb.mesh?.name ?? "[Empty]").ToArray(); 
-			s = EditorGUI.Popup(resPos, s, selection);
-			idProp.intValue = s;
+			var selection = b.buildingMesh.subMeshes.Select(sb => sb.mesh != null ? sb.mesh.name : "[Empty]").Prepend("[None]").ToArray(); 
+			s = EditorGUI.Popup(resPos, s+1, selection);
+			idProp.intValue = s-1;
 		}
 		EditorGUI.EndProperty();
 	}

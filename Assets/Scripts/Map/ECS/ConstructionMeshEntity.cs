@@ -32,7 +32,7 @@ public class ConstructionMeshEntity : ScriptableObject
 		{
 			var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
 
-			Render(p, rotation, buildingMesh.subMeshes[i-1].mesh, arr[i], height, constructTime);
+			Render(p, rotation, buildingMesh.subMeshes[i-1].mesh, arr[i], height, constructTime, buildingMesh.subMeshes[i-1].offset.y);
 		}
 		return arr;
 	}
@@ -71,7 +71,7 @@ public class ConstructionMeshEntity : ScriptableObject
 	}
 
 
-	private void Render(float3 pos, quaternion rotation, MeshEntityRotatable mesh, Entity entity, float height, float duration)
+	private void Render(float3 pos, quaternion rotation, MeshEntityRotatable mesh, Entity entity, float height, float duration, float offset = 0)
 	{
 		var renderMesh = new RenderMesh
 		{
@@ -84,7 +84,7 @@ public class ConstructionMeshEntity : ScriptableObject
 
 		Map.EM.SetSharedComponentData(entity, renderMesh);
 		Map.EM.SetComponentData(entity, new ConstructionHeight { Value = height });
-		Map.EM.SetComponentData(entity, new ConstructionOffset { Value = pos.y });
+		Map.EM.SetComponentData(entity, new ConstructionOffset { Value = pos.y - offset });
 		Map.EM.SetComponentData(entity, new ConstructionStart { Value = Time.time });
 		Map.EM.SetComponentData(entity, new ConstructionDuration { Value = duration });
 		Map.EM.SetComponentData(entity, new Translation { Value = pos });

@@ -12,6 +12,8 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
+using static BuildingMeshEntity;
+
 namespace Amatsugu.Phos.TileEntities
 {
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Building/Turret")]
@@ -23,16 +25,16 @@ namespace Amatsugu.Phos.TileEntities
 		public float attackRange;
 		public float minAttackRange;
 		public ProjectileMeshEntity projectileMesh;
-		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
-		public MeshEntityRotatable turretHead;
-		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
-		public MeshEntityRotatable turretBarrel;
+		//[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
+		public SubMeshIdentifier turretHead;
+		//[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
+		public SubMeshIdentifier turretBarrel;
 		public UnitClass.Class unitClass;
 		public UnitDomain.Domain domain;
 		[EnumFlags]
 		public UnitDomain.Domain targetingDomain;
-		public float3 headOffset;
-		public float3 barrelOffset;
+		//public float3 headOffset;
+		//public float3 barrelOffset;
 		public float3 shotOffset;
 
 		public override IEnumerable<ComponentType> GetComponents()

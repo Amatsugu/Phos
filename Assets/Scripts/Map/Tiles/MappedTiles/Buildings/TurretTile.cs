@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 
 using UnityEngine;
@@ -27,13 +28,13 @@ namespace Amatsugu.Phos.Tiles
 			turretInfo = tInfo;
 		}
 
-		public override void RenderBuilding()
+		public override void RenderSubMeshes(quaternion rot)
 		{
-			base.RenderBuilding();
+			base.RenderSubMeshes(rot);
 			var e = GetBuildingEntity();
-			_turretHead = turretInfo.turretHead.Instantiate(SurfacePoint + turretInfo.headOffset, 1, GetBuildingRotation());
-			if(turretInfo.turretBarrel != null)
-				_turretBarrel = turretInfo.turretBarrel.Instantiate(SurfacePoint + turretInfo.barrelOffset, 1, GetBuildingRotation());
+			_turretHead = subMeshes[turretInfo.turretHead.id];
+			if(turretInfo.turretBarrel.id != -1)
+				_turretBarrel = subMeshes[turretInfo.turretBarrel.id];
 			Map.EM.AddComponentData(e, new Turret
 			{
 				Head = _turretHead,
@@ -41,7 +42,6 @@ namespace Amatsugu.Phos.Tiles
 				shotOffset = turretInfo.shotOffset,
 				projectile = turretInfo.projectileMesh.GetEntity()
 			});
-			
 		}
 
 
@@ -95,7 +95,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnHide();
 			Map.EM.AddComponent<FrozenRenderSceneTag>(_turretHead);
-			if (turretInfo.turretBarrel != null)
+			if (Map.EM.Exists(_turretBarrel))
 				Map.EM.AddComponent<FrozenRenderSceneTag>(_turretBarrel);
 		}
 
@@ -103,7 +103,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnShow();
 			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_turretHead);
-			if(turretInfo.turretBarrel != null)
+			if (Map.EM.Exists(_turretBarrel))
 				Map.EM.RemoveComponent<FrozenRenderSceneTag>(_turretBarrel);
 		}
 
@@ -111,7 +111,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.Destroy();
 			Map.EM.DestroyEntity(_turretHead);
-			if(turretInfo.turretBarrel != null)
+			if (Map.EM.Exists(_turretBarrel))
 				Map.EM.DestroyEntity(_turretBarrel);
 		}
 	}
