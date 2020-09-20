@@ -32,7 +32,7 @@ MonoBehaviour:
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 2
-  constructionTime: 2
+  constructionTime: 8
   category: 5
   footprint:
     size: 1
@@ -70,19 +70,13 @@ MonoBehaviour:
   attackRange: 90
   minAttackRange: 30
   projectileMesh: {fileID: 11400000, guid: 62c2ee0ac7d02f44893337e65482e9d0, type: 2}
-  turretHead: {fileID: 11400000, guid: 0a2916d05cb062148b699e3e8a833704, type: 2}
-  turretBarrel: {fileID: 11400000, guid: 390322bc108c1704ab21ecb28d46878e, type: 2}
+  turretHead:
+    id: 0
+  turretBarrel:
+    id: 1
   unitClass: 2
   domain: 1
   targetingDomain: 0
-  headOffset:
-    x: 0
-    y: 0.716867
-    z: 0
-  barrelOffset:
-    x: 0
-    y: 1.26789
-    z: 0
   shotOffset:
     x: 0
     y: 0
