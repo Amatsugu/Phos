@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Unity.Collections;
@@ -8,17 +9,52 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
+[Serializable]
 [CreateAssetMenu(menuName = "ECS/Construction Mesh Enity")]
 public class ConstructionMeshEntity : ScriptableObject
 {
 	public Material material;
 
-	public NativeArray<Entity> Instantiate(float3 pos, quaternion rotation, BuildingMeshEntity buildingMesh, float constructTime)
+	public NativeArray<Entity> Instantiate(float3 pos, quaternion rotation,  float height, BuildingMeshEntity buildingMesh, float constructTime)
 	{
 		var arr = new NativeArray<Entity>(1 + buildingMesh.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
-		var arch = Map.EM.CreateArchetype(typeof(RenderMesh),
+		var arch = GetArchetype();
+
+		Map.EM.CreateEntity(arch, arr);
+
+		Render(pos, rotation, buildingMesh, arr[0], height, constructTime);
+
+		for (int i = 1; i < buildingMesh.subMeshes.Length +1; i++)
+		{
+			var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
+
+			Render(p, rotation, buildingMesh.subMeshes[i-1].mesh, arr[i], height, constructTime);
+		}
+		return arr;
+	}
+
+	public NativeArray<Entity> Instantiate(float3 pos, quaternion rotation, float height, float constructionTime, params MeshEntityRotatable[] meshes)
+	{
+		var arr = new NativeArray<Entity>(meshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+
+		var arch = GetArchetype();
+
+		Map.EM.CreateEntity(arch, arr);
+
+		for (int i = 0; i < meshes.Length; i++)
+		{
+			Render(pos, rotation, meshes[i], arr[i], height, constructionTime);
+		}
+		return arr;
+	}
+
+	public EntityArchetype GetArchetype()
+	{
+		return Map.EM.CreateArchetype(typeof(RenderMesh),
 			typeof(Translation),
 			typeof(Scale),
 			typeof(Rotation),
@@ -32,19 +68,8 @@ public class ConstructionMeshEntity : ScriptableObject
 			typeof(ConstructionStart),
 			typeof(ConstructionDuration),
 			typeof(ConstructionHeight));
-
-		Map.EM.CreateEntity(arch, arr);
-
-		Render(pos, rotation, buildingMesh, arr[0], buildingMesh.height, constructTime);
-
-		for (int i = 1; i < buildingMesh.subMeshes.Length +1; i++)
-		{
-			var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
-
-			Render(p, rotation, buildingMesh.subMeshes[i-1].mesh, arr[i], buildingMesh.height, constructTime);
-		}
-		return arr;
 	}
+
 
 	private void Render(float3 pos, quaternion rotation, MeshEntityRotatable mesh, Entity entity, float height, float duration)
 	{

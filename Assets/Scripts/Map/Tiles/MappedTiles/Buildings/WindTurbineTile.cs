@@ -24,12 +24,12 @@ namespace Amatsugu.Phos.Tiles
 			_weatherSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<WeatherSystem>();
 		}
 
-		protected override void OnBuilt()
+		public override void RenderSubMeshes(quaternion rot)
 		{
-			_blade = turbineInfo.turbineBlade.Instantiate(SurfacePoint);
+			base.RenderSubMeshes(rot);
+			_blade = subMeshes[turbineInfo.turbineBladeSubMesh.id];
 			Map.EM.AddComponentData(_blade, new RotateAxis { Value = math.up() });
 			Map.EM.AddComponentData(_blade, new RotateSpeed { Value = 0 });
-			base.OnBuilt();
 		}
 
 		protected override void OnTick()
@@ -61,12 +61,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnDisconnected();
 			Map.EM.SetComponentData(_blade, new RotateSpeed { Value = 0 });
-		}
-
-		public override void Destroy()
-		{
-			base.Destroy();
-			Map.EM.DestroyEntity(_blade);
 		}
 
 	}

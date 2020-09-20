@@ -93,7 +93,10 @@ namespace Amatsugu.Phos.Tiles
 				if (HasHQConnection)
 					return;
 				if (!HasHQConnection)
+				{
 					Map.EM.RemoveComponent<BuildingOffTag>(GetBuildingEntity());
+					Map.EM.RemoveComponent<BuildingOffTag>(subMeshes);
+				}
 			}
 			HasHQConnection = true;
 			OnConnected();
@@ -115,7 +118,10 @@ namespace Amatsugu.Phos.Tiles
 			}
 			var e = GetBuildingEntity();
 			if (!Map.EM.HasComponent<BuildingOffTag>(e))
+			{
 				Map.EM.AddComponent<BuildingOffTag>(e);
+				Map.EM.AddComponent<BuildingOffTag>(subMeshes);
+			}
 			HasHQConnection = false;
 			OnDisconnected();
 		}

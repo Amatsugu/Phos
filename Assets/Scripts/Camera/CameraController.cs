@@ -144,7 +144,7 @@ public class CameraController : MonoBehaviour
 		var moveVector = Vector3.zero;
 		var mPos = Input.mousePosition;
 
-		if (!Input.GetKey(KeyCode.Mouse1))
+		if (!Input.GetKey(KeyCode.Mouse2))
 		{
 			if (Input.GetKey(KeyCode.A))
 				moveVector.x = -1;
@@ -194,6 +194,11 @@ public class CameraController : MonoBehaviour
 				_isFocusing = false;
 				_canRotate = false;
 				curPos = ray.GetPoint(d);
+#if UNITY_EDITOR
+				DebugUtilz.DrawCrosshair(curPos, .3f, Color.magenta, 0);
+				DebugUtilz.DrawCrosshair(_lastClickPos, .3f, Color.red, 0);
+				Debug.DrawLine(_lastClickPos, curPos, Color.green);
+#endif
 				var delta = _lastClickPos - curPos;
 				delta.y = 0;
 				pos += delta;

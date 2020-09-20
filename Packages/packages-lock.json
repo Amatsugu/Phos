@@ -45,7 +45,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.entities": {
-      "version": "0.14.0-preview.18",
+      "version": "0.14.0-preview.19",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -70,7 +70,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.2",
+      "version": "2.0.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -206,7 +206,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.quicksearch": {
-      "version": "1.5.4",
+      "version": "2.0.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -243,17 +243,17 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.rendering.hybrid": {
-      "version": "0.8.0-preview.18",
+      "version": "0.8.0-preview.19",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.entities": "0.14.0-preview.18"
+        "com.unity.entities": "0.14.0-preview.19"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.9.0",
-      "depth": 2,
+      "version": "1.11.1",
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

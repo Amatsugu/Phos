@@ -16,5 +16,5 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: a4066cb8451ca7e4f9c49a038cf240bb, type: 2}
   castShadows: 0
   receiveShadows: 0
-  isStatic: 1
-  nonUniformScale: 1
+  isStatic: 0
+  nonUniformScale: 0

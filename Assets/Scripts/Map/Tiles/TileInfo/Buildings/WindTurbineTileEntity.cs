@@ -11,7 +11,7 @@ namespace Amatsugu.Phos.TileEntities
 		[Header("Wind Turbine")]
 		public float maxSpinSpeed = 10;
 		public float2 efficencyRange;
-		public MeshEntityRotatable turbineBlade;
+		public BuildingMeshEntity.SubMeshIdentifier turbineBladeSubMesh;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

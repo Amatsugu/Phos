@@ -21,7 +21,7 @@ namespace AnimationSystem
 		protected override void OnUpdate()
 		{
 			//setup animations
-			Entities.ForEach((Entity e, ref FallAnim f) =>
+			Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ref FallAnim f) =>
 			{
 				PostUpdateCommands.AddComponent(e, new Velocity { Value = f.startSpeed });
 				PostUpdateCommands.RemoveComponent<FallAnim>(e);
@@ -29,7 +29,7 @@ namespace AnimationSystem
 
 			var curTime = UnityEngine.Time.time;
 			//Thumper
-			Entities.ForEach((Slider th, ref AnimationPhase phase, ref AnimStartPos start, ref AnimEndPos end,  ref Translation t) =>
+			Entities.WithNone<BuildingOffTag>().ForEach((Slider th, ref AnimationPhase phase, ref AnimStartPos start, ref AnimEndPos end,  ref Translation t) =>
 			{
 				var time = ((curTime + phase.Value) % th.duration) / th.duration;
 				var p = th.animationCurve.Evaluate(time);
@@ -37,7 +37,7 @@ namespace AnimationSystem
 			});
 
 			//callbacks
-			Entities.ForEach((Entity e, ref Floor f, ref HitFloorCallback floorCallback, ref Translation t) =>
+			Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ref Floor f, ref HitFloorCallback floorCallback, ref Translation t) =>
 			{
 				if (t.Value.y <= f.Value)
 				{
@@ -196,6 +196,7 @@ namespace AnimationSystem
 				{
 					typeof(Disabled),
 					typeof(FrozenRenderSceneTag),
+					typeof(BuildingOffTag),
 				}
 			};
 			_rotateQuery = GetEntityQuery(rotDesc);
@@ -210,6 +211,7 @@ namespace AnimationSystem
 				{
 					typeof(Disabled),
 					typeof(FrozenRenderSceneTag),
+					typeof(BuildingOffTag),
 				}
 			};
 			_accelQuery = GetEntityQuery(accelDesc);
@@ -224,6 +226,7 @@ namespace AnimationSystem
 				{
 					typeof(Disabled),
 					typeof(FrozenRenderSceneTag),
+					typeof(BuildingOffTag),
 				}
 			};
 			_gravityQuery = GetEntityQuery(gravityDesc);
@@ -238,6 +241,7 @@ namespace AnimationSystem
 				{
 					typeof(Disabled),
 					typeof(FrozenRenderSceneTag),
+					typeof(BuildingOffTag),
 				}
 			};
 			_velQuery = GetEntityQuery(velDesc);
@@ -253,6 +257,7 @@ namespace AnimationSystem
 				{
 					typeof(Disabled),
 					typeof(FrozenRenderSceneTag),
+					typeof(BuildingOffTag),
 				}
 			};
 			_floorQuery = GetEntityQuery(floorDesc);

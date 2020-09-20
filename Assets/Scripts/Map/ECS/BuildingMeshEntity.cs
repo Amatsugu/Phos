@@ -20,6 +20,12 @@ public class BuildingMeshEntity : MeshEntityRotatable
 		public MeshEntityRotatable mesh;
 	}
 
+	[Serializable]
+	public struct SubMeshIdentifier
+	{
+		public int id;
+	}
+
 	[Header("Sub Mesh")]
 	public SubMeshEntry[] subMeshes;
 	[Header("Center of Mass")]

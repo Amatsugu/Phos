@@ -178,3 +178,12 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.mathematics from version 1.1.0 to 1.2.1
+
+=== Sat Sep 19 22:21:17 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.quicksearch from version 1.5.4 to 2.0.2
+  com.unity.scriptablebuildpipeline from version 1.7.3 to 1.11.1

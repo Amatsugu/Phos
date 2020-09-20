@@ -28,18 +28,19 @@ namespace Amatsugu.Phos.Tiles
 		protected Dictionary<HexCoords, StatsBuffs> buffSources;
 		protected MetaTile[] metaTiles;
 		protected bool hasBuilding;
+		protected NativeArray<Entity> subMeshes;
 
 		private Entity _building;
 		private Entity _offshorePlatform;
 		private NativeArray<Entity> _healthBars;
 		private NativeArray<Entity> _adjacencyConnectors;
 		private int _connectorCount;
-		private NativeArray<Entity> _subMeshes;
 
 		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
 		{
 			buildingInfo = tInfo;
 			totalBuffs = StatsBuffs.Default;
+			buffSources = new Dictionary<HexCoords, StatsBuffs>();
 			if (tInfo.useMetaTiles)
 				metaTiles = new MetaTile[tInfo.footprint.footprint.Length - 1];
 
@@ -75,11 +76,11 @@ namespace Amatsugu.Phos.Tiles
 			if (buildingInfo.buildingMesh != null)
 			{
 				Map.EM.SetComponentData(_building, new Translation { Value = SurfacePoint });
-				for (int i = 0; i < _subMeshes.Length; i++)
+				for (int i = 0; i < subMeshes.Length; i++)
 				{
-					var h = Map.EM.GetComponentData<Translation>(_subMeshes[i]);
+					var h = Map.EM.GetComponentData<Translation>(subMeshes[i]);
 					h.Value = new float3(h.Value.x, SurfacePoint.y, h.Value.z);
-					Map.EM.SetComponentData(_subMeshes[i], h);
+					Map.EM.SetComponentData(subMeshes[i], h);
 				}
 			}
 		}
@@ -94,7 +95,13 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (buildingInfo.constructionMesh != null)
 			{
-				buildingInfo.constructionMesh.Instantiate(SurfacePoint, quaternion.identity, buildingInfo.buildingMesh, buildingInfo.constructionTime);
+				var pos = SurfacePoint;
+				var height = buildingInfo.buildingMesh.height;
+				if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
+				{
+					buildingInfo.constructionMesh.Instantiate(pos, quaternion.identity, height, buildingInfo.constructionTime, buildingInfo.offshorePlatformMesh);
+				}
+				buildingInfo.constructionMesh.Instantiate(SurfacePoint, quaternion.identity, buildingInfo.buildingMesh.height, buildingInfo.buildingMesh, buildingInfo.constructionTime);
 			}
 			CreateMetaTiles();
 		}
@@ -122,10 +129,10 @@ namespace Amatsugu.Phos.Tiles
 				for (int i = 0; i < _adjacencyConnectors.Length; i++)
 				{
 					if (Map.EM.Exists(_adjacencyConnectors[i]))
-						Map.EM.AddComponent<FrozenRenderSceneTag>(_adjacencyConnectors);
+						Map.EM.AddComponent<FrozenRenderSceneTag>(_adjacencyConnectors[i]);
 				}
 			}
-			Map.EM.AddComponent(_subMeshes, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(subMeshes, typeof(FrozenRenderSceneTag));
 		}
 
 		public override void OnShow()
@@ -143,7 +150,7 @@ namespace Amatsugu.Phos.Tiles
 						Map.EM.RemoveComponent<FrozenRenderSceneTag>(_adjacencyConnectors);
 				}
 			}
-			Map.EM.RemoveComponent(_subMeshes, typeof(FrozenRenderSceneTag));
+			Map.EM.RemoveComponent(subMeshes, typeof(FrozenRenderSceneTag));
 		}
 		public void Build()
 		{
@@ -172,7 +179,7 @@ namespace Amatsugu.Phos.Tiles
 				hasBuilding = true;
 				var rot = GetBuildingRotation();
 				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, rot, GameRegistry.TileDatabase.entityIds[buildingInfo], buildingInfo.maxHealth, buildingInfo.faction);
-				_subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(SurfacePoint, rot);
+				RenderSubMeshes(rot);
 			}
 
 			if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
@@ -181,6 +188,11 @@ namespace Amatsugu.Phos.Tiles
 			ApplyBonuses();
 			ApplyBuffs();
 			RenderDecorators();
+		}
+
+		public virtual void RenderSubMeshes(quaternion rot)
+		{
+			subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(SurfacePoint, rot);
 		}
 
 		public virtual void CreateMetaTiles()
@@ -392,7 +404,7 @@ namespace Amatsugu.Phos.Tiles
 				}
 				if (_connectorCount > 0)
 					Map.EM.DestroyEntity(_adjacencyConnectors);
-				Map.EM.DestroyEntity(_subMeshes);
+				Map.EM.DestroyEntity(subMeshes);
 				
 			}
 			catch
