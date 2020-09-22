@@ -6,8 +6,9 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System.Linq;
 using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.ECS;
 
-[CustomPropertyDrawer(typeof(BuildingMeshEntity.SubMeshIdentifier))]
+[CustomPropertyDrawer(typeof(SubMeshIdentifier))]
 public class SubmeshIdentifierDrawer : PropertyDrawer
 {
 
@@ -24,6 +25,11 @@ public class SubmeshIdentifierDrawer : PropertyDrawer
 			var selection = b.buildingMesh.subMeshes.Select(sb => sb.mesh != null ? sb.mesh.name : "[Empty]").Prepend("[None]").ToArray(); 
 			s = EditorGUI.Popup(resPos, s+1, selection);
 			idProp.intValue = s-1;
+		}else if(property.serializedObject.targetObject is MobileUnitEntity u)
+		{
+			var selection = u.subMeshes.Select(sb => sb.mesh != null ? sb.mesh.name : "[Empty]").Prepend("[None]").ToArray();
+			s = EditorGUI.Popup(resPos, s + 1, selection);
+			idProp.intValue = s - 1;
 		}
 		EditorGUI.EndProperty();
 	}

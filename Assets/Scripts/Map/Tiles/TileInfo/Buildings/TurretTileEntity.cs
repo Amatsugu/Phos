@@ -12,8 +12,6 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
-using static BuildingMeshEntity;
-
 namespace Amatsugu.Phos.TileEntities
 {
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Building/Turret")]

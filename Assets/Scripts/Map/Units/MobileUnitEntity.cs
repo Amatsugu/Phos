@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.UnitComponents;
+﻿using Amatsugu.Phos.ECS;
+using Amatsugu.Phos.UnitComponents;
 
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ public class MobileUnitEntity : MeshEntityRotatable
 	public float attackSpeed = 1;
 	public float maxHealth;
 	public int size;
+	public float buildTime;
 	[Header("Classification")]
 	public int tier;
 	public UnitDomain.Domain unitDomain;
@@ -27,16 +29,16 @@ public class MobileUnitEntity : MeshEntityRotatable
 	public UnitDomain.Domain unitTargetingDomain;
 	public UnitClass.Class unitClass;
 	public Sprite icon;
-	[Header("Misc")]
+	[Header("Meshes")]
 	public float3 centerOfMassOffset;
-	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Units", typeof(MeshEntityRotatable))]
-	public MeshEntityRotatable head;
+	public ConstructionMeshEntity constructionMesh;
+	public SubMeshEntry[] subMeshes;
+	public SubMeshIdentifier head;
 	[CreateNewAsset("Assets/GameData/MapAssets/Projectiles", typeof(ProjectileMeshEntity))]
 	public ProjectileMeshEntity projectile;
 	[CreateNewAsset("Assets/GameData/MapAssets/Meshes/UI/HealthBar", typeof(HealthBarDefination))]
 	public HealthBarDefination healthBar;
 	public float3 healthBarOffset;
-	public float buildTime;
 
 	public override IEnumerable<ComponentType> GetComponents()
 	{

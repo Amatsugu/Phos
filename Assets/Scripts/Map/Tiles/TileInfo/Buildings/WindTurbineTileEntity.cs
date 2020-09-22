@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.Tiles;
+﻿using Amatsugu.Phos.ECS;
+using Amatsugu.Phos.Tiles;
 
 using Unity.Mathematics;
 
@@ -11,7 +12,7 @@ namespace Amatsugu.Phos.TileEntities
 		[Header("Wind Turbine")]
 		public float maxSpinSpeed = 10;
 		public float2 efficencyRange;
-		public BuildingMeshEntity.SubMeshIdentifier turbineBladeSubMesh;
+		public SubMeshIdentifier turbineBladeSubMesh;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

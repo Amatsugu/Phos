@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Amatsugu.Phos.TileEntities;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -51,6 +53,26 @@ public class ConstructionMeshEntity : ScriptableObject
 		}
 		return arr;
 	}
+
+	public NativeArray<Entity> Instantiate(float3 pos, quaternion rotation, MobileUnitEntity unitEntity, float height, float constructTime)
+	{
+		var arr = new NativeArray<Entity>(1 + unitEntity.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+
+		var arch = GetArchetype();
+
+		Map.EM.CreateEntity(arch, arr);
+
+		Render(pos, rotation, unitEntity, arr[0], height, constructTime);
+
+		for (int i = 1; i < unitEntity.subMeshes.Length + 1; i++)
+		{
+			var p = pos + math.rotate(rotation, unitEntity.subMeshes[i - 1].offset);
+
+			Render(p, rotation, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, unitEntity.subMeshes[i - 1].offset.y);
+		}
+		return arr;
+	}
+
 
 	public EntityArchetype GetArchetype()
 	{

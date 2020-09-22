@@ -1,5 +1,7 @@
 ﻿using Amatsugu.Phos.TileEntities;
 
+using Unity.Mathematics;
+
 using UnityEngine;
 
 namespace Amatsugu.Phos.Tiles
@@ -16,6 +18,7 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void StartConstruction(MobileUnitEntity unitEntity)
 		{
 			Debug.Log($"Unit starting construction: {unitEntity.GetNameString()}");
+			unitEntity.constructionMesh.Instantiate(SurfacePoint + new float3(0, .3f, 0), Quaternion.identity, unitEntity, 0.8f, unitEntity.buildTime);
 			_curUnit = unitEntity;
 		}
 
@@ -23,8 +26,8 @@ namespace Amatsugu.Phos.Tiles
 		{
 
 			var unit = GameRegistry.GameMap.AddUnit(_curUnit, this, factoryInfo.faction);
-			var posX = Random.Range(1, 10);
-			var posZ = Random.Range(1, 10);
+			var posX = UnityEngine.Random.Range(1, 10);
+			var posZ = UnityEngine.Random.Range(1, 10);
 			unit.MoveTo(Coords.TranslateOffset(posX, posZ).WorldPos);
 			_curUnit = null;
 			GameEvents.InvokeOnUnitBuilt(Coords);

@@ -24,6 +24,7 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 	private NativeArray<Entity> _healhBar;
 	private Vector3 _startPos;
 	protected Map map;
+	private NativeArray<Entity> _subMeshes;
 
 
 #if DEBUG
@@ -75,15 +76,26 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 			return Entity;
 		IsRendered = _isShown = true;
 		Entity = info.Instantiate(_startPos, Quaternion.identity, id, Faction);
-		if (info.head != null)
-		{
-			HeadEntity = info.head.Instantiate(_startPos, new float3(1, 1, 1), Quaternion.identity);
-			Map.EM.AddComponentData(Entity, new UnitHead { Value = HeadEntity });
-		}
+		RenderSubMeshes();
 		Map.EM.SetComponentData(Entity, new FactionId { Value = Faction });
 		if(info.healthBar != null)
 			_healhBar = info.healthBar.Instantiate(Entity, info.centerOfMassOffset + info.healthBarOffset);
 		return Entity;
+	}
+
+	public virtual void RenderSubMeshes()
+	{
+		if (info.subMeshes.Length == 0)
+			return;
+		_subMeshes = new NativeArray<Entity>(info.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+		for (int i = 0; i < info.subMeshes.Length; i++)
+			 _subMeshes[i] = info.subMeshes[i].mesh.Instantiate(_startPos, 1, quaternion.identity);
+
+		if (info.head.id != -1)
+		{
+			HeadEntity = _subMeshes[info.head.id];
+			Map.EM.AddComponentData(Entity, new UnitHead { Value = HeadEntity });
+		}
 	}
 
 	public void Show(bool isShown)
@@ -147,12 +159,12 @@ public class MobileUnit : ICommandable, IMoveable, IAttackState, IAttack, IGroun
 		{
 			if(Map.EM.Exists(Entity))
 				Map.EM.DestroyEntity(Entity);
-			if (info.head != null)
-				Map.EM.DestroyEntity(HeadEntity);
 			if (_healhBar.IsCreated)
 				Map.EM.DestroyEntity(_healhBar);
+			Map.EM.DestroyEntity(_subMeshes);
 			IsRendered = false;
-		}catch(Exception e)
+		}
+		catch (Exception e)
 		{
 			Debug.LogWarning(e);
 		}
