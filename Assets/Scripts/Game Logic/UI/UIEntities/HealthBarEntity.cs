@@ -6,7 +6,7 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ECS/Rotatable Mesh Enity")]
+[CreateAssetMenu(menuName = "ECS/Healthbar Mesh Enity")]
 public class HealthBarEntity : MeshEntityRotatable
 {
 	[Header("HealthBar")]

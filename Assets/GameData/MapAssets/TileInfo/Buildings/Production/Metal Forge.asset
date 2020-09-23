@@ -32,12 +32,20 @@ MonoBehaviour:
   customDeathTile: 0
   deathTile: {fileID: 0}
   tier: 2
-  constructionTime: 2
+  constructionTime: 6
   category: 3
   footprint:
-    size: 1
+    size: 2
     footprint:
     - x: 0
+      y: 0
+    - x: -1
+      y: 0
+    - x: 0
+      y: -1
+    - x: 1
+      y: -1
+    - x: 1
       y: 0
   useMetaTiles: 0
   flattenOuterRange: 0

@@ -12,16 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: Metal Forge MeshEntityRotatable
   m_EditorClassIdentifier: 
-  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: c5bd27640a28cbf40bc7a31293db797e, type: 2}
+  mesh: {fileID: 3909233067320746374, guid: d3670aea3ac38a742a85527209035826, type: 3}
+  material: {fileID: 2100000, guid: f2bca93419fcbaf4d8c2e9b7f6506023, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
-  subMeshes: []
+  nonUniformScale: 0
+  subMeshes:
+  - offset:
+      x: 0
+      y: 0
+      z: -0.180603
+    mesh: {fileID: 11400000, guid: 0e5d2773637e8c142ab77766068bf5a1, type: 2}
+  - offset:
+      x: 0
+      y: 0
+      z: 0
+    mesh: {fileID: 11400000, guid: 1900dab42dff73c4ea0ffa682b5de41c, type: 2}
   centerOfMassOffset:
     x: 0
-    y: 0
+    y: 1.2
     z: 0
   radius: 0
-  height: 1
+  height: 2.5
