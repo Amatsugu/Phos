@@ -19,7 +19,7 @@ namespace Amatsugu.Phos.Tiles
 		private HashSet<TileEntity> _connectables;
 		private NativeArray<Entity> _connectionMeshes;
 
-		public SmartTile(HexCoords coords, float height, Map map, SmartTileEntity tInfo = null) : base(coords, height, map, tInfo)
+		public SmartTile(HexCoords coords, float height, Map map, SmartTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			smartTile = tInfo;
 			_connectables = new HashSet<TileEntity>();

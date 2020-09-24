@@ -6,7 +6,7 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public InteractiveBuildingTileInfo uiInfo;
 
-		public InteractiveBuildingTile(HexCoords coords, float height, Map map, InteractiveBuildingTileInfo tInfo) : base(coords, height, map, tInfo)
+		public InteractiveBuildingTile(HexCoords coords, float height, Map map, InteractiveBuildingTileInfo tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			uiInfo = tInfo;
 		}

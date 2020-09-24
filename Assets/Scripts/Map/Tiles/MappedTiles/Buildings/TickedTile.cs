@@ -6,7 +6,7 @@ namespace Amatsugu.Phos.Tiles
 	{
 		private bool _isTicking;
 
-		public TickedBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+		public TickedBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 		}
 

@@ -14,9 +14,10 @@ public class PlacementValidator : ScriptableObject
 	public MeshEntity selectionIndicator;
 	public MeshEntity errorIndicator;
 
-	public virtual bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
+	public virtual bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
-		var tilesToOccupy = buildingTile.footprint.GetOccupiedTiles(pos);//HexCoords.SpiralSelect(pos, buildingTile.size);
+		var tilesToOccupy = buildingTile.footprint.GetOccupiedTiles(pos, rotation);
+
 		bool outOfBounds = false;
 		for (int i = 0; i < tilesToOccupy.Length; i++)
 		{

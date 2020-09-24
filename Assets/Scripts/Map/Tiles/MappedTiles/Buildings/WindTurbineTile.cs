@@ -18,7 +18,7 @@ namespace Amatsugu.Phos.Tiles
 		private Entity _blade;
 
 
-		public WindTurbileTile(HexCoords coords, float height, Map map, WindTurbineTileEntity tInfo) : base(coords, height, map, tInfo)
+		public WindTurbileTile(HexCoords coords, float height, Map map, WindTurbineTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			turbineInfo = tInfo;
 			_weatherSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<WeatherSystem>();

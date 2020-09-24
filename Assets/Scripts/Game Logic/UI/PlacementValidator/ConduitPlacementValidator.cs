@@ -15,7 +15,7 @@ public class ConduitPlacementValidator : PlacementValidator
 	public MeshEntityRotatable powerLineIndicator;
 	public int maxOverlap = 2;
 
-	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
+	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
 		var conduitInfo = buildingTile as ResourceConduitTileEntity;
 		if (conduitInfo == null)
@@ -51,6 +51,6 @@ public class ConduitPlacementValidator : PlacementValidator
 			indicatorManager.LogError($"Cannot place more than {maxOverlap} overlaping conduits");
 			return false;
 		}
-		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
+		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager, rotation);
 	}
 }

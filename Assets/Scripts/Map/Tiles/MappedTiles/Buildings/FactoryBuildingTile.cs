@@ -10,7 +10,7 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public FactoryTileEntity factoryInfo;
 		private MobileUnitEntity _curUnit;
-		public FactoryBuildingTile(HexCoords coords, float height, Map map, FactoryTileEntity tInfo) : base(coords, height, map, tInfo)
+		public FactoryBuildingTile(HexCoords coords, float height, Map map, FactoryTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			factoryInfo = tInfo;
 		}

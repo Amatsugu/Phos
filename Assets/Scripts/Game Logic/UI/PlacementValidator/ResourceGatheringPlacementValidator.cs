@@ -1,9 +1,7 @@
 ﻿using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 using UnityEngine;
@@ -16,7 +14,7 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 	private Dictionary<int, int> _resInRange = new Dictionary<int, int>();
 	private Dictionary<int, List<Tile>> _resTiles = new Dictionary<int, List<Tile>>();
 
-	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
+	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
 		var buildingInfo = buildingTile as ResourceGatheringBuildingEntity;
 		if (buildingInfo == null)
@@ -26,7 +24,7 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 		//Find tiles in range
 		map.HexSelectForEach(pos, buildingInfo.footprint.size + buildingInfo.gatherRange, t =>
 		{
-			if(t is ResourceTile rt && !rt.gatherer.isCreated)
+			if (t is ResourceTile rt && !rt.gatherer.isCreated)
 			{
 				var yeild = rt.resInfo.resourceYields;
 				for (int i = 0; i < yeild.Length; i++)
@@ -69,14 +67,14 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 		indicatorManager.floatingText.rectTransform.position = GameRegistry.Camera.WorldToScreenPoint(map[pos].SurfacePoint) + new Vector3(0, 15);
 		bool cannotGather = _resInRange.Count > 0;
 		bool cannotPlace = false;
-		var tilesToOccupy = buildingTile.footprint.GetOccupiedTiles(pos);//HexCoords.SpiralSelect(pos, buildingTile.size);
+		var tilesToOccupy = buildingTile.footprint.GetOccupiedTiles(pos, rotation);
 		foreach (var tiles in _resTiles)
 		{
 			for (int i = 0; i < tiles.Value.Count; i++)
 			{
 				for (int j = 0; j < tilesToOccupy.Length; j++)
 				{
-					if(tiles.Value[i].Coords == tilesToOccupy[j])
+					if (tiles.Value[i].Coords == tilesToOccupy[j])
 					{
 						cannotPlace = true;
 						indicatorManager.SetIndicator(tiles.Value[i], errorIndicator);
@@ -84,7 +82,6 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 					else
 						indicatorManager.SetIndicator(tiles.Value[i], cannotGatherIndicator);
 				}
-
 			}
 		}
 		if (cannotPlace)
@@ -105,6 +102,6 @@ public class ResourceGatheringPlacementValidator : PlacementValidator
 			return false;
 		}
 
-		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
+		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager, rotation);
 	}
 }

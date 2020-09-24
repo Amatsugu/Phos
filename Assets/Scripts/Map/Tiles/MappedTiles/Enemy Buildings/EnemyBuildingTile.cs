@@ -4,7 +4,7 @@ namespace Amatsugu.Phos.Tiles
 {
 	public class EnemyBuildingTile : BuildingTile
 	{
-		public EnemyBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+		public EnemyBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			isBuilt = true;
 		}

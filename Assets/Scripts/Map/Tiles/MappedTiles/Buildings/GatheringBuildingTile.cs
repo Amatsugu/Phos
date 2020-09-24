@@ -12,7 +12,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 {
 	public ResourceGatheringBuildingEntity gatherInfo;
 
-	public GatheringBuildingTile(HexCoords coords, float height, Map map, ResourceGatheringBuildingEntity tInfo) : base(coords, height, map, tInfo)
+	public GatheringBuildingTile(HexCoords coords, float height, Map map, ResourceGatheringBuildingEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 	{
 		gatherInfo = tInfo;
 	}

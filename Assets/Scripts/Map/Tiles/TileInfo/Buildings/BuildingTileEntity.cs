@@ -99,10 +99,15 @@ namespace Amatsugu.Phos.TileEntities
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{
+			return CreateTile(map, pos, height, 0);
+		}
+
+		public virtual Tile CreateTile(Map map, HexCoords pos, float height, int rotation)
+		{
 			if (consumption.Length != 0 || production.Any(p => p.id == 0))
-				return new PoweredBuildingTile(pos, height, map, this);
+				return new PoweredBuildingTile(pos, height, map, this, rotation);
 			else
-				return new BuildingTile(pos, height, map, this);
+				return new BuildingTile(pos, height, map, this, rotation);
 		}
 
 		public virtual StringBuilder GetProductionString()

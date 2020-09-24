@@ -10,7 +10,7 @@ using UnityEngine;
 public class TechBuildingValidator : PlacementValidator
 {
 	public MeshEntityRotatable borderMesh;
-	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
+	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
 		var techBuilding = buildingTile as TechBuildingTileEntity;
 #if DEBUG
@@ -21,6 +21,6 @@ public class TechBuildingValidator : PlacementValidator
 		var canBuild = !map.HasTechBuilding(techBuilding);
 		if (!canBuild)
 			indicatorManager.LogError("Only one tech building of each type can be built");
-		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager) && canBuild;
+		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager, rotation) && canBuild;
 	}
 }

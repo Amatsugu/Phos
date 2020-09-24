@@ -217,6 +217,43 @@ public struct HexCoords : IEquatable<HexCoords>
 		new int3(-1,  0, +1),
 		new int3( 0, -1, +1),
 	};
+
+	public HexCoords RotateAround(HexCoords center, int angle) => Rotate(this, center, angle);
+
+	public static HexCoords Rotate(HexCoords coord, HexCoords center, int angle)
+	{
+		if (coord == center)
+			return coord;
+		if (angle >= 6)
+			angle /= 6;
+		if (angle == 0)
+			return coord;
+		var pc = new int3(coord.X - center.X, coord.Y - center.Y, coord.Z - center.Z);
+		if(angle > 0)
+		{
+			for (int i = 0; i < angle; i++)
+				pc = SlideRight(pc);
+		}else
+		{
+			angle = math.abs(angle);
+			for (int i = 0; i < angle; i++)
+				pc = SlideLeft(pc);
+		}
+		var r = new HexCoords(pc.x + center.X, pc.y + center.Y, coord.edgeLength);
+		var eR = new int3(pc.x + center.X, pc.y + center.Y, pc.z + center.Z);
+		return r;
+	}
+
+	private static int3 SlideLeft(int3 point)
+	{
+		return new int3(-point.y, -point.z, -point.x);
+	}
+
+	private static int3 SlideRight(int3 point)
+	{
+		return new int3(-point.z, -point.x, -point.y);
+	}
+
 	public static HexCoords Zero(float edgeLength)
 	{
 		return new HexCoords(0, 0, edgeLength);

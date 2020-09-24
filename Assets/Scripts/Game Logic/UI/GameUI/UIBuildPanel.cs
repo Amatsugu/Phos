@@ -354,7 +354,7 @@ public class UIBuildPanel : UITabPanel
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, indicatorManager);
+		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, indicatorManager, 0);
 		var neighbors = GameRegistry.GameMap.GetNeighbors(selectedTile.Coords);
 		var effects = new List<string>();
 		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)

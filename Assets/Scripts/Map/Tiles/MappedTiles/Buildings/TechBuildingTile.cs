@@ -13,7 +13,7 @@ namespace Amatsugu.Phos.Tiles
 
 		private readonly HashSet<HexCoords> _buffedTiles;
 
-		public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+		public TechBuildingTile(HexCoords coords, float height, Map map, TechBuildingTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			techInfo = tInfo;
 			_buffedTiles = new HashSet<HexCoords>(HexCoords.SpiralSelect(coords, tInfo.effectRange, true));

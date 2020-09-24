@@ -23,7 +23,7 @@ namespace Amatsugu.Phos.Tiles
 		private Entity _turretHead;
 		private Entity _turretBarrel;
 
-		public TurretTile(HexCoords coords, float height, Map map, TurretTileEntity tInfo) : base(coords, height, map, tInfo)
+		public TurretTile(HexCoords coords, float height, Map map, TurretTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			turretInfo = tInfo;
 		}

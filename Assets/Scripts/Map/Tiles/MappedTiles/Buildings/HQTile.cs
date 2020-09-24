@@ -15,7 +15,7 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public readonly HQTileEntity hqInfo;
 
-		public HQTile(HexCoords coords, float height, Map map, HQTileEntity tInfo) : base(coords, height, map, tInfo)
+		public HQTile(HexCoords coords, float height, Map map, HQTileEntity tInfo) : base(coords, height, map, tInfo, 0)
 		{
 			hqInfo = tInfo;
 		}
@@ -76,7 +76,7 @@ namespace Amatsugu.Phos.Tiles
 
 	public class SubHQTile : PoweredBuildingTile
 	{
-		public SubHQTile(HexCoords coords, float height, Map map, SubHQTileEntity tInfo) : base(coords, height, map, tInfo)
+		public SubHQTile(HexCoords coords, float height, Map map, SubHQTileEntity tInfo) : base(coords, height, map, tInfo, 0)
 		{
 			HasHQConnection = true;
 		}

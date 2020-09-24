@@ -25,7 +25,7 @@ namespace Amatsugu.Phos.Tiles
 		private bool _switchLines;
 		private Entity _energyPacket;
 
-		public ResourceConduitTile(HexCoords coords, float height, Map map, ResourceConduitTileEntity tInfo) : base(coords, height, map, tInfo)
+		public ResourceConduitTile(HexCoords coords, float height, Map map, ResourceConduitTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			conduitInfo = tInfo;
 			_poweredRangeSq = HexCoords.TileToWorldDist(conduitInfo.poweredRange, map.innerRadius);

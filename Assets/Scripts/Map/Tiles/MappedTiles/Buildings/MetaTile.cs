@@ -19,7 +19,7 @@ namespace Amatsugu.Phos.Tiles
 		private bool _isPowered;
 		private bool _isConduit;
 
-		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo)
+		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo, 0)
 		{
 			originalTile = tInfo;
 			ParentTile = parentTile;

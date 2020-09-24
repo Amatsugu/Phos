@@ -17,7 +17,9 @@ namespace Amatsugu.Phos.TileEntities
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{
-			return new SmartTile(pos, height, map, this);
+			return new SmartTile(pos, height, map, this, 0);
 		}
+
+		
 	}
 }

@@ -9,7 +9,7 @@ public class TurretValidator : PlacementValidator
 {
 	public MeshEntity rangeSphere;
 	public MeshEntity minRangeSphere;
-	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager)
+	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
 		var turret = buildingTile as TurretTileEntity;
 #if DEBUG
@@ -19,6 +19,6 @@ public class TurretValidator : PlacementValidator
 		IndicatorManager.ShowRangeSphere(map[pos], turret.attackRange * 2, rangeSphere);
 		if (turret.minAttackRange != 0)
 			IndicatorManager.ShowRangeSphere(map[pos], turret.minAttackRange * 2, minRangeSphere);
-		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager);
+		return base.ValidatePlacement(map, pos, buildingTile, indicatorManager, rotation);
 	}
 }

@@ -14,7 +14,7 @@ namespace Amatsugu.Phos.Tiles
 		private Entity _ringEntity;
 		private readonly PhosCoreTileInfo _phosInfo;
 
-		public PhosCoreTile(HexCoords coords, float height, Map map, PhosCoreTileInfo tInfo) : base(coords, height, map, tInfo)
+		public PhosCoreTile(HexCoords coords, float height, Map map, PhosCoreTileInfo tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			isBuilt = true;
 			_phosInfo = tInfo;

@@ -29,6 +29,8 @@ namespace Amatsugu.Phos.Tiles
 		protected MetaTile[] metaTiles;
 		protected bool hasBuilding;
 		protected NativeArray<Entity> subMeshes;
+		protected readonly int rotationAngle;
+		protected readonly quaternion rotation;
 
 		private Entity _building;
 		private Entity _offshorePlatform;
@@ -36,11 +38,13 @@ namespace Amatsugu.Phos.Tiles
 		private NativeArray<Entity> _adjacencyConnectors;
 		private int _connectorCount;
 
-		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo, int rotation) : base(coords, height, map, tInfo)
 		{
 			buildingInfo = tInfo;
 			totalBuffs = StatsBuffs.Default;
 			buffSources = new Dictionary<HexCoords, StatsBuffs>();
+			rotationAngle = rotation;
+			this.rotation = quaternion.RotateY(math.radians(60 * rotation));
 			if (tInfo.useMetaTiles)
 				metaTiles = new MetaTile[tInfo.footprint.footprint.Length - 1];
 
@@ -52,12 +56,12 @@ namespace Amatsugu.Phos.Tiles
 
 		protected virtual quaternion GetBuildingRotation()
 		{
-			return quaternion.identity;
+			return rotation;
 		}
 
 		public virtual void SetBuildingRotation(int rotation)
 		{
-
+			
 		}
 
 		public ResourceIndentifier[] GetResourceRefund()

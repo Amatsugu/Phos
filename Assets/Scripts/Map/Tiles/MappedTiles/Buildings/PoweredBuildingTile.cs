@@ -16,7 +16,7 @@ namespace Amatsugu.Phos.Tiles
 
 		private int _connectionNotif = -1;
 
-		public PoweredBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo) : base(coords, height, map, tInfo)
+		public PoweredBuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			
 		}
