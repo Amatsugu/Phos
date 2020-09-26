@@ -19,6 +19,12 @@ namespace Amatsugu.Phos.TileEntities
 			return new HQTile(pos, height, map, this);
 		}
 
+		public override Tile CreateTile(Map map, HexCoords pos, float height, int rotation)
+		{
+			return CreateTile(map, pos, height);
+		}
+
+
 		private void OnValidate()
 		{
 			if (subHQTiles?.Length != 6)

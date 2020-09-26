@@ -64,20 +64,21 @@ public class BuildQueueSystem : ComponentSystem
 	/// </summary>
 	/// <param name="building">The tile info of the building to build</param>
 	/// <param name="dst">The tile on which the building will be placed</param>
-	public static void QueueBuilding(BuildingTileEntity building, Tile dst) => _INST.QueueBuilding(dst, building);
+	public static void QueueBuilding(BuildingTileEntity building, Tile dst, int rotation = 0) => _INST.QueueBuilding(dst, building, rotation);
 
 	/// <summary>
 	/// Add a building to the build queue
 	/// </summary>
 	/// <param name="tile">The tile on which the building will be placed</param>
 	/// <param name="building">The tile info of the building to build</param>
-	private void QueueBuilding(Tile tile, BuildingTileEntity building)
+	private void QueueBuilding(Tile tile, BuildingTileEntity building, int rotation)
 	{
 		var orderId = _curOrderID++;
 		_pendingBuildOrders.Add(orderId, new BuildOrder
 		{
 			building = building,
-			dstTile = tile
+			dstTile = tile,
+			rotation = rotation
 		});
 		_readyToBuildOrders.Add(orderId);
 	}
@@ -146,10 +147,10 @@ public class BuildQueueSystem : ComponentSystem
 	/// <param name="order">The build order cotaining the detials on how to place the building</param>
 	private void PlaceBuilding(BuildOrder order)
 	{
-		var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords);
+		var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords, order.rotation);
 		GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center);
 		//GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.footprint.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
-		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building);
+		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation);
 		_constructionOrders.Add(new ConstructionOrder
 		{
 			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + order.building.constructionTime,
@@ -194,6 +195,7 @@ public struct BuildOrder
 	public FactoryBuildingTile factory;
 	public UnitIdentifier unit;
 	public OrderType orderType;
+	internal int rotation;
 }
 
 public enum OrderType

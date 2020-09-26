@@ -61,7 +61,11 @@ namespace Amatsugu.Phos.Tiles
 
 		public override StringBuilder GetName()
 		{
+#if UNITY_EDITOR
+			return ParentTile.GetName().Append(" Meta");
+#else
 			return ParentTile.GetName();
+#endif
 		}
 
 		protected override void ApplyTileProperites()
@@ -93,6 +97,16 @@ namespace Amatsugu.Phos.Tiles
 		protected override void DestroyBuilding()
 		{
 
+		}
+
+		public override void OnPlaced()
+		{
+			
+		}
+
+		protected override void ApplyBonuses()
+		{
+			
 		}
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)

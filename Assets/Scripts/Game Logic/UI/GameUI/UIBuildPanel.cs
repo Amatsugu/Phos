@@ -7,6 +7,7 @@ using System.Linq;
 using TMPro;
 
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics.Systems;
 
 using UnityEngine;
@@ -47,6 +48,7 @@ public class UIBuildPanel : UITabPanel
 	private FactoryBuildingTile _selectedFactory;
 	private UnitDatabase _unitDatabase;
 	private BuildQueueSystem _buildQueue;
+	private int _rotation;
 
 	public enum BuildState
 	{
@@ -221,6 +223,7 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].OnClick += () =>
 					{
 						state = BuildState.Placement;
+						_rotation = 0;
 						_selectedBuilding = b.info;
 					};
 					_icons[i].SetActive(true);
@@ -354,11 +357,27 @@ public class UIBuildPanel : UITabPanel
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, indicatorManager, 0);
-		var neighbors = GameRegistry.GameMap.GetNeighbors(selectedTile.Coords);
-		var effects = new List<string>();
-		for (int i = 0; i < _selectedBuilding.adjacencyEffects.Length; i++)
-			_selectedBuilding.adjacencyEffects[i].GetAdjacencyEffectsString(selectedTile, neighbors, ref effects);
+		if(Input.GetKeyUp(KeyCode.Q))
+		{
+			_rotation--;
+		}else if(Input.GetKeyUp(KeyCode.E))
+		{
+			_rotation++;
+		}
+		_rotation = _rotation.Mod(6);
+
+		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, indicatorManager, _rotation);
+		var effects = new float2();
+
+		var footprint = _selectedBuilding.footprint.GetOccupiedTiles(selectedTile.Coords, _rotation);
+
+		for (int i = 0; i < footprint.Length; i++)
+		{
+			var t = footprint[i];
+			var neighbors = GameRegistry.GameMap.GetNeighbors(t);
+			for (int j = 0; j < _selectedBuilding.adjacencyEffects.Length; j++)
+				_selectedBuilding.adjacencyEffects[j].GetAdjacencyEffectsString(GameRegistry.GameMap[t], neighbors, ref effects);
+		}
 
 		ShowPoweredTiles(selectedTile);
 		if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -402,7 +421,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.Placement)
 			ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
-		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile);
+		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, _rotation);
 		if (state == BuildState.HQPlacement)
 		{
 			_selectedBuilding = null;

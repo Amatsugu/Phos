@@ -224,10 +224,9 @@ public struct HexCoords : IEquatable<HexCoords>
 	{
 		if (coord == center)
 			return coord;
-		if (angle >= 6)
-			angle /= 6;
 		if (angle == 0)
 			return coord;
+		angle = angle.Mod(6);
 		var pc = new int3(coord.X - center.X, coord.Y - center.Y, coord.Z - center.Z);
 		if(angle > 0)
 		{

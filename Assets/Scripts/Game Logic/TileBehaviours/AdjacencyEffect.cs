@@ -18,16 +18,14 @@ public class AdjacencyEffect : ScriptableObject
 	public BonusDefination[] bonusDefinations;
 	public MeshEntityRotatable line;
 
-	public virtual void GetAdjacencyEffectsString(Tile tile, Tile[] neighbors, ref List<string> effectsString)
+	public virtual void GetAdjacencyEffectsString(Tile tile, Tile[] neighbors, ref float2 effects)
 	{
-		var (prod, cons) = CalculateBonuses(neighbors, out var selection);
+		effects += CalculateBonuses(neighbors, out var selection);
 		for (int i = 0; i < selection.Count; i++)
 			RenderPreviewLine(tile.SurfacePoint, selection[i].SurfacePoint, tile.Height);
-		effectsString.Add($"+{prod}x Production Rate");
-		effectsString.Add($"-{cons}x Consumption Rate");
 	}
 
-	private (float prodBonus, float consBonus) CalculateBonuses(Tile[] neighbors, out List<BuildingTile> buildings)
+	private float2 CalculateBonuses(Tile[] neighbors, out List<BuildingTile> buildings)
 	{
 		var productionBonus = 0f;
 		var consumtionBonus = 0f;
@@ -36,7 +34,10 @@ public class AdjacencyEffect : ScriptableObject
 		{
 			if (neighbors[i] is BuildingTile b)
 			{
-				var bId = GameRegistry.TileDatabase.entityIds[b.info];
+				var info = b.info;
+				if (b is MetaTile m)
+					info = m.ParentTile.info;
+				var bId = GameRegistry.TileDatabase.entityIds[info];
 				for (int j = 0; j < bonusDefinations.Length; j++)
 				{
 					if (bonusDefinations[j].buildingsSet.Contains(bId))
@@ -50,7 +51,7 @@ public class AdjacencyEffect : ScriptableObject
 				}
 			}
 		}
-		return (productionBonus, consumtionBonus);
+		return new float2(productionBonus, consumtionBonus);
 	}
 
 	public bool ApplyBonus(BuildingTile srcBuilding, Tile otherTile)
@@ -91,6 +92,7 @@ public class AdjacencyEffect : ScriptableObject
 		entities[1] = LineFactory.CreateStaticLine(line, a2, b2, 0.05f);
 		entities[2] = LineFactory.CreateStaticLine(line, b2, b, 0.05f);
 	}
+
 
 	private void RenderPreviewLine(float3 a, float3 b, float height)
 	{

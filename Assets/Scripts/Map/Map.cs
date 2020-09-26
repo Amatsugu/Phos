@@ -365,6 +365,7 @@ public class Map : IDisposable
 			t.UpdateHeight(math.lerp(t.Height, height, flatten[t.Coords]));
 		}
 		for (int i = 0; i < footprint.Length; i++)
+
 			this[footprint[i]].UpdateHeight(height);
 	}
 
@@ -423,6 +424,8 @@ public class Map : IDisposable
 			tile.UpdateHeight(math.lerp(tile.Height, height, 1 - d));
 		}
 	}
+
+	public Tile ReplaceTile(Tile tile, BuildingTileEntity newTile, int rotation) => ReplaceTile(tile, newTile.CreateTile(this, tile.Coords, tile.Height, rotation));
 
 	public Tile ReplaceTile(Tile tile, TileEntity newTile) => ReplaceTile(tile, newTile.CreateTile(this, tile.Coords, tile.Height));
 

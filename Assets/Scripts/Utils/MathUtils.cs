@@ -90,6 +90,11 @@ public static class MathUtils
 		return ((int)(value * n)) / n;
 	}
 
+	public static int Mod(this int x, int m)
+	{
+		return (x % m + m) % m;
+	}
+
 	public static Aabb PhysicsBounds(float3 a, float3 b)
 	{
 		float3 min = default, max = default;

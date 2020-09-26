@@ -91,7 +91,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnPlaced()
 		{
 			base.OnPlaced();
-
+			Debug.Log($"{GetName()} placed at {Coords}");
 			StartConstruction();
 		}
 
@@ -103,9 +103,9 @@ namespace Amatsugu.Phos.Tiles
 				var height = buildingInfo.buildingMesh.height;
 				if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
 				{
-					buildingInfo.constructionMesh.Instantiate(pos, quaternion.identity, height, buildingInfo.constructionTime, buildingInfo.offshorePlatformMesh);
+					buildingInfo.constructionMesh.Instantiate(pos, GetBuildingRotation(), height, buildingInfo.constructionTime, buildingInfo.offshorePlatformMesh);
 				}
-				buildingInfo.constructionMesh.Instantiate(SurfacePoint, quaternion.identity, buildingInfo.buildingMesh.height, buildingInfo.buildingMesh, buildingInfo.constructionTime);
+				buildingInfo.constructionMesh.Instantiate(SurfacePoint, GetBuildingRotation(), buildingInfo.buildingMesh.height, buildingInfo.buildingMesh, buildingInfo.constructionTime);
 			}
 			CreateMetaTiles();
 		}
@@ -176,7 +176,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (buildingInfo.buildingMesh.mesh == null)
 			{
-				Debug.LogWarning($"No Building Assigned for {base.GetName()}");
+				Debug.LogWarning($"No Building Assigned for {GetName()}");
 			}
 			else
 			{
@@ -203,7 +203,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (buildingInfo.useMetaTiles)
 			{
-				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords);
+				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
 				for (int i = 0, j = 0 ; i < tiles.Length; i++)
 				{
 					if (tiles[i] == Coords)
@@ -271,6 +271,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			base.TileUpdated(src, updateType);
+			if (!IsBuilt)
+				return;
 			if (updateType == TileUpdateType.Placed || updateType == TileUpdateType.Removed)
 				ApplyBonuses();
 		}
@@ -279,6 +281,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (!IsBuilt || !_isRendered)
 				return;
+			Debug.Log($"Apply Bonus: {GetName()} {Coords}");	
 			var entity = GetBuildingEntity();
 			Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
 			Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
@@ -351,10 +354,11 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void Deconstruct()
 		{
-			if (!buildingInfo.useMetaTiles)
-				return;
-			for (int i = 0; i < metaTiles.Length; i++)
-				map.RevertTile(metaTiles[i]);
+			if (buildingInfo.useMetaTiles)
+			{
+				for (int i = 0; i < metaTiles.Length; i++)
+					map.RevertTile(metaTiles[i]);
+			}
 			map.RevertTile(this);
 		}
 
