@@ -292,10 +292,21 @@ public class UIBuildPanel : UITabPanel
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		indicatorManager.SetIndicator(selectedTile, destructionIndicatorEntity);
 		var deconstructable = selectedTile as IDeconstructable;
 		if (deconstructable == null)
 			return;
+		if (selectedTile is BuildingTile b)
+		{
+			var footprint = b.buildingInfo.footprint.GetOccupiedTiles(selectedTile.Coords, b.Rotation);
+			foreach (var t in footprint)
+			{
+				indicatorManager.SetIndicator(GameRegistry.GameMap[t], destructionIndicatorEntity);
+			}
+		}
+		else
+		{
+			indicatorManager.SetIndicator(selectedTile, destructionIndicatorEntity);
+		}
 		if (Input.GetKeyUp(KeyCode.Mouse0) && deconstructable.CanDeconstruct(Faction.Player))
 			deconstructable.Deconstruct();
 	}
@@ -357,10 +368,11 @@ public class UIBuildPanel : UITabPanel
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		if(Input.GetKeyUp(KeyCode.Q))
+		if (Input.GetKeyUp(KeyCode.Q))
 		{
 			_rotation--;
-		}else if(Input.GetKeyUp(KeyCode.E))
+		}
+		else if (Input.GetKeyUp(KeyCode.E))
 		{
 			_rotation++;
 		}

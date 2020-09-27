@@ -22,6 +22,8 @@ namespace Amatsugu.Phos.Tiles
 		public int upgradeLevel = 0;
 		public bool IsBuilt => isBuilt;
 
+		public int Rotation => rotationAngle;
+
 		protected StatsBuffs totalBuffs;
 		protected bool isBuilt;
 		protected bool buidlingRendered;

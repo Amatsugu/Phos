@@ -72,16 +72,24 @@ namespace Amatsugu.Phos.Tiles
 		{
 		}
 
-		public override void OnDisconnected()
+		public override void HQConnected()
+		{
+			if (_isPowered && !_isConduit)
+				_poweredParent.HQConnected();
+		}
+
+		public override void HQDisconnected()
 		{
 			if (_isPowered && !_isConduit)
 				_poweredParent.HQDisconnected();
 		}
 
+		public override void OnDisconnected()
+		{
+		}
+
 		public override void OnConnected()
 		{
-			if (_isPowered && !_isConduit)
-				_poweredParent.HQConnected();
 		}
 
 		public override void Deconstruct()
