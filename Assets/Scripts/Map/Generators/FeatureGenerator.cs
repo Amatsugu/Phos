@@ -1,3 +1,5 @@
+using Amatsugu.Phos;
+
 using UnityEngine;
 
 public abstract class FeatureGenerator : ScriptableObject

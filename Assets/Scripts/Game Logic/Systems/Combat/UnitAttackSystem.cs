@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.UnitComponents;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.UnitComponents;
 
 using System;
 using Unity.Burst;
@@ -126,8 +127,8 @@ public class UnitAttackSystem : ComponentSystem
 			//Get Objects in Rect Range
 			_physicsWorld.AABBCast(t.Value, range.MaxRange, new CollisionFilter
 			{
-				BelongsTo = 1u << (int)faction.Value,
-				CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
+				BelongsTo = (uint)faction.Value.AsCollisionLayer(),
+				CollidesWith = (~(uint)(faction.Value.AsCollisionLayer() | CollisionLayer.Projectile | CollisionLayer.Tile)),//~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
 				GroupIndex = 0
 			}, ref _castHits);
 			//Get Circual Range

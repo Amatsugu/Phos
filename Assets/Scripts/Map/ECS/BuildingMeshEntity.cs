@@ -1,7 +1,6 @@
 ﻿using Amatsugu.Phos.ECS;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +8,9 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+
 using UnityEngine;
+
 using CapsuleCollider = Unity.Physics.CapsuleCollider;
 
 namespace Amatsugu.Phos.TileEntities
@@ -19,10 +20,13 @@ namespace Amatsugu.Phos.TileEntities
 	{
 		[Header("Sub Mesh")]
 		public SubMeshEntry[] subMeshes;
+
 		[Header("Center of Mass")]
 		public float3 centerOfMassOffset;
+
 		[Header("Collider")]
 		public float radius;
+
 		public float height;
 
 		public override IEnumerable<ComponentType> GetComponents()
@@ -64,7 +68,7 @@ namespace Amatsugu.Phos.TileEntities
 				Vertex1 = new float3(0, height, 0)
 			}, new CollisionFilter
 			{
-				BelongsTo = 1u << (int)Faction.Tile | 1u << (int)faction,
+				BelongsTo = (uint)(CollisionLayer.Building | faction.AsCollisionLayer()),
 				CollidesWith = ~0u
 			});
 			Map.EM.SetComponentData(e, new PhysicsCollider

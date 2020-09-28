@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Amatsugu.Phos;
+
+using UnityEngine;
 
 public static class Cartographer
 {

@@ -1,8 +1,14 @@
 ﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Units;
 
+using Unity.Collections;
+using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
+using Unity.Physics.Systems;
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Amatsugu.Phos.Tiles
 {
@@ -10,9 +16,11 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public FactoryTileEntity factoryInfo;
 		private MobileUnitEntity _curUnit;
+		private BuildPhysicsWorld _physicsWorld;
 		public FactoryBuildingTile(HexCoords coords, float height, Map map, FactoryTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			factoryInfo = tInfo;
+			_physicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
 		}
 
 		public virtual void StartConstruction(MobileUnitEntity unitEntity)
@@ -24,13 +32,42 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void FinishConstruction()
 		{
-
 			var unit = GameRegistry.GameMap.AddUnit(_curUnit, this, factoryInfo.faction);
-			var posX = UnityEngine.Random.Range(1, 10);
-			var posZ = UnityEngine.Random.Range(1, 10);
-			unit.MoveTo(Coords.TranslateOffset(posX, posZ).WorldPos);
+			unit.MoveTo(FindEmptyTile().WorldPos);
 			_curUnit = null;
 			GameEvents.InvokeOnUnitBuilt(Coords);
+		}
+
+
+		private HexCoords FindEmptyTile()
+		{
+			var curR = 1;
+			var hits = new NativeList<int>();
+			while(true)
+			{
+				var curRing = HexCoords.SelectRing(Coords, curR);
+				for (int i = 0; i < curRing.Length; i++)
+				{
+					hits.Clear();
+					var pos = curRing[i].WorldPos;
+					PhysicsUtilz.AABBCast(_physicsWorld, new Aabb
+					{
+						Min = pos - new float3(-.5f, 0, -.5f),
+						Max = pos + new float3(.5f, 50, .5f)
+					}, new CollisionFilter
+					{
+						CollidesWith = (uint)CollisionLayer.Unit,
+						BelongsTo = (uint)CollisionLayer.Unit
+					}, ref hits);
+
+					if (hits.Length == 0)
+					{
+						hits.Dispose();
+						return curRing[i];
+					}
+				}
+				curR++;
+			}
 		}
 
 	}

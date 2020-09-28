@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Amatsugu.Phos;
+
 using Unity.Collections;
-using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using UnityEngine;
 
 public static class PhysicsUtilz
 {
@@ -25,13 +23,12 @@ public static class PhysicsUtilz
 		{
 			Aabb = bounds,
 			Filter = filter
-
 		}, ref castHits);
 	}
 
 	public static bool GetTileFromRay(this BuildPhysicsWorld world, UnityEngine.Ray ray, float dist, CollisionFilter filter, out HexCoords tilePos)
 	{
-		if(world.PhysicsWorld.CastRay(new RaycastInput
+		if (world.PhysicsWorld.CastRay(new RaycastInput
 		{
 			Start = ray.origin,
 			End = ray.GetPoint(dist),
@@ -47,12 +44,23 @@ public static class PhysicsUtilz
 
 	public static bool GetTileFromRay(this BuildPhysicsWorld world, UnityEngine.Ray ray, float dist, out HexCoords tilePos)
 	{
-		return world.GetTileFromRay(ray, dist, new Unity.Physics.CollisionFilter
+		return world.GetTileFromRay(ray, dist, new CollisionFilter
 		{
 			GroupIndex = 0,
-			BelongsTo = (1u << (int)Faction.Tile),
-			CollidesWith = (1u << (int)Faction.Tile)
+			BelongsTo = (int)CollisionLayer.Tile,
+			CollidesWith = (int)CollisionLayer.Tile
 		}, out tilePos);
+	}
+
+	public static CollisionLayer AsCollisionLayer(this Faction faction)
+	{
+		return faction switch
+		{
+			Faction.Phos => CollisionLayer.Phos,
+			Faction.Player => CollisionLayer.Player,
+			Faction.None => CollisionLayer.Default,
+			_ => throw new System.NotImplementedException($"Invalid faction: {faction}")
+		};
 	}
 
 	public static float3 CalculateProjectileShotVector(float3 start, float3 tgt, float flightTime = 5f)

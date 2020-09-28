@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.ECS.Jobs.Pathfinder;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.ECS.Jobs.Pathfinder;
 using Amatsugu.Phos.UnitComponents;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
 public class SolarPanelTile : TickedBuildingTile

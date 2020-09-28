@@ -24,7 +24,7 @@ MonoBehaviour:
   gravity: 1
   gravityFactor: 1
   mass: 1
-  faction: 3
+  faction: 1
   friendlyFire: 0
   damage: 100
   scale:

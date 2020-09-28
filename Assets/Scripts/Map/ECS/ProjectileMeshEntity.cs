@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Amatsugu.Phos;
+
+using System.Collections.Generic;
 using System.Linq;
 
 using Unity.Entities;
@@ -68,13 +70,13 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 
 	protected override CollisionFilter GetFilter() => friendlyFire ? new CollisionFilter
 	{
-		BelongsTo = (1u << (int)faction),
-		CollidesWith = ~((1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.PlayerProjectile)),
+		BelongsTo = (uint)faction.AsCollisionLayer(),
+		CollidesWith = ~((uint)CollisionLayer.Projectile),
 		GroupIndex = 0
 	} : new CollisionFilter
 	{
-		BelongsTo = (1u << (int)Faction.None),
-		CollidesWith = ~((1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)faction)),
+		BelongsTo = (uint)CollisionLayer.Default,
+		CollidesWith = ~(uint)(CollisionLayer.Projectile | faction.AsCollisionLayer()),
 		GroupIndex = 0
 	};
 }

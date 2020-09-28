@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
 using System.Collections.Generic;
@@ -339,8 +340,8 @@ public class UIBuildPanel : UITabPanel
 			Filter = new Unity.Physics.CollisionFilter
 			{
 				GroupIndex = 0,
-				BelongsTo = (1u << (int)Faction.Tile),
-				CollidesWith = (1u << (int)Faction.Tile)
+				BelongsTo = (uint)CollisionLayer.Tile,
+				CollidesWith = (uint)CollisionLayer.Tile
 			}
 		}, out var hit))
 		{

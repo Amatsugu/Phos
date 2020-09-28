@@ -1,6 +1,8 @@
-﻿using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 using Amatsugu.Phos.UnitComponents;
+using Amatsugu.Phos.Units;
 
 using System;
 using System.Collections;
@@ -173,8 +175,8 @@ public class UISelectionPanel : UIPanel
 				DebugUtilz.DrawBounds(bounds, Color.cyan);
 				_buildPhysicsWorld.AABBCast(bounds, new CollisionFilter
 				{
-					BelongsTo = 1u << (int)Faction.Player,
-					CollidesWith = 1u << (int)Faction.Unit
+					BelongsTo = (int)CollisionLayer.Player,
+					CollidesWith = (int)CollisionLayer.Unit
 				}, ref _castHits);
 				_selection.Clear();
 				actionsPanel.ResetSelection();

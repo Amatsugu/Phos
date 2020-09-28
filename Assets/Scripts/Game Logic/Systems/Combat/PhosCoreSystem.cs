@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Amatsugu.Phos;
+
+using System.Linq;
 
 using Unity.Burst;
 using Unity.Collections;
@@ -66,8 +68,8 @@ public class PhosCoreSystem : ComponentSystem
 				_inRangeList.Clear();
 				buildPhysics.AABBCast(t.Value, new float3(core.targetingRange), new CollisionFilter
 				{
-					BelongsTo = 1u << (int)faction.Value,
-					CollidesWith = ~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
+					BelongsTo = (uint)faction.Value.AsCollisionLayer(),
+					CollidesWith = ~(uint)(faction.Value.AsCollisionLayer() | CollisionLayer.Projectile),//~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
 					GroupIndex = 0
 				}, ref _inRangeList);
 				if (_inRangeList.Length == 0)

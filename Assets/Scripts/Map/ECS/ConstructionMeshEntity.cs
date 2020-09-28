@@ -1,4 +1,6 @@
-﻿using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Units;
 
 using System;
 using System.Collections;

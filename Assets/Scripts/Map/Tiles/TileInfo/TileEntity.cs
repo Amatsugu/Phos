@@ -47,7 +47,7 @@ namespace Amatsugu.Phos.TileEntities
 			var colFilter = new CollisionFilter
 			{
 				CollidesWith = ~0u,
-				BelongsTo = (1u << (int)Faction.Tile),
+				BelongsTo = (uint)(CollisionLayer.Tile),
 				GroupIndex = 0
 			};
 #if true

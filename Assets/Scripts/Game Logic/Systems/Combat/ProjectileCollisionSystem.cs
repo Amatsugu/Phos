@@ -39,11 +39,11 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 			var tgtF = faction[tgt].Value;
 			switch (srcF)
 			{
-				case Faction.PhosProjectile:
+				case Faction.Phos:
 					if (tgtF == Faction.Phos)
 						return;
 					break;
-				case Faction.PlayerProjectile:
+				case Faction.Player:
 					if (tgtF == Faction.Player)
 						return;
 					break;

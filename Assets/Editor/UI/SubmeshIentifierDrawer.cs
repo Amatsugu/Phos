@@ -7,6 +7,7 @@ using UnityEditor.UIElements;
 using System.Linq;
 using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.ECS;
+using Amatsugu.Phos.Units;
 
 [CustomPropertyDrawer(typeof(SubMeshIdentifier))]
 public class SubmeshIdentifierDrawer : PropertyDrawer

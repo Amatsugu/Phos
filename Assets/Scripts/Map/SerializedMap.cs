@@ -1,5 +1,7 @@
-﻿using Amatsugu.Phos.DataStore;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.DataStore;
 using Amatsugu.Phos.Tiles;
+using Amatsugu.Phos.Units;
 
 using Newtonsoft.Json;
 
