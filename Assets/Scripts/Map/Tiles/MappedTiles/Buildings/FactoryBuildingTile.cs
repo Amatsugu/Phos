@@ -42,7 +42,7 @@ namespace Amatsugu.Phos.Tiles
 		private HexCoords FindEmptyTile()
 		{
 			var curR = 1;
-			var hits = new NativeList<int>();
+			var hits = new NativeList<int>(Allocator.Temp);
 			while(true)
 			{
 				var curRing = HexCoords.SelectRing(Coords, curR);
@@ -56,8 +56,8 @@ namespace Amatsugu.Phos.Tiles
 						Max = pos + new float3(.5f, 50, .5f)
 					}, new CollisionFilter
 					{
-						CollidesWith = (uint)CollisionLayer.Unit,
-						BelongsTo = (uint)CollisionLayer.Unit
+						CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Building),
+						BelongsTo = (uint)(CollisionLayer.Unit | CollisionLayer.Building)
 					}, ref hits);
 
 					if (hits.Length == 0)
