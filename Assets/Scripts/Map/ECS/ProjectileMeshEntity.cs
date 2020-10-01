@@ -70,13 +70,13 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 
 	protected override CollisionFilter GetFilter() => friendlyFire ? new CollisionFilter
 	{
-		BelongsTo = (uint)faction.AsCollisionLayer(),
-		CollidesWith = ~((uint)CollisionLayer.Projectile),
+		BelongsTo = (uint)CollisionLayer.Projectile,
+		CollidesWith = (uint)(faction.Invert().AsCollisionLayer() | faction.AsCollisionLayer()),
 		GroupIndex = 0
 	} : new CollisionFilter
 	{
-		BelongsTo = (uint)CollisionLayer.Default,
-		CollidesWith = ~(uint)(CollisionLayer.Projectile | faction.AsCollisionLayer()),
+		BelongsTo = (uint)CollisionLayer.Projectile,
+		CollidesWith = ~(uint)(faction.Invert().AsCollisionLayer()),
 		GroupIndex = 0
 	};
 }

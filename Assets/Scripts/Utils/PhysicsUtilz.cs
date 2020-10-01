@@ -42,6 +42,16 @@ public static class PhysicsUtilz
 		return false;
 	}
 
+	public static Faction Invert(this Faction faction)
+	{
+		return faction switch
+		{
+			Faction.Phos => Faction.Player,
+			Faction.Player => Faction.Phos,
+			_ => Faction.None,
+		};
+	}
+
 	public static bool GetTileFromRay(this BuildPhysicsWorld world, UnityEngine.Ray ray, float dist, out HexCoords tilePos)
 	{
 		return world.GetTileFromRay(ray, dist, new CollisionFilter

@@ -83,5 +83,7 @@ public class PhysicsMeshEntity : MeshEntityRotatable
 		})
 	};
 
+	
+
 	protected virtual CollisionFilter GetFilter() => CollisionFilter.Default;
 }

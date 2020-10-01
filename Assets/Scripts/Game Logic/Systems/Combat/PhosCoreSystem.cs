@@ -35,11 +35,14 @@ public class PhosCoreSystem : ComponentSystem
 		_inRangeList = new NativeList<int>(Allocator.Persistent);
 		_curTargets = new NativeArray<float3>(6, Allocator.Persistent);
 		GameEvents.OnMapLoaded -= Init;
+		_state = 1;
 	}
 
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
+		if (_state == 0)
+			return;
 		_inRangeList.Dispose();
 		_curTargets.Dispose();
 	}

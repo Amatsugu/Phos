@@ -41,7 +41,6 @@ public class UnitMovementSystem : ComponentSystem
 
 	void Init()
 	{
-		_ready = true;
 		_map = GameRegistry.GameMap;
 		_navData = _map.GenerateNavData();
 		_tileEdgeLength = _map.tileEdgeLength;
@@ -53,6 +52,7 @@ public class UnitMovementSystem : ComponentSystem
 		_closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
 		_nodePairs = new NativeHashMap<PathNode, PathNode>(_navData.Count(), Allocator.Persistent);
 		GameEvents.OnMapChanged += OnMapChanged;
+		_ready = true;
 	}
 
 	void OnMapChanged()
@@ -63,6 +63,8 @@ public class UnitMovementSystem : ComponentSystem
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
+		if (!_ready)
+			return;
 		GameEvents.OnMapChanged -= OnMapChanged;
 		_navData.Dispose();
 	}

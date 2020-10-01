@@ -3,9 +3,9 @@ using Unity.Entities;
 
 public enum Faction
 {
-	None = 0,
+	None,
 	Player,
-	Phos,
+	Phos
 }
 
 public struct FactionId : IComponentData, IEquatable<FactionId>
