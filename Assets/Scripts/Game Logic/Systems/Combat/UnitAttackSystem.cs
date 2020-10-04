@@ -80,7 +80,7 @@ public class UnitAttackSystem : ComponentSystem
 
 	private void RotateTurretAndShootAI()
 	{
-		Entities.WithNone<Disabled>().ForEach((Entity e, ref Translation t, ref AttackSpeed atkSpeed, ref AttackRange range, ref AttackTarget atkTarget, ref UnitHead head) =>
+		Entities.WithNone<Disabled>().ForEach((Entity e, ref Translation t, ref Projectile projectile, ref AttackSpeed atkSpeed, ref AttackRange range, ref AttackTarget atkTarget, ref UnitHead head) =>
 		{
 			if (!EntityManager.Exists(atkTarget.Value))
 			{
@@ -102,7 +102,7 @@ public class UnitAttackSystem : ComponentSystem
 			var dist = math.length(dir);
 			if (dist > range.MaxRange || dist < range.MinRange)
 			{
-				//PostUpdateCommands.AddComponent<MoveToTarget>(e);
+				PostUpdateCommands.AddComponent<MoveToTarget>(e);
 				return;
 			}
 			if (atkSpeed.NextAttackTime > Time.ElapsedTime)
@@ -110,8 +110,8 @@ public class UnitAttackSystem : ComponentSystem
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
 			dir = math.normalize(dir) * -20;
-			//var proj = _bullet.BufferedInstantiate(PostUpdateCommands, t.Value + new float3(0, 1, 0), scale: 0.2f, velocity: dir);
-			//PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 3 });
+
+			var proj = ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, projectile.Value, t.Value + new float3(0, 1, 0), dir, Time.ElapsedTime + 3);
 		});
 	}
 
@@ -127,8 +127,8 @@ public class UnitAttackSystem : ComponentSystem
 			//Get Objects in Rect Range
 			_physicsWorld.AABBCast(t.Value, range.MaxRange, new CollisionFilter
 			{
-				BelongsTo = (uint)faction.Value.AsCollisionLayer(),
-				CollidesWith = (~(uint)(faction.Value.AsCollisionLayer() | CollisionLayer.Projectile | CollisionLayer.Tile)),//~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
+				BelongsTo = (uint)faction.Value.Invert().AsCollisionLayer(),
+				CollidesWith = ((uint)(CollisionLayer.Building | CollisionLayer.Unit)),
 				GroupIndex = 0
 			}, ref _castHits);
 			//Get Circual Range

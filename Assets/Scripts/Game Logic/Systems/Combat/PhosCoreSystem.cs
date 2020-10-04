@@ -71,8 +71,8 @@ public class PhosCoreSystem : ComponentSystem
 				_inRangeList.Clear();
 				buildPhysics.AABBCast(t.Value, new float3(core.targetingRange), new CollisionFilter
 				{
-					BelongsTo = (uint)faction.Value.AsCollisionLayer(),
-					CollidesWith = ~(uint)(faction.Value.AsCollisionLayer() | CollisionLayer.Projectile),//~((1u << (int)faction.Value) | (1u << (int)Faction.None) | (1u << (int)Faction.PlayerProjectile) | (1u << (int)Faction.PhosProjectile) | (1u << (int)Faction.Tile) | (1u << (int)Faction.Unit)),
+					BelongsTo = (uint)(faction.Value.Invert().AsCollisionLayer()),
+					CollidesWith = (uint)(CollisionLayer.Building | CollisionLayer.Unit),
 					GroupIndex = 0
 				}, ref _inRangeList);
 				if (_inRangeList.Length == 0)
@@ -84,29 +84,30 @@ public class PhosCoreSystem : ComponentSystem
 					if (math.lengthsq(target - t.Value) <= core.targetingRangeSq)
 						_curTargets[i] = target;
 				}
-				FireBurst(t.Value, baseAngle, _curTargets, core, faction);
+				FireBurst(data.projectile, t.Value, baseAngle, _curTargets, core, faction);
+				
 				core.nextVolleyTime = Time.ElapsedTime + core.fireRate;
 			}
 		});
 	}
 
-	private void FireBurst(float3 startPos, float baseAngle, NativeArray<float3> targets, PhosCore core, FactionId team)
+	private void FireBurst(Entity projectile, float3 startPos, float baseAngle, NativeArray<float3> targets, PhosCore core, FactionId team)
 	{
 		for (int i = 0; i < 6; i++)
 		{
-			FirePorjectile(startPos, baseAngle + (math.PI / 3) * i, targets[i % targets.Length], core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)), team);
+			FirePorjectile(projectile, startPos, baseAngle + (math.PI / 3) * i, targets[i % targets.Length], core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)), team);
 		}
 	}
 
-	private void FireBurst(float3 startPos, float baseAngle, float3 target, PhosCore core, FactionId team)
+	private void FireBurst(Entity projectile, float3 startPos, float baseAngle, float3 target, PhosCore core, FactionId team)
 	{
 		for (int i = 0; i < 6; i++)
 		{
-			FirePorjectile(startPos, baseAngle + (math.PI / 3) * i, target, core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)), team);
+			FirePorjectile(projectile, startPos, baseAngle + (math.PI / 3) * i, target, core, Time.ElapsedTime + core.targetDelay + (i * (1 / 12f)), team);
 		}
 	}
 
-	private void FirePorjectile(float3 startPos, float angle, float3 target, PhosCore core, double targetTime, FactionId team)
+	private void FirePorjectile(Entity projectile, float3 startPos, float angle, float3 target, PhosCore core, double targetTime, FactionId team)
 	{
 		if (target.Equals(0))
 			return;
@@ -114,8 +115,8 @@ public class PhosCoreSystem : ComponentSystem
 		var pos = startPos + (dir * 2.9f) + new float3(0, 4, 0);
 		dir.y = .4f;
 		var vel = dir * core.projectileSpeed;
-		/*var proj = projectile.BufferedInstantiate(PostUpdateCommands, pos, .5f, vel);
-		PostUpdateCommands.AddComponent(proj, new DeathTime { Value = Time.ElapsedTime + 15 });
+
+		var proj = ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, projectile, pos, vel, Time.ElapsedTime + 15);
 
 		PostUpdateCommands.AddComponent(proj, new PhosProjectile
 		{
@@ -123,7 +124,6 @@ public class PhosCoreSystem : ComponentSystem
 			target = target,
 			flightSpeed = core.projectileSpeed * 15
 		});
-		*/
 	}
 }
 

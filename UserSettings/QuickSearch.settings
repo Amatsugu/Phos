@@ -16,7 +16,7 @@ filters = {
 	settings = true
 }
 scopes = {
-	"last_search.AB59B443" = "phos"
+	"last_search.AB59B443" = "phos core"
 }
 providers = {
 	asset = {

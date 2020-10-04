@@ -58,7 +58,7 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		return e;
 	}
 
-	public static void ShootProjectile(EntityCommandBuffer cmb, Entity projectileEntity, float3 pos, float3 velocity, double deathTime)
+	public static Entity ShootProjectile(EntityCommandBuffer cmb, Entity projectileEntity, float3 pos, float3 velocity, double deathTime)
 	{
 		var proj = cmb.Instantiate(projectileEntity);
 		cmb.SetComponent(proj, new Translation { Value = pos });
@@ -66,6 +66,7 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 		cmb.AddComponent(proj, new DeathTime { Value = deathTime });
 		cmb.SetComponent(proj, new PhysicsVelocity { Linear = velocity });
 		cmb.RemoveComponent<Disabled>(proj);
+		return proj;
 	}
 
 	protected override CollisionFilter GetFilter() => friendlyFire ? new CollisionFilter
