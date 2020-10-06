@@ -117,8 +117,8 @@ namespace Amatsugu.Phos.Units
 			Map.EM.SetComponentData(e, new CenterOfMass { Value = pos + centerOfMassOffset });
 			var collisionFilter = new CollisionFilter
 			{
-				CollidesWith = ~0u,
-				BelongsTo = (uint)(faction.AsCollisionLayer() | CollisionLayer.Unit),
+				CollidesWith = (uint)faction.AsCollisionLayer(),
+				BelongsTo = (uint)CollisionLayer.Unit,
 				GroupIndex = 0
 			};
 

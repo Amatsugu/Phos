@@ -544,12 +544,12 @@ namespace Amatsugu.Phos
 		{
 			if (!IsRendered)
 				return;
-			if (!Application.isPlaying)
-				return;
 			foreach (var unitEntry in units)
 				unitEntry.Value.Destroy();
 			foreach (var chunk in chunks)
 				chunk.Destroy();
+			/*if (!Application.isPlaying)
+				return;*/
 			GameEvents.InvokeOnMapDestroyed();
 			IsRendered = false;
 		}

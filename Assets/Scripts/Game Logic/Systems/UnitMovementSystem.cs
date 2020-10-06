@@ -95,7 +95,7 @@ public class UnitMovementSystem : ComponentSystem
 		});
 
 		//Move to Target
-		Entities.WithNone<Path>().ForEach((Entity e, ref Translation c, ref MoveToTarget m, ref AttackTarget t, ref AttackRange range) =>
+		Entities.WithNone<Path>().WithAll<MoveToTarget>().ForEach((Entity e, ref Translation c, ref AttackTarget t, ref AttackRange range) =>
 		{
 			var tPos = EntityManager.GetComponentData<CenterOfMass>(t.Value);
 			if (!range.IsInRange(c.Value, tPos.Value))

@@ -160,6 +160,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void Destroy()
 		{
+			Debug.Log("Destroy Tile");
 			try
 			{
 				Map.EM.DestroyEntity(_tileEntity);
@@ -239,7 +240,7 @@ namespace Amatsugu.Phos.Tiles
 			if (_decorRendered)
 				return;
 			_decorRendered = true;
-			_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent);
+			_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 			int lastIndex = 0;
 			for (int i = 0; i < info.decorators.Length; i++)
 			{

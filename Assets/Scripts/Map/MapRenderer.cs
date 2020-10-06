@@ -69,8 +69,8 @@ public class MapRenderer : MonoBehaviour
 
 	private void OnDestroy()
 	{
-#if !UNITY_EDITOR
 		map?.Dispose();
+#if !UNITY_EDITOR
 #endif
 	}
 

@@ -393,6 +393,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void Destroy()
 		{
+			Debug.Log("Destory Building");
 			base.Destroy();
 			if (!_isRendered)
 				return;
