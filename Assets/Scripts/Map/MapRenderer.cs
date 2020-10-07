@@ -70,8 +70,6 @@ public class MapRenderer : MonoBehaviour
 	private void OnDestroy()
 	{
 		map?.Dispose();
-#if !UNITY_EDITOR
-#endif
 	}
 
 	public void Init()

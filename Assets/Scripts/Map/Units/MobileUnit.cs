@@ -170,6 +170,10 @@ namespace Amatsugu.Phos.Units
 			catch (Exception e)
 			{
 				Debug.LogWarning(e);
+			}finally
+			{
+				if (_healhBar.IsCreated)
+					_healhBar.Dispose();
 			}
 		}
 

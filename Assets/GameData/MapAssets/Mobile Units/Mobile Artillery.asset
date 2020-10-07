@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 905da5d09f166504b8c1d4df1b43cbad, type: 3}
-  m_Name: Scout Drone
+  m_Name: Mobile Artillery
   m_EditorClassIdentifier: 
-  mesh: {fileID: -4707071215487635230, guid: 4662ab6cf2bd63045bc78266402d79c2, type: 3}
+  mesh: {fileID: 3909233067320746374, guid: 2f8bb88e9e6c2ec4fbb319d06bdf2916, type: 3}
   material: {fileID: 2100000, guid: e440dce879ca15048ac2ad010ec5f4f3, type: 2}
   castShadows: 1
   receiveShadows: 1
@@ -21,9 +21,9 @@ MonoBehaviour:
   moveSpeed: 10
   attackRange: 20
   attackSpeed: 10
-  maxHealth: 100
+  maxHealth: 6000
   size: 0
-  buildTime: 3
+  buildTime: 5
   tier: 1
   unitDomain: 0
   unitTargetingDomain: 0
@@ -34,9 +34,24 @@ MonoBehaviour:
     y: 0.5
     z: 0
   constructionMesh: {fileID: 11400000, guid: f91054b4d51d5944ba378803a6daf941, type: 2}
-  subMeshes: []
+  subMeshes:
+  - offset:
+      x: -0.142849
+      y: 0.385511
+      z: -0.219711
+    mesh: {fileID: 11400000, guid: adfd4484216b72a468d3fc5a09dd4cf0, type: 2}
+  - offset:
+      x: -0.142849
+      y: 0.381138
+      z: -0.219711
+    mesh: {fileID: 11400000, guid: e0087b88bd507d746a08c07041466b03, type: 2}
+  - offset:
+      x: -0.191604
+      y: 0.294551
+      z: -0.219711
+    mesh: {fileID: 11400000, guid: c6f27a23936cc3146b82b5549aef31cd, type: 2}
   head:
-    id: 0
+    id: 1
   projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
   healthBar: {fileID: 11400000, guid: 64264ba37fb009140b7237d68e6e4e60, type: 2}
   healthBarOffset:

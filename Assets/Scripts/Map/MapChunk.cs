@@ -62,7 +62,6 @@ public struct MapChunk
 
 	public void Destroy()
 	{
-		Debug.Log("Destroy Chunk");
 		try
 		{
 			if (!isRendered)

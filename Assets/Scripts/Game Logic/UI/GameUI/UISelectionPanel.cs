@@ -7,6 +7,8 @@ using Amatsugu.Phos.Units;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
@@ -46,6 +48,12 @@ public class UISelectionPanel : UIPanel
 		_activeIcons = new List<UISelectedEntity>();
 		GameEvents.OnMapLoaded += OnMapLoaded;
 		GameEvents.OnUnitDied += OnUnitDied;
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		_castHits.Dispose();
 	}
 
 	private void OnUnitDied(ICommandable unit)

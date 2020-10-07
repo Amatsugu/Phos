@@ -149,7 +149,6 @@ public class PowerTransferEffectSystem : ComponentSystem
 
 	void DestroyAll()
 	{
-		Debug.Log("Destroy all");
 		_removeAll = true;
 	}
 

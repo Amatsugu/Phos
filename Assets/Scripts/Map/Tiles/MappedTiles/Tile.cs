@@ -160,7 +160,6 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void Destroy()
 		{
-			Debug.Log("Destroy Tile");
 			try
 			{
 				Map.EM.DestroyEntity(_tileEntity);
@@ -172,7 +171,10 @@ namespace Amatsugu.Phos.Tiles
 			finally
 			{
 				if (_decor.IsCreated)
+				{
+					Debug.Log("Dispose Decors");
 					_decor.Dispose();
+				}
 			}
 		}
 

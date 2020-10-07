@@ -93,7 +93,6 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnPlaced()
 		{
 			base.OnPlaced();
-			Debug.Log($"{GetName()} placed at {Coords}");
 			StartConstruction();
 		}
 
@@ -283,7 +282,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (!IsBuilt || !_isRendered)
 				return;
-			Debug.Log($"Apply Bonus: {GetName()} {Coords}");	
 			var entity = GetBuildingEntity();
 			Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
 			Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
@@ -393,7 +391,6 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void Destroy()
 		{
-			Debug.Log("Destory Building");
 			base.Destroy();
 			if (!_isRendered)
 				return;
@@ -409,10 +406,7 @@ namespace Amatsugu.Phos.Tiles
 				if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
 					Map.EM.DestroyEntity(_offshorePlatform);
 				if (_healthBars.IsCreated)
-				{
 					Map.EM.DestroyEntity(_healthBars);
-					_healthBars.Dispose();
-				}
 				if (_connectorCount > 0)
 					Map.EM.DestroyEntity(_adjacencyConnectors);
 				Map.EM.DestroyEntity(subMeshes);
@@ -420,6 +414,15 @@ namespace Amatsugu.Phos.Tiles
 			}
 			catch
 			{
+			}finally
+			{
+				if (_healthBars.IsCreated)
+					_healthBars.Dispose();
+				if (_adjacencyConnectors.IsCreated)
+					_adjacencyConnectors.Dispose();
+				if (subMeshes.IsCreated)
+					subMeshes.Dispose();
+
 			}
 		}
 

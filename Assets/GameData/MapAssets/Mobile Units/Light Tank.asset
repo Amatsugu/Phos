@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 905da5d09f166504b8c1d4df1b43cbad, type: 3}
-  m_Name: Test Unit
+  m_Name: Light Tank
   m_EditorClassIdentifier: 
   mesh: {fileID: -4707071215487635230, guid: 4662ab6cf2bd63045bc78266402d79c2, type: 3}
   material: {fileID: 2100000, guid: e440dce879ca15048ac2ad010ec5f4f3, type: 2}
@@ -21,13 +21,13 @@ MonoBehaviour:
   moveSpeed: 10
   attackRange: 20
   attackSpeed: 10
-  maxHealth: 100
+  maxHealth: 6000
   size: 0
   buildTime: 5
   tier: 1
   unitDomain: 0
   unitTargetingDomain: 0
-  unitClass: 0
+  unitClass: 1
   icon: {fileID: 0}
   centerOfMassOffset:
     x: 0

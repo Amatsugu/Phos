@@ -1,5 +1,4 @@
-﻿
-using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos.TileEntities;
 
 using Unity.Entities;
 using Unity.Rendering;
@@ -92,8 +91,14 @@ namespace Amatsugu.Phos.Tiles
 		public override void Destroy()
 		{
 			base.Destroy();
-			if (Map.EM.Exists(_shell))
-				Map.EM.DestroyEntity(_shell);
+			try
+			{
+				if (Map.EM.Exists(_shell))
+					Map.EM.DestroyEntity(_shell);
+			}
+			catch
+			{
+			}
 		}
 	}
 }

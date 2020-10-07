@@ -22,7 +22,7 @@ public class ConstructionMeshEntity : ScriptableObject
 {
 	public Material material;
 
-	public NativeArray<Entity> Instantiate(float3 pos, quaternion rotation,  float height, BuildingMeshEntity buildingMesh, float constructTime)
+	public void Instantiate(float3 pos, quaternion rotation,  float height, BuildingMeshEntity buildingMesh, float constructTime)
 	{
 		var arr = new NativeArray<Entity>(1 + buildingMesh.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
@@ -38,10 +38,10 @@ public class ConstructionMeshEntity : ScriptableObject
 
 			Render(p, rotation, buildingMesh.subMeshes[i-1].mesh, arr[i], height, constructTime, buildingMesh.subMeshes[i-1].offset.y);
 		}
-		return arr;
+		arr.Dispose();
 	}
 
-	public NativeArray<Entity> Instantiate(float3 pos, quaternion rotation, float height, float constructionTime, params MeshEntityRotatable[] meshes)
+	public void Instantiate(float3 pos, quaternion rotation, float height, float constructionTime, params MeshEntityRotatable[] meshes)
 	{
 		var arr = new NativeArray<Entity>(meshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
@@ -53,10 +53,10 @@ public class ConstructionMeshEntity : ScriptableObject
 		{
 			Render(pos, rotation, meshes[i], arr[i], height, constructionTime);
 		}
-		return arr;
+		arr.Dispose();
 	}
 
-	public NativeArray<Entity> Instantiate(float3 pos, quaternion rotation, MobileUnitEntity unitEntity, float height, float constructTime)
+	public void Instantiate(float3 pos, quaternion rotation, MobileUnitEntity unitEntity, float height, float constructTime)
 	{
 		var arr = new NativeArray<Entity>(1 + unitEntity.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
@@ -72,7 +72,7 @@ public class ConstructionMeshEntity : ScriptableObject
 
 			Render(p, rotation, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, unitEntity.subMeshes[i - 1].offset.y);
 		}
-		return arr;
+		arr.Dispose();
 	}
 
 
