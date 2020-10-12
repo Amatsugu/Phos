@@ -65,6 +65,9 @@ public class UnitMovementSystem : ComponentSystem
 		base.OnDestroy();
 		if (!_ready)
 			return;
+		_open.Dispose();
+		_closed.Dispose();
+		_nodePairs.Dispose();
 		GameEvents.OnMapChanged -= OnMapChanged;
 		_navData.Dispose();
 	}

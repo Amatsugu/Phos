@@ -211,7 +211,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "8.2.0",
+      "version": "10.0.0-preview.30",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -220,23 +220,23 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.high-definition": {
-      "version": "8.2.0",
+      "version": "10.0.0-preview.27",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "8.2.0",
-        "com.unity.shadergraph": "8.2.0",
-        "com.unity.visualeffectgraph": "8.2.0",
-        "com.unity.render-pipelines.high-definition-config": "8.2.0"
+        "com.unity.render-pipelines.core": "10.0.0-preview.30",
+        "com.unity.shadergraph": "10.0.0-preview.27",
+        "com.unity.visualeffectgraph": "10.0.0-preview.27",
+        "com.unity.render-pipelines.high-definition-config": "10.0.0-preview.27"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.high-definition-config": {
-      "version": "8.2.0",
+      "version": "10.0.0-preview.27",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "8.2.0"
+        "com.unity.render-pipelines.core": "10.0.0-preview.30"
       },
       "url": "https://packages.unity.com"
     },
@@ -257,8 +257,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
-      "version": "4.0.9",
-      "depth": 1,
+      "version": "4.3.1",
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -277,12 +277,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "8.2.0",
+      "version": "10.0.0-preview.27",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "8.2.0",
-        "com.unity.searcher": "4.0.9"
+        "com.unity.render-pipelines.core": "10.0.0-preview.30",
+        "com.unity.searcher": "4.3.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -340,11 +340,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.visualeffectgraph": {
-      "version": "8.2.0",
+      "version": "10.0.0-preview.27",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.shadergraph": "8.2.0"
+        "com.unity.shadergraph": "10.0.0-preview.27"
       },
       "url": "https://packages.unity.com"
     },

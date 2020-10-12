@@ -18,7 +18,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-public class IndicatorManager
+public class IndicatorManager : IDisposable
 {
 	public TMP_Text floatingText;
 
@@ -30,6 +30,7 @@ public class IndicatorManager
 	private float3 _offset;
 	private int _nextEntityIndex = 0;
 	private List<string> _errors;
+	private bool disposedValue;
 
 	public IndicatorManager(EntityManager entityManager, float offset, TMP_Text floatingText, int maxIndicator = 1024)
 	{
@@ -42,6 +43,7 @@ public class IndicatorManager
 		_entities = new NativeArray<Entity>(maxIndicator, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 		this.floatingText = floatingText;
 	}
+
 
 	private void GrowIndicators(MeshEntity indicatorMesh, int count)
 	{
@@ -202,4 +204,34 @@ public class IndicatorManager
 		floatingText.gameObject.SetActive(false);
 	}
 
+	protected virtual void Dispose(bool disposing)
+	{
+		if (!disposedValue)
+		{
+			if (disposing)
+			{
+				// TODO: dispose managed state (managed objects)
+
+			}
+			if(_entities.IsCreated)
+				_entities.Dispose();
+			// TODO: free unmanaged resources (unmanaged objects) and override finalizer
+			// TODO: set large fields to null
+			disposedValue = true;
+		}
+	}
+
+	// // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+	// ~IndicatorManager()
+	// {
+	//     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+	//     Dispose(disposing: false);
+	// }
+
+	public void Dispose()
+	{
+		// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+		Dispose(disposing: true);
+		GC.SuppressFinalize(this);
+	}
 }

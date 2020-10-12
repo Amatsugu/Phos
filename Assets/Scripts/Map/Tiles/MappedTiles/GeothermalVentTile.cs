@@ -47,9 +47,15 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void Destroy()
 		{
-			GameObject.Destroy(_gyser);
-			Map.EM.DestroyEntity(_core);
-			base.Destroy();
+			try
+			{
+				GameObject.Destroy(_gyser);
+				Map.EM.DestroyEntity(_core);
+			}
+			finally
+			{
+				base.Destroy();
+			}
 		}
 	}
 

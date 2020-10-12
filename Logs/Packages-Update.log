@@ -187,3 +187,11 @@ Update Mode: updateDependencies
 The following packages were updated:
   com.unity.quicksearch from version 1.5.4 to 2.0.2
   com.unity.scriptablebuildpipeline from version 1.7.3 to 1.11.1
+
+=== Sun Oct 11 11:58:18 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.high-definition from version 8.2.0 to 10.0.0-preview.27
