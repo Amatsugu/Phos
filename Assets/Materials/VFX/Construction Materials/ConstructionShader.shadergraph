@@ -193,9 +193,6 @@
             "m_Id": "d64893ad631c4e97b8f6907b9460c892"
         },
         {
-            "m_Id": "b1a2a098a3ca47548e352c6e1cc829de"
-        },
-        {
             "m_Id": "367e8d253fb94f0d85456f50a2649f71"
         },
         {
@@ -923,8 +920,8 @@
     },
     "m_FragmentContext": {
         "m_Position": {
-            "x": 25.000015258789064,
-            "y": 253.0
+            "x": 31.999988555908204,
+            "y": 261.0
         },
         "m_Blocks": [
             {
@@ -935,9 +932,6 @@
             },
             {
                 "m_Id": "d64893ad631c4e97b8f6907b9460c892"
-            },
-            {
-                "m_Id": "b1a2a098a3ca47548e352c6e1cc829de"
             },
             {
                 "m_Id": "367e8d253fb94f0d85456f50a2649f71"
@@ -1353,10 +1347,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -342.0,
-            "y": 219.00001525878907,
+            "x": -136.00001525878907,
+            "y": 999.0000610351563,
             "width": 142.0,
-            "height": 34.0
+            "height": 34.000003814697269
         }
     },
     "m_Slots": [
@@ -2245,7 +2239,7 @@
     "m_DOTSInstancing": false,
     "m_Version": 0,
     "m_FirstTimeMigrationExecuted": true,
-    "inspectorFoldoutMask": 0
+    "inspectorFoldoutMask": 1
 }
 
 {
@@ -2470,10 +2464,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
+            "x": 44.99999237060547,
+            "y": 151.00001525878907,
+            "width": 200.0,
+            "height": 41.0
         }
     },
     "m_Slots": [
@@ -2763,8 +2757,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -474.0,
-            "y": 726.0,
+            "x": -479.000244140625,
+            "y": 750.9999389648438,
             "width": 130.0,
             "height": 118.0
         }
@@ -3314,10 +3308,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -321.0,
-            "y": 180.0,
-            "width": 117.00000762939453,
-            "height": 34.0
+            "x": -128.00001525878907,
+            "y": 940.0000610351563,
+            "width": 117.0,
+            "height": 34.000003814697269
         }
     },
     "m_Slots": [
@@ -3663,10 +3657,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -330.0,
-            "y": 273.0,
-            "width": 161.0,
-            "height": 178.0
+            "x": -282.00006103515627,
+            "y": 324.0000305175781,
+            "width": 161.00001525878907,
+            "height": 178.00001525878907
         }
     },
     "m_Slots": [
@@ -4728,37 +4722,6 @@
         "z": 0.0,
         "w": 0.0
     }
-}
-
-{
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "b1a2a098a3ca47548e352c6e1cc829de",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "SurfaceDescription.CoatMask",
-    "m_NodeVersion": 0,
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "ecd6788b97434833bcc96853e1237cbe"
-        }
-    ],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "SurfaceDescription.CoatMask"
 }
 
 {
@@ -6229,23 +6192,6 @@
         "Z"
     ],
     "m_Space": 0
-}
-
-{
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "ecd6788b97434833bcc96853e1237cbe",
-    "m_Id": 0,
-    "m_DisplayName": "Coat Mask",
-    "m_SlotType": 0,
-    "m_Priority": 2147483647,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "CoatMask",
-    "m_StageCapability": 2,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": [
-        "X"
-    ]
 }
 
 {

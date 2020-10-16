@@ -9,8 +9,9 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: CannotGatherIndicator
   m_Shader: {fileID: 4800000, guid: c4edd00ff2db5b24391a4fcb1762e459, type: 3}
-  m_ShaderKeywords: _BLENDMODE_ALPHA _DISABLE_DECALS _DISABLE_SSR _DISABLE_SSR_TRANSPARENT
-    _EMISSIVE_COLOR_MAP _NORMALMAP_TANGENT_SPACE _SURFACE_TYPE_TRANSPARENT
+  m_ShaderKeywords: _BLENDMODE_ALPHA _COLORMAP _DISABLE_DECALS _DISABLE_SSR _DISABLE_SSR_TRANSPARENT
+    _EMISSIVEMAP _EMISSIVE_COLOR_MAP _MATERIAL_AFFECTS_ALBEDO _MATERIAL_AFFECTS_NORMAL
+    _NORMALMAP_TANGENT_SPACE _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -27,6 +28,8 @@ Material:
   - DBufferMesh_MAOS
   - DBufferMesh_MS
   - DBufferMesh_AOS
+  - DecalProjectorForwardEmissive
+  - DecalMeshForwardEmissive
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -122,10 +125,17 @@ Material:
     - Vector1_3EE48FA8: 4.01
     - Vector1_5C627842: 2.64
     - Vector1_9B86633A: 0.5
+    - _AO: 1
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
+    - _AffectAO: 0
+    - _AffectAlbedo: 1
+    - _AffectEmission: 0
+    - _AffectMetal: 1
+    - _AffectNormal: 1
+    - _AffectSmoothness: 0
     - _AlbedoAffectEmissive: 0
     - _AlbedoMode: 1
     - _AlphaCutoff: 0.5
@@ -144,6 +154,10 @@ Material:
     - _CullModeForward: 2
     - _Cutoff: 0.5
     - _DecalBlend: 0.5
+    - _DecalColorMask0: 15
+    - _DecalColorMask1: 15
+    - _DecalColorMask2: 8
+    - _DecalColorMask3: 8
     - _DecalMaskMapBlueScale: 1
     - _DecalMeshDepthBias: 0
     - _DecalStencilRef: 16
@@ -268,6 +282,7 @@ Material:
     - _UVBase: 0
     - _UVDetail: 0
     - _UVEmissive: 0
+    - _Unity_Identify_HDRP_Decal: 1
     - _UseEmissiveIntensity: 1
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 4

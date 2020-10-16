@@ -174,6 +174,8 @@ namespace Amatsugu.Phos.Units
 			{
 				if (_healhBar.IsCreated)
 					_healhBar.Dispose();
+				if (_subMeshes.IsCreated)
+					_subMeshes.Dispose();
 			}
 		}
 
