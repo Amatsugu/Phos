@@ -172,7 +172,6 @@ namespace Amatsugu.Phos.Tiles
 			{
 				if (_decor.IsCreated)
 				{
-					Debug.Log("Dispose Decors");
 					_decor.Dispose();
 				}
 			}

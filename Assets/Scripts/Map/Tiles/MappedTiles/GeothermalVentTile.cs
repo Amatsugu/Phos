@@ -47,6 +47,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void Destroy()
 		{
+			base.Destroy();
 			try
 			{
 				GameObject.Destroy(_gyser);
@@ -54,7 +55,6 @@ namespace Amatsugu.Phos.Tiles
 			}
 			finally
 			{
-				base.Destroy();
 			}
 		}
 	}

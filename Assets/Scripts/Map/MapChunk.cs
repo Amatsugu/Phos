@@ -62,6 +62,8 @@ public struct MapChunk
 
 	public void Destroy()
 	{
+		if (!isCreated)
+			return;
 		try
 		{
 			if (!isRendered)
@@ -80,6 +82,7 @@ public struct MapChunk
 		}
 		for (int i = 0; i < Tiles.Length; i++)
 			Tiles[i].Destroy();
+		isCreated = false;
 	}
 
 	public bool Show(bool shown)

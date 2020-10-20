@@ -311,6 +311,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void Destroy()
 		{
+			base.Destroy();
 			try
 			{
 				var lines = _conduitLines.Values.ToArray();
@@ -321,7 +322,6 @@ namespace Amatsugu.Phos.Tiles
 			{
 			}
 			Map.EM.DestroyEntity(_energyPacket);
-			base.Destroy();
 		}
 	}
 }

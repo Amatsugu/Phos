@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mobile Artillery
   m_EditorClassIdentifier: 
   mesh: {fileID: 3909233067320746374, guid: 2f8bb88e9e6c2ec4fbb319d06bdf2916, type: 3}
-  material: {fileID: 2100000, guid: e440dce879ca15048ac2ad010ec5f4f3, type: 2}
+  material: {fileID: 2100000, guid: 7bedd0d29f641f84f94f1b099cdb604b, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 0
@@ -25,8 +25,8 @@ MonoBehaviour:
   size: 0
   buildTime: 5
   tier: 1
-  unitDomain: 0
-  unitTargetingDomain: 0
+  unitDomain: 1
+  unitTargetingDomain: 1
   unitClass: 0
   icon: {fileID: 0}
   centerOfMassOffset:

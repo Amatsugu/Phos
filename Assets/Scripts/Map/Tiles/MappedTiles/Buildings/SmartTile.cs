@@ -91,6 +91,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.Destroy();
 			Map.EM.DestroyEntity(_connectionMeshes);
+			_connectionMeshes.Dispose();
 		}
 	}
 }

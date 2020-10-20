@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 905da5d09f166504b8c1d4df1b43cbad, type: 3}
   m_Name: Scout Drone
   m_EditorClassIdentifier: 
-  mesh: {fileID: -4707071215487635230, guid: 4662ab6cf2bd63045bc78266402d79c2, type: 3}
-  material: {fileID: 2100000, guid: e440dce879ca15048ac2ad010ec5f4f3, type: 2}
+  mesh: {fileID: -4190509250366896844, guid: f0cb0ea8ca4361f41809f5836811393f, type: 3}
+  material: {fileID: 2100000, guid: 7bedd0d29f641f84f94f1b099cdb604b, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 0
@@ -25,7 +25,7 @@ MonoBehaviour:
   size: 0
   buildTime: 3
   tier: 1
-  unitDomain: 0
+  unitDomain: 1
   unitTargetingDomain: 0
   unitClass: 0
   icon: {fileID: 0}
