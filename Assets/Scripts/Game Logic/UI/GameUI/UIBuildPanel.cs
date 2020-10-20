@@ -80,6 +80,12 @@ public class UIBuildPanel : UITabPanel
 		base.Awake();
 	}
 
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		indicatorManager.Dispose();
+	}
+
 	protected override void Start()
 	{
 		base.Start();
