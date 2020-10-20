@@ -56,8 +56,8 @@ namespace Amatsugu.Phos.Tiles
 						Max = pos + new float3(.5f, 50, .5f)
 					}, new CollisionFilter
 					{
-						CollidesWith = (uint)CollisionLayer.Building,
-						BelongsTo = (uint)CollisionLayer.Unit
+						CollidesWith = (uint)(CollisionLayer.Building | CollisionLayer.Unit),
+						BelongsTo = (uint)(CollisionLayer.Building | CollisionLayer.Unit)
 					}, ref hits);
 
 					if (hits.Length == 0)

@@ -48,14 +48,11 @@ namespace Amatsugu.Phos.Tiles
 		public override void Destroy()
 		{
 			base.Destroy();
-			try
-			{
-				GameObject.Destroy(_gyser);
+			if (World.DefaultGameObjectInjectionWorld == null)
+				return;
+			Object.Destroy(_gyser);
+			if (World.DefaultGameObjectInjectionWorld != null)
 				Map.EM.DestroyEntity(_core);
-			}
-			finally
-			{
-			}
 		}
 	}
 
@@ -97,14 +94,10 @@ namespace Amatsugu.Phos.Tiles
 		public override void Destroy()
 		{
 			base.Destroy();
-			try
-			{
-				if (Map.EM.Exists(_shell))
-					Map.EM.DestroyEntity(_shell);
-			}
-			catch
-			{
-			}
+			if (World.DefaultGameObjectInjectionWorld == null)
+				return;
+			if (Map.EM.Exists(_shell))
+				Map.EM.DestroyEntity(_shell);
 		}
 	}
 }

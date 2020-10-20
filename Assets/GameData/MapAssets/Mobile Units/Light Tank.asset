@@ -21,7 +21,7 @@ MonoBehaviour:
   moveSpeed: 10
   attackRange: 20
   attackSpeed: 10
-  maxHealth: 6000
+  maxHealth: 200
   size: 0
   buildTime: 5
   tier: 1

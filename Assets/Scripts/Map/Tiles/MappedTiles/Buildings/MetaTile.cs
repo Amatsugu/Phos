@@ -120,7 +120,6 @@ namespace Amatsugu.Phos.Tiles
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			ParentTile.TileUpdated(src, updateType);
-			Debug.Log($"[META] Received {updateType} update from {src.Coords} {src.GetName()}");
 		}
 
 		public override void OnHeightChanged()

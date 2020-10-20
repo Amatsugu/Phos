@@ -113,7 +113,7 @@ public class UnitAttackSystem : ComponentSystem
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
 			//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
 			dir = math.normalize(dir) * -20;
-			Debug.Log("Shoot");
+
 			var proj = ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, projectile.Value, t.Value + new float3(0, 1, 0), dir, Time.ElapsedTime + 3);
 		});
 	}

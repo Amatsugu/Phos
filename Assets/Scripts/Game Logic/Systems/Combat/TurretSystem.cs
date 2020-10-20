@@ -33,13 +33,13 @@ namespace Amatsugu.Phos.ECS
 			_castHits = new NativeList<int>(Allocator.Persistent);
 			_playerTargetingFilter = new CollisionFilter
 			{
-				BelongsTo = (uint)(CollisionLayer.Unit | CollisionLayer.Building),
-				CollidesWith = (uint)CollisionLayer.Phos
+				CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Building),
+				BelongsTo = (uint)CollisionLayer.Phos
 			};
 			_phosTargetingFilter = new CollisionFilter
 			{
-				BelongsTo = (uint)(CollisionLayer.Unit | CollisionLayer.Building),
-				CollidesWith = (uint)CollisionLayer.Player
+				CollidesWith = (uint)(CollisionLayer.Unit | CollisionLayer.Building),
+				BelongsTo = (uint)CollisionLayer.Player
 			};
 		}
 

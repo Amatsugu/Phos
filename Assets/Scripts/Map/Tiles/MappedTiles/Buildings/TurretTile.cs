@@ -110,6 +110,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void Destroy()
 		{
 			base.Destroy();
+			if (World.DefaultGameObjectInjectionWorld == null)
+				return;
 			Map.EM.DestroyEntity(_turretHead);
 			if (Map.EM.Exists(_turretBarrel))
 				Map.EM.DestroyEntity(_turretBarrel);

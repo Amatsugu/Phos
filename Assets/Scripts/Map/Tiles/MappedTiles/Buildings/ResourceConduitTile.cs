@@ -312,15 +312,10 @@ namespace Amatsugu.Phos.Tiles
 		public override void Destroy()
 		{
 			base.Destroy();
-			try
-			{
-				var lines = _conduitLines.Values.ToArray();
-				foreach (var line in _conduitLines)
-					Map.EM.DestroyEntity(line.Value);
-			}
-			catch
-			{
-			}
+			if (World.DefaultGameObjectInjectionWorld == null)
+				return;
+			foreach (var line in _conduitLines)
+				Map.EM.DestroyEntity(line.Value);
 			Map.EM.DestroyEntity(_energyPacket);
 		}
 	}

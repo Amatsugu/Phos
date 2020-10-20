@@ -2,15 +2,12 @@
 using Amatsugu.Phos.TileEntities;
 
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
-
-using UnityEditor;
 
 using UnityEngine;
 
@@ -49,8 +46,8 @@ namespace Amatsugu.Phos.Tiles
 			this.rotation = quaternion.RotateY(math.radians(60 * rotation));
 			if (tInfo.useMetaTiles)
 				metaTiles = new MetaTile[tInfo.footprint.footprint.Length - 1];
-
 		}
+
 		public override TileEntity GetMeshEntity()
 		{
 			return buildingInfo.preserveGroundTile ? originalTile : buildingInfo;
@@ -63,7 +60,6 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void SetBuildingRotation(int rotation)
 		{
-			
 		}
 
 		public ResourceIndentifier[] GetResourceRefund()
@@ -90,6 +86,7 @@ namespace Amatsugu.Phos.Tiles
 				}
 			}
 		}
+
 		public override void OnPlaced()
 		{
 			base.OnPlaced();
@@ -157,6 +154,7 @@ namespace Amatsugu.Phos.Tiles
 			}
 			Map.EM.RemoveComponent(subMeshes, typeof(FrozenRenderSceneTag));
 		}
+
 		public void Build()
 		{
 			if (isBuilt)
@@ -169,7 +167,6 @@ namespace Amatsugu.Phos.Tiles
 
 		protected virtual void OnBuilt()
 		{
-
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
 		}
 
@@ -205,7 +202,7 @@ namespace Amatsugu.Phos.Tiles
 			if (buildingInfo.useMetaTiles)
 			{
 				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
-				for (int i = 0, j = 0 ; i < tiles.Length; i++)
+				for (int i = 0, j = 0; i < tiles.Length; i++)
 				{
 					if (tiles[i] == Coords)
 						continue;
@@ -269,6 +266,7 @@ namespace Amatsugu.Phos.Tiles
 			if (buildingInfo.healthBar != null)
 				_healthBars = buildingInfo.healthBar.Instantiate(entity, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
 		}
+
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			base.TileUpdated(src, updateType);
@@ -341,7 +339,7 @@ namespace Amatsugu.Phos.Tiles
 			else
 				Map.EM.SetComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti });
 			//Consumption
-			if(!Map.EM.HasComponent<ConsumptionMulti>(e))
+			if (!Map.EM.HasComponent<ConsumptionMulti>(e))
 				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti });
 			else
 				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti });
@@ -363,6 +361,7 @@ namespace Amatsugu.Phos.Tiles
 		}
 
 		public virtual bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;
+
 		public override void OnSerialize(Dictionary<string, string> tileData)
 		{
 			if (IsBuilt)
@@ -399,7 +398,7 @@ namespace Amatsugu.Phos.Tiles
 
 		protected virtual void DestroyBuilding()
 		{
-			try
+			if (World.DefaultGameObjectInjectionWorld != null)
 			{
 				if (buildingInfo.buildingMesh != null)
 					Map.EM.DestroyEntity(_building);
@@ -410,21 +409,14 @@ namespace Amatsugu.Phos.Tiles
 				if (_connectorCount > 0)
 					Map.EM.DestroyEntity(_adjacencyConnectors);
 				Map.EM.DestroyEntity(subMeshes);
-				
 			}
-			catch
-			{
-			}finally
-			{
-				if (_healthBars.IsCreated)
-					_healthBars.Dispose();
-				if (_adjacencyConnectors.IsCreated)
-					_adjacencyConnectors.Dispose();
-				if (subMeshes.IsCreated)
-					subMeshes.Dispose();
 
-			}
+			if (_healthBars.IsCreated)
+				_healthBars.Dispose();
+			if (_adjacencyConnectors.IsCreated)
+				_adjacencyConnectors.Dispose();
+			if (subMeshes.IsCreated)
+				subMeshes.Dispose();
 		}
-
 	}
 }

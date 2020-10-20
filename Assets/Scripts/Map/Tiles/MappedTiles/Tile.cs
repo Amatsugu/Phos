@@ -160,20 +160,14 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void Destroy()
 		{
-			try
+			if(World.DefaultGameObjectInjectionWorld != null)
 			{
 				Map.EM.DestroyEntity(_tileEntity);
 				Map.EM.DestroyEntity(_decor);
 			}
-			catch
+			if (_decor.IsCreated)
 			{
-			}
-			finally
-			{
-				if (_decor.IsCreated)
-				{
-					_decor.Dispose();
-				}
+				_decor.Dispose();
 			}
 		}
 

@@ -62,7 +62,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void Destroy()
 		{
 			base.Destroy();
-			Map.EM.DestroyEntity(_ringEntity);
+			if(World.DefaultGameObjectInjectionWorld != null)
+				Map.EM.DestroyEntity(_ringEntity);
 		}
 
 		protected override void OnBuilt()

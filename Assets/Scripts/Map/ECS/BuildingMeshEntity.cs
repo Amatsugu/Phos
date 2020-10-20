@@ -68,8 +68,8 @@ namespace Amatsugu.Phos.TileEntities
 				Vertex1 = new float3(0, height, 0)
 			}, new CollisionFilter
 			{
-				BelongsTo = (uint)faction.AsCollisionLayer(),
-				CollidesWith = (uint)CollisionLayer.Building
+				BelongsTo = (uint)(faction.AsCollisionLayer() | CollisionLayer.Building),
+				CollidesWith = ~(uint)(faction.Invert().AsCollisionLayer())
 			});
 			Map.EM.SetComponentData(e, new PhysicsCollider
 			{
