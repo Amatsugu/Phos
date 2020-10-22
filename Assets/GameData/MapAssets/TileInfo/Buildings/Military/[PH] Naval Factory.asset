@@ -45,7 +45,7 @@ MonoBehaviour:
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
-  faction: 0
+  faction: 1
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:

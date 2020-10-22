@@ -163,12 +163,14 @@ namespace Amatsugu.Phos.Tiles
 			if(World.DefaultGameObjectInjectionWorld != null)
 			{
 				Map.EM.DestroyEntity(_tileEntity);
-				Map.EM.DestroyEntity(_decor);
+				if(_decor.IsCreated)
+					Map.EM.DestroyEntity(_decor);
 			}
 			if (_decor.IsCreated)
 			{
 				_decor.Dispose();
 			}
+			_isRendered = false;
 		}
 
 		public void Show(bool isShown)
