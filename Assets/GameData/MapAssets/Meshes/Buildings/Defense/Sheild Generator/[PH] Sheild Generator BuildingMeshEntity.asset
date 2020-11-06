@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
+  m_Name: '[PH] Sheild Generator BuildingMeshEntity'
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 8363115727601933184, guid: 272e2c66936e8c745940767eaff6498a, type: 3}
+  material: {fileID: 2100000, guid: b0b3fcb12db8c5143bc1cb0fef51b5b1, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 0
+  subMeshes:
+  - offset:
+      x: -0.271779
+      y: 2.79375
+      z: 0
+    mesh: {fileID: 11400000, guid: 2dafcbe5301c09d468e3e97c25a3b348, type: 2}
+  - offset:
+      x: -0.271779
+      y: 2.79375
+      z: 0
+    mesh: {fileID: 11400000, guid: 2dafcbe5301c09d468e3e97c25a3b348, type: 2}
+  - offset:
+      x: -0.271779
+      y: 2.79375
+      z: 0
+    mesh: {fileID: 11400000, guid: 2dafcbe5301c09d468e3e97c25a3b348, type: 2}
+  - offset:
+      x: -0.271779
+      y: 2.79375
+      z: 0
+    mesh: {fileID: 11400000, guid: 2dafcbe5301c09d468e3e97c25a3b348, type: 2}
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0
+  radius: 0
+  height: 2

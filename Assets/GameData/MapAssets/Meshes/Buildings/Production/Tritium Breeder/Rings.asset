@@ -9,19 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
-  m_Name: Lithium Evaporator BuildingMeshEntity
+  m_Script: {fileID: 11500000, guid: eeea512ae509a3e4abe05e16324004dd, type: 3}
+  m_Name: Rings
   m_EditorClassIdentifier: 
-  mesh: {fileID: 4493585093827132993, guid: 4342cf29682c5bf4f91d092c614b89bf, type: 3}
+  mesh: {fileID: 6889500831704049005, guid: 47191f44ed9931a48bf13e883f40a02f, type: 3}
   material: {fileID: 2100000, guid: f2bca93419fcbaf4d8c2e9b7f6506023, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
-  subMeshes: []
-  centerOfMassOffset:
+  animationType: 1
+  duration: 0
+  rotationAxis:
+    x: 0
+    y: 1
+    z: 0
+  rotationSpeed: 2
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxOffset:
     x: 0
     y: 0
     z: 0
-  radius: 0
-  height: 0

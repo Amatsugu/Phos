@@ -10,15 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
-  m_Name: Lithium Evaporator BuildingMeshEntity
+  m_Name: Tritium Breeder BuildingMeshEntity
   m_EditorClassIdentifier: 
-  mesh: {fileID: 4493585093827132993, guid: 4342cf29682c5bf4f91d092c614b89bf, type: 3}
+  mesh: {fileID: 7208924622587382261, guid: 47191f44ed9931a48bf13e883f40a02f, type: 3}
   material: {fileID: 2100000, guid: f2bca93419fcbaf4d8c2e9b7f6506023, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
-  subMeshes: []
+  subMeshes:
+  - offset:
+      x: 0
+      y: 0
+      z: 0
+    mesh: {fileID: 11400000, guid: ec643bfdd9a4165468904f56dfccd25c, type: 2}
+  - offset:
+      x: 0
+      y: 0
+      z: 0
+    mesh: {fileID: 11400000, guid: d72780d3eca3f284bad74c1a5ad77330, type: 2}
+  - offset:
+      x: 0
+      y: 0
+      z: 0
+    mesh: {fileID: 11400000, guid: 5a899d43e863ada4090139d34c4245d5, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0

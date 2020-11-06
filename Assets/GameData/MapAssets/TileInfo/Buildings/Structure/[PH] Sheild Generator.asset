@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dce1f248ec013df4693b191f7fcbf51c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
   m_Name: '[PH] Sheild Generator'
   m_EditorClassIdentifier: 
   mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
@@ -39,6 +39,18 @@ MonoBehaviour:
     footprint:
     - x: 0
       y: 0
+    - x: -1
+      y: 0
+    - x: 0
+      y: -1
+    - x: 1
+      y: -1
+    - x: 1
+      y: 0
+    - x: 0
+      y: 1
+    - x: -1
+      y: 1
   useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 1
@@ -62,9 +74,3 @@ MonoBehaviour:
   production: []
   consumption: []
   adjacencyEffects: []
-  poweredRange: 3
-  connectionRange: 24
-  lineEntity: {fileID: 11400000, guid: 4a4e5f856ce080a45bed2395cb3eb258, type: 2}
-  lineEntityInactive: {fileID: 11400000, guid: c7c93174831cb88429bc7e5a33ff5238, type: 2}
-  energyPacket: {fileID: 11400000, guid: 387055346b29e1f4890789816ea8cee3, type: 2}
-  powerLineOffset: 1.46
