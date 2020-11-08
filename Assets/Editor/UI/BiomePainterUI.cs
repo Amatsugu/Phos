@@ -46,7 +46,6 @@ public class BiomePainterUI : Editor
 		{
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(painter);
-			Undo.RecordObject(painter, "Biome Painter");
 		}
 		
 	}

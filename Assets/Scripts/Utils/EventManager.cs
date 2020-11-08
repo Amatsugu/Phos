@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum GameEvent
 {
@@ -83,6 +82,7 @@ public class GameEvents
 		add => INST._onMapLoaded += value;
 		remove => INST._onMapLoaded -= value;
 	}
+
 	public static void InvokeOnMapLoaded() => INST._onMapLoaded?.Invoke();
 
 	public static event Action OnMapChanged
@@ -90,6 +90,7 @@ public class GameEvents
 		add => INST._onMapChanged += value;
 		remove => INST._onMapChanged -= value;
 	}
+
 	public static void InvokeOnMapChanged() => INST._onMapChanged?.Invoke();
 
 	public static event Action OnGameReady
@@ -97,6 +98,7 @@ public class GameEvents
 		add => INST._onGameReady += value;
 		remove => INST._onGameReady -= value;
 	}
+
 	public static void InvokeOnGameReady() => INST._onGameReady?.Invoke();
 
 	public static event Action OnMapRegen
@@ -104,21 +106,23 @@ public class GameEvents
 		add => INST._onMapRegen += value;
 		remove => INST._onMapRegen -= value;
 	}
+
 	public static void InvokeOnMapRegen() => INST._onMapRegen?.Invoke();
-	
+
 	public static event Action OnMapDestroyed
 	{
 		add => INST._onMapDestroyed += value;
 		remove => INST._onMapDestroyed -= value;
 	}
-	public static void InvokeOnMapDestroyed() => INST._onMapDestroyed?.Invoke();
 
+	public static void InvokeOnMapDestroyed() => INST._onMapDestroyed?.Invoke();
 
 	public static event Action OnWeatherInit
 	{
 		add => INST._onWeatherInit += value;
 		remove => INST._onWeatherInit -= value;
 	}
+
 	public static void InvokeOnWeatherInit() => INST._onWeatherInit?.Invoke();
 
 	public static event Action OnHQPlaced
@@ -126,6 +130,7 @@ public class GameEvents
 		add => INST._onHQPlaced += value;
 		remove => INST._onHQPlaced -= value;
 	}
+
 	public static void InvokeOnHQPlaced() => INST._onHQPlaced?.Invoke();
 
 	public static event Action OnGameTick
@@ -133,6 +138,7 @@ public class GameEvents
 		add => INST._onGameTick += value;
 		remove => INST._onGameTick -= value;
 	}
+
 	public static void InvokeOnGameTick() => INST._onGameTick?.Invoke();
 
 	public static event Action OnGameSaving
@@ -140,6 +146,7 @@ public class GameEvents
 		add => INST._onGameSaving += value;
 		remove => INST._onGameSaving -= value;
 	}
+
 	public static void InvokeOnGameSaving() => INST._onGameSaving?.Invoke();
 
 	public static event Action OnGameLoaded
@@ -147,6 +154,7 @@ public class GameEvents
 		add => INST._onGameGameLoaded += value;
 		remove => INST._onGameGameLoaded -= value;
 	}
+
 	public static void InvokeOnGameLoaded() => INST._onGameGameLoaded?.Invoke();
 
 	public static event Action<BuildingTileEntity> OnBuildingUnlocked
@@ -170,6 +178,7 @@ public class GameEvents
 		add => INST._onDevConsoleClose += value;
 		remove => INST._onDevConsoleClose -= value;
 	}
+
 	public static void InvokeOnDevConsoleClose() => INST._onDevConsoleClose?.Invoke();
 
 	public static event Action OnCameraFreeze
@@ -218,26 +227,63 @@ public class GameEvents
 		remove => INST._onUnitBuilt -= value;
 	}
 
+	public static void InvokeOnUnitQueued(BuildOrder order) => INST._onUnitQueued?.Invoke(order);
+
+	public static event Action<BuildOrder> OnUnitQueued
+	{
+		add => INST._onUnitQueued += value;
+		remove => INST._onUnitQueued -= value;
+	}
+
+	public static void InvokeOnUnitConstructionStart(ConstructionOrder order) => INST._onUnitConstructionStart?.Invoke(order);
+
+	public static event Action<ConstructionOrder> OnUnitConstructionStart
+	{
+		add => INST._onUnitConstructionStart += value;
+		remove => INST._onUnitConstructionStart -= value;
+	}
+
 	public static void InvokeOnBuildingDied(BuildingTile building) => INST._onBuildingDied?.Invoke(building);
 
 	private event Action _onMapLoaded;
+
 	private event Action _onGameReady;
+
 	private event Action _onMapRegen;
+
 	private event Action _onMapDestroyed;
+
 	private event Action _onMapChanged;
+
 	private event Action _onWeatherInit;
+
 	private event Action _onHQPlaced;
+
 	private event Action _onGameTick;
+
 	private event Action _onGameSaving;
+
 	private event Action _onGameGameLoaded;
+
 	private event Action _onDevConsoleOpen;
+
 	private event Action _onDevConsoleClose;
+
 	private event Action _onCameraFreeze;
+
 	private event Action _onCameraUnFreeze;
+
 	private event Action<BuildingTileEntity> _onBuildingUnlocked;
+
 	private event Action<int> _onAnimationEvent;
+
 	private event Action<MobileUnit> _onUnitDied;
+
 	private event Action<BuildingTile> _onBuildingDied;
+
 	private event Action<HexCoords> _onUnitBuilt;
 
+	private event Action<BuildOrder> _onUnitQueued;
+
+	private event Action<ConstructionOrder> _onUnitConstructionStart;
 }

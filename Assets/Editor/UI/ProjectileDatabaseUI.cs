@@ -29,7 +29,6 @@ public class ProjectileDatabaseUI : Editor
 			Refresh();
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(database);
-			Undo.RecordObject(database, "Tile Database");
 		}
 		if (GUILayout.Button("Reset"))
 		{
@@ -37,7 +36,6 @@ public class ProjectileDatabaseUI : Editor
 			Refresh();
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(database);
-			Undo.RecordObject(database, "Tile Database");
 		}
 		GUI.enabled = true;
 		foreach (var unitDef in database.entityDefs.Values)

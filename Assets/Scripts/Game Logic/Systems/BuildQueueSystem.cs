@@ -93,6 +93,7 @@ public class BuildQueueSystem : ComponentSystem
 			unit = unit,
 			orderType = OrderType.Unit,
 		});
+
 		_readyToBuildOrders.Add(orderId);
 		if (!_factoryReady.ContainsKey(factory.Coords))
 			_factoryReady.Add(factory.Coords, true);

@@ -22,7 +22,6 @@ public class BuildingDatabaseUI : Editor
 			Refresh();
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(database);
-			Undo.RecordObject(database, "Building Database");
 		}
 	}
 
@@ -36,7 +35,6 @@ public class BuildingDatabaseUI : Editor
 			Refresh();
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(database);
-			Undo.RecordObject(database, "Building Database");
 		}
 		GUI.enabled = true;
 		var guiStyle = new GUIStyle
