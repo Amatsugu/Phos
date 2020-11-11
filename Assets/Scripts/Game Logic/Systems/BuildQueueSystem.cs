@@ -77,6 +77,7 @@ public class BuildQueueSystem : ComponentSystem
 		var orderId = _curOrderID++;
 		_pendingBuildOrders.Add(orderId, new BuildOrder
 		{
+			id = orderId,
 			building = building,
 			dstTile = tile,
 			rotation = rotation
@@ -89,6 +90,7 @@ public class BuildQueueSystem : ComponentSystem
 		var orderId = _curOrderID++;
 		_pendingBuildOrders.Add(orderId, new BuildOrder
 		{
+			id = orderId,
 			factory = factory,
 			unit = unit,
 			orderType = OrderType.Unit,
@@ -135,11 +137,14 @@ public class BuildQueueSystem : ComponentSystem
 		var unit = GameRegistry.UnitDatabase[order.unit];
 		_factoryReady[order.factory.Coords] = false;
 		order.factory.StartConstruction(unit.info);
+		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : unit.info.buildTime;
 		_constructionOrders.Add(new ConstructionOrder
 		{
 			orderType = OrderType.Unit,
+			id = order.id,
+			buildTime = buildTime,
 			targetBuilding = order.factory.Coords,
-			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + unit.info.buildTime,
+			buildCompleteTime = Time.ElapsedTime + buildTime,
 		});
 	}
 
@@ -153,9 +158,11 @@ public class BuildQueueSystem : ComponentSystem
 		GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center);
 		//GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.footprint.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
 		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation);
+		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : order.building.constructionTime;
 		_constructionOrders.Add(new ConstructionOrder
 		{
-			buildTime = GameRegistry.Cheats.INSTANT_BUILD ? Time.ElapsedTime : Time.ElapsedTime + order.building.constructionTime,
+			buildCompleteTime = Time.ElapsedTime + buildTime,
+			buildTime = buildTime,
 			targetBuilding = order.dstTile.Coords
 		});
 	}
@@ -168,7 +175,7 @@ public class BuildQueueSystem : ComponentSystem
 		for (int i = 0; i < _constructionOrders.Count; i++)
 		{
 			var curOrder = _constructionOrders[i];
-			if (Time.ElapsedTime > curOrder.buildTime)
+			if (Time.ElapsedTime > curOrder.buildCompleteTime)
 			{
 				switch (curOrder.orderType)
 				{
@@ -192,6 +199,7 @@ public class BuildQueueSystem : ComponentSystem
 
 public struct BuildOrder
 {
+	public int id;
 	public Tile dstTile;
 	public BuildingTileEntity building;
 	public FactoryBuildingTile factory;
@@ -208,7 +216,9 @@ public enum OrderType
 
 public struct ConstructionOrder
 {
-	public double buildTime;
+	public int id;
+	public double buildCompleteTime;
 	public HexCoords targetBuilding;
 	public OrderType orderType;
+	public float buildTime;
 }
