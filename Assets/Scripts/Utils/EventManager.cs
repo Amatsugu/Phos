@@ -243,6 +243,22 @@ public class GameEvents
 		remove => INST._onUnitConstructionStart -= value;
 	}
 
+	public static void InvokeOnUnitConstructionEnd(int orderId) => INST._onUnitConstructionEnd?.Invoke(orderId);
+
+	public static event Action<int> OnUnitConstructionEnd
+	{
+		add => INST._onUnitConstructionEnd += value;
+		remove => INST._onUnitConstructionEnd -= value;
+	}
+
+	public static void InvokeOnUnitDequeued(int orderId) => INST._onUnitDequeued?.Invoke(orderId);
+
+	public static event Action<int> OnUnitDequeued
+	{
+		add => INST._onUnitDequeued += value;
+		remove => INST._onUnitDequeued -= value;
+	}
+
 	public static void InvokeOnBuildingDied(BuildingTile building) => INST._onBuildingDied?.Invoke(building);
 
 	private event Action _onMapLoaded;
@@ -286,4 +302,6 @@ public class GameEvents
 	private event Action<BuildOrder> _onUnitQueued;
 
 	private event Action<ConstructionOrder> _onUnitConstructionStart;
+	private event Action<int> _onUnitConstructionEnd;
+	private event Action<int> _onUnitDequeued;
 }

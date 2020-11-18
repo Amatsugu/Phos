@@ -170,7 +170,6 @@ namespace Amatsugu.Phos.Tiles
 			{
 				_decor.Dispose();
 			}
-			_isRendered = false;
 		}
 
 		public void Show(bool isShown)

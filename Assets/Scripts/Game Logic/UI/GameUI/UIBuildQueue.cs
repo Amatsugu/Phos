@@ -1,13 +1,15 @@
 using Amatsugu.Phos.UI;
 
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace Amatsugu.Phos
 {
-    public class UIBuildQueue : UIPanel
-    {
+	public class UIBuildQueue : UIPanel
+	{
+		public RectTransform content;
+		public UIQueueItem queueItemPrefab;
 
 		private List<UIQueueItem> _items;
 		private Dictionary<int, UIQueueItem> _activeItems;
@@ -17,8 +19,15 @@ namespace Amatsugu.Phos
 			base.Awake();
 			_activeItems = new Dictionary<int, UIQueueItem>();
 			_items = new List<UIQueueItem>();
+		}
+
+		protected override void Start()
+		{
+			base.Start();
 			GameEvents.OnUnitQueued += OnUnitQueued;
 			GameEvents.OnUnitConstructionStart += OnConstructionStart;
+			GameEvents.OnUnitConstructionEnd += OnUnitRemoved;
+			GameEvents.OnUnitDequeued += OnUnitRemoved;
 		}
 
 		private void OnConstructionStart(ConstructionOrder order)
@@ -28,11 +37,38 @@ namespace Amatsugu.Phos
 
 		private void OnUnitQueued(BuildOrder order)
 		{
-
-			var curItem = _items[0];
-			_items.RemoveAt(0);
+			var curItem = GetQueueItem();
 			_activeItems.Add(order.id, curItem);
 			curItem.Init(order);
+		}
+
+		private void OnUnitRemoved(int id)
+		{
+			if(_activeItems.ContainsKey(id))
+			{
+				var itm = _activeItems[id];
+				ReleaseQueueItem(itm);
+				itm.SetActive(false);
+			}
+		}
+
+		private UIQueueItem GetQueueItem()
+		{
+			if (_items.Count > 0)
+			{
+				var curItem = _items[0];
+				_items.RemoveAt(0);
+				return curItem;
+			}else
+			{
+				var newItem = Instantiate(queueItemPrefab, content);
+				return newItem;
+			}
+		}
+
+		private void ReleaseQueueItem(UIQueueItem item)
+		{
+			_items.Add(item);
 		}
 
 		protected override void OnDestroy()
@@ -40,6 +76,8 @@ namespace Amatsugu.Phos
 			base.OnDestroy();
 			GameEvents.OnUnitQueued -= OnUnitQueued;
 			GameEvents.OnUnitConstructionStart -= OnConstructionStart;
+			GameEvents.OnUnitConstructionEnd -= OnUnitRemoved;
+			GameEvents.OnUnitDequeued -= OnUnitRemoved;
 		}
 	}
 }

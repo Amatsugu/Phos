@@ -17,7 +17,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public override TileEntity GetMeshEntity()
 		{
-			return originalTile ?? info;
+			return originalTile != null ? originalTile : info;
 		}
 
 		public override void OnSerialize(Dictionary<string, string> tileData)

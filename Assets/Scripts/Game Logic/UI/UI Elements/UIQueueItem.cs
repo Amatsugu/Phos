@@ -15,20 +15,23 @@ namespace Amatsugu.Phos.UI
 	public class UIQueueItem : UIButtonHover, IPointerClickHandler
 	{
 		public Image icon;
-		public TMP_Text name;
+		public Image mask;
+		public TMP_Text nameText;
 		public event Action<PointerEventData> OnClick;
 
 
 		private bool _isBuilding;
-		private double _completionTime;
+		private float _completionTime;
 		private float _buildTime;
 
 		public void Init(BuildOrder buildOrder)
 		{
 			var unit = GameRegistry.UnitDatabase[buildOrder.unit].info;
-
-			name.SetText(unit.name);
+			if(nameText != null)
+				nameText.SetText(unit.name);
 			icon.sprite = unit.icon;
+			rTransform.SetAsLastSibling();
+			gameObject.SetActive(true);
 		}
 
 		public void OnPointerClick(PointerEventData eventData)
@@ -44,7 +47,7 @@ namespace Amatsugu.Phos.UI
 		public void SetAsBuilding(double completionTime, float buildTime)
 		{
 			_isBuilding = true;
-			_completionTime = completionTime;
+			_completionTime = (float)completionTime;
 			_buildTime = buildTime;
 		}
 
@@ -55,7 +58,7 @@ namespace Amatsugu.Phos.UI
 				return;
 			var remainingTime = _completionTime - Time.time;
 			var prog = remainingTime / _buildTime;
-
+			mask.fillAmount = prog;
 		}
 	}
 }

@@ -88,13 +88,15 @@ public class BuildQueueSystem : ComponentSystem
 	public void QueueUnit(FactoryBuildingTile factory, UnitIdentifier unit)
 	{
 		var orderId = _curOrderID++;
-		_pendingBuildOrders.Add(orderId, new BuildOrder
+		var newOrder = new BuildOrder
 		{
 			id = orderId,
 			factory = factory,
 			unit = unit,
 			orderType = OrderType.Unit,
-		});
+		};
+		_pendingBuildOrders.Add(orderId, newOrder);
+		GameEvents.InvokeOnUnitQueued(newOrder);
 
 		_readyToBuildOrders.Add(orderId);
 		if (!_factoryReady.ContainsKey(factory.Coords))
@@ -138,14 +140,16 @@ public class BuildQueueSystem : ComponentSystem
 		_factoryReady[order.factory.Coords] = false;
 		order.factory.StartConstruction(unit.info);
 		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : unit.info.buildTime;
-		_constructionOrders.Add(new ConstructionOrder
+		var constructOrder = new ConstructionOrder
 		{
 			orderType = OrderType.Unit,
 			id = order.id,
 			buildTime = buildTime,
 			targetBuilding = order.factory.Coords,
 			buildCompleteTime = Time.ElapsedTime + buildTime,
-		});
+		};
+		_constructionOrders.Add(constructOrder);
+		GameEvents.InvokeOnUnitConstructionStart(constructOrder);
 	}
 
 	/// <summary>
@@ -185,6 +189,7 @@ public class BuildQueueSystem : ComponentSystem
 
 					case OrderType.Unit:
 						(GameRegistry.GameMap[curOrder.targetBuilding] as FactoryBuildingTile).FinishConstruction();
+						GameEvents.InvokeOnUnitConstructionEnd(curOrder.id);
 						break;
 				}
 				_removal.Add(i);
