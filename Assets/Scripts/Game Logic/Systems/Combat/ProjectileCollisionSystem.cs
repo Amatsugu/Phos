@@ -1,4 +1,5 @@
 ﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
@@ -10,7 +11,9 @@ using Unity.Rendering;
 public struct ProjectileCollisionJob : ICollisionEventsJob
 {
 	public ComponentDataFromEntity<Health> health;
+	[ReadOnly]
 	public ComponentDataFromEntity<FactionId> faction;
+	[ReadOnly]
 	public ComponentDataFromEntity<Damage> damage;
 	public ComponentDataFromEntity<DeathTime> deathTime;
 	public EntityCommandBuffer.ParallelWriter cmb;
@@ -82,6 +85,7 @@ public class ProjectileCollisionSystem : JobComponentSystem
 			time = Time.ElapsedTime
 		};
 		inputDeps = job.Schedule(_sim.Simulation, ref _physicsWorld.PhysicsWorld, inputDeps);
+		inputDeps.Complete();
 		return inputDeps;
 	}
 }

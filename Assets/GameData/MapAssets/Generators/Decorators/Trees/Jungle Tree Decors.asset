@@ -15,7 +15,7 @@ MonoBehaviour:
   meshEntity: {fileID: 11400000, guid: 826a8d44cd9508845ab9124b565f5435, type: 2}
   densityMulti: 1
   minPerTile: 0
-  maxPerTile: 3
+  maxPerTile: 2
   densityPower: 1
   minHeight: 2
   maxHeight: 4

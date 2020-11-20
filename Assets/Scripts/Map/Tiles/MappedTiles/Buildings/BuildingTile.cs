@@ -398,7 +398,7 @@ namespace Amatsugu.Phos.Tiles
 
 		protected virtual void DestroyBuilding()
 		{
-			Debug.Log($"Destroying Building {info.GetNameString()}");
+			Debug.Log($"Destroying Building {info.name}");
 			if (World.DefaultGameObjectInjectionWorld != null)
 			{
 				if (buildingInfo.buildingMesh != null)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
   m_Name: Terra Map
   m_EditorClassIdentifier: 
-  Size: {x: 16, y: 16}
+  Size: {x: 10, y: 10}
   tileMapper: {fileID: 0}
   seaLevel: 4.9
   edgeLength: 1
