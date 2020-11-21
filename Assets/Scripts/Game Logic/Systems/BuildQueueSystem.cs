@@ -132,6 +132,7 @@ public class BuildQueueSystem : ComponentSystem
 			((FactoryBuildingTile)GameRegistry.GameMap[curOrder.targetBuilding]).CancelConstruction();
 			_factoryReady[curOrder.targetBuilding] = true;
 		}
+		GameEvents.InvokeOnUnitDequeued(orderId);
 	}
 
 	/// <summary>

@@ -15,7 +15,6 @@ using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
-[UpdateBefore(typeof(BuildPhysicsWorld))]
 public class PhosCoreSystem : ComponentSystem
 {
 	private int _state = 0;

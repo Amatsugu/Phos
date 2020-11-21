@@ -19,6 +19,8 @@ public class UIBuildPanel : UITabPanel
 
 	[HideInInspector]
 	public UIInfoPanel infoPanel;
+	[HideInInspector]
+	public UIBuildQueuePanel buildQueueUI;
 
 	public TMP_Text floatingText;
 	public UIInfoBanner banner;
@@ -68,6 +70,7 @@ public class UIBuildPanel : UITabPanel
 			if (state == BuildState.HQPlacement)
 				return;
 			HideIndicators();
+			buildQueueUI.Hide();
 			state = BuildState.Disabled;
 		};
 		_icons = new UIUnitIcon[8];
@@ -151,6 +154,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.HQPlacement) //This should never happen, but just in case
 			return;
+		buildQueueUI.Show();
 		state = BuildState.UnitConstruction;
 		_selectedFactory = factoryTile;
 		var units = _selectedFactory.factoryInfo.unitsToBuild;

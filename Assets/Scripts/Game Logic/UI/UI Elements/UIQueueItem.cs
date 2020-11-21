@@ -32,6 +32,7 @@ namespace Amatsugu.Phos.UI
 			icon.sprite = unit.icon;
 			rTransform.SetAsLastSibling();
 			gameObject.SetActive(true);
+			mask.fillAmount = 1;
 		}
 
 		public void OnPointerClick(PointerEventData eventData)

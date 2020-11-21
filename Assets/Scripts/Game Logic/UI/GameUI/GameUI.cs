@@ -1,4 +1,6 @@
-﻿using Steamworks;
+﻿using Amatsugu.Phos;
+
+using Steamworks;
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ public class GameUI : UIHover
 	private UIActionsPanel _actionsPanel;
 	private UICategoryPanel _categoryPanel;
 	private UISelectionPanel _selectionPanel;
+	private UIBuildQueuePanel _buildQueuePanel;
 
 	private UIState _state;
 	private UIState _prevState = UIState.HQPlacement;
@@ -46,10 +49,12 @@ public class GameUI : UIHover
 		_categoryPanel.gameObject.SetActive(true);
 		_selectionPanel = GetComponentInChildren<UISelectionPanel>(true);
 		_selectionPanel.gameObject.SetActive(true);
-
+		_buildQueuePanel = GetComponentInChildren<UIBuildQueuePanel>(true);
+		_buildQueuePanel.gameObject.SetActive(true);
 
 		_selectionPanel.actionsPanel = _actionsPanel;
 		_buildPanel.infoPanel = _infoPanel;
+		_buildPanel.buildQueueUI = _buildQueuePanel;
 
 		_categoryPanel.OnButtonClicked += CategorySelected;
 		_categoryPanel.OnDeconstructClick += EnterDeconstructMode;

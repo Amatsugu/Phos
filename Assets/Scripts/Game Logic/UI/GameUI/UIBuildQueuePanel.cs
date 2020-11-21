@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos
 {
-	public class UIBuildQueue : UIPanel
+	public class UIBuildQueuePanel : UIPanel
 	{
 		public RectTransform content;
 		public UIQueueItem queueItemPrefab;
@@ -46,7 +46,8 @@ namespace Amatsugu.Phos
 			curItem.Init(order);
 			curItem.OnClick += c =>
 			{
-				
+				if (c.button == UnityEngine.EventSystems.PointerEventData.InputButton.Right)
+					_buildQueueSystem.CancelOrder(order.id);
 			};
 		}
 
@@ -55,8 +56,8 @@ namespace Amatsugu.Phos
 			if(_activeItems.ContainsKey(id))
 			{
 				var itm = _activeItems[id];
-				ReleaseQueueItem(itm);
 				itm.SetActive(false);
+				ReleaseQueueItem(itm);
 			}
 		}
 

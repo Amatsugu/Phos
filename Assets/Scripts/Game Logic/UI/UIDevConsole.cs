@@ -29,7 +29,7 @@ public class UIDevConsole : MonoBehaviour
 
 	private List<string> _logs;
 	private string _lastCmd;
-	private string _curLog;
+	private string _curLogTimeStamp;
 	private List<string> _curPredictionItems;
 	private int _curPrediction;
 
@@ -41,8 +41,7 @@ public class UIDevConsole : MonoBehaviour
 		_commandNames = new List<string>();
 		_logs = new List<string>();
 		INST = this;
-		_curLog = $"{DateTime.Now.ToString().Replace('/', '-').Replace(':', '.')}";
-		Debug.Log(_curLog);
+		_curLogTimeStamp = $"{DateTime.Now.ToString().Replace('/', '-').Replace(':', '.')}";
 		AddDefaultCommands();
 	}
 
@@ -51,7 +50,7 @@ public class UIDevConsole : MonoBehaviour
 	private void Start()
 	{
 #if UNITY_EDITOR
-			GameEvents.OnGameReady += OnGameReady;
+			GameEvents.OnGameReady += DevMode;
 #endif
 		consolePanel.OnHide += () =>
 		{
@@ -96,11 +95,11 @@ public class UIDevConsole : MonoBehaviour
 		});
 	}
 
-	private void OnGameReady()
+	private void DevMode()
 	{
 		ParseCommand("unlockAll");
 		ParseCommand("noResourceCost");
-		GameEvents.OnGameReady -= OnGameReady;
+		GameEvents.OnGameReady -= DevMode;
 	}
 
 	private void AddDefaultCommands()
@@ -317,7 +316,7 @@ public class UIDevConsole : MonoBehaviour
 	private void Save()
 	{
 #if !UNITY_ENGINE
-		File.WriteAllLines($"output - {_curLog}.log", _logs);
+		File.WriteAllLines($"output - {_curLogTimeStamp}.log", _logs);
 #endif
 	}
 
