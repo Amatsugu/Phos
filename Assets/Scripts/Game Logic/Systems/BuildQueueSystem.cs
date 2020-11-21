@@ -103,6 +103,37 @@ public class BuildQueueSystem : ComponentSystem
 			_factoryReady.Add(factory.Coords, true);
 	}
 
+	public void CancelOrder(int orderId)
+	{
+		if (_pendingBuildOrders.ContainsKey(orderId))
+		{
+			_pendingBuildOrders.Remove(orderId);
+			_readyToBuildOrders.Remove(orderId);
+		}
+		else
+		{
+			ConstructionOrder curOrder = default;
+			var orderIndex = -1;
+			for (int i = 0; i < _constructionOrders.Count; i++)
+			{
+				if(_constructionOrders[i].id == orderId)
+				{
+					curOrder = _constructionOrders[i];
+					orderIndex = i;
+					break;
+				}
+			}
+			if(!curOrder.isCreaated)
+			{
+				Debug.LogWarning($"No order to cancel with ID: {orderId}");
+				return;
+			}
+			_constructionOrders.RemoveAt(orderIndex);
+			((FactoryBuildingTile)GameRegistry.GameMap[curOrder.targetBuilding]).CancelConstruction();
+			_factoryReady[curOrder.targetBuilding] = true;
+		}
+	}
+
 	/// <summary>
 	/// Place all buildings that have been marked as ready to place
 	/// </summary>
@@ -140,14 +171,7 @@ public class BuildQueueSystem : ComponentSystem
 		_factoryReady[order.factory.Coords] = false;
 		order.factory.StartConstruction(unit.info);
 		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : unit.info.buildTime;
-		var constructOrder = new ConstructionOrder
-		{
-			orderType = OrderType.Unit,
-			id = order.id,
-			buildTime = buildTime,
-			targetBuilding = order.factory.Coords,
-			buildCompleteTime = Time.ElapsedTime + buildTime,
-		};
+		var constructOrder = new ConstructionOrder(order, buildTime, Time.ElapsedTime + buildTime);
 		_constructionOrders.Add(constructOrder);
 		GameEvents.InvokeOnUnitConstructionStart(constructOrder);
 	}
@@ -163,12 +187,7 @@ public class BuildQueueSystem : ComponentSystem
 		//GameRegistry.GameMap.HexFlatten(order.dstTile.Coords, order.building.footprint.size, order.building.flattenOuterRange, Map.FlattenMode.Average, true);
 		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation);
 		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : order.building.constructionTime;
-		_constructionOrders.Add(new ConstructionOrder
-		{
-			buildCompleteTime = Time.ElapsedTime + buildTime,
-			buildTime = buildTime,
-			targetBuilding = order.dstTile.Coords
-		});
+		_constructionOrders.Add(new ConstructionOrder(order, buildTime, Time.ElapsedTime + buildTime));
 	}
 
 	/// <summary>
@@ -226,4 +245,20 @@ public struct ConstructionOrder
 	public HexCoords targetBuilding;
 	public OrderType orderType;
 	public float buildTime;
+
+	public bool isCreaated;
+
+
+	public ConstructionOrder(BuildOrder order, float buildTime, double completeTime)
+	{
+		this.id = order.id;
+		orderType = order.orderType;
+		if (order.orderType == OrderType.Building)
+			targetBuilding = order.dstTile.Coords;
+		else
+			targetBuilding = order.factory.Coords;
+		this.buildTime = buildTime;
+		buildCompleteTime = completeTime;
+		isCreaated = true;
+	}
 }

@@ -17,6 +17,7 @@ namespace Amatsugu.Phos.Tiles
 		public FactoryTileEntity factoryInfo;
 		private MobileUnitEntity _curUnit;
 		private BuildPhysicsWorld _physicsWorld;
+		private Entity _constructionMesh;
 		public FactoryBuildingTile(HexCoords coords, float height, Map map, FactoryTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			factoryInfo = tInfo;
@@ -28,6 +29,11 @@ namespace Amatsugu.Phos.Tiles
 			Debug.Log($"Unit starting construction: {unitEntity.GetNameString()}");
 			unitEntity.constructionMesh.Instantiate(SurfacePoint + new float3(0, .3f, 0), Quaternion.identity, unitEntity, 0.8f, unitEntity.buildTime);
 			_curUnit = unitEntity;
+		}
+
+		public virtual void CancelConstruction()
+		{
+			_curUnit = null;
 		}
 
 		public virtual void FinishConstruction()

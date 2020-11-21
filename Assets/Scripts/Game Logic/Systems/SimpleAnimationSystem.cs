@@ -102,6 +102,7 @@ namespace AnimationSystem
 		[BurstCompile]
 		public struct FloorJob : IJobChunk //IJobForEach<Floor, Translation> //TODO Optimize this
 		{
+			[ReadOnly]
 			public ComponentTypeHandle<Floor> floorType;
 			public ComponentTypeHandle<Translation> transType;
 

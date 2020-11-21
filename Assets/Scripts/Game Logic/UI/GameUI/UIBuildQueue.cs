@@ -2,6 +2,8 @@ using Amatsugu.Phos.UI;
 
 using System.Collections.Generic;
 
+using Unity.Entities;
+
 using UnityEngine;
 
 namespace Amatsugu.Phos
@@ -13,6 +15,7 @@ namespace Amatsugu.Phos
 
 		private List<UIQueueItem> _items;
 		private Dictionary<int, UIQueueItem> _activeItems;
+		private BuildQueueSystem _buildQueueSystem;
 
 		protected override void Awake()
 		{
@@ -24,6 +27,7 @@ namespace Amatsugu.Phos
 		protected override void Start()
 		{
 			base.Start();
+			_buildQueueSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildQueueSystem>();
 			GameEvents.OnUnitQueued += OnUnitQueued;
 			GameEvents.OnUnitConstructionStart += OnConstructionStart;
 			GameEvents.OnUnitConstructionEnd += OnUnitRemoved;
@@ -40,6 +44,10 @@ namespace Amatsugu.Phos
 			var curItem = GetQueueItem();
 			_activeItems.Add(order.id, curItem);
 			curItem.Init(order);
+			curItem.OnClick += c =>
+			{
+				
+			};
 		}
 
 		private void OnUnitRemoved(int id)
@@ -68,6 +76,7 @@ namespace Amatsugu.Phos
 
 		private void ReleaseQueueItem(UIQueueItem item)
 		{
+			item.ClearClickEvents();
 			_items.Add(item);
 		}
 
