@@ -335,14 +335,14 @@ namespace Amatsugu.Phos.Tiles
 			var e = GetBuildingEntity();
 			//Production
 			if (!Map.EM.HasComponent<ProductionMulti>(e))
-				Map.EM.AddComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti });
+				Map.EM.AddComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
 			else
-				Map.EM.SetComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti });
+				Map.EM.SetComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1});
 			//Consumption
 			if (!Map.EM.HasComponent<ConsumptionMulti>(e))
-				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti });
+				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
 			else
-				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti });
+				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
 			//Health
 			var curHealth = Map.EM.GetComponentData<Health>(e);
 			curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;

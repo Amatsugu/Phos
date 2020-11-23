@@ -1,9 +1,6 @@
-﻿
-using Amatsugu.Phos.DataStore;
+﻿using Amatsugu.Phos.DataStore;
 using Amatsugu.Phos.Tiles;
 
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 using UnityEngine;
@@ -15,6 +12,7 @@ namespace Amatsugu.Phos.TileEntities
 	{
 		[Header("Tech")]
 		public BuildingIdentifier[] buildingsToUnlock;
+
 		public int effectRange = 4;
 		public StatsBuffs StatsBuffs;
 
@@ -37,6 +35,9 @@ namespace Amatsugu.Phos.TileEntities
 				prod.Append("\t");
 				prod.AppendLine(GameRegistry.BuildingDatabase[buildingsToUnlock[i]].info.GetNameString().ToString());
 			}
+
+			prod.AppendLine("Buffs:");
+			prod.Append(StatsBuffs.ToString());
 			return prod;
 		}
 	}

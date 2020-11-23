@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+
+using Amatsugu.Phos;
 
 using Unity.Entities.UniversalDelegates;
 
@@ -35,15 +38,18 @@ namespace Amatsugu.Phos.DataStore
 			return new StatsBuffs
 			{
 				structureHealth = left.structureHealth + right.structureHealth,
-				unitHealth = left.unitHealth + right.unitHealth,
 				structureRange = left.structureRange + right.structureRange,
+				structureAttack = left.structureAttack + right.structureAttack,
+
+
+				unitHealth = left.unitHealth + right.unitHealth,
 				unitRange = left.unitRange + right.unitRange,
+				unitAttack = left.unitAttack + right.unitAttack,
+
 				buildCostMulti = left.buildCostMulti + right.buildCostMulti,
 				buildSpeedMulti = left.buildSpeedMulti + right.buildSpeedMulti,
 				consumptionMulti = left.consumptionMulti + right.consumptionMulti,
 				productionMulti = left.productionMulti + right.productionMulti,
-				structureAttack = left.structureAttack + right.structureAttack,
-				unitAttack = left.unitAttack + right.unitAttack
 			};
 		}
 
@@ -52,16 +58,49 @@ namespace Amatsugu.Phos.DataStore
 			return new StatsBuffs
 			{
 				structureHealth = left.structureHealth - right.structureHealth,
-				unitHealth = left.unitHealth - right.unitHealth,
+				structureAttack = left.structureAttack - right.structureAttack,
 				structureRange = left.structureRange - right.structureRange,
+
+				unitHealth = left.unitHealth - right.unitHealth,
+				unitAttack = left.unitAttack - right.unitAttack,
 				unitRange = left.unitRange - right.unitRange,
+
 				buildCostMulti = left.buildCostMulti - right.buildCostMulti,
 				buildSpeedMulti = left.buildSpeedMulti - right.buildSpeedMulti,
 				consumptionMulti = left.consumptionMulti - right.consumptionMulti,
 				productionMulti = left.productionMulti - right.productionMulti,
-				structureAttack = left.structureAttack - right.structureAttack,
-				unitAttack = left.unitAttack - right.unitAttack
 			};
 		}
+
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+
+			if (structureHealth != default)
+				sb.AppendLine($"Structure Health: {structureHealth.ToNumberString()}");
+			if (structureRange != default)
+				sb.AppendLine($"Structure Range: {structureRange.ToNumberString()}");
+			if (structureAttack != default)
+				sb.AppendLine($"Structure Attack: {structureAttack.ToNumberString()}");
+
+			if (unitHealth != default)
+				sb.AppendLine($"Unit Health: {unitHealth.ToNumberString()}");
+			if (unitRange != default)
+				sb.AppendLine($"Unit Range: {unitRange.ToNumberString()}");
+			if (unitAttack != default)
+				sb.AppendLine($"Unit Attack: {unitAttack.ToNumberString()}");
+
+			if (buildCostMulti != 0)
+				sb.AppendLine($"Build Cost: {buildCostMulti.ToNumberString()}");
+			if (buildSpeedMulti != 0)
+				sb.AppendLine($"Build Speed: {buildSpeedMulti.ToNumberString()}");
+			if (consumptionMulti != 0)
+				sb.AppendLine($"Resource Consumtion: {consumptionMulti.ToNumberString()}");
+			if (productionMulti != 0)
+				sb.AppendLine($"Resource Production: {productionMulti.ToNumberString()}");
+
+			return sb.ToString();
+		}
+
 	}
 }
