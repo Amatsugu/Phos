@@ -25,7 +25,7 @@ public class UIUnitIcon : UIButtonHover, IPointerClickHandler
 			Hover();
 	}
 
-	public Vector3 anchoredPosition
+	public Vector3 AnchoredPosition
 	{
 		get => rTransform.anchoredPosition;
 		set => rTransform.anchoredPosition = value;

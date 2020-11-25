@@ -1,5 +1,10 @@
+using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Units;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 using TMPro;
 
@@ -16,7 +21,8 @@ namespace Amatsugu.Phos
 		public TMP_Text bodyText;
 		public GraphicRaycaster graphicRaycaster;
 		public EventSystem eventSystem;
-		public void Show(RectTransform anchor, string message, string title = null)
+
+		public void Show(StringBuilder message, StringBuilder title = null)
 		{
 			if(title != null)
 			{
@@ -26,25 +32,28 @@ namespace Amatsugu.Phos
 				titleText.gameObject.SetActive(false);
 
 			bodyText.SetText(message);
-			var pos = anchor.position;
-
-			var offset = anchor.pivot * anchor.rect.size;
-
-			rTransform.anchoredPosition = pos + new Vector3(offset.x, offset.y);
+			rTransform.anchoredPosition = Input.mousePosition + new Vector3(5, 5);
 			Show();
+		}
+
+		public void Show(BuildingTileEntity info)
+		{
+			var text = new StringBuilder(info.description);
+			text.AppendLine(info.GetUpkeepString().ToString());
+			text.AppendLine(info.GetProductionString().ToString());
+			Show(text, info.GetNameString());
+		}
+
+		public void Show(MobileUnitEntity info)
+		{
+			var text = new StringBuilder(info.description);
+			Show(text, info.GetNameString());
 		}
 
 		protected override void LateUpdate()
 		{
 			base.LateUpdate();
-			var hits = new List<RaycastResult>();
-			graphicRaycaster.Raycast(new PointerEventData(eventSystem), hits);
-			for (int i = 0; i < hits.Count; i++)
-			{
-				var r = hits[i].gameObject.GetComponent<RectTransform>();
-				if (r != null)
-					Show(r, "Test");
-			}
+			rTransform.anchoredPosition = Input.mousePosition + new Vector3(5, 5);
 		}
 	}
 }

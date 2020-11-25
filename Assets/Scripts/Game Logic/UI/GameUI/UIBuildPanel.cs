@@ -21,6 +21,8 @@ public class UIBuildPanel : UITabPanel
 	public UIInfoPanel infoPanel;
 	[HideInInspector]
 	public UIBuildQueuePanel buildQueueUI;
+	[HideInInspector]
+	public UITooltip tooltipUI;
 
 	public TMP_Text floatingText;
 	public UIInfoBanner banner;
@@ -134,6 +136,7 @@ public class UIBuildPanel : UITabPanel
 			{
 				_icons[i] = Instantiate(iconPrefab, contentArea, false);
 				_icons[i].OnBlur += infoPanel.Hide;
+				_icons[i].OnBlur += () => tooltipUI.Hide();
 			}
 			if (j < buildings.Length)
 			{
@@ -165,6 +168,7 @@ public class UIBuildPanel : UITabPanel
 			{
 				_icons[i] = Instantiate(iconPrefab, contentArea, false);
 				_icons[i].OnBlur += infoPanel.Hide;
+				_icons[i].OnBlur += () => tooltipUI.Hide();
 			}
 			if (j < units.Length)
 			{
@@ -180,6 +184,7 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].icon.sprite = unit.icon;
 					_icons[i].button.interactable = true;
 					_icons[i].OnHover += () => infoPanel.ShowInfo(unit);
+					_icons[i].OnHover += () => tooltipUI.Show(unit);
 					_icons[i].OnClick += () =>
 					{
 						_buildQueue.QueueUnit(factoryTile, unitId);
@@ -212,6 +217,7 @@ public class UIBuildPanel : UITabPanel
 			{
 				_icons[i] = Instantiate(iconPrefab, contentArea, false);
 				_icons[i].OnBlur += infoPanel.Hide;
+				_icons[i].OnBlur += () => tooltipUI.Hide();
 			}
 			if (j < buildings.Length)
 			{
@@ -231,6 +237,7 @@ public class UIBuildPanel : UITabPanel
 							_icons[i].button.interactable = false;
 					}
 					_icons[i].OnHover += () => infoPanel.ShowInfo(b.info);
+					_icons[i].OnHover += () => tooltipUI.Show(b.info);
 					_icons[i].OnClick += () =>
 					{
 						state = BuildState.Placement;

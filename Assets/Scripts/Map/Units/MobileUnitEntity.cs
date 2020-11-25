@@ -19,6 +19,7 @@ namespace Amatsugu.Phos.Units
 	[CreateAssetMenu(menuName = "Map Asset/Units/Unit")]
 	public class MobileUnitEntity : MeshEntityRotatable
 	{
+		public string description;
 		[Header("Stats")]
 		public float moveSpeed = 1;
 		public float attackRange = 20;

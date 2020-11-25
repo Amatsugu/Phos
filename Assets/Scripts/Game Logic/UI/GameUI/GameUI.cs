@@ -19,6 +19,7 @@ public class GameUI : UIHover
 	private UICategoryPanel _categoryPanel;
 	private UISelectionPanel _selectionPanel;
 	private UIBuildQueuePanel _buildQueuePanel;
+	private UITooltip _tooltip;
 
 	private UIState _state;
 	private UIState _prevState = UIState.HQPlacement;
@@ -51,10 +52,13 @@ public class GameUI : UIHover
 		_selectionPanel.gameObject.SetActive(true);
 		_buildQueuePanel = GetComponentInChildren<UIBuildQueuePanel>(true);
 		_buildQueuePanel.gameObject.SetActive(true);
+		_tooltip = GetComponentInChildren<UITooltip>(true);
+		_tooltip.gameObject.SetActive(true);
 
 		_selectionPanel.actionsPanel = _actionsPanel;
 		_buildPanel.infoPanel = _infoPanel;
 		_buildPanel.buildQueueUI = _buildQueuePanel;
+		_buildPanel.tooltipUI = _tooltip;
 
 		_categoryPanel.OnButtonClicked += CategorySelected;
 		_categoryPanel.OnDeconstructClick += EnterDeconstructMode;

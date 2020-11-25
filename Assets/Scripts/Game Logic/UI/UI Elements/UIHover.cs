@@ -59,12 +59,18 @@ public class UIHover : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
 	protected override void OnEnable()
 	{
 		base.OnEnable();
-		rTransform = rTransform ?? GetComponent<RectTransform>();
+		if(rTransform != null)
+			rTransform = GetComponent<RectTransform>();
 	}
 
 	protected override void Awake()
 	{
 		base.Awake();
+		rTransform = GetComponent<RectTransform>();
+	}
+	protected override void Start()
+	{
+		base.Start();
 		rTransform = GetComponent<RectTransform>();
 	}
 
@@ -87,7 +93,8 @@ public class UIHover : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	public virtual void SetActive(bool active)
 	{
-		rTransform = rTransform ?? GetComponent<RectTransform>();
+		if(rTransform == null)
+		rTransform = GetComponent<RectTransform>();
 		gameObject.SetActive(active);
 		if (!active)
 			isHovered = false;
