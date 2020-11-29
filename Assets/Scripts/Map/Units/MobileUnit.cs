@@ -160,8 +160,7 @@ namespace Amatsugu.Phos.Units
 		{
 			try
 			{
-				if (Map.EM.Exists(Entity))
-					Map.EM.DestroyEntity(Entity);
+				Map.EM.DestroyEntity(Entity);
 				if (_healhBar.IsCreated)
 					Map.EM.DestroyEntity(_healhBar);
 				Map.EM.DestroyEntity(_subMeshes);

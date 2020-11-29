@@ -25,7 +25,7 @@ public struct ConstructionHeight : IComponentData
 	public float Value;
 }
 
-[MaterialProperty("_ConstructStart", MaterialPropertyFormat.Float)]
+[MaterialProperty("_StartTime", MaterialPropertyFormat.Float)]
 public struct ConstructionStart : IComponentData
 {
 	public float Value;

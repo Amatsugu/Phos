@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 9
+  version: 11
 --- !u!21 &2100000
 Material:
   serializedVersion: 6
@@ -48,6 +48,18 @@ Material:
         m_Texture: {fileID: 2800000, guid: 351fc2dad0a0a574bbdca1b385d5a2c8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_3D3B0B86: 1
     - Vector1_4473BC03: 0.09
@@ -81,6 +93,7 @@ Material:
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
+    - _RefractionModel: 0
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _SrcBlend: 1
@@ -109,6 +122,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - Color_097a37d69691418988eefa877fa15e3b: {r: 0, g: 0, b: 0, a: 0}
     - Color_A654D4B7: {r: 0, g: 1, b: 0.8048501, a: 1}
     - _ConstructColor: {r: 1, g: 0, b: 0.39215687, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
