@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f034cba68ab55e046ae1445a42f18c0e, type: 3}
   m_Name: IndirectLightingController
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   m_AdvancedMode: 0
   indirectDiffuseLightingMultiplier:
     m_OverrideState: 1
@@ -406,10 +406,10 @@ MonoBehaviour:
     m_Value: 0
   exposure:
     m_OverrideState: 1
-    m_Value: 2.47
+    m_Value: 5.37
   multiplier:
     m_OverrideState: 1
-    m_Value: 4.66
+    m_Value: 15.3
     min: 0
   upperHemisphereLuxValue:
     m_OverrideState: 0
@@ -503,7 +503,7 @@ MonoBehaviour:
     max: 10
   groundTint:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0.19303334, b: 0.26415092, a: 1}
+    m_Value: {r: 0, g: 0.19621064, b: 0.5188679, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0
@@ -547,13 +547,13 @@ MonoBehaviour:
     max: 1
   horizonTint:
     m_OverrideState: 1
-    m_Value: {r: 0.8820755, g: 1, b: 0.95968777, a: 1}
+    m_Value: {r: 0, g: 0.53787744, b: 0.5647059, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0
   zenithTint:
     m_OverrideState: 1
-    m_Value: {r: 0.2863564, g: 0.9339623, b: 0.82074445, a: 1}
+    m_Value: {r: 0, g: 1, b: 0.82424235, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0

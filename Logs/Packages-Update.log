@@ -213,3 +213,12 @@ Update Mode: updateDependencies
 The following packages were updated:
   com.unity.render-pipelines.high-definition from version 10.1.0 to 10.2.0
   com.unity.scriptablebuildpipeline from version 1.9.0 to 1.11.1
+
+=== Sat Dec  5 13:07:04 2020
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.scriptablebuildpipeline from version 1.11.1 to 1.14.1
+  com.unity.test-framework from version 1.1.18 to 1.1.19
