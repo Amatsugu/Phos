@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86005638f0d4f7a47b51240defaeaed4, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
   m_Name: Wall Pillar
   m_EditorClassIdentifier: 
   mesh: {fileID: -8116138440861595531, guid: 64b12e103490a3e418c2258b143e762c, type: 3}
@@ -18,6 +18,3 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
-  size:
-    x: 0
-    y: 0

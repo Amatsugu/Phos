@@ -20,7 +20,7 @@ public class CenterOfMassSystem : JobComponentSystem
 
 		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 		{
-			if (!chunk.DidChange(translationType, lastVersion) && !chunk.DidChange(centerOfMassOffsetType, lastVersion))
+			if (!(chunk.DidChange(translationType, lastVersion) && chunk.DidChange(centerOfMassOffsetType, lastVersion)))
 				return;
 			var positions = chunk.GetNativeArray(translationType);
 			var offsets = chunk.GetNativeArray(centerOfMassOffsetType);

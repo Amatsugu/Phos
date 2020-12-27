@@ -16,7 +16,7 @@ filters = {
 	settings = true
 }
 scopes = {
-	"last_search.AB59B443" = "forest"
+	"last_search.AB59B443" = "building"
 }
 providers = {
 	asset = {

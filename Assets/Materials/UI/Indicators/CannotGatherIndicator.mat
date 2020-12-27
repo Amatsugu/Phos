@@ -159,12 +159,12 @@ Material:
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
-    - _AlphaDstBlend: 10
+    - _AlphaDstBlend: 1
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
     - _Anisotropy: 0
-    - _BlendMode: 0
+    - _BlendMode: 1
     - _CoatMask: 0
     - _CullMode: 2
     - _CullModeForward: 2
@@ -206,7 +206,7 @@ Material:
     - _DoubleSidedNormalMode: 1
     - _Drag: 1
     - _DrawOrder: 0
-    - _DstBlend: 10
+    - _DstBlend: 1
     - _Emissive: 1
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 0

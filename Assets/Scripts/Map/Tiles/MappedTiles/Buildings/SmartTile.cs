@@ -8,8 +8,6 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 
-using UnityEngine;
-
 namespace Amatsugu.Phos.Tiles
 {
 	public class SmartTile : BuildingTile
@@ -29,10 +27,11 @@ namespace Amatsugu.Phos.Tiles
 			for (int i = 0; i < tInfo.connectTo.Length; i++)
 				_connectables.Add(GameRegistry.BuildingDatabase.buildings[tInfo.connectTo[i].id].info);
 		}
+
 		public override void OnHeightChanged()
 		{
 			base.OnHeightChanged();
-			if(isBuilt)
+			if (isBuilt)
 				RenderConnections();
 		}
 
@@ -41,7 +40,7 @@ namespace Amatsugu.Phos.Tiles
 			base.OnHide();
 			for (int i = 0; i < 6; i++)
 			{
-				if(Map.EM.Exists(_connectionMeshes[i]))
+				if (Map.EM.Exists(_connectionMeshes[i]))
 					Map.EM.AddComponent<FrozenRenderSceneTag>(_connectionMeshes[i]);
 			}
 		}
@@ -59,7 +58,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			base.TileUpdated(src, updateType);
-			if(isBuilt)
+			if (isBuilt)
 				RenderConnections();
 		}
 
@@ -74,24 +73,33 @@ namespace Amatsugu.Phos.Tiles
 			var nT = map.GetNeighbors(Coords);
 			for (int i = 0; i < 6; i++)
 			{
-				if(_connectables.Contains(nT[i].info))
+				if (_connectables.Contains(nT[i].info))
 				{
 					if (!Map.EM.Exists(_connectionMeshes[i]))
 						_connectionMeshes[i] = smartTile.connectionMesh.Instantiate(SurfacePoint, 1, quaternion.RotateY(math.radians(90 + (60 * i))));
 					else
 						Map.EM.SetComponentData(_connectionMeshes[i], new Translation { Value = SurfacePoint });
-				}else
+				}
+				else
 				{
 					if (Map.EM.Exists(_connectionMeshes[i]))
 						Map.EM.DestroyEntity(_connectionMeshes[i]);
 				}
 			}
 		}
+
 		public override void Destroy()
 		{
 			base.Destroy();
-			Map.EM.DestroyEntity(_connectionMeshes);
-			_connectionMeshes.Dispose();
+			try
+
+			{
+				Map.EM.DestroyEntity(_connectionMeshes);
+			}
+			finally
+			{
+				_connectionMeshes.Dispose();
+			}
 		}
 	}
 }

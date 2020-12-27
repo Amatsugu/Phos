@@ -3,6 +3,7 @@ using Amatsugu.Phos.TileEntities;
 
 using System;
 
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -36,6 +37,10 @@ public class MapRenderer : MonoBehaviour
 
 	private Plane[] _camPlanes;
 	private EntityManager _entityManager;
+#if UNITY_EDITOR
+	private NativeArray<HexCoords> _navDataKeys;
+	private NativeArray<float> _navDataValues;
+#endif
 
 	internal void SetMap(Map map, GameState gameState)
 	{
@@ -46,6 +51,9 @@ public class MapRenderer : MonoBehaviour
 		map.Render(_entityManager);
 		_lastCamPos = default;
 		_lastCamRot = default;
+
+
+
 		GameEvents.InvokeOnMapLoaded();
 	}
 
@@ -65,6 +73,7 @@ public class MapRenderer : MonoBehaviour
 		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 		GameEvents.OnMapRegen += Regenerate;
 		GameEvents.InvokeOnGameLoaded();
+
 	}
 
 	private void OnDestroy()
@@ -91,6 +100,27 @@ public class MapRenderer : MonoBehaviour
 		pos *= 2;
 		pos.y = map.seaLevel;
 		_ocean = Instantiate(oceanPlane, pos, Quaternion.identity).GetComponent<Transform>();
+
+
+#if UNITY_EDITOR
+		void Load()
+		{
+			Debug.Log("Nav Data");
+			if (_navDataKeys.IsCreated)
+				_navDataKeys.Dispose();
+			if (_navDataValues.IsCreated)
+				_navDataValues.Dispose();
+			var d = map.GenerateNavData();
+			_navDataKeys = d.GetKeyArray(Allocator.Persistent);
+			_navDataValues = d.GetValueArray(Allocator.Persistent);
+
+			d.Dispose();
+		};
+
+		GameEvents.OnMapLoaded += Load;
+		GameEvents.OnMapChanged += Load;
+#endif
+
 		UnityEngine.Debug.Log("Map Load Invoke");
 		GameEvents.InvokeOnMapLoaded();
 		GameEvents.InvokeOnGameReady();
@@ -98,6 +128,18 @@ public class MapRenderer : MonoBehaviour
 
 	private void LateUpdate()
 	{
+#if UNITY_EDITOR
+		for (int i = 0; i < _navDataKeys.Length; i++)
+		{
+			var coord = _navDataKeys[i];
+			var val = _navDataValues[i];
+			var tile = map[coord];
+			if (!tile.IsShown)
+				continue;
+			var color = Color.Lerp(Color.red, Color.cyan, val / 5f);
+			Debug.DrawRay(tile.SurfacePoint, math.up() * math.abs(val) * .5f, color);
+		}
+#endif
 		//return;
 		var camPos = _cam.transform.position;
 		var camRot = _cam.transform.rotation;
@@ -123,6 +165,12 @@ public class MapRenderer : MonoBehaviour
 		map.Destroy();
 		Destroy(_ocean.gameObject);
 		Init();
+#if UNITY_EDITOR
+		if (_navDataKeys.IsCreated)
+			_navDataKeys.Dispose();
+		if (_navDataValues.IsCreated)
+			_navDataValues.Dispose();
+#endif
 		_lastCamPos = Vector3.zero;
 	}
 }

@@ -237,7 +237,7 @@ public class UIActionsPanel : UIPanel
 			tilesNeeded += HexCoords.GetTileCount((_selectedEntities[i] as IMoveable).GetSize());
 
 		var r = HexCoords.CalculateRadius(tilesNeeded) + 1;
-		var orderedUnits = _selectedEntities.OrderBy(u => ((IMoveable)u).GetSize()).Reverse().Select(u => u as IMoveable).ToArray();
+		var orderedUnits = _selectedEntities.Cast<IMoveable>().OrderByDescending(u => u.GetSize()).ToArray();
 
 		var occupiedSet = new HashSet<HexCoords>();
 		var openSet = new HashSet<HexCoords>();
@@ -255,15 +255,6 @@ public class UIActionsPanel : UIPanel
 					for (int x = 0; x < footprint.Length; x++)
 						occupiedSet.Add(footprint[x]);
 					orderedUnits[i].MoveTo(_map[openTiles[j]].SurfacePoint);
-					/*var order = new MoveOrder
-					{
-						unit = orderedUnits[i],
-						dst = _map[openTiles[j]].SurfacePoint
-					};
-					order.cost = (order.dst - order.unit.Position).sqrMagnitude;
-					UnityEngine.Debug.DrawRay(order.dst, Vector3.up, Color.magenta, 1);
-					_moveOrderQueue.Enqueue(order);*/
-
 					break;
 				}
 			}
@@ -292,7 +283,7 @@ public class UIActionsPanel : UIPanel
 				break;
 			}
 		}
-
+		Debug.Log($"Validity Check: {isValid}");
 		return isValid;
 	}
 

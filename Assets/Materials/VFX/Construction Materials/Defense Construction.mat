@@ -97,6 +97,7 @@ Material:
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _SrcBlend: 1
+    - _StartTime: 0
     - _StencilRef: 0
     - _StencilRefDepth: 8
     - _StencilRefDistortionVec: 4
