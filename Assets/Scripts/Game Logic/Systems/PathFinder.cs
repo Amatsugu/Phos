@@ -26,14 +26,8 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 		}
 
 		[BurstCompile]
-		public static List<HexCoords> GetPath(
-			float3 src,
-			float3 dst,
-			ref NativeHashMap<HexCoords, float> navData,
-			float innerRadius,
-			ref NativeList<PathNode> open,
-			ref NativeHashMap<PathNode, float> closed,
-			ref NativeHashMap<PathNode, PathNode> nodePairs)
+		public static List<HexCoords> GetPath(float3 src, float3 dst, ref NativeHashMap<HexCoords, float> navData, float innerRadius,
+			ref NativeList<PathNode> open, ref NativeHashMap<PathNode, float> closed, ref NativeHashMap<PathNode, PathNode> nodePairs, float muliplier = 1f)
 		{
 			var srcCoord = HexCoords.FromPosition(src);
 			var dstCoord = HexCoords.FromPosition(dst);
@@ -65,14 +59,14 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 					if (!navData.ContainsKey(curNeighbor))
 						continue;
 
-					var newNode = new PathNode(curNeighbor, navData[curNeighbor], best.G + 1);
+					var newNode = new PathNode(curNeighbor, navData[curNeighbor] * muliplier, best.G + 1);
 					//Debug.DrawLine(best.surfacePoint, newNode.surfacePoint, Color.blue, 1);
 					if (closed.ContainsKey(newNode))
 						continue;
-					if (navData[curNeighbor] < 0)
+					if (navData[curNeighbor] * muliplier< 0)
 					{
 						closed.Add(newNode, 0);
-						break;
+						continue;
 					}
 
 					if (curNeighbor == dstCoord)
@@ -183,13 +177,13 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 
 			public int Compare(PathNode x, PathNode y)
 			{
-				var diff = x.F - y.F;
-				if (diff == 0)
-					return 0;
-				if (diff < 0)
-					return -1;
-				else
-					return 1;
+				return Mathf.RoundToInt(x.F - y.F);
+				//if (diff == 0)
+				//	return 0;
+				//if (diff < 0)
+				//	return -1;
+				//else
+				//	return 1;
 			}
 
 			public override bool Equals(object obj) => obj is PathNode n ? n.coords.Equals(n.coords) : false;

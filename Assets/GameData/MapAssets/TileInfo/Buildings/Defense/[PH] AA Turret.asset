@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 93f6de7c742a08b4cadb99176a63d07e, type: 3}
   m_Name: '[PH] AA Turret'
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
@@ -39,13 +39,13 @@ MonoBehaviour:
     footprint:
     - x: 0
       y: 0
-  useMetaTiles: 0
+  useMetaTiles: 1
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
-  faction: 0
+  faction: 1
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
@@ -57,3 +57,19 @@ MonoBehaviour:
   production: []
   consumption: []
   adjacencyEffects: []
+  fireRate: 20
+  damage: 1
+  attackRange: 30
+  minAttackRange: 2
+  projectileMesh: {fileID: 11400000, guid: 0b1838ed4bd877e489a2415ea3578bde, type: 2}
+  turretHead:
+    id: 0
+  turretBarrel:
+    id: 1
+  unitClass: 0
+  domain: 1
+  targetingDomain: 2
+  shotOffset:
+    x: 0
+    y: 0
+    z: 0

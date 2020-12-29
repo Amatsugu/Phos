@@ -22,7 +22,7 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 1
   assetGuid: 84b3e30a3534ba84da2e7befd1cb54db
-  buildingMesh: {fileID: 0}
+  buildingMesh: {fileID: 11400000, guid: adf5860c525e82b4e93581e86701eb20, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -39,13 +39,25 @@ MonoBehaviour:
     footprint:
     - x: 0
       y: 0
-  useMetaTiles: 0
+    - x: -1
+      y: 0
+    - x: 0
+      y: -1
+    - x: 1
+      y: -1
+    - x: 1
+      y: 0
+    - x: 0
+      y: 1
+    - x: -1
+      y: 1
+  useMetaTiles: 1
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
-  faction: 0
+  faction: 1
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:

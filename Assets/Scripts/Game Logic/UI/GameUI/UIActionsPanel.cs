@@ -283,7 +283,7 @@ public class UIActionsPanel : UIPanel
 				break;
 			}
 		}
-		Debug.Log($"Validity Check: {isValid}");
+
 		return isValid;
 	}
 

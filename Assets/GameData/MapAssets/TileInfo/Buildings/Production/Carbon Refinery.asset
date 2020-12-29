@@ -22,7 +22,7 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 0
   assetGuid: 763826ebcd88b8f44bd20f65c32a52f7
-  buildingMesh: {fileID: 11400000, guid: 0a6041550933afd48b7c545b8f20841f, type: 2}
+  buildingMesh: {fileID: 11400000, guid: 4e4aebfecd0580b4694599af50dae84a, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -39,23 +39,15 @@ MonoBehaviour:
     footprint:
     - x: 0
       y: 0
+    - x: -1
+      y: 0
     - x: 0
       y: -1
     - x: 1
       y: -1
     - x: 1
       y: 0
-    - x: 0
-      y: 1
-    - x: -1
-      y: 1
-    - x: -2
-      y: 0
-    - x: -1
-      y: -1
-    - x: -2
-      y: 1
-  useMetaTiles: 0
+  useMetaTiles: 1
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
