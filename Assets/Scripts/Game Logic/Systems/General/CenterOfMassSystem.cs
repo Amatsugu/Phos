@@ -20,7 +20,7 @@ public class CenterOfMassSystem : JobComponentSystem
 
 		public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
 		{
-			if (!(chunk.DidChange(translationType, lastVersion) && chunk.DidChange(centerOfMassOffsetType, lastVersion)))
+			if (!chunk.DidChange(translationType, lastVersion))
 				return;
 			var positions = chunk.GetNativeArray(translationType);
 			var offsets = chunk.GetNativeArray(centerOfMassOffsetType);
@@ -51,7 +51,7 @@ public class CenterOfMassSystem : JobComponentSystem
 			}
 		};
 		_query = GetEntityQuery(desc);
-		_query.SetChangedVersionFilter(new ComponentType[] { typeof(Translation), typeof(CenterOfMassOffset) });
+		_query.SetChangedVersionFilter(new ComponentType[] { typeof(Translation)});
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)

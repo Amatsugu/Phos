@@ -87,30 +87,38 @@ public class ConstructionMeshEntity : ScriptableObject
 			typeof(PerInstanceCullingTag),
 			typeof(WorldRenderBounds),
 			typeof(ChunkWorldRenderBounds),
-			typeof(RenderBounds),
-			typeof(ConstructionOffset),
-			typeof(ConstructionStart),
-			typeof(ConstructionDuration),
-			typeof(ConstructionHeight));
+			typeof(RenderBounds));
+			//typeof(ConstructionOffset),
+			//typeof(ConstructionStart),
+			//typeof(ConstructionDuration),
+			//typeof(ConstructionHeight));
 	}
 
 
 	private void Render(float3 pos, quaternion rotation, MeshEntityRotatable mesh, Entity entity, float height, float duration, float offset = 0)
 	{
+		var mat = new Material(material);
+		mat.SetFloat("Height", height);
+		mat.SetFloat("Offset", pos.y - offset);
+		mat.SetFloat("StartTime", Time.time);
+		mat.SetFloat("Duration", duration);
+
 		var renderMesh = new RenderMesh
 		{
 			castShadows = mesh.castShadows,
 			receiveShadows =mesh.receiveShadows,
-			material = material,
+			material = mat,
 			mesh = mesh.mesh,
 			subMesh = 0
 		};
 
+
+
 		Map.EM.SetSharedComponentData(entity, renderMesh);
-		Map.EM.SetComponentData(entity, new ConstructionHeight { Value = height });
-		Map.EM.SetComponentData(entity, new ConstructionOffset { Value = pos.y - offset });
-		Map.EM.SetComponentData(entity, new ConstructionStart { Value = Time.time });
-		Map.EM.SetComponentData(entity, new ConstructionDuration { Value = duration });
+		//Map.EM.SetComponentData(entity, new ConstructionHeight { Value = height });
+		//Map.EM.SetComponentData(entity, new ConstructionOffset { Value = pos.y - offset });
+		//Map.EM.SetComponentData(entity, new ConstructionStart { Value = Time.time });
+		//Map.EM.SetComponentData(entity, new ConstructionDuration { Value = duration });
 		Map.EM.SetComponentData(entity, new Translation { Value = pos });
 		Map.EM.SetComponentData(entity, new Rotation { Value = rotation });
 		Map.EM.SetComponentData(entity, new Scale { Value = 1 });

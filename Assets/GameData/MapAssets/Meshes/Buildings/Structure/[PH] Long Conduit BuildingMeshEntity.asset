@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: '[PH] Long Conduit BuildingMeshEntity'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
+  mesh: {fileID: 6894623564810876310, guid: f653c996b328e834294b536543820098, type: 3}
+  material: {fileID: 2100000, guid: b171a3b48348e8443abe58eebef7e7a7, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1

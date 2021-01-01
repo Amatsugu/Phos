@@ -2,6 +2,7 @@
 using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
+using System;
 using System.Collections.Generic;
 
 using Unity.Entities;
@@ -30,7 +31,7 @@ public class BuildQueueSystem : ComponentSystem
 	private void OnUnitBuilt(HexCoords coords)
 	{
 		Debug.Log("Unit built");
-		if(_factoryReady.ContainsKey(coords))
+		if (_factoryReady.ContainsKey(coords))
 			_factoryReady[coords] = true;
 	}
 
@@ -116,14 +117,14 @@ public class BuildQueueSystem : ComponentSystem
 			var orderIndex = -1;
 			for (int i = 0; i < _constructionOrders.Count; i++)
 			{
-				if(_constructionOrders[i].id == orderId)
+				if (_constructionOrders[i].id == orderId)
 				{
 					curOrder = _constructionOrders[i];
 					orderIndex = i;
 					break;
 				}
 			}
-			if(!curOrder.isCreaated)
+			if (!curOrder.isCreaated)
 			{
 				Debug.LogWarning($"No order to cancel with ID: {orderId}");
 				return;
@@ -145,10 +146,19 @@ public class BuildQueueSystem : ComponentSystem
 		{
 			var orderId = _readyToBuildOrders[i - offset];
 			var order = _pendingBuildOrders[orderId];
+
 			switch (order.orderType)
 			{
 				case OrderType.Building:
-					PlaceBuilding(order);
+					try
+					{
+						PlaceBuilding(order);
+					}
+					catch (Exception e)
+					{
+						Debug.LogError($"Failed to build building: {order.building.GetNameString()}, skipping");
+						Debug.LogError(e);
+					}
 					_pendingBuildOrders.Remove(orderId);
 					_readyToBuildOrders.RemoveAt(i - offset++);
 					break;
@@ -156,7 +166,16 @@ public class BuildQueueSystem : ComponentSystem
 				case OrderType.Unit:
 					if (_factoryReady.ContainsKey(order.factory.Coords) && _factoryReady[order.factory.Coords]) //Check if can build
 					{
-						StartUnitConstruction(order);
+						try
+						{
+							StartUnitConstruction(order);
+						}
+						catch (Exception e)
+						{
+							
+							Debug.LogError($"Failed to build unit: {GameRegistry.UnitDatabase[order.unit].info.GetNameString()}, skipping");
+							Debug.LogError(e);
+						}
 						_pendingBuildOrders.Remove(orderId);
 						_readyToBuildOrders.RemoveAt(i - offset++);
 					}
@@ -248,7 +267,6 @@ public struct ConstructionOrder
 	public float buildTime;
 
 	public bool isCreaated;
-
 
 	public ConstructionOrder(BuildOrder order, float buildTime, double completeTime)
 	{

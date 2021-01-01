@@ -1,15 +1,13 @@
 ﻿using Amatsugu.Phos;
-using Amatsugu.Phos.ECS.Jobs.Pathfinder;
 using Amatsugu.Phos.UnitComponents;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
 using UnityEngine;
+
 using static Amatsugu.Phos.ECS.Jobs.Pathfinder.PathFinder;
 
 public class UnitMovementSystem : ComponentSystem
@@ -21,8 +19,10 @@ public class UnitMovementSystem : ComponentSystem
 	private EntityQuery EntityQuery;
 
 	private NativeHashMap<HexCoords, float> _navData;
+
 	//private Dictionary<int, NativeList<HexCoords>> _paths;
 	private NativeList<PathNode> _open;
+
 	private NativeHashMap<PathNode, float> _closed;
 	private NativeHashMap<PathNode, PathNode> _nodePairs;
 	private bool _ready;
@@ -39,7 +39,7 @@ public class UnitMovementSystem : ComponentSystem
 		base.OnStartRunning();
 	}
 
-	void Init()
+	private void Init()
 	{
 		_map = GameRegistry.GameMap;
 		_navData = _map.GenerateNavData();
@@ -55,7 +55,7 @@ public class UnitMovementSystem : ComponentSystem
 		_ready = true;
 	}
 
-	void OnMapChanged()
+	private void OnMapChanged()
 	{
 		_map.GenerateNavData(ref _navData);
 	}
@@ -81,7 +81,7 @@ public class UnitMovementSystem : ComponentSystem
 		if (!_ready)
 			return;
 		///Caluclate Paths
-		Entities.WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
+		Entities.WithAllReadOnly<UnitDomain.Land>().WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
 		{
 			var p = GetPath(t.Value, d.Value, ref _navData, _map.innerRadius, ref _open, ref _closed, ref _nodePairs);
 			if (p == null)
@@ -96,25 +96,45 @@ public class UnitMovementSystem : ComponentSystem
 				Progress = p.Count - 1
 			});
 		});
+		Entities.WithAllReadOnly<UnitDomain.Naval>().WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
+		{
+			var p = GetPath(t.Value, d.Value, ref _navData, _map.innerRadius, ref _open, ref _closed, ref _nodePairs, -1);
+			if (p == null)
+			{
+				Debug.LogWarning("Path Null");
+				PostUpdateCommands.RemoveComponent<Destination>(e);
+				return;
+			}
+			PostUpdateCommands.AddSharedComponent(e, new Path { Value = p });
+			PostUpdateCommands.AddComponent(e, new PathProgress
+			{
+				Progress = p.Count - 1
+			});
+		});
 
 		//Move to Target
-		Entities.WithNone<Path>().WithAll<MoveToTarget>().ForEach((Entity e, ref Translation c, ref AttackTarget t, ref AttackRange range) =>
+		Entities.WithNone<Path, Destination>().WithAllReadOnly<MoveToTarget>().ForEach((Entity e, ref Translation c, ref AttackTarget t, ref AttackRange range) =>
 		{
 			var tPos = EntityManager.GetComponentData<CenterOfMass>(t.Value);
 			if (!range.IsInRange(c.Value, tPos.Value))
 				return;
-			if(EntityManager.HasComponent<Destination>(e))
-			{
-				PostUpdateCommands.SetComponent(e, new Destination { Value = tPos.Value });
-			}else
-				PostUpdateCommands.AddComponent(e, new Destination { Value = tPos.Value });
+			PostUpdateCommands.AddComponent(e, new Destination { Value = tPos.Value });
+		});
+
+		//Move to Target
+		Entities.WithNone<Path>().WithAllReadOnly<MoveToTarget, Destination>().ForEach((Entity e, ref Translation c, ref AttackTarget t, ref AttackRange range) =>
+		{
+			var tPos = EntityManager.GetComponentData<CenterOfMass>(t.Value);
+			if (!range.IsInRange(c.Value, tPos.Value))
+				return;
+			PostUpdateCommands.SetComponent(e, new Destination { Value = tPos.Value });
 		});
 
 		//Follow path to Target
-		Entities.WithAll<MoveToTarget>().ForEach((Entity e, ref Translation t, ref AttackRange range, ref AttackTarget tgt, ref PathProgress pathId, ref Destination d) =>
+		Entities.WithAllReadOnly<MoveToTarget>().WithAnyReadOnly<UnitDomain.Land, UnitDomain.Naval>().ForEach((Entity e, ref Translation t, ref AttackRange range, ref AttackTarget tgt, ref PathProgress pathId, ref Destination d) =>
 		{
 			var tPos = EntityManager.GetComponentData<CenterOfMass>(tgt.Value);
-			if(!tPos.Value.Equals(d.Value))
+			if (!tPos.Value.Equals(d.Value))
 			{
 				PostUpdateCommands.RemoveComponent<PathProgress>(e);
 				PostUpdateCommands.RemoveComponent<Path>(e);
@@ -133,17 +153,9 @@ public class UnitMovementSystem : ComponentSystem
 		});
 
 		//Follow Paths
-		Entities.ForEach((Entity e, Path path, ref UnitId id, ref Rotation rot, ref Translation t, ref PathProgress pathId, ref MoveSpeed speed) =>
+		Entities.WithAnyReadOnly<UnitDomain.Land, UnitDomain.Naval>().ForEach((Entity e, Path path, ref UnitId id, ref Rotation rot, ref Translation t, ref PathProgress pathId, ref MoveSpeed speed) =>
 		{
-
 			//Path Complete
-			if (pathId.Progress < 0)
-			{
-				PostUpdateCommands.RemoveComponent<PathProgress>(e);
-				PostUpdateCommands.RemoveComponent<Path>(e);
-				PostUpdateCommands.RemoveComponent<Destination>(e);
-				return;
-			}
 			var dst = _map[path.Value[pathId.Progress]].SurfacePoint;
 
 			dst.y = t.Value.y;
@@ -158,19 +170,50 @@ public class UnitMovementSystem : ComponentSystem
 				rot.Value = Quaternion.RotateTowards(rot.Value, targetRot, 360 * Time.DeltaTime);
 				//PostUpdateCommands.SetComponent(unit.HeadEntity, rot);
 			}
-			if (EntityManager.HasComponent<UnitHead>(e))
+			else
 			{
-				var head = EntityManager.GetComponentData<UnitHead>(e).Value;
-				PostUpdateCommands.SetComponent(head, t);
-				if(!EntityManager.HasComponent<AttackTarget>(e))
-					PostUpdateCommands.SetComponent(head, rot);
+				PostUpdateCommands.RemoveComponent<PathProgress>(e);
+				PostUpdateCommands.RemoveComponent<Path>(e);
+				PostUpdateCommands.RemoveComponent<Destination>(e);
+				return;
 			}
 			t.Value.y = _map[HexCoords.FromPosition(t.Value)].Height;
 			//Next Point
 			if (t.Value.Equals(dst))
-			{
 				pathId.Progress--;
-			}
+		});
+
+		//Follow Path Air
+		Entities.WithAnyReadOnly<UnitDomain.Air>().ForEach((ref Rotation rot, ref Translation t, ref MoveSpeed speed, ref Destination dst) =>
+		{
+			var pos = Vector3.MoveTowards(t.Value, dst.Value, speed.Value * Time.DeltaTime);
+			var p2 = pos;
+			p2.y = _map[HexCoords.FromPosition(t.Value)].SurfacePoint.y + 6f;
+			pos = Vector3.MoveTowards(pos, p2, speed.Value * Time.DeltaTime);
+			t.Value = pos;
+
+			var dir = (t.Value - dst.Value);
+			dir.y = 0;
+			rot.Value = quaternion.LookRotation(dir, math.up());
+		});
+
+		Entities.ForEach((ref UnitHead head, ref Translation t) =>
+		{
+			PostUpdateCommands.SetComponent(head.Value, t);
+		});
+
+		Entities.WithNone<AttackTarget>().ForEach((ref UnitHead head, ref Rotation r) =>
+		{
+			PostUpdateCommands.SetComponent(head.Value, r);
+		});
+
+		Entities.ForEach((ref Translation t, ref UnitHead head, ref AttackTarget target) =>
+		{
+			var targetPos = EntityManager.GetComponentData<CenterOfMass>(target.Value);
+			var dir = (t.Value - targetPos.Value);
+			dir.y = 0;
+			var rot = quaternion.LookRotation(dir, math.up());
+			PostUpdateCommands.SetComponent(head.Value, new Rotation { Value = rot });
 		});
 	}
 }
