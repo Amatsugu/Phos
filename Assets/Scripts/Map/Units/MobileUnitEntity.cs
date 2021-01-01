@@ -58,6 +58,7 @@ namespace Amatsugu.Phos.Units
 			typeof(UnitState),
 			typeof(PhysicsCollider),
 			typeof(PhysicsMass),
+			typeof(AnimationSystem.AnimationData.Velocity),
 			typeof(CenterOfMassOffset),
 			typeof(CenterOfMass),
 			typeof(TargetingDomain),

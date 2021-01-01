@@ -243,5 +243,10 @@ namespace Amatsugu.Phos.Units
 		{
 			return Map.EM.GetComponentData<CenterOfMass>(Entity).Value;
 		}
+
+		public UnitDomain.Domain GetDomain()
+		{
+			return info.unitDomain;
+		}
 	}
 }

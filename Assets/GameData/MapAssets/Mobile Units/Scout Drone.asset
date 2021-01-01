@@ -35,12 +35,7 @@ MonoBehaviour:
     y: 0.5
     z: 0
   constructionMesh: {fileID: 11400000, guid: f91054b4d51d5944ba378803a6daf941, type: 2}
-  subMeshes:
-  - offset:
-      x: 0
-      y: 0
-      z: 0
-    mesh: {fileID: 11400000, guid: 68cb1fd3b1861fd4880a15223d7f5b63, type: 2}
+  subMeshes: []
   head:
     id: -1
   projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}

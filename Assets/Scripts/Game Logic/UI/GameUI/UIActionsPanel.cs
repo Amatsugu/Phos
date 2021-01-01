@@ -1,5 +1,6 @@
 ﻿using Amatsugu.Phos;
 using Amatsugu.Phos.Tiles;
+using Amatsugu.Phos.Units;
 
 using Effects.Lines;
 
@@ -190,8 +191,8 @@ public class UIActionsPanel : UIPanel
 
 	private void UpdateMove()
 	{
-		if(!_lastOrderTarget.Equals(float3.zero))
-			RenderMove();
+		//if(!_lastOrderTarget.Equals(float3.zero))
+		//	RenderMove();
 
 		if (!Input.GetKeyUp(KeyCode.Mouse1))
 			return;
@@ -232,12 +233,20 @@ public class UIActionsPanel : UIPanel
 		//if (tile.IsUnderwater)
 		//	return;
 		_lastOrderTarget = tile.SurfacePoint;
-		var tilesNeeded = 0;
-		for (int i = 0; i < _selectedEntities.Count; i++)
-			tilesNeeded += HexCoords.GetTileCount((_selectedEntities[i] as IMoveable).GetSize());
+		var movables = _selectedEntities.Cast<IMoveable>().ToList();
+
+
+		var boids = movables.Where(u => u.GetDomain() == UnitDomain.Domain.Air).ToList();
+		for (int i = 0; i < boids.Count; i++)
+			boids[i].MoveTo(tile.SurfacePoint);
+
+		var pathFindingUnits = movables.Where(u => u.GetDomain() != UnitDomain.Domain.Air).ToList();
+		if (pathFindingUnits.Count == 0)
+			return;
+		var tilesNeeded = pathFindingUnits.Sum(m => m.GetSize());
 
 		var r = HexCoords.CalculateRadius(tilesNeeded) + 1;
-		var orderedUnits = _selectedEntities.Cast<IMoveable>().OrderByDescending(u => u.GetSize()).ToArray();
+		var orderedUnits = pathFindingUnits.OrderByDescending(u => u.GetSize()).ToArray();
 
 		var occupiedSet = new HashSet<HexCoords>();
 		var openSet = new HashSet<HexCoords>();

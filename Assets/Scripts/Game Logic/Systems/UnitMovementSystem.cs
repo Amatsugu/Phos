@@ -184,18 +184,19 @@ public class UnitMovementSystem : ComponentSystem
 		});
 
 		//Follow Path Air
-		Entities.WithAnyReadOnly<UnitDomain.Air>().ForEach((ref Rotation rot, ref Translation t, ref MoveSpeed speed, ref Destination dst) =>
-		{
-			var pos = Vector3.MoveTowards(t.Value, dst.Value, speed.Value * Time.DeltaTime);
-			var p2 = pos;
-			p2.y = _map[HexCoords.FromPosition(t.Value)].SurfacePoint.y + 6f;
-			pos = Vector3.MoveTowards(pos, p2, speed.Value * Time.DeltaTime);
-			t.Value = pos;
+		//Entities.WithAnyReadOnly<UnitDomain.Air>().ForEach((ref Rotation rot, ref Translation t, ref MoveSpeed speed, ref Destination dst) =>
+		//{
+		//	var pos = Vector3.MoveTowards(t.Value, dst.Value, speed.Value * Time.DeltaTime);
+		//	var p2 = pos;
+		//	p2.y = _map[HexCoords.FromPosition(t.Value)].SurfacePoint.y + 6f;
+		//	pos = Vector3.MoveTowards(pos, p2, speed.Value * Time.DeltaTime);
+		//	t.Value = pos;
 
-			var dir = (t.Value - dst.Value);
-			dir.y = 0;
-			rot.Value = quaternion.LookRotation(dir, math.up());
-		});
+		//	var dir = (t.Value - dst.Value);
+		//	dir.y = 0;
+		//	rot.Value = quaternion.LookRotation(dir, math.up());
+		//});
+
 
 		Entities.ForEach((ref UnitHead head, ref Translation t) =>
 		{

@@ -71,6 +71,9 @@ public interface IMoveable
 	void MoveTo(float3 pos);
 
 	int GetSize();
+
+	UnitDomain.Domain GetDomain();
+
 }
 
 public interface IPartolable

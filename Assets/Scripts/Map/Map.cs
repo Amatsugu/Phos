@@ -461,22 +461,25 @@ namespace Amatsugu.Phos
 			return tileDist;
 		}
 
-		public NativeHashMap<HexCoords, float> GenerateNavData()
+		public NativeHashMap<HexCoords, float> GenerateNavData(bool underwaterData = true)
 		{
 			var nav = new NativeHashMap<HexCoords, float>(totalHeight * totalWidth, Allocator.Persistent);
-			GenerateNavData(ref nav);
+			GenerateNavData(ref nav, underwaterData);
 			return nav;
 		}
 
-		public void GenerateNavData(ref NativeHashMap<HexCoords, float> navData)
+		public void GenerateNavData(ref NativeHashMap<HexCoords, float> navData, bool underwaterData = false)
 		{
 			for (int z = 0; z < totalHeight; z++)
 			{
 				for (int x = 0; x < totalWidth; x++)
 				{
 					var t = this[HexCoords.FromOffsetCoords(x, z, tileEdgeLength)];
-					var navValue = t.IsUnderwater ? t.Height * -1 : (t.info.isTraverseable ? t.Height : float.MinValue);
-					navData.Add(t.Coords, navValue);
+					var navValue = t.IsUnderwater ? (underwaterData ? t.Height * -1 : seaLevel) : (t.info.isTraverseable ? t.Height : float.MinValue);
+					if (navData.ContainsKey(t.Coords))
+						navData[t.Coords] = navValue;
+					else
+						navData.Add(t.Coords, navValue);
 				}
 			}
 		}

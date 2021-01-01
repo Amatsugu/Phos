@@ -38,7 +38,7 @@ namespace Amatsugu.Phos.Tiles
 
 		protected override void OnBuilt()
 		{
-			var spawnTiles = map.HexSelect(Coords, 2);
+			var spawnTiles = map.HexSelect(Coords, 6);
 			for (int i = 0; i < spawnTiles.Count; i++)
 			{
 				if (!(spawnTiles[i] is BuildingTile))
@@ -52,7 +52,8 @@ namespace Amatsugu.Phos.Tiles
 						Value = quaternion.LookRotation(fwd, Vector3.up)
 					};
 					Map.EM.SetComponentData(unit.Entity, rot);
-					Map.EM.SetComponentData(unit.HeadEntity, rot);
+					if(Map.EM.Exists(unit.HeadEntity))
+						Map.EM.SetComponentData(unit.HeadEntity, rot);
 				}
 			}
 			//PowerTransferEffectSystem.AddNode(map.conduitGraph.GetNode(Coords));

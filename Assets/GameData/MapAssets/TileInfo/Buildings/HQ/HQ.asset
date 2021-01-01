@@ -34,7 +34,6 @@ MonoBehaviour:
   tier: 1
   constructionTime: 0
   category: 0
-  size: 1
   footprint:
     size: 2
     footprint:
@@ -54,6 +53,7 @@ MonoBehaviour:
       y: 1
     - x: -1
       y: 1
+  useMetaTiles: 0
   flattenOuterRange: 6
   isOffshore: 0
   offshoreOnly: 0
@@ -87,4 +87,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d966e12209bf2fa4c9378e52af7fd189, type: 2}
   - {fileID: 11400000, guid: e06933dfdc394b44a8d7dd66a08bd22c, type: 2}
   - {fileID: 11400000, guid: 6e4e32dbf880de14d96237eda527fc63, type: 2}
-  unitInfo: {fileID: 11400000, guid: 8c4dc19ef577e654494f91bd6a995810, type: 2}
+  unitInfo: {fileID: 11400000, guid: a20b3d4581d9b1f41a2bf5c59c4acc40, type: 2}
