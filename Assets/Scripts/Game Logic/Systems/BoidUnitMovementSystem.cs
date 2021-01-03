@@ -2,15 +2,13 @@ using Amatsugu.Phos.UnitComponents;
 
 using AnimationSystem.AnimationData;
 
-using System.Collections.Generic;
-
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Amatsugu.Phos
 {
@@ -68,7 +66,7 @@ namespace Amatsugu.Phos
 
 			private float3 ForwardMovement(MoveSpeed speed, Rotation rotation)
 			{
-				var fwd = new float3(0, 0 , 1);
+				var fwd = new float3(0, 0, 1);
 				fwd = math.rotate(rotation.Value, fwd);
 
 				fwd *= speed.Value * 1;
@@ -93,7 +91,6 @@ namespace Amatsugu.Phos
 				else
 					return velocity;
 			}
-
 
 			private float3 TendToPoint(Translation translation, float3 center)
 			{
@@ -172,8 +169,6 @@ namespace Amatsugu.Phos
 			GameEvents.OnMapChanged += OnMapChanged;
 		}
 
-
-
 		private void OnMapChanged()
 		{
 			if (_navData.IsCreated)
@@ -198,7 +193,7 @@ namespace Amatsugu.Phos
 				velocityType = GetComponentTypeHandle<Velocity>(false),
 				moveSpeedType = GetComponentTypeHandle<MoveSpeed>(true),
 				destinationType = GetComponentTypeHandle<Destination>(true),
-				navData= _navData,
+				navData = _navData,
 				dt = Time.DeltaTime
 			};
 			inputDeps = boidsJob.Schedule(_entityQuery, inputDeps);

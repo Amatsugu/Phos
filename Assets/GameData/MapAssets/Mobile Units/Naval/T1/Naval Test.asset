@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905da5d09f166504b8c1d4df1b43cbad, type: 3}
+  m_Name: Naval Test
+  m_EditorClassIdentifier: 
+  mesh: {fileID: -4190509250366896844, guid: f0cb0ea8ca4361f41809f5836811393f, type: 3}
+  material: {fileID: 2100000, guid: 7bedd0d29f641f84f94f1b099cdb604b, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 0
+  nonUniformScale: 0
+  description: 
+  moveSpeed: 10
+  attackRange: 20
+  attackSpeed: 10
+  maxHealth: 100
+  size: 1
+  buildTime: 3
+  tier: 1
+  unitDomain: 4
+  unitTargetingDomain: 0
+  unitClass: 3
+  icon: {fileID: 0}
+  centerOfMassOffset:
+    x: 0
+    y: 0.5
+    z: 0
+  constructionMesh: {fileID: 11400000, guid: f91054b4d51d5944ba378803a6daf941, type: 2}
+  subMeshes: []
+  head:
+    id: -1
+  projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}
+  healthBar: {fileID: 11400000, guid: 64264ba37fb009140b7237d68e6e4e60, type: 2}
+  healthBarOffset:
+    x: 0
+    y: 1
+    z: 0

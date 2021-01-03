@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: '[PH] Naval Factory BuildingMeshEntity'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
+  mesh: {fileID: -5495902117074765545, guid: 87b5246bcf1feee40af9d14107aa7757, type: 3}
+  material: {fileID: 2100000, guid: c576650d9be277d468eea65b3dd169b8, type: 2}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 1
+  subMeshes: []
   centerOfMassOffset:
     x: 0
     y: 0

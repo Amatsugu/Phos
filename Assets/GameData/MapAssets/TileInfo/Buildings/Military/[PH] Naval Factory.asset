@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 9098ea6ee8539a44e9c1877e35a06261, type: 3}
   m_Name: '[PH] Naval Factory'
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
@@ -35,14 +35,28 @@ MonoBehaviour:
   constructionTime: 2
   category: 5
   footprint:
-    size: 1
+    size: 2
     footprint:
     - x: 0
       y: 0
+    - x: -1
+      y: 0
+    - x: 0
+      y: -1
+    - x: 1
+      y: -1
+    - x: 1
+      y: 0
+    - x: 0
+      y: 1
+    - x: -1
+      y: 1
+    - x: -1
+      y: 2
   useMetaTiles: 0
   flattenOuterRange: 0
-  isOffshore: 0
-  offshoreOnly: 0
+  isOffshore: 1
+  offshoreOnly: 1
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
   faction: 1
@@ -57,3 +71,5 @@ MonoBehaviour:
   production: []
   consumption: []
   adjacencyEffects: []
+  unitsToBuild:
+  - id: 17

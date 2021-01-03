@@ -26,7 +26,7 @@ MonoBehaviour:
   size: 0
   buildTime: 3
   tier: 1
-  unitDomain: 2
+  unitDomain: 1
   unitTargetingDomain: 0
   unitClass: 3
   icon: {fileID: 0}

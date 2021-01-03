@@ -11,6 +11,7 @@ using Unity.Physics.Systems;
 using Unity.Transforms;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [BurstCompile]
 public class UnitAttackSystem : ComponentSystem
@@ -75,7 +76,7 @@ public class UnitAttackSystem : ComponentSystem
 	private void AttackAI()
 	{
 		_castHits.Clear();
-		SelectTarget();
+		//SelectTarget();
 		RotateTurretAndShootAI();
 	}
 
@@ -98,20 +99,12 @@ public class UnitAttackSystem : ComponentSystem
 			{
 				Value = aimRot
 			});
-			if (aimRot != desRot)
-				return;
+			//if (aimRot != desRot)
+			//	return;
 			var dist = math.length(dir);
-			/*
-			if ((dist > range.MaxRange || dist < range.MinRange) && !(EntityManager.HasComponent<Path>(e) || EntityManager.HasComponent<Destination>(e)))
-			{
-				PostUpdateCommands.AddComponent<MoveToTarget>(e);
-				return;
-			}
-			*/
 			if (atkSpeed.NextAttackTime > Time.ElapsedTime)
 				return;
 			atkSpeed.NextAttackTime = Time.ElapsedTime + atkSpeed.Value;
-			//PostUpdateCommands.SetComponent(Map.ActiveMap.units[id.Value].HeadEntity, new Rotation { Value = quaternion.LookRotation(turretDir, Vector3.up) });
 			dir = math.normalize(dir) * -20;
 
 			var proj = ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, projectile.Value, t.Value + new float3(0, 1, 0), dir, Time.ElapsedTime + 3);

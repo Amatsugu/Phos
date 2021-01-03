@@ -177,7 +177,7 @@ public class UnitMovementSystem : ComponentSystem
 				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
-			t.Value.y = _map[HexCoords.FromPosition(t.Value)].Height;
+			t.Value.y = _map[HexCoords.FromPosition(t.Value)].SurfacePoint.y;
 			//Next Point
 			if (t.Value.Equals(dst))
 				pathId.Progress--;
