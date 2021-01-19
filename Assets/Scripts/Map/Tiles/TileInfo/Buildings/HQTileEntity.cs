@@ -14,6 +14,7 @@ namespace Amatsugu.Phos.TileEntities
 
 		public SubHQTileEntity[] subHQTiles;
 		public MobileUnitEntity unitInfo;
+		public int unitCount = 16;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

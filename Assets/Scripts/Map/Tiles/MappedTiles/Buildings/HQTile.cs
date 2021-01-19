@@ -38,7 +38,7 @@ namespace Amatsugu.Phos.Tiles
 
 		protected override void OnBuilt()
 		{
-			var spawnTiles = map.HexSelect(Coords, 6);
+			var spawnTiles = map.HexSelect(Coords, hqInfo.unitCount);
 			for (int i = 0; i < spawnTiles.Count; i++)
 			{
 				if (!(spawnTiles[i] is BuildingTile))

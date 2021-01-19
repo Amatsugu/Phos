@@ -59,7 +59,7 @@ namespace Amatsugu.Phos
 
 					rotations[i] = new Rotation
 					{
-						Value = quaternion.LookRotation(-totalVelocity, math.up())
+						Value = quaternion.LookRotationSafe(-totalVelocity, math.up())
 					};
 				}
 			}
@@ -95,7 +95,7 @@ namespace Amatsugu.Phos
 			private float3 TendToPoint(Translation translation, float3 center)
 			{
 				var dir = (center - translation.Value);
-				if (math.length(dir) > 2)
+				if (math.lengthsq(dir) > 2 * 2)
 					return dir * .3f;
 				else
 					return 0;
@@ -122,7 +122,7 @@ namespace Amatsugu.Phos
 				{
 					if (i != j)
 					{
-						if (math.lengthsq(translations[i].Value - translations[j].Value) < 10)
+						if (math.lengthsq(translations[i].Value - translations[j].Value) < 3 * 3)
 							c -= (translations[i].Value - translations[j].Value);
 					}
 				}

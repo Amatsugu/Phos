@@ -23,7 +23,7 @@ MonoBehaviour:
   attackRange: 20
   attackSpeed: 10
   maxHealth: 100
-  size: 0
+  size: 1
   buildTime: 3
   tier: 1
   unitDomain: 1

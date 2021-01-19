@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Amatsugu.Phos.Tiles;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +16,9 @@ namespace Amatsugu.Phos.UI
 {
 	public class UIQueueItem : UIButtonHover, IPointerClickHandler
 	{
+		public HexCoords Building { get; private set; }
+		public bool IsDone { get; private set; }
+
 		public Image icon;
 		public Image mask;
 		public TMP_Text nameText;
@@ -24,6 +29,7 @@ namespace Amatsugu.Phos.UI
 		private float _completionTime;
 		private float _buildTime;
 
+
 		public void Init(BuildOrder buildOrder)
 		{
 			var unit = GameRegistry.UnitDatabase[buildOrder.unit].info;
@@ -33,6 +39,15 @@ namespace Amatsugu.Phos.UI
 			rTransform.SetAsLastSibling();
 			gameObject.SetActive(true);
 			mask.fillAmount = 1;
+			Building = buildOrder.factory.Coords;
+			IsDone = false;
+		}
+
+		public void Finish()
+		{
+			IsDone = true;
+			ClearClickEvents();
+			SetActive(false);
 		}
 
 		public void OnPointerClick(PointerEventData eventData)
@@ -45,17 +60,24 @@ namespace Amatsugu.Phos.UI
 			OnClick = null;
 		}
 
+		public override void ClearAllEvents()
+		{
+			base.ClearAllEvents();
+			ClearClickEvents();
+		}
+
 		public void SetAsBuilding(double completionTime, float buildTime)
 		{
 			_isBuilding = true;
 			_completionTime = (float)completionTime;
 			_buildTime = buildTime;
+			mask.fillAmount = 1;
 		}
 
 		protected override void Update()
 		{
 			base.Update();
-			if (!_isBuilding)
+			if (!_isBuilding || IsDone)
 				return;
 			var remainingTime = _completionTime - Time.time;
 			var prog = remainingTime / _buildTime;

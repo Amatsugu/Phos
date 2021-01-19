@@ -1,6 +1,8 @@
+using Amatsugu.Phos.Tiles;
 using Amatsugu.Phos.UI;
 
 using System.Collections.Generic;
+using System.Linq;
 
 using Unity.Entities;
 
@@ -16,6 +18,7 @@ namespace Amatsugu.Phos
 		private List<UIQueueItem> _items;
 		private Dictionary<int, UIQueueItem> _activeItems;
 		private BuildQueueSystem _buildQueueSystem;
+		private HexCoords _curFactory;
 
 		protected override void Awake()
 		{
@@ -34,6 +37,22 @@ namespace Amatsugu.Phos
 			GameEvents.OnUnitDequeued += OnUnitRemoved;
 		}
 
+
+		public void Show(FactoryBuildingTile factory)
+		{
+			_curFactory = factory.Coords;
+			var activeKeys = _activeItems.Keys.ToArray();
+			for (int i = 0; i < activeKeys.Length; i++)
+			{
+				var k = _activeItems[activeKeys[i]];
+				if (k.Building != factory.Coords || k.IsDone)
+					k.SetActive(false);
+				else
+					k.SetActive(true);
+			}
+			Show();
+		}
+
 		private void OnConstructionStart(ConstructionOrder order)
 		{
 			_activeItems[order.id].SetAsBuilding(order.buildCompleteTime, order.buildTime);
@@ -49,6 +68,8 @@ namespace Amatsugu.Phos
 				if (c.button == UnityEngine.EventSystems.PointerEventData.InputButton.Right)
 					_buildQueueSystem.CancelOrder(order.id);
 			};
+			if (order.factory.Coords != _curFactory)
+				curItem.SetActive(false);
 		}
 
 		private void OnUnitRemoved(int id)
@@ -56,7 +77,7 @@ namespace Amatsugu.Phos
 			if(_activeItems.ContainsKey(id))
 			{
 				var itm = _activeItems[id];
-				itm.SetActive(false);
+				itm.Finish();
 				ReleaseQueueItem(itm);
 			}
 		}

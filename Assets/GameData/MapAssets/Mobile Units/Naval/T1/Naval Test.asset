@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 905da5d09f166504b8c1d4df1b43cbad, type: 3}
   m_Name: Naval Test
   m_EditorClassIdentifier: 
-  mesh: {fileID: -4190509250366896844, guid: f0cb0ea8ca4361f41809f5836811393f, type: 3}
+  mesh: {fileID: 8200345890075662854, guid: 3585e5d64ca906d4f803666b65a8f6b6, type: 3}
   material: {fileID: 2100000, guid: 7bedd0d29f641f84f94f1b099cdb604b, type: 2}
   castShadows: 1
   receiveShadows: 1

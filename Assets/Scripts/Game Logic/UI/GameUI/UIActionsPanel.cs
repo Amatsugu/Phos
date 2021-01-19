@@ -258,7 +258,7 @@ public class UIActionsPanel : UIPanel
 		{
 			for (int j = 0; j < openTiles.Length; j++)
 			{
-				var footprint = HexCoords.SpiralSelect(openTiles[j], orderedUnits[i].GetSize());
+				var footprint = HexCoords.SpiralSelect(openTiles[j], orderedUnits[i].GetSize() - 1);
 				if (IsValidFootPrint(footprint, openSet, occupiedSet))
 				{
 					for (int x = 0; x < footprint.Length; x++)
@@ -276,21 +276,18 @@ public class UIActionsPanel : UIPanel
 		for (int i = 0; i < footprint.Length; i++)
 		{
 			var coord = footprint[i];
+			DebugUtilz.DrawCrosshair(_map[coord].SurfacePoint, 10, Color.red, 1);
 			//if (_map[coord].IsUnderwater)
 			//{
 			//	isValid = false;
 			//	break;
 			//}
-			if (!open.Contains(coord))
-			{
-				isValid = false;
-				break;
-			}
+			if(_map[coord] is BuildingTile)
+				return false;
+			//if (!open.Contains(coord))
+			//	return false;
 			if (occupied.Contains(coord))
-			{
-				isValid = false;
-				break;
-			}
+				return false;
 		}
 
 		return isValid;

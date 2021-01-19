@@ -16,7 +16,7 @@ filters = {
 	settings = true
 }
 scopes = {
-	"last_search.AB59B443" = "air"
+	"last_search.AB59B443" = "hq tile"
 }
 providers = {
 	asset = {

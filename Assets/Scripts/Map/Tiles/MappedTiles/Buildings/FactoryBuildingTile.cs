@@ -26,7 +26,6 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void StartConstruction(MobileUnitEntity unitEntity)
 		{
-			Debug.Log($"Unit starting construction: {unitEntity.GetNameString()}");
 			unitEntity.constructionMesh.Instantiate(SurfacePoint + new float3(0, .3f, 0), Quaternion.identity, unitEntity, 0.8f, unitEntity.buildTime);
 			_curUnit = unitEntity;
 		}
