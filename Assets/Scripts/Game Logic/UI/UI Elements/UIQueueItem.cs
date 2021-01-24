@@ -41,6 +41,7 @@ namespace Amatsugu.Phos.UI
 			mask.fillAmount = 1;
 			Building = buildOrder.factory.Coords;
 			IsDone = false;
+			_isBuilding = false;
 		}
 
 		public void Finish()

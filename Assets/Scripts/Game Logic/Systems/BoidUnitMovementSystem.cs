@@ -78,8 +78,10 @@ namespace Amatsugu.Phos
 				var coord = HexCoords.FromPosition(t.Value);
 				var ground = navData.ContainsKey(coord) ? navData[coord] : altitude;
 				var tAlt = new float3(t.Value.x, altitude + ground, t.Value.z);
-				if (t.Value.y != altitude)
-					return (tAlt - t.Value) * 1f;
+				if (t.Value.y > tAlt.y)
+					return (tAlt - t.Value) * 2f;
+				else if(t.Value.y < tAlt.y)
+					return (tAlt - t.Value) * .5f;
 				else
 					return 0;
 			}

@@ -157,6 +157,11 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (state == BuildState.HQPlacement) //This should never happen, but just in case
 			return;
+		if(state != BuildState.UnitConstruction)
+		{
+			base.OnTabSelected(0);
+			_tier = 1;
+		}
 		buildQueueUI.Show(factoryTile);
 		state = BuildState.UnitConstruction;
 		_selectedFactory = factoryTile;
@@ -208,6 +213,11 @@ public class UIBuildPanel : UITabPanel
 		if (state == BuildState.HQPlacement)
 			return;
 		buildQueueUI.Hide();
+		if (state != BuildState.Idle && state != BuildState.Placement)
+		{
+			base.OnTabSelected(0);
+			_tier = 1;
+		}
 		state = BuildState.Idle;
 		_lastCategory = category;
 		var buildings = _buildingDatabase[category];
