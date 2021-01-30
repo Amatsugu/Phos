@@ -81,7 +81,7 @@ public class UnitMovementSystem : ComponentSystem
 		if (!_ready)
 			return;
 		///Caluclate Paths
-		Entities.WithAllReadOnly<UnitDomain.Land>().WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
+		Entities.WithAllReadOnly<UnitDomain.Land, MoveSpeed>().WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id, ref MoveSpeed speed) =>
 		{
 			var p = GetPath(t.Value, d.Value, ref _navData, _map.innerRadius, ref _open, ref _closed, ref _nodePairs);
 			if (p == null)
@@ -90,13 +90,17 @@ public class UnitMovementSystem : ComponentSystem
 				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
-			PostUpdateCommands.AddSharedComponent(e, new Path { Value = p });
+			var s = t.Value;
+			s.y = 0;
+			var path = new Path(p, s, 3);
+			path.DrawDebug(speed.Value, speed.Value * .5f, 1/30f);
+			PostUpdateCommands.AddSharedComponent(e, path);
 			PostUpdateCommands.AddComponent(e, new PathProgress
 			{
-				Progress = p.Count - 1
+				Progress = 0
 			});
 		});
-		Entities.WithAllReadOnly<UnitDomain.Naval>().WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id) =>
+		Entities.WithAllReadOnly<UnitDomain.Naval, MoveSpeed>().WithNone<PathProgress, Path>().ForEach((Entity e, ref Translation t, ref Destination d, ref UnitId id, ref MoveSpeed speed) =>
 		{
 			var p = GetPath(t.Value, d.Value, ref _navData, _map.innerRadius, ref _open, ref _closed, ref _nodePairs, -1);
 			if (p == null)
@@ -105,10 +109,14 @@ public class UnitMovementSystem : ComponentSystem
 				PostUpdateCommands.RemoveComponent<Destination>(e);
 				return;
 			}
-			PostUpdateCommands.AddSharedComponent(e, new Path { Value = p });
+			var s = t.Value;
+			s.y = 0;
+			var path = new Path(p, s, 10);
+			path.DrawDebug(speed.Value, speed.Value * .5f, 1/30f);
+			PostUpdateCommands.AddSharedComponent(e, path);
 			PostUpdateCommands.AddComponent(e, new PathProgress
 			{
-				Progress = p.Count - 1
+				Progress = 0
 			});
 		});
 
@@ -153,34 +161,42 @@ public class UnitMovementSystem : ComponentSystem
 		});
 
 		//Follow Paths
-		Entities.WithAnyReadOnly<UnitDomain.Land, UnitDomain.Naval>().ForEach((Entity e, Path path, ref UnitId id, ref Rotation rot, ref Translation t, ref PathProgress pathId, ref MoveSpeed speed) =>
+		Entities.WithAnyReadOnly<UnitDomain.Land, UnitDomain.Naval>().WithAllReadOnly<Path, UnitId>().ForEach((Entity e, Path path, ref UnitId id, ref Rotation rot, ref Translation t, ref PathProgress pathId, ref MoveSpeed speed) =>
 		{
 			//Path Complete
-			var dst = _map[path.Value[pathId.Progress]].SurfacePoint;
+			var pos = t.Value;
+			//pos.y = 0;
+			var pathIndex = pathId.Progress;
+			while (path.turnBoundaries[pathIndex].HasCrossedLine(t.Value))
+			{
+				if (pathIndex == path.finishIndex)
+				{
+					PostUpdateCommands.RemoveComponent<PathProgress>(e);
+					PostUpdateCommands.RemoveComponent<Path>(e);
+					PostUpdateCommands.RemoveComponent<Destination>(e);
+					return;
+				}
+				else
+				{
+					pathIndex =  ++pathId.Progress;
+				}
+			}
 
-			dst.y = t.Value.y;
-			t.Value = Vector3.MoveTowards(t.Value, dst, Time.DeltaTime * speed.Value);
-			if (pathId.Progress > 0)
-			{
-				var pointA = _map[path.Value[pathId.Progress - 1]].SurfacePoint;
-				var pointB = dst;
-				var dir = math.normalizesafe(pointB - pointA);
-				dir.y = 0;
-				var targetRot = quaternion.LookRotation(dir, math.up());
-				rot.Value = Quaternion.RotateTowards(rot.Value, targetRot, 360 * Time.DeltaTime);
-				//PostUpdateCommands.SetComponent(unit.HeadEntity, rot);
-			}
-			else
-			{
-				PostUpdateCommands.RemoveComponent<PathProgress>(e);
-				PostUpdateCommands.RemoveComponent<Path>(e);
-				PostUpdateCommands.RemoveComponent<Destination>(e);
-				return;
-			}
-			t.Value.y = _map[HexCoords.FromPosition(t.Value)].SurfacePoint.y;
-			//Next Point
-			if (t.Value.Equals(dst))
-				pathId.Progress--;
+			var tgtPos = _map[path.WayPoints[pathIndex]].SurfacePoint;
+			var targetRot = quaternion.LookRotation(tgtPos - pos, math.up());
+
+			var fwdRot = Quaternion.Lerp(rot.Value, targetRot, Time.DeltaTime * speed.Value * .5f);
+			var fwd = math.rotate(targetRot, new float3(0, 0, 1));
+			t.Value += fwd * speed.Value * Time.DeltaTime;
+
+			tgtPos.y = pos.y = 0;
+			targetRot = quaternion.LookRotation(tgtPos - pos, math.up());
+			targetRot = math.mul(targetRot, quaternion.RotateY(math.radians(180)));
+			rot.Value = Quaternion.Lerp(rot.Value, targetRot, Time.DeltaTime * speed.Value * .5f);
+
+			var tgtHeight = _map[HexCoords.FromPosition(t.Value)].SurfacePoint.y;
+			if(t.Value.y < tgtHeight)
+				t.Value.y = tgtHeight ;
 		});
 
 		//Follow Path Air
@@ -196,7 +212,6 @@ public class UnitMovementSystem : ComponentSystem
 		//	dir.y = 0;
 		//	rot.Value = quaternion.LookRotation(dir, math.up());
 		//});
-
 
 		Entities.ForEach((ref UnitHead head, ref Translation t) =>
 		{

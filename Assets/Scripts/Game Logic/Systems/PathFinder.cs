@@ -93,6 +93,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 					curNode = nodePairs[curNode];
 				}
 				//nodePairs.Dispose();
+				path.Reverse();
 				return path;
 			}
 			//nodePairs.Dispose();
