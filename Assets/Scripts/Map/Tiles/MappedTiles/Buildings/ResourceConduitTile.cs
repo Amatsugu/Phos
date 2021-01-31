@@ -81,7 +81,7 @@ namespace Amatsugu.Phos.Tiles
 			base.OnHide();
 			var lines = _conduitLines.Values.ToArray();
 			for (int i = 0; i < lines.Length; i++)
-				Map.EM.AddComponent<FrozenRenderSceneTag>(lines[i]);
+				Map.EM.AddComponent<DisableRendering>(lines[i]);
 		}
 
 		public override void OnShow()
@@ -89,7 +89,7 @@ namespace Amatsugu.Phos.Tiles
 			base.OnShow();
 			var lines = _conduitLines.Values.ToArray();
 			for (int i = 0; i < lines.Length; i++)
-				Map.EM.RemoveComponent<FrozenRenderSceneTag>(lines[i]);
+				Map.EM.RemoveComponent<DisableRendering>(lines[i]);
 		}
 
 		public override void OnPlaced()

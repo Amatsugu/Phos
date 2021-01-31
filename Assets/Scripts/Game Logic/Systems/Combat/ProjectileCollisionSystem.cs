@@ -30,7 +30,7 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 	private void DealDamage(Entity src, Entity tgt)
 	{
 		deathTime[src] = new DeathTime { Value = time };
-		//cmb.AddComponent(src.Index, src, ComponentType.ReadWrite<FrozenRenderSceneTag>());
+		//cmb.AddComponent(src.Index, src, ComponentType.ReadWrite<DisableRendering>());
 		cmb.RemoveComponent<PhysicsVelocity>(src.Index, src);
 		//cmb.DestroyEntity(src.Index, src);
 		if (!health.HasComponent(tgt))

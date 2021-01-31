@@ -45,13 +45,13 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnShow()
 		{
 			base.OnShow();
-			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_ringEntity);
+			Map.EM.RemoveComponent<DisableRendering>(_ringEntity);
 		}
 
 		public override void OnHide()
 		{
 			base.OnHide();
-			Map.EM.AddComponent<FrozenRenderSceneTag>(_ringEntity);
+			Map.EM.AddComponent<DisableRendering>(_ringEntity);
 		}
 
 		public override void OnDeath()

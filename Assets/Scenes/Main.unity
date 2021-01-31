@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 1.8910387, g: 57893, b: 65504, a: 1}
+  m_IndirectSpecularColor: {r: 4294.4395, g: 17506.031, b: 30431.906, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2006,13 +2006,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170076733}
-  m_LocalRotation: {x: -0.2493346, y: -0.6416719, z: 0.68690604, w: -0.23291542}
+  m_LocalRotation: {x: -0.15485571, y: 0.82592964, z: -0.46824035, w: -0.27315015}
   m_LocalPosition: {x: 0, y: 3400, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1545681347}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 93.9, y: -219.9, z: 0}
+  m_LocalEulerAnglesHint: {x: 59.1, y: 216.6, z: 0}
 --- !u!114 &170076737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2095,7 +2095,7 @@ MonoBehaviour:
   m_ShadowResolution:
     m_Override: 512
     m_UseOverride: 0
-    m_Level: 2
+    m_Level: 3
   m_ShadowDimmer: 1
   m_VolumetricShadowDimmer: 1
   m_ShadowFadeDistance: 10000
@@ -6581,7 +6581,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2102994817}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999807
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13984,7 +13984,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -442.99997}
+  m_AnchoredPosition: {x: 0, y: -442.99988}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1427279150

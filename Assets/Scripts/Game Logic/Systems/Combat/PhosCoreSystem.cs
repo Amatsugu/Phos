@@ -175,7 +175,7 @@ public class PhosProjectileSystem : JobComponentSystem
 			None = new ComponentType[]
 			{
 				typeof(Disabled),
-				typeof(FrozenRenderSceneTag)
+				typeof(DisableRendering)
 			}
 		};
 		entityQuery = GetEntityQuery(desc);

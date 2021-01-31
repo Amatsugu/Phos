@@ -94,17 +94,17 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHide()
 		{
 			base.OnHide();
-			Map.EM.AddComponent<FrozenRenderSceneTag>(_turretHead);
+			Map.EM.AddComponent<DisableRendering>(_turretHead);
 			if (Map.EM.Exists(_turretBarrel))
-				Map.EM.AddComponent<FrozenRenderSceneTag>(_turretBarrel);
+				Map.EM.AddComponent<DisableRendering>(_turretBarrel);
 		}
 
 		public override void OnShow()
 		{
 			base.OnShow();
-			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_turretHead);
+			Map.EM.RemoveComponent<DisableRendering>(_turretHead);
 			if (Map.EM.Exists(_turretBarrel))
-				Map.EM.RemoveComponent<FrozenRenderSceneTag>(_turretBarrel);
+				Map.EM.RemoveComponent<DisableRendering>(_turretBarrel);
 		}
 
 		public override void Destroy()

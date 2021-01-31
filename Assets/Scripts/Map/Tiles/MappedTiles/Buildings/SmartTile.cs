@@ -41,7 +41,7 @@ namespace Amatsugu.Phos.Tiles
 			for (int i = 0; i < 6; i++)
 			{
 				if (Map.EM.Exists(_connectionMeshes[i]))
-					Map.EM.AddComponent<FrozenRenderSceneTag>(_connectionMeshes[i]);
+					Map.EM.AddComponent<DisableRendering>(_connectionMeshes[i]);
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Amatsugu.Phos.Tiles
 			for (int i = 0; i < 6; i++)
 			{
 				if (Map.EM.Exists(_connectionMeshes[i]))
-					Map.EM.RemoveComponent<FrozenRenderSceneTag>(_connectionMeshes[i]);
+					Map.EM.RemoveComponent<DisableRendering>(_connectionMeshes[i]);
 			}
 		}
 

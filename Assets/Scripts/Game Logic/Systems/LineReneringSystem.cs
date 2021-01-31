@@ -26,7 +26,7 @@ public class LineReneringSystem : JobComponentSystem
 			None = new ComponentType[]
 			{
 				typeof(Disabled),
-				typeof(FrozenRenderSceneTag)
+				typeof(DisableRendering)
 			}
 		};
 		_entityQuery = GetEntityQuery(desc);
@@ -97,7 +97,7 @@ public class LineWidthSystem : JobComponentSystem
 			None = new ComponentType[]
 			{
 				typeof(Disabled),
-				typeof(FrozenRenderSceneTag)
+				typeof(DisableRendering)
 			}
 		};
 		_entityQuery = GetEntityQuery(desc);

@@ -92,7 +92,7 @@ public class HealthBarSystem : JobComponentSystem
 			},
 			None = new ComponentType[]
 			{
-				typeof(FrozenRenderSceneTag),
+				typeof(DisableRendering),
 				typeof(Disabled)
 			}
 		};
@@ -107,7 +107,7 @@ public class HealthBarSystem : JobComponentSystem
 			},
 			None = new ComponentType[]
 			{
-				typeof(FrozenRenderSceneTag),
+				typeof(DisableRendering),
 				typeof(Disabled)
 			}
 		};

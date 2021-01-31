@@ -196,7 +196,7 @@ namespace AnimationSystem
 				None = new ComponentType[]
 				{
 					typeof(Disabled),
-					typeof(FrozenRenderSceneTag),
+					typeof(DisableRendering),
 					typeof(BuildingOffTag),
 				}
 			};
@@ -211,7 +211,7 @@ namespace AnimationSystem
 				None = new ComponentType[]
 				{
 					typeof(Disabled),
-					typeof(FrozenRenderSceneTag),
+					typeof(DisableRendering),
 					typeof(BuildingOffTag),
 				}
 			};
@@ -226,7 +226,7 @@ namespace AnimationSystem
 				None = new ComponentType[]
 				{
 					typeof(Disabled),
-					typeof(FrozenRenderSceneTag),
+					typeof(DisableRendering),
 					typeof(BuildingOffTag),
 				}
 			};
@@ -241,7 +241,7 @@ namespace AnimationSystem
 				None = new ComponentType[]
 				{
 					typeof(Disabled),
-					typeof(FrozenRenderSceneTag),
+					typeof(DisableRendering),
 					typeof(BuildingOffTag),
 				}
 			};
@@ -257,7 +257,7 @@ namespace AnimationSystem
 				None = new ComponentType[]
 				{
 					typeof(Disabled),
-					typeof(FrozenRenderSceneTag),
+					typeof(DisableRendering),
 					typeof(BuildingOffTag),
 				}
 			};

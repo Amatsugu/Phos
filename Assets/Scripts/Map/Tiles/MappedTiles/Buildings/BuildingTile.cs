@@ -123,36 +123,36 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnHide();
 			if (hasBuilding)
-				Map.EM.AddComponent(_building, typeof(FrozenRenderSceneTag));
+				Map.EM.AddComponent(_building, typeof(DisableRendering));
 			if (_healthBars.IsCreated)
-				Map.EM.AddComponent<FrozenRenderSceneTag>(_healthBars);
+				Map.EM.AddComponent<DisableRendering>(_healthBars);
 			if (_connectorCount > 0)
 			{
 				for (int i = 0; i < _adjacencyConnectors.Length; i++)
 				{
 					if (Map.EM.Exists(_adjacencyConnectors[i]))
-						Map.EM.AddComponent<FrozenRenderSceneTag>(_adjacencyConnectors[i]);
+						Map.EM.AddComponent<DisableRendering>(_adjacencyConnectors[i]);
 				}
 			}
-			Map.EM.AddComponent(subMeshes, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(subMeshes, typeof(DisableRendering));
 		}
 
 		public override void OnShow()
 		{
 			base.OnShow();
 			if (hasBuilding)
-				Map.EM.RemoveComponent(_building, typeof(FrozenRenderSceneTag));
+				Map.EM.RemoveComponent(_building, typeof(DisableRendering));
 			if (_healthBars.IsCreated)
-				Map.EM.RemoveComponent<FrozenRenderSceneTag>(_healthBars);
+				Map.EM.RemoveComponent<DisableRendering>(_healthBars);
 			if (_connectorCount > 0)
 			{
 				for (int i = 0; i < _adjacencyConnectors.Length; i++)
 				{
 					if (Map.EM.Exists(_adjacencyConnectors[i]))
-						Map.EM.RemoveComponent<FrozenRenderSceneTag>(_adjacencyConnectors);
+						Map.EM.RemoveComponent<DisableRendering>(_adjacencyConnectors);
 				}
 			}
-			Map.EM.RemoveComponent(subMeshes, typeof(FrozenRenderSceneTag));
+			Map.EM.RemoveComponent(subMeshes, typeof(DisableRendering));
 		}
 
 		public void Build()

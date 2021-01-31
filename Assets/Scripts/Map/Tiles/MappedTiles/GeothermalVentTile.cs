@@ -34,14 +34,14 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnShow()
 		{
 			base.OnShow();
-			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_core);
+			Map.EM.RemoveComponent<DisableRendering>(_core);
 			_gyser.SetActive(true);
 		}
 
 		public override void OnHide()
 		{
 			base.OnHide();
-			Map.EM.AddComponent(_core, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(_core, typeof(DisableRendering));
 			_gyser.SetActive(false);
 		}
 
@@ -82,13 +82,13 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHide()
 		{
 			base.OnHide();
-			Map.EM.AddComponent(_shell, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(_shell, typeof(DisableRendering));
 		}
 
 		public override void OnShow()
 		{
 			base.OnShow();
-			Map.EM.RemoveComponent<FrozenRenderSceneTag>(_shell);
+			Map.EM.RemoveComponent<DisableRendering>(_shell);
 		}
 
 		public override void Destroy()

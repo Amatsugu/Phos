@@ -99,9 +99,9 @@ public struct MapChunk
 		for (int i = 0; i < Tiles.Length; i++)
 			Tiles[i].Show(shown);
 		if (shown)
-			Map.EM.RemoveComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+			Map.EM.RemoveComponent(_chunkTiles, typeof(DisableRendering));
 		else
-			Map.EM.AddComponent(_chunkTiles, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(_chunkTiles, typeof(DisableRendering));
 		isShown = shown;
 		return true;
 	}

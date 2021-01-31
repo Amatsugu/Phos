@@ -107,17 +107,17 @@ namespace Amatsugu.Phos.Units
 				return;
 			if (_isShown = isShown)
 			{
-				Map.EM.RemoveComponent(Entity, typeof(FrozenRenderSceneTag));
-				Map.EM.RemoveComponent(HeadEntity, typeof(FrozenRenderSceneTag));
+				Map.EM.RemoveComponent(Entity, typeof(DisableRendering));
+				Map.EM.RemoveComponent(HeadEntity, typeof(DisableRendering));
 				if (_healhBar.IsCreated)
-					Map.EM.RemoveComponent(_healhBar, typeof(FrozenRenderSceneTag));
+					Map.EM.RemoveComponent(_healhBar, typeof(DisableRendering));
 			}
 			else
 			{
-				Map.EM.AddComponent(Entity, typeof(FrozenRenderSceneTag));
-				Map.EM.AddComponent(HeadEntity, typeof(FrozenRenderSceneTag));
+				Map.EM.AddComponent(Entity, typeof(DisableRendering));
+				Map.EM.AddComponent(HeadEntity, typeof(DisableRendering));
 				if (_healhBar.IsCreated)
-					Map.EM.AddComponent(_healhBar, typeof(FrozenRenderSceneTag));
+					Map.EM.AddComponent(_healhBar, typeof(DisableRendering));
 			}
 		}
 

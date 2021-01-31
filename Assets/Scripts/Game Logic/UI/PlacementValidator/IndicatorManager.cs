@@ -64,7 +64,7 @@ public class IndicatorManager : IDisposable
 		{
 			Entity curEntity;
 			entities.Add(curEntity = indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
-			Map.EM.AddComponent(curEntity, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(curEntity, typeof(DisableRendering));
 		}
 	}
 
@@ -143,7 +143,7 @@ public class IndicatorManager : IDisposable
 			if (i < tiles.Count)
 			{
 				if (i >= _renderedEntities[indicatorMesh])
-					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[indicatorMesh][i]);
+					_EM.RemoveComponent<DisableRendering>(_indicatorEntities[indicatorMesh][i]);
 
 				_EM.SetComponentData(_indicatorEntities[indicatorMesh][i], new Translation { Value = tiles[i].SurfacePoint + _offset });
 			}
@@ -152,7 +152,7 @@ public class IndicatorManager : IDisposable
 				if (i >= _renderedEntities[indicatorMesh])
 					break;
 				if (i < _renderedEntities[indicatorMesh])
-					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(FrozenRenderSceneTag));
+					_EM.AddComponent(_indicatorEntities[indicatorMesh][i], typeof(DisableRendering));
 			}
 		}
 		_renderedEntities[indicatorMesh] = tiles.Count;
@@ -167,7 +167,7 @@ public class IndicatorManager : IDisposable
 			if (j < nodes.Count)
 			{
 				if (i >= _renderedEntities[line])
-					_EM.RemoveComponent<FrozenRenderSceneTag>(_indicatorEntities[line][i]);
+					_EM.RemoveComponent<DisableRendering>(_indicatorEntities[line][i]);
 
 				var pos = nodes[j].conduitPos.WorldPos + new float3(0, nodes[j].height, 0);
 				LineFactory.UpdateStaticLine(_indicatorEntities[line][i], src, pos, thiccness);
@@ -178,7 +178,7 @@ public class IndicatorManager : IDisposable
 				if (i >= _renderedEntities[line])
 					break;
 				if (i < _renderedEntities[line])
-					_EM.AddComponent(_indicatorEntities[line][i], typeof(FrozenRenderSceneTag));
+					_EM.AddComponent(_indicatorEntities[line][i], typeof(DisableRendering));
 			}
 		}
 		_renderedEntities[line] = c;
@@ -190,7 +190,7 @@ public class IndicatorManager : IDisposable
 			return;
 		for (int i = 0; i < _renderedEntities[indicator]; i++)
 		{
-			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(FrozenRenderSceneTag));
+			_EM.AddComponent(_indicatorEntities[indicator][i], typeof(DisableRendering));
 		}
 		_renderedEntities[indicator] = 0;
 	}

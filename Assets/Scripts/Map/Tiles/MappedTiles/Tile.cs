@@ -183,12 +183,12 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void OnShow()
 		{
-			Map.EM.RemoveComponent(_decor, typeof(FrozenRenderSceneTag));
+			Map.EM.RemoveComponent(_decor, typeof(DisableRendering));
 		}
 
 		public virtual void OnHide()
 		{
-			Map.EM.AddComponent(_decor, typeof(FrozenRenderSceneTag));
+			Map.EM.AddComponent(_decor, typeof(DisableRendering));
 		}
 
 		public virtual TileEntity GetMeshEntity()

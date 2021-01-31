@@ -145,17 +145,17 @@ public class MapRenderer : MonoBehaviour
 		}
 #endif
 		//return;
-		var camPos = _cam.transform.position;
-		var camRot = _cam.transform.rotation;
-		if (_lastCamPos != camPos || _lastCamRot != camRot)
-		{
-			GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
-			//map.UpdateView(_camPlanes);
-			map.UpdateView(camPos, _camPlanes, renderDistance);
-			_lastCamPos = _cam.transform.position;
-			_lastCamRot = _cam.transform.rotation;
-			_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z);
-		}
+		//var camPos = _cam.transform.position;
+		//var camRot = _cam.transform.rotation;
+		//if (_lastCamPos != camPos || _lastCamRot != camRot)
+		//{
+		//	GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
+		//	//map.UpdateView(_camPlanes);
+		//	map.UpdateView(camPos, _camPlanes, renderDistance);
+		//	_lastCamPos = _cam.transform.position;
+		//	_lastCamRot = _cam.transform.rotation;
+		//	_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z);
+		//}
 
 		if (generator.Regen)
 		{
