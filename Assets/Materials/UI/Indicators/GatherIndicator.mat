@@ -210,7 +210,7 @@ Material:
     - _DrawOrder: 0
     - _DstBlend: 1
     - _EmissiveColorMode: 1
-    - _EmissiveExposureWeight: 0
+    - _EmissiveExposureWeight: 0.518
     - _EmissiveIntensity: 630.346
     - _EmissiveIntensityUnit: 1
     - _EnableBlendModePreserveSpecularLighting: 1

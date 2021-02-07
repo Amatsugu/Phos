@@ -27,6 +27,7 @@ namespace Amatsugu.Phos.TileEntities
 		public SubMeshIdentifier turretHead;
 		//[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(MeshEntityRotatable))]
 		public SubMeshIdentifier turretBarrel;
+		public SubMeshIdentifier turretBarrelTip;
 		public UnitClass.Class unitClass;
 		public UnitDomain.Domain domain;
 		[EnumFlags]

@@ -3,8 +3,6 @@ using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Units;
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -13,8 +11,6 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 [Serializable]
 [CreateAssetMenu(menuName = "ECS/Construction Mesh Enity")]
@@ -22,7 +18,7 @@ public class ConstructionMeshEntity : ScriptableObject
 {
 	public Material material;
 
-	public void Instantiate(float3 pos, quaternion rotation,  float height, BuildingMeshEntity buildingMesh, float constructTime)
+	public void Instantiate(float3 pos, quaternion rotation, float height, BuildingMeshEntity buildingMesh, float constructTime)
 	{
 		var arr = new NativeArray<Entity>(1 + buildingMesh.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
@@ -32,11 +28,11 @@ public class ConstructionMeshEntity : ScriptableObject
 
 		Render(pos, rotation, buildingMesh, arr[0], height, constructTime);
 
-		for (int i = 1; i < buildingMesh.subMeshes.Length +1; i++)
+		for (int i = 1; i < buildingMesh.subMeshes.Length + 1; i++)
 		{
 			var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
 
-			Render(p, rotation, buildingMesh.subMeshes[i-1].mesh, arr[i], height, constructTime, buildingMesh.subMeshes[i-1].offset.y);
+			Render(p, rotation, buildingMesh.subMeshes[i - 1].mesh, arr[i], height, constructTime, buildingMesh.subMeshes[i - 1].offset.y);
 		}
 		arr.Dispose();
 	}
@@ -75,7 +71,6 @@ public class ConstructionMeshEntity : ScriptableObject
 		arr.Dispose();
 	}
 
-
 	public EntityArchetype GetArchetype()
 	{
 		return Map.EM.CreateArchetype(typeof(RenderMesh),
@@ -87,38 +82,37 @@ public class ConstructionMeshEntity : ScriptableObject
 			typeof(PerInstanceCullingTag),
 			typeof(WorldRenderBounds),
 			typeof(ChunkWorldRenderBounds),
-			typeof(RenderBounds));
-			//typeof(ConstructionOffset),
-			//typeof(ConstructionStart),
-			//typeof(ConstructionDuration),
-			//typeof(ConstructionHeight));
+			typeof(RenderBounds),
+			typeof(ConstructionOffset),
+			typeof(ConstructionStart),
+			typeof(ConstructionDuration),
+			typeof(ConstructionHeight));
 	}
-
 
 	private void Render(float3 pos, quaternion rotation, MeshEntityRotatable mesh, Entity entity, float height, float duration, float offset = 0)
 	{
-		var mat = new Material(material);
-		mat.SetFloat("Height", height);
-		mat.SetFloat("Offset", pos.y - offset);
-		mat.SetFloat("StartTime", Time.time);
-		mat.SetFloat("Duration", duration);
+		//var mat = new Material(material);
+		//mat.SetFloat("Height", height);
+		//mat.SetFloat("Offset", pos.y - offset);
+		//mat.SetFloat("StartTime", Time.time);
+		//mat.SetFloat("Duration", duration);
 
 		var renderMesh = new RenderMesh
 		{
 			castShadows = mesh.castShadows,
-			receiveShadows =mesh.receiveShadows,
-			material = mat,
+			receiveShadows = mesh.receiveShadows,
+			material = material,
 			mesh = mesh.mesh,
 			subMesh = 0
 		};
 
-
-
+		//get
 		Map.EM.SetSharedComponentData(entity, renderMesh);
-		//Map.EM.SetComponentData(entity, new ConstructionHeight { Value = height });
-		//Map.EM.SetComponentData(entity, new ConstructionOffset { Value = pos.y - offset });
-		//Map.EM.SetComponentData(entity, new ConstructionStart { Value = Time.time });
-		//Map.EM.SetComponentData(entity, new ConstructionDuration { Value = duration });
+
+		Map.EM.SetComponentData(entity, new ConstructionHeight { Value = height });
+		Map.EM.SetComponentData(entity, new ConstructionOffset { Value = pos.y - offset });
+		Map.EM.SetComponentData(entity, new ConstructionStart { Value = Time.time });
+		Map.EM.SetComponentData(entity, new ConstructionDuration { Value = duration });
 		Map.EM.SetComponentData(entity, new Translation { Value = pos });
 		Map.EM.SetComponentData(entity, new Rotation { Value = rotation });
 		Map.EM.SetComponentData(entity, new Scale { Value = 1 });
@@ -132,8 +126,5 @@ public class ConstructionMeshEntity : ScriptableObject
 				Extents = mesh.mesh.bounds.extents
 			}
 		});
-
-
-
 	}
 }

@@ -321,21 +321,28 @@ namespace Amatsugu.Phos
 			return selection;
 		}
 
+		[Flags]
 		public enum FlattenMode
 		{
 			Center,
-			Average
+			Average,
+			IgnoreUnderWater
 		}
 
 		public void FootprintFlatten(HexCoords[] footprint, int radius, FlattenMode mode = FlattenMode.Center)
 		{
+			//Get the center of the footprint
 			var c = this[footprint[0]];
+			//Determine the target height
 			float height = c.Height;
-			if (mode == FlattenMode.Average)
+			if (mode.HasFlag(FlattenMode.Average))
 				height = footprint.Average(t => this[t].Height);
 
+			//Distance to flaten
 			var flattenDist = HexCoords.CalculateInnerRadius(radius);
-			var flatten = new Dictionary<HexCoords, float>();
+			//Flaten ammount
+			var flatten = new Dictionary<HexCoords, (float value, int count)>();
+			//Tiles to flatten
 			var flattenTargets = new List<Tile>();
 			for (int i = 0; i < footprint.Length; i++)
 			{
@@ -343,15 +350,22 @@ namespace Amatsugu.Phos
 				{
 					if (t is BuildingTile)
 						return;
+					if (t.IsUnderwater && mode.HasFlag(FlattenMode.IgnoreUnderWater))
+						return;
 					var h = t.Height;
 					var dist = math.length(footprint[i].WorldPos - t.Coords.WorldPos);
 					var f = (dist / flattenDist);
 					f = 1 - math.clamp(math.abs(f), 0, 1);
 					if (flatten.ContainsKey(t.Coords))
-						flatten[t.Coords] = (flatten[t.Coords] + f) / 2f;
+					{
+						var v = flatten[t.Coords];
+						v.value += f;
+						v.count++;
+						flatten[t.Coords] = v;
+					}
 					else
 					{
-						flatten.Add(t.Coords, f);
+						flatten.Add(t.Coords, (f, 1));
 						flattenTargets.Add(t);
 					}
 				}, true);
@@ -359,10 +373,10 @@ namespace Amatsugu.Phos
 			for (int i = 0; i < flattenTargets.Count; i++)
 			{
 				var t = flattenTargets[i];
-				t.UpdateHeight(math.lerp(t.Height, height, flatten[t.Coords]));
+				var f = flatten[t.Coords].value / flatten[t.Coords].count;
+				t.UpdateHeight(math.lerp(t.Height, height, f));
 			}
 			for (int i = 0; i < footprint.Length; i++)
-
 				this[footprint[i]].UpdateHeight(height);
 		}
 

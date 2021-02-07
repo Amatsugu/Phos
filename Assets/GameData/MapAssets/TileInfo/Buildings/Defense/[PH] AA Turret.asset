@@ -66,6 +66,8 @@ MonoBehaviour:
     id: 0
   turretBarrel:
     id: 1
+  turretBarrelTip:
+    id: 2
   unitClass: 0
   domain: 1
   targetingDomain: 2

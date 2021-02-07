@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
+using Unity.Transforms;
 
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace Amatsugu.Phos.Tiles
 
 		private Entity _turretHead;
 		private Entity _turretBarrel;
+		private Entity _turretBarrelTip;
 
 		public TurretTile(HexCoords coords, float height, Map map, TurretTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
@@ -35,6 +37,8 @@ namespace Amatsugu.Phos.Tiles
 			_turretHead = subMeshes[turretInfo.turretHead.id];
 			if(turretInfo.turretBarrel.id != -1)
 				_turretBarrel = subMeshes[turretInfo.turretBarrel.id];
+			if (turretInfo.turretBarrelTip.id != -1)
+				_turretBarrelTip = subMeshes[turretInfo.turretBarrelTip.id];
 			Map.EM.AddComponentData(e, new Turret
 			{
 				Head = _turretHead,
@@ -58,7 +62,9 @@ namespace Amatsugu.Phos.Tiles
 			{
 				Value = 1f/turretInfo.fireRate
 			});
-			switch(turretInfo.unitClass)
+			Map.EM.SetComponentData(_turretBarrel, new Parent {Value = _turretHead });
+			Map.EM.SetComponentData(_turretBarrelTip, new Parent {Value = _turretBarrel });
+			switch (turretInfo.unitClass)
 			{
 				case UnitClass.Class.Turret:
 					Map.EM.AddComponentData(e, new UnitClass.Turret());

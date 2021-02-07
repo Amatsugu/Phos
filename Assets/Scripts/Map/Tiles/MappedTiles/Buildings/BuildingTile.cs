@@ -194,7 +194,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void RenderSubMeshes(quaternion rot)
 		{
-			subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(SurfacePoint, rot);
+			subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(SurfacePoint, rot, _building);
 		}
 
 		public virtual void CreateMetaTiles()

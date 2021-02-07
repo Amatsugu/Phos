@@ -54,7 +54,7 @@ MonoBehaviour:
     - x: -1
       y: 1
   useMetaTiles: 0
-  flattenOuterRange: 6
+  flattenOuterRange: 8
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}

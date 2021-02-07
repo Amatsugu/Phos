@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 953beb541740ddc499d005ee80c9ff29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   m_AdvancedMode: 0
   quality:
     m_OverrideState: 0
@@ -54,10 +54,10 @@ MonoBehaviour:
     min: 0
   baseHeight:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 10
   maximumHeight:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 40
   meanFreePath:
     m_OverrideState: 1
     m_Value: 150
@@ -77,11 +77,11 @@ MonoBehaviour:
     min: 0
     max: 1
   depthExtent:
-    m_OverrideState: 0
-    m_Value: 9999
+    m_OverrideState: 1
+    m_Value: 50
     min: 0.1
   denoisingMode:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 2
   anisotropy:
     m_OverrideState: 1
@@ -192,38 +192,6 @@ MonoBehaviour:
   gradientDiffusion:
     m_OverrideState: 1
     m_Value: 0.6
---- !u!114 &-4088448949883262709
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f034cba68ab55e046ae1445a42f18c0e, type: 3}
-  m_Name: IndirectLightingController
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  indirectDiffuseLightingMultiplier:
-    m_OverrideState: 1
-    m_Value: 0
-    min: 0
-  indirectDiffuseLightingLayers:
-    m_OverrideState: 0
-    m_Value: 255
-  reflectionLightingMultiplier:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  reflectionLightingLayers:
-    m_OverrideState: 0
-    m_Value: 255
-  reflectionProbeIntensityMultiplier:
-    m_OverrideState: 1
-    m_Value: 0
-    min: 0
 --- !u!114 &-2312259003157648248
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -243,7 +211,7 @@ MonoBehaviour:
     m_Value: 371.2
     min: 0
   directionalTransmissionMultiplier:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
     min: 0
     max: 1
@@ -290,7 +258,6 @@ MonoBehaviour:
   - {fileID: -6972632640479637153}
   - {fileID: -2312259003157648248}
   - {fileID: 4484304127375216729}
-  - {fileID: -4088448949883262709}
   - {fileID: 5668942131719995546}
   - {fileID: -6272560185975733662}
 --- !u!114 &2606366001746560817
@@ -338,7 +305,7 @@ MonoBehaviour:
     m_Value: 0
   length:
     m_OverrideState: 1
-    m_Value: 0.305
+    m_Value: 0.015
     min: 0
     max: 1
   opacity:
@@ -403,13 +370,13 @@ MonoBehaviour:
     max: 360
   skyIntensityMode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 0
   exposure:
     m_OverrideState: 1
-    m_Value: 5.37
+    m_Value: 4.99
   multiplier:
     m_OverrideState: 1
-    m_Value: 15.3
+    m_Value: 4.18
     min: 0
   upperHemisphereLuxValue:
     m_OverrideState: 0
@@ -439,7 +406,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   sphericalMode:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   seaLevel:
     m_OverrideState: 1
@@ -477,23 +444,23 @@ MonoBehaviour:
     m_Value: 55261.973
     min: 0
   aerosolDensity:
-    m_OverrideState: 0
-    m_Value: 0.03
+    m_OverrideState: 1
+    m_Value: 0.027
     min: 0
     max: 1
   aerosolTint:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {r: 0, g: 0.1972607, b: 0.20754719, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
   aerosolMaximumAltitude:
     m_OverrideState: 0
-    m_Value: 8289.296
+    m_Value: 100
     min: 0
   aerosolAnisotropy:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: -1
     min: -1
     max: 1
   numberOfBounces:
@@ -503,7 +470,7 @@ MonoBehaviour:
     max: 10
   groundTint:
     m_OverrideState: 1
-    m_Value: {r: 0.018059999, g: 0.024023999, b: 0.027999999, a: 1}
+    m_Value: {r: 0.013204999, g: 0.017647834, b: 0.019, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0
@@ -515,7 +482,7 @@ MonoBehaviour:
     m_Value: {fileID: 0}
   groundEmissionMultiplier:
     m_OverrideState: 0
-    m_Value: 8.2
+    m_Value: 1375
     min: 0
   planetRotation:
     m_OverrideState: 0
@@ -547,7 +514,7 @@ MonoBehaviour:
     max: 1
   horizonTint:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0.53787744, b: 0.5647059, a: 1}
+    m_Value: {r: 0, g: 0.95138884, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0

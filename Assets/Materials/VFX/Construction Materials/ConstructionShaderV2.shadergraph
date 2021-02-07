@@ -949,7 +949,7 @@
     },
     "m_PreviewData": {
         "serializedMesh": {
-            "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
+            "m_SerializedMesh": "{\"mesh\":{\"fileID\":6894623564810876310,\"guid\":\"f653c996b328e834294b536543820098\",\"type\":3}}",
             "m_Guid": ""
         }
     },
@@ -1154,7 +1154,7 @@
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
+    "hlslDeclarationOverride": 2,
     "m_Hidden": false,
     "m_Value": {
         "r": 0.0,
@@ -1562,7 +1562,7 @@
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
-    "hlslDeclarationOverride": 2,
+    "hlslDeclarationOverride": 3,
     "m_Hidden": false,
     "m_Value": 0.0,
     "m_FloatType": 0,
@@ -1857,7 +1857,7 @@
     "m_TransparentDepthPrepass": false,
     "m_TransparentDepthPostpass": false,
     "m_SupportLodCrossFade": false,
-    "m_DoubleSidedMode": 0,
+    "m_DoubleSidedMode": 1,
     "m_DOTSInstancing": false,
     "m_Version": 0,
     "m_FirstTimeMigrationExecuted": true,
@@ -1877,7 +1877,7 @@
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
-    "hlslDeclarationOverride": 2,
+    "hlslDeclarationOverride": 3,
     "m_Hidden": false,
     "m_Value": 0.0,
     "m_FloatType": 0,
@@ -2385,7 +2385,7 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"53c234e3c34b146409bb0c43abaab56d\",\"type\":3}}",
         "m_Guid": ""
     },
     "m_Modifiable": true,
@@ -3059,8 +3059,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2078.0,
-            "y": 296.0000305175781,
+            "x": -2070.0,
+            "y": 270.0,
             "width": 126.0,
             "height": 77.0
         }
@@ -4013,7 +4013,7 @@
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
-    "hlslDeclarationOverride": 2,
+    "hlslDeclarationOverride": 3,
     "m_Hidden": false,
     "m_Value": 2.0,
     "m_FloatType": 0,
@@ -4094,7 +4094,7 @@
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
-    "hlslDeclarationOverride": 2,
+    "hlslDeclarationOverride": 3,
     "m_Hidden": false,
     "m_Value": 0.0,
     "m_FloatType": 0,
@@ -4497,8 +4497,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2412.0,
-            "y": 434.0,
+            "x": -2413.0,
+            "y": 433.0,
             "width": 127.00000762939453,
             "height": 34.0
         }
@@ -5329,10 +5329,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1499.0001220703125,
-            "y": -369.0000305175781,
+            "x": -1419.0,
+            "y": -414.0,
             "width": 232.00001525878907,
-            "height": 146.00001525878907
+            "height": 146.0
         }
     },
     "m_Slots": [
@@ -6300,7 +6300,7 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"6aab84d50ef2f5e4784bd63744a8bad2\",\"type\":3}}",
         "m_Guid": ""
     },
     "m_Modifiable": true,
@@ -6319,8 +6319,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2238.0,
-            "y": 305.0000305175781,
+            "x": -2248.0,
+            "y": 228.99996948242188,
             "width": 126.0,
             "height": 118.0
         }

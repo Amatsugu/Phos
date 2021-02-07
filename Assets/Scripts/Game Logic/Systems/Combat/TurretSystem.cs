@@ -143,7 +143,7 @@ namespace Amatsugu.Phos.ECS
 				var aim = PhysicsUtilz.CalculateProjectileShotVector(pos.Value, tgtPos);
 				var bR = math.normalize(EntityManager.GetComponentData<Rotation>(t.Barrel).Value);
 				var barrelR = Quaternion.LookRotation(-aim, math.up());
-				barrelR = Quaternion.RotateTowards(bR, barrelR, 180 * Time.DeltaTime);
+				//barrelR = Quaternion.RotateTowards(bR, barrelR, 180 * Time.DeltaTime);
 				EntityManager.SetComponentData(t.Barrel, new Rotation
 				{
 					Value = barrelR
@@ -180,8 +180,8 @@ namespace Amatsugu.Phos.ECS
 				var r = EntityManager.GetComponentData<Rotation>(t.Head).Value;
 				r = math.mul(math.normalizesafe(r), quaternion.AxisAngle(math.up(), math.radians(10) * Time.DeltaTime));
 				PostUpdateCommands.SetComponent(t.Head, new Rotation { Value = r });
-				if (EntityManager.Exists(t.Barrel))
-					PostUpdateCommands.SetComponent(t.Barrel, new Rotation { Value = r });
+				//if (EntityManager.Exists(t.Barrel))
+				//	PostUpdateCommands.SetComponent(t.Barrel, new Rotation { Value = r });
 			});
 
 			//Timing
