@@ -73,14 +73,16 @@ public static class PhysicsUtilz
 		};
 	}
 
-	public static float3 CalculateProjectileShotVector(float3 start, float3 tgt, float flightTime = 5f)
+	public static float3 CalculateProjectileShotVector(float3 start, float3 tgt, float flightTime = 5f, bool rotate = true)
 	{
 		var d = math.length(start - tgt);
 		var h = start.y - tgt.y;
 		var g = 9.8f;
 		var vY = ((g * flightTime * flightTime) - (2 * h)) / (2 * flightTime);
 		var vX = d / flightTime;
-		var v = new float3(0, vY, vX);
+		var v = new float3(0, -vY, vX);
+		if (!rotate)
+			return v;
 
 		var dir = start - tgt;
 		dir.y = 0;

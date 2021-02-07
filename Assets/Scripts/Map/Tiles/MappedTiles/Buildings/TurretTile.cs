@@ -62,8 +62,8 @@ namespace Amatsugu.Phos.Tiles
 			{
 				Value = 1f/turretInfo.fireRate
 			});
-			Map.EM.SetComponentData(_turretBarrel, new Parent {Value = _turretHead });
-			Map.EM.SetComponentData(_turretBarrelTip, new Parent {Value = _turretBarrel });
+			//Map.EM.SetComponentData(_turretBarrel, new Parent {Value = _turretHead });
+			//Map.EM.SetComponentData(_turretBarrelTip, new Parent {Value = _turretBarrel });
 			switch (turretInfo.unitClass)
 			{
 				case UnitClass.Class.Turret:

@@ -78,6 +78,8 @@ public class CameraController : MonoBehaviour
 		if (Input.GetKeyUp(KeyCode.F2))
 		{
 			_state = CameraMode.Panning;
+			_canRotate = true;
+			_rotationTime = 0;
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 		}
@@ -129,6 +131,7 @@ public class CameraController : MonoBehaviour
 			camRot.x = 270;
 
 		var camQ = Quaternion.Euler(camRot);
+
 		camPos += camQ * move * Time.deltaTime;
 		_thisTransform.position = camPos;
 		_thisTransform.rotation = camQ;
@@ -174,6 +177,8 @@ public class CameraController : MonoBehaviour
 				_isFocusing = false;
 				_canRotate = false;
 			}
+
+			//moveVector = math.rotate(quaternion.RotateY(rot.y), moveVector);
 
 			if (Input.GetKey(KeyCode.LeftShift))
 				moveVector *= 2;
@@ -237,6 +242,8 @@ public class CameraController : MonoBehaviour
 				_rotationTime = Mathf.Clamp(_rotationTime, 0, 1);
 				var angle = lowAngle.Lerp(highAngle, angleCurve.Evaluate(t));
 				rot.x = rot.x.Lerp(angle, _rotationTime);
+				rot.y = rot.y.Lerp(0, _rotationTime);
+				rot.z = rot.z.Lerp(0, _rotationTime);
 			}
 		}
 		if (_isFocusing)

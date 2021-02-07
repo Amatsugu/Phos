@@ -24,16 +24,22 @@ MonoBehaviour:
       y: 0
       z: 0
     mesh: {fileID: 11400000, guid: ec643bfdd9a4165468904f56dfccd25c, type: 2}
+    parent:
+      id: -1
   - offset:
       x: 0
       y: 0
       z: 0
     mesh: {fileID: 11400000, guid: d72780d3eca3f284bad74c1a5ad77330, type: 2}
+    parent:
+      id: -1
   - offset:
       x: 0
       y: 0
       z: 0
     mesh: {fileID: 11400000, guid: 5a899d43e863ada4090139d34c4245d5, type: 2}
+    parent:
+      id: -1
   centerOfMassOffset:
     x: 0
     y: 0

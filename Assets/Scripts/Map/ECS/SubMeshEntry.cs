@@ -13,6 +13,7 @@ namespace Amatsugu.Phos.ECS
 	{
 		public float3 offset;
 		public MeshEntityRotatable mesh;
+		public SubMeshIdentifier parent;
 	}
 
 	[Serializable]

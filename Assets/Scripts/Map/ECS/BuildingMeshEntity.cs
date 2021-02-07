@@ -79,15 +79,25 @@ namespace Amatsugu.Phos.TileEntities
 			return e;
 		}
 
-		public NativeArray<Entity> InstantiateSubMeshes(float3 position, quaternion rotation, Entity parent)
+		public NativeArray<Entity> InstantiateSubMeshes(quaternion rotation, Entity parent)
 		{
 			var e = new NativeArray<Entity>(subMeshes.Length, Allocator.Persistent);
 			for (int i = 0; i < subMeshes.Length; i++)
 			{
-				var pos = /*position +*/ math.rotate(rotation, subMeshes[i].offset);
+				var pos = subMeshes[i].offset; //math.rotate(rotation, subMeshes[i].offset);
 				e[i] = subMeshes[i].mesh.Instantiate(pos, 1, rotation);
 				Map.EM.AddComponent<LocalToParent>(e[i]);
-				Map.EM.AddComponentData(e[i], new Parent { Value = parent });
+			}
+			for (int i = 0; i < subMeshes.Length; i++)
+			{
+#if UNITY_EDITOR
+				if (subMeshes[i].parent.id == i)
+					Debug.LogWarning($"{name} has a submesh [{subMeshes[i].mesh.name}] whose parent is assigned to itself");
+#endif
+					if (subMeshes[i].parent.id == -1 || subMeshes[i].parent.id == i)
+					Map.EM.AddComponentData(e[i], new Parent { Value = parent });
+				else
+					Map.EM.AddComponentData(e[i], new Parent { Value = e[subMeshes[i].parent.id] });
 			}
 			return e;
 		}

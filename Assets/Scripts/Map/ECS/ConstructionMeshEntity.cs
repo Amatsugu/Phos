@@ -30,9 +30,17 @@ public class ConstructionMeshEntity : ScriptableObject
 
 		for (int i = 1; i < buildingMesh.subMeshes.Length + 1; i++)
 		{
-			var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
+			//var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
 
-			Render(p, rotation, buildingMesh.subMeshes[i - 1].mesh, arr[i], height, constructTime, buildingMesh.subMeshes[i - 1].offset.y);
+			Render(buildingMesh.subMeshes[i - 1].offset, rotation, buildingMesh.subMeshes[i - 1].mesh, arr[i], height, constructTime, buildingMesh.subMeshes[i - 1].offset.y);
+		}
+		for (int i = 0; i < buildingMesh.subMeshes.Length; i++)
+		{
+			Map.EM.AddComponent<LocalToParent>(arr[i + 1]); ;
+			if (buildingMesh.subMeshes[i].parent.id == -1 || buildingMesh.subMeshes[i].parent.id == i)
+				Map.EM.AddComponentData(arr[i + 1], new Parent { Value = arr[0] });
+			else
+				Map.EM.AddComponentData(arr[i + 1], new Parent { Value = arr[buildingMesh.subMeshes[i].parent.id + 1] });
 		}
 		arr.Dispose();
 	}
@@ -64,9 +72,17 @@ public class ConstructionMeshEntity : ScriptableObject
 
 		for (int i = 1; i < unitEntity.subMeshes.Length + 1; i++)
 		{
-			var p = pos + math.rotate(rotation, unitEntity.subMeshes[i - 1].offset);
+			//var p = pos + math.rotate(rotation, unitEntity.subMeshes[i - 1].offset);
 
-			Render(p, rotation, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, unitEntity.subMeshes[i - 1].offset.y);
+			Render(unitEntity.subMeshes[i - 1].offset, rotation, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, unitEntity.subMeshes[i - 1].offset.y);
+		}
+		for (int i = 0; i < unitEntity.subMeshes.Length; i++)
+		{
+			Map.EM.AddComponent<LocalToParent>(arr[i + 1]); ;
+			if(unitEntity.subMeshes[i].parent.id == -1 || unitEntity.subMeshes[i].parent.id == i)
+				Map.EM.AddComponentData(arr[i + 1], new Parent { Value = arr[0] });
+			else
+				Map.EM.AddComponentData(arr[i + 1], new Parent { Value = arr[unitEntity.subMeshes[i].parent.id + 1] });
 		}
 		arr.Dispose();
 	}

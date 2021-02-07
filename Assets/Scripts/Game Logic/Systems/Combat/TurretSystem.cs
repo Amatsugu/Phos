@@ -128,7 +128,7 @@ namespace Amatsugu.Phos.ECS
 				//if (r.value.Equals(desR.value))
 				//	return;
 				var barrelPos = EntityManager.GetComponentData<Translation>(hasBarrel ? t.Barrel : t.Head).Value;
-				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
+				var shotPos = barrelPos + math.rotate(r, t.shotOffset) + pos.Value;
 				ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, t.projectile, shotPos, -math.normalize(dir) * 15f, Time.ElapsedTime + 5);
 			});
 
@@ -140,10 +140,11 @@ namespace Amatsugu.Phos.ECS
 					return;
 				var tgtPos = EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value;
 				//Barrel
-				var aim = PhysicsUtilz.CalculateProjectileShotVector(pos.Value, tgtPos);
+				var aim = PhysicsUtilz.CalculateProjectileShotVector(pos.Value, tgtPos, rotate: false);
 				var bR = math.normalize(EntityManager.GetComponentData<Rotation>(t.Barrel).Value);
-				var barrelR = Quaternion.LookRotation(-aim, math.up());
-				//barrelR = Quaternion.RotateTowards(bR, barrelR, 180 * Time.DeltaTime);
+				var barrelR = Quaternion.LookRotation(aim, math.up());
+				barrelR = Quaternion.RotateTowards(bR, barrelR, 180 * Time.DeltaTime);
+				//Debug.DrawRay(pos.Value, math.rotate(barrelR, new float3(0, 0, 1)), Color.white);
 				EntityManager.SetComponentData(t.Barrel, new Rotation
 				{
 					Value = barrelR
@@ -167,10 +168,14 @@ namespace Amatsugu.Phos.ECS
 					return;
 				if (!EntityManager.Exists(attackTarget.Value))
 					return;
-				var r = EntityManager.GetComponentData<Rotation>(t.Barrel).Value;
+				var barrelRot = EntityManager.GetComponentData<Rotation>(t.Barrel).Value;
 				var barrelPos = EntityManager.GetComponentData<Translation>(t.Barrel).Value;
-				var shotPos = barrelPos + math.rotate(r, t.shotOffset);
+				var headPos = EntityManager.GetComponentData<Translation>(t.Head).Value;
+				barrelPos = math.rotate(barrelRot, headPos + barrelPos + t.shotOffset) + pos.Value;
+				var shotPos = barrelPos;// + math.rotate(barrelRot, );
+				DebugUtilz.DrawCrosshair(shotPos, 1, Color.red, 0);
 				var v = PhysicsUtilz.CalculateProjectileShotVector(shotPos, EntityManager.GetComponentData<CenterOfMass>(attackTarget.Value).Value);
+				v.y *= -1;
 				ProjectileMeshEntity.ShootProjectile(PostUpdateCommands, t.projectile, shotPos, v, Time.ElapsedTime + 20);
 			});
 
