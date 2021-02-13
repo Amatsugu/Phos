@@ -19,10 +19,7 @@ namespace Amatsugu.Phos.Tiles
 			ventInfo = tInfo;
 		}
 
-		public override TileEntity GetMeshEntity()
-		{
-			return originalTile;
-		}
+		public override TileEntity MeshEntity => originalTile;
 
 		public override Entity Render()
 		{
@@ -68,10 +65,7 @@ namespace Amatsugu.Phos.Tiles
 			this.angle = angle;
 		}
 
-		public override TileEntity GetMeshEntity()
-		{
-			return originalTile;
-		}
+		public override TileEntity MeshEntity => originalTile;
 
 		public override Entity Render()
 		{

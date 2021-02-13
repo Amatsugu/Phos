@@ -19,6 +19,7 @@ namespace Amatsugu.Phos.Tiles
 		public HexCoords Coords { get; protected set; }
 		public float3 SurfacePoint { get; protected set; }
 		public float Height { get; protected set; }
+		public virtual TileEntity MeshEntity => info;
 		public bool IsUnderwater { get; protected set; }
 
 		public readonly TileEntity info;
@@ -60,14 +61,18 @@ namespace Amatsugu.Phos.Tiles
 			return this;
 		}
 
-		public virtual StringBuilder GetName()
+		public virtual StringBuilder GetNameString()
 		{
+#if UNITY_EDITOR
+			return info.GetNameString().Append(" ").Append(Coords);
+#else
 			return info.GetNameString();
+#endif
 		}
 
-		public virtual string GetDescription()
+		public virtual StringBuilder GetDescriptionString()
 		{
-			return info.description;
+			return new StringBuilder(info.description).AppendLine();
 		}
 
 		// override object.Equals
@@ -191,16 +196,12 @@ namespace Amatsugu.Phos.Tiles
 			Map.EM.AddComponent(_decor, typeof(DisableRendering));
 		}
 
-		public virtual TileEntity GetMeshEntity()
-		{
-			return info;
-		}
 
 		public virtual Entity Render()
 		{
 			IsShown = true;
 			_isRendered = true;
-			_tileEntity = GetMeshEntity().Instantiate(Coords, Height);
+			_tileEntity = MeshEntity.Instantiate(Coords, Height);
 			return _tileEntity;
 		}
 

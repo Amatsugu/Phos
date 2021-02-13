@@ -2,6 +2,7 @@
 using Amatsugu.Phos.TileEntities;
 
 using System.Collections.Generic;
+using System.Text;
 
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -21,10 +22,10 @@ namespace Amatsugu.Phos.Tiles
 			
 		}
 
-		public override string GetDescription()
+		public override StringBuilder GetDescriptionString()
 		{
-			return base.GetDescription() + "\n" +
-				$"Has HQ Connection: {HasHQConnection} {Map.EM.HasComponent<ConsumptionMulti>(_tileEntity)}";
+			return base.GetDescriptionString()
+				.AppendLine($"Has HQ Connection: {HasHQConnection}");
 		}
 
 		public override void OnPlaced()

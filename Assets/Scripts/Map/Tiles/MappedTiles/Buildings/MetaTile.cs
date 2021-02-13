@@ -54,15 +54,15 @@ namespace Amatsugu.Phos.Tiles
 			ParentTile.RemoveBuff(src);
 		}
 
-		public override string GetDescription()
+		public override StringBuilder GetDescriptionString()
 		{
-			return ParentTile.GetDescription();
+			return ParentTile.GetDescriptionString();
 		}
 
-		public override StringBuilder GetName()
+		public override StringBuilder GetNameString()
 		{
 #if UNITY_EDITOR
-			return ParentTile.GetName().Append(" Meta");
+			return ParentTile.GetNameString().Append(" [Meta]");
 #else
 			return ParentTile.GetName();
 #endif

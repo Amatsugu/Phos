@@ -283,7 +283,7 @@ public class ResourceSystem : ComponentSystem
 	public static void AddResources(ResourceIndentifier[] resources, float multi = 1)
 	{
 		for (int i = 0; i < resources.Length; i++)
-			AddResource(resources[i]);
+			AddResource(resources[i], multi);
 	}
 
 	public static void AddResource(ResourceIndentifier resource, float multi = 1)

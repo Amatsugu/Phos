@@ -67,7 +67,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 				}
 			}
 		}, true);
-		var prodData = new ProductionData
+		_productionData = new ProductionData
 		{
 			resourceIds = new int[gatherInfo.resourcesToGather.Length],
 			rates = new int[gatherInfo.resourcesToGather.Length]
@@ -79,8 +79,8 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			var res = gatherInfo.resourcesToGather[i];
 			if (resInRange.ContainsKey(res.id))
 			{
-				prodData.resourceIds[i] = res.id;
-				prodData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
+				_productionData.resourceIds[i] = res.id;
+				_productionData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
 				var gathered = resTiles[res.id];
 				for (int j = 0; j < gathered.Count; j++)
 					gathered[j].gatherer = Coords;
@@ -90,9 +90,9 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		var exisitingProdData = Map.EM.GetSharedComponentData<ProductionData>(entity);
 		if (exisitingProdData.rates?.Length > 0)
 		{
-			prodData.rates = exisitingProdData.rates.Concat(prodData.rates).ToArray();
-			prodData.resourceIds = exisitingProdData.resourceIds.Concat(prodData.resourceIds).ToArray();
-			Map.EM.SetSharedComponentData(entity, prodData);
+			_productionData.rates = exisitingProdData.rates.Concat(_productionData.rates).ToArray();
+			_productionData.resourceIds = exisitingProdData.resourceIds.Concat(_productionData.resourceIds).ToArray();
+			Map.EM.SetSharedComponentData(entity, _productionData);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			}
 		}, true);
 
-		var prodData = new ProductionData
+		_productionData = new ProductionData
 		{
 			resourceIds = new int[gatherInfo.resourcesToGather.Length],
 			rates = new int[gatherInfo.resourcesToGather.Length]
@@ -131,8 +131,8 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			var res = gatherInfo.resourcesToGather[i];
 			if (resInRange.ContainsKey(res.id))
 			{
-				prodData.resourceIds[i] = res.id;
-				prodData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
+				_productionData.resourceIds[i] = res.id;
+				_productionData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
 			}
 		}
 
@@ -141,13 +141,13 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			var exisitingProdData = Map.EM.GetSharedComponentData<ProductionData>(entity);
 			if (exisitingProdData.rates?.Length > 0)
 			{
-				prodData.rates = exisitingProdData.rates.Concat(prodData.rates).ToArray();
-				prodData.resourceIds = exisitingProdData.resourceIds.Concat(prodData.resourceIds).ToArray();
-				Map.EM.SetSharedComponentData(entity, prodData);
+				_productionData.rates = exisitingProdData.rates.Concat(_productionData.rates).ToArray();
+				_productionData.resourceIds = exisitingProdData.resourceIds.Concat(_productionData.resourceIds).ToArray();
+				Map.EM.SetSharedComponentData(entity, _productionData);
 			}
 		}
 		else
-			Map.EM.AddSharedComponentData(entity, prodData);
+			Map.EM.AddSharedComponentData(entity, _productionData);
 
 	}
 

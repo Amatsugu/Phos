@@ -309,9 +309,9 @@ public class UIBuildPanel : UITabPanel
 		infoPanel.Hide();
 		var tile = GetTileUnderCursor();
 		if (tile is BuildingTile b)
-			infoPanel.ShowInfo(b.buildingInfo);
+			infoPanel.ShowInfo(b);
 		else if (tile is ResourceTile r)
-			infoPanel.ShowInfo(r.resInfo);
+			infoPanel.ShowInfo(r);
 		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f && f.IsBuilt && f.HasHQConnection)
 			Show(f);
 	}

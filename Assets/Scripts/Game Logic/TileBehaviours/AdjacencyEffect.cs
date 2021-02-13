@@ -60,7 +60,7 @@ public class AdjacencyEffect : ScriptableObject
 		if (!(otherTile is BuildingTile otherBuilding))
 			return false;
 		var bId = GameRegistry.TileDatabase.entityIds[otherBuilding.info];
-		Console.WriteLine($"Checking for ADJ Bonus on {otherTile.Coords} {otherTile.GetName()}");
+		Console.WriteLine($"Checking for ADJ Bonus on {otherTile.Coords} {otherTile.GetNameString()}");
 		bool hasBonus = false;
 		for (int j = 0; j < bonusDefinations.Length; j++)
 		{

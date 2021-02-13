@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.Tiles;
+﻿using Amatsugu.Phos.DataStore;
+using Amatsugu.Phos.Tiles;
 
 using System;
 using System.Collections.Generic;
@@ -122,6 +123,21 @@ namespace Amatsugu.Phos.TileEntities
 			return prodString;
 		}
 
+		public virtual StringBuilder GetProductionString(StatsBuffs buffs)
+		{
+			if (buffs.productionMulti == 0)
+				return GetProductionString();
+			var prodString = new StringBuilder();
+			for (int i = 0; i < production.Length; i++)
+			{
+				prodString.Append($"+{Mathf.Round(production[i].ammount * buffs.productionMulti)}{ResourceDatabase.GetResourceString(production[i].id)}/t")
+					.Append($"({MathUtils.Round(buffs.productionMulti * 100, 2).ToNumberString()}) ");
+				if (i < production.Length - 1)
+					prodString.Append(" ");
+			}
+			return prodString;
+		}
+
 		public virtual StringBuilder GetCostString()
 		{
 			var costString = new StringBuilder();
@@ -144,6 +160,21 @@ namespace Amatsugu.Phos.TileEntities
 			for (int i = 0; i < consumption.Length; i++)
 			{
 				upkeepString.Append($"\u2011{consumption[i].ammount}{ResourceDatabase.GetResourceString(consumption[i].id)}/t");
+				if (i < consumption.Length - 1)
+					upkeepString.Append(" ");
+			}
+			return upkeepString;
+		}
+
+		public virtual StringBuilder GetUpkeepString(StatsBuffs buffs)
+		{
+			if (buffs.consumptionMulti == 0)
+				return GetUpkeepString();
+			var upkeepString = new StringBuilder();
+			for (int i = 0; i < consumption.Length; i++)
+			{
+				upkeepString.Append($"\u2011{Mathf.Round(consumption[i].ammount * buffs.consumptionMulti)}{ResourceDatabase.GetResourceString(consumption[i].id)}/t")
+					.Append($"({MathUtils.Round(buffs.consumptionMulti * 100, 2).ToNumberString()}) ");
 				if (i < consumption.Length - 1)
 					upkeepString.Append(" ");
 			}

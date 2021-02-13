@@ -27,7 +27,7 @@ MonoBehaviour:
     max: 1
   m_RaySteps:
     m_OverrideState: 0
-    m_Value: 32
+    m_Value: 64
     min: 16
     max: 128
   m_FullResolutionSS:
@@ -293,9 +293,9 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 16
+    m_Value: 14.65893
   compensation:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1.16
   limitMin:
     m_OverrideState: 1
@@ -581,8 +581,8 @@ MonoBehaviour:
   active: 1
   m_AdvancedMode: 0
   temperature:
-    m_OverrideState: 1
-    m_Value: -2
+    m_OverrideState: 0
+    m_Value: -6
     min: -100
     max: 100
   tint:

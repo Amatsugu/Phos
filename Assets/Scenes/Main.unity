@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 1968.2906, g: 16398.688, b: 36938.03, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1992,7 +1992,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
-  m_ColorTemperature: 6570
+  m_ColorTemperature: 12729
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -6470,8 +6470,8 @@ MonoBehaviour:
   zoomAmmount: 4
   zoomSpeed: 2
   edgePanSize: 10
-  highAngle: 60
-  lowAngle: 40
+  highAngle: 70
+  lowAngle: 50
   angleCurve:
     serializedVersion: 2
     m_Curve:
@@ -6581,7 +6581,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2102994817}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999912
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -1,4 +1,5 @@
 ﻿using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
 using Amatsugu.Phos.Units;
 
 using System.Collections;
@@ -22,16 +23,31 @@ public class UIInfoPanel : UIPanel
 		SetActive(true);
 	}
 
-	public void ShowInfo(ResourceTileInfo tile)
+	//public void ShowInfo(Tile tile)
+	//{
+	//	titleText.SetText(tile.GetNameString());
+	//	//var upkeep = tile..GetUpkeepString();
+	//	//descriptionText.SetText($"{building.description}\n{(upkeep.Length > 0 ? $"Upkeep: {upkeep}" : "")}");
+	//	descriptionText.SetText(tile.GetDescriptionString());
+	//	//productionText.SetText(building.GetProductionString());
+	//	SetActive(true);
+	//}
+
+	public void ShowInfo(BuildingTile tile)
 	{
 		titleText.SetText(tile.GetNameString());
-		descriptionText.SetText(tile.description);
-		var sb = new StringBuilder();
-		for (int i = 0; i < tile.resourceYields.Length; i++)
-		{
-			sb.Append($"{ResourceDatabase.GetResourceName(tile.resourceYields[i].id)}");
-		}
-		productionText.SetText(sb);
+		//var upkeep = tile..GetUpkeepString();
+		//descriptionText.SetText($"{building.description}\n{(upkeep.Length > 0 ? $"Upkeep: {upkeep}" : "")}");
+		descriptionText.SetText(tile.GetDescriptionString());
+		productionText.SetText(tile.GetProductionString());
+		SetActive(true);
+	}
+
+	public void ShowInfo(ResourceTile tile)
+	{
+		titleText.SetText(tile.GetNameString());
+		descriptionText.SetText(tile.GetDescriptionString());
+		productionText.SetText(tile.GetProductionString());
 		SetActive(true);
 	}
 

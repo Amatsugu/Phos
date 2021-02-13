@@ -2,6 +2,7 @@
 using Amatsugu.Phos.TileEntities;
 
 using System.Collections.Generic;
+using System.Text;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -28,14 +29,16 @@ namespace Amatsugu.Phos.Tiles
 		protected MetaTile[] metaTiles;
 		protected bool hasBuilding;
 		protected NativeArray<Entity> subMeshes;
-		protected readonly int rotationAngle;
-		protected readonly quaternion rotation;
+		protected int rotationAngle;
+		protected quaternion rotation;
 
 		private Entity _building;
 		private Entity _offshorePlatform;
 		private NativeArray<Entity> _healthBars;
 		private NativeArray<Entity> _adjacencyConnectors;
 		private int _connectorCount;
+		protected ProductionData _productionData;
+		protected ConsumptionData _consumptionData;
 
 		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo, int rotation) : base(coords, height, map, tInfo)
 		{
@@ -48,10 +51,24 @@ namespace Amatsugu.Phos.Tiles
 				metaTiles = new MetaTile[tInfo.footprint.footprint.Length - 1];
 		}
 
-		public override TileEntity GetMeshEntity()
+		public StringBuilder GetProductionString()
 		{
-			return buildingInfo.preserveGroundTile ? originalTile : buildingInfo;
+			if (_productionData.resourceIds == null)
+				return null;
+			//return buildingInfo.GetProductionString(totalBuffs);
+			var sb = new StringBuilder().AppendLine("Production"); ;
+			for (int i = 0; i < _productionData.resourceIds.Length; i++)
+			{
+				var res = _productionData.resourceIds[i];
+				var rate = _productionData.rates[i] * totalBuffs.productionMulti;
+				if (rate == 0)
+					continue;
+				sb.Append(ResourceDatabase.GetResourceString(res)).Append(" +").AppendLine(math.floor(rate).ToString());
+			}
+			return sb;
 		}
+
+		public override TileEntity MeshEntity => buildingInfo.preserveGroundTile ? originalTile : buildingInfo;
 
 		protected virtual quaternion GetBuildingRotation()
 		{
@@ -60,6 +77,9 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void SetBuildingRotation(int rotation)
 		{
+			rotationAngle = rotation;
+			this.rotation = quaternion.RotateY(math.radians(60 * rotation));
+			Map.EM.SetComponentData(_building, new Rotation { Value = this.rotation });
 		}
 
 		public ResourceIndentifier[] GetResourceRefund()
@@ -174,7 +194,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (buildingInfo.buildingMesh.mesh == null)
 			{
-				Debug.LogWarning($"No Building Assigned for {GetName()}");
+				Debug.LogWarning($"No Building Assigned for {GetNameString()}");
 			}
 			else
 			{
@@ -225,7 +245,7 @@ namespace Amatsugu.Phos.Tiles
 			var consumption = buildingInfo.consumption;
 			if (production.Length > 0)
 			{
-				var pData = new ProductionData
+				_productionData = new ProductionData
 				{
 					resourceIds = new int[production.Length],
 					rates = new int[production.Length]
@@ -233,15 +253,15 @@ namespace Amatsugu.Phos.Tiles
 				for (int i = 0; i < production.Length; i++)
 				{
 					var rId = production[i].id;
-					pData.resourceIds[i] = rId;
-					pData.rates[i] = (int)production[i].ammount;
+					_productionData.resourceIds[i] = rId;
+					_productionData.rates[i] = (int)production[i].ammount;
 				}
 
-				Map.EM.AddSharedComponentData(entity, pData);
+				Map.EM.AddSharedComponentData(entity, _productionData);
 			}
 			if (consumption.Length > 0)
 			{
-				var cData = new ConsumptionData
+				_consumptionData = new ConsumptionData
 				{
 					resourceIds = new int[consumption.Length],
 					rates = new int[consumption.Length]
@@ -249,11 +269,11 @@ namespace Amatsugu.Phos.Tiles
 				for (int i = 0; i < consumption.Length; i++)
 				{
 					var rId = consumption[i].id;
-					cData.resourceIds[i] = rId;
-					cData.rates[i] = (int)consumption[i].ammount;
+					_consumptionData.resourceIds[i] = rId;
+					_consumptionData.rates[i] = (int)consumption[i].ammount;
 				}
 
-				Map.EM.AddSharedComponentData(entity, cData);
+				Map.EM.AddSharedComponentData(entity, _consumptionData);
 			}
 			Map.EM.SetComponentData(entity, new Health
 			{
@@ -373,7 +393,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (tileData.ContainsKey("isBuilt"))
 				isBuilt = true;
-			Debug.Log(isBuilt);
 			base.OnDeSerialized(tileData);
 		}
 

@@ -7,6 +7,7 @@ using Effects.Lines;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 using Unity.Entities;
 using Unity.Mathematics;
@@ -283,11 +284,11 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
-		public override string GetDescription()
+		public override StringBuilder GetDescriptionString()
 		{
-			return base.GetDescription() + $"\nConnections Lines: {_conduitLines.Count}" +
-				$"\nConnected Nodes: {map.conduitGraph.GetNode(Coords).ConnectionCount}/{map.conduitGraph.maxConnections}" +
-				$"\nRange {_poweredRangeSq} {HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius)}";
+			return base.GetDescriptionString().AppendLine($"Connections Lines: {_conduitLines.Count}")
+				.AppendLine($"nConnected Nodes: {map.conduitGraph.GetNode(Coords).ConnectionCount}/{map.conduitGraph.maxConnections}")
+				.AppendLine($"nRange {_poweredRangeSq} {HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius)}");
 		}
 
 		public override void RenderBuilding()
