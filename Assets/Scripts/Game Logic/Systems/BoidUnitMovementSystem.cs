@@ -8,17 +8,16 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-using UnityEngine.Profiling;
-
 namespace Amatsugu.Phos
 {
+	//[BurstCompile]
 	public class BoidUnitMovementSystem : JobComponentSystem
 	{
 		private struct BoidJob : IJobChunk
 		{
-			[ReadOnly] public ComponentTypeHandle<Translation> translationType;
 			[ReadOnly] internal ComponentTypeHandle<MoveSpeed> moveSpeedType;
 			[ReadOnly] internal ComponentTypeHandle<Destination> destinationType;
+			public ComponentTypeHandle<Translation> translationType;
 			public ComponentTypeHandle<Velocity> velocityType;
 			public ComponentTypeHandle<Rotation> rotationType;
 			[ReadOnly] public NativeHashMap<HexCoords, float> navData;
@@ -34,34 +33,48 @@ namespace Amatsugu.Phos
 
 				var flightHeight = new float3(0, 6, 0);
 
-				for (int i = 0; i < translations.Length; i++)
+				for (int i = 0; i < chunk.Count; i++)
 				{
 					var v = velocities[i];
 
 					var totalVelocity = v.Value;
 
+					translations[i] = GroupColision(translations[i]);
+
 					totalVelocity += Flocking(i, ref translations, chunk.Count) * dt;
 
 					totalVelocity += CollisionAvoidance(i, ref translations, chunk.Count) * dt;
 
-					totalVelocity += MatchSpeed(i, ref velocities, chunk.Count) * dt;
+					//totalVelocity += MatchSpeed(i, ref velocities, chunk.Count) * dt;
 
 					//totalVelocity += ForwardMovement(speeds[i], rotations[i]) * dt;
 					totalVelocity += TendToPoint(translations[i], destinations[i].Value + flightHeight) * dt;
 
 					totalVelocity += TendToAltitude(translations[i], 6) * dt;
-
-					totalVelocity = LimitVelocity(totalVelocity, speeds[i].Value);
+					if (!totalVelocity.Equals(float3.zero))
+						totalVelocity = LimitVelocity(totalVelocity, speeds[i].Value);
 
 					v.Value = totalVelocity;
 
 					velocities[i] = v;
 
-					rotations[i] = new Rotation
+					if (!totalVelocity.Equals(0))
 					{
-						Value = quaternion.LookRotationSafe(-totalVelocity, math.up())
-					};
+						rotations[i] = new Rotation
+						{
+							Value = quaternion.LookRotationSafe(-totalVelocity, math.up())
+						};
+					}
 				}
+			}
+
+			private Translation GroupColision(Translation translation)
+			{
+				var coord = HexCoords.FromPosition(translation.Value);
+				var ground = navData.ContainsKey(coord) ? navData[coord] : translation.Value.y;
+				if (translation.Value.y < ground)
+					translation.Value.y = ground;
+				return translation;
 			}
 
 			private float3 ForwardMovement(MoveSpeed speed, Rotation rotation)
@@ -80,7 +93,7 @@ namespace Amatsugu.Phos
 				var tAlt = new float3(t.Value.x, altitude + ground, t.Value.z);
 				if (t.Value.y > tAlt.y)
 					return (tAlt - t.Value) * 2f;
-				else if(t.Value.y < tAlt.y)
+				else if (t.Value.y < tAlt.y)
 					return (tAlt - t.Value) * .5f;
 				else
 					return 0;
@@ -135,6 +148,9 @@ namespace Amatsugu.Phos
 			{
 				float3 avgPos = float3.zero;
 
+				if (count <= 1)
+					return avgPos;
+
 				for (int i = 0; i < count; i++)
 				{
 					if (i != j)
@@ -154,7 +170,7 @@ namespace Amatsugu.Phos
 			base.OnCreate();
 			var desc = new EntityQueryDesc
 			{
-				All = new ComponentType[]
+				All = new[]
 				{
 					ComponentType.ReadOnly<Translation>(),
 					ComponentType.ReadOnly<MoveSpeed>(),
@@ -191,7 +207,7 @@ namespace Amatsugu.Phos
 			var boidsJob = new BoidJob
 			{
 				rotationType = GetComponentTypeHandle<Rotation>(false),
-				translationType = GetComponentTypeHandle<Translation>(true),
+				translationType = GetComponentTypeHandle<Translation>(false),
 				velocityType = GetComponentTypeHandle<Velocity>(false),
 				moveSpeedType = GetComponentTypeHandle<MoveSpeed>(true),
 				destinationType = GetComponentTypeHandle<Destination>(true),

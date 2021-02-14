@@ -152,4 +152,12 @@ public struct MapChunk
 		_chunkTiles[chunkCoord.ToIndex(SIZE)] = newTile.Render();
 		return newTile;
 	}
+
+	public void Start()
+	{
+		if (!isRendered)
+			throw new System.Exception("Cannot run Start of a chunk that has not been rendered yet");
+		for (int i = 0; i < Tiles.Length; i++)
+			Tiles[i].Start();
+	}
 }

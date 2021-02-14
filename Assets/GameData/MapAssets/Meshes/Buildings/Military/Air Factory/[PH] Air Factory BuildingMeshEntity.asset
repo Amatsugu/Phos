@@ -31,4 +31,4 @@ MonoBehaviour:
     y: 0
     z: 0
   radius: 0
-  height: 0
+  height: 1.4

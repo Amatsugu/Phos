@@ -1,6 +1,7 @@
 ﻿using Amatsugu.Phos.DataStore;
 using Amatsugu.Phos.TileEntities;
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -54,7 +55,7 @@ namespace Amatsugu.Phos.Tiles
 		public StringBuilder GetProductionString()
 		{
 			if (_productionData.resourceIds == null)
-				return null;
+				return new StringBuilder();
 			//return buildingInfo.GetProductionString(totalBuffs);
 			var sb = new StringBuilder().AppendLine("Production"); ;
 			for (int i = 0; i < _productionData.resourceIds.Length; i++)
@@ -63,7 +64,18 @@ namespace Amatsugu.Phos.Tiles
 				var rate = _productionData.rates[i] * totalBuffs.productionMulti;
 				if (rate == 0)
 					continue;
-				sb.Append(ResourceDatabase.GetResourceString(res)).Append(" +").AppendLine(math.floor(rate).ToString());
+				sb.Append(ResourceDatabase.GetResourceString(res)).Append(" +").Append(math.floor(rate).ToString()).Append(" (").Append(Math.Round(totalBuffs.productionMulti * 100, 2)).AppendLine("%)");
+			}
+			if (_consumptionData.resourceIds == null)
+				return sb;
+			sb.AppendLine("Consumption");
+			for (int i = 0; i < _consumptionData.resourceIds.Length; i++)
+			{
+				var res = _consumptionData.resourceIds[i];
+				var rate = _consumptionData.rates[i] * totalBuffs.productionMulti;
+				if (rate == 0)
+					continue;
+				sb.Append(ResourceDatabase.GetResourceString(res)).Append(" -").Append(math.floor(rate).ToString()).Append(" (").Append(Math.Round(totalBuffs.consumptionMulti * 100, 2)).AppendLine("%)");
 			}
 			return sb;
 		}
@@ -182,6 +194,7 @@ namespace Amatsugu.Phos.Tiles
 			isBuilt = true;
 			OnBuilt();
 			RenderBuilding();
+			Start();
 			map.InvokeOnBuilt(Coords);
 		}
 
@@ -206,10 +219,18 @@ namespace Amatsugu.Phos.Tiles
 
 			if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
 				_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
+			
+			RenderDecorators();
+		}
+
+		public override void Start()
+		{
+			base.Start();
+			if (!isBuilt)
+				return;
 			ApplyTileProperites();
 			ApplyBonuses();
 			ApplyBuffs();
-			RenderDecorators();
 		}
 
 		public virtual void RenderSubMeshes(quaternion rot)

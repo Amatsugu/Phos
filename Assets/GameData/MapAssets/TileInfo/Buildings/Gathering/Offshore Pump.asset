@@ -63,8 +63,7 @@ MonoBehaviour:
   consumption:
   - id: 0
     ammount: 20
-  adjacencyEffects:
-  - {fileID: 0}
+  adjacencyEffects: []
   resourcesToGather:
   - id: 3
     ammount: 1

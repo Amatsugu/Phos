@@ -26,13 +26,13 @@ public class ConstructionMeshEntity : ScriptableObject
 
 		Map.EM.CreateEntity(arch, arr);
 
-		Render(pos, rotation, buildingMesh, arr[0], height, constructTime);
+		Render(pos, rotation, buildingMesh, arr[0], height, constructTime, pos.y);
 
 		for (int i = 1; i < buildingMesh.subMeshes.Length + 1; i++)
 		{
 			//var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
 
-			Render(buildingMesh.subMeshes[i - 1].offset, rotation, buildingMesh.subMeshes[i - 1].mesh, arr[i], height, constructTime, buildingMesh.subMeshes[i - 1].offset.y);
+			Render(buildingMesh.subMeshes[i - 1].offset, rotation, buildingMesh.subMeshes[i - 1].mesh, arr[i], height, constructTime, pos.y);
 		}
 		for (int i = 0; i < buildingMesh.subMeshes.Length; i++)
 		{
@@ -55,7 +55,7 @@ public class ConstructionMeshEntity : ScriptableObject
 
 		for (int i = 0; i < meshes.Length; i++)
 		{
-			Render(pos, rotation, meshes[i], arr[i], height, constructionTime);
+			Render(pos, rotation, meshes[i], arr[i], height, constructionTime, pos.y);
 		}
 		arr.Dispose();
 	}
@@ -68,13 +68,13 @@ public class ConstructionMeshEntity : ScriptableObject
 
 		Map.EM.CreateEntity(arch, arr);
 
-		Render(pos, rotation, unitEntity, arr[0], height, constructTime);
+		Render(pos, rotation, unitEntity, arr[0], height, constructTime, pos.y);
 
 		for (int i = 1; i < unitEntity.subMeshes.Length + 1; i++)
 		{
 			//var p = pos + math.rotate(rotation, unitEntity.subMeshes[i - 1].offset);
 
-			Render(unitEntity.subMeshes[i - 1].offset, rotation, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, unitEntity.subMeshes[i - 1].offset.y);
+			Render(unitEntity.subMeshes[i - 1].offset, rotation, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, pos.y);
 		}
 		for (int i = 0; i < unitEntity.subMeshes.Length; i++)
 		{
@@ -126,7 +126,7 @@ public class ConstructionMeshEntity : ScriptableObject
 		Map.EM.SetSharedComponentData(entity, renderMesh);
 
 		Map.EM.SetComponentData(entity, new ConstructionHeight { Value = height });
-		Map.EM.SetComponentData(entity, new ConstructionOffset { Value = pos.y - offset });
+		Map.EM.SetComponentData(entity, new ConstructionOffset { Value = offset });
 		Map.EM.SetComponentData(entity, new ConstructionStart { Value = Time.time });
 		Map.EM.SetComponentData(entity, new ConstructionDuration { Value = duration });
 		Map.EM.SetComponentData(entity, new Translation { Value = pos });

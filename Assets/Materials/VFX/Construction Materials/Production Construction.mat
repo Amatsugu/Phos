@@ -25,7 +25,7 @@ Material:
     type: 3}
   m_ShaderKeywords: _ALPHATEST_ON _DISABLE_SSR_TRANSPARENT _DOUBLESIDED_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
   m_CustomRenderQueue: 2475
   stringTagMap:
@@ -62,13 +62,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_3D3B0B86: 1
-    - Vector1_4473BC03: 0.09
+    - Vector1_4473BC03: 0.02
     - Vector1_60635AAB: 5.7
     - Vector1_81908D21: 335.3112
     - Vector1_A76B6459: 0.525
     - Vector1_A865A9AC: 4.7
     - Vector1_ACE3B177: 0.48
-    - Vector1_FD454108: 37640.57
+    - Vector1_FD454108: 150000
     - _AddPrecomputedVelocity: 0
     - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 0
@@ -123,7 +123,8 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_097a37d69691418988eefa877fa15e3b: {r: 0, g: 0, b: 0, a: 0}
+    - Color_097a37d69691418988eefa877fa15e3b: {r: 675.5879, g: 42.38983, b: 291.43008,
+        a: 1}
     - Color_A654D4B7: {r: 0, g: 1, b: 0.8048501, a: 1}
     - _ConstructColor: {r: 1, g: 0, b: 0.39215687, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}

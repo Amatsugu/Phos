@@ -172,9 +172,12 @@ namespace Amatsugu.Phos
 				EM = entityManager;
 			for (int i = 0; i < chunks.Length; i++)
 				chunks[i].Render();
+			for (int i = 0; i < chunks.Length; i++)
+				chunks[i].Start();
 
 			foreach (var unit in units)
 				unit.Value.Render();
+
 		}
 
 		/// <summary>

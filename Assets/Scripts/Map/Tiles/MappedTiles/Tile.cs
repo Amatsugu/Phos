@@ -33,6 +33,7 @@ namespace Amatsugu.Phos.Tiles
 		protected Entity _tileEntity;
 		private NativeArray<Entity> _decor;
 		protected bool _isRendered;
+		protected bool _isInit;
 		private bool _decorRendered;
 
 		public Tile(HexCoords coords, float height, Map map, TileEntity tInfo = null)
@@ -203,6 +204,11 @@ namespace Amatsugu.Phos.Tiles
 			_isRendered = true;
 			_tileEntity = MeshEntity.Instantiate(Coords, Height);
 			return _tileEntity;
+		}
+
+		public virtual void Start()
+		{
+			_isInit = true;
 		}
 
 		public SerializedTile Serialize()

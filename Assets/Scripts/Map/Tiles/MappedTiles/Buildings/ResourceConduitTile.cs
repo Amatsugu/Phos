@@ -291,9 +291,9 @@ namespace Amatsugu.Phos.Tiles
 				.AppendLine($"nRange {_poweredRangeSq} {HexCoords.TileToWorldDist(conduitInfo.connectionRange, map.innerRadius)}");
 		}
 
-		public override void RenderBuilding()
+		public override void Start()
 		{
-			base.RenderBuilding();
+			base.Start();
 			var thisNode = map.conduitGraph.GetNode(Coords);
 			var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
 			var b = Coords.WorldPos + new float3(0, thisNode.height, 0);
@@ -308,6 +308,12 @@ namespace Amatsugu.Phos.Tiles
 				var a = c.conduitPos.WorldPos + new float3(0, c.height, 0);
 				_conduitLines.Add(c.conduitPos, LineFactory.CreateStaticLine(line, a, b));
 			}
+		}
+
+		public override void RenderBuilding()
+		{
+			base.RenderBuilding();
+			
 		}
 
 		public override void Destroy()

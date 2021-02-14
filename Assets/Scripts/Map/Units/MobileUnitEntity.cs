@@ -57,7 +57,7 @@ namespace Amatsugu.Phos.Units
 			typeof(FactionId),
 			typeof(UnitState),
 			typeof(PhysicsCollider),
-			typeof(PhysicsMass),
+			//typeof(PhysicsMass),
 			typeof(AnimationSystem.AnimationData.Velocity),
 			typeof(CenterOfMassOffset),
 			typeof(CenterOfMass),
@@ -74,7 +74,7 @@ namespace Amatsugu.Phos.Units
 			Map.EM.SetComponentData(entity, new Projectile { Value = projectile.GetEntity() });
 			Map.EM.SetComponentData(entity, new AttackSpeed { Value = 1f / attackSpeed });
 			Map.EM.SetComponentData(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
-			Map.EM.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
+			//Map.EM.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
 			Map.EM.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
 			Map.EM.SetComponentData(entity, new AttackRange(attackRange));
 

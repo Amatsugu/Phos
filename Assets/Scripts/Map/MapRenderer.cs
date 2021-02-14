@@ -88,14 +88,7 @@ public class MapRenderer : MonoBehaviour
 		GameRegistry.InitGame(map);
 		generator.GenerateFeatures(map);
 		map.Render(_entityManager);
-		/*
-		var col = Cartographer.RenderMap(map, mapRes);
-		var tex = new Texture2D(map.totalWidth * mapRes, map.totalHeight * mapRes, TextureFormat.RGBA32, false);
-		tex.SetPixels(col);
-		tex.Apply();
-		(var sprite = Sprite.Create(tex, new Rect(Vector2.zero, new Vector2(tex.width, tex.height)), Vector2.zero);
-		img.sprite = sprite;
-		*/
+		
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;
 		pos.y = map.seaLevel;
@@ -144,18 +137,6 @@ public class MapRenderer : MonoBehaviour
 			}
 		}
 #endif
-		//return;
-		//var camPos = _cam.transform.position;
-		//var camRot = _cam.transform.rotation;
-		//if (_lastCamPos != camPos || _lastCamRot != camRot)
-		//{
-		//	GeometryUtility.CalculateFrustumPlanes(_cam, _camPlanes);
-		//	//map.UpdateView(_camPlanes);
-		//	map.UpdateView(camPos, _camPlanes, renderDistance);
-		//	_lastCamPos = _cam.transform.position;
-		//	_lastCamRot = _cam.transform.rotation;
-		//	_ocean.position = new Vector3(_lastCamPos.x, _ocean.position.y, _lastCamPos.z);
-		//}
 
 		if (generator.Regen)
 		{

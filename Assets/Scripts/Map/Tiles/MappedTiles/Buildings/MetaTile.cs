@@ -74,12 +74,14 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void HQConnected()
 		{
+			Debug.Log("Meta Connect");
 			if (_isPowered && !_isConduit)
 				_poweredParent.HQConnected();
 		}
 
 		public override void HQDisconnected()
 		{
+			Debug.Log("Meta Discconnect");
 			if (_isPowered && !_isConduit)
 				_poweredParent.HQDisconnected();
 		}
