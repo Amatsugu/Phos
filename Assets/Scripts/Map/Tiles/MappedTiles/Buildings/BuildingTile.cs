@@ -52,6 +52,10 @@ namespace Amatsugu.Phos.Tiles
 				metaTiles = new MetaTile[tInfo.footprint.footprint.Length - 1];
 		}
 
+		/// <summary>
+		/// Gets the Rich Text string representing information about the production of this building
+		/// </summary>
+		/// <returns>String Builder</returns>
 		public StringBuilder GetProductionString()
 		{
 			if (_productionData.resourceIds == null)
@@ -80,20 +84,24 @@ namespace Amatsugu.Phos.Tiles
 			return sb;
 		}
 
+		/// <summary>
+		/// The TileEntity that contains information about the underlying tile
+		/// </summary>
 		public override TileEntity MeshEntity => buildingInfo.preserveGroundTile ? originalTile : buildingInfo;
 
+		/// <summary>
+		/// Gets the rotation of the building on this tile
+		/// </summary>
+		/// <returns>Quaternion of the building's rotation</returns>
 		protected virtual quaternion GetBuildingRotation()
 		{
 			return rotation;
 		}
 
-		public virtual void SetBuildingRotation(int rotation)
-		{
-			rotationAngle = rotation;
-			this.rotation = quaternion.RotateY(math.radians(60 * rotation));
-			Map.EM.SetComponentData(_building, new Rotation { Value = this.rotation });
-		}
-
+		/// <summary>
+		/// Gets the resources that this building will return when deconstructed
+		/// </summary>
+		/// <returns>Array of resource Identifiers</returns>
 		public ResourceIndentifier[] GetResourceRefund()
 		{
 			var res = new ResourceIndentifier[buildingInfo.cost.Length];
@@ -103,6 +111,7 @@ namespace Amatsugu.Phos.Tiles
 			}
 			return res;
 		}
+
 
 		public override void OnHeightChanged()
 		{
@@ -123,8 +132,12 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnPlaced();
 			StartConstruction();
+			CreateMetaTiles();
 		}
 
+		/// <summary>
+		/// Start the construction animations for this building
+		/// </summary>
 		protected virtual void StartConstruction()
 		{
 			if (buildingInfo.constructionMesh != null)
@@ -137,7 +150,6 @@ namespace Amatsugu.Phos.Tiles
 				}
 				buildingInfo.constructionMesh.Instantiate(SurfacePoint, GetBuildingRotation(), buildingInfo.buildingMesh.height, buildingInfo.buildingMesh, buildingInfo.constructionTime);
 			}
-			CreateMetaTiles();
 		}
 
 		public override Entity Render()
@@ -187,6 +199,9 @@ namespace Amatsugu.Phos.Tiles
 			Map.EM.RemoveComponent(subMeshes, typeof(DisableRendering));
 		}
 
+		/// <summary>
+		/// Completes the build phase of this building
+		/// </summary>
 		public void Build()
 		{
 			if (isBuilt)
@@ -195,14 +210,27 @@ namespace Amatsugu.Phos.Tiles
 			OnBuilt();
 			RenderBuilding();
 			Start();
+			if(buildingInfo.useMetaTiles)
+			{
+				for (int i = 0; i < metaTiles.Length; i++)
+				{
+					metaTiles[i].Start();
+				}
+			}
 			map.InvokeOnBuilt(Coords);
 		}
 
+		/// <summary>
+		/// Callback for when this build phase completes
+		/// </summary>
 		protected virtual void OnBuilt()
 		{
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
 		}
 
+		/// <summary>
+		/// Instantiates the building entities for this tile
+		/// </summary>
 		public virtual void RenderBuilding()
 		{
 			if (buildingInfo.buildingMesh.mesh == null)
@@ -229,15 +257,22 @@ namespace Amatsugu.Phos.Tiles
 			if (!isBuilt)
 				return;
 			ApplyTileProperites();
-			ApplyBonuses();
+			ApplyAdjacencyBonuses();
 			ApplyBuffs();
 		}
 
+		/// <summary>
+		/// Instantiate the submesses for this building tile
+		/// </summary>
+		/// <param name="rot">The rotation of the building</param>
 		public virtual void RenderSubMeshes(quaternion rot)
 		{
 			subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(rot, _building);
 		}
 
+		/// <summary>
+		/// Replace tiles in this building's footprint with meta tiles
+		/// </summary>
 		public virtual void CreateMetaTiles()
 		{
 			if (buildingInfo.useMetaTiles)
@@ -248,16 +283,24 @@ namespace Amatsugu.Phos.Tiles
 					if (tiles[i] == Coords)
 						continue;
 					var tgtTile = map[tiles[i]];
-					metaTiles[j++] = map.ReplaceTile(tgtTile, new MetaTile(tiles[i], tgtTile.Height, map, tgtTile.originalTile, this));
+					var mt = map.ReplaceTile(tgtTile, new MetaTile(tiles[i], tgtTile.Height, map, tgtTile.originalTile, this));
+					metaTiles[j++] = mt;
 				}
 			}
 		}
 
+		/// <summary>
+		/// Gets the DOTS Entity for the building on this tile
+		/// </summary>
+		/// <returns>Entity</returns>
 		protected virtual Entity GetBuildingEntity()
 		{
 			return buildingInfo.buildingMesh.mesh != null ? _building : _tileEntity;
 		}
 
+		/// <summary>
+		/// Applies component data to entities on this building
+		/// </summary>
 		protected virtual void ApplyTileProperites()
 		{
 			var entity = GetBuildingEntity();
@@ -314,16 +357,16 @@ namespace Amatsugu.Phos.Tiles
 			if (!IsBuilt)
 				return;
 			if (updateType == TileUpdateType.Placed || updateType == TileUpdateType.Removed)
-				ApplyBonuses();
+				ApplyAdjacencyBonuses();
 		}
 
-		protected virtual void ApplyBonuses()
+		/// <summary>
+		/// Applies adjanceny bonuses to neighboring tiles
+		/// </summary>
+		protected virtual void ApplyAdjacencyBonuses()
 		{
 			if (!IsBuilt || !_isRendered)
 				return;
-			var entity = GetBuildingEntity();
-			Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
-			Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
 			var neighbors = map.GetNeighbors(Coords);
 			if (!_adjacencyConnectors.IsCreated)
 				_adjacencyConnectors = new NativeArray<Entity>(6 * 3, Allocator.Persistent);
@@ -346,6 +389,11 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
+		/// <summary>
+		/// Add and apply a buff to this tile
+		/// </summary>
+		/// <param name="src">The source tile for the buff</param>
+		/// <param name="buff">The buff to apply</param>
 		public virtual void AddBuff(HexCoords src, StatsBuffs buff)
 		{
 			if (buffSources.ContainsKey(src))
@@ -359,6 +407,10 @@ namespace Amatsugu.Phos.Tiles
 			ApplyBuffs();
 		}
 
+		/// <summary>
+		/// Remove a previously applied buff from this tile
+		/// </summary>
+		/// <param name="src">The tile that applied the buff</param>
 		public virtual void RemoveBuff(HexCoords src)
 		{
 			if (buffSources.ContainsKey(src))
@@ -369,6 +421,9 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
+		/// <summary>
+		/// Applies the current set of buffs to this tile
+		/// </summary>
 		protected virtual void ApplyBuffs()
 		{
 			if (!isBuilt || !_isRendered)
@@ -391,6 +446,9 @@ namespace Amatsugu.Phos.Tiles
 			Map.EM.SetComponentData(e, curHealth);
 		}
 
+		/// <summary>
+		/// Deconstruct this building, reverting it to it's original tile
+		/// </summary>
 		public virtual void Deconstruct()
 		{
 			if (buildingInfo.useMetaTiles)
@@ -401,6 +459,11 @@ namespace Amatsugu.Phos.Tiles
 			map.RevertTile(this);
 		}
 
+		/// <summary>
+		/// Can this tile be deconstructed by the provided faction
+		/// </summary>
+		/// <param name="faction">The faction attempting to deconstruct this tile</param>
+		/// <returns></returns>
 		public virtual bool CanDeconstruct(Faction faction) => buildingInfo.faction == faction;
 
 		public override void OnSerialize(Dictionary<string, string> tileData)
@@ -417,12 +480,18 @@ namespace Amatsugu.Phos.Tiles
 			base.OnDeSerialized(tileData);
 		}
 
+		/// <summary>
+		/// Kills this bulding, causing it to be destroyed
+		/// </summary>
 		public void Die()
 		{
 			OnDeath();
 			map.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
 		}
 
+		/// <summary>
+		/// Callback for when this building dies
+		/// </summary>
 		public virtual void OnDeath()
 		{
 			NotificationsUI.NotifyWithTarget(NotifType.Warning, $"Building Destroyed: {buildingInfo.GetNameString()}", Coords);
@@ -436,6 +505,9 @@ namespace Amatsugu.Phos.Tiles
 			DestroyBuilding();
 		}
 
+		/// <summary>
+		/// Destorys the entities associated with this building and frees memory
+		/// </summary>
 		protected virtual void DestroyBuilding()
 		{
 			if (World.DefaultGameObjectInjectionWorld != null)

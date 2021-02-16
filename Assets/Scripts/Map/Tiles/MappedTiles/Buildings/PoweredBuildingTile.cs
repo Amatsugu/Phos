@@ -33,6 +33,9 @@ namespace Amatsugu.Phos.Tiles
 			base.OnPlaced();
 		}
 
+		/// <summary>
+		/// Callback for when this building is both powered and finished the build phase. Called after whichever happens last
+		/// </summary>
 		protected virtual void OnBuiltAndPowered()
 		{
 
@@ -44,6 +47,9 @@ namespace Amatsugu.Phos.Tiles
 			FindConduitConnections();
 		}
 
+		/// <summary>
+		/// Find a connection to nearby conduits
+		/// </summary>
 		public virtual void FindConduitConnections()
 		{
 			Profiler.BeginSample("Find Conduit Connections");
@@ -75,6 +81,10 @@ namespace Amatsugu.Phos.Tiles
 			Profiler.EndSample();
 		}
 
+		/// <summary>
+		/// Check if any of  this building's meta tiles has a connection to the HQ
+		/// </summary>
+		/// <returns></returns>
 		public virtual bool MetaTilesHasConnection()
 		{
 			if (!buildingInfo.useMetaTiles)
@@ -87,6 +97,9 @@ namespace Amatsugu.Phos.Tiles
 			return false;
 		}
 
+		/// <summary>
+		/// Callback for when this tile receives an HQ connection
+		/// </summary>
 		public virtual void HQConnected()
 		{
 			if (connectionInit)
@@ -103,6 +116,9 @@ namespace Amatsugu.Phos.Tiles
 			OnConnected();
 		}
 
+		/// <summary>
+		/// Callback for the this tile loses it's HQ connection
+		/// </summary>
 		public virtual void HQDisconnected()
 		{
 			if (connectionInit)
@@ -127,6 +143,9 @@ namespace Amatsugu.Phos.Tiles
 			OnDisconnected();
 		}
 
+		/// <summary>
+		/// Callback for sucessful connection to the HQ
+		/// </summary>
 		public virtual void OnConnected()
 		{
 			if (IsBuilt)
@@ -138,6 +157,9 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
+		/// <summary>
+		/// Callback for when this tile lost connection to the HQ and could not reconnect
+		/// </summary>
 		public virtual void OnDisconnected()
 		{
 			if(_connectionNotif == -1)

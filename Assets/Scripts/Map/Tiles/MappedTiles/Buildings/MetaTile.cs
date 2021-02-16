@@ -16,8 +16,8 @@ namespace Amatsugu.Phos.Tiles
 		public BuildingTile ParentTile { get; private set; }
 
 		private PoweredBuildingTile _poweredParent;
-		private bool _isPowered;
-		private bool _isConduit;
+		private bool _isPoweredTile;
+		private bool _isConduitTile;
 
 		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo, 0)
 		{
@@ -26,9 +26,9 @@ namespace Amatsugu.Phos.Tiles
 			if (ParentTile is PoweredBuildingTile powered)
 			{
 				_poweredParent = powered;
-				_isPowered = true;
+				_isPoweredTile = true;
 			}
-			_isConduit = ParentTile is ResourceConduitTile;
+			_isConduitTile = ParentTile is ResourceConduitTile;
 		}
 
 		protected override void StartConstruction()
@@ -42,6 +42,12 @@ namespace Amatsugu.Phos.Tiles
 		public override void RenderBuilding()
 		{
 			hasBuilding = false;
+			
+		}
+
+		protected override void ApplyBuffs()
+		{
+			
 		}
 
 		public override void AddBuff(HexCoords src, StatsBuffs buff)
@@ -68,21 +74,30 @@ namespace Amatsugu.Phos.Tiles
 #endif
 		}
 
+		public override void Start()
+		{
+			base.Start();
+			FindConduitConnections();
+		}
+
+		public override bool MetaTilesHasConnection()
+		{
+			return false;
+		}
+
 		protected override void ApplyTileProperites()
 		{
 		}
 
 		public override void HQConnected()
 		{
-			Debug.Log("Meta Connect");
-			if (_isPowered && !_isConduit)
+			if (_isPoweredTile && !_isConduitTile)
 				_poweredParent.HQConnected();
 		}
 
 		public override void HQDisconnected()
 		{
-			Debug.Log("Meta Discconnect");
-			if (_isPowered && !_isConduit)
+			if (_isPoweredTile && !_isConduitTile)
 				_poweredParent.HQDisconnected();
 		}
 
@@ -114,7 +129,7 @@ namespace Amatsugu.Phos.Tiles
 			
 		}
 
-		protected override void ApplyBonuses()
+		protected override void ApplyAdjacencyBonuses()
 		{
 			
 		}
@@ -145,7 +160,7 @@ namespace Amatsugu.Phos.Tiles
 			ParentTile = map[coord] as BuildingTile;
 			if (ParentTile is PoweredBuildingTile powered)
 			{
-				_isPowered = true;
+				_isPoweredTile = true;
 				_poweredParent = powered;
 			}
 		}
