@@ -9,7 +9,8 @@ public class TimedDeathSystem : ComponentSystem
 	{
 		Entities.ForEach((Entity e, ref DeathTime t) =>
 		{
-			if (Time.ElapsedTime >= t.Value)
+			
+			if (UnityEngine.Time.time >= t.Value)
 				PostUpdateCommands.DestroyEntity(e);
 		});
 	}

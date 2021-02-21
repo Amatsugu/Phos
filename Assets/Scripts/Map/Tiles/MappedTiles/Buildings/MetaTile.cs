@@ -70,7 +70,7 @@ namespace Amatsugu.Phos.Tiles
 #if UNITY_EDITOR
 			return ParentTile.GetNameString().Append(" [Meta]");
 #else
-			return ParentTile.GetName();
+			return ParentTile.GetNameString();
 #endif
 		}
 

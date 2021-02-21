@@ -111,7 +111,7 @@ namespace Amatsugu.Phos.ECS
 			});
 
 			//Shoot Turret
-			Entities.WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
+			Entities.WithNone<BuildingOffTag, BuildingDisabledTag>().WithAll<UnitClass.Turret>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
 			{
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
@@ -162,7 +162,7 @@ namespace Amatsugu.Phos.ECS
 			});
 
 			//Shoot Artillery 
-			Entities.WithAll<UnitClass.Artillery>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
+			Entities.WithNone<BuildingOffTag, BuildingDisabledTag>().WithAll<UnitClass.Artillery>().ForEach((Entity e, ref Turret t, ref Translation pos, ref AttackSpeed speed, ref AttackTarget attackTarget) =>
 			{
 				if (Time.ElapsedTime < speed.NextAttackTime)
 					return;
