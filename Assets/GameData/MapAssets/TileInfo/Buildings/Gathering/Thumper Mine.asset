@@ -19,7 +19,7 @@ MonoBehaviour:
   isStatic: 1
   nonUniformScale: 1
   description: Slams a heavy mass into veins of ore in order to harvest them. Only
-    capable of mining  Iron and  Carbon.
+    capable of mining  Iron and Carbon.
   decorators: []
   isTraverseable: 0
   assetGuid: 0ef12f3aada833948909acbc675a5953
