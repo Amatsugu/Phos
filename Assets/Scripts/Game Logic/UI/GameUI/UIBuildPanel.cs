@@ -135,7 +135,6 @@ public class UIBuildPanel : UITabPanel
 			if (_icons[i] == null)
 			{
 				_icons[i] = Instantiate(iconPrefab, contentArea, false);
-				_icons[i].OnBlur += infoPanel.Hide;
 				_icons[i].OnBlur += () => tooltipUI.Hide();
 			}
 			if (j < buildings.Length)
@@ -172,7 +171,6 @@ public class UIBuildPanel : UITabPanel
 			if (_icons[i] == null)
 			{
 				_icons[i] = Instantiate(iconPrefab, contentArea, false);
-				_icons[i].OnBlur += infoPanel.Hide;
 				_icons[i].OnBlur += () => tooltipUI.Hide();
 			}
 			if (j < units.Length)
@@ -188,7 +186,6 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].costText.SetText(unit.GetCostString());
 					_icons[i].icon.sprite = unit.icon;
 					_icons[i].button.interactable = true;
-					_icons[i].OnHover += () => infoPanel.ShowInfo(unit);
 					_icons[i].OnHover += () => tooltipUI.Show(unit);
 					_icons[i].OnClick += () =>
 					{
@@ -227,7 +224,6 @@ public class UIBuildPanel : UITabPanel
 			if (_icons[i] == null)
 			{
 				_icons[i] = Instantiate(iconPrefab, contentArea, false);
-				_icons[i].OnBlur += infoPanel.Hide;
 				_icons[i].OnBlur += () => tooltipUI.Hide();
 			}
 			if (j < buildings.Length)
@@ -247,7 +243,6 @@ public class UIBuildPanel : UITabPanel
 						if (GameRegistry.GameMap.HasTechBuilding(b.info as TechBuildingTileEntity))
 							_icons[i].button.interactable = false;
 					}
-					_icons[i].OnHover += () => infoPanel.ShowInfo(b.info);
 					_icons[i].OnHover += () => tooltipUI.Show(b.info);
 					_icons[i].OnClick += () =>
 					{
@@ -307,11 +302,18 @@ public class UIBuildPanel : UITabPanel
 	private void InfoPanelLogic()
 	{
 		infoPanel.Hide();
+		tooltipUI.Hide();
 		var tile = GetTileUnderCursor();
 		if (tile is BuildingTile b)
-			infoPanel.ShowInfo(b);
+		{
+			tooltipUI.Show(b.GetDescriptionString().AppendLine(b.GetProductionString().ToString()), b.GetNameString());
+			//infoPanel.ShowInfo(b);
+		}
 		else if (tile is ResourceTile r)
-			infoPanel.ShowInfo(r);
+		{
+			tooltipUI.Show(r.GetDescriptionString().AppendLine(r.GetProductionString().ToString()), r.GetNameString());
+			//infoPanel.ShowInfo(r);
+		}
 		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f && f.IsBuilt && f.HasHQConnection)
 			Show(f);
 	}

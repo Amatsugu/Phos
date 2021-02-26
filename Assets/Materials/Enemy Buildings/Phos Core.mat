@@ -10,7 +10,7 @@ Material:
   m_Name: Phos Core
   m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
   m_ShaderKeywords: _DISABLE_SSR_TRANSPARENT _EMISSIVE_COLOR_MAP _MATERIAL_FEATURE_CLEAR_COAT
-    _MATERIAL_FEATURE_IRIDESCENCE _NORMALMAP_TANGENT_SPACE
+    _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -192,8 +192,8 @@ Material:
     - _IridescenceMask: 0.23
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
-    - _MaterialID: 3
-    - _Metallic: 1
+    - _MaterialID: 1
+    - _Metallic: 0.203
     - _MetallicRemapMax: 0.206
     - _MetallicRemapMin: 0
     - _NormalMapSpace: 0

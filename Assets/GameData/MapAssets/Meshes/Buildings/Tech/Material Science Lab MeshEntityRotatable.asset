@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac08c7606c20c41967144a17c65c2f, type: 3}
   m_Name: Material Science Lab MeshEntityRotatable
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5096555209517778525, guid: aafae5f8d410f68498123ee46449db74, type: 3}
+  mesh: {fileID: 4938118403268736631, guid: 2893f4f0c1913a84b80de6803f40493d, type: 3}
   material: {fileID: 2100000, guid: c5bd27640a28cbf40bc7a31293db797e, type: 2}
   castShadows: 1
   receiveShadows: 1
