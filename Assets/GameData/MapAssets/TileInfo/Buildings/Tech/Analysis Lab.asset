@@ -40,8 +40,12 @@ MonoBehaviour:
     footprint:
     - x: 0
       y: 0
-  useMetaTiles: 0
-  flattenOuterRange: 0
+    - x: -1
+      y: 0
+    - x: 1
+      y: 0
+  useMetaTiles: 1
+  flattenOuterRange: 6
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}

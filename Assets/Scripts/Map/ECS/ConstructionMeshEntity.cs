@@ -32,7 +32,7 @@ public class ConstructionMeshEntity : ScriptableObject
 		{
 			//var p = pos + math.rotate(rotation, buildingMesh.subMeshes[i - 1].offset);
 
-			Render(buildingMesh.subMeshes[i - 1].offset, rotation, buildingMesh.subMeshes[i - 1].mesh, arr[i], height, constructTime, pos.y);
+			Render(buildingMesh.subMeshes[i - 1].offset, quaternion.identity, buildingMesh.subMeshes[i - 1].mesh, arr[i], height, constructTime, pos.y);
 		}
 		for (int i = 0; i < buildingMesh.subMeshes.Length; i++)
 		{
@@ -74,7 +74,7 @@ public class ConstructionMeshEntity : ScriptableObject
 		{
 			//var p = pos + math.rotate(rotation, unitEntity.subMeshes[i - 1].offset);
 
-			Render(unitEntity.subMeshes[i - 1].offset, rotation, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, pos.y);
+			Render(unitEntity.subMeshes[i - 1].offset, quaternion.identity, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, pos.y);
 		}
 		for (int i = 0; i < unitEntity.subMeshes.Length; i++)
 		{

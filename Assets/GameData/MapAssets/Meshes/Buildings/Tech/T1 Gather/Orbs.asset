@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e048a40e661a3f48b31d111dc9509b1, type: 3}
+  m_Name: Orbs
+  m_EditorClassIdentifier: 
+  mesh: {fileID: -3277720207305301817, guid: 141ce7ae703fca14bb35e76a678ee420, type: 3}
+  material: {fileID: 2100000, guid: e5ca756b9dab2814d836707a2dbd5673, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 0

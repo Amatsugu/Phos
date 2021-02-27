@@ -267,7 +267,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <param name="rot">The rotation of the building</param>
 		public virtual void RenderSubMeshes(quaternion rot)
 		{
-			subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(rot, _building);
+			subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(quaternion.identity, _building);
 		}
 
 		/// <summary>
