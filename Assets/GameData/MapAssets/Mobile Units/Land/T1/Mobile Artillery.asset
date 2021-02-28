@@ -37,20 +37,26 @@ MonoBehaviour:
   constructionMesh: {fileID: 11400000, guid: f91054b4d51d5944ba378803a6daf941, type: 2}
   subMeshes:
   - offset:
-      x: -0.142849
-      y: 0.385511
-      z: -0.219711
+      x: 0
+      y: 0
+      z: 0
     mesh: {fileID: 11400000, guid: adfd4484216b72a468d3fc5a09dd4cf0, type: 2}
+    parent:
+      id: -1
   - offset:
-      x: -0.142849
-      y: 0.381138
-      z: -0.219711
+      x: 0
+      y: 0
+      z: 0
     mesh: {fileID: 11400000, guid: e0087b88bd507d746a08c07041466b03, type: 2}
+    parent:
+      id: 0
   - offset:
-      x: -0.191604
-      y: 0.294551
-      z: -0.219711
+      x: 0
+      y: 0
+      z: 0
     mesh: {fileID: 11400000, guid: c6f27a23936cc3146b82b5549aef31cd, type: 2}
+    parent:
+      id: 1
   head:
     id: 1
   projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}

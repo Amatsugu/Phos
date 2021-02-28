@@ -69,7 +69,7 @@ public class HealthBarSystem : JobComponentSystem
 				var centerOffset = math.rotate(camRot, new float3((healthBar.size / -2f), 0));
 				pos[i] = new Translation
 				{
-					Value = (posSrc[healthBar.target].Value + (layerOffset * (int)healthBar.type) + healthBar.offset) + centerOffset
+					Value = posSrc[healthBar.target].Value + (layerOffset * (int)healthBar.type) + healthBar.offset + centerOffset
 				};
 			}
 		}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 905da5d09f166504b8c1d4df1b43cbad, type: 3}
-  m_Name: Naval Test
+  m_Name: Destroyer
   m_EditorClassIdentifier: 
   mesh: {fileID: 8200345890075662854, guid: 3585e5d64ca906d4f803666b65a8f6b6, type: 3}
   material: {fileID: 2100000, guid: 7bedd0d29f641f84f94f1b099cdb604b, type: 2}
@@ -28,14 +28,42 @@ MonoBehaviour:
   tier: 1
   unitDomain: 4
   unitTargetingDomain: 0
-  unitClass: 3
+  unitClass: 1
   icon: {fileID: 0}
   centerOfMassOffset:
     x: 0
     y: 0.5
     z: 0
   constructionMesh: {fileID: 11400000, guid: f91054b4d51d5944ba378803a6daf941, type: 2}
-  subMeshes: []
+  subMeshes:
+  - offset:
+      x: 0
+      y: 0.385929
+      z: -1.0108
+    mesh: {fileID: 11400000, guid: 0002971e3de8fee44a38943ee0cfacf1, type: 2}
+    parent:
+      id: -1
+  - offset:
+      x: 0
+      y: 0.048112
+      z: -0.06762
+    mesh: {fileID: 11400000, guid: 5b1dac86ce5c7f24e90b7af3ea71885a, type: 2}
+    parent:
+      id: 0
+  - offset:
+      x: 0
+      y: 0.385929
+      z: 1.0108
+    mesh: {fileID: 11400000, guid: 0002971e3de8fee44a38943ee0cfacf1, type: 2}
+    parent:
+      id: -1
+  - offset:
+      x: 0
+      y: 0.048112
+      z: -0.06762
+    mesh: {fileID: 11400000, guid: 5b1dac86ce5c7f24e90b7af3ea71885a, type: 2}
+    parent:
+      id: 2
   head:
     id: -1
   projectile: {fileID: 11400000, guid: 55862559bdae3734096a682461b34c0c, type: 2}

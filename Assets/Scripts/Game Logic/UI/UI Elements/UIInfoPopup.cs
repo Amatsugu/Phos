@@ -87,6 +87,8 @@ public class UIInfoPopup : UIExpandable
 	{
 		SetActive(true);
 		_notifPos = tile.SurfacePoint + offset;
+		if (tile is BuildingTile b)
+			_notifPos += new Vector3(0, b.buildingInfo.buildingMesh.height, 0);
 		rTransform.position = _notifPos;
 		rTransform.rotation = GameRegistry.Camera.transform.rotation;
 		Debug.DrawLine(tile.SurfacePoint, _notifPos, Color.magenta, 5);

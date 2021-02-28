@@ -90,9 +90,7 @@ namespace Amatsugu.Phos.Units
 		{
 			if (info.subMeshes.Length == 0)
 				return;
-			_subMeshes = new NativeArray<Entity>(info.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-			for (int i = 0; i < info.subMeshes.Length; i++)
-				_subMeshes[i] = info.subMeshes[i].mesh.Instantiate(_startPos, 1, quaternion.identity);
+			_subMeshes = info.InstantiateSubMeshes(quaternion.identity, Entity);
 
 			if (info.head.id != -1)
 			{

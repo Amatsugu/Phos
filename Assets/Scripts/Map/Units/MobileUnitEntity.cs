@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.Transforms;
 
 using UnityEngine;
 
@@ -138,6 +140,29 @@ namespace Amatsugu.Phos.Units
 				}, collisionFilter, physMat)
 			});
 
+			return e;
+		}
+
+		public NativeArray<Entity> InstantiateSubMeshes(quaternion rotation, Entity parent)
+		{
+			var e = new NativeArray<Entity>(subMeshes.Length, Allocator.Persistent);
+			for (int i = 0; i < subMeshes.Length; i++)
+			{
+				var pos = subMeshes[i].offset; //math.rotate(rotation, subMeshes[i].offset);
+				e[i] = subMeshes[i].mesh.Instantiate(pos, 1, rotation);
+				Map.EM.AddComponent<LocalToParent>(e[i]);
+			}
+			for (int i = 0; i < subMeshes.Length; i++)
+			{
+#if UNITY_EDITOR
+				if (subMeshes[i].parent.id == i)
+					Debug.LogWarning($"{name} has a submesh [{subMeshes[i].mesh.name}] whose parent is assigned to itself");
+#endif
+				if (subMeshes[i].parent.id == -1 || subMeshes[i].parent.id == i)
+					Map.EM.AddComponentData(e[i], new Parent { Value = parent });
+				else
+					Map.EM.AddComponentData(e[i], new Parent { Value = e[subMeshes[i].parent.id] });
+			}
 			return e;
 		}
 
