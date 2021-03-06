@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb6a11db4dcb784db8667e1e0f421a2, type: 3}
+  m_Name: Logistics Hub
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
+  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  castShadows: 1
+  receiveShadows: 1
+  isStatic: 1
+  nonUniformScale: 0
+  description: A logistics hub to improve resources management and allowing for the
+    creation of more advanced production facilities.
+  decorators: []
+  isTraverseable: 0
+  assetGuid: eff0cbc9ab35c844488d2e6935e178fd
+  buildingMesh: {fileID: 11400000, guid: 97ae1174d81cecb4f906ad1824be9cfb, type: 2}
+  centerOfMassOffset:
+    x: 0
+    y: 0
+    z: 0
+  constructionMesh: {fileID: 11400000, guid: b02b98a1576f3fa4b9a3449d64664ceb, type: 2}
+  preserveGroundTile: 1
+  customDeathTile: 0
+  deathTile: {fileID: 0}
+  tier: 1
+  constructionTime: 2
+  category: 1
+  footprint:
+    size: 1
+    footprint:
+    - x: 0
+      y: 0
+    - x: -1
+      y: 0
+    - x: 0
+      y: -1
+    - x: 1
+      y: -1
+    - x: 1
+      y: 0
+    - x: 0
+      y: 1
+    - x: -1
+      y: 1
+  useMetaTiles: 0
+  flattenOuterRange: 0
+  isOffshore: 0
+  offshoreOnly: 0
+  offshorePlatformMesh: {fileID: 0}
+  icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
+  faction: 1
+  maxHealth: 100
+  healthBar: {fileID: 0}
+  healthBarOffset:
+    x: 0
+    y: 0
+    z: 0
+  validator: {fileID: 11400000, guid: 5e51699febb757e4d8619d4b0d7c3e10, type: 2}
+  cost:
+  - id: 1
+    ammount: 80
+  - id: 2
+    ammount: 40
+  - id: 0
+    ammount: 20
+  production: []
+  consumption:
+  - id: 0
+    ammount: 20
+  adjacencyEffects: []
+  buildingsToUnlock:
+  - id: 25
+  - id: 23
+  - id: 27
+  - id: 28
+  effectRange: 5
+  StatsBuffs:
+    structureRange: 0
+    unitRange: 0
+    structureAttack: 0
+    unitAttack: 0
+    structureHealth: 0
+    unitHealth: 0
+    buildSpeedMulti: 0
+    buildCostMulti: 0
+    consumptionMulti: -0.25
+    productionMulti: 0

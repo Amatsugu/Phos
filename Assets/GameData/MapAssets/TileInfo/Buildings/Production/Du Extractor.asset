@@ -63,5 +63,5 @@ MonoBehaviour:
   - id: 0
     ammount: 30
   - id: 3
-    ammount: 10
+    ammount: 20
   adjacencyEffects: []

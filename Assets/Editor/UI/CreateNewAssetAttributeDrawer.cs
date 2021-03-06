@@ -23,7 +23,8 @@ public class CreateNewAssetAttributeDrawer : PropertyDrawer
 			var name = property.serializedObject.targetObject.name;
 			var assetPath = $"{attr.path}/{name} {type.Name}.asset";
 			AssetDatabase.CreateAsset(instance, assetPath);
-			property.objectReferenceValue = instance;
+			var asset = AssetDatabase.LoadAssetAtPath<ScriptableObject>(assetPath);
+			property.objectReferenceValue = asset;
 			property.serializedObject.ApplyModifiedProperties();
 			property.serializedObject.UpdateIfRequiredOrScript();
 		}

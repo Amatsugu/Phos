@@ -57,7 +57,9 @@ MonoBehaviour:
   validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
   cost: []
   production: []
-  consumption: []
+  consumption:
+  - id: 0
+    ammount: 10
   adjacencyEffects: []
   unitsToBuild:
   - id: 0

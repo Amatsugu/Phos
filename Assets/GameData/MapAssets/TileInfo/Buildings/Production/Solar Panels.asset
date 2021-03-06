@@ -56,6 +56,6 @@ MonoBehaviour:
   cost: []
   production:
   - id: 0
-    ammount: 2
+    ammount: 3
   consumption: []
   adjacencyEffects: []

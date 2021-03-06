@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9098ea6ee8539a44e9c1877e35a06261, type: 3}
-  m_Name: '[PH] Air Factory'
+  m_Script: {fileID: 11500000, guid: 7cb6a11db4dcb784db8667e1e0f421a2, type: 3}
+  m_Name: '[PH]T2 Structure Tech'
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
   material: {fileID: 0}
@@ -21,55 +21,61 @@ MonoBehaviour:
   description: 
   decorators: []
   isTraverseable: 1
-  assetGuid: 84b3e30a3534ba84da2e7befd1cb54db
-  buildingMesh: {fileID: 11400000, guid: adf5860c525e82b4e93581e86701eb20, type: 2}
+  assetGuid: 35b3f45ba19c91a479516f40e0d76841
+  buildingMesh: {fileID: 11400000, guid: ab0f5b81354c73b4886b5aa33d98a1e5, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
-  constructionMesh: {fileID: 11400000, guid: 17a4d41402e088d429af93ca0c127ff4, type: 2}
-  preserveGroundTile: 1
+  constructionMesh: {fileID: 11400000, guid: b02b98a1576f3fa4b9a3449d64664ceb, type: 2}
+  preserveGroundTile: 0
   customDeathTile: 0
   deathTile: {fileID: 0}
-  tier: 3
+  tier: 2
   constructionTime: 2
-  category: 5
+  category: 1
   footprint:
-    size: 2
+    size: 0
     footprint:
     - x: 0
       y: 0
-    - x: -1
-      y: 0
-    - x: 0
-      y: -1
-    - x: 1
-      y: -1
-    - x: 1
-      y: 0
-    - x: 0
-      y: 1
-    - x: -1
-      y: 1
-  useMetaTiles: 1
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
   icon: {fileID: 0}
-  faction: 1
+  faction: 0
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 0
     z: 0
-  validator: {fileID: 11400000, guid: 611c8b3b246b0c54397fbe5fece4c1b9, type: 2}
-  cost: []
+  validator: {fileID: 11400000, guid: 5e51699febb757e4d8619d4b0d7c3e10, type: 2}
+  cost:
+  - id: 1
+    ammount: 20
+  - id: 0
+    ammount: 30
+  - id: 4
+    ammount: 20
   production: []
   consumption:
   - id: 0
-    ammount: 100
+    ammount: 75
   adjacencyEffects: []
-  unitsToBuild:
-  - id: 4
+  buildingsToUnlock:
+  - id: 31
+  effectRange: 8
+  StatsBuffs:
+    structureRange: 8
+    unitRange: 0
+    structureAttack: 0
+    unitAttack: 0
+    structureHealth: 100
+    unitHealth: 0
+    buildSpeedMulti: 1
+    buildCostMulti: -0.5
+    consumptionMulti: 0
+    productionMulti: 0

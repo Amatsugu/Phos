@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 953beb541740ddc499d005ee80c9ff29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   quality:
     m_OverrideState: 0
@@ -54,10 +54,10 @@ MonoBehaviour:
     min: 0
   baseHeight:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 0
   maximumHeight:
     m_OverrideState: 1
-    m_Value: 40
+    m_Value: 0
   meanFreePath:
     m_OverrideState: 1
     m_Value: 150
@@ -78,7 +78,7 @@ MonoBehaviour:
     max: 1
   depthExtent:
     m_OverrideState: 1
-    m_Value: 50
+    m_Value: 9999
     min: 0.1
   denoisingMode:
     m_OverrideState: 1
@@ -465,7 +465,7 @@ MonoBehaviour:
     max: 1
   numberOfBounces:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 8
     min: 1
     max: 10
   groundTint:

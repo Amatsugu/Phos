@@ -10,55 +10,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cb6a11db4dcb784db8667e1e0f421a2, type: 3}
-  m_Name: Logistics Hub
+  m_Name: '[PH]T2 Production Tech'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
+  mesh: {fileID: 0}
+  material: {fileID: 0}
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 0
-  description: A logistics hub to improve resources management and allowing for the
-    creation of more advanced production facilities.
+  nonUniformScale: 1
+  description: 
   decorators: []
-  isTraverseable: 0
-  assetGuid: eff0cbc9ab35c844488d2e6935e178fd
-  buildingMesh: {fileID: 11400000, guid: 97ae1174d81cecb4f906ad1824be9cfb, type: 2}
+  isTraverseable: 1
+  assetGuid: 319e2d9ae543c8c4e95cd7d4995048c4
+  buildingMesh: {fileID: 11400000, guid: 997376d46163e9c4cbd9410a5012591a, type: 2}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
   constructionMesh: {fileID: 11400000, guid: b02b98a1576f3fa4b9a3449d64664ceb, type: 2}
-  preserveGroundTile: 1
+  preserveGroundTile: 0
   customDeathTile: 0
   deathTile: {fileID: 0}
-  tier: 1
+  tier: 2
   constructionTime: 2
   category: 1
   footprint:
-    size: 1
+    size: 0
     footprint:
     - x: 0
       y: 0
-    - x: -1
-      y: 0
-    - x: 0
-      y: -1
-    - x: 1
-      y: -1
-    - x: 1
-      y: 0
-    - x: 0
-      y: 1
-    - x: -1
-      y: 1
   useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
-  icon: {fileID: -3950912798310049422, guid: cb7fd186402fdca43b2f1535c208b329, type: 3}
-  faction: 1
+  icon: {fileID: 0}
+  faction: 0
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
@@ -67,22 +54,23 @@ MonoBehaviour:
     z: 0
   validator: {fileID: 11400000, guid: 5e51699febb757e4d8619d4b0d7c3e10, type: 2}
   cost:
-  - id: 1
-    ammount: 80
-  - id: 2
+  - id: 6
+    ammount: 25
+  - id: 7
+    ammount: 25
+  - id: 4
     ammount: 40
-  - id: 0
-    ammount: 20
   production: []
   consumption:
   - id: 0
-    ammount: 20
+    ammount: 75
   adjacencyEffects: []
   buildingsToUnlock:
-  - id: 25
-  - id: 23
-  - id: 27
-  effectRange: 5
+  - id: 19
+  - id: 21
+  - id: 22
+  - id: 24
+  effectRange: 8
   StatsBuffs:
     structureRange: 0
     unitRange: 0
@@ -92,5 +80,5 @@ MonoBehaviour:
     unitHealth: 0
     buildSpeedMulti: 0
     buildCostMulti: 0
-    consumptionMulti: -0.25
-    productionMulti: 0
+    consumptionMulti: 0.1
+    productionMulti: 1.5

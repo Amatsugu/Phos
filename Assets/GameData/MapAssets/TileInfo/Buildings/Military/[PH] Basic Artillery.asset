@@ -63,7 +63,9 @@ MonoBehaviour:
   validator: {fileID: 11400000, guid: 1445faee8d0ca2f498c9099fb4e94c4f, type: 2}
   cost: []
   production: []
-  consumption: []
+  consumption:
+  - id: 0
+    ammount: 60
   adjacencyEffects: []
   fireRate: 0.5
   damage: 5
@@ -74,6 +76,8 @@ MonoBehaviour:
     id: 0
   turretBarrel:
     id: 1
+  turretBarrelTip:
+    id: 0
   unitClass: 2
   domain: 1
   targetingDomain: 0
