@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b18c86062785a064188dae3043494561, type: 3}
+  m_Name: Terra Map Plain
+  m_EditorClassIdentifier: 
+  Size: {x: 10, y: 10}
+  tileMapper: {fileID: 0}
+  seaLevel: 4.9
+  edgeLength: 1
+  featureGenerators: []
+  Regen: 0
+  borderSize: 64
+  borderCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  noiseScale: 350
+  noiseLayers:
+  - name: Shape
+    enabled: 1
+    useFirstLayerAsMask: 0
+    noiseSettings:
+      type: 0
+      strength: 2.93
+      layerCount: 4
+      baseRoughness: 2.14
+      roughness: 0.87
+      persistence: 0.77
+      minValue: -0.2
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
+  - name: Rough
+    enabled: 1
+    useFirstLayerAsMask: 0
+    noiseSettings:
+      type: 0
+      strength: -0.23
+      layerCount: 4
+      baseRoughness: 2.85
+      roughness: 2
+      persistence: 1
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0
+  - name: Mountains
+    enabled: 1
+    useFirstLayerAsMask: 1
+    noiseSettings:
+      type: 1
+      strength: 10.44
+      layerCount: 4
+      baseRoughness: 2.6
+      roughness: 4
+      persistence: 1.57
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 0.35
+  - name: Valleys
+    enabled: 1
+    useFirstLayerAsMask: 0
+    noiseSettings:
+      type: 1
+      strength: -1
+      layerCount: 3
+      baseRoughness: 3.87
+      roughness: 5.8
+      persistence: 0
+      minValue: 0
+      center: {x: 0, y: 0, z: 0}
+      weightMultiplier: 4.57
+  biomePainter: {fileID: 11400000, guid: 7438b41a7cb6dd84ab4eacb56a927956, type: 2}
+  useSeed: 0
+  useSeedDev: 1
+  seed: 1223939298
+  landSeaRatio: 0.35
+  useDecorators: 1
+  biomeFold: 0
+  preview: 1

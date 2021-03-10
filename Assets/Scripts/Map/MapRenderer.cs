@@ -9,11 +9,7 @@ using UnityEngine;
 
 public class MapRenderer : MonoBehaviour
 {
-	public TileEntity tile;
-	public MapGenerator generator;
 	public GameObject oceanPlane;
-	public MeshEntityRotatable line;
-	public TileDatabase tileDatabase;
 	public UnityEngine.UI.Image img;
 	public int mapRes = 4;
 	public int renderDistance = 1;
@@ -21,8 +17,6 @@ public class MapRenderer : MonoBehaviour
 	[HideInInspector]
 	public Map map;
 
-	[HideInInspector]
-	public Vector3 min, max;
 
 	public SerializedMap serializedMap;
 
@@ -38,6 +32,13 @@ public class MapRenderer : MonoBehaviour
 	private NativeArray<float> _navDataValues;
 	private bool _showNavData;
 #endif
+
+	private MapAuthoring _mapAuthoring;
+
+	private void Awake()
+	{
+		_mapAuthoring = GetComponent<MapAuthoring>();
+	}
 
 	internal void SetMap(Map map, GameState gameState)
 	{
@@ -62,10 +63,7 @@ public class MapRenderer : MonoBehaviour
 		_cam = GameRegistry.Camera;
 		_lastCamPos = _cam.transform.position;
 		_camPlanes = GeometryUtility.CalculateFrustumPlanes(_cam);
-		min = Vector3.zero;
 		Init();
-		max = new Vector3(map.totalWidth * map.shortDiagonal, 0, map.totalHeight * 1.5f);
-		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 		GameEvents.OnMapRegen += Regenerate;
 		GameEvents.InvokeOnGameLoaded();
 	}
@@ -84,9 +82,9 @@ public class MapRenderer : MonoBehaviour
 	public void Init()
 	{
 		_entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-		map = generator.GenerateMap(transform);
+		map = _mapAuthoring.generator.GenerateMap(transform);
 		GameRegistry.InitGame(map);
-		generator.GenerateFeatures(map);
+		_mapAuthoring.generator.GenerateFeatures(map);
 		map.Render(_entityManager);
 		
 		var pos = oceanPlane.transform.localScale;
@@ -138,10 +136,10 @@ public class MapRenderer : MonoBehaviour
 		}
 #endif
 
-		if (generator.Regen)
+		if (_mapAuthoring.generator.Regen)
 		{
 			GameEvents.InvokeOnMapRegen();
-			generator.Regen = false;
+			_mapAuthoring.generator.Regen = false;
 		}
 	}
 

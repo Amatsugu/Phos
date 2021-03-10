@@ -10,7 +10,12 @@ PrefabInstance:
     - target: {fileID: 4771652169232489713, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
         type: 3}
       propertyPath: m_Name
-      value: Grass
+      value: Sand
+      objectReference: {fileID: 0}
+    - target: {fileID: 4771652169232580817, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4771652169232580817, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
         type: 3}
@@ -29,6 +34,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4771652169232580817, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4771652169232580817, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -41,16 +51,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4771652169232580817, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4771652169232580817, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4771652169232580817, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
         type: 3}
@@ -72,5 +72,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 691ada38dc6cea649b1fa292e387714a, type: 2}
+    - target: {fileID: 8979606873355484238, guid: 72f0dfb39ccda494689793f6b7fcc9bc,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72f0dfb39ccda494689793f6b7fcc9bc, type: 3}

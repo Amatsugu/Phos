@@ -373,7 +373,7 @@ MonoBehaviour:
     m_Value: 0
   exposure:
     m_OverrideState: 1
-    m_Value: 4.57
+    m_Value: 4.32
   multiplier:
     m_OverrideState: 1
     m_Value: 4.18
@@ -445,7 +445,7 @@ MonoBehaviour:
     min: 0
   aerosolDensity:
     m_OverrideState: 1
-    m_Value: 0.027
+    m_Value: 0.087
     min: 0
     max: 1
   aerosolTint:
@@ -470,7 +470,7 @@ MonoBehaviour:
     max: 10
   groundTint:
     m_OverrideState: 1
-    m_Value: {r: 0.013204999, g: 0.017647834, b: 0.019, a: 1}
+    m_Value: {r: 0, g: 0.009083934, b: 0.01886791, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0
@@ -514,7 +514,7 @@ MonoBehaviour:
     max: 1
   horizonTint:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0.95138884, b: 1, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 0

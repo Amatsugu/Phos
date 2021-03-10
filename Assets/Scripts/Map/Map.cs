@@ -23,11 +23,30 @@ namespace Amatsugu.Phos
 		public bool IsRendered { get; private set; }
 
 		public string Name;
+		/// <summary>
+		/// height in chunks
+		/// </summary>
 		public readonly int height;
+		/// <summary>
+		/// Height in tiles
+		/// </summary>
 		public readonly int totalHeight;
+		/// <summary>
+		/// Width in chunks
+		/// </summary>
 		public readonly int width;
+		/// <summary>
+		/// Width in tiles
+		/// </summary>
 		public readonly int totalWidth;
+		/// <summary>
+		/// Number of chunks
+		/// </summary>
 		public readonly int length;
+		/// <summary>
+		/// Number of tiles
+		/// </summary>
+		public readonly int tileCount;
 		public readonly float tileEdgeLength;
 		public readonly float longDiagonal;
 		public readonly float shortDiagonal;
@@ -45,7 +64,7 @@ namespace Amatsugu.Phos
 
 		private HashSet<TechBuildingTileEntity> _techBuildings;
 		private int _nextUnitId = 1;
-		private MapChunk[] chunks;
+		public MapChunk[] chunks;
 
 		public Map(int height, int width, int seed, float edgeLength = 1)
 		{
@@ -53,6 +72,7 @@ namespace Amatsugu.Phos
 			this.height = height;
 			totalWidth = width * MapChunk.SIZE;
 			totalHeight = height * MapChunk.SIZE;
+			tileCount = totalHeight * totalWidth;
 			Seed = seed;
 			UnityEngine.Random.InitState(seed);
 			length = width * height;
@@ -562,16 +582,17 @@ namespace Amatsugu.Phos
 
 		public void Destroy()
 		{
-			if (!IsRendered)
-				return;
-			foreach (var unitEntry in units)
-				unitEntry.Value.Destroy();
 			foreach (var chunk in chunks)
 				chunk.Destroy();
-			/*if (!Application.isPlaying)
-				return;*/
-			GameEvents.InvokeOnMapDestroyed();
-			IsRendered = false;
+			if (IsRendered)
+			{
+				foreach (var unitEntry in units)
+					unitEntry.Value.Destroy();
+				/*if (!Application.isPlaying)
+					return;*/
+				GameEvents.InvokeOnMapDestroyed();
+				IsRendered = false;
+			}
 		}
 
 		#region IDisposable Support

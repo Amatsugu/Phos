@@ -46,7 +46,7 @@ public class RandomGenerator : MapGenerator
 		noiseFilters = null;
 	}
 
-	public override Map GenerateMap(Transform parent = null)
+	public override Map GenerateMap(Transform _)
 	{
 		var reject = 0;
 		var totalStartTime = DateTime.Now;

@@ -17,7 +17,9 @@ MonoBehaviour:
   castShadows: 1
   receiveShadows: 1
   isStatic: 1
-  nonUniformScale: 1
+  nonUniformScale: 0
+  tilePrefab: {fileID: 4771652169232489713, guid: f1a8a180de5a8c64e93165853439b8e1,
+    type: 3}
   description: 
   decorators:
   - {fileID: 11400000, guid: d5b2d61e5a7fc2649a6fe014c1ae7a42, type: 2}

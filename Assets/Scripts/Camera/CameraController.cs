@@ -13,7 +13,6 @@ public class CameraController : MonoBehaviour
 	public float lowAngle = 80;
 	public AnimationCurve angleCurve;
 	public bool edgePan = false;
-	public MapRenderer mapRenderer;
 
 	private float _targetHeight;
 	private float _lastHeight;
@@ -28,6 +27,7 @@ public class CameraController : MonoBehaviour
 	private Vector3 _focusPos;
 	private bool _canRotate = true;
 	private float _rotationTime = 0;
+	public Vector3 min, max;
 
 	private CameraMode _state = 0;
 
@@ -54,6 +54,10 @@ public class CameraController : MonoBehaviour
 		GameEvents.OnCameraFreeze += OnFreeze;
 		GameEvents.OnCameraUnFreeze += OnUnFreeze;
 		_state = CameraMode.Panning;
+		var map = GameRegistry.GameMap;
+		min = Vector3.zero;
+		max = new Vector3(map.totalWidth * map.shortDiagonal, 0, map.totalHeight * 1.5f);
+		_cam.transform.position = new Vector3(max.x / 2, 50, max.z / 2);
 	}
 
 	private void OnFreeze()
@@ -190,7 +194,7 @@ public class CameraController : MonoBehaviour
 			//Drag Panning
 			Vector3 curPos;
 			var ray = _cam.ScreenPointToRay(mPos);
-			var height = pos.y - mapRenderer.map.seaLevel;
+			var height = pos.y - GameRegistry.GameMap.seaLevel;
 			var d = height / Mathf.Sin(_cam.transform.localEulerAngles.x * Mathf.Deg2Rad);
 			if (Input.GetKeyDown(KeyCode.Mouse2))
 				_lastClickPos = ray.GetPoint(d);
@@ -253,8 +257,8 @@ public class CameraController : MonoBehaviour
 			if (_focusTime >= 1)
 				_isFocusing = false;
 		}
-		pos.x = Mathf.Clamp(pos.x, mapRenderer.min.x, mapRenderer.max.x);
-		pos.z = Mathf.Clamp(pos.z, mapRenderer.min.z, mapRenderer.max.z);
+		pos.x = Mathf.Clamp(pos.x, min.x, max.x);
+		pos.z = Mathf.Clamp(pos.z, min.z, max.z);
 		_thisTransform.position = pos;
 		_thisTransform.rotation = Quaternion.Euler(rot);
 	}

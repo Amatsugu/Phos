@@ -62,27 +62,25 @@ public struct MapChunk
 
 	public void Destroy()
 	{
-		if (!isCreated)
-			return;
-		try
+		if (isCreated)
 		{
-			if (!isRendered)
+			try
 			{
-				foreach (var tile in _chunkTiles)
-					Map.EM.DestroyEntity(tile);
+				if (!isRendered)
+				{
+					foreach (var tile in _chunkTiles)
+						Map.EM.DestroyEntity(tile);
+				}
 			}
+			catch
+			{
+			}
+			for (int i = 0; i < Tiles.Length; i++)
+				Tiles[i].Destroy();
+			isCreated = false;
 		}
-		catch
-		{
-		}
-		finally
-		{
-			if (_chunkTiles.IsCreated)
-				_chunkTiles.Dispose();
-		}
-		for (int i = 0; i < Tiles.Length; i++)
-			Tiles[i].Destroy();
-		isCreated = false;
+		if (_chunkTiles.IsCreated)
+			_chunkTiles.Dispose();
 	}
 
 	public bool Show(bool shown)

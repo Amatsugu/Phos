@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos.ECS;
+using Amatsugu.Phos.TileEntities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,23 @@ namespace Amatsugu.Phos.Tiles
 			Height = height;
 			info = tInfo;
 			this.map = map;
+			if (height < map.seaLevel)
+			{
+				SurfacePoint = new float3(Coords.WorldPos.x, map.seaLevel, Coords.WorldPos.z);
+				IsUnderwater = true;
+			}
+			else
+			{
+				IsUnderwater = false;
+				SurfacePoint = new float3(Coords.WorldPos.x, Height, Coords.WorldPos.z);
+			}
+		}
+
+		public Tile(Map map, HexCoords coords, float height, TileDefination tileDefination)
+		{
+			this.map = map;
+			Coords = coords;
+			Height = height;
 			if (height < map.seaLevel)
 			{
 				SurfacePoint = new float3(Coords.WorldPos.x, map.seaLevel, Coords.WorldPos.z);
@@ -302,6 +320,8 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void Destroy()
 		{
+			if (!_isRendered)
+				return;
 			if(World.DefaultGameObjectInjectionWorld != null)
 			{
 				Map.EM.DestroyEntity(_tileEntity);

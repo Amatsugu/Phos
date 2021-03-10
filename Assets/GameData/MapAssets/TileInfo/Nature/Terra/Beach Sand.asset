@@ -18,6 +18,8 @@ MonoBehaviour:
   receiveShadows: 1
   isStatic: 1
   nonUniformScale: 0
+  tilePrefab: {fileID: 5170280297184577035, guid: e100493ae062ba748a66b41855f11731,
+    type: 3}
   description: 
   decorators: []
   isTraverseable: 1

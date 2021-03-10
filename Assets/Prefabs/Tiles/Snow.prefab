@@ -7,10 +7,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6735948926377082181, guid: 0beeadb238bfcd3448e90157942b09ef,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539,
+        type: 3}
+    - target: {fileID: 7196555812495606586, guid: 0beeadb238bfcd3448e90157942b09ef,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
     - target: {fileID: 7196555812497546746, guid: 0beeadb238bfcd3448e90157942b09ef,
         type: 3}
       propertyPath: m_Name
-      value: Grass
+      value: Snow
+      objectReference: {fileID: 0}
+    - target: {fileID: 7196555812498031066, guid: 0beeadb238bfcd3448e90157942b09ef,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7196555812498031066, guid: 0beeadb238bfcd3448e90157942b09ef,
         type: 3}
@@ -29,6 +45,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7196555812498031066, guid: 0beeadb238bfcd3448e90157942b09ef,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7196555812498031066, guid: 0beeadb238bfcd3448e90157942b09ef,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -41,16 +62,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7196555812498031066, guid: 0beeadb238bfcd3448e90157942b09ef,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7196555812498031066, guid: 0beeadb238bfcd3448e90157942b09ef,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7196555812498031066, guid: 0beeadb238bfcd3448e90157942b09ef,
         type: 3}
@@ -67,10 +78,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7196555812495606586, guid: 0beeadb238bfcd3448e90157942b09ef,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 164521d8bd28fb147ac67bd2fc665633, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0beeadb238bfcd3448e90157942b09ef, type: 3}

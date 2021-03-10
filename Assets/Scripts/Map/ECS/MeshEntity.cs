@@ -76,6 +76,7 @@ public class MeshEntity : ScriptableObject
 			typeof(Translation),
 			nonUniformScale ? typeof(NonUniformScale) : typeof(Scale),
 			typeof(RenderMesh),
+			typeof(BlendProbeTag),
 			typeof(LocalToWorld),
 			typeof(PerInstanceCullingTag),
 			typeof(WorldRenderBounds),

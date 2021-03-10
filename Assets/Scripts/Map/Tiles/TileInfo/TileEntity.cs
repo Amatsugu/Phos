@@ -21,6 +21,8 @@ namespace Amatsugu.Phos.TileEntities
 	[Serializable]
 	public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
 	{
+		[Header("Prefabs")]
+		public GameObject tilePrefab;
 		[Header("Tile Info")]
 		public string description;
 		public TileDecorator[] decorators;
