@@ -80,6 +80,12 @@ namespace Amatsugu.Phos
 				EntityManager.AddComponent<Disabled>(e);
 			});
 		}
+
+		protected override void OnStopRunning()
+		{
+			base.OnStopRunning();
+			GameRegistry.GameMap.Destroy();
+		}
 	}
 
 

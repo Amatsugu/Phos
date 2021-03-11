@@ -10,6 +10,7 @@ public class InitializeWeather : MonoBehaviour
 {
 	public MeshEntity cloudMesh;
 	public MeshEntity cloudShadowMesh;
+	public GameObject cloudPrefab;
 	public Light sun;
 	public VolumeProfile volumeProfile;
 	public VisualEffect rainVfx;
@@ -28,7 +29,7 @@ public class InitializeWeather : MonoBehaviour
 	public float disolveUpperBound = 0;
 	public float disolveLowerBound = 0;
 
-	private NativeArray<Entity> _clouds;
+	//private NativeArray<Entity> _clouds;
 	private NativeArray<Entity> _cloudShadows;
 
 	private void Awake()
@@ -39,11 +40,11 @@ public class InitializeWeather : MonoBehaviour
 	private void InitWather()
 	{
 		var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-		_clouds = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+		//_clouds = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 		_cloudShadows = new NativeArray<Entity>(fieldHeight * fieldWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-		cloudMesh.Instantiate(_clouds);
+		//cloudMesh.Instantiate(_clouds);
 		cloudShadowMesh.Instantiate(_cloudShadows);
-		em.AddComponent(_clouds, typeof(CloudData));
+		//em.AddComponent(_clouds, typeof(CloudData));
 		em.AddComponent(_cloudShadows, typeof(CloudData));
 		em.AddComponent(_cloudShadows, typeof(ShadowOnlyTag));
 		var innerR = HexCoords.CalculateInnerRadius(2);
@@ -53,9 +54,9 @@ public class InitializeWeather : MonoBehaviour
 			{
 				var pos = HexCoords.OffsetToWorldPosXZ(x, z, innerR, 2);
 				pos.y = clouldHeight;
-				em.SetComponentData(_clouds[x + z * fieldWidth], new Translation { Value = pos });
-				em.SetComponentData(_clouds[x + z * fieldWidth], new NonUniformScale { Value = Vector3.one * 4 });
-				em.SetComponentData(_clouds[x + z * fieldWidth], new CloudData { pos = pos, index = x + z * fieldWidth });
+				//em.SetComponentData(_clouds[x + z * fieldWidth], new Translation { Value = pos });
+				//em.SetComponentData(_clouds[x + z * fieldWidth], new NonUniformScale { Value = Vector3.one * 4 });
+				//em.SetComponentData(_clouds[x + z * fieldWidth], new CloudData { pos = pos, index = x + z * fieldWidth });
 				em.SetComponentData(_cloudShadows[x + z * fieldWidth], new Translation { Value = pos });
 				em.SetComponentData(_cloudShadows[x + z * fieldWidth], new NonUniformScale { Value = Vector3.one * 4 });
 				em.SetComponentData(_cloudShadows[x + z * fieldWidth], new CloudData { pos = pos, index = x + z * fieldWidth });
@@ -69,8 +70,8 @@ public class InitializeWeather : MonoBehaviour
 	{
 		if (enabled)
 		{
-			if (_clouds.IsCreated)
-				_clouds.Dispose();
+			//if (_clouds.IsCreated)
+			//	_clouds.Dispose();
 			if (_cloudShadows.IsCreated)
 				_cloudShadows.Dispose();
 		}
