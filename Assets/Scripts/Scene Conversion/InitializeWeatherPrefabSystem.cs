@@ -14,10 +14,7 @@ namespace Amatsugu.Phos.Weather
     {
 		protected override void OnUpdate()
 		{
-			Entities.ForEach((InitializeWeather weather) =>
-			{
-				DeclareReferencedPrefab(weather.cloudPrefab);
-			});
+			
 		}
     }
 

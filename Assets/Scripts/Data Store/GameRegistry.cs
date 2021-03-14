@@ -36,6 +36,7 @@ public class GameRegistry : MonoBehaviour
 	public static TileDatabase TileDatabase => INST.tileDatabase;
 	public static UnitDatabase UnitDatabase => INST.unitDatabase;
 	public static ProjectileDatabase ProjectileDatabase => INST.projectileDatabase;
+	public static PrefabDatabase PrefabDatabase => INST.prefabDatabase;
 	public static Map GameMap => INST.gameState.map;
 	public static RarityColors RarityColors => INST.rarityColors;
 
@@ -58,6 +59,7 @@ public class GameRegistry : MonoBehaviour
 	public UnitDatabase unitDatabase;
 	public BuildingDatabase buildingDatabase;
 	public ProjectileDatabase projectileDatabase;
+	public PrefabDatabase prefabDatabase;
 
 
 	public static void InitGame(GameState gameState)

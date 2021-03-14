@@ -14,7 +14,8 @@ public static class Cartographer
 			{
 				int cX = x / res, cY = y / res;
 				var tile1 = chunk.Tiles[cX + cY * MapChunk.SIZE];
-				var color = tile1.info.material.color;
+				var r = tile1.info.tilePrefab.GetComponent<MeshRenderer>();
+				var color = r.sharedMaterial.color;
 				if (!tile1.IsUnderwater && cY - 1 >= 0)
 				{
 					var tile2 = chunk.Tiles[cX + (cY - 1) * MapChunk.SIZE];
@@ -71,8 +72,9 @@ public static class Cartographer
 			{
 				var tile1 = map[HexCoords.FromOffsetCoords(x, y, map.tileEdgeLength)];
 				var color = Color.magenta;
-				if (tile1.info.material != null)
-					color = tile1.info.material.color;
+				var r = tile1.info.tilePrefab.GetComponent<MeshRenderer>();
+				if (r != null)
+					color = r.sharedMaterial.color;
 				if (!tile1.IsUnderwater && y - 1 >= 0)
 				{
 					var tile2 = map[HexCoords.FromOffsetCoords(x, y - 1, map.tileEdgeLength)];

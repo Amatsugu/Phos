@@ -23,8 +23,10 @@ namespace Amatsugu.Phos.TileEntities
 	public class BuildingTileEntity : TileEntity
 	{
 		[Header("Rendering")]
+		[Obsolete]
 		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(BuildingMeshEntity))]
 		public BuildingMeshEntity buildingMesh;
+		public GameObject buildingPrefab;
 		public float3 centerOfMassOffset;
 		public ConstructionMeshEntity constructionMesh;
 		public bool preserveGroundTile;
@@ -50,7 +52,6 @@ namespace Amatsugu.Phos.TileEntities
 		public MeshEntityRotatable offshorePlatformMesh;
 
 		[Header("Building Info")]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2235:Mark all non-serializable fields", Justification = "Seraialized by Unity")]
 		public Sprite icon;
 		public Faction faction;
 		[Header("Health")]
@@ -71,32 +72,6 @@ namespace Amatsugu.Phos.TileEntities
 		[Header("Adjacency Bonuses")]
 		public AdjacencyEffect[] adjacencyEffects;
 
-
-		public override IEnumerable<ComponentType> GetComponents()
-		{
-			return base.GetComponents().Concat(new ComponentType[]
-			{
-			typeof(CenterOfMassOffset),
-			typeof(CenterOfMass),
-			});
-		}
-
-		public override void PrepareDefaultComponentData(Entity entity)
-		{
-			base.PrepareDefaultComponentData(entity);
-			Map.EM.SetComponentData(entity, new CenterOfMassOffset
-			{
-				Value = centerOfMassOffset
-			});
-		}
-
-		public override Entity Instantiate(HexCoords pos, float height)
-		{
-			var e = base.Instantiate(pos, height);
-			var p = new float3(pos.WorldPos.x, height, pos.WorldPos.z);
-			Map.EM.SetComponentData(e, new CenterOfMass { Value = p + centerOfMassOffset });
-			return e;
-		}
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

@@ -1,6 +1,7 @@
 ﻿using Amatsugu.Phos.ECS;
 using Amatsugu.Phos.TileEntities;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,9 @@ namespace Amatsugu.Phos.Tiles
 		public TileEntity originalTile;
 		public readonly Map map;
 
+		[Obsolete]
 		protected Entity _tileEntity;
+		[Obsolete]
 		private NativeArray<Entity> _decor;
 		protected bool _isRendered;
 		protected bool _isInit;
@@ -91,12 +94,17 @@ namespace Amatsugu.Phos.Tiles
 		/// Creates all the entities releated to this tile and shows it in the world
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public virtual Entity Render()
 		{
 			IsShown = true;
 			_isRendered = true;
-			_tileEntity = MeshEntity.Instantiate(Coords, Height);
 			return _tileEntity;
+		}
+
+		public virtual void PrepareTileInstance(Entity instance, EntityCommandBuffer postUpdateCommands)
+		{
+
 		}
 
 		/// <summary>
@@ -171,9 +179,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 			if (!_isRendered)
 				return;
-
-			if (info.mesh != null)
-				Map.EM.SetComponentData(_tileEntity, new Translation { Value = SurfacePoint });
 		}
 
 		/// <summary>

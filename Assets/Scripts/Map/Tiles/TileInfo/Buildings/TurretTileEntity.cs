@@ -36,17 +36,6 @@ namespace Amatsugu.Phos.TileEntities
 		//public float3 barrelOffset;
 		public float3 shotOffset;
 
-		public override IEnumerable<ComponentType> GetComponents()
-		{
-			return base.GetComponents().Concat(new ComponentType[] 
-			{ 
-				typeof(Turret), 
-				typeof(TargetingDomain),
-				typeof(AttackSpeed),
-				typeof(AttackRange)
-			});
-		}
-
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{
 			return CreateTile(map, pos, height, 0);

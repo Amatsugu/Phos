@@ -125,7 +125,8 @@ public class MapGeneratorUI : Editor
 				var a = hMap[x + z * w];
 				var i = x + z * w;
 				var (tile, _) = creator.biomePainter.GetTile(moist[i], temp[i], a, creator.seaLevel);
-				var color = tile.material.color;
+				var r = tile.tilePrefab.GetComponent<MeshRenderer>();
+				var color = r.sharedMaterial.color; //tile.material.color;
 				if (a > creator.seaLevel)
 				{
 					if (z - 1 >= 0)

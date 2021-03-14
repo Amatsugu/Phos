@@ -62,9 +62,11 @@ namespace Amatsugu.Phos
 		public ConduitGraph conduitGraph;
 		public Dictionary<int, MobileUnit> units;
 
+		public MapChunk[] chunks;
+		public NativeArray<Entity> tiles;
+
 		private HashSet<TechBuildingTileEntity> _techBuildings;
 		private int _nextUnitId = 1;
-		public MapChunk[] chunks;
 
 		public Map(int height, int width, int seed, float edgeLength = 1)
 		{
@@ -588,11 +590,12 @@ namespace Amatsugu.Phos
 			{
 				foreach (var unitEntry in units)
 					unitEntry.Value.Destroy();
-				/*if (!Application.isPlaying)
-					return;*/
+				EM.DestroyEntity(tiles);
 				GameEvents.InvokeOnMapDestroyed();
 				IsRendered = false;
 			}
+			if(tiles.IsCreated)
+				tiles.Dispose();
 		}
 
 		#region IDisposable Support

@@ -26,20 +26,6 @@ namespace Amatsugu.Phos.TileEntities
 		public MeshEntityRotatable projectile;
 		public MeshEntityRotatable laser;
 
-		public override IEnumerable<ComponentType> GetComponents()
-		{
-			return base.GetComponents().Concat(new ComponentType[] 
-			{
-				//typeof(PhosCore),
-				//typeof(PhosCoreData),
-			});
-		}
-
-		public override void PrepareDefaultComponentData(Entity entity)
-		{
-			base.PrepareDefaultComponentData(entity);
-			
-		}
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{

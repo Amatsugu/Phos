@@ -19,7 +19,7 @@ namespace Amatsugu.Phos.TileEntities
 {
 	[CreateAssetMenu(menuName = "Map Asset/Tile/Tile Info")]
 	[Serializable]
-	public class TileEntity : MeshEntityRotatable, ISerializationCallbackReceiver
+	public class TileEntity : ScriptableObject, ISerializationCallbackReceiver
 	{
 		[Header("Prefabs")]
 		public GameObject tilePrefab;
@@ -30,66 +30,9 @@ namespace Amatsugu.Phos.TileEntities
 		[HideInInspector]
 		public string assetGuid;
 
-		public override IEnumerable<ComponentType> GetComponents()
+		public virtual void PrepareEntityPrefab(Entity prefab, EntityManager entityManager)
 		{
-			nonUniformScale = false;
-			return base.GetComponents().Concat(new ComponentType[]{
-			typeof(HexPosition),
-			typeof(PhysicsCollider)
-		});
-		}
 
-		public override void PrepareDefaultComponentData(Entity entity)
-		{
-			base.PrepareDefaultComponentData(entity);
-			//Map.EM.SetComponentData(entity, new FactionId { Value = faction });
-
-			var physMat = Unity.Physics.Material.Default;
-			physMat.CollisionResponse = CollisionResponsePolicy.CollideRaiseCollisionEvents;
-			var colFilter = new CollisionFilter
-			{
-				CollidesWith = ~0u,
-				BelongsTo = (uint)(CollisionLayer.Tile),
-				GroupIndex = 0
-			};
-#if true
-			var verts = new NativeArray<float3>(mesh.vertices.Select(v => (float3)v).ToArray(), Allocator.Temp);
-			var collider = ConvexCollider.Create(verts, new ConvexHullGenerationParameters
-			{
-				BevelRadius = 0
-			}, colFilter, physMat); ;
-			verts.Dispose();
-#else
-		var collider = BoxCollider.Create(new BoxGeometry
-		{
-			BevelRadius = 0,
-			Center = new float3(0, -25, 0),
-			Size = new float3(1, 50, 1),
-			Orientation = quaternion.identity
-		}, colFilter, physMat);
-		/*var collider = CylinderCollider.Create(new CylinderGeometry
-		{
-			BevelRadius = 0.04f,
-			Center = new float3(0, -25, 0),
-			SideCount = 6,
-			Height = 50,
-			Radius = pos.edgeLength,
-			Orientation = quaternion.RotateX(math.radians(90))
-		}, colFilter, physMat);*/
-#endif
-
-			Map.EM.SetComponentData(entity, new PhysicsCollider
-			{
-				Value = collider
-			});
-		}
-
-		public virtual Entity Instantiate(HexCoords pos, float height)
-		{
-			var e = Instantiate(new float3(pos.WorldPos.x, height, pos.WorldPos.z), pos.edgeLength);
-			Map.EM.SetComponentData(e, new HexPosition { Value = pos });
-
-			return e;
 		}
 
 		public virtual Tile CreateTile(Map map, HexCoords pos, float height)

@@ -14,6 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileDatabase: {fileID: 11400000, guid: f973b4e22fe4f24429859b2a7732f9b3, type: 2}
   _buildingValues:
+  - id: 7
+    info: {fileID: 11400000, guid: 6e4e32dbf880de14d96237eda527fc63, type: 2}
+    category: 0
+  - id: 8
+    info: {fileID: 11400000, guid: 25fcb05707ae26c42b41d05913a69c7e, type: 2}
+    category: 0
+  - id: 10
+    info: {fileID: 11400000, guid: e06933dfdc394b44a8d7dd66a08bd22c, type: 2}
+    category: 0
+  - id: 11
+    info: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}
+    category: 0
+  - id: 12
+    info: {fileID: 11400000, guid: d966e12209bf2fa4c9378e52af7fd189, type: 2}
+    category: 0
+  - id: 13
+    info: {fileID: 11400000, guid: 83b9fc58865dd7b4395a139fcbc8b5a7, type: 2}
+    category: 0
+  - id: 44
+    info: {fileID: 11400000, guid: 345658ca8afa8e14195c332196239802, type: 2}
+    category: 0
+  - id: 9
+    info: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
+    category: 0
   - id: 1
     info: {fileID: 11400000, guid: a5eace77a4b1371449d3767bbe091f9d, type: 2}
     category: 6
@@ -35,27 +59,6 @@ MonoBehaviour:
   - id: 4
     info: {fileID: 11400000, guid: 74972f4338262c245b3f0a0d8d3a93f1, type: 2}
     category: 2
-  - id: 7
-    info: {fileID: 11400000, guid: 6e4e32dbf880de14d96237eda527fc63, type: 2}
-    category: 0
-  - id: 8
-    info: {fileID: 11400000, guid: 25fcb05707ae26c42b41d05913a69c7e, type: 2}
-    category: 0
-  - id: 10
-    info: {fileID: 11400000, guid: e06933dfdc394b44a8d7dd66a08bd22c, type: 2}
-    category: 0
-  - id: 11
-    info: {fileID: 11400000, guid: c3edf8360bd778042a697766b3127f35, type: 2}
-    category: 0
-  - id: 12
-    info: {fileID: 11400000, guid: d966e12209bf2fa4c9378e52af7fd189, type: 2}
-    category: 0
-  - id: 13
-    info: {fileID: 11400000, guid: 83b9fc58865dd7b4395a139fcbc8b5a7, type: 2}
-    category: 0
-  - id: 9
-    info: {fileID: 11400000, guid: 1c0ee8cb1827bb24abbb94b009332008, type: 2}
-    category: 0
   - id: 18
     info: {fileID: 11400000, guid: 951c1c66f8993ae4fa65857920f371fa, type: 2}
     category: 5

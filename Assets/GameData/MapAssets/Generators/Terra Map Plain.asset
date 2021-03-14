@@ -16,7 +16,8 @@ MonoBehaviour:
   tileMapper: {fileID: 0}
   seaLevel: 4.9
   edgeLength: 1
-  featureGenerators: []
+  featureGenerators:
+  - {fileID: 11400000, guid: bf240f7bcb2cf5548a75889870e26969, type: 2}
   Regen: 0
   borderSize: 64
   borderCurve:
