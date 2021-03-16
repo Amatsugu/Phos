@@ -18,6 +18,10 @@ MonoBehaviour:
   edgeLength: 1
   featureGenerators:
   - {fileID: 11400000, guid: bf240f7bcb2cf5548a75889870e26969, type: 2}
+  - {fileID: 11400000, guid: c9e48f60e45c00e4083aa5568f49129b, type: 2}
+  - {fileID: 11400000, guid: 19cbb8bc839fbdf4e9f0b5f479e64ea3, type: 2}
+  - {fileID: 11400000, guid: 93401847f3613cc40b2de43739f80765, type: 2}
+  - {fileID: 11400000, guid: 473d589591da6e14e9845fd435ad0948, type: 2}
   Regen: 0
   borderSize: 64
   borderCurve:

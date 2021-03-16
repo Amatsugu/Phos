@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: Gold Resource Decor
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: c2a15a0aea8233643806c76f9df6152c, type: 2}
+  basePrefab: {fileID: 8516474848725600311, guid: 36146c94f44153f40af1843d4e2928fc,
+    type: 3}
   densityMulti: 1
+  multiMesh: 0
+  meshPrefabs: []
+  meshEntities: []
   rotation: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
+  offset:
+    x: 0
+    y: 0
+    z: 0
+  randomRotMin: 0
+  randomRotMax: 180

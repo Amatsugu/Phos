@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: Silver Resource Decor
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: 3dd940d48edfca74ab3b06874accc72d, type: 2}
+  basePrefab: {fileID: 3957530567815454909, guid: 99306dc4842174b4090414e688f7489c,
+    type: 3}
   densityMulti: 1
+  multiMesh: 0
+  meshPrefabs: []
+  meshEntities: []
   rotation: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
+  offset:
+    x: 0
+    y: 0
+    z: 0
+  randomRotMin: 0
+  randomRotMax: 180

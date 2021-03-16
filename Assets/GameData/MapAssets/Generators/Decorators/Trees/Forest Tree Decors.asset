@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Forest Tree Decors
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: d15a66e16191615489e8e1475d82526e, type: 2}
+  basePrefab: {fileID: 8102376360934636125, guid: 657239c3cbe70ea4db295c4639e825e5,
+    type: 3}
   densityMulti: 1
   minPerTile: 0
   maxPerTile: 1

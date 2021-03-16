@@ -242,7 +242,7 @@ Material:
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
     - _MaterialID: 1
-    - _Metallic: 0.394
+    - _Metallic: 0.736
     - _MetallicRemapMax: 0.394
     - _MetallicRemapMin: 0
     - _Mode: 0
@@ -267,7 +267,7 @@ Material:
     - _SelectionThickness: 0
     - _ShiverDirectionality: 0.5
     - _ShiverDrag: 0.2
-    - _Smoothness: 0.311
+    - _Smoothness: 0.944
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
     - _SmoothnessTextureChannel: 0

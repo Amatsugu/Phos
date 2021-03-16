@@ -84,6 +84,14 @@ namespace Amatsugu.Phos.Tiles
 			return sb;
 		}
 
+		public virtual void InstantiateBuilding(Entity tileInst, BuildingPrefab prefab, EntityCommandBuffer postUpdateCommands)
+		{
+			var buildingInst = postUpdateCommands.Instantiate(prefab.value);
+			postUpdateCommands.AddComponent(buildingInst, new Parent { Value = tileInst });
+			postUpdateCommands.AddComponent<LocalToParent>(buildingInst);
+			postUpdateCommands.SetComponent(buildingInst, new Rotation { Value = rotation });
+		}
+
 		/// <summary>
 		/// The TileEntity that contains information about the underlying tile
 		/// </summary>

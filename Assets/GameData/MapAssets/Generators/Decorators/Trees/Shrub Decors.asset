@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Shrub Decors
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: df4b63e56cfb61b4a8d267dc83564c3f, type: 2}
+  basePrefab: {fileID: 2869925211434785322, guid: 5e2bdd53d27f5cc4c91fdeca298c53dd,
+    type: 3}
   densityMulti: 1
   minPerTile: 0
   maxPerTile: 2
@@ -23,21 +25,12 @@ MonoBehaviour:
   maxSize: 0.5
   noise:
     type: 0
-    simpleNoiseSettings:
-      strength: 1
-      layerCount: 4
-      baseRoughness: 3
-      roughness: 2
-      persistence: 0.5
-      minValue: 0
-      center: {x: 0, y: 0, z: 0}
-    rigidNoiseSettings:
-      strength: 1
-      layerCount: 3
-      baseRoughness: 1.94
-      roughness: 2
-      persistence: 0.5
-      minValue: 0
-      center: {x: 0, y: 0, z: 0}
-      weightMultiplier: 0
+    strength: 0
+    layerCount: 0
+    baseRoughness: 0
+    roughness: 0
+    persistence: 0
+    minValue: 0
+    center: {x: 0, y: 0, z: 0}
+    weightMultiplier: 0
   noiseScale: 15

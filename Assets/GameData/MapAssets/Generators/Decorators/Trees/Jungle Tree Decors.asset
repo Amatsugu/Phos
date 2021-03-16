@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Jungle Tree Decors
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: 826a8d44cd9508845ab9124b565f5435, type: 2}
+  basePrefab: {fileID: 950264676501443945, guid: 0e0f1637caf35e64394f21f32db93e0e,
+    type: 3}
   densityMulti: 1
   minPerTile: 0
   maxPerTile: 2

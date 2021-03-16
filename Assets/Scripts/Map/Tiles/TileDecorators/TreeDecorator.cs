@@ -1,8 +1,12 @@
-﻿using Amatsugu.Phos.Tiles;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.Tiles;
+
+using System;
 
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 using UnityEngine;
 
@@ -27,6 +31,26 @@ public class TreeDecorator : TileDecorator
 		_filter = null;
 	}
 
+	public override void Instantiate(Entity tileInst, HexCoords coords, ref DynamicBuffer<GenericPrefab> genericPrefabs, EntityCommandBuffer postUpdateCommands)
+	{
+		var count = GetDecorEntityCount(GameRegistry.GameMap[coords]);
+		if (count == 0)
+			return;
+		var prefab = genericPrefabs[GameRegistry.PrefabDatabase[basePrefab]];
+		for (int i = 0; i < count; i++)
+		{
+			var size = _rand.Range(minSize, maxSize);
+			var height = _rand.Range(minHeight, maxHeight);
+			var pos = new float3(_rand.NextFloat(), 0, _rand.NextFloat()) * (GameRegistry.GameMap.innerRadius);
+			var instance = postUpdateCommands.Instantiate(prefab.value);
+			postUpdateCommands.AddComponent(instance, new Parent { Value = tileInst });
+			postUpdateCommands.AddComponent<LocalToParent>(instance);
+			postUpdateCommands.SetComponent(instance, new Rotation { Value = Quaternion.Euler(0, _rand.Range(0, 360), 0) });
+			postUpdateCommands.SetComponent(instance, new Translation { Value = pos });
+			//decor[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size), );
+		}
+	}
+
 	public override int GetDecorEntityCount(Tile tile)
 	{
 		if (_filter == null)
@@ -39,6 +63,7 @@ public class TreeDecorator : TileDecorator
 		return Mathf.RoundToInt(noise * densityMulti);
 	}
 
+	[Obsolete]
 	public override void Render(Tile tile, NativeSlice<Entity> decor)
 	{
 		var count = GetDecorEntityCount(tile);

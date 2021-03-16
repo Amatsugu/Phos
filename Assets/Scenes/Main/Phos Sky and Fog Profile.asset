@@ -231,7 +231,7 @@ MonoBehaviour:
     m_Value: 3
   enable:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   length:
     m_OverrideState: 1
     m_Value: 0.015
@@ -302,7 +302,7 @@ MonoBehaviour:
     m_Value: 0
   exposure:
     m_OverrideState: 1
-    m_Value: 4.32
+    m_Value: 3.77
   multiplier:
     m_OverrideState: 1
     m_Value: 4.18

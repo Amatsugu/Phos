@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: Coal Resource Decor
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: 836e617081c6062418b280a9fdd461fe, type: 2}
+  basePrefab: {fileID: 2119160303806054404, guid: ad61e0d15d78db94ea020944077db7e8,
+    type: 3}
   densityMulti: 1
+  multiMesh: 0
+  meshPrefabs: []
+  meshEntities: []
   rotation: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
+  offset:
+    x: 0
+    y: 0
+    z: 0
+  randomRotMin: 0
+  randomRotMax: 180

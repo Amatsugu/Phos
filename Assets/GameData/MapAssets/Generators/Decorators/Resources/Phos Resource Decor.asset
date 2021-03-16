@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: Phos Resource Decor
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 0}
+  basePrefab: {fileID: 0}
   densityMulti: 1
   multiMesh: 1
+  meshPrefabs:
+  - {fileID: 4549207076505003622, guid: 36548d7c44420464ea0cf92fc1289cb7, type: 3}
+  - {fileID: 2861858183872398449, guid: 81d630fd688715b4ca55188d13a24289, type: 3}
   meshEntities:
   - {fileID: 11400000, guid: 8ce5e30add3a05140b51f4c8094ac402, type: 2}
   - {fileID: 11400000, guid: 03a354837a515cb4dbe35443250a0eea, type: 2}

@@ -28,6 +28,7 @@ namespace Amatsugu.Phos
 				var database = m.tileDatabase;
 				GameRegistry.INST.tileDatabase = database;
 				var tiles = database.tileEntites.Values.ToArray();
+				var decors = new List<GameObject>();
 				var tilesBuffer = DstEntityManager.AddBuffer<TilePrefab>(mapEntity);
 				for (int i = 0; i < tiles.Length; i++)
 				{
@@ -35,12 +36,13 @@ namespace Amatsugu.Phos
 					var e = GetPrimaryEntity(tileDef.tile.tilePrefab);
 					tilesBuffer.Add(new TilePrefab(tileDef, e));
 					tileDef.tile.PrepareEntityPrefab(e, DstEntityManager);
+					for (int d = 0; d < tileDef.tile.decorators.Length; d++)
+						tileDef.tile.decorators[d].DeclarePrefabs(decors);
 				}
 				DstEntityManager.AddComponent<MapTag>(mapEntity);
 
 				//Convert Building Database
 				var buildings = GameRegistry.BuildingDatabase.buildings.Values.OrderBy(v => v.id).ToArray();
-				var decors = new List<GameObject>();
 				var buildingsBuffer = DstEntityManager.AddBuffer<BuildingPrefab>(mapEntity);
 				for (int i = 0; i < buildings.Length; i++)
 				{
@@ -54,21 +56,25 @@ namespace Amatsugu.Phos
 					}
 
 					//Collect Prefabs from decorators
-					for (int d = 0; d < building.info.decorators.Length; d++)
-						building.info.decorators[d].DeclarePrefabs(decors);
 				}
 
 
 				var genericPrefabBuffer = DstEntityManager.AddBuffer<GenericPrefab>(mapEntity);
 				var prefabDB = new PrefabDatabase();
+				GameRegistry.INST.prefabDatabase = prefabDB;
 				var curPrefabIndex = 0;
+				Debug.Log($"Decorators to register {decors.Count}");
 				//Collect decors prefabs
 				for (int i = 0; i < decors.Count; i++)
 				{
+					Debug.Log($"Try Registering {decors[i].name}");
+
 					if (prefabDB.RegisterPrefab(decors[i], curPrefabIndex))
 					{
 						var prefab = GetPrimaryEntity(decors[i]);
+						Debug.Log($"Registering {decors[i].name}");
 						genericPrefabBuffer.Add(new GenericPrefab(prefab));
+						curPrefabIndex++;
 					}
 				}
 			});
@@ -86,12 +92,12 @@ namespace Amatsugu.Phos
 
 		protected override void OnUpdate()
 		{
-			Entities.WithNone<Disabled>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<TilePrefab> tileBuffer, DynamicBuffer<BuildingPrefab> buildingsBuffer) =>
+			Entities.WithNone<Disabled>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<TilePrefab> tileBuffer, DynamicBuffer<BuildingPrefab> buildingsBuffer, DynamicBuffer<GenericPrefab> genericPrefabs) =>
 			{
 				var map = GameRegistry.GameMap;
 				Map.EM = EntityManager;
 				var buildingsDic = GameRegistry.BuildingDatabase.buildings.Values.Where(v => v.info.buildingPrefab != null).ToDictionary(v => v.info.buildingPrefab, v => v.id);
-				Debug.Log($"Buildings Dict {buildingsDic.Count}");
+
 				for (int i = 0; i < map.chunks.Length; i++)
 				{
 					var chunk = map.chunks[i];
@@ -113,13 +119,15 @@ namespace Amatsugu.Phos
 						PostUpdateCommands.SetComponent(tileInst, new Translation { Value = p });
 						PostUpdateCommands.AddComponent(tileInst, new HexPosition { Value = tile.Coords });
 						tile.PrepareTileInstance(tileInst, PostUpdateCommands);
+						tile.InstantiateDecorators(tileInst, ref genericPrefabs, PostUpdateCommands);
 						switch(tile)
 						{
 							case BuildingTile b:
-								InstantiateBuilding(tileInst, b, buildingsDic, buildingsBuffer);
-								break;
-							case ResourceTile r:
-
+								var buildingId = buildingsDic[b.buildingInfo.buildingPrefab];
+								var buildingPrefab = buildingsBuffer[buildingId];
+								if (!buildingPrefab.isCreated)
+									continue;
+								b.InstantiateBuilding(tileInst, buildingPrefab, PostUpdateCommands);
 								break;
 						}
 
@@ -138,16 +146,6 @@ namespace Amatsugu.Phos
 		{
 			base.OnStopRunning();
 			GameRegistry.GameMap.Destroy();
-		}
-		private void InstantiateBuilding(Entity tileInst, BuildingTile buildingTile, Dictionary<GameObject, int> buildingsDic, DynamicBuffer<BuildingPrefab> buildingsBuffer)
-		{
-			var buildingId = buildingsDic[buildingTile.buildingInfo.buildingPrefab];
-			var buildingPrefab = buildingsBuffer[buildingId];
-			if (!buildingPrefab.isCreated)
-				return;
-			var buildingInst = PostUpdateCommands.Instantiate(buildingPrefab.value);
-			PostUpdateCommands.AddComponent(buildingInst, new Parent { Value = tileInst });
-			PostUpdateCommands.AddComponent<LocalToParent>(buildingInst);
 		}
 	}
 

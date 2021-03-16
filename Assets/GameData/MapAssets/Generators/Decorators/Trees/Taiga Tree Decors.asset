@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Taiga Tree Decors
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: 2875fb87523145843a5049ec1d582b94, type: 2}
+  basePrefab: {fileID: 4527469165675283937, guid: 2b8a72ddf9beff44d88438430172b61e,
+    type: 3}
   densityMulti: 1
   minPerTile: 0
   maxPerTile: 3

@@ -102,7 +102,13 @@ namespace Amatsugu.Phos.Tiles
 			return _tileEntity;
 		}
 
-		public virtual void PrepareTileInstance(Entity instance, EntityCommandBuffer postUpdateCommands)
+		public void InstantiateDecorators(Entity tileInst, ref DynamicBuffer<GenericPrefab> genericPrefabs, EntityCommandBuffer postUpdateCommands)
+		{
+			for (int i = 0; i < info.decorators.Length; i++)
+				info.decorators[i].Instantiate(tileInst, Coords, ref genericPrefabs, postUpdateCommands);
+		}
+
+		public virtual void PrepareTileInstance(Entity tileInst, EntityCommandBuffer postUpdateCommands)
 		{
 
 		}

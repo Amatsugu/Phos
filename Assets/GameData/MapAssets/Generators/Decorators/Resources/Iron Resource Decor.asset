@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: Iron Resource Decor
   m_EditorClassIdentifier: 
   meshEntity: {fileID: 11400000, guid: bbb912ce73f971749b03e72041e1dde4, type: 2}
+  basePrefab: {fileID: 7123512158567761269, guid: 3046af84a64d0874989a335cde469134,
+    type: 3}
   densityMulti: 1
+  multiMesh: 0
+  meshPrefabs: []
+  meshEntities: []
   rotation: {x: 0, y: 0, z: 0}
-  offset: {x: 0, y: 0, z: 0}
+  offset:
+    x: 0
+    y: 0
+    z: 0
+  randomRotMin: 0
+  randomRotMax: 180
