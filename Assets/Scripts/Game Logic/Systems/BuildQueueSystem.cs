@@ -44,6 +44,7 @@ public class BuildQueueSystem : ComponentSystem
 
 	private void InitBuildQueue()
 	{
+		Debug.Log("Init Build Queue");
 		_INST = this;
 		_isReady = true;
 		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
@@ -57,8 +58,12 @@ public class BuildQueueSystem : ComponentSystem
 	{
 		if (!_isReady)
 			return;
-		BuildReadyOrders();
-		ProcessConstructionOrders();
+
+		Entities.ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs) =>
+		{
+			BuildReadyOrders(genericPrefabs);
+			ProcessConstructionOrders();
+		});
 	}
 
 	/// <summary>
@@ -139,7 +144,7 @@ public class BuildQueueSystem : ComponentSystem
 	/// <summary>
 	/// Place all buildings that have been marked as ready to place
 	/// </summary>
-	private void BuildReadyOrders()
+	private void BuildReadyOrders(DynamicBuffer<GenericPrefab> prefabs)
 	{
 		int offset = 0;
 		for (int i = 0; i < _readyToBuildOrders.Count; i++)
@@ -150,15 +155,19 @@ public class BuildQueueSystem : ComponentSystem
 			switch (order.orderType)
 			{
 				case OrderType.Building:
+#if !UNITY_EDITOR
 					try
 					{
-						PlaceBuilding(order);
+#endif
+						PlaceBuilding(order, prefabs);
+#if !UNITY_EDITOR
 					}
 					catch (Exception e)
 					{
 						Debug.LogError($"Failed to build building: {order.building.GetNameString()}, skipping");
 						Debug.LogError(e);
 					}
+#endif
 					_pendingBuildOrders.Remove(orderId);
 					_readyToBuildOrders.RemoveAt(i - offset++);
 					break;
@@ -172,7 +181,6 @@ public class BuildQueueSystem : ComponentSystem
 						}
 						catch (Exception e)
 						{
-							
 							Debug.LogError($"Failed to build unit: {GameRegistry.UnitDatabase[order.unit].info.GetNameString()}, skipping");
 							Debug.LogError(e);
 						}
@@ -200,12 +208,13 @@ public class BuildQueueSystem : ComponentSystem
 	/// Places a building on the map
 	/// </summary>
 	/// <param name="order">The build order cotaining the detials on how to place the building</param>
-	private void PlaceBuilding(BuildOrder order)
+	private void PlaceBuilding(BuildOrder order, DynamicBuffer<GenericPrefab> prefabs)
 	{
 		var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords, order.rotation);
-		if(!order.dstTile.IsUnderwater)
+		if (!order.dstTile.IsUnderwater)
 			GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center | Map.FlattenMode.IgnoreUnderWater);
-		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation);
+		//GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation);
+		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation, prefabs, PostUpdateCommands);
 		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : order.building.constructionTime;
 		_constructionOrders.Add(new ConstructionOrder(order, buildTime, Time.ElapsedTime + buildTime));
 	}

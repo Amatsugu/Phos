@@ -30,7 +30,7 @@ namespace Amatsugu.Phos.Tiles
 			var tilesToReplace = map.GetNeighbors(Coords);
 			for (int i = 0; i < tilesToReplace.Length; i++)
 			{
-				map.ReplaceTile(tilesToReplace[i], hqInfo.subHQTiles[i]);
+				//map.ReplaceTile(tilesToReplace[i], hqInfo.subHQTiles[i]);
 			}
 			GameRegistry.BaseNameUI.panel.Show();
 			GameEvents.InvokeOnHQPlaced();

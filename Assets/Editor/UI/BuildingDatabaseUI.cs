@@ -98,6 +98,7 @@ public class BuildingDatabaseUI : Editor
 					category = b.category
 				};
 				database.buildings.Add(existingB.id, existingB);
+				
 			}else
 			{
 				existingB.category = b.category;

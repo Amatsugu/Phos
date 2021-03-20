@@ -34,11 +34,8 @@ namespace Amatsugu.Phos.Tiles
 
 		[Obsolete]
 		protected Entity _tileEntity;
-		[Obsolete]
-		private NativeArray<Entity> _decor;
 		protected bool _isRendered;
 		protected bool _isInit;
-		private bool _decorRendered;
 
 		/// <summary>
 		/// Create a tile
@@ -102,10 +99,36 @@ namespace Amatsugu.Phos.Tiles
 			return _tileEntity;
 		}
 
+		public TileEntity GetGroundTileInfo()
+		{
+			return originalTile != null ? originalTile : info;
+		}
+
 		public void InstantiateDecorators(Entity tileInst, ref DynamicBuffer<GenericPrefab> genericPrefabs, EntityCommandBuffer postUpdateCommands)
 		{
 			for (int i = 0; i < info.decorators.Length; i++)
 				info.decorators[i].Instantiate(tileInst, Coords, ref genericPrefabs, postUpdateCommands);
+		}
+
+		public virtual Entity InstantiateTile(DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		{
+#if DEBUG
+			if (GetGroundTileInfo().tilePrefab == null)
+			{
+				Debug.LogError($"No prefab for {GetNameString()}: {originalTile.GetNameString()} | {info.GetNameString()}");
+				return postUpdateCommands.CreateEntity();
+			}
+#endif
+			var tileId = GameRegistry.PrefabDatabase[GetGroundTileInfo().tilePrefab];
+			var prefab = prefabs[tileId];
+			var tileInst = postUpdateCommands.Instantiate(prefab.value);
+			var p = SurfacePoint;
+			p.y = Height;
+			postUpdateCommands.SetComponent(tileInst, new Translation { Value = p });
+			postUpdateCommands.AddComponent(tileInst, new HexPosition { Value = Coords });
+			_isRendered = true;
+			map.tiles[Coords.ToIndex(map.totalWidth)] = tileInst;
+			return tileInst;
 		}
 
 		public virtual void PrepareTileInstance(Entity tileInst, EntityCommandBuffer postUpdateCommands)
@@ -116,21 +139,9 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Render the decorators for this tile
 		/// </summary>
+		[Obsolete]
 		public virtual void RenderDecorators()
 		{
-			if (info.decorators.Length == 0)
-				return;
-			if (_decorRendered)
-				return;
-			_decorRendered = true;
-			_decor = new NativeArray<Entity>(info.decorators.Sum(t => t.GetDecorEntityCount(this)), Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-			int lastIndex = 0;
-			for (int i = 0; i < info.decorators.Length; i++)
-			{
-				var count = info.decorators[i].GetDecorEntityCount(this);
-				info.decorators[i].Render(this, _decor.Slice(lastIndex, count));
-				lastIndex += count;
-			}
 		}
 
 		/// <summary>
@@ -211,18 +222,10 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Applies the height of the tile to the decorators
 		/// </summary>
+		[Obsolete]
 		private void UpdateDecorationHeight()
 		{
-			if (!_isRendered)
-				return;
-			int lastIndex = 0;
-			for (int i = 0; i < info.decorators.Length; i++)
-			{
-				var count = info.decorators[i].GetDecorEntityCount(this);
-				var slice = _decor.Slice(lastIndex, count);
-				info.decorators[i].UpdateHeight(slice, this);
-				lastIndex += count;
-			}
+			
 		}
 		/// <summary>
 		/// Sends a tile update to neighboring tiles
@@ -257,29 +260,26 @@ namespace Amatsugu.Phos.Tiles
 		/// Sets the visibility of this tile
 		/// </summary>
 		/// <param name="isShown">Whether or not the tile should be shown</param>
+		[Obsolete]
 		public void Show(bool isShown)
 		{
-			IsShown = isShown;
-			if (isShown)
-				OnShow();
-			else
-				OnHide();
+			
 		}
 
 		/// <summary>
 		/// Callback for when the tile marked as visible
 		/// </summary>
+		[Obsolete]
 		public virtual void OnShow()
 		{
-			Map.EM.RemoveComponent(_decor, typeof(DisableRendering));
 		}
 
 		/// <summary>
 		/// Callback for when the tile is marked as not visible
 		/// </summary>
+		[Obsolete]
 		public virtual void OnHide()
 		{
-			Map.EM.AddComponent(_decor, typeof(DisableRendering));
 		}
 		/// <summary>
 		/// Convert this tile to a SerializedTile
@@ -322,27 +322,16 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void OnRemoved()
 		{
-
 			BroadcastTileUpdate(TileUpdateType.Removed);
 		}
 
 		/// <summary>
 		/// Destorys all entities associated with this tile and cleans up allocated memory
 		/// </summary>
+		[Obsolete]
 		public virtual void Destroy()
 		{
-			if (!_isRendered)
-				return;
-			if(World.DefaultGameObjectInjectionWorld != null)
-			{
-				Map.EM.DestroyEntity(_tileEntity);
-				if(_decor.IsCreated)
-					Map.EM.DestroyEntity(_decor);
-			}
-			if (_decor.IsCreated)
-			{
-				_decor.Dispose();
-			}
+			
 		}
 
 		// override object.Equals

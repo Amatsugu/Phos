@@ -32,7 +32,7 @@ namespace Amatsugu.Phos.TileEntities
 			return CreateTile(map, pos, height, 0);
 		}
 
-		public override Tile CreateTile(Map map, HexCoords pos, float height, int rotation)
+		public override BuildingTile CreateTile(Map map, HexCoords pos, float height, int rotation)
 		{
 			return new PhosCoreTile(pos, height, map, this, rotation);
 		}

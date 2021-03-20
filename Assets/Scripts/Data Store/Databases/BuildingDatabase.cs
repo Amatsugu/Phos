@@ -68,6 +68,7 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 		}
 		foreach (var key in tmp.Keys)
 			buildingCategories.Add(key, tmp[key].ToArray());
+
 	}
 
 	public BuildingDefination[] this[BuildingCategory c]

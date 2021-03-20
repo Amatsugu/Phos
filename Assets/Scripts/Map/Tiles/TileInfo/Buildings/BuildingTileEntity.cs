@@ -78,7 +78,7 @@ namespace Amatsugu.Phos.TileEntities
 			return CreateTile(map, pos, height, 0);
 		}
 
-		public virtual Tile CreateTile(Map map, HexCoords pos, float height, int rotation)
+		public virtual BuildingTile CreateTile(Map map, HexCoords pos, float height, int rotation)
 		{
 			if (consumption.Length != 0 || production.Any(p => p.id == 0))
 				return new PoweredBuildingTile(pos, height, map, this, rotation);

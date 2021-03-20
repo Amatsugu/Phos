@@ -2,6 +2,8 @@
 using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
+using System;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -20,7 +22,6 @@ public struct MapChunk
 	internal Bounds Bounds => _bounds;
 
 	private Bounds _bounds;
-	private NativeArray<Entity> _chunkTiles;
 
 	public MapChunk(Map map, int offsetX, int offsetZ, float tileEdgeLength, float shortDiagonal)
 	{
@@ -35,7 +36,6 @@ public struct MapChunk
 			min = worldCoord.WorldPos,
 			max = worldCoord.WorldPos + new float3(SIZE * shortDiagonal, 100, SIZE * 1.5f)
 		};
-		_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 	}
 
 	public Tile this[HexCoords coord]
@@ -51,95 +51,20 @@ public struct MapChunk
 	public bool InView(Plane[] camPlanes)
 	{
 		var inView = GeometryUtility.TestPlanesAABB(camPlanes, _bounds);
+#if UNITY_EDITOR
 		var color = inView ? Color.red : Color.blue;
-		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, 0, _bounds.max.z), color);
-		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.max.z), color);
-		UnityEngine.Debug.DrawLine(new Vector3(_bounds.max.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
-		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
-		UnityEngine.Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, SIZE, _bounds.min.z), color);
+		Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, 0, _bounds.max.z), color);
+		Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.max.z), color);
+		Debug.DrawLine(new Vector3(_bounds.max.x, 0, _bounds.max.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+		Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.max.x, 0, _bounds.min.z), color);
+		Debug.DrawLine(new Vector3(_bounds.min.x, 0, _bounds.min.z), new Vector3(_bounds.min.x, SIZE, _bounds.min.z), color);
+#endif
 		return inView;
 	}
 
-	public void Destroy()
-	{
-		if (isCreated)
-		{
-			try
-			{
-				if (!isRendered)
-				{
-					foreach (var tile in _chunkTiles)
-						Map.EM.DestroyEntity(tile);
-				}
-			}
-			catch
-			{
-			}
-			for (int i = 0; i < Tiles.Length; i++)
-				Tiles[i].Destroy();
-			isCreated = false;
-		}
-		if (_chunkTiles.IsCreated)
-			_chunkTiles.Dispose();
-	}
-
-	public bool Show(bool shown)
-	{
-		if (!isRendered && shown)
-		{
-			Render();
-			return true;
-		}
-		if (!isRendered)
-			return false;
-		if (shown == isShown)
-			return false;
-		for (int i = 0; i < Tiles.Length; i++)
-			Tiles[i].Show(shown);
-		if (shown)
-			Map.EM.RemoveComponent(_chunkTiles, typeof(DisableRendering));
-		else
-			Map.EM.AddComponent(_chunkTiles, typeof(DisableRendering));
-		isShown = shown;
-		return true;
-	}
-
-	internal void Render()
-	{
-		if (isRendered)
-			return;
-		isShown = true;
-		isRendered = true;
-		if (!_chunkTiles.IsCreated)
-			_chunkTiles = new NativeArray<Entity>(SIZE * SIZE, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-		var renderBounds = new AABB
-		{
-			Center = Bounds.center,
-			Extents = Bounds.extents
-		};
-		for (int i = 0; i < SIZE * SIZE; i++)
-		{
-			_chunkTiles[i] = Tiles[i].Render();
-			Map.EM.SetComponentData(_chunkTiles[i], new ChunkWorldRenderBounds
-			{
-				Value = renderBounds
-			});
-			Tiles[i].RenderDecorators();
-		}
-	}
-
-	internal void RenderDecorators()
-	{
-		for (int i = 0; i < Tiles.Length; i++)
-		{
-			Tiles[i].RenderDecorators();
-		}
-	}
-
+	[Obsolete]
 	public T ReplaceTile<T>(HexCoords chunkCoord, T newTile) where T : Tile
 	{
-		if (!isRendered)
-			Render();
 		var tile = this[chunkCoord];
 		newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 		if (tile.originalTile == null)
@@ -147,15 +72,7 @@ public struct MapChunk
 		else
 			newTile.originalTile = tile.originalTile;
 		this[chunkCoord] = newTile;
-		_chunkTiles[chunkCoord.ToIndex(SIZE)] = newTile.Render();
 		return newTile;
 	}
 
-	public void Start()
-	{
-		if (!isRendered)
-			throw new System.Exception("Cannot run Start of a chunk that has not been rendered yet");
-		for (int i = 0; i < Tiles.Length; i++)
-			Tiles[i].Start();
-	}
 }

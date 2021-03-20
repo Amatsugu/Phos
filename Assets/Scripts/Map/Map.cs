@@ -84,6 +84,7 @@ namespace Amatsugu.Phos
 			shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
 			longDiagonal = 2 * tileEdgeLength;
 			units = new Dictionary<int, MobileUnit>(500);
+			tiles = new NativeArray<Entity>(totalHeight * totalWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 			_techBuildings = new HashSet<TechBuildingTileEntity>();
 		}
 
@@ -145,61 +146,6 @@ namespace Amatsugu.Phos
 		public TileEntity[] GetTileTyes()
 		{
 			return chunks.SelectMany(c => c.Tiles.Select(t => t.info)).Distinct().ToArray();
-		}
-
-		internal void UpdateView(Plane[] camPlanes)
-		{
-			if (!IsRendered)
-				throw new Exception("Map is not rendered yet");
-			var chunksChanged = 0;
-
-			for (int i = 0; i < chunks.Length; i++)
-			{
-				if (chunks[i].Show(chunks[i].InView(camPlanes)))
-					chunksChanged++;
-			}
-		}
-
-		internal void UpdateView(float3 camPos, Plane[] camPlanes, int renderDist = 3)
-		{
-			var coord = HexCoords.FromPosition(camPos, tileEdgeLength);
-			var (cX, cZ) = coord.GetChunkPos();
-			for (int z = 0; z < height; z++)
-			{
-				var zMin = cZ - renderDist;
-				var zMax = cZ + renderDist;
-				for (int x = 0; x < width; x++)
-				{
-					var xMin = cX - renderDist;
-					var xMax = cX + renderDist;
-					//if (x < xMin || x > xMax)
-					//	chunks[x + z * width].Show(false);
-					if ((z < zMin || z > zMax) || (x < xMin || x > xMax))
-						chunks[x + z * width].Show(false);
-					else
-					{
-						var i = x + z * width;
-						chunks[i].Show(chunks[i].InView(camPlanes));
-					}
-				}
-			}
-		}
-
-		public void Render(EntityManager entityManager)
-		{
-			if (IsRendered)
-				return;
-			IsRendered = true;
-			if (EM == default)
-				EM = entityManager;
-			for (int i = 0; i < chunks.Length; i++)
-				chunks[i].Render();
-			for (int i = 0; i < chunks.Length; i++)
-				chunks[i].Start();
-
-			foreach (var unit in units)
-				unit.Value.Render();
-
 		}
 
 		/// <summary>
@@ -461,10 +407,13 @@ namespace Amatsugu.Phos
 			}
 		}
 
+		[Obsolete]
 		public Tile ReplaceTile(Tile tile, BuildingTileEntity newTile, int rotation) => ReplaceTile(tile, newTile.CreateTile(this, tile.Coords, tile.Height, rotation));
 
+		[Obsolete]
 		public Tile ReplaceTile(Tile tile, TileEntity newTile) => ReplaceTile(tile, newTile.CreateTile(this, tile.Coords, tile.Height));
 
+		[Obsolete]
 		public T ReplaceTile<T>(Tile tile, T newTile) where T : Tile
 		{
 			if (!IsRendered)
@@ -475,7 +424,6 @@ namespace Amatsugu.Phos
 			var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
 			var nT = chunks[index].ReplaceTile(localCoord, newTile);
 			tile.OnRemoved();
-			tile.Destroy();
 			if (tile.info is TechBuildingTileEntity tb && _techBuildings.Contains(tb))
 				_techBuildings.Remove(tb);
 			nT.OnPlaced();
@@ -485,12 +433,47 @@ namespace Amatsugu.Phos
 			return nT;
 		}
 
+		
+
+		[Obsolete]
 		public void RevertTile(Tile tile)
 		{
 			if (tile.originalTile != null)
 				ReplaceTile(tile, tile.originalTile);
 			else
 				UnityEngine.Debug.LogWarning("No Original Tile to revert to");
+		}
+
+		public Tile ReplaceTile(Tile tile, TileEntity newTileInfo, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		{
+			tile.OnRemoved();
+			var tileIndex = tile.Coords.ToIndex(totalWidth);
+			postUpdateCommands.DestroyEntity(tiles[tileIndex]);
+			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height);
+			var nTInst = tiles[tileIndex] = nT.InstantiateTile(prefabs, postUpdateCommands);
+			nT.PrepareTileInstance(nTInst, postUpdateCommands);
+			nT.OnPlaced();
+			OnTilePlaced?.Invoke(tile.Coords);
+			nT.Start();
+			return nT;
+		}
+
+
+		public Tile ReplaceTile(Tile tile, BuildingTileEntity newTileInfo, int rotation, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		{
+			tile.OnRemoved();
+			var tileIndex = tile.Coords.ToIndex(totalWidth);
+			postUpdateCommands.DestroyEntity(tiles[tileIndex]);
+			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height, rotation);
+			nT.originalTile = tile.GetGroundTileInfo();
+			var nTInst = tiles[tileIndex] = nT.InstantiateTile(prefabs, postUpdateCommands);
+			var buildingId = GameRegistry.PrefabDatabase[newTileInfo.buildingPrefab];
+			nT.InstantiateBuilding(nTInst, prefabs[buildingId],postUpdateCommands);
+			nT.PrepareTileInstance(nTInst, postUpdateCommands);
+			nT.OnPlaced();
+			OnTilePlaced?.Invoke(tile.Coords);
+			//nT.Start();
+			return nT;
 		}
 
 		public int GetDistance(HexCoords a, HexCoords b)
@@ -584,16 +567,7 @@ namespace Amatsugu.Phos
 
 		public void Destroy()
 		{
-			foreach (var chunk in chunks)
-				chunk.Destroy();
-			if (IsRendered)
-			{
-				foreach (var unitEntry in units)
-					unitEntry.Value.Destroy();
-				EM.DestroyEntity(tiles);
-				GameEvents.InvokeOnMapDestroyed();
-				IsRendered = false;
-			}
+			Debug.Log("Disposing Map");
 			if(tiles.IsCreated)
 				tiles.Dispose();
 		}

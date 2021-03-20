@@ -1,20 +1,16 @@
 using Amatsugu.Phos.Tiles;
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Transforms;
 
 using UnityEngine;
 
 namespace Amatsugu.Phos
 {
 	public class MapConversionSystem : GameObjectConversionSystem
-    {
+	{
 		protected override void OnUpdate()
 		{
 			Entities.ForEach((MapAuthoring m) =>
@@ -25,62 +21,52 @@ namespace Amatsugu.Phos
 				GameRegistry.InitGame(new GameState(map));
 
 				//Convert Tile Database
-				var database = m.tileDatabase;
-				GameRegistry.INST.tileDatabase = database;
-				var tiles = database.tileEntites.Values.ToArray();
-				var decors = new List<GameObject>();
-				var tilesBuffer = DstEntityManager.AddBuffer<TilePrefab>(mapEntity);
+				var prefabDB = GameRegistry.INST.prefabDatabase = new PrefabDatabase();
+				var curPrefabIndex = 0;
+				var prefabs = new List<GameObject>();
+
+				var tileDB = GameRegistry.INST.tileDatabase = m.tileDatabase;
+				var tiles = tileDB.tileEntites.Values.OrderBy(t => t.id).ToArray();
+
 				for (int i = 0; i < tiles.Length; i++)
 				{
 					var tileDef = tiles[i];
+					prefabs.Add(tileDef.tile.tilePrefab);
 					var e = GetPrimaryEntity(tileDef.tile.tilePrefab);
-					tilesBuffer.Add(new TilePrefab(tileDef, e));
 					tileDef.tile.PrepareEntityPrefab(e, DstEntityManager);
+					//Collect Prefabs from decorators
 					for (int d = 0; d < tileDef.tile.decorators.Length; d++)
-						tileDef.tile.decorators[d].DeclarePrefabs(decors);
+						tileDef.tile.decorators[d].DeclarePrefabs(prefabs);
 				}
 				DstEntityManager.AddComponent<MapTag>(mapEntity);
 
 				//Convert Building Database
 				var buildings = GameRegistry.BuildingDatabase.buildings.Values.OrderBy(v => v.id).ToArray();
-				var buildingsBuffer = DstEntityManager.AddBuffer<BuildingPrefab>(mapEntity);
 				for (int i = 0; i < buildings.Length; i++)
 				{
 					var building = buildings[i];
-					if (building.info.buildingPrefab == null)
-						buildingsBuffer.Add(default);
-					else
-					{
-						var e = GetPrimaryEntity(building.info.buildingPrefab);
-						buildingsBuffer.Add(new BuildingPrefab(building, e));
-					}
-
-					//Collect Prefabs from decorators
+					if (building.info.buildingPrefab != null)
+						prefabs.Add(building.info.buildingPrefab);
 				}
 
-
 				var genericPrefabBuffer = DstEntityManager.AddBuffer<GenericPrefab>(mapEntity);
-				var prefabDB = new PrefabDatabase();
-				GameRegistry.INST.prefabDatabase = prefabDB;
-				var curPrefabIndex = 0;
-				Debug.Log($"Decorators to register {decors.Count}");
-				//Collect decors prefabs
-				for (int i = 0; i < decors.Count; i++)
+				Debug.Log($"Prefabs to register {prefabs.Count}");
+				//Collect prefabs and register to db
+				for (int i = 0; i < prefabs.Count; i++)
 				{
-					Debug.Log($"Try Registering {decors[i].name}");
-
-					if (prefabDB.RegisterPrefab(decors[i], curPrefabIndex))
+					if (prefabs[i] == null)
+						continue;
+					if (prefabDB.RegisterPrefab(prefabs[i], curPrefabIndex))
 					{
-						var prefab = GetPrimaryEntity(decors[i]);
-						Debug.Log($"Registering {decors[i].name}");
+						Debug.Log($"Registering {prefabs[i].name}");
+						var prefab = GetPrimaryEntity(prefabs[i]);
 						genericPrefabBuffer.Add(new GenericPrefab(prefab));
 						curPrefabIndex++;
 					}
 				}
 			});
-
 		}
-    }
+	}
 
 	public class MapSystem : ComponentSystem
 	{
@@ -92,80 +78,63 @@ namespace Amatsugu.Phos
 
 		protected override void OnUpdate()
 		{
-			Entities.WithNone<Disabled>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<TilePrefab> tileBuffer, DynamicBuffer<BuildingPrefab> buildingsBuffer, DynamicBuffer<GenericPrefab> genericPrefabs) =>
+			Entities.WithNone<MapGeneratedTag>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs) =>
 			{
 				var map = GameRegistry.GameMap;
 				Map.EM = EntityManager;
-				var buildingsDic = GameRegistry.BuildingDatabase.buildings.Values.Where(v => v.info.buildingPrefab != null).ToDictionary(v => v.info.buildingPrefab, v => v.id);
-
 				for (int i = 0; i < map.chunks.Length; i++)
 				{
 					var chunk = map.chunks[i];
 					for (int j = 0; j < chunk.Tiles.Length; j++)
 					{
 						var tile = chunk.Tiles[j];
-						var tileId = GameRegistry.TileDatabase.entityIds[tile.info];
-						if(tile.originalTile != null)
-							tileId = GameRegistry.TileDatabase.entityIds[tile.originalTile];
-						var prefab = tileBuffer[tileId];
-						if(!prefab.isCreated || !EntityManager.Exists(prefab.value))
-						{
-							Debug.LogWarning($"Tile {tile.GetNameString()} has not beed created");
-							continue;
-						}
-						var tileInst = PostUpdateCommands.Instantiate(prefab.value);
-						var p = tile.SurfacePoint;
-						p.y = tile.Height;
-						PostUpdateCommands.SetComponent(tileInst, new Translation { Value = p });
-						PostUpdateCommands.AddComponent(tileInst, new HexPosition { Value = tile.Coords });
+						//Debug.Log($"Instantiating {tile.GetNameString()}");
+						var tileInst = tile.InstantiateTile(genericPrefabs, PostUpdateCommands);
 						tile.PrepareTileInstance(tileInst, PostUpdateCommands);
 						tile.InstantiateDecorators(tileInst, ref genericPrefabs, PostUpdateCommands);
-						switch(tile)
+						switch (tile)
 						{
 							case BuildingTile b:
-								var buildingId = buildingsDic[b.buildingInfo.buildingPrefab];
-								var buildingPrefab = buildingsBuffer[buildingId];
-								if (!buildingPrefab.isCreated)
-									continue;
+								var buildingId = GameRegistry.PrefabDatabase[b.buildingInfo.buildingPrefab];
+								var buildingPrefab = genericPrefabs[buildingId];
 								b.InstantiateBuilding(tileInst, buildingPrefab, PostUpdateCommands);
 								break;
 						}
-
 					}
 				}
 
 				GameEvents.InvokeOnGameLoaded();
 				GameEvents.InvokeOnMapLoaded();
+				for (int i = 0; i < map.chunks.Length; i++)
+				{
+					var chunk = map.chunks[i];
+					for (int j = 0; j < chunk.Tiles.Length; j++)
+					{
+						var tile = chunk.Tiles[j];
+						//tile.Start();
+					}
+				}
+
 				GameEvents.InvokeOnGameReady();
 
-				EntityManager.AddComponent<Disabled>(e);
+				EntityManager.AddComponent<MapGeneratedTag>(e);
 			});
 		}
 
-		protected override void OnStopRunning()
+		protected override void OnDestroy()
 		{
-			base.OnStopRunning();
+			base.OnDestroy();
 			GameRegistry.GameMap.Destroy();
 		}
 	}
-
 
 	public struct MapTag : IComponentData
 	{
 	}
 
-	public struct BuildingPrefab : IBufferElementData
+	public struct MapGeneratedTag : IComponentData
 	{
-		public int id;
-		public Entity value;
-		public bool isCreated;
 
-		public BuildingPrefab(BuildingDatabase.BuildingDefination defination, Entity entity)
-		{
-			id = defination.id;
-			value = entity;
-			isCreated = true;
-		}
 	}
 
 	public struct GenericPrefab : IBufferElementData
@@ -176,20 +145,5 @@ namespace Amatsugu.Phos
 		{
 			value = entity;
 		}
-	}
-
-	public struct TilePrefab : IBufferElementData
-	{
-		public int id;
-		public Entity value;
-		public bool isCreated;
-
-		public TilePrefab(TileDatabase.TileDefination defination, Entity entity)
-		{
-			id = defination.id;
-			value = entity;
-			isCreated = true;
-		}
-
 	}
 }

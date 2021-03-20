@@ -12,45 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
   m_Name: BlockingTile
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: acbbe86fe400ff747a45db1f5d6cba26
   buildingMesh: {fileID: 0}
+  buildingPrefab: {fileID: 0}
   centerOfMassOffset:
     x: 0
     y: 0
     z: 0
   constructionMesh: {fileID: 0}
+  preserveGroundTile: 0
+  customDeathTile: 0
+  deathTile: {fileID: 0}
   tier: 1
   constructionTime: 2
   category: 0
-  size: 0
+  footprint:
+    size: 0
+    footprint:
+    - x: 0
+      y: 0
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0
   offshorePlatformMesh: {fileID: 0}
-  placementMode: 0
+  icon: {fileID: 0}
+  faction: 0
   maxHealth: 100
   healthBar: {fileID: 0}
   healthBarOffset:
     x: 0
     y: 0
     z: 0
-  faction: 0
-  customDeathTile: 0
-  deathTile: {fileID: 0}
-  upgradeTarget:
-    id: -1
-  icon: {fileID: 0}
-  preserveGroundTile: 0
   validator: {fileID: 0}
   cost: []
   production: []
   consumption: []
+  adjacencyEffects: []

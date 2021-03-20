@@ -84,7 +84,7 @@ namespace Amatsugu.Phos.Tiles
 			return sb;
 		}
 
-		public virtual void InstantiateBuilding(Entity tileInst, BuildingPrefab prefab, EntityCommandBuffer postUpdateCommands)
+		public virtual void InstantiateBuilding(Entity tileInst, GenericPrefab prefab, EntityCommandBuffer postUpdateCommands)
 		{
 			var buildingInst = postUpdateCommands.Instantiate(prefab.value);
 			postUpdateCommands.AddComponent(buildingInst, new Parent { Value = tileInst });

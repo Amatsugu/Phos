@@ -1,12 +1,15 @@
 ﻿using Amatsugu.Phos;
 using Amatsugu.Phos.TileEntities;
 
+using System;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
 using UnityEngine;
 
+[Obsolete]
 public class MapRenderer : MonoBehaviour
 {
 	public GameObject oceanPlane;
@@ -45,8 +48,7 @@ public class MapRenderer : MonoBehaviour
 		this.map.Dispose();
 		this.map = map;
 		gameState.map = map;
-		GameRegistry.InitGame(gameState);
-		map.Render(_entityManager);
+		//GameRegistry.InitGame(gameState);
 		_lastCamPos = default;
 		_lastCamRot = default;
 
@@ -85,7 +87,6 @@ public class MapRenderer : MonoBehaviour
 		map = _mapAuthoring.generator.GenerateMap(transform);
 		GameRegistry.InitGame(map);
 		_mapAuthoring.generator.GenerateFeatures(map);
-		map.Render(_entityManager);
 		
 		var pos = oceanPlane.transform.localScale;
 		pos *= 2;

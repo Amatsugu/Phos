@@ -74,15 +74,16 @@ public class ResourceGenerator : FeatureGenerator
 			for (int x = 0; x < map.totalWidth; x++)
 			{
 				var pos = HexCoords.FromOffsetCoords(x, z, map.tileEdgeLength);
-				if (map[pos] is ResourceTile)
+				var curTile = map[pos];
+				if (curTile is ResourceTile)
 					continue;
-				var h = map[pos].Height;
+				var h = curTile.Height;
 				if (h < map.seaLevel)
 					continue;
 				if (resourceMap[x + z * map.totalWidth] == 0)
 				{
 					var res = resource.CreateTile(map, pos, h);
-					res.originalTile = map[pos].info;
+					res.originalTile = curTile.GetGroundTileInfo();
 					map[pos] = res;
 				}
 			}

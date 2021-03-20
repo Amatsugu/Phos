@@ -1,5 +1,6 @@
 ﻿using Amatsugu.Phos;
 using Amatsugu.Phos.TileEntities;
+using Amatsugu.Phos.Tiles;
 
 using System.Linq;
 
@@ -67,7 +68,7 @@ public class StructureGenerator : FeatureGenerator
 	{
 		var origTile = map[coords];
 		map[coords] = tile.CreateTile(map, coords, origTile.Height);
-		map[coords].originalTile = origTile.info;
+		map[coords].originalTile = origTile.GetGroundTileInfo();
 		var ring = HexCoords.SpiralSelect(coords, crystalRange, true);
 		for (int i = 0; i < ring.Length; i++)
 		{
@@ -82,6 +83,6 @@ public class StructureGenerator : FeatureGenerator
 		if (origTile == null)
 			return;
 		map[coords] = phosCrystal.CreateTile(map, coords, origTile.Height);
-		map[coords].originalTile = origTile.originalTile != null ? origTile.originalTile : origTile.info;
+		map[coords].originalTile = origTile.GetGroundTileInfo();
 	}
 }
