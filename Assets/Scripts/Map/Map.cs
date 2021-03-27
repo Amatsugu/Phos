@@ -19,6 +19,7 @@ namespace Amatsugu.Phos
 {
 	public class Map : IDisposable
 	{
+		[Obsolete]
 		public static EntityManager EM;
 		public bool IsRendered { get; private set; }
 
@@ -419,9 +420,8 @@ namespace Amatsugu.Phos
 			if (!IsRendered)
 				throw new Exception("Cannot use ReplaceTile for an unrendered map");
 			var coord = tile.Coords;
-			var (chunkX, chunkZ) = coord.GetChunkPos();
-			var index = chunkX + chunkZ * width;
-			var localCoord = coord.ToChunkLocalCoord(chunkX, chunkZ);
+			var index = coord.GetChunkIndex(width);
+			var localCoord = coord.ToChunkLocalCoord();
 			var nT = chunks[index].ReplaceTile(localCoord, newTile);
 			tile.OnRemoved();
 			if (tile.info is TechBuildingTileEntity tb && _techBuildings.Contains(tb))
@@ -444,36 +444,37 @@ namespace Amatsugu.Phos
 				UnityEngine.Debug.LogWarning("No Original Tile to revert to");
 		}
 
-		public Tile ReplaceTile(Tile tile, TileEntity newTileInfo, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		public Tile ReplaceTile(Tile tile, Tile newTile, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
+			if (tile.Coords != newTile.Coords)
+				throw new Exception("New tile must be a the same position of the tile it replaces");
 			tile.OnRemoved();
+			newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			var tileIndex = tile.Coords.ToIndex(totalWidth);
 			postUpdateCommands.DestroyEntity(tiles[tileIndex]);
-			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height);
-			var nTInst = tiles[tileIndex] = nT.InstantiateTile(prefabs, postUpdateCommands);
-			nT.PrepareTileInstance(nTInst, postUpdateCommands);
-			nT.OnPlaced();
+			var nTInst = tiles[tileIndex] = newTile.InstantiateTile(prefabs, postUpdateCommands);
+			newTile.PrepareTileInstance(nTInst, postUpdateCommands);
+			if(tile is BuildingTile buildingTile)
+			{
+				buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
+				buildingTile.PrepareTileInstance(nTInst, postUpdateCommands);
+			}
+			newTile.OnPlaced();
 			OnTilePlaced?.Invoke(tile.Coords);
-			nT.Start();
-			return nT;
+			newTile.Start();
+			return newTile;
 		}
 
+		public Tile ReplaceTile(Tile tile, TileEntity newTileInfo, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		{
+			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height);
+			return ReplaceTile(tile, nT, prefabs, postUpdateCommands);
+		}
 
 		public Tile ReplaceTile(Tile tile, BuildingTileEntity newTileInfo, int rotation, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
-			tile.OnRemoved();
-			var tileIndex = tile.Coords.ToIndex(totalWidth);
-			postUpdateCommands.DestroyEntity(tiles[tileIndex]);
 			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height, rotation);
-			nT.originalTile = tile.GetGroundTileInfo();
-			var nTInst = tiles[tileIndex] = nT.InstantiateTile(prefabs, postUpdateCommands);
-			var buildingId = GameRegistry.PrefabDatabase[newTileInfo.buildingPrefab];
-			nT.InstantiateBuilding(nTInst, prefabs[buildingId],postUpdateCommands);
-			nT.PrepareTileInstance(nTInst, postUpdateCommands);
-			nT.OnPlaced();
-			OnTilePlaced?.Invoke(tile.Coords);
-			//nT.Start();
-			return nT;
+			return ReplaceTile(tile, nT, prefabs, postUpdateCommands);
 		}
 
 		public int GetDistance(HexCoords a, HexCoords b)

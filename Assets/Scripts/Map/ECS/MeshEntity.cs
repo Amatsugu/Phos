@@ -26,7 +26,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual Entity GetEntity()
 	{
-		var em = Map.EM;
+		var em = GameRegistry.EntityManager;
 		if (_entity == null || !em.Exists(_entity))
 		{
 			UnityEngine.Debug.Log($"<b>Create Entity:</b> {name} [{GetType().Name}]");
@@ -44,7 +44,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual void PrepareDefaultComponentData(Entity entity)
 	{
-		var em = Map.EM;
+		var em = GameRegistry.EntityManager;
 		RenderMesh sharedMesh = new RenderMesh
 		{
 			castShadows = castShadows,
@@ -68,7 +68,7 @@ public class MeshEntity : ScriptableObject
 	}
 
 	protected virtual EntityArchetype GetArchetype() =>
-		Map.EM.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
+		GameRegistry.EntityManager.CreateArchetype(isStatic ? GetComponents().Append(typeof(Static)).ToArray() : GetComponents().ToArray());
 
 	public virtual IEnumerable<ComponentType> GetComponents()
 	{
@@ -115,7 +115,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual Entity Instantiate(float3 position, float3 scale)
 	{
-		var em = Map.EM;
+		var em = GameRegistry.EntityManager;
 		var e = em.Instantiate(GetEntity());
 		em.SetComponentData(e, new Translation { Value = position });
 		if (nonUniformScale)
@@ -128,7 +128,7 @@ public class MeshEntity : ScriptableObject
 
 	public virtual void Instantiate(NativeArray<Entity> output)
 	{
-		var em = Map.EM;
+		var em = GameRegistry.EntityManager;
 		em.Instantiate(GetEntity(), output);
 		em.RemoveComponent<Disabled>(output);
 	}

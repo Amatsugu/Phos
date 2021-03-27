@@ -193,9 +193,9 @@ public class UISelectionPanel : UIPanel
 					for (int i = 0; i < _castHits.Length; i++)
 					{
 						var entity = _buildPhysicsWorld.PhysicsWorld.Bodies[_castHits[i]].Entity;
-						if (Map.EM.HasComponent<UnitId>(entity))
+						if (GameRegistry.EntityManager.HasComponent<UnitId>(entity))
 						{
-							var e = _map.units[Map.EM.GetComponentData<UnitId>(entity).Value];
+							var e = _map.units[GameRegistry.EntityManager.GetComponentData<UnitId>(entity).Value];
 							_selection.Add(e);
 							actionsPanel.AddSelectedEntity(e);
 						}

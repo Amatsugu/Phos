@@ -84,12 +84,15 @@ namespace Amatsugu.Phos.Tiles
 			return sb;
 		}
 
-		public virtual void InstantiateBuilding(Entity tileInst, GenericPrefab prefab, EntityCommandBuffer postUpdateCommands)
+		public virtual Entity InstantiateBuilding(Entity tileInst, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
+			var prefabId = GameRegistry.PrefabDatabase[buildingInfo.buildingPrefab];
+			var prefab = prefabs[prefabId];
 			var buildingInst = postUpdateCommands.Instantiate(prefab.value);
 			postUpdateCommands.AddComponent(buildingInst, new Parent { Value = tileInst });
 			postUpdateCommands.AddComponent<LocalToParent>(buildingInst);
 			postUpdateCommands.SetComponent(buildingInst, new Rotation { Value = rotation });
+			return buildingInst;
 		}
 
 		/// <summary>
@@ -124,16 +127,6 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHeightChanged()
 		{
 			base.OnHeightChanged();
-			if (buildingInfo.buildingMesh != null)
-			{
-				Map.EM.SetComponentData(_building, new Translation { Value = SurfacePoint });
-				for (int i = 0; i < subMeshes.Length; i++)
-				{
-					var h = Map.EM.GetComponentData<Translation>(subMeshes[i]);
-					h.Value = new float3(h.Value.x, SurfacePoint.y, h.Value.z);
-					Map.EM.SetComponentData(subMeshes[i], h);
-				}
-			}
 		}
 
 		public override void OnPlaced()
@@ -146,8 +139,10 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Start the construction animations for this building
 		/// </summary>
+		[Obsolete]
 		protected virtual void StartConstruction()
 		{
+			return;
 			if (buildingInfo.constructionMesh != null)
 			{
 				var pos = SurfacePoint;
@@ -160,72 +155,26 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
-		public override Entity Render()
-		{
-			var e = base.Render();
-			if (isBuilt)
-			{
-				//isBuilt = false;
-				RenderBuilding();
-			}
-			return e;
-		}
-
-		public override void OnHide()
-		{
-			base.OnHide();
-			if (hasBuilding)
-				Map.EM.AddComponent(_building, typeof(DisableRendering));
-			if (_healthBars.IsCreated)
-				Map.EM.AddComponent<DisableRendering>(_healthBars);
-			if (_connectorCount > 0)
-			{
-				for (int i = 0; i < _adjacencyConnectors.Length; i++)
-				{
-					if (Map.EM.Exists(_adjacencyConnectors[i]))
-						Map.EM.AddComponent<DisableRendering>(_adjacencyConnectors[i]);
-				}
-			}
-			Map.EM.AddComponent(subMeshes, typeof(DisableRendering));
-		}
-
-		public override void OnShow()
-		{
-			base.OnShow();
-			if (hasBuilding)
-				Map.EM.RemoveComponent(_building, typeof(DisableRendering));
-			if (_healthBars.IsCreated)
-				Map.EM.RemoveComponent<DisableRendering>(_healthBars);
-			if (_connectorCount > 0)
-			{
-				for (int i = 0; i < _adjacencyConnectors.Length; i++)
-				{
-					if (Map.EM.Exists(_adjacencyConnectors[i]))
-						Map.EM.RemoveComponent<DisableRendering>(_adjacencyConnectors);
-				}
-			}
-			Map.EM.RemoveComponent(subMeshes, typeof(DisableRendering));
-		}
 
 		/// <summary>
 		/// Completes the build phase of this building
 		/// </summary>
 		public void Build()
 		{
-			if (isBuilt)
-				return;
-			isBuilt = true;
-			OnBuilt();
-			RenderBuilding();
-			Start();
-			if(buildingInfo.useMetaTiles)
-			{
-				for (int i = 0; i < metaTiles.Length; i++)
-				{
-					metaTiles[i].Start();
-				}
-			}
-			map.InvokeOnBuilt(Coords);
+			//if (isBuilt)
+			//	return;
+			//isBuilt = true;
+			//OnBuilt();
+			//RenderBuilding();
+			//Start();
+			//if(buildingInfo.useMetaTiles)
+			//{
+			//	for (int i = 0; i < metaTiles.Length; i++)
+			//	{
+			//		metaTiles[i].Start();
+			//	}
+			//}
+			//map.InvokeOnBuilt(Coords);
 		}
 
 		/// <summary>
@@ -236,83 +185,9 @@ namespace Amatsugu.Phos.Tiles
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
 		}
 
-		/// <summary>
-		/// Instantiates the building entities for this tile
-		/// </summary>
-		public virtual void RenderBuilding()
+		public virtual void PrareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
-			if (buildingInfo.buildingMesh.mesh == null)
-			{
-				Debug.LogWarning($"No Building Assigned for {GetNameString()}");
-			}
-			else
-			{
-				hasBuilding = true;
-				var rot = GetBuildingRotation();
-				_building = buildingInfo.buildingMesh.Instantiate(SurfacePoint, rot, GameRegistry.TileDatabase.entityIds[buildingInfo], buildingInfo.maxHealth, buildingInfo.faction);
-				RenderSubMeshes(rot);
-			}
-
-			if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
-				_offshorePlatform = buildingInfo.offshorePlatformMesh.Instantiate(SurfacePoint);
-			
-			RenderDecorators();
-		}
-
-		public override void Start()
-		{
-			base.Start();
-			if (!isBuilt)
-				return;
-			ApplyTileProperites();
-			ApplyAdjacencyBonuses();
-			ApplyBuffs();
-		}
-
-		/// <summary>
-		/// Instantiate the submesses for this building tile
-		/// </summary>
-		/// <param name="rot">The rotation of the building</param>
-		public virtual void RenderSubMeshes(quaternion rot)
-		{
-			subMeshes = buildingInfo.buildingMesh.InstantiateSubMeshes(quaternion.identity, _building);
-		}
-
-		/// <summary>
-		/// Replace tiles in this building's footprint with meta tiles
-		/// </summary>
-		public virtual void CreateMetaTiles()
-		{
-			if (buildingInfo.useMetaTiles)
-			{
-				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
-				for (int i = 0, j = 0; i < tiles.Length; i++)
-				{
-					if (tiles[i] == Coords)
-						continue;
-					var tgtTile = map[tiles[i]];
-					var mt = map.ReplaceTile(tgtTile, new MetaTile(tiles[i], tgtTile.Height, map, tgtTile.originalTile, this));
-					metaTiles[j++] = mt;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the DOTS Entity for the building on this tile
-		/// </summary>
-		/// <returns>Entity</returns>
-		protected virtual Entity GetBuildingEntity()
-		{
-			return buildingInfo.buildingMesh.mesh != null ? _building : _tileEntity;
-		}
-
-		/// <summary>
-		/// Applies component data to entities on this building
-		/// </summary>
-		protected virtual void ApplyTileProperites()
-		{
-			var entity = GetBuildingEntity();
-			Map.EM.SetComponentData(entity, new HexPosition { Value = Coords });
+			postUpdateCommands.SetComponent(building, new HexPosition { Value = Coords });
 			var production = buildingInfo.production;
 			var consumption = buildingInfo.consumption;
 			if (production.Length > 0)
@@ -329,7 +204,7 @@ namespace Amatsugu.Phos.Tiles
 					_productionData.rates[i] = (int)production[i].ammount;
 				}
 
-				Map.EM.AddSharedComponentData(entity, _productionData);
+				postUpdateCommands.AddSharedComponent(building, _productionData);
 			}
 			if (consumption.Length > 0)
 			{
@@ -345,18 +220,49 @@ namespace Amatsugu.Phos.Tiles
 					_consumptionData.rates[i] = (int)consumption[i].ammount;
 				}
 
-				Map.EM.AddSharedComponentData(entity, _consumptionData);
+				postUpdateCommands.AddSharedComponent(building, _consumptionData);
 			}
-			Map.EM.SetComponentData(entity, new Health
+			postUpdateCommands.SetComponent(building, new Health
 			{
 				maxHealth = buildingInfo.maxHealth,
 				Value = buildingInfo.maxHealth
 			});
-			Map.EM.AddComponentData(entity, new ConsumptionMulti { Value = 1 });
-			Map.EM.AddComponentData(entity, new ProductionMulti { Value = 1 });
-			Map.EM.AddComponent(entity, typeof(FirstTickTag));
-			if (buildingInfo.healthBar != null)
-				_healthBars = buildingInfo.healthBar.Instantiate(entity, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
+			postUpdateCommands.AddComponent(building, new ConsumptionMulti { Value = 1 });
+			postUpdateCommands.AddComponent(building, new ProductionMulti { Value = 1 });
+			postUpdateCommands.AddComponent(building, typeof(FirstTickTag));
+			
+			//if (buildingInfo.healthBar != null)
+			//	_healthBars = buildingInfo.healthBar.Instantiate(building, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
+		}
+
+		public override void Start()
+		{
+			base.Start();
+			if (!isBuilt)
+				return;
+			ApplyAdjacencyBonuses();
+			ApplyBuffs();
+		}
+
+		/// <summary>
+		/// Replace tiles in this building's footprint with meta tiles
+		/// </summary>
+		[Obsolete]
+		public virtual void CreateMetaTiles()
+		{
+			return;
+			if (buildingInfo.useMetaTiles)
+			{
+				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
+				for (int i = 0, j = 0; i < tiles.Length; i++)
+				{
+					if (tiles[i] == Coords)
+						continue;
+					var tgtTile = map[tiles[i]];
+					var mt = map.ReplaceTile(tgtTile, new MetaTile(tiles[i], tgtTile.Height, map, tgtTile.originalTile, this));
+					metaTiles[j++] = mt;
+				}
+			}
 		}
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
@@ -371,8 +277,10 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Applies adjanceny bonuses to neighboring tiles
 		/// </summary>
+		[Obsolete]
 		protected virtual void ApplyAdjacencyBonuses()
 		{
+			return;
 			if (!IsBuilt || !_isRendered)
 				return;
 			var neighbors = map.GetNeighbors(Coords);
@@ -432,26 +340,27 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Applies the current set of buffs to this tile
 		/// </summary>
+		[Obsolete]
 		protected virtual void ApplyBuffs()
 		{
 			if (!isBuilt || !_isRendered)
 				return;
-			var e = GetBuildingEntity();
-			//Production
-			if (!Map.EM.HasComponent<ProductionMulti>(e))
-				Map.EM.AddComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
-			else
-				Map.EM.SetComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1});
-			//Consumption
-			if (!Map.EM.HasComponent<ConsumptionMulti>(e))
-				Map.EM.AddComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
-			else
-				Map.EM.SetComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
-			//Health
-			var curHealth = Map.EM.GetComponentData<Health>(e);
-			curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;
-			curHealth.Value += totalBuffs.structureHealth;
-			Map.EM.SetComponentData(e, curHealth);
+			//var e = GetBuildingEntity();
+			////Production
+			//if (!GameRegistry.EntityManager.HasComponent<ProductionMulti>(e))
+			//	GameRegistry.EntityManager.AddComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
+			//else
+			//	GameRegistry.EntityManager.SetComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1});
+			////Consumption
+			//if (!GameRegistry.EntityManager.HasComponent<ConsumptionMulti>(e))
+			//	GameRegistry.EntityManager.AddComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
+			//else
+			//	GameRegistry.EntityManager.SetComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
+			////Health
+			//var curHealth = GameRegistry.EntityManager.GetComponentData<Health>(e);
+			//curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;
+			//curHealth.Value += totalBuffs.structureHealth;
+			//GameRegistry.EntityManager.SetComponentData(e, curHealth);
 		}
 
 		/// <summary>
@@ -459,12 +368,12 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void Deconstruct()
 		{
-			if (buildingInfo.useMetaTiles)
-			{
-				for (int i = 0; i < metaTiles.Length; i++)
-					map.RevertTile(metaTiles[i]);
-			}
-			map.RevertTile(this);
+			//if (buildingInfo.useMetaTiles)
+			//{
+			//	for (int i = 0; i < metaTiles.Length; i++)
+			//		map.RevertTile(metaTiles[i]);
+			//}
+			//map.RevertTile(this);
 		}
 
 		/// <summary>
@@ -494,7 +403,7 @@ namespace Amatsugu.Phos.Tiles
 		public void Die()
 		{
 			OnDeath();
-			map.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
+			//map.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
 		}
 
 		/// <summary>
@@ -505,38 +414,13 @@ namespace Amatsugu.Phos.Tiles
 			NotificationsUI.NotifyWithTarget(NotifType.Warning, $"Building Destroyed: {buildingInfo.GetNameString()}", Coords);
 		}
 
-		public override void Destroy()
+		public override void Dispose()
 		{
-			base.Destroy();
+			base.Dispose();
 			if (!_isRendered)
 				return;
-			DestroyBuilding();
-		}
-
-		/// <summary>
-		/// Destorys the entities associated with this building and frees memory
-		/// </summary>
-		protected virtual void DestroyBuilding()
-		{
-			if (World.DefaultGameObjectInjectionWorld != null)
-			{
-				if (buildingInfo.buildingMesh != null)
-					Map.EM.DestroyEntity(_building);
-				if (buildingInfo.isOffshore && buildingInfo.offshorePlatformMesh != null)
-					Map.EM.DestroyEntity(_offshorePlatform);
-				if (_healthBars.IsCreated)
-					Map.EM.DestroyEntity(_healthBars);
-				if (_connectorCount > 0)
-					Map.EM.DestroyEntity(_adjacencyConnectors);
-				Map.EM.DestroyEntity(subMeshes);
-			}
-
-			if (_healthBars.IsCreated)
-				_healthBars.Dispose();
 			if (_adjacencyConnectors.IsCreated)
 				_adjacencyConnectors.Dispose();
-			if (subMeshes.IsCreated)
-				subMeshes.Dispose();
 		}
 	}
 }

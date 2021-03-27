@@ -21,38 +21,20 @@ namespace Amatsugu.Phos.Tiles
 
 		public override TileEntity MeshEntity => originalTile;
 
-		public override Entity Render()
+		public override Entity InstantiateTile(DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
-			_core = ventInfo.core.Instantiate(new Vector3(Coords.WorldPos.x, Height, Coords.WorldPos.z));
 			_gyser = GameObject.Instantiate(ventInfo.gyser, new Vector3(Coords.WorldPos.x, Height, Coords.WorldPos.z), Quaternion.identity);
-			return base.Render();
+			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}
-
-		public override void OnShow()
+		
+		public override void Dispose()
 		{
-			base.OnShow();
-			Map.EM.RemoveComponent<DisableRendering>(_core);
-			_gyser.SetActive(true);
-		}
-
-		public override void OnHide()
-		{
-			base.OnHide();
-			Map.EM.AddComponent(_core, typeof(DisableRendering));
-			_gyser.SetActive(false);
-		}
-
-		public override void Destroy()
-		{
-			base.Destroy();
-			if (World.DefaultGameObjectInjectionWorld == null)
-				return;
+			base.Dispose();
 			Object.Destroy(_gyser);
-			if (World.DefaultGameObjectInjectionWorld != null)
-				Map.EM.DestroyEntity(_core);
 		}
 	}
 
+	//TODO: 
 	public class GeothermalVentShellTile : ResourceTile
 	{
 		public VentTileInfo ventInfo;
@@ -67,31 +49,9 @@ namespace Amatsugu.Phos.Tiles
 
 		public override TileEntity MeshEntity => originalTile;
 
-		public override Entity Render()
+		public override void Dispose()
 		{
-			_shell = ventInfo.shell.Instantiate(new Vector3(Coords.WorldPos.x, Height, Coords.WorldPos.z), Vector3.one, Quaternion.Euler(0, angle - 60, 0));
-			return base.Render();
-		}
-
-		public override void OnHide()
-		{
-			base.OnHide();
-			Map.EM.AddComponent(_shell, typeof(DisableRendering));
-		}
-
-		public override void OnShow()
-		{
-			base.OnShow();
-			Map.EM.RemoveComponent<DisableRendering>(_shell);
-		}
-
-		public override void Destroy()
-		{
-			base.Destroy();
-			if (World.DefaultGameObjectInjectionWorld == null)
-				return;
-			if (Map.EM.Exists(_shell))
-				Map.EM.DestroyEntity(_shell);
+			base.Dispose();
 		}
 	}
 }

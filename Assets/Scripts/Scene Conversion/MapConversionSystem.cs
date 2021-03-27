@@ -73,7 +73,7 @@ namespace Amatsugu.Phos
 		protected override void OnStartRunning()
 		{
 			base.OnStartRunning();
-			Map.EM = EntityManager;
+			GameRegistry.INST.entityManager = EntityManager;
 		}
 
 		protected override void OnUpdate()
@@ -81,7 +81,6 @@ namespace Amatsugu.Phos
 			Entities.WithNone<MapGeneratedTag>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs) =>
 			{
 				var map = GameRegistry.GameMap;
-				Map.EM = EntityManager;
 				for (int i = 0; i < map.chunks.Length; i++)
 				{
 					var chunk = map.chunks[i];
@@ -95,9 +94,8 @@ namespace Amatsugu.Phos
 						switch (tile)
 						{
 							case BuildingTile b:
-								var buildingId = GameRegistry.PrefabDatabase[b.buildingInfo.buildingPrefab];
-								var buildingPrefab = genericPrefabs[buildingId];
-								b.InstantiateBuilding(tileInst, buildingPrefab, PostUpdateCommands);
+								var buildingInst = b.InstantiateBuilding(tileInst, genericPrefabs, PostUpdateCommands);
+								b.PrareBuildingEntity(buildingInst, PostUpdateCommands);
 								break;
 						}
 					}

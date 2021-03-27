@@ -379,8 +379,8 @@ public class UIBuildPanel : UITabPanel
 			if (hit.RigidBodyIndex != -1)
 			{
 				var e = col.Bodies[hit.RigidBodyIndex].Entity;
-				if (Map.EM.HasComponent<HexPosition>(e))
-					selectedTile = GameRegistry.GameMap[Map.EM.GetComponentData<HexPosition>(e).Value];
+				if (GameRegistry.EntityManager.HasComponent<HexPosition>(e))
+					selectedTile = GameRegistry.GameMap[GameRegistry.EntityManager.GetComponentData<HexPosition>(e).Value];
 			}
 		}
 		if (selectedTile is MetaTile m)

@@ -5,6 +5,7 @@ using DataStore.ConduitGraph;
 
 using Effects.Lines;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,8 +46,10 @@ namespace Amatsugu.Phos.Tiles
 			UpdateConnections(map.conduitGraph.GetConnections(Coords), TileUpdateType.Height);
 		}
 
+		[Obsolete]
 		public void UpdateLines()
 		{
+			return;
 			var lines = _conduitLines.Keys.ToArray();
 			if (!map.conduitGraph.ContainsNode(Coords))
 				return;
@@ -75,22 +78,6 @@ namespace Amatsugu.Phos.Tiles
 				}
 			}
 			_switchLines = false;
-		}
-
-		public override void OnHide()
-		{
-			base.OnHide();
-			var lines = _conduitLines.Values.ToArray();
-			for (int i = 0; i < lines.Length; i++)
-				Map.EM.AddComponent<DisableRendering>(lines[i]);
-		}
-
-		public override void OnShow()
-		{
-			base.OnShow();
-			var lines = _conduitLines.Values.ToArray();
-			for (int i = 0; i < lines.Length; i++)
-				Map.EM.RemoveComponent<DisableRendering>(lines[i]);
 		}
 
 		public override void OnPlaced()
@@ -294,6 +281,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void Start()
 		{
 			base.Start();
+			return;
 			var thisNode = map.conduitGraph.GetNode(Coords);
 			var line = HasHQConnection ? conduitInfo.lineEntity : conduitInfo.lineEntityInactive;
 			var b = Coords.WorldPos + new float3(0, thisNode.height, 0);
@@ -310,15 +298,9 @@ namespace Amatsugu.Phos.Tiles
 			}
 		}
 
-		public override void RenderBuilding()
+		public override void Dispose()
 		{
-			base.RenderBuilding();
-			
-		}
-
-		public override void Destroy()
-		{
-			base.Destroy();
+			base.Dispose();
 			if (World.DefaultGameObjectInjectionWorld == null)
 				return;
 			foreach (var line in _conduitLines)

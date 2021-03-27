@@ -1,5 +1,6 @@
 ﻿using Amatsugu.Phos.TileEntities;
 
+using System;
 using System.Collections.Generic;
 
 using Unity.Collections;
@@ -31,29 +32,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnHeightChanged()
 		{
 			base.OnHeightChanged();
-			if (isBuilt)
-				RenderConnections();
 		}
 
-		public override void OnHide()
-		{
-			base.OnHide();
-			for (int i = 0; i < 6; i++)
-			{
-				if (Map.EM.Exists(_connectionMeshes[i]))
-					Map.EM.AddComponent<DisableRendering>(_connectionMeshes[i]);
-			}
-		}
-
-		public override void OnShow()
-		{
-			base.OnShow();
-			for (int i = 0; i < 6; i++)
-			{
-				if (Map.EM.Exists(_connectionMeshes[i]))
-					Map.EM.RemoveComponent<DisableRendering>(_connectionMeshes[i]);
-			}
-		}
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
@@ -62,14 +42,10 @@ namespace Amatsugu.Phos.Tiles
 				RenderConnections();
 		}
 
-		public override void RenderBuilding()
-		{
-			RenderConnections();
-			base.RenderBuilding();
-		}
-
+		[Obsolete]
 		protected virtual void RenderConnections()
 		{
+			return;
 			var nT = map.GetNeighbors(Coords);
 			for (int i = 0; i < 6; i++)
 			{
@@ -85,20 +61,6 @@ namespace Amatsugu.Phos.Tiles
 					if (Map.EM.Exists(_connectionMeshes[i]))
 						Map.EM.DestroyEntity(_connectionMeshes[i]);
 				}
-			}
-		}
-
-		public override void Destroy()
-		{
-			base.Destroy();
-			try
-
-			{
-				Map.EM.DestroyEntity(_connectionMeshes);
-			}
-			finally
-			{
-				_connectionMeshes.Dispose();
 			}
 		}
 	}

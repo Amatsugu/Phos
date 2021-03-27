@@ -21,106 +21,57 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public TurretTileEntity turretInfo;
 
-		private Entity _turretHead;
-		private Entity _turretBarrel;
-		private Entity _turretBarrelTip;
-
 		public TurretTile(HexCoords coords, float height, Map map, TurretTileEntity tInfo, int rotation) : base(coords, height, map, tInfo, rotation)
 		{
 			turretInfo = tInfo;
 		}
 
-		public override void RenderSubMeshes(quaternion rot)
-		{
-			base.RenderSubMeshes(rot);
-			var e = GetBuildingEntity();
-			_turretHead = subMeshes[turretInfo.turretHead.id];
-			if(turretInfo.turretBarrel.id != -1)
-				_turretBarrel = subMeshes[turretInfo.turretBarrel.id];
-			if (turretInfo.turretBarrelTip.id != -1)
-				_turretBarrelTip = subMeshes[turretInfo.turretBarrelTip.id];
-			Map.EM.AddComponentData(e, new Turret
-			{
-				Head = _turretHead,
-				Barrel = _turretBarrel,
-				shotOffset = turretInfo.shotOffset,
-				projectile = turretInfo.projectileMesh.GetEntity()
-			});
-		}
 
-
-		protected override void ApplyTileProperites()
+		public override void PrareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
-			base.ApplyTileProperites();
-			var e = GetBuildingEntity();
-			Map.EM.AddComponentData(e, new AttackRange
+			base.PrareBuildingEntity(building, postUpdateCommands);
+			postUpdateCommands.AddComponent(building, new AttackRange
 			{
 				MaxRange = turretInfo.attackRange,
 				MinRange = turretInfo.minAttackRange
 			});
-			Map.EM.AddComponentData(e, new AttackSpeed
+			postUpdateCommands.AddComponent(building, new AttackSpeed
 			{
-				Value = 1f/turretInfo.fireRate
+				Value = 1f / turretInfo.fireRate
 			});
 			//Map.EM.SetComponentData(_turretBarrel, new Parent {Value = _turretHead });
 			//Map.EM.SetComponentData(_turretBarrelTip, new Parent {Value = _turretBarrel });
 			switch (turretInfo.unitClass)
 			{
 				case UnitClass.Class.Turret:
-					Map.EM.AddComponentData(e, new UnitClass.Turret());
+					postUpdateCommands.AddComponent(building, new UnitClass.Turret());
 					break;
 				case UnitClass.Class.Artillery:
-					Map.EM.AddComponentData(e, new UnitClass.Artillery());
+					postUpdateCommands.AddComponent(building, new UnitClass.Artillery());
 					break;
 				case UnitClass.Class.Support:
-					Map.EM.AddComponentData(e, new UnitClass.Support());
+					postUpdateCommands.AddComponent(building, new UnitClass.Support());
 					break;
 				case UnitClass.Class.FixedGun:
-					Map.EM.AddComponentData(e, new UnitClass.FixedGun());
+					postUpdateCommands.AddComponent(building, new UnitClass.FixedGun());
 					break;
 			}
 			switch (turretInfo.domain)
 			{
 				case UnitDomain.Domain.Air:
-					Map.EM.AddComponentData(e, new UnitDomain.Air());
+					postUpdateCommands.AddComponent(building, new UnitDomain.Air());
 					break;
 				case UnitDomain.Domain.Land:
-					Map.EM.AddComponentData(e, new UnitDomain.Land());
+					postUpdateCommands.AddComponent(building, new UnitDomain.Land());
 					break;
 				case UnitDomain.Domain.Naval:
-					Map.EM.AddComponentData(e, new UnitDomain.Naval());
+					postUpdateCommands.AddComponent(building, new UnitDomain.Naval());
 					break;
 			}
-			Map.EM.AddComponentData(e, new TargetingDomain
+			postUpdateCommands.AddComponent(building, new TargetingDomain
 			{
 				Value = turretInfo.targetingDomain
 			});
-		}
-
-		public override void OnHide()
-		{
-			base.OnHide();
-			Map.EM.AddComponent<DisableRendering>(_turretHead);
-			if (Map.EM.Exists(_turretBarrel))
-				Map.EM.AddComponent<DisableRendering>(_turretBarrel);
-		}
-
-		public override void OnShow()
-		{
-			base.OnShow();
-			Map.EM.RemoveComponent<DisableRendering>(_turretHead);
-			if (Map.EM.Exists(_turretBarrel))
-				Map.EM.RemoveComponent<DisableRendering>(_turretBarrel);
-		}
-
-		public override void Destroy()
-		{
-			base.Destroy();
-			if (World.DefaultGameObjectInjectionWorld == null)
-				return;
-			Map.EM.DestroyEntity(_turretHead);
-			if (Map.EM.Exists(_turretBarrel))
-				Map.EM.DestroyEntity(_turretBarrel);
 		}
 	}
 }

@@ -4,6 +4,8 @@ using Amatsugu.Phos.TileEntities;
 using System.Collections.Generic;
 using System.Text;
 
+using Unity.Entities;
+
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -41,9 +43,10 @@ namespace Amatsugu.Phos.Tiles
 
 		}
 
-		protected override void ApplyTileProperites()
+
+		public override void PrareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
-			base.ApplyTileProperites();
+			base.PrareBuildingEntity(building, postUpdateCommands);
 			FindConduitConnections();
 		}
 
@@ -102,14 +105,15 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void HQConnected()
 		{
+			//TODO: Building powered state
 			if (connectionInit)
 			{
 				if (HasHQConnection)
 					return;
 				if (!HasHQConnection)
 				{
-					Map.EM.RemoveComponent<BuildingOffTag>(GetBuildingEntity());
-					Map.EM.RemoveComponent<BuildingOffTag>(subMeshes);
+					//Map.EM.RemoveComponent<BuildingOffTag>(GetBuildingEntity());
+					//Map.EM.RemoveComponent<BuildingOffTag>(subMeshes);
 				}
 			}
 			HasHQConnection = true;
@@ -121,6 +125,7 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void HQDisconnected()
 		{
+			//TODO: Building powered state
 			if (connectionInit)
 			{
 				if (HasHQConnection)
@@ -133,12 +138,12 @@ namespace Amatsugu.Phos.Tiles
 				else
 					return;
 			}
-			var e = GetBuildingEntity();
-			if (!Map.EM.HasComponent<BuildingOffTag>(e))
-			{
-				Map.EM.AddComponent<BuildingOffTag>(e);
-				Map.EM.AddComponent<BuildingOffTag>(subMeshes);
-			}
+			//var e = GetBuildingEntity();
+			//if (!Map.EM.HasComponent<BuildingOffTag>(e))
+			//{
+			//	Map.EM.AddComponent<BuildingOffTag>(e);
+			//	Map.EM.AddComponent<BuildingOffTag>(subMeshes);
+			//}
 			HasHQConnection = false;
 			OnDisconnected();
 		}

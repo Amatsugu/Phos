@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos.Tiles
 {
-	public class Tile
+	public class Tile : IDisposable
 	{
 		public HexCoords Coords { get; protected set; }
 		public float3 SurfacePoint { get; protected set; }
@@ -85,18 +85,6 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void OnPlaced()
 		{
 			BroadcastTileUpdate(TileUpdateType.Placed);
-		}
-
-		/// <summary>
-		/// Creates all the entities releated to this tile and shows it in the world
-		/// </summary>
-		/// <returns></returns>
-		[Obsolete]
-		public virtual Entity Render()
-		{
-			IsShown = true;
-			_isRendered = true;
-			return _tileEntity;
 		}
 
 		public TileEntity GetGroundTileInfo()
@@ -185,7 +173,6 @@ namespace Amatsugu.Phos.Tiles
 				SurfacePoint = new Vector3(Coords.WorldPos.x, Height, Coords.WorldPos.z);
 			}
 			OnHeightChanged();
-			UpdateDecorationHeight();
 			BroadcastTileUpdate(TileUpdateType.Height);
 		}
 
@@ -219,14 +206,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 			return new StringBuilder(info.description).AppendLine();
 		}
-		/// <summary>
-		/// Applies the height of the tile to the decorators
-		/// </summary>
-		[Obsolete]
-		private void UpdateDecorationHeight()
-		{
-			
-		}
+
 		/// <summary>
 		/// Sends a tile update to neighboring tiles
 		/// </summary>
@@ -256,31 +236,7 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 		}
-		/// <summary>
-		/// Sets the visibility of this tile
-		/// </summary>
-		/// <param name="isShown">Whether or not the tile should be shown</param>
-		[Obsolete]
-		public void Show(bool isShown)
-		{
-			
-		}
 
-		/// <summary>
-		/// Callback for when the tile marked as visible
-		/// </summary>
-		[Obsolete]
-		public virtual void OnShow()
-		{
-		}
-
-		/// <summary>
-		/// Callback for when the tile is marked as not visible
-		/// </summary>
-		[Obsolete]
-		public virtual void OnHide()
-		{
-		}
 		/// <summary>
 		/// Convert this tile to a SerializedTile
 		/// </summary>
@@ -328,8 +284,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Destorys all entities associated with this tile and cleans up allocated memory
 		/// </summary>
-		[Obsolete]
-		public virtual void Destroy()
+		public virtual void Dispose()
 		{
 			
 		}

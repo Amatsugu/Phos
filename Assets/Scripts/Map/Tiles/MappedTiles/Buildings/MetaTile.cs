@@ -31,18 +31,8 @@ namespace Amatsugu.Phos.Tiles
 			_isConduitTile = ParentTile is ResourceConduitTile;
 		}
 
-		protected override void StartConstruction()
-		{
-		}
-
 		protected override void OnBuilt()
 		{
-		}
-
-		public override void RenderBuilding()
-		{
-			hasBuilding = false;
-			
 		}
 
 		protected override void ApplyBuffs()
@@ -85,10 +75,6 @@ namespace Amatsugu.Phos.Tiles
 			return false;
 		}
 
-		protected override void ApplyTileProperites()
-		{
-		}
-
 		public override void HQConnected()
 		{
 			if (_isPoweredTile && !_isConduitTile)
@@ -117,11 +103,6 @@ namespace Amatsugu.Phos.Tiles
 		public override bool CanDeconstruct(Faction faction)
 		{
 			return ParentTile.CanDeconstruct(faction);
-		}
-
-		protected override void DestroyBuilding()
-		{
-
 		}
 
 		public override void OnPlaced()
