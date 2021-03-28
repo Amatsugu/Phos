@@ -99,9 +99,9 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		//}
 	}
 
-	public override void PrareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
+	public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 	{
-		base.PrareBuildingEntity(building, postUpdateCommands);
+		base.PrepareBuildingEntity(building, postUpdateCommands);
 		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
 		var resInRange = new Dictionary<int, int>();
 		//var resTiles = new Dictionary<int, List<ResourceTile>>();

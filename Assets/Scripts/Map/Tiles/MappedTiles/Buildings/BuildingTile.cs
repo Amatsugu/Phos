@@ -185,9 +185,9 @@ namespace Amatsugu.Phos.Tiles
 			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
 		}
 
-		public virtual void PrareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
+		public virtual void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
-			postUpdateCommands.SetComponent(building, new HexPosition { Value = Coords });
+			postUpdateCommands.AddComponent(building, new HexPosition { Value = Coords });
 			var production = buildingInfo.production;
 			var consumption = buildingInfo.consumption;
 			if (production.Length > 0)
@@ -222,7 +222,7 @@ namespace Amatsugu.Phos.Tiles
 
 				postUpdateCommands.AddSharedComponent(building, _consumptionData);
 			}
-			postUpdateCommands.SetComponent(building, new Health
+			postUpdateCommands.AddComponent(building, new Health
 			{
 				maxHealth = buildingInfo.maxHealth,
 				Value = buildingInfo.maxHealth
@@ -230,6 +230,8 @@ namespace Amatsugu.Phos.Tiles
 			postUpdateCommands.AddComponent(building, new ConsumptionMulti { Value = 1 });
 			postUpdateCommands.AddComponent(building, new ProductionMulti { Value = 1 });
 			postUpdateCommands.AddComponent(building, typeof(FirstTickTag));
+			postUpdateCommands.AddComponent(building, new BuildingId { Value = GameRegistry.BuildingDatabase[buildingInfo] });
+
 			
 			//if (buildingInfo.healthBar != null)
 			//	_healthBars = buildingInfo.healthBar.Instantiate(building, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);

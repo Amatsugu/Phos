@@ -64,7 +64,7 @@ public class IndicatorManager : IDisposable
 		{
 			Entity curEntity;
 			entities.Add(curEntity = indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
-			Map.EM.AddComponent(curEntity, typeof(DisableRendering));
+			GameRegistry.EntityManager.AddComponent(curEntity, typeof(DisableRendering));
 		}
 	}
 
@@ -82,7 +82,7 @@ public class IndicatorManager : IDisposable
 				if (neighbors[n].Coords.Distance(center.Coords) <= range)
 					continue;
 				var e = border.Instantiate(s, 1, quaternion.RotateY(math.radians((60 * n) + 180)));
-				Map.EM.AddComponentData(e, new DeathTime { Value = Time.time + .01f });
+				GameRegistry.EntityManager.AddComponentData(e, new DeathTime { Value = Time.time + .01f });
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public class IndicatorManager : IDisposable
 	public static void ShowRangeSphere(Tile tile, float attackRange, MeshEntity rangeSphere)
 	{
 		var e = rangeSphere.Instantiate(tile.SurfacePoint, attackRange);
-		Map.EM.AddComponentData(e, new DeathTime { Value = Time.time + 0.01f });
+		GameRegistry.EntityManager.AddComponentData(e, new DeathTime { Value = Time.time + 0.01f });
 	}
 
 	public void SetIndicator(Tile tile, MeshEntity indicator)

@@ -449,16 +449,18 @@ namespace Amatsugu.Phos
 			if (tile.Coords != newTile.Coords)
 				throw new Exception("New tile must be a the same position of the tile it replaces");
 			tile.OnRemoved();
+			newTile.originalTile = tile.GetGroundTileInfo();
 			newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			var tileIndex = tile.Coords.ToIndex(totalWidth);
-			postUpdateCommands.DestroyEntity(tiles[tileIndex]);
+			//postUpdateCommands.DestroyEntity(tiles[tileIndex]);
 			var nTInst = tiles[tileIndex] = newTile.InstantiateTile(prefabs, postUpdateCommands);
 			newTile.PrepareTileInstance(nTInst, postUpdateCommands);
-			if(tile is BuildingTile buildingTile)
+			if(newTile is BuildingTile buildingTile)
 			{
-				buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
-				buildingTile.PrepareTileInstance(nTInst, postUpdateCommands);
+				var buildingInst = buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
+				buildingTile.PrepareBuildingEntity(buildingInst, postUpdateCommands);
 			}
+			this[tile.Coords] = newTile;
 			newTile.OnPlaced();
 			OnTilePlaced?.Invoke(tile.Coords);
 			newTile.Start();

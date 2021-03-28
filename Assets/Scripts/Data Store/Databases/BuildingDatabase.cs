@@ -95,4 +95,12 @@ public class BuildingDatabase : ScriptableObject, ISerializationCallbackReceiver
 			return buildings[identifier.id];
 		}
 	}
+
+	public int this[BuildingTileEntity tileEntity]
+	{
+		get
+		{
+			return tileDatabase.entityIds[tileEntity];
+		}
+	}
 }

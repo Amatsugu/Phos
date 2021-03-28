@@ -262,3 +262,15 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.ide.visualstudio from version 2.0.5 to 2.0.7
+
+=== Sun Mar 28 09:16:56 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.high-definition from version 10.3.2 to 11.0.0
+  com.unity.textmeshpro from version 3.0.3 to 3.0.4
+  com.unity.timeline from version 1.4.6 to 1.5.2
+The following packages were removed:
+  com.unity.quicksearch@2.0.2

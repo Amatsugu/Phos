@@ -27,9 +27,9 @@ namespace Amatsugu.Phos.Tiles
 		}
 
 
-		public override void PrareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
+		public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
-			base.PrareBuildingEntity(building, postUpdateCommands);
+			base.PrepareBuildingEntity(building, postUpdateCommands);
 			postUpdateCommands.AddComponent(building, new AttackRange
 			{
 				MaxRange = turretInfo.attackRange,

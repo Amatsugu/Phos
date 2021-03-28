@@ -95,7 +95,7 @@ namespace Amatsugu.Phos
 						{
 							case BuildingTile b:
 								var buildingInst = b.InstantiateBuilding(tileInst, genericPrefabs, PostUpdateCommands);
-								b.PrareBuildingEntity(buildingInst, PostUpdateCommands);
+								b.PrepareBuildingEntity(buildingInst, PostUpdateCommands);
 								break;
 						}
 					}

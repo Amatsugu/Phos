@@ -19,9 +19,9 @@ namespace Amatsugu.Phos.Tiles
 			_phosInfo = tInfo;
 		}
 
-		public override void PrareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
+		public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
-			base.PrareBuildingEntity(building, postUpdateCommands);
+			base.PrepareBuildingEntity(building, postUpdateCommands);
 			//TODO: Move to conversion system
 			//postUpdateCommands.AddComponent(building, new PhosCoreData
 			//{
