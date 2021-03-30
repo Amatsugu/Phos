@@ -4,6 +4,7 @@ using DataStore.ConduitGraph;
 
 using System;
 
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -34,6 +35,16 @@ namespace Amatsugu.Phos.Tiles
 			}
 			GameRegistry.BaseNameUI.panel.Show();
 			GameEvents.InvokeOnHQPlaced();
+		}
+
+		public override Entity InstantiateTile(DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		{
+			var tilesToReplace = map.GetNeighbors(Coords);
+			for (int i = 0; i < tilesToReplace.Length; i++)
+			{
+				BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i]);
+			}
+			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}
 
 		protected override void OnBuilt()

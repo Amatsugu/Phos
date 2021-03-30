@@ -64,7 +64,6 @@ namespace Amatsugu.Phos
 		public Dictionary<int, MobileUnit> units;
 
 		public MapChunk[] chunks;
-		public NativeArray<Entity> tiles;
 
 		private HashSet<TechBuildingTileEntity> _techBuildings;
 		private int _nextUnitId = 1;
@@ -85,7 +84,6 @@ namespace Amatsugu.Phos
 			shortDiagonal = Mathf.Sqrt(3f) * tileEdgeLength;
 			longDiagonal = 2 * tileEdgeLength;
 			units = new Dictionary<int, MobileUnit>(500);
-			tiles = new NativeArray<Entity>(totalHeight * totalWidth, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 			_techBuildings = new HashSet<TechBuildingTileEntity>();
 		}
 
@@ -453,7 +451,8 @@ namespace Amatsugu.Phos
 			newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			var tileIndex = tile.Coords.ToIndex(totalWidth);
 			//postUpdateCommands.DestroyEntity(tiles[tileIndex]);
-			var nTInst = tiles[tileIndex] = newTile.InstantiateTile(prefabs, postUpdateCommands);
+			GameRegistry.TileRemovalSystem.MarkForRemoval(tile.Coords, Time.realtimeSinceStartup);
+			var nTInst = newTile.InstantiateTile(prefabs, postUpdateCommands);
 			newTile.PrepareTileInstance(nTInst, postUpdateCommands);
 			if(newTile is BuildingTile buildingTile)
 			{
@@ -571,8 +570,6 @@ namespace Amatsugu.Phos
 		public void Destroy()
 		{
 			Debug.Log("Disposing Map");
-			if(tiles.IsCreated)
-				tiles.Dispose();
 		}
 
 		#region IDisposable Support

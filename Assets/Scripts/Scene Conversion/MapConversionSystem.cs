@@ -135,6 +135,16 @@ namespace Amatsugu.Phos
 
 	}
 
+	public struct TileTag : IComponentData
+	{
+
+	}
+
+	public struct TileVersion : IComponentData
+	{
+		public float Value;
+	}
+
 	public struct GenericPrefab : IBufferElementData
 	{
 		public Entity value;

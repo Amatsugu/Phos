@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71afc00c1593154c969aaba5600777d, type: 3}
   m_Name: Tech Sub HQ
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 0
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 0
   assetGuid: 83b9fc58865dd7b4395a139fcbc8b5a7
   buildingMesh: {fileID: 11400000, guid: 1f8895393fbf86f4f9aa7d16ee0a2c9d, type: 2}
+  buildingPrefab: {fileID: 4526504589292469470, guid: 1ef06d85efa2c5740af8a526fb59ce56,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -34,12 +31,12 @@ MonoBehaviour:
   tier: 0
   constructionTime: 0
   category: 0
-  size: 0
   footprint:
     size: 1
     footprint:
     - x: 0
       y: 0
+  useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0

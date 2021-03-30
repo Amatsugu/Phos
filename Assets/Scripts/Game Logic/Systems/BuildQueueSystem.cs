@@ -26,6 +26,8 @@ public class BuildQueueSystem : ComponentSystem
 		GameEvents.OnMapLoaded += InitBuildQueue;
 		_factoryReady = new Dictionary<HexCoords, bool>();
 		GameEvents.OnUnitBuilt += OnUnitBuilt;
+		_INST = this;
+		GameRegistry.INST.buildQueueSystem = this;
 	}
 
 	private void OnUnitBuilt(HexCoords coords)
@@ -45,7 +47,6 @@ public class BuildQueueSystem : ComponentSystem
 	private void InitBuildQueue()
 	{
 		Debug.Log("Init Build Queue");
-		_INST = this;
 		_isReady = true;
 		_pendingBuildOrders = new Dictionary<int, BuildOrder>();
 		_readyToBuildOrders = new List<int>();
