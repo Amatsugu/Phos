@@ -60,9 +60,9 @@ public class BuildQueueSystem : ComponentSystem
 		if (!_isReady)
 			return;
 
-		Entities.ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs) =>
+		Entities.ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs, DynamicBuffer<TileInstance> tiles) =>
 		{
-			BuildReadyOrders(genericPrefabs);
+			BuildReadyOrders(genericPrefabs, tiles);
 			ProcessConstructionOrders();
 		});
 	}
@@ -145,7 +145,7 @@ public class BuildQueueSystem : ComponentSystem
 	/// <summary>
 	/// Place all buildings that have been marked as ready to place
 	/// </summary>
-	private void BuildReadyOrders(DynamicBuffer<GenericPrefab> prefabs)
+	private void BuildReadyOrders(DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles)
 	{
 		int offset = 0;
 		for (int i = 0; i < _readyToBuildOrders.Count; i++)
@@ -160,7 +160,7 @@ public class BuildQueueSystem : ComponentSystem
 					try
 					{
 #endif
-						PlaceBuilding(order, prefabs);
+						PlaceBuilding(order, prefabs, tiles);
 #if !UNITY_EDITOR
 					}
 					catch (Exception e)
@@ -209,12 +209,12 @@ public class BuildQueueSystem : ComponentSystem
 	/// Places a building on the map
 	/// </summary>
 	/// <param name="order">The build order cotaining the detials on how to place the building</param>
-	private void PlaceBuilding(BuildOrder order, DynamicBuffer<GenericPrefab> prefabs)
+	private void PlaceBuilding(BuildOrder order, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles)
 	{
 		var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords, order.rotation);
 		if (!order.dstTile.IsUnderwater)
 			GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center | Map.FlattenMode.IgnoreUnderWater);
-		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation, prefabs, PostUpdateCommands);
+		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation, prefabs, tiles, PostUpdateCommands);
 		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : order.building.constructionTime;
 		_constructionOrders.Add(new ConstructionOrder(order, buildTime, Time.ElapsedTime + buildTime));
 	}

@@ -102,6 +102,13 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 	{
 		base.PrepareBuildingEntity(building, postUpdateCommands);
+		
+		postUpdateCommands.AddSharedComponent(building, PrepareProductionData());
+
+	}
+
+	public virtual ProductionData PrepareProductionData()
+	{
 		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
 		var resInRange = new Dictionary<int, int>();
 		//var resTiles = new Dictionary<int, List<ResourceTile>>();
@@ -137,20 +144,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 				_productionData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
 			}
 		}
-
-		if (GameRegistry.EntityManager.HasComponent<ProductionData>(building))
-		{
-			var exisitingProdData = GameRegistry.EntityManager.GetSharedComponentData<ProductionData>(building);
-			if (exisitingProdData.rates?.Length > 0)
-			{
-				_productionData.rates = exisitingProdData.rates.Concat(_productionData.rates).ToArray();
-				_productionData.resourceIds = exisitingProdData.resourceIds.Concat(_productionData.resourceIds).ToArray();
-				postUpdateCommands.SetSharedComponent(building, _productionData);
-			}
-		}
-		else
-			postUpdateCommands.AddSharedComponent(building, _productionData);
-
+		return _productionData;
 	}
 
 	public override void OnRemoved()

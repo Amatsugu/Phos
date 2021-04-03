@@ -12,12 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2f48f35186256469050c882e08c1e1, type: 3}
   m_Name: Mining Drill
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 0
+  tilePrefab: {fileID: 0}
   description: Drills deep into the soil. Capable to extracting at a higher efficiency
     and capable of mining  Gold and Silver
   decorators:
@@ -25,6 +20,8 @@ MonoBehaviour:
   isTraverseable: 1
   assetGuid: ba0f6b1eb8dc15140b1a78d6d5193a76
   buildingMesh: {fileID: 11400000, guid: 1a6e2d608f330684282a507f252731ae, type: 2}
+  buildingPrefab: {fileID: 5128771313900564891, guid: 30f81aad6daecce40af84994e775f181,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

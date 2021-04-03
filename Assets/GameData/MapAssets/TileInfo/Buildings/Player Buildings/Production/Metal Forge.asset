@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
   m_Name: Metal Forge
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: Forges an alloy with iron and carbon to produce steel.
   decorators: []
   isTraverseable: 0
   assetGuid: 2e4734b90a718294d9106a9cd2c5f510
   buildingMesh: {fileID: 11400000, guid: 41cfa5a46899f3a42be761d72cc6125a, type: 2}
+  buildingPrefab: {fileID: 2995758111591224768, guid: 30183541c2fa0274eb16ded737e183dd,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

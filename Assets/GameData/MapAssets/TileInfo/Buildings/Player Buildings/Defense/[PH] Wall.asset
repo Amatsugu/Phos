@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1852c72404f4c31468f84418951e687a, type: 3}
   m_Name: '[PH] Wall'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: 8d7afbe3607d9b84393ee19fd6a8df64
   buildingMesh: {fileID: 11400000, guid: 85a0829040b6d2541ba9e95742c77801, type: 2}
+  buildingPrefab: {fileID: 6122786881753093625, guid: cc06c2ac984f7024a8186765fa0e52bb,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

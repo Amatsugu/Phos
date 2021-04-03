@@ -43,9 +43,8 @@ public class GameRegistry : MonoBehaviour
 	public static Map GameMap => INST.gameState.map;
 	public static RarityColors RarityColors => INST.rarityColors;
 	public static EntityManager EntityManager => INST.entityManager;
-	public static TileRemovalSystem TileRemovalSystem => INST.tileRemovalSystem;
 	public static BuildQueueSystem BuildQueueSystem => INST.buildQueueSystem;
-	public static TileHeightUpdaterSystem TileHeightUpdaterSystem => INST.tileHeightUpdaterSystem;
+	public static Entity MapEntity => INST.mapEntity;
 
 	internal static void SetState(GameState gameState)
 	{
@@ -68,9 +67,8 @@ public class GameRegistry : MonoBehaviour
 	public ProjectileDatabase projectileDatabase;
 	public PrefabDatabase prefabDatabase;
 	public EntityManager entityManager;
-	public TileRemovalSystem tileRemovalSystem;
 	public BuildQueueSystem buildQueueSystem;
-	public TileHeightUpdaterSystem tileHeightUpdaterSystem;
+	public Entity mapEntity;
 
 	public static void InitGame(GameState gameState)
 	{

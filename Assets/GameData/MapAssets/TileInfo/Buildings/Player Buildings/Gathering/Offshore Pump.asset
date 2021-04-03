@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2f48f35186256469050c882e08c1e1, type: 3}
   m_Name: Offshore Pump
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 0
+  tilePrefab: {fileID: 0}
   description: A beach based water pump that collects ocean water.
   decorators: []
   isTraverseable: 0
   assetGuid: 74972f4338262c245b3f0a0d8d3a93f1
   buildingMesh: {fileID: 11400000, guid: a51232047fe9d2645ab754d722f56bc6, type: 2}
+  buildingPrefab: {fileID: 3385639805373682319, guid: afb2c9bd6e9b9a040bf6b69a2b1766e0,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

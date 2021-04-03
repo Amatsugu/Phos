@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
   m_Name: Carbon Refinery
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: Refines Raw Carbon to create carbon nanotubes
   decorators: []
   isTraverseable: 0
   assetGuid: 763826ebcd88b8f44bd20f65c32a52f7
   buildingMesh: {fileID: 11400000, guid: 4e4aebfecd0580b4694599af50dae84a, type: 2}
+  buildingPrefab: {fileID: 9123737048531246421, guid: 6bbe81c18850f3e41a95af63423a8444,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

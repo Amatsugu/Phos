@@ -173,8 +173,10 @@ namespace Amatsugu.Phos.Tiles
 				IsUnderwater = false;
 				SurfacePoint = new Vector3(Coords.WorldPos.x, Height, Coords.WorldPos.z);
 			}
-			GameRegistry.TileHeightUpdaterSystem.UpdateTileHeight(Coords, height);
-			//GameRegistry.EntityManager.SetComponentData(map.tiles[Coords.ToIndex(map.totalWidth)], new Translation { Value = new float3(Coords.WorldPos.x, height, Coords.WorldPos.z)});
+			var em = GameRegistry.EntityManager;
+			var tiles = em.GetBuffer<TileInstance>(GameRegistry.MapEntity);
+			var curTile = tiles[Coords.ToIndex(map.totalWidth)];
+			em.SetComponentData(curTile, new Translation { Value = new float3(SurfacePoint.x, height, SurfacePoint.z) });
 			OnHeightChanged();
 			BroadcastTileUpdate(TileUpdateType.Height);
 		}

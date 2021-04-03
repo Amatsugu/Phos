@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
   m_Name: Fuel Refinery
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: Refines raw carbon to provide a much more concentrated fuel.
   decorators: []
   isTraverseable: 0
   assetGuid: 806da794f6c07bb419f217c1384051b6
   buildingMesh: {fileID: 11400000, guid: 730ccf125d45816468a97981c139262c, type: 2}
+  buildingPrefab: {fileID: 3097244460459203428, guid: 818d0f8f5ff323344a6ae6773aad11d1,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

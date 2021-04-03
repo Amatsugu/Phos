@@ -12,18 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a91ecd3bd8605dd478580f975ea364c7, type: 3}
   m_Name: Wind Turbine
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: Produces power by caprutring enegry from the wind. Efficeny is affected
     by the current wind speed.
   decorators: []
   isTraverseable: 0
   assetGuid: 5a5dfdf1626f50245bcbfeb7b5ec3cfb
   buildingMesh: {fileID: 11400000, guid: a028dc4d6993c444ba02febd426ef8c1, type: 2}
+  buildingPrefab: {fileID: 2914833643862071066, guid: f31eefb47f6bb3945b1f1b61435f7d01,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -69,4 +66,5 @@ MonoBehaviour:
   efficencyRange:
     x: 0.2
     y: 2
-  turbineBlade: {fileID: 11400000, guid: f5b5966ec5e089d478efabace0666799, type: 2}
+  turbineBladeSubMesh:
+    id: 0

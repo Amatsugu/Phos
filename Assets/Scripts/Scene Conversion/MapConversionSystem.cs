@@ -64,6 +64,8 @@ namespace Amatsugu.Phos
 						curPrefabIndex++;
 					}
 				}
+
+				DstEntityManager.AddBuffer<TileInstance>(mapEntity);
 			});
 		}
 	}
@@ -78,16 +80,15 @@ namespace Amatsugu.Phos
 
 		protected override void OnUpdate()
 		{
-			Entities.WithNone<MapGeneratedTag>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs) =>
+			Entities.WithNone<MapGeneratedTag>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs, DynamicBuffer<TileInstance> tiles) =>
 			{
 				var map = GameRegistry.GameMap;
-				for (int i = 0; i < map.chunks.Length; i++)
+				//tiles.EnsureCapacity(map.tileCount);
+				for (int z = 0; z < map.totalHeight; z++)
 				{
-					var chunk = map.chunks[i];
-					for (int j = 0; j < chunk.Tiles.Length; j++)
+					for (int x = 0; x < map.totalWidth; x++)
 					{
-						var tile = chunk.Tiles[j];
-						//Debug.Log($"Instantiating {tile.GetNameString()}");
+						var tile = map[HexCoords.FromOffsetCoords(x, z, map.tileEdgeLength)];
 						var tileInst = tile.InstantiateTile(genericPrefabs, PostUpdateCommands);
 						tile.PrepareTileInstance(tileInst, PostUpdateCommands);
 						tile.InstantiateDecorators(tileInst, ref genericPrefabs, PostUpdateCommands);
@@ -98,6 +99,7 @@ namespace Amatsugu.Phos
 								b.PrepareBuildingEntity(buildingInst, PostUpdateCommands);
 								break;
 						}
+						tiles.Add(tileInst);
 					}
 				}
 
@@ -126,18 +128,65 @@ namespace Amatsugu.Phos
 		}
 	}
 
+	/// <summary>
+	/// Initialize the buffer to store all the tile instances
+	/// </summary>
+	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
+	public class MapLateUpdateSystem : ComponentSystem
+	{
+		private bool _isDone;
+
+		protected override void OnUpdate()
+		{
+			if (_isDone)
+				return;
+			var entities = EntityManager.GetAllEntities();
+			var desc = new EntityQueryDesc
+			{
+				All = new[] { ComponentType.ReadOnly<TileTag>(), ComponentType.ReadOnly<HexPosition>() }
+			};
+			var query = GetEntityQuery(desc);
+			var filter = EntityManager.GetEntityQueryMask(query);
+
+			Entities.WithAllReadOnly<MapTag>().ForEach((Entity e, DynamicBuffer<TileInstance> tiles) =>
+			{
+				for (int i = 0; i < GameRegistry.GameMap.tileCount; i++)
+					tiles.Add(default);
+				for (int i = 0; i < entities.Length; i++)
+				{
+					if (!filter.Matches(entities[i]))
+						continue;
+					HexCoords coords = EntityManager.GetComponentData<HexPosition>(entities[i]);
+					tiles[coords.ToIndex(GameRegistry.GameMap.totalWidth)] = entities[i];
+				}
+				GameRegistry.INST.mapEntity = e;
+			});
+
+			_isDone = true;
+			entities.Dispose();
+			
+		}
+	}
+
 	public struct MapTag : IComponentData
 	{
 	}
 
 	public struct MapGeneratedTag : IComponentData
 	{
-
 	}
 
 	public struct TileTag : IComponentData
 	{
+	}
 
+	public struct TileInstance : IBufferElementData
+	{
+		public Entity Value;
+
+		public static implicit operator TileInstance(Entity entity) => new TileInstance { Value = entity };
+
+		public static implicit operator Entity(TileInstance inst) => inst.Value;
 	}
 
 	public struct TileVersion : IComponentData

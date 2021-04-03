@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce1f248ec013df4693b191f7fcbf51c, type: 3}
   m_Name: Resource Conduit
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: Transfers power and resources to buildings.
   decorators: []
   isTraverseable: 0
   assetGuid: 69df6771048597e47af78e977c2c3909
   buildingMesh: {fileID: 11400000, guid: 1cccbdfb97aeb9f43955b041dd54202c, type: 2}
+  buildingPrefab: {fileID: 8175029066798223439, guid: 79d063a8d36a0dc41a7673552a89e692,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

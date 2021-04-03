@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f6de7c742a08b4cadb99176a63d07e, type: 3}
   m_Name: '[PH] Turret'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: a5eace77a4b1371449d3767bbe091f9d
   buildingMesh: {fileID: 11400000, guid: 9d50a266ffc5a424db44349b7e5bbcdc, type: 2}
+  buildingPrefab: {fileID: 5380577957529232320, guid: f249b221668a34a4a80a1f43076c2a82,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -68,6 +65,8 @@ MonoBehaviour:
     id: 0
   turretBarrel:
     id: -1
+  turretBarrelTip:
+    id: 0
   unitClass: 1
   domain: 1
   targetingDomain: 0
