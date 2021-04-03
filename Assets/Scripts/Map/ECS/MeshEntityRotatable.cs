@@ -24,7 +24,7 @@ public class MeshEntityRotatable : MeshEntity
 	public Entity Instantiate(float3 position, float3 scale, Quaternion rotation)
 	{
 		var e = Instantiate(position, scale);
-		Map.EM.SetComponentData(e, new Rotation { Value = rotation });
+		GameRegistry.EntityManager.SetComponentData(e, new Rotation { Value = rotation });
 		return e;
 	}
 
@@ -39,7 +39,7 @@ public class MeshEntityRotatable : MeshEntity
 	public Entity Instantiate(float3 position, float scale, quaternion rotation)
 	{
 		var e = Instantiate(position, scale);
-		Map.EM.SetComponentData(e, new Rotation { Value = rotation });
+		GameRegistry.EntityManager.SetComponentData(e, new Rotation { Value = rotation });
 		return e;
 	}
 

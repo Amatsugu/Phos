@@ -86,7 +86,7 @@ namespace Amatsugu.Phos.Tiles
 			map.conduitGraph.AddNodeDisconected(Coords, SurfacePoint.y + conduitInfo.powerLineOffset);
 		}
 
-		public override void FindConduitConnections()
+		public override void FindConduitConnections(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
 			var disconnectedNodesStart = map.conduitGraph.GetDisconectedNodes();
 			var closest = map.conduitGraph.GetNodesInRange(Coords, _connectRangeSq);
@@ -114,7 +114,7 @@ namespace Amatsugu.Phos.Tiles
 				thisNode.ConnectTo(closest[i]);
 			}
 			if (connectionsMade == 0)
-				HQDisconnected();
+				HQDisconnected(building, postUpdateCommands);
 			else
 			{
 				//Propagate Connection
@@ -128,17 +128,20 @@ namespace Amatsugu.Phos.Tiles
 						if (disconnectedNodesEnd.Contains(disconnectedNodesStart[i]))
 							continue;
 						var tile = map[disconnectedNodesStart[i].conduitPos];
-						if (tile is ResourceConduitTile conduit)
-							conduit.HQConnected();
+						//if (tile is ResourceConduitTile conduit)
+						//	conduit.HQConnected();
+
+						//TODO: Update other conduits
 					}
-					HQConnected();
+					HQConnected(building, postUpdateCommands);
 				}
 				else
-					HQDisconnected();
+					HQDisconnected(building, postUpdateCommands);
 			}
 			connectionInit = true;
 		}
 
+		[Obsolete]
 		private void AddNewConnections()
 		{
 			var curNode = map.conduitGraph.GetNode(Coords);
@@ -156,8 +159,10 @@ namespace Amatsugu.Phos.Tiles
 
 				curNode.ConnectTo(closest[i]);
 				var tile = map[closest[i].conduitPos];
-				if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
-					conduit.HQConnected();
+				//if (tile is ResourceConduitTile conduit && !conduit.HasHQConnection)
+				//	conduit.HQConnected();
+
+				//TODO: receive other conduit connections
 				var a = closest[i].conduitPos.WorldPos + new float3(0, closest[i].height, 0);
 				var b = Coords.WorldPos + new float3(0, curNode.height, 0);
 				_conduitLines.Add(closest[i].conduitPos, LineFactory.CreateStaticLine(conduitInfo.lineEntity, a, b));
@@ -173,15 +178,15 @@ namespace Amatsugu.Phos.Tiles
 			var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
 			for (int i = 0; i < disconnectedNodes.Length; i++)
 			{
-				(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).HQDisconnected();
+				//(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).HQDisconnected();
 				PowerTransferEffectSystem.RemoveNode(disconnectedNodes[i]);
 			}
-			HQDisconnected();
+			//HQDisconnected();
 			UpdateConnections(connections, TileUpdateType.Removed);
 			base.OnRemoved();
 		}
 
-		public override void HQConnected()
+		protected override void HQConnected(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
 			if (connectionInit && HasHQConnection)
 				return;
@@ -189,13 +194,14 @@ namespace Amatsugu.Phos.Tiles
 				return;
 			CreateNodeEffect();
 			_switchLines = HasHQConnection = true;
-			UpdateLines();
+			//UpdateLines();
 			map.HexSelectForEach(Coords, conduitInfo.poweredRange, t =>
 			{
 				if (t is ResourceConduitTile)
 					return;
-				if (t is PoweredBuildingTile pb)
-					pb.HQConnected();
+				//if (t is PoweredBuildingTile pb)
+				//	pb.HQConnected(building, postUpdateCommands);
+				//TODO: Update other tiles
 			}, true);
 			OnConnected();
 		}
@@ -212,7 +218,7 @@ namespace Amatsugu.Phos.Tiles
 			PowerTransferEffectSystem.AddNode(cNode);
 		}
 
-		public override void HQDisconnected()
+		protected override void HQDisconnected(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
 			if (connectionInit && !HasHQConnection)
 				return;
@@ -225,8 +231,9 @@ namespace Amatsugu.Phos.Tiles
 			{
 				if (t is ResourceConduitTile)
 					return;
-				if (t is PoweredBuildingTile pb)
-					pb.HQDisconnected();
+				//if (t is PoweredBuildingTile pb)
+				//	pb.HQDisconnected();
+				//Update other tiles
 			}, true);
 			OnDisconnected();
 		}

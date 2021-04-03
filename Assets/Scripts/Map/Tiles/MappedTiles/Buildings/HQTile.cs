@@ -49,25 +49,7 @@ namespace Amatsugu.Phos.Tiles
 
 		protected override void OnBuilt()
 		{
-			var spawnTiles = map.HexSelect(Coords, hqInfo.unitCount);
-			for (int i = 0; i < spawnTiles.Count; i++)
-			{
-				if (!(spawnTiles[i] is BuildingTile))
-				{
-					var b = spawnTiles[i].SurfacePoint;
-					b.y = SurfacePoint.y;
-					var fwd = SurfacePoint - b;
-					var unit = map.AddUnit(hqInfo.unitInfo, spawnTiles[i], hqInfo.faction);
-					var rot = new Rotation
-					{
-						Value = quaternion.LookRotation(fwd, Vector3.up)
-					};
-					Map.EM.SetComponentData(unit.Entity, rot);
-					if(Map.EM.Exists(unit.HeadEntity))
-						Map.EM.SetComponentData(unit.HeadEntity, rot);
-				}
-			}
-			//PowerTransferEffectSystem.AddNode(map.conduitGraph.GetNode(Coords));
+			//TODO: Create starter units
 			ResourceSystem.AddResources(hqInfo.startingResources);
 		}
 
@@ -96,18 +78,17 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnPlaced()
 		{
 			base.OnPlaced();
-			Build();
 		}
 
 		protected override void OnBuilt()
 		{
 		}
 
-		public override void HQConnected()
+		protected override void HQConnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
 		}
 
-		public override void HQDisconnected()
+		protected override void HQDisconnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
 		}
 

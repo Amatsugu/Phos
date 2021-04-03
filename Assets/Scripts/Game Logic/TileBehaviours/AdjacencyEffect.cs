@@ -102,9 +102,9 @@ public class AdjacencyEffect : ScriptableObject
 		var e1 = LineFactory.CreateStaticLine(line, a, a2, 0.05f);
 		var e2 = LineFactory.CreateStaticLine(line, a2, b2, 0.05f);
 		var e3 = LineFactory.CreateStaticLine(line, b2, b, 0.05f);
-		Map.EM.AddComponentData(e1, new DeathTime { Value = Time.time + .01f });
-		Map.EM.AddComponentData(e2, new DeathTime { Value = Time.time + .01f });
-		Map.EM.AddComponentData(e3, new DeathTime { Value = Time.time + .01f });
+		GameRegistry.EntityManager.AddComponentData(e1, new DeathTime { Value = Time.time + .01f });
+		GameRegistry.EntityManager.AddComponentData(e2, new DeathTime { Value = Time.time + .01f });
+		GameRegistry.EntityManager.AddComponentData(e3, new DeathTime { Value = Time.time + .01f });
 	}
 }
 

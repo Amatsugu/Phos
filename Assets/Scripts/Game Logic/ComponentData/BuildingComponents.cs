@@ -22,3 +22,11 @@ public struct BuildingId : IComponentData
 {
 	public int Value;
 }
+
+public struct Building : IComponentData
+{
+	public Entity Value;
+
+	public static implicit operator Entity(Building building) => building.Value;
+	public static implicit operator Building(Entity buildingInst) => new Building {Value = buildingInst };
+}

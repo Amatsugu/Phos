@@ -275,6 +275,7 @@ public class UIBuildPanel : UITabPanel
 				break;
 
 			case BuildState.Idle:
+				InfoPanelLogic();
 				ReadBackInput();
 				break;
 

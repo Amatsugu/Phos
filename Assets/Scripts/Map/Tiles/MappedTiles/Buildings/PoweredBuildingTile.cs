@@ -43,41 +43,40 @@ namespace Amatsugu.Phos.Tiles
 
 		}
 
-
-		public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
+		protected override void BuildingStart(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
-			base.PrepareBuildingEntity(building, postUpdateCommands);
-			FindConduitConnections();
+			base.BuildingStart(buildingInst, postUpdateCommands);
+			FindConduitConnections(buildingInst, postUpdateCommands);
 		}
 
 		/// <summary>
 		/// Find a connection to nearby conduits
 		/// </summary>
-		public virtual void FindConduitConnections()
+		public virtual void FindConduitConnections(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
 			Profiler.BeginSample("Find Conduit Connections");
 			var closestConduit = map.conduitGraph.GetClosestConduitNode(Coords);
 			if (closestConduit == null)
 			{
 				if (MetaTilesHasConnection())
-					HQConnected();
+					HQConnected(building, postUpdateCommands);
 				else
-					HQDisconnected();
+					HQDisconnected(building, postUpdateCommands);
 			}
 			else
 			{
 				
 				var conduit = (map[closestConduit.conduitPos] as ResourceConduitTile);
 				if (!conduit.HasHQConnection)
-					HQDisconnected();
+					HQDisconnected(building, postUpdateCommands);
 				else if (conduit.IsInPoweredRange(Coords))
-					HQConnected();
+					HQConnected(building, postUpdateCommands);
 				else
 				{
 					if (MetaTilesHasConnection())
-						HQConnected();
+						HQConnected(building, postUpdateCommands);
 					else
-						HQDisconnected();
+						HQDisconnected(building, postUpdateCommands);
 				}
 			}
 			connectionInit = true;
@@ -103,7 +102,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Callback for when this tile receives an HQ connection
 		/// </summary>
-		public virtual void HQConnected()
+		protected virtual void HQConnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
 			//TODO: Building powered state
 			if (connectionInit)
@@ -111,10 +110,7 @@ namespace Amatsugu.Phos.Tiles
 				if (HasHQConnection)
 					return;
 				if (!HasHQConnection)
-				{
-					//Map.EM.RemoveComponent<BuildingOffTag>(GetBuildingEntity());
-					//Map.EM.RemoveComponent<BuildingOffTag>(subMeshes);
-				}
+					postUpdateCommands.RemoveComponent<BuildingOffTag>(buildingInst);
 			}
 			HasHQConnection = true;
 			OnConnected();
@@ -123,7 +119,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Callback for the this tile loses it's HQ connection
 		/// </summary>
-		public virtual void HQDisconnected()
+		protected virtual void HQDisconnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
 			//TODO: Building powered state
 			if (connectionInit)
@@ -132,18 +128,14 @@ namespace Amatsugu.Phos.Tiles
 				{
 					HasHQConnection = false;
 					connectionInit = false;
-					FindConduitConnections();
+					FindConduitConnections(buildingInst, postUpdateCommands);
 					return;
 				}
 				else
 					return;
 			}
-			//var e = GetBuildingEntity();
-			//if (!Map.EM.HasComponent<BuildingOffTag>(e))
-			//{
-			//	Map.EM.AddComponent<BuildingOffTag>(e);
-			//	Map.EM.AddComponent<BuildingOffTag>(subMeshes);
-			//}
+			if(HasHQConnection)
+				postUpdateCommands.AddComponent<BuildingOffTag>(buildingInst);
 			HasHQConnection = false;
 			OnDisconnected();
 		}

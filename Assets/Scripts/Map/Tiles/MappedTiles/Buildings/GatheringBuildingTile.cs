@@ -45,58 +45,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	[Obsolete]
 	protected virtual void UpdateGather()
 	{
-		//var entity = GetBuildingEntity();
-		//var resInRange = new Dictionary<int, int>();
-		//var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
-		//var resTiles = new Dictionary<int, List<ResourceTile>>();
-		//map.HexSelectForEach(Coords, fullRange, t =>
-		//{
-		//	if (t is ResourceTile rt && !rt.gatherer.isCreated)
-		//	{
-		//		var yeild = rt.resInfo.resourceYields;
-		//		for (int i = 0; i < yeild.Length; i++)
-		//		{
-		//			var yID = yeild[i].id;
-		//			if (resInRange.ContainsKey(yID))
-		//			{
-		//				resInRange[yID]++;
-		//				resTiles[yID].Add(rt);
-		//			}
-		//			else
-		//			{
-		//				resInRange.Add(yID, 1);
-		//				resTiles.Add(yID, new List<ResourceTile> { rt });
-		//			}
-		//		}
-		//	}
-		//}, true);
-		//_productionData = new ProductionData
-		//{
-		//	resourceIds = new int[gatherInfo.resourcesToGather.Length],
-		//	rates = new int[gatherInfo.resourcesToGather.Length]
-		//};
-
-		//var approxRates = new int[gatherInfo.resourcesToGather.Length];
-		//for (int i = 0; i < gatherInfo.resourcesToGather.Length; i++)
-		//{
-		//	var res = gatherInfo.resourcesToGather[i];
-		//	if (resInRange.ContainsKey(res.id))
-		//	{
-		//		_productionData.resourceIds[i] = res.id;
-		//		_productionData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
-		//		var gathered = resTiles[res.id];
-		//		for (int j = 0; j < gathered.Count; j++)
-		//			gathered[j].gatherer = Coords;
-		//	}
-		//}
-
-		//var exisitingProdData = Map.EM.GetSharedComponentData<ProductionData>(entity);
-		//if (exisitingProdData.rates?.Length > 0)
-		//{
-		//	_productionData.rates = exisitingProdData.rates.Concat(_productionData.rates).ToArray();
-		//	_productionData.resourceIds = exisitingProdData.resourceIds.Concat(_productionData.resourceIds).ToArray();
-		//	Map.EM.SetSharedComponentData(entity, _productionData);
-		//}
+		
 	}
 
 	public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)

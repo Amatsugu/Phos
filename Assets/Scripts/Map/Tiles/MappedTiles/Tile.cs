@@ -125,21 +125,22 @@ namespace Amatsugu.Phos.Tiles
 
 		}
 
-		/// <summary>
-		/// Render the decorators for this tile
-		/// </summary>
-		[Obsolete]
-		public virtual void RenderDecorators()
-		{
-		}
 
 		/// <summary>
 		/// Called after Render and it is safe to perform operations on entities of this tile and other tiles
 		/// </summary>
+		[Obsolete]
 		public virtual void Start()
 		{
 			_isInit = true;
 		}
+
+
+		public virtual void Start(Entity tileInst, EntityCommandBuffer postUpdateCommands)
+		{
+
+		}
+
 
 		/// <summary>
 		/// Set biome data for the tile

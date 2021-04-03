@@ -92,6 +92,7 @@ namespace Amatsugu.Phos.Tiles
 			postUpdateCommands.AddComponent(buildingInst, new Parent { Value = tileInst });
 			postUpdateCommands.AddComponent<LocalToParent>(buildingInst);
 			postUpdateCommands.SetComponent(buildingInst, new Rotation { Value = rotation });
+			postUpdateCommands.AddComponent<Building>(tileInst, buildingInst);
 			return buildingInst;
 		}
 
@@ -159,6 +160,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Completes the build phase of this building
 		/// </summary>
+		[Obsolete]
 		public void Build()
 		{
 			//if (isBuilt)
@@ -175,6 +177,25 @@ namespace Amatsugu.Phos.Tiles
 			//	}
 			//}
 			//map.InvokeOnBuilt(Coords);
+		}
+
+		public override void Start(Entity tileInst, EntityCommandBuffer postUpdateCommands)
+		{
+			base.Start(tileInst, postUpdateCommands);
+			var building = GameRegistry.EntityManager.GetComponentData<Building>(tileInst);
+			BuildingStart(building, postUpdateCommands);
+		}
+
+		protected virtual void BuildingStart(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
+		{
+
+		}
+
+		public Entity Build(Entity tileInst, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		{
+			var buildingInst = InstantiateBuilding(tileInst, prefabs, postUpdateCommands);
+			PrepareBuildingEntity(buildingInst, postUpdateCommands);
+			return buildingInst;
 		}
 
 		/// <summary>
@@ -405,7 +426,6 @@ namespace Amatsugu.Phos.Tiles
 		public void Die()
 		{
 			OnDeath();
-			//map.ReplaceTile(this, buildingInfo.customDeathTile ? buildingInfo.deathTile : originalTile);
 		}
 
 		/// <summary>

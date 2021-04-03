@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
+using Unity.Entities;
+
 using UnityEngine;
 
 
@@ -64,27 +66,37 @@ namespace Amatsugu.Phos.Tiles
 #endif
 		}
 
-		public override void Start()
-		{
-			base.Start();
-			FindConduitConnections();
-		}
+		//public override void Start()
+		//{
+		//	base.Start();
+		//	FindConduitConnections();
+		//}
 
 		public override bool MetaTilesHasConnection()
 		{
 			return false;
 		}
 
-		public override void HQConnected()
+		//public override void HQConnected()
+		//{
+		//	if (_isPoweredTile && !_isConduitTile)
+		//		_poweredParent.HQConnected();
+		//}
+
+		//public override void HQDisconnected()
+		//{
+		//	if (_isPoweredTile && !_isConduitTile)
+		//		_poweredParent.HQDisconnected();
+		//}
+
+		protected override void HQConnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
-			if (_isPoweredTile && !_isConduitTile)
-				_poweredParent.HQConnected();
+			//base.HQConnected(buildingInst, postUpdateCommands);
 		}
 
-		public override void HQDisconnected()
+		protected override void HQDisconnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
-			if (_isPoweredTile && !_isConduitTile)
-				_poweredParent.HQDisconnected();
+			//base.HQDisconnected(buildingInst, postUpdateCommands);
 		}
 
 		public override void OnDisconnected()

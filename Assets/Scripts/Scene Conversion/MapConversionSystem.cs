@@ -157,6 +157,7 @@ namespace Amatsugu.Phos
 					if (!filter.Matches(entities[i]))
 						continue;
 					HexCoords coords = EntityManager.GetComponentData<HexPosition>(entities[i]);
+					GameRegistry.GameMap[coords].Start(entities[i], PostUpdateCommands);
 					tiles[coords.ToIndex(GameRegistry.GameMap.totalWidth)] = entities[i];
 				}
 				GameRegistry.INST.mapEntity = e;
