@@ -274,3 +274,12 @@ The following packages were updated:
   com.unity.timeline from version 1.4.6 to 1.5.2
 The following packages were removed:
   com.unity.quicksearch@2.0.2
+
+=== Wed Apr  7 19:05:33 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.test-framework from version 1.1.22 to 1.1.24
+  com.unity.timeline from version 1.5.2 to 1.5.4

@@ -30,7 +30,7 @@ namespace DataStore.ConduitGraph
 			this.maxConnections = maxConnections;
 			nodes = new Dictionary<int, ConduitNode>();
 			_coordMap = new Dictionary<HexCoords, int>();
-			_baseNode = CreateNode(baseNode, hqNodeHeight);
+			_baseNode = CreateNode(baseNode, 0, hqNodeHeight);
 		}
 
 		public ConduitGraph(ConduitNode baseNode, int maxConnections = 6)
@@ -77,25 +77,25 @@ namespace DataStore.ConduitGraph
 
 		public bool ContainsNode(HexCoords nodePos) => _coordMap.ContainsKey(nodePos);
 
-		public void AddNode(HexCoords nodePos, float height, ConduitNode connectTo)
+		public void AddNode(HexCoords nodePos, float height, int poweredRange, ConduitNode connectTo)
 		{
-			var newNode = CreateNode(nodePos, height);
+			var newNode = CreateNode(nodePos, poweredRange, height);
 			newNode.ConnectTo(connectTo);
 			OnNodeAdded?.Invoke(newNode);
 		}
 
-		private ConduitNode CreateNode(HexCoords nodePos, float height)
+		private ConduitNode CreateNode(HexCoords nodePos, int poweredRange, float height)
 		{
 			var id = _curId++;
-			var newNode = new ConduitNode(id, nodePos, height, maxConnections);
+			var newNode = new ConduitNode(id, nodePos, height, poweredRange, maxConnections);
 			nodes.Add(id, newNode);
 			_coordMap.Add(nodePos, id);
 			return newNode;
 		}
 
-		public void AddNodeDisconected(HexCoords nodePos, float height)
+		public void AddNodeDisconected(HexCoords nodePos, int poweredRange, float height)
 		{
-			var node = CreateNode(nodePos, height);
+			var node = CreateNode(nodePos, poweredRange, height);
 			OnNodeAdded?.Invoke(node);
 		}
 
@@ -160,6 +160,22 @@ namespace DataStore.ConduitGraph
 					disconected[j++] = nodesArr[i];
 			}
 			return disconected;
+		}
+
+		public void CalculateConnectivity()
+		{
+			var visited = new HashSet<ConduitNode>();
+			TraverseGraph(_baseNode, visited);
+
+			var nodesArr = nodes.Values.ToArray();
+			for (int i = 0; i < Count; i++)
+			{
+				if (visited.Contains(nodesArr[i]))
+					nodesArr[i].MarkAsConnected();
+				else
+					nodesArr[i].MarkAsDisconnected();
+
+			}
 		}
 
 		public HashSet<ConduitNode> GetDisconectedNodesSet()
@@ -348,6 +364,7 @@ namespace DataStore.ConduitGraph
 		public readonly int maxConnections;
 		public readonly int id;
 		public float height;
+		public int poweredRange;
 		public HexCoords conduitPos;
 
 		internal int[] _connections;
@@ -358,17 +375,31 @@ namespace DataStore.ConduitGraph
 		[JsonIgnore]
 		public bool IsFull => ConnectionCount == maxConnections;
 
-		public ConduitNode(int id, HexCoords pos, float height, int maxConnections = 6)
+		public bool IsConnected { get; private set; }
+
+		public ConduitNode(int id, HexCoords pos, float height, int poweredRange, int maxConnections = 6)
 		{
 			this.id = id;
 			conduitPos = pos;
 			this.height = height;
+			this.poweredRange = poweredRange;
 			this.maxConnections = maxConnections;
 			_connections = new int[maxConnections];
 			for (int i = 0; i < maxConnections; i++)
 				_connections[i] = -1;
 			ConnectionCount = 0;
 		}
+
+		public void MarkAsConnected()
+		{
+			IsConnected = true;
+		}
+
+		public void MarkAsDisconnected()
+		{
+			IsConnected = false;
+		}
+
 
 		internal void ConnectTo(ConduitNode node)
 		{

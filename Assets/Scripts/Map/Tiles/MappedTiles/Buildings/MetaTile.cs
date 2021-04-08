@@ -89,16 +89,6 @@ namespace Amatsugu.Phos.Tiles
 		//		_poweredParent.HQDisconnected();
 		//}
 
-		protected override void HQConnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
-		{
-			//base.HQConnected(buildingInst, postUpdateCommands);
-		}
-
-		protected override void HQDisconnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
-		{
-			//base.HQDisconnected(buildingInst, postUpdateCommands);
-		}
-
 		public override void OnDisconnected()
 		{
 		}

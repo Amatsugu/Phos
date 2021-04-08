@@ -444,13 +444,11 @@ public class UIBuildPanel : UITabPanel
 		var conduitsInRange = GameRegistry.GameMap.conduitGraph.GetNodesInRange(selectedTile.Coords, _poweredTileRangeSq, false);
 		for (int i = 0; i < conduitsInRange.Count; i++)
 		{
-			var conduit = (GameRegistry.GameMap[conduitsInRange[i].conduitPos] as ResourceConduitTile);
-			if (conduit == null)
-				continue;
-			if (conduit.HasHQConnection)
-				poweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
+			var conduit = conduitsInRange[i];
+			if (conduit.IsConnected)
+				poweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.conduitPos, conduit.poweredRange));
 			else
-				unPoweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.Coords, conduit.conduitInfo.poweredRange));
+				unPoweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.conduitPos, conduit.poweredRange));
 		}
 		if (poweredTiles.Count > 0)
 			indicatorManager.ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());

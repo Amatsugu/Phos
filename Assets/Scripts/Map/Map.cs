@@ -454,16 +454,22 @@ namespace Amatsugu.Phos
 			postUpdateCommands.DestroyEntity(tiles[tileIndex].Value);
 			var nTInst = newTile.InstantiateTile(prefabs, postUpdateCommands);
 			newTile.PrepareTileInstance(nTInst, postUpdateCommands);
-			if(newTile is BuildingTile buildingTile)
+			var buildingTile = newTile as BuildingTile;
+			Entity buildingInst = default;
+			if (buildingTile != null)
 			{
-				var buildingInst = buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
+				buildingInst = buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
 				buildingTile.PrepareBuildingEntity(buildingInst, postUpdateCommands);
 			}
 			tiles[tileIndex] = nTInst;
 			this[tile.Coords] = newTile;
 			newTile.OnPlaced();
 			OnTilePlaced?.Invoke(tile.Coords);
-			newTile.Start();
+			newTile.Start(nTInst, postUpdateCommands);
+			if (buildingTile != null)
+			{
+				buildingTile.BuildingStart(buildingInst, postUpdateCommands);
+			}
 			return newTile;
 		}
 

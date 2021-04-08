@@ -124,7 +124,7 @@ namespace Amatsugu.Phos
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
-			GameRegistry.GameMap.Destroy();
+			//GameRegistry.GameMap.Destroy();
 		}
 	}
 
@@ -157,7 +157,10 @@ namespace Amatsugu.Phos
 					if (!filter.Matches(entities[i]))
 						continue;
 					HexCoords coords = EntityManager.GetComponentData<HexPosition>(entities[i]);
-					GameRegistry.GameMap[coords].Start(entities[i], PostUpdateCommands);
+					var tile = GameRegistry.GameMap[coords];
+					tile.Start(entities[i], PostUpdateCommands);
+					if(tile is BuildingTile buildingTile)
+						buildingTile.BuildingStart(entities[i], PostUpdateCommands);
 					tiles[coords.ToIndex(GameRegistry.GameMap.totalWidth)] = entities[i];
 				}
 				GameRegistry.INST.mapEntity = e;

@@ -182,11 +182,9 @@ namespace Amatsugu.Phos.Tiles
 		public override void Start(Entity tileInst, EntityCommandBuffer postUpdateCommands)
 		{
 			base.Start(tileInst, postUpdateCommands);
-			var building = GameRegistry.EntityManager.GetComponentData<Building>(tileInst);
-			BuildingStart(building, postUpdateCommands);
 		}
 
-		protected virtual void BuildingStart(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
+		public virtual void BuildingStart(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
 
 		}

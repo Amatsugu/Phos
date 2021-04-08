@@ -84,13 +84,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 		}
 
-		protected override void HQConnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
-		{
-		}
-
-		protected override void HQDisconnected(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
-		{
-		}
 
 		public override bool CanDeconstruct(Faction faction) => false;
 	}
