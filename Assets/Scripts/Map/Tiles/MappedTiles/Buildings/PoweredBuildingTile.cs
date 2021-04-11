@@ -95,18 +95,10 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnSerialize(Dictionary<string, string> tileData)
 		{
 			base.OnSerialize(tileData);
-			tileData.Add("connectionInit", null);
-			tileData.Add("hasHQConnection", null);
 		}
 
 		public override void OnDeSerialized(Dictionary<string, string> tileData)
 		{
-			connectionInit = tileData.ContainsKey("connectionInit");
-			HasHQConnection = tileData.ContainsKey("hasHQConnection");
-			if (!HasHQConnection)
-				OnDisconnected();
-			else
-				OnConnected();
 			base.OnDeSerialized(tileData);
 		}
 

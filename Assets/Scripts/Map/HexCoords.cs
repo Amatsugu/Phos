@@ -102,8 +102,19 @@ public struct HexCoords : IEquatable<HexCoords>
 
 	public int ToIndex(int mapWidth) => X + Y * mapWidth + Y / 2;
 
+	/// <summary>
+	/// Distance between coords in tiles
+	/// </summary>
+	/// <param name="b"></param>
+	/// <returns></returns>
 	public int Distance(HexCoords b) => (math.abs(X - b.X) + math.abs(Y - b.Y) + math.abs(Z - b.Z)) / 2;
 
+
+	/// <summary>
+	/// Distance between coords in world space
+	/// </summary>
+	/// <param name="b"></param>
+	/// <returns></returns>
 	public float DistanceToSq(HexCoords b) => math.lengthsq(WorldPos - b.WorldPos);
 
 	public static float DistanceSq(HexCoords a, HexCoords b) => math.lengthsq(a.WorldPos - b.WorldPos);
@@ -278,6 +289,12 @@ public struct HexCoords : IEquatable<HexCoords>
 		return neighbors;
 	}
 
+	public static void GetNeighbors(HexCoords center, ref HexCoords[] neighbors)
+	{
+		for (int i = 0; i < 6; i++)
+			neighbors[i] = center.GetNeighbor(i);
+	}
+
 	public bool IsInBounds(int height, int widht)
 	{
 		if (0 > OffsetCoords.y || height <= OffsetCoords.y)
@@ -306,16 +323,10 @@ public struct HexCoords : IEquatable<HexCoords>
 	{
 		if (!isCreated)
 			return false;
-		if (obj == null || GetType() != obj.GetType())
-		{
-			return false;
-		}
-
-		var h = (HexCoords)obj;
-		if (!h.isCreated)
-			return false;
-		return this.Equals(h);
+		if (obj is HexCoords h)
+			return Equals(h);
+		return false;
 	}
 
-	public bool Equals(HexCoords other) => isCreated && other.isCreated && X == other.X && Y == other.Y;
+	public bool Equals(HexCoords other) => X == other.X && Y == other.Y;
 }

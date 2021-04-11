@@ -144,6 +144,41 @@ namespace DataStore.ConduitGraph
 			return closest;
 		}
 
+		public ConduitNode GetClosestPoweredNodeInRange(HexCoords coord)
+		{
+			var pos = _coordMap.Keys.ToArray();
+			for (int i = 0; i < _coordMap.Count; i++)
+			{
+				var n = nodes[_coordMap[pos[i]]];
+				if (n.Equals(_baseNode))
+					continue;
+				if (coord.Distance(n.conduitPos) > n.poweredRange)
+					continue;
+				if (IsInPoweredRange(n, coord))
+					return n;
+			}
+			return null;
+		}
+
+		private bool IsInPoweredRange(ConduitNode node, HexCoords coords)
+		{
+			var center = node.conduitPos;
+			for (int k = 0; k <= node.poweredRange; k++)
+			{
+				var item = center.Scale(4, k);
+				for (int i = 0; i < 6; i++)
+				{
+					for (int j = 0; j < k; j++)
+					{
+						if (item == coords)
+							return true;
+						item = item.GetNeighbor(i);
+					}
+				}
+			}
+			return false;
+		}
+
 		public ConduitNode[] GetDisconectedNodes()
 		{
 			var visited = new HashSet<ConduitNode>();
