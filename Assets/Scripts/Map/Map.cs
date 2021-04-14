@@ -433,11 +433,15 @@ namespace Amatsugu.Phos
 
 		
 
-		[Obsolete]
-		public void RevertTile(Tile tile)
+		public void RevertTile(Tile tile, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommandBuffer)
 		{
+
 			if (tile.originalTile != null)
-				ReplaceTile(tile, tile.originalTile);
+			{
+				
+				ReplaceTile(tile, tile.originalTile, prefabs, tiles, postUpdateCommandBuffer);
+				//ReplaceTile(tile, tile.originalTile);
+			}
 			else
 				UnityEngine.Debug.LogWarning("No Original Tile to revert to");
 		}
@@ -450,7 +454,6 @@ namespace Amatsugu.Phos
 			newTile.originalTile = tile.GetGroundTileInfo();
 			newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			var tileIndex = tile.Coords.ToIndex(totalWidth);
-			Debug.Log($"{GameRegistry.EntityManager.Exists(tiles[tileIndex])} | {GameRegistry.EntityManager.Exists(tiles[tileIndex].Value)}");
 			postUpdateCommands.DestroyEntity(tiles[tileIndex].Value);
 			var nTInst = newTile.InstantiateTile(prefabs, postUpdateCommands);
 			newTile.PrepareTileInstance(nTInst, postUpdateCommands);

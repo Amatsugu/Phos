@@ -97,9 +97,9 @@ namespace Amatsugu.Phos.Tiles
 		{
 		}
 
-		public override void Deconstruct()
+		public override void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommands)
 		{
-			ParentTile.Deconstruct();
+			ParentTile.Deconstruct(prefabs, tiles, postUpdateCommands);
 		}
 
 		public override bool CanDeconstruct(Faction faction)

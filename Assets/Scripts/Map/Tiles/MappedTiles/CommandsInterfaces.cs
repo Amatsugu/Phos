@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Amatsugu.Phos;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +35,7 @@ public interface ICommandable
 
 public interface IDeconstructable
 {
-	void Deconstruct();
+	void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommands);
 
 	bool CanDeconstruct(Faction faction);
 

@@ -322,6 +322,7 @@ public class UIBuildPanel : UITabPanel
 	private void DeconstructLogic()
 	{
 		indicatorManager.UnSetAllIndicators();
+		
 		var selectedTile = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
@@ -341,7 +342,12 @@ public class UIBuildPanel : UITabPanel
 			indicatorManager.SetIndicator(selectedTile, destructionIndicatorEntity);
 		}
 		if (Input.GetKeyUp(KeyCode.Mouse0) && deconstructable.CanDeconstruct(Faction.Player))
-			deconstructable.Deconstruct();
+		{
+			var postUpdateCommands = GameRegistry.EntityManager.World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
+			var tiles = GameRegistry.EntityManager.GetBuffer<TileInstance>(GameRegistry.MapEntity);
+			var prefabs = GameRegistry.EntityManager.GetBuffer<GenericPrefab>(GameRegistry.MapEntity);
+			deconstructable.Deconstruct(prefabs, tiles, postUpdateCommands);
+		}
 	}
 
 	private void ReadBackInput()
