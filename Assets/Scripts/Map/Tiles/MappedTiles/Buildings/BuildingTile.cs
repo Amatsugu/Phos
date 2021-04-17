@@ -387,14 +387,14 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Deconstruct this building, reverting it to it's original tile
 		/// </summary>
-		public virtual void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommands)
+		public virtual void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
 		{
-			if (buildingInfo.useMetaTiles)
-			{
-				for (int i = 0; i < metaTiles.Length; i++)
-					map.RevertTile(metaTiles[i], prefabs, tiles, postUpdateCommands);
-			}
-			map.RevertTile(this, prefabs, tiles, postUpdateCommands);
+			//if (buildingInfo.useMetaTiles)
+			//{
+			//	for (int i = 0; i < metaTiles.Length; i++)
+			//		map.RevertTile(metaTiles[i], prefabs, existingTileInstance, postUpdateCommands);
+			//}
+			map.RevertTile(this, prefabs, existingTileInstance, postUpdateCommands);
 		}
 
 		/// <summary>

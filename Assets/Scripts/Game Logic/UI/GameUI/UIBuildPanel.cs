@@ -304,7 +304,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		infoPanel.Hide();
 		tooltipUI.Hide();
-		var tile = GetTileUnderCursor();
+		var (tile, _) = GetTileUnderCursor();
 		if (tile is BuildingTile b)
 		{
 			tooltipUI.Show(b.GetDescriptionString().AppendLine(b.GetProductionString().ToString()), b.GetNameString());
@@ -315,7 +315,7 @@ public class UIBuildPanel : UITabPanel
 			tooltipUI.Show(r.GetDescriptionString().AppendLine(r.GetProductionString().ToString()), r.GetNameString());
 			//infoPanel.ShowInfo(r);
 		}
-		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f && f.IsBuilt && f.HasHQConnection)
+		if (Input.GetKeyUp(KeyCode.Mouse0) && tile is FactoryBuildingTile f && f.IsBuilt)
 			Show(f);
 	}
 
@@ -323,7 +323,7 @@ public class UIBuildPanel : UITabPanel
 	{
 		indicatorManager.UnSetAllIndicators();
 		
-		var selectedTile = GetTileUnderCursor();
+		var (selectedTile, isnt) = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
 		var deconstructable = selectedTile as IDeconstructable;
@@ -343,10 +343,10 @@ public class UIBuildPanel : UITabPanel
 		}
 		if (Input.GetKeyUp(KeyCode.Mouse0) && deconstructable.CanDeconstruct(Faction.Player))
 		{
-			var postUpdateCommands = GameRegistry.EntityManager.World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
-			var tiles = GameRegistry.EntityManager.GetBuffer<TileInstance>(GameRegistry.MapEntity);
+			var postUpdateCommands = GameRegistry.EntityManager.World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
+			//var tiles = GameRegistry.EntityManager.GetBuffer<TileInstance>(GameRegistry.MapEntity);
 			var prefabs = GameRegistry.EntityManager.GetBuffer<GenericPrefab>(GameRegistry.MapEntity);
-			deconstructable.Deconstruct(prefabs, tiles, postUpdateCommands);
+			deconstructable.Deconstruct(prefabs, isnt, postUpdateCommands);
 		}
 	}
 
@@ -366,10 +366,11 @@ public class UIBuildPanel : UITabPanel
 		}
 	}
 
-	private Tile GetTileUnderCursor()
+	private (Tile tile, Entity tileInstance) GetTileUnderCursor()
 	{
 		Tile selectedTile = default;
-		var col = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>().PhysicsWorld;
+		Entity inst = default;
+		var col = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>().PhysicsWorld;
 		var ray = _cam.ScreenPointToRay(Input.mousePosition);
 		if (col.CollisionWorld.CastRay(new Unity.Physics.RaycastInput
 		{
@@ -387,12 +388,15 @@ public class UIBuildPanel : UITabPanel
 			{
 				var e = col.Bodies[hit.RigidBodyIndex].Entity;
 				if (GameRegistry.EntityManager.HasComponent<HexPosition>(e))
+				{
 					selectedTile = GameRegistry.GameMap[GameRegistry.EntityManager.GetComponentData<HexPosition>(e).Value];
+					inst = e;
+				}
 			}
 		}
 		if (selectedTile is MetaTile m)
 			selectedTile = m.ParentTile;
-		return selectedTile;
+		return (selectedTile, inst);
 	}
 
 	private void ValidatePlacement()
@@ -404,7 +408,7 @@ public class UIBuildPanel : UITabPanel
 		}
 		indicatorManager.UnSetAllIndicators();
 		indicatorManager.HideAllIndicators();
-		var selectedTile = GetTileUnderCursor();
+		var (selectedTile, inst) = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
 		if (Input.GetKeyUp(KeyCode.Q))
@@ -434,7 +438,7 @@ public class UIBuildPanel : UITabPanel
 		if (Input.GetKeyUp(KeyCode.Mouse0))
 		{
 			if (isValid)
-				PlaceBuilding(selectedTile);
+				PlaceBuilding(selectedTile, inst);
 			else
 				ShowErrors();
 		}
@@ -466,11 +470,11 @@ public class UIBuildPanel : UITabPanel
 			indicatorManager.HideIndicator(unpoweredTileIndicatorEntity);
 	}
 
-	private void PlaceBuilding(Tile selectedTile)
+	private void PlaceBuilding(Tile selectedTile, Entity existingTileInstance)
 	{
 		if (state == BuildState.Placement)
 			ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
-		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, _rotation);
+		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, existingTileInstance, _rotation);
 		if (state == BuildState.HQPlacement)
 		{
 			_selectedBuilding = null;

@@ -18,6 +18,7 @@ namespace DataStore.ConduitGraph
 		public int Count => nodes.Count;
 		public Dictionary<HexCoords, int> _coordMap;
 		private readonly ConduitNode _baseNode;
+		private readonly List<int> _nodesToRemove;
 
 		public event Action<ConduitNode> OnNodeRemoved;
 
@@ -31,6 +32,7 @@ namespace DataStore.ConduitGraph
 			nodes = new Dictionary<int, ConduitNode>();
 			_coordMap = new Dictionary<HexCoords, int>();
 			_baseNode = CreateNode(baseNode, 0, hqNodeHeight);
+			_nodesToRemove = new List<int>();
 		}
 
 		public ConduitGraph(ConduitNode baseNode, int maxConnections = 6)
@@ -39,6 +41,7 @@ namespace DataStore.ConduitGraph
 			nodes = new Dictionary<int, ConduitNode>();
 			_coordMap = new Dictionary<HexCoords, int>();
 			_baseNode = baseNode;
+			_nodesToRemove = new List<int>();
 		}
 
 		public SerializedConduitGrapth Serialize()
@@ -57,7 +60,12 @@ namespace DataStore.ConduitGraph
 			_curId = curId;
 		}
 
-		public ConduitNode GetNode(HexCoords nodePos) => nodes[_coordMap[nodePos]];
+		public ConduitNode GetNode(HexCoords nodePos)
+		{
+			if (!_coordMap.ContainsKey(nodePos))
+				return null;
+			return nodes[_coordMap[nodePos]];
+		}
 
 		public void ConnectNode(HexCoords nodePos, ConduitNode connectTo) => nodes[_coordMap[nodePos]].ConnectTo(connectTo);
 

@@ -42,7 +42,7 @@ namespace Amatsugu.Phos.Tiles
 			var tilesToReplace = map.GetNeighbors(Coords);
 			for (int i = 0; i < tilesToReplace.Length; i++)
 			{
-				BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i]);
+				//BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i]);
 			}
 			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}

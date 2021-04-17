@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos
 {
+	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 	public class PowerTransferSystem : ComponentSystem
 	{
 		private ConduitGraph _conduitGraph;
@@ -40,7 +41,7 @@ namespace Amatsugu.Phos
 
 			Entities.WithAllReadOnly<ResourceConduitTag, HQConntectedTag, HexPosition>().WithNone<PoweredBuildingTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
-				if (!_conduitGraph.GetNode(pos).IsConnected)
+				if (_conduitGraph.GetNode(pos)?.IsConnected == false)
 					PostUpdateCommands.RemoveComponent<HQConntectedTag>(e);
 			});
 

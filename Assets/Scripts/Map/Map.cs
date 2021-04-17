@@ -433,20 +433,20 @@ namespace Amatsugu.Phos
 
 		
 
-		public void RevertTile(Tile tile, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommandBuffer)
+		public void RevertTile(Tile tile, DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommandBuffer)
 		{
 
 			if (tile.originalTile != null)
 			{
 				
-				ReplaceTile(tile, tile.originalTile, prefabs, tiles, postUpdateCommandBuffer);
+				ReplaceTile(tile, tile.originalTile, prefabs, existingTileInstance, postUpdateCommandBuffer);
 				//ReplaceTile(tile, tile.originalTile);
 			}
 			else
 				UnityEngine.Debug.LogWarning("No Original Tile to revert to");
 		}
 
-		public Tile ReplaceTile(Tile tile, Tile newTile, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommands)
+		public Tile ReplaceTile(Tile tile, Tile newTile, DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
 		{
 			if (tile.Coords != newTile.Coords)
 				throw new Exception("New tile must be a the same position of the tile it replaces");
@@ -454,7 +454,7 @@ namespace Amatsugu.Phos
 			newTile.originalTile = tile.GetGroundTileInfo();
 			newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			var tileIndex = tile.Coords.ToIndex(totalWidth);
-			postUpdateCommands.DestroyEntity(tiles[tileIndex].Value);
+			postUpdateCommands.DestroyEntity(existingTileInstance);
 			var nTInst = newTile.InstantiateTile(prefabs, postUpdateCommands);
 			newTile.PrepareTileInstance(nTInst, postUpdateCommands);
 			var buildingTile = newTile as BuildingTile;
@@ -464,7 +464,7 @@ namespace Amatsugu.Phos
 				buildingInst = buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
 				buildingTile.PrepareBuildingEntity(buildingInst, postUpdateCommands);
 			}
-			tiles[tileIndex] = nTInst;
+			//tiles[tileIndex] = nTInst;
 			this[tile.Coords] = newTile;
 			newTile.OnPlaced();
 			OnTilePlaced?.Invoke(tile.Coords);
@@ -476,16 +476,16 @@ namespace Amatsugu.Phos
 			return newTile;
 		}
 
-		public Tile ReplaceTile(Tile tile, TileEntity newTileInfo, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommands)
+		public Tile ReplaceTile(Tile tile, TileEntity newTileInfo, DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
 		{
 			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height);
-			return ReplaceTile(tile, nT, prefabs, tiles, postUpdateCommands);
+			return ReplaceTile(tile, nT, prefabs, existingTileInstance, postUpdateCommands);
 		}
 
-		public Tile ReplaceTile(Tile tile, BuildingTileEntity newTileInfo, int rotation, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpdateCommands)
+		public Tile ReplaceTile(Tile tile, BuildingTileEntity newTileInfo, int rotation, DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
 		{
 			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height, rotation);
-			return ReplaceTile(tile, nT, prefabs, tiles, postUpdateCommands);
+			return ReplaceTile(tile, nT, prefabs, existingTileInstance, postUpdateCommands);
 		}
 
 		public int GetDistance(HexCoords a, HexCoords b)
