@@ -28,11 +28,6 @@ namespace Amatsugu.Phos.Tiles
 				throw new Exception("Second HQ added");
 #endif
 			map.conduitGraph = new ConduitGraph(Coords, Height + 3);
-			var tilesToReplace = map.GetNeighbors(Coords);
-			for (int i = 0; i < tilesToReplace.Length; i++)
-			{
-				//map.ReplaceTile(tilesToReplace[i], hqInfo.subHQTiles[i]);
-			}
 			GameRegistry.BaseNameUI.panel.Show();
 			GameEvents.InvokeOnHQPlaced();
 		}
@@ -40,9 +35,11 @@ namespace Amatsugu.Phos.Tiles
 		public override Entity InstantiateTile(DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
 			var tilesToReplace = map.GetNeighbors(Coords);
+			var tiles = GameRegistry.GetTileInstanceBuffer();
 			for (int i = 0; i < tilesToReplace.Length; i++)
 			{
-				//BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i]);
+				var subInx = tilesToReplace[i].Coords.ToIndex(map.totalWidth);
+				BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i], tiles[subInx]);
 			}
 			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}

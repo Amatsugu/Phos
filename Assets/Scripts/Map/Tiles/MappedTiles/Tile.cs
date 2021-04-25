@@ -175,7 +175,7 @@ namespace Amatsugu.Phos.Tiles
 				SurfacePoint = new Vector3(Coords.WorldPos.x, Height, Coords.WorldPos.z);
 			}
 			var em = GameRegistry.EntityManager;
-			var tiles = em.GetBuffer<TileInstance>(GameRegistry.MapEntity);
+			var tiles = GameRegistry.GetTileInstanceBuffer();
 			var curTile = tiles[Coords.ToIndex(map.totalWidth)];
 			em.SetComponentData(curTile, new Translation { Value = new float3(SurfacePoint.x, height, SurfacePoint.z) });
 			OnHeightChanged();

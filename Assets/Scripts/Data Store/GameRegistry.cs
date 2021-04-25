@@ -94,7 +94,7 @@ public class GameRegistry : MonoBehaviour
 		if (!_inst.gameState.unlockedBuildings.Contains(building.id))
 		{
 			_inst.gameState.unlockedBuildings.Add(building.id);
-			if(notify)
+			if (notify)
 				GameEvents.InvokeOnBuildingUnlocked(BuildingDatabase[building].info);
 		}
 	}
@@ -103,6 +103,8 @@ public class GameRegistry : MonoBehaviour
 	{
 		return _inst.gameState.unlockedBuildings.Contains(id);
 	}
+
+	public static DynamicBuffer<TileInstance> GetTileInstanceBuffer() => EntityManager.GetBuffer<TileInstance>(MapEntity);
 
 	public static class Cheats
 	{
