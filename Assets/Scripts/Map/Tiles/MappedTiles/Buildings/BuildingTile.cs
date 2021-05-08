@@ -256,14 +256,7 @@ namespace Amatsugu.Phos.Tiles
 			//	_healthBars = buildingInfo.healthBar.Instantiate(building, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
 		}
 
-		public override void Start()
-		{
-			base.Start();
-			if (!isBuilt)
-				return;
-			ApplyAdjacencyBonuses();
-			ApplyBuffs();
-		}
+
 
 		/// <summary>
 		/// Replace tiles in this building's footprint with meta tiles

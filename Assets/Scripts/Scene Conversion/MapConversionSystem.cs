@@ -39,7 +39,7 @@ namespace Amatsugu.Phos
 					prefabs.Add(tileDef.tile.tilePrefab);
 					var e = GetPrimaryEntity(tileDef.tile.tilePrefab);
 					tileDef.tile.PrepareEntityPrefab(e, DstEntityManager);
-					if(DstEntityManager.Exists(e))
+					if (DstEntityManager.Exists(e))
 						DstEntityManager.AddComponent<NewInstanceTag>(e);
 					//Collect Prefabs from decorators
 					for (int d = 0; d < tileDef.tile.decorators.Length; d++)
@@ -71,8 +71,6 @@ namespace Amatsugu.Phos
 						curPrefabIndex++;
 					}
 				}
-
-				
 			});
 		}
 	}
@@ -168,20 +166,15 @@ namespace Amatsugu.Phos
 						continue;
 					HexCoords coords = EntityManager.GetComponentData<HexPosition>(_entities[i]);
 					var tile = GameRegistry.GameMap[coords];
-					PostUpdateCommands.RemoveComponent<NewInstanceTag>(_entities[i]); 
+					PostUpdateCommands.RemoveComponent<NewInstanceTag>(_entities[i]);
 					tile.Start(_entities[i], PostUpdateCommands);
-					if(tile is BuildingTile buildingTile)
+					if (tile is BuildingTile buildingTile)
 						buildingTile.BuildingStart(_entities[i], PostUpdateCommands);
 					tiles[coords.ToIndex(GameRegistry.GameMap.totalWidth)] = _entities[i];
 				}
 				GameRegistry.INST.mapEntity = e;
 				PostUpdateCommands.AddComponent<MapInitTag>(e);
 			});
-
-		}
-
-		protected override void OnDestroy()
-		{
 			_entities.Dispose();
 		}
 	}
@@ -198,13 +191,11 @@ namespace Amatsugu.Phos
 				buffer[pos.Value.ToIndex(mapWidth)] = e;
 				PostUpdateCommands.RemoveComponent<NewInstanceTag>(e);
 			});
-
 		}
 	}
 
 	public struct NewInstanceTag : IComponentData
 	{
-
 	}
 
 	public struct MapTag : IComponentData
@@ -213,7 +204,6 @@ namespace Amatsugu.Phos
 
 	public struct MapInitTag : IComponentData
 	{
-
 	}
 
 	public struct MapGeneratedTag : IComponentData

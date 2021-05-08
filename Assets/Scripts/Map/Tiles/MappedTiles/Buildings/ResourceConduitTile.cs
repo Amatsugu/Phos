@@ -40,7 +40,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
 			base.PrepareBuildingEntity(building, postUpdateCommands);
-			postUpdateCommands.AddComponent<ResourceConduitTag>(building);
+			postUpdateCommands.AddComponent(building, new ResourceConduitTag { height = conduitInfo.powerLineOffset });
 		}
 
 
@@ -67,14 +67,14 @@ namespace Amatsugu.Phos.Tiles
 
 		public override void OnRemoved()
 		{
-			var connections = map.conduitGraph.GetConnections(Coords);
-			map.conduitGraph.RemoveNode(Coords);
-			var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
-			for (int i = 0; i < disconnectedNodes.Length; i++)
-			{
-				//(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).HQDisconnected();
-				//PowerTransferEffectSystem.RemoveNode(disconnectedNodes[i]);
-			}
+			//var connections = map.conduitGraph.GetConnections(Coords);
+			//map.conduitGraph.RemoveNode(Coords);
+			//var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
+			//for (int i = 0; i < disconnectedNodes.Length; i++)
+			//{
+			//	//(map[disconnectedNodes[i].conduitPos] as PoweredBuildingTile).HQDisconnected();
+			//	//PowerTransferEffectSystem.RemoveNode(disconnectedNodes[i]);
+			//}
 			//HQDisconnected();
 			base.OnRemoved();
 		}

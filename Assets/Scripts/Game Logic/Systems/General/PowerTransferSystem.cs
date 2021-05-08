@@ -32,7 +32,15 @@ namespace Amatsugu.Phos
 		{
 			if (_conduitGraph == null)
 				return;
-			_conduitGraph.CalculateConnectivity();
+
+
+
+			Entities.WithAllReadOnly<MapTag, RecalculateConduitsTag>().ForEach(e =>
+			{
+				_conduitGraph.CalculateConnectivity();
+				PostUpdateCommands.RemoveComponent<RecalculateConduitsTag>(e);
+			});
+
 			//TODO: Figure out a better way to defer the deletion of the conduit node to when the entity is destroyed
 			Entities.WithAllReadOnly<ResourceConduitTag, HexPosition>().WithNone<HQConntectedTag, PoweredBuildingTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
@@ -64,6 +72,7 @@ namespace Amatsugu.Phos
 
 	public struct ResourceConduitTag : IComponentData
 	{
+		public float height;
 	}
 
 	public struct PoweredBuildingTag : IComponentData
@@ -72,5 +81,10 @@ namespace Amatsugu.Phos
 
 	public struct HQConntectedTag : IComponentData
 	{
+	}
+
+	public struct RecalculateConduitsTag : IComponentData
+	{
+
 	}
 }
