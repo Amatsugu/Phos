@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 1347.666, g: 7738.496, b: 23899.406, a: 1}
+  m_IndirectSpecularColor: {r: 1347.3347, g: 7739.496, b: 23898.203, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6459,7 +6459,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2102994817}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9993077
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12083,6 +12083,7 @@ GameObject:
   - component: {fileID: 1195272783}
   - component: {fileID: 1195272782}
   - component: {fileID: 1195272784}
+  - component: {fileID: 1195272785}
   m_Layer: 0
   m_Name: Map Converted
   m_TagString: Untagged
@@ -12131,6 +12132,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &1195272785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195272781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111c82c97a594e7418fe082b32ed1411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeLine: {fileID: 1149351255413549042, guid: 9f96753ac4d80184bb15fd1092324175,
+    type: 3}
+  inactiveLine: {fileID: 8771009111150523436, guid: 16cd4c4a41c3cbc429c7f1a193c04a72,
+    type: 3}
 --- !u!1 &1201272541
 GameObject:
   m_ObjectHideFlags: 0
@@ -14097,7 +14114,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -442.99994}
+  m_AnchoredPosition: {x: 0, y: -443}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1427279150
@@ -15904,6 +15921,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1843403389794246424, guid: 644afa68e48689348a508fc228a622b2,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1843403389794246424, guid: 644afa68e48689348a508fc228a622b2,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 1843403389794246424, guid: 644afa68e48689348a508fc228a622b2,
         type: 3}

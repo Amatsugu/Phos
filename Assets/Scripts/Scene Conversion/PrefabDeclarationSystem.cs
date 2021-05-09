@@ -28,6 +28,12 @@ namespace Amatsugu.Phos
 					DeclareReferencedPrefab(tileDef.tile.tilePrefab);
 				}
 			});
+
+			Entities.ForEach((ConduitLinesAuthoring lines) =>
+			{
+				DeclareReferencedPrefab(lines.activeLine);
+				DeclareReferencedPrefab(lines.inactiveLine);
+			});
 			Entities.ForEach((InitializeWeather weather) =>
 			{
 				DeclareReferencedPrefab(weather.cloudPrefab);

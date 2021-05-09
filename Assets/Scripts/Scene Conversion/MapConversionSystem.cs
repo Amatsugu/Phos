@@ -174,8 +174,8 @@ namespace Amatsugu.Phos
 				}
 				GameRegistry.INST.mapEntity = e;
 				PostUpdateCommands.AddComponent<MapInitTag>(e);
+				_entities.Dispose();
 			});
-			_entities.Dispose();
 		}
 	}
 
