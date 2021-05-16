@@ -451,6 +451,7 @@ namespace Amatsugu.Phos
 			if (tile.Coords != newTile.Coords)
 				throw new Exception("New tile must be a the same position of the tile it replaces");
 			tile.OnRemoved();
+			tile.OnDestroy(existingTileInstance, postUpdateCommands);
 			newTile.originalTile = tile.GetGroundTileInfo();
 			newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
 			var tileIndex = tile.Coords.ToIndex(totalWidth);

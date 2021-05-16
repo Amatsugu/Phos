@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9098ea6ee8539a44e9c1877e35a06261, type: 3}
   m_Name: '[PH] Basic Factory'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: 7679b2dd491795a4db3514c4ee90243c
   buildingMesh: {fileID: 11400000, guid: e21f3e6c11a445945b28989ee82720eb, type: 2}
+  buildingPrefab: {fileID: 2954327415767875223, guid: edb89b25eaa5b2b4bb188e571e5ad9f0,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

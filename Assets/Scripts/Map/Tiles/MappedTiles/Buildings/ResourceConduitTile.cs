@@ -59,6 +59,8 @@ namespace Amatsugu.Phos.Tiles
 			{
 				if (nodes[i].conduitPos == Coords)
 					continue;
+				if (nodes[i].IsFull)
+					continue;
 				map.conduitGraph.ConnectNode(Coords, nodes[i]);
 				if (connectCount >= map.conduitGraph.maxConnections)
 					break;
@@ -68,7 +70,7 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnRemoved()
 		{
 			//var connections = map.conduitGraph.GetConnections(Coords);
-			//map.conduitGraph.RemoveNode(Coords);
+			map.conduitGraph.RemoveNode(Coords);
 			//var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
 			//for (int i = 0; i < disconnectedNodes.Length; i++)
 			//{
@@ -79,7 +81,23 @@ namespace Amatsugu.Phos.Tiles
 			base.OnRemoved();
 		}
 
-
+		public override void OnDestroy(Entity tileInst, EntityCommandBuffer postUpdateCommands)
+		{
+			base.OnDestroy(tileInst, postUpdateCommands);
+			var desc = new EntityQueryDesc
+			{
+				None = new[]
+				{
+					ComponentType.ReadOnly<RecalculateConduitsTag>()
+				},
+				All = new[]
+				{
+					ComponentType.ReadOnly<MapTag>()
+				}
+			};
+			var query = GameRegistry.EntityManager.CreateEntityQuery(desc);
+			postUpdateCommands.AddComponent<RecalculateConduitsTag>(query);
+		}
 
 		public override StringBuilder GetDescriptionString()
 		{

@@ -12,18 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb6a11db4dcb784db8667e1e0f421a2, type: 3}
   m_Name: Architect Workshop
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 0
+  tilePrefab: {fileID: 0}
   description: ' Optimizes construction protocols allowing for the construction of
     more advanced infastructure.'
   decorators: []
   isTraverseable: 0
   assetGuid: 0ef40f19d9b634a4382340a8aae1e9a0
   buildingMesh: {fileID: 11400000, guid: 396bb86d2dfd29140b0d4ed8115681dc, type: 2}
+  buildingPrefab: {fileID: 1092590988834529254, guid: 6b724785fa8b4244ab6dacd0b2cbe6b2,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

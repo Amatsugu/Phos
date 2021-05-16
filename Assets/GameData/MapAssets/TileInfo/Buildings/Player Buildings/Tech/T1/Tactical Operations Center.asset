@@ -12,18 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb6a11db4dcb784db8667e1e0f421a2, type: 3}
   m_Name: Tactical Operations Center
   m_EditorClassIdentifier: 
-  mesh: {fileID: 5062246478642505140, guid: 16e879b608a4cad42897a9dd812fe539, type: 3}
-  material: {fileID: 2100000, guid: 0157f16dfd50d684787bf01dda4f64a7, type: 2}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: Establish a tactical presence allowing for the construction of defensive
     structures.
   decorators: []
   isTraverseable: 0
   assetGuid: 4cf2d7c361cb572479674c0f8f82fcb7
   buildingMesh: {fileID: 11400000, guid: d281c80e3ecb0bf45b8b6f5283061ec8, type: 2}
+  buildingPrefab: {fileID: 1159001185816109376, guid: 4da1b7c983aa1664c81eb71e05d38a07,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0
@@ -40,6 +37,18 @@ MonoBehaviour:
     footprint:
     - x: 0
       y: 0
+    - x: -1
+      y: 0
+    - x: 0
+      y: -1
+    - x: 1
+      y: -1
+    - x: 1
+      y: 0
+    - x: 0
+      y: 1
+    - x: -1
+      y: 1
   useMetaTiles: 0
   flattenOuterRange: 0
   isOffshore: 0

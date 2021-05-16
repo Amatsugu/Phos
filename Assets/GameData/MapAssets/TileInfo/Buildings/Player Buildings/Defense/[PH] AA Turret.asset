@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f6de7c742a08b4cadb99176a63d07e, type: 3}
   m_Name: '[PH] AA Turret'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: 974cb405ea677da4db3fdea4e99aad2d
   buildingMesh: {fileID: 11400000, guid: 6dffa469a2745bd4f81b26f2398277da, type: 2}
+  buildingPrefab: {fileID: 8950867938034825663, guid: 1ee29afddfc71164c9d06b8de36dd02a,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

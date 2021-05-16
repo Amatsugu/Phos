@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10313bffdc6289d40aea8f1d88454a38, type: 3}
   m_Name: Solar Panels
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 0
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 0
   assetGuid: dc79b73a0226f9f49a7335c742c20914
   buildingMesh: {fileID: 11400000, guid: af50277f603e50346bf17a5c4b35c9f6, type: 2}
+  buildingPrefab: {fileID: 860532654635527934, guid: 833e8a20e7aba7843a48c351d4c97623,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

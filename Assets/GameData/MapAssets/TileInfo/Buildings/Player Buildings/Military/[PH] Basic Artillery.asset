@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f6de7c742a08b4cadb99176a63d07e, type: 3}
   m_Name: '[PH] Basic Artillery'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: 74905fa5284c3d84c89b3cae3e36c7e2
   buildingMesh: {fileID: 11400000, guid: f77c86339dd504143ab88535f24cac60, type: 2}
+  buildingPrefab: {fileID: 6089805322607668543, guid: 7162cd5a43a9bdd49971771e9b81a7f0,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9098ea6ee8539a44e9c1877e35a06261, type: 3}
   m_Name: '[PH] Naval Factory'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: 74a3bdda4b0721241adb17ea4ac87aa1
   buildingMesh: {fileID: 11400000, guid: 783c89ed0bd14ec4a94684f845a2dd1f, type: 2}
+  buildingPrefab: {fileID: 3524441999456761402, guid: f84c1053762ba1a478f2aae5baf8deaf,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

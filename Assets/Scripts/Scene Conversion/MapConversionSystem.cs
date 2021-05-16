@@ -14,6 +14,8 @@ namespace Amatsugu.Phos
 	{
 		protected override void OnUpdate()
 		{
+			
+
 			Entities.ForEach((MapAuthoring m) =>
 			{
 				var mapEntity = GetPrimaryEntity(m);

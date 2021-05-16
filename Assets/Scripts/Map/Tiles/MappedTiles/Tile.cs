@@ -287,6 +287,11 @@ namespace Amatsugu.Phos.Tiles
 			BroadcastTileUpdate(TileUpdateType.Removed);
 		}
 
+		public virtual void OnDestroy(Entity tileInst, EntityCommandBuffer postUpdateCommands)
+		{
+
+		}
+
 		/// <summary>
 		/// Destorys all entities associated with this tile and cleans up allocated memory
 		/// </summary>

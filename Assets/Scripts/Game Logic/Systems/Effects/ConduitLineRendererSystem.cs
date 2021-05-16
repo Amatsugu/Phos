@@ -13,32 +13,42 @@ using UnityEngine;
 namespace Amatsugu.Phos
 {
 
-	[UpdateAfter(typeof(MapConversionSystem))]
-	public class ConduitLineRendererConversionSystem : GameObjectConversionSystem
-	{
-		protected override void OnUpdate()
-		{
-			Entities.ForEach((ConduitLinesAuthoring lines) =>
-			{
-				var entity = GetPrimaryEntity(lines);
-				var prefabs = GameRegistry.PrefabDatabase;
-				PostUpdateCommands.AddComponent(entity, new ConduitLinePrefabs
-				{
-					active = GetPrimaryEntity(lines.activeLine),
-					inactive = GetPrimaryEntity(lines.inactiveLine)
-				});
-			});
-		}
-	}
-
 	[UpdateAfter(typeof(PowerTransferSystem))]
 	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 	public class ConduitLineRendererSystem : ComponentSystem
 	{
+		private EntityQuery _query;
+
+		protected override void OnStartRunning()
+		{
+			base.OnStartRunning();
+			var desc = new EntityQueryDesc
+			{
+				All = new[]
+				{
+					ComponentType.ReadOnly<ConduitLineTag>()
+				},
+				None = new[]
+				{
+					ComponentType.ReadOnly<NewConduitLineTag>()
+				}
+			};
+
+			_query = GetEntityQuery(desc);
+		}
+
 		protected override void OnUpdate()
 		{
+			Entities.WithAllReadOnly<NewConduitLineTag>().ForEach(e =>
+			{
+				PostUpdateCommands.RemoveComponent<NewConduitLineTag>(e);
+			});
+
+
 			Entities.WithAllReadOnly<RenderConduitLinesTag, MapTag, ConduitLinePrefabs>().ForEach((Entity e, ref ConduitLinePrefabs lines) =>
 			{
+				//PostUpdateCommands.DestroyEntitiesForEntityQuery(_query);
+				PostUpdateCommands.DestroyEntity(_query);
 				var existingConnections = new HashSet<ConduitConnection>();
 				var nodesDict = GameRegistry.GameMap.conduitGraph.nodes;
 				var nodes = GameRegistry.GameMap.conduitGraph.nodes.Values.ToArray();
@@ -109,5 +119,15 @@ namespace Amatsugu.Phos
 	{
 		public Entity active;
 		public Entity inactive;
+	}
+
+	public struct ConduitLineTag : IComponentData
+	{
+
+	}
+
+	public struct NewConduitLineTag : IComponentData
+	{
+
 	}
 }

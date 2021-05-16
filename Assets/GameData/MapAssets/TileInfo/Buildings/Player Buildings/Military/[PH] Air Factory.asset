@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9098ea6ee8539a44e9c1877e35a06261, type: 3}
   m_Name: '[PH] Air Factory'
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 1
+  tilePrefab: {fileID: 0}
   description: 
   decorators: []
   isTraverseable: 1
   assetGuid: 84b3e30a3534ba84da2e7befd1cb54db
   buildingMesh: {fileID: 11400000, guid: adf5860c525e82b4e93581e86701eb20, type: 2}
+  buildingPrefab: {fileID: 1245394029724371894, guid: 408a5b4c6da73094481dc69192c9bb00,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 0

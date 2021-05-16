@@ -12,18 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b936cc80a414424e9bb00833d28a8a0, type: 3}
   m_Name: Scout Station
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
-  material: {fileID: 0}
-  castShadows: 1
-  receiveShadows: 1
-  isStatic: 1
-  nonUniformScale: 0
+  tilePrefab: {fileID: 0}
   description: Allows for the production of basic scout units. It also increases
     the attack range of nearby buildings.(NYI)
   decorators: []
   isTraverseable: 1
   assetGuid: 951c1c66f8993ae4fa65857920f371fa
   buildingMesh: {fileID: 11400000, guid: 1bb61aafcae21db428eb6e6582caecf7, type: 2}
+  buildingPrefab: {fileID: 3111118844688795196, guid: 702282892b0e9404293fb88873812912,
+    type: 3}
   centerOfMassOffset:
     x: 0
     y: 1.3
