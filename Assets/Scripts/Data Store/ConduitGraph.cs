@@ -466,10 +466,12 @@ namespace DataStore.ConduitGraph
 
 		public void DisconnectFrom(ConduitNode node)
 		{
+#if UNITY_EDITOR
 			if (IsEmpty)
 				throw new Exception($"This node is empty");
 			if (!IsConnectedTo(node))
 				throw new Exception($"This node[{id}] is not connected to [{node.id}]");
+#endif
 			RemoveConnection(node.id);
 			node.RemoveConnection(id);
 		}

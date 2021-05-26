@@ -17,7 +17,6 @@ namespace Amatsugu.Phos.UI
 	public class QuickSave : MonoBehaviour
 	{
 		private GameSave gameSave;
-		private MapRenderer _renderer;
 
 		private bool canSave = false;
 
@@ -78,7 +77,7 @@ namespace Amatsugu.Phos.UI
 		{
 			Debug.Log("Quick Load");
 			gameSave = GameSave.Load("Quick Save");
-			_renderer.SetMap(gameSave.map.Deserialize(GameRegistry.TileDatabase, GameRegistry.UnitDatabase), gameSave.gameState);
+			//_renderer.SetMap(gameSave.map.Deserialize(GameRegistry.TileDatabase, GameRegistry.UnitDatabase), gameSave.gameState);
 			NotificationsUI.Notify(NotifType.Info, "Game Loaded");
 		}
 	}

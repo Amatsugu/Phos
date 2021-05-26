@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4659100341380834183}
   - component: {fileID: 5011580326647075373}
   m_Layer: 0
-  m_Name: Struts
+  m_Name: Offshore Pump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 1987908763940934434}
   - component: {fileID: 3929671835765904785}
   - component: {fileID: 6589213877411896445}
+  - component: {fileID: 6199173908751658952}
   m_Layer: 0
   m_Name: Rotor
   m_TagString: Untagged
@@ -249,6 +250,32 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6199173908751658952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4464378613597830581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498090c868448af4f9d6b9e10da68f6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 0
+  axis:
+    x: 0
+    y: 1
+    z: 0
+  speed: 2
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  duration: 0
+  animationPhase: 0
 --- !u!1 &6367732131934530853
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,8 +38,6 @@ namespace Amatsugu.Phos
 			Entities.WithAllReadOnly<MapTag, RecalculateConduitsTag>().ForEach(e =>
 			{
 				_conduitGraph.CalculateConnectivity();
-				PostUpdateCommands.RemoveComponent<RecalculateConduitsTag>(e);
-				PostUpdateCommands.AddComponent<RenderConduitLinesTag>(e);
 			});
 
 			//TODO: Figure out a better way to defer the deletion of the conduit node to when the entity is destroyed

@@ -33,6 +33,12 @@ namespace AnimationSystem
 			{
 				var time = ((curTime + phase.Value) % th.duration) / th.duration;
 				var p = th.animationCurve.Evaluate(time);
+				var a = start.Value;
+				var b = end.Value;
+				a.x += t.Value.x;
+				a.z += t.Value.z;
+				b.x += t.Value.x;
+				b.z += t.Value.z;
 				t.Value = math.lerp(start.Value, end.Value, p);
 			});
 

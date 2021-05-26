@@ -125,11 +125,6 @@ namespace Amatsugu.Phos.Tiles
 		}
 
 
-		public override void OnHeightChanged()
-		{
-			base.OnHeightChanged();
-		}
-
 		public override void OnPlaced()
 		{
 			base.OnPlaced();

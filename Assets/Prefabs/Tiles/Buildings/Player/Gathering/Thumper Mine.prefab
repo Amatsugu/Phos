@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8096181062359874218}
   - component: {fileID: 5233283835215105350}
   - component: {fileID: 3134120167372327283}
+  - component: {fileID: 593058459610344508}
   m_Layer: 0
   m_Name: Thumper
   m_TagString: Untagged
@@ -82,6 +83,87 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &593058459610344508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498060699611443832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498090c868448af4f9d6b9e10da68f6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 1
+  axis:
+    x: 0
+    y: 1
+    z: 0
+  speed: 1
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.9822716
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.15545854
+    - serializedVersion: 3
+      time: 0.1
+      value: 0
+      inSlope: 0
+      outSlope: 0.006725336
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.09956331
+    - serializedVersion: 3
+      time: 0.85
+      value: 1
+      inSlope: -0.27525964
+      outSlope: -20.00002
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.10664725
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9
+      value: 0
+      inSlope: -20.00002
+      outSlope: -16.09003
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.052682776
+    - serializedVersion: 3
+      time: 0.95
+      value: 0
+      inSlope: -1.9173495
+      outSlope: -1.3854104
+      tangentMode: 1
+      weightedMode: 3
+      inWeight: 0.90684146
+      outWeight: 0.57787406
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  duration: 2
+  animationPhase: 0
+  timeRelativePhase: 0
 --- !u!1 &1917524984470925698
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,6 +175,7 @@ GameObject:
   - component: {fileID: 8448096407106376536}
   - component: {fileID: 7270904197048488615}
   - component: {fileID: 4326400263330708564}
+  - component: {fileID: 4385495803340838868}
   m_Layer: 0
   m_Name: Thumper_1
   m_TagString: Untagged
@@ -164,6 +247,87 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4385495803340838868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917524984470925698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498090c868448af4f9d6b9e10da68f6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 1
+  axis:
+    x: 0
+    y: 1
+    z: 0
+  speed: 1
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.9822716
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.15545854
+    - serializedVersion: 3
+      time: 0.1
+      value: 0
+      inSlope: 0
+      outSlope: 0.006725336
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.09956331
+    - serializedVersion: 3
+      time: 0.85
+      value: 1
+      inSlope: -0.27525964
+      outSlope: -20.00002
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.10664725
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9
+      value: 0
+      inSlope: -20.00002
+      outSlope: -16.09003
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.052682776
+    - serializedVersion: 3
+      time: 0.95
+      value: 0
+      inSlope: -1.9173495
+      outSlope: -1.3854104
+      tangentMode: 1
+      weightedMode: 3
+      inWeight: 0.90684146
+      outWeight: 0.57787406
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  duration: 2
+  animationPhase: 0.1
+  timeRelativePhase: 0
 --- !u!1 &7913447504609698626
 GameObject:
   m_ObjectHideFlags: 0

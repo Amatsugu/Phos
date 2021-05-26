@@ -32,10 +32,7 @@ namespace Amatsugu.Phos.Tiles
 		public TileEntity originalTile;
 		public readonly Map map;
 
-		[Obsolete]
-		protected Entity _tileEntity;
 		protected bool _isRendered;
-		protected bool _isInit;
 
 		/// <summary>
 		/// Create a tile
@@ -124,17 +121,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 
 		}
-
-
-		/// <summary>
-		/// Called after Render and it is safe to perform operations on entities of this tile and other tiles
-		/// </summary>
-		[Obsolete]
-		public virtual void Start()
-		{
-			_isInit = true;
-		}
-
 
 		public virtual void Start(Entity tileInst, EntityCommandBuffer postUpdateCommands)
 		{

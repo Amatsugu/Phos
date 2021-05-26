@@ -53,26 +53,4 @@ public class MeshDecorator : TileDecorator
 		else
 			prefabs.Add(basePrefab);
 	}
-
-	[Obsolete]
-	public override void Render(Tile tile, NativeSlice<Entity> decor)
-	{
-		var rot = rotation;
-		var mesh = meshEntity;
-		if (multiMesh)
-			mesh = meshEntities[UnityEngine.Random.Range(0, meshEntities.Length)];
-		rot.y = Mathf.PerlinNoise(tile.Coords.WorldPos.x / 10f, tile.Coords.WorldPos.z / 10f).Remap(0, 1, randomRotMin, randomRotMax);
-		decor[0] = mesh.Instantiate(tile.SurfacePoint + offset, Vector3.one, Quaternion.Euler(rot));
-	}
-
-	[Obsolete]
-	public override void UpdateHeight(NativeSlice<Entity> decor, Tile tile)
-	{
-		foreach (var tileDecor in decor)
-		{
-			var p = Map.EM.GetComponentData<Translation>(tileDecor);
-			p.Value.y = tile.Height + offset.y;
-			Map.EM.SetComponentData(tileDecor, p);
-		}
-	}
 }

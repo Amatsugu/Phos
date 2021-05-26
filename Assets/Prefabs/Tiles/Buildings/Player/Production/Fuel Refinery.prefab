@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 7124984876652638387}
   - component: {fileID: 1861901361598721150}
   - component: {fileID: 2896244464725360499}
+  - component: {fileID: 2275295033664126300}
   m_Layer: 0
   m_Name: Blades
   m_TagString: Untagged
@@ -165,3 +166,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2275295033664126300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677840239730184726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498090c868448af4f9d6b9e10da68f6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 0
+  axis:
+    x: 0
+    y: 1
+    z: 0
+  speed: 1
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  duration: 0
+  animationPhase: 0

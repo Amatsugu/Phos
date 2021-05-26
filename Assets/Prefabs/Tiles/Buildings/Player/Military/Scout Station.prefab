@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 6798629489150436962}
   - component: {fileID: 8240698888743536527}
   - component: {fileID: 4230956749258024519}
+  - component: {fileID: 7879675634035924434}
   m_Layer: 0
   m_Name: Scout Dish
   m_TagString: Untagged
@@ -165,3 +166,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7879675634035924434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3367748096886194251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e1c45292785b34996a1410ddd29a7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axis:
+    x: 0
+    y: 1
+    z: 0
+  speed: 0.8

@@ -62,17 +62,4 @@ public class TreeDecorator : TileDecorator
 		noise = MathUtils.Remap(Mathf.Clamp(noise, 0, 1), 0, 1, minPerTile, maxPerTile);
 		return Mathf.RoundToInt(noise * densityMulti);
 	}
-
-	[Obsolete]
-	public override void Render(Tile tile, NativeSlice<Entity> decor)
-	{
-		var count = GetDecorEntityCount(tile);
-		for (int i = 0; i < count; i++)
-		{
-			var size = _rand.Range(minSize, maxSize);
-			var height = _rand.Range(minHeight, maxHeight);
-			var pos = new float3(_rand.NextFloat(), 0, _rand.NextFloat()) * (tile.map.innerRadius);
-			decor[i] = meshEntity.Instantiate(pos + tile.SurfacePoint, new Vector3(size, height, size), Quaternion.Euler(0, _rand.Range(0, 360), 0));
-		}
-	}
 }

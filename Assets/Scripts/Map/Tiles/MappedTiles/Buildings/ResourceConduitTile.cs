@@ -70,6 +70,8 @@ namespace Amatsugu.Phos.Tiles
 		public override void OnRemoved()
 		{
 			//var connections = map.conduitGraph.GetConnections(Coords);
+			var node = map.conduitGraph.GetNode(Coords);
+			Debug.Log($"Remove Node: {node.id}");
 			map.conduitGraph.RemoveNode(Coords);
 			//var disconnectedNodes = map.conduitGraph.GetDisconectedNodes();
 			//for (int i = 0; i < disconnectedNodes.Length; i++)

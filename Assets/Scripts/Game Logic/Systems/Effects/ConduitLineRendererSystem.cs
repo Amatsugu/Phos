@@ -45,9 +45,8 @@ namespace Amatsugu.Phos
 			});
 
 
-			Entities.WithAllReadOnly<RenderConduitLinesTag, MapTag, ConduitLinePrefabs>().ForEach((Entity e, ref ConduitLinePrefabs lines) =>
+			Entities.WithAllReadOnly<RecalculateConduitsTag, MapTag, ConduitLinePrefabs>().ForEach((Entity e, ref ConduitLinePrefabs lines) =>
 			{
-				//PostUpdateCommands.DestroyEntitiesForEntityQuery(_query);
 				PostUpdateCommands.DestroyEntity(_query);
 				var existingConnections = new HashSet<ConduitConnection>();
 				var nodesDict = GameRegistry.GameMap.conduitGraph.nodes;
@@ -57,7 +56,9 @@ namespace Amatsugu.Phos
 					var curNode = nodes[i];
 					for (int j = 0; j < curNode.ConnectionCount; j++)
 					{
-						var curCID = curNode._connections[j];	
+						var curCID = curNode._connections[j];
+						if (curCID == -1)
+							continue;
 						var bNode = nodesDict[curCID];
 						var thisConnection = new ConduitConnection(curNode, bNode);
 						if (existingConnections.Contains(thisConnection))
@@ -75,7 +76,7 @@ namespace Amatsugu.Phos
 						LineFactory.UpdateStaticLine(PostUpdateCommands, line, a, b);
 					}
 				}
-				PostUpdateCommands.RemoveComponent<RenderConduitLinesTag>(e);
+				PostUpdateCommands.RemoveComponent<RecalculateConduitsTag>(e);
 			});
 
 		}
