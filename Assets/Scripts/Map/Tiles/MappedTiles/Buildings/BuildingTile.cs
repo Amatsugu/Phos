@@ -329,7 +329,6 @@ namespace Amatsugu.Phos.Tiles
 			else
 				buffSources.Add(src, buff);
 			totalBuffs += buff;
-			ApplyBuffs();
 		}
 
 		/// <summary>
@@ -342,8 +341,32 @@ namespace Amatsugu.Phos.Tiles
 			{
 				totalBuffs -= buffSources[src];
 				buffSources.Remove(src);
-				ApplyBuffs();
 			}
+		}
+
+		public virtual void AddBuff(HexCoords src, StatsBuffs buff, Entity tileEntity, EntityCommandBuffer postUpdateCommands)
+		{
+
+		}
+
+		public virtual void RemoveBuff(HexCoords src, StatsBuffs buff, Entity tileEntity, EntityCommandBuffer postUpdateCommands)
+		{
+
+		}
+
+		public virtual void ApplyBufs(Entity tileEntity, EntityCommandBuffer postUpdateCommands)
+		{
+			if (!isBuilt || !_isRendered)
+				return;
+
+			postUpdateCommands.SetComponent(tileEntity, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
+			postUpdateCommands.SetComponent(tileEntity, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
+			
+			//TODO: Figure out health buffs
+			//var curHealth = postUpdateCommands.GetComponentData<Health>(tileEntity);
+			//curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;
+			//curHealth.Value += totalBuffs.structureHealth;
+			//postUpdateCommands.SetComponentData(tileEntity, curHealth);
 		}
 
 		/// <summary>

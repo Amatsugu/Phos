@@ -229,6 +229,16 @@ namespace Amatsugu.Phos.Tiles
 		{
 		}
 
+		public virtual void OnNeighborPlaced(TileEvent tileEvent, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpadteCommands)
+		{
+
+		}
+
+		public virtual void OnNeighborRemoved(TileEvent tileEvent, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpadteCommands)
+		{
+
+		}
+
 		/// <summary>
 		/// Convert this tile to a SerializedTile
 		/// </summary>

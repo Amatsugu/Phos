@@ -22,7 +22,6 @@ namespace Amatsugu.Phos.UI
 
 		public void Start()
 		{
-			_renderer = GameObject.FindObjectOfType<MapRenderer>();
 			GameEvents.OnHQPlaced += OnHQ;
 		}
 
