@@ -45,7 +45,16 @@ namespace Amatsugu.Phos
 						DstEntityManager.AddComponent<NewInstanceTag>(e);
 					//Collect Prefabs from decorators
 					for (int d = 0; d < tileDef.tile.decorators.Length; d++)
+					{
+#if DEBUG
+						if(tileDef.tile.decorators[d] == null)
+						{
+							Debug.LogWarning($"Decorator is null for tile {tileDef.tile.GetNameString()}");
+							continue;
+						}
+#endif
 						tileDef.tile.decorators[d].DeclarePrefabs(prefabs);
+					}
 				}
 				DstEntityManager.AddComponent<MapTag>(mapEntity);
 
@@ -73,6 +82,8 @@ namespace Amatsugu.Phos
 						curPrefabIndex++;
 					}
 				}
+				GameEvents.InvokeOnGameLoaded();
+
 			});
 		}
 	}
@@ -110,8 +121,6 @@ namespace Amatsugu.Phos
 					}
 				}
 
-				GameEvents.InvokeOnGameLoaded();
-				GameEvents.InvokeOnMapLoaded();
 				for (int i = 0; i < map.chunks.Length; i++)
 				{
 					var chunk = map.chunks[i];
@@ -122,9 +131,9 @@ namespace Amatsugu.Phos
 					}
 				}
 
-				GameEvents.InvokeOnGameReady();
 
 				EntityManager.AddComponent<MapGeneratedTag>(e);
+				GameEvents.InvokeOnMapLoaded();
 			});
 		}
 
@@ -175,6 +184,7 @@ namespace Amatsugu.Phos
 					tiles[coords.ToIndex(GameRegistry.GameMap.totalWidth)] = _entities[i];
 				}
 				GameRegistry.INST.mapEntity = e;
+				GameEvents.InvokeOnGameReady();
 				PostUpdateCommands.AddComponent<MapInitTag>(e);
 				_entities.Dispose();
 			});

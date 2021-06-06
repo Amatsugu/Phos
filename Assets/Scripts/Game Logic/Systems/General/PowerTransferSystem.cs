@@ -1,3 +1,5 @@
+using Amatsugu.Phos.Tiles;
+
 using DataStore.ConduitGraph;
 
 using Unity.Entities;
@@ -44,27 +46,39 @@ namespace Amatsugu.Phos
 			Entities.WithAllReadOnly<ResourceConduitTag, HexPosition>().WithNone<HQConntectedTag, PoweredBuildingTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				if (_conduitGraph.GetNode(pos)?.IsConnected == true)
+				{
+					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnConnected();
 					PostUpdateCommands.AddComponent<HQConntectedTag>(e);
+				}
 			});
 
 			Entities.WithAllReadOnly<ResourceConduitTag, HQConntectedTag, HexPosition>().WithNone<PoweredBuildingTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				if (_conduitGraph.GetNode(pos)?.IsConnected == false)
+				{
+					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnDisconnected();
 					PostUpdateCommands.RemoveComponent<HQConntectedTag>(e);
+				}
 			});
 
 			Entities.WithAllReadOnly<PoweredBuildingTag, HexPosition>().WithNone<BuildingOffTag, ResourceConduitTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
 				if (node == null)
+				{
+					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnConnected();
 					PostUpdateCommands.AddComponent<BuildingOffTag>(e);
+				}
 			});
 
 			Entities.WithAllReadOnly<PoweredBuildingTag, BuildingOffTag, HexPosition>().WithNone<ResourceConduitTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
 				if (node != null)
+				{
+					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnDisconnected();
 					PostUpdateCommands.RemoveComponent<BuildingOffTag>(e);
+				}
 			});
 		}
 	}

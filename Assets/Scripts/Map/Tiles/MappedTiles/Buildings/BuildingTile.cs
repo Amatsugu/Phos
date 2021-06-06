@@ -321,6 +321,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <param name="buff">The buff to apply</param>
 		public virtual void AddBuff(HexCoords src, StatsBuffs buff)
 		{
+			Debug.Log("Add Buff Called");
 			if (buffSources.ContainsKey(src))
 			{
 				totalBuffs -= buffSources[src];
@@ -329,6 +330,9 @@ namespace Amatsugu.Phos.Tiles
 			else
 				buffSources.Add(src, buff);
 			totalBuffs += buff;
+			var entity = GetTileInstance();
+			if(!GameRegistry.EntityManager.HasComponent<ApplyBuffTag>(entity))
+				GameRegistry.EntityManager.AddComponent<ApplyBuffTag>(entity);
 		}
 
 		/// <summary>
@@ -342,20 +346,14 @@ namespace Amatsugu.Phos.Tiles
 				totalBuffs -= buffSources[src];
 				buffSources.Remove(src);
 			}
-		}
-
-		public virtual void AddBuff(HexCoords src, StatsBuffs buff, Entity tileEntity, EntityCommandBuffer postUpdateCommands)
-		{
-
-		}
-
-		public virtual void RemoveBuff(HexCoords src, StatsBuffs buff, Entity tileEntity, EntityCommandBuffer postUpdateCommands)
-		{
-
+			var entity = GetTileInstance();
+			if (!GameRegistry.EntityManager.HasComponent<ApplyBuffTag>(entity))
+				GameRegistry.EntityManager.AddComponent<ApplyBuffTag>(entity);
 		}
 
 		public virtual void ApplyBufs(Entity tileEntity, EntityCommandBuffer postUpdateCommands)
 		{
+			Debug.Log("Apply Buffs Called");
 			if (!isBuilt || !_isRendered)
 				return;
 
@@ -367,32 +365,6 @@ namespace Amatsugu.Phos.Tiles
 			//curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;
 			//curHealth.Value += totalBuffs.structureHealth;
 			//postUpdateCommands.SetComponentData(tileEntity, curHealth);
-		}
-
-		/// <summary>
-		/// Applies the current set of buffs to this tile
-		/// </summary>
-		[Obsolete]
-		protected virtual void ApplyBuffs()
-		{
-			if (!isBuilt || !_isRendered)
-				return;
-			//var e = GetBuildingEntity();
-			////Production
-			//if (!GameRegistry.EntityManager.HasComponent<ProductionMulti>(e))
-			//	GameRegistry.EntityManager.AddComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
-			//else
-			//	GameRegistry.EntityManager.SetComponentData(e, new ProductionMulti { Value = totalBuffs.productionMulti + 1});
-			////Consumption
-			//if (!GameRegistry.EntityManager.HasComponent<ConsumptionMulti>(e))
-			//	GameRegistry.EntityManager.AddComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
-			//else
-			//	GameRegistry.EntityManager.SetComponentData(e, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
-			////Health
-			//var curHealth = GameRegistry.EntityManager.GetComponentData<Health>(e);
-			//curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;
-			//curHealth.Value += totalBuffs.structureHealth;
-			//GameRegistry.EntityManager.SetComponentData(e, curHealth);
 		}
 
 		/// <summary>

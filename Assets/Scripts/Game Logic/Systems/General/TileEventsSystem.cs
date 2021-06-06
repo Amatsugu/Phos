@@ -8,8 +8,23 @@ namespace Amatsugu.Phos
 	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 	public class TileEventsSystem : ComponentSystem
 	{
+		private bool _isReady = false;
+
+		protected override void OnCreate()
+		{
+			base.OnCreate();
+			GameEvents.OnGameReady += OnReady;
+		}
+
+		private void OnReady()
+		{
+			//_isReady = true;
+		}
+
 		protected override void OnUpdate()
 		{
+			if (!_isReady)
+				return;
 			var tiles = GameRegistry.GetTileInstanceBuffer();
 			var map = GameRegistry.GameMap;
 			var width = map.totalWidth;
@@ -32,21 +47,31 @@ namespace Amatsugu.Phos
 				events.Clear();
 			});
 
-			Entities.ForEach((Entity e, DynamicBuffer<BuffEvent> buffEvents) =>
-			{
-				for (int i = 0; i < buffEvents.Length; i++)
-				{
-					var curBuff = buffEvents[i];
-					var tileInst = tiles[curBuff.tile.ToIndex(width)];
-					var tile = map[curBuff.tile] as BuildingTile;
-					if (curBuff.remove)
-						tile.AddBuff(curBuff.srcTile, curBuff.stats, tileInst, PostUpdateCommands);
-					else
-						tile.RemoveBuff(curBuff.srcTile, curBuff.stats, tileInst, PostUpdateCommands);
-					tile.ApplyBufs(tileInst, PostUpdateCommands);
-				}
+			//Entities.ForEach((Entity e, DynamicBuffer<BuffEvent> buffEvents) =>
+			//{
+			//	for (int i = 0; i < buffEvents.Length; i++)
+			//	{
+			//		var curBuff = buffEvents[i];
+			//		var tileInst = tiles[curBuff.tile.ToIndex(width)];
+			//		var tile = map[curBuff.tile] as BuildingTile;
+			//		tile.ApplyBufs(tileInst, PostUpdateCommands);
+			//	}
 
-				buffEvents.Clear();
+			//	buffEvents.Clear();
+			//});
+		}
+	}
+
+	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
+	[UpdateAfter(typeof(TileEventsSystem))]
+	public class TileBuffsSystem : ComponentSystem
+	{
+		protected override void OnUpdate()
+		{
+			Entities.WithAllReadOnly<ApplyBuffTag, HexPosition>().ForEach((Entity e, ref HexPosition pos) =>
+			{
+				(GameRegistry.GameMap[pos.Value] as BuildingTile).ApplyBufs(e, PostUpdateCommands);
+				PostUpdateCommands.RemoveComponent<ApplyBuffTag>(e);
 			});
 		}
 	}
@@ -66,9 +91,11 @@ namespace Amatsugu.Phos
 
 	public struct BuffEvent : IBufferElementData
 	{
-		public StatsBuffs stats;
-		public HexCoords srcTile;
 		public HexCoords tile;
-		public bool remove;
+	}
+
+	public struct ApplyBuffTag : IComponentData
+	{
+
 	}
 }

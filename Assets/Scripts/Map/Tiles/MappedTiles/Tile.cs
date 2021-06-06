@@ -89,6 +89,12 @@ namespace Amatsugu.Phos.Tiles
 			return originalTile != null ? originalTile : info;
 		}
 
+		public Entity GetTileInstance()
+		{
+			var tiles = GameRegistry.GetTileInstanceBuffer();
+			return tiles[Coords.ToIndex(map.totalWidth)];
+		}
+
 		public void InstantiateDecorators(Entity tileInst, ref DynamicBuffer<GenericPrefab> genericPrefabs, EntityCommandBuffer postUpdateCommands)
 		{
 			for (int i = 0; i < info.decorators.Length; i++)

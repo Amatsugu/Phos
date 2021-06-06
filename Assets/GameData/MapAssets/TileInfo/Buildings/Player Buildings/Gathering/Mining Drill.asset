@@ -15,8 +15,7 @@ MonoBehaviour:
   tilePrefab: {fileID: 0}
   description: Drills deep into the soil. Capable to extracting at a higher efficiency
     and capable of mining  Gold and Silver
-  decorators:
-  - {fileID: 11400000, guid: 98a486c948c9bc2499b5ec4a2c469a8c, type: 2}
+  decorators: []
   isTraverseable: 1
   assetGuid: ba0f6b1eb8dc15140b1a78d6d5193a76
   buildingMesh: {fileID: 11400000, guid: 1a6e2d608f330684282a507f252731ae, type: 2}

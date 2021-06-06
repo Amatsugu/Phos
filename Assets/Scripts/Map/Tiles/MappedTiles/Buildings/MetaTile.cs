@@ -37,9 +37,9 @@ namespace Amatsugu.Phos.Tiles
 		{
 		}
 
-		protected override void ApplyBuffs()
+		public override void ApplyBufs(Entity tileEntity, EntityCommandBuffer postUpdateCommands)
 		{
-			
+			ParentTile.ApplyBufs(tileEntity, postUpdateCommands);
 		}
 
 		public override void AddBuff(HexCoords src, StatsBuffs buff)
