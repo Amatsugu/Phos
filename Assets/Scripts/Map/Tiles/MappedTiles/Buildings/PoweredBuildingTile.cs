@@ -14,7 +14,6 @@ namespace Amatsugu.Phos.Tiles
 {
 	public class PoweredBuildingTile : BuildingTile
 	{
-		[Obsolete]
 		public bool HasHQConnection { get; protected set; }
 
 		[Obsolete]
@@ -68,12 +67,20 @@ namespace Amatsugu.Phos.Tiles
 			return false;
 		}
 
-	
+
+		protected override void OnBuilt()
+		{
+			base.OnBuilt();
+			if (HasHQConnection)
+				OnBuiltAndPowered();
+		}
+
 		/// <summary>
 		/// Callback for sucessful connection to the HQ
 		/// </summary>
 		public virtual void OnConnected()
 		{
+			HasHQConnection = true;
 			if (IsBuilt)
 				OnBuiltAndPowered();
 			if (_connectionNotif != -1)
@@ -88,7 +95,9 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void OnDisconnected()
 		{
-			if(_connectionNotif == -1)
+			HasHQConnection = false;
+
+			if (_connectionNotif == -1)
 				_connectionNotif = InfoPopupUI.ShowPopupNotif(this, null, "No Power Connection", "This tile is not being powered by a Resource Conduit and cannot opperate");
 		}
 

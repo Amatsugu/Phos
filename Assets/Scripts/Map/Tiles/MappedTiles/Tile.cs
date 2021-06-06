@@ -3,13 +3,10 @@ using Amatsugu.Phos.TileEntities;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -125,14 +122,11 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void PrepareTileInstance(Entity tileInst, EntityCommandBuffer postUpdateCommands)
 		{
-
 		}
 
 		public virtual void Start(Entity tileInst, EntityCommandBuffer postUpdateCommands)
 		{
-
 		}
-
 
 		/// <summary>
 		/// Set biome data for the tile
@@ -211,38 +205,36 @@ namespace Amatsugu.Phos.Tiles
 		/// <param name="type">The update type</param>
 		public virtual void BroadcastTileUpdate(TileUpdateType type)
 		{
-			var neighbors = map.GetNeighbors(this);
 			for (int i = 0; i < 6; i++)
-				neighbors[i]?.TileUpdated(this, type);
+			{
+				//	neighbors[i]?.TileUpdated(this, type);
+				var eventBuffer = GameRegistry.EntityManager.GetBuffer<TileEvent>(GameRegistry.MapEntity);
+				eventBuffer.Add(new TileEvent()
+				{
+					srcTile = Coords,
+					tile = Coords.GetNeighbor(i),
+					type = type
+				});
+			}
 		}
 
-		/// <summary>
-		/// Tile updates enum
-		/// </summary>
-		public enum TileUpdateType
-		{
-			Placed,
-			Removed,
-			Height
-		}
 
 		/// <summary>
 		/// Receiver for tile updates
 		/// </summary>
 		/// <param name="src">The tile that send the update</param>
 		/// <param name="updateType">The type of update that occured</param>
+		[Obsolete]
 		public virtual void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 		}
 
 		public virtual void OnNeighborPlaced(TileEvent tileEvent, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpadteCommands)
 		{
-
 		}
 
 		public virtual void OnNeighborRemoved(TileEvent tileEvent, DynamicBuffer<TileInstance> tiles, EntityCommandBuffer postUpadteCommands)
 		{
-
 		}
 
 		/// <summary>
@@ -270,7 +262,6 @@ namespace Amatsugu.Phos.Tiles
 		/// <param name="tileData">Dictionary to write tile data to</param>
 		public virtual void OnSerialize(Dictionary<string, string> tileData)
 		{
-
 		}
 
 		/// <summary>
@@ -279,8 +270,8 @@ namespace Amatsugu.Phos.Tiles
 		/// <param name="tileData">Dictionary containg the data to be read</param>
 		public virtual void OnDeSerialized(Dictionary<string, string> tileData)
 		{
-
 		}
+
 		/// <summary>
 		/// Callback for when this tile is being removed from the map
 		/// </summary>
@@ -291,7 +282,6 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void OnDestroy(Entity tileInst, EntityCommandBuffer postUpdateCommands)
 		{
-
 		}
 
 		/// <summary>
@@ -299,7 +289,6 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void Dispose()
 		{
-			
 		}
 
 		// override object.Equals

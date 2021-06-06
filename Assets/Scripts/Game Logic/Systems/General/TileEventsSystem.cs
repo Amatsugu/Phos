@@ -3,43 +3,29 @@ using Amatsugu.Phos.Tiles;
 
 using Unity.Entities;
 
+using UnityEngine;
+
 namespace Amatsugu.Phos
 {
 	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 	public class TileEventsSystem : ComponentSystem
 	{
-		private bool _isReady = false;
-
-		protected override void OnCreate()
-		{
-			base.OnCreate();
-			GameEvents.OnGameReady += OnReady;
-		}
-
-		private void OnReady()
-		{
-			//_isReady = true;
-		}
-
 		protected override void OnUpdate()
 		{
-			if (!_isReady)
-				return;
-			var tiles = GameRegistry.GetTileInstanceBuffer();
 			var map = GameRegistry.GameMap;
 			var width = map.totalWidth;
-			Entities.ForEach((Entity e, DynamicBuffer<TileEvent> events) =>
+			Entities.ForEach((Entity e, DynamicBuffer<TileEvent> events, DynamicBuffer<TileInstance> tiles) =>
 			{
 				for (int i = 0; i < events.Length; i++)
 				{
 					var curEvent = events[i];
 					switch (curEvent.type)
 					{
-						case TileEventType.TilePlaced:
+						case TileUpdateType.Placed:
 							map[curEvent.tile].OnNeighborPlaced(curEvent, tiles, PostUpdateCommands);
 							break;
 
-						case TileEventType.TileRemoved:
+						case TileUpdateType.Removed:
 							map[curEvent.tile].OnNeighborRemoved(curEvent, tiles, PostUpdateCommands);
 							break;
 					}
@@ -47,18 +33,6 @@ namespace Amatsugu.Phos
 				events.Clear();
 			});
 
-			//Entities.ForEach((Entity e, DynamicBuffer<BuffEvent> buffEvents) =>
-			//{
-			//	for (int i = 0; i < buffEvents.Length; i++)
-			//	{
-			//		var curBuff = buffEvents[i];
-			//		var tileInst = tiles[curBuff.tile.ToIndex(width)];
-			//		var tile = map[curBuff.tile] as BuildingTile;
-			//		tile.ApplyBufs(tileInst, PostUpdateCommands);
-			//	}
-
-			//	buffEvents.Clear();
-			//});
 		}
 	}
 
@@ -68,25 +42,41 @@ namespace Amatsugu.Phos
 	{
 		protected override void OnUpdate()
 		{
-			Entities.WithAllReadOnly<ApplyBuffTag, HexPosition>().ForEach((Entity e, ref HexPosition pos) =>
+			var map = GameRegistry.GameMap;
+			var width = map.totalWidth;
+			Entities.ForEach((Entity e, DynamicBuffer<BuffEvent> buffEvents, DynamicBuffer<TileInstance> tiles) =>
 			{
-				(GameRegistry.GameMap[pos.Value] as BuildingTile).ApplyBufs(e, PostUpdateCommands);
-				PostUpdateCommands.RemoveComponent<ApplyBuffTag>(e);
+				for (int i = 0; i < buffEvents.Length; i++)
+				{
+					var curBuff = buffEvents[i];
+					var tileInst = tiles[curBuff.tile.ToIndex(width)];
+					var buidingInst = EntityManager.GetComponentData<Building>(tileInst).Value;
+					var tile = map[curBuff.tile] as BuildingTile;
+					tile.ApplyBuffs(tileInst, buidingInst, PostUpdateCommands);
+				}
+
+				buffEvents.Clear();
 			});
+			//Entities.WithAllReadOnly<ApplyBuffTag, HexPosition>().ForEach((Entity e, ref HexPosition pos) =>
+			//{
+			//	(GameRegistry.GameMap[pos.Value] as BuildingTile).ApplyBufs(e, PostUpdateCommands);
+			//	PostUpdateCommands.RemoveComponent<ApplyBuffTag>(e);
+			//});
 		}
 	}
 
 	public struct TileEvent : IBufferElementData
 	{
-		public TileEventType type;
+		public TileUpdateType type;
 		public HexCoords srcTile;
 		public HexCoords tile;
 	}
 
-	public enum TileEventType
+	public enum TileUpdateType
 	{
-		TilePlaced,
-		TileRemoved
+		Placed,
+		Removed,
+		Height
 	}
 
 	public struct BuffEvent : IBufferElementData

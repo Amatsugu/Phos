@@ -84,6 +84,10 @@ namespace Amatsugu.Phos
 				}
 				GameEvents.InvokeOnGameLoaded();
 
+				//Add Event Buffers
+				DstEntityManager.AddBuffer<TileEvent>(mapEntity);
+				DstEntityManager.AddBuffer<BuffEvent>(mapEntity);
+
 			});
 		}
 	}
@@ -101,6 +105,7 @@ namespace Amatsugu.Phos
 			Entities.WithNone<MapGeneratedTag>().WithAll<MapTag>().ForEach((Entity e, DynamicBuffer<GenericPrefab> genericPrefabs, DynamicBuffer<TileInstance> tiles) =>
 			{
 				var map = GameRegistry.GameMap;
+				GameRegistry.INST.mapEntity = e;
 				//tiles.EnsureCapacity(map.tileCount);
 				for (int z = 0; z < map.totalHeight; z++)
 				{
@@ -133,6 +138,7 @@ namespace Amatsugu.Phos
 
 
 				EntityManager.AddComponent<MapGeneratedTag>(e);
+
 				GameEvents.InvokeOnMapLoaded();
 			});
 		}
@@ -183,7 +189,6 @@ namespace Amatsugu.Phos
 						buildingTile.BuildingStart(_entities[i], PostUpdateCommands);
 					tiles[coords.ToIndex(GameRegistry.GameMap.totalWidth)] = _entities[i];
 				}
-				GameRegistry.INST.mapEntity = e;
 				GameEvents.InvokeOnGameReady();
 				PostUpdateCommands.AddComponent<MapInitTag>(e);
 				_entities.Dispose();

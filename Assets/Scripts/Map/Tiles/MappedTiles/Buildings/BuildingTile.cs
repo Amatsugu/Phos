@@ -158,6 +158,8 @@ namespace Amatsugu.Phos.Tiles
 		[Obsolete]
 		public void Build()
 		{
+			isBuilt = true;
+			OnBuilt();
 			//if (isBuilt)
 			//	return;
 			//isBuilt = true;
@@ -330,9 +332,7 @@ namespace Amatsugu.Phos.Tiles
 			else
 				buffSources.Add(src, buff);
 			totalBuffs += buff;
-			var entity = GetTileInstance();
-			if(!GameRegistry.EntityManager.HasComponent<ApplyBuffTag>(entity))
-				GameRegistry.EntityManager.AddComponent<ApplyBuffTag>(entity);
+			AddBuffEvent();
 		}
 
 		/// <summary>
@@ -345,20 +345,24 @@ namespace Amatsugu.Phos.Tiles
 			{
 				totalBuffs -= buffSources[src];
 				buffSources.Remove(src);
+				AddBuffEvent();
 			}
-			var entity = GetTileInstance();
-			if (!GameRegistry.EntityManager.HasComponent<ApplyBuffTag>(entity))
-				GameRegistry.EntityManager.AddComponent<ApplyBuffTag>(entity);
 		}
 
-		public virtual void ApplyBufs(Entity tileEntity, EntityCommandBuffer postUpdateCommands)
+		private void AddBuffEvent()
 		{
-			Debug.Log("Apply Buffs Called");
+			var buffEvents = GameRegistry.EntityManager.GetBuffer<BuffEvent>(GameRegistry.MapEntity);
+			buffEvents.Add(new BuffEvent { tile = Coords });
+		}
+
+		public virtual void ApplyBuffs(Entity tileEntity, Entity buildingEntity, EntityCommandBuffer postUpdateCommands)
+		{
+			Debug.Log($"Apply Buffs Called for {GetNameString()}");
 			if (!isBuilt || !_isRendered)
 				return;
 
-			postUpdateCommands.SetComponent(tileEntity, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
-			postUpdateCommands.SetComponent(tileEntity, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
+			postUpdateCommands.SetComponent(buildingEntity, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
+			postUpdateCommands.SetComponent(buildingEntity, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
 			
 			//TODO: Figure out health buffs
 			//var curHealth = postUpdateCommands.GetComponentData<Health>(tileEntity);
