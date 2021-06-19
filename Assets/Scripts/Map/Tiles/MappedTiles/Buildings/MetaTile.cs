@@ -112,10 +112,6 @@ namespace Amatsugu.Phos.Tiles
 			
 		}
 
-		protected override void ApplyAdjacencyBonuses()
-		{
-			
-		}
 
 		public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{

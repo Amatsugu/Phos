@@ -33,7 +33,6 @@ namespace Amatsugu.Phos.Tiles
 		protected int rotationAngle;
 		protected quaternion rotation;
 
-		private Entity _building;
 		private Entity _offshorePlatform;
 		private NativeArray<Entity> _healthBars;
 		private NativeArray<Entity> _adjacencyConnectors;
@@ -96,6 +95,20 @@ namespace Amatsugu.Phos.Tiles
 			return buildingInst;
 		}
 
+		public virtual void CreateMetaTiles(DynamicBuffer<TileInstance> tileEntities, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		{
+			if (!buildingInfo.useMetaTiles)
+				return;
+			var footprint = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
+			for (int i = 0; i < footprint.Length; i++)
+			{
+				var c = footprint[i];
+				var tile = map[c];
+				var metaTile = new MetaTile(c, Height, map, originalTile, this);
+				map.ReplaceTile(tile, metaTile, prefabs, tileEntities[c.ToIndex(map.totalWidth)], postUpdateCommands);
+			}
+		}
+
 		/// <summary>
 		/// The TileEntity that contains information about the underlying tile
 		/// </summary>
@@ -129,7 +142,6 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnPlaced();
 			StartConstruction();
-			CreateMetaTiles();
 		}
 
 		/// <summary>
@@ -255,66 +267,6 @@ namespace Amatsugu.Phos.Tiles
 
 
 
-		/// <summary>
-		/// Replace tiles in this building's footprint with meta tiles
-		/// </summary>
-		[Obsolete]
-		public virtual void CreateMetaTiles()
-		{
-			return;
-			if (buildingInfo.useMetaTiles)
-			{
-				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
-				for (int i = 0, j = 0; i < tiles.Length; i++)
-				{
-					if (tiles[i] == Coords)
-						continue;
-					var tgtTile = map[tiles[i]];
-					var mt = map.ReplaceTile(tgtTile, new MetaTile(tiles[i], tgtTile.Height, map, tgtTile.originalTile, this));
-					metaTiles[j++] = mt;
-				}
-			}
-		}
-
-		public override void TileUpdated(Tile src, TileUpdateType updateType)
-		{
-			base.TileUpdated(src, updateType);
-			if (!IsBuilt)
-				return;
-			if (updateType == TileUpdateType.Placed || updateType == TileUpdateType.Removed)
-				ApplyAdjacencyBonuses();
-		}
-
-		/// <summary>
-		/// Applies adjanceny bonuses to neighboring tiles
-		/// </summary>
-		[Obsolete]
-		protected virtual void ApplyAdjacencyBonuses()
-		{
-			return;
-			if (!IsBuilt || !_isRendered)
-				return;
-			var neighbors = map.GetNeighbors(Coords);
-			if (!_adjacencyConnectors.IsCreated)
-				_adjacencyConnectors = new NativeArray<Entity>(6 * 3, Allocator.Persistent);
-			if (_connectorCount > 0)
-			{
-				Map.EM.DestroyEntity(_adjacencyConnectors);
-			}
-			for (int i = 0; i < buildingInfo.adjacencyEffects.Length; i++)
-			{
-				var effect = buildingInfo.adjacencyEffects[i];
-				for (int n = 0; n < neighbors.Length; n++)
-				{
-					if (effect.ApplyBonus(this, neighbors[n]))
-					{
-						var slice = _adjacencyConnectors.Slice(n * 3, 3);
-						effect.RenderConnectionLine(SurfacePoint, neighbors[n].SurfacePoint, ref slice);
-						_connectorCount += 3;
-					}
-				}
-			}
-		}
 
 		/// <summary>
 		/// Add and apply a buff to this tile
@@ -376,11 +328,6 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
 		{
-			//if (buildingInfo.useMetaTiles)
-			//{
-			//	for (int i = 0; i < metaTiles.Length; i++)
-			//		map.RevertTile(metaTiles[i], prefabs, existingTileInstance, postUpdateCommands);
-			//}
 			map.RevertTile(this, prefabs, existingTileInstance, postUpdateCommands);
 		}
 

@@ -406,32 +406,6 @@ namespace Amatsugu.Phos
 			}
 		}
 
-		[Obsolete]
-		public Tile ReplaceTile(Tile tile, BuildingTileEntity newTile, int rotation) => ReplaceTile(tile, newTile.CreateTile(this, tile.Coords, tile.Height, rotation));
-
-		[Obsolete]
-		public Tile ReplaceTile(Tile tile, TileEntity newTile) => ReplaceTile(tile, newTile.CreateTile(this, tile.Coords, tile.Height));
-
-		[Obsolete]
-		public T ReplaceTile<T>(Tile tile, T newTile) where T : Tile
-		{
-			if (!IsRendered)
-				throw new Exception("Cannot use ReplaceTile for an unrendered map");
-			var coord = tile.Coords;
-			var index = coord.GetChunkIndex(width);
-			var localCoord = coord.ToChunkLocalCoord();
-			var nT = chunks[index].ReplaceTile(localCoord, newTile);
-			tile.OnRemoved();
-			if (tile.info is TechBuildingTileEntity tb && _techBuildings.Contains(tb))
-				_techBuildings.Remove(tb);
-			nT.OnPlaced();
-			if (nT.info is TechBuildingTileEntity techB && !_techBuildings.Contains(techB))
-				_techBuildings.Add(techB);
-			OnTilePlaced?.Invoke(coord);
-			return nT;
-		}
-
-		
 
 		public void RevertTile(Tile tile, DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommandBuffer)
 		{
