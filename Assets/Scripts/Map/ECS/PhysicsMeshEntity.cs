@@ -38,19 +38,19 @@ public class PhysicsMeshEntity : MeshEntityRotatable
 	public override void PrepareDefaultComponentData(Entity entity)
 	{
 		base.PrepareDefaultComponentData(entity);
-		Map.EM.SetComponentData(entity, new PhysicsGravityFactor
+		GameRegistry.EntityManager.SetComponentData(entity, new PhysicsGravityFactor
 		{
 			Value = gravity ? gravityFactor : 0
 		});
-		Map.EM.AddComponentData(entity, GetMass());
-		Map.EM.SetComponentData(entity, GetCollider());
+		GameRegistry.EntityManager.AddComponentData(entity, GetMass());
+		GameRegistry.EntityManager.SetComponentData(entity, GetCollider());
 
 	}
 
 	public virtual Entity Instantiate(float3 position, quaternion rotation, float scale = 1, float3 velocity = default, float3 angularVelocity = default)
 	{
 		var e = Instantiate(position, scale, rotation);
-		var em = Map.EM;
+		var em = GameRegistry.EntityManager;
 		em.SetComponentData(e, new PhysicsVelocity
 		{
 			Linear = velocity,

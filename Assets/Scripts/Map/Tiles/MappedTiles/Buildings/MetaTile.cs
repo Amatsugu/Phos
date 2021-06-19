@@ -17,20 +17,10 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public BuildingTile ParentTile { get; private set; }
 
-		private PoweredBuildingTile _poweredParent;
-		private bool _isPoweredTile;
-		private bool _isConduitTile;
-
 		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo, 0)
 		{
 			originalTile = tInfo;
 			ParentTile = parentTile;
-			if (ParentTile is PoweredBuildingTile powered)
-			{
-				_poweredParent = powered;
-				_isPoweredTile = true;
-			}
-			_isConduitTile = ParentTile is ResourceConduitTile;
 		}
 
 		protected override void OnBuilt()
@@ -137,11 +127,6 @@ namespace Amatsugu.Phos.Tiles
 			var y = int.Parse(tileData["parent.Y"]);
 			var coord = new HexCoords(x, y, map.tileEdgeLength);
 			ParentTile = map[coord] as BuildingTile;
-			if (ParentTile is PoweredBuildingTile powered)
-			{
-				_isPoweredTile = true;
-				_poweredParent = powered;
-			}
 		}
 	}
 }

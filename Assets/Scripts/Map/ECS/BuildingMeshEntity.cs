@@ -17,6 +17,7 @@ using CapsuleCollider = Unity.Physics.CapsuleCollider;
 namespace Amatsugu.Phos.TileEntities
 {
 	[Serializable]
+	[Obsolete]
 	public class BuildingMeshEntity : MeshEntityRotatable
 	{
 		[Header("Sub Mesh")]

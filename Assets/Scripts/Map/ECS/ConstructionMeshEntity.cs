@@ -14,6 +14,7 @@ using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "ECS/Construction Mesh Enity")]
+[Obsolete]
 public class ConstructionMeshEntity : ScriptableObject
 {
 	public Material material;

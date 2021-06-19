@@ -80,7 +80,7 @@ namespace Amatsugu.Phos.Units
 			IsRendered = _isShown = true;
 			Entity = info.Instantiate(_startPos, Quaternion.identity, id, Faction);
 			RenderSubMeshes();
-			Map.EM.SetComponentData(Entity, new FactionId { Value = Faction });
+			GameRegistry.EntityManager.SetComponentData(Entity, new FactionId { Value = Faction });
 			if (info.healthBar != null)
 				_healhBar = info.healthBar.Instantiate(Entity, info.centerOfMassOffset + info.healthBarOffset);
 			return Entity;
@@ -95,7 +95,7 @@ namespace Amatsugu.Phos.Units
 			if (info.head.id != -1)
 			{
 				HeadEntity = _subMeshes[info.head.id];
-				Map.EM.AddComponentData(Entity, new UnitHead { Value = HeadEntity });
+				GameRegistry.EntityManager.AddComponentData(Entity, new UnitHead { Value = HeadEntity });
 			}
 		}
 
@@ -105,34 +105,34 @@ namespace Amatsugu.Phos.Units
 				return;
 			if (_isShown = isShown)
 			{
-				Map.EM.RemoveComponent(Entity, typeof(DisableRendering));
-				Map.EM.RemoveComponent(HeadEntity, typeof(DisableRendering));
+				GameRegistry.EntityManager.RemoveComponent(Entity, typeof(DisableRendering));
+				GameRegistry.EntityManager.RemoveComponent(HeadEntity, typeof(DisableRendering));
 				if (_healhBar.IsCreated)
-					Map.EM.RemoveComponent(_healhBar, typeof(DisableRendering));
+					GameRegistry.EntityManager.RemoveComponent(_healhBar, typeof(DisableRendering));
 			}
 			else
 			{
-				Map.EM.AddComponent(Entity, typeof(DisableRendering));
-				Map.EM.AddComponent(HeadEntity, typeof(DisableRendering));
+				GameRegistry.EntityManager.AddComponent(Entity, typeof(DisableRendering));
+				GameRegistry.EntityManager.AddComponent(HeadEntity, typeof(DisableRendering));
 				if (_healhBar.IsCreated)
-					Map.EM.AddComponent(_healhBar, typeof(DisableRendering));
+					GameRegistry.EntityManager.AddComponent(_healhBar, typeof(DisableRendering));
 			}
 		}
 
 		public void MoveTo(float3 pos)
 		{
-			if (Map.EM.HasComponent<MoveToTarget>(Entity))
-				Map.EM.RemoveComponent<MoveToTarget>(Entity);
-			if (!Map.EM.HasComponent<Destination>(Entity))
+			if (GameRegistry.EntityManager.HasComponent<MoveToTarget>(Entity))
+				GameRegistry.EntityManager.RemoveComponent<MoveToTarget>(Entity);
+			if (!GameRegistry.EntityManager.HasComponent<Destination>(Entity))
 			{
-				Map.EM.AddComponent(Entity, typeof(Destination));
+				GameRegistry.EntityManager.AddComponent(Entity, typeof(Destination));
 			}
-			if (Map.EM.HasComponent<Path>(Entity))
+			if (GameRegistry.EntityManager.HasComponent<Path>(Entity))
 			{
-				Map.EM.RemoveComponent<PathProgress>(Entity);
-				Map.EM.RemoveComponent<Path>(Entity);
+				GameRegistry.EntityManager.RemoveComponent<PathProgress>(Entity);
+				GameRegistry.EntityManager.RemoveComponent<Path>(Entity);
 			}
-			Map.EM.SetComponentData(Entity, new Destination { Value = pos });
+			GameRegistry.EntityManager.SetComponentData(Entity, new Destination { Value = pos });
 		}
 
 		public int GetSize()
@@ -158,10 +158,10 @@ namespace Amatsugu.Phos.Units
 		{
 			try
 			{
-				Map.EM.DestroyEntity(Entity);
+				GameRegistry.EntityManager.DestroyEntity(Entity);
 				if (_healhBar.IsCreated)
-					Map.EM.DestroyEntity(_healhBar);
-				Map.EM.DestroyEntity(_subMeshes);
+					GameRegistry.EntityManager.DestroyEntity(_healhBar);
+				GameRegistry.EntityManager.DestroyEntity(_subMeshes);
 				IsRendered = false;
 			}
 			catch (Exception e)
@@ -178,20 +178,20 @@ namespace Amatsugu.Phos.Units
 
 		public void SetState(UnitState.State state)
 		{
-			if (Map.EM.HasComponent<UnitState>(Entity))
-				Map.EM.SetComponentData(Entity, new UnitState { Value = state });
+			if (GameRegistry.EntityManager.HasComponent<UnitState>(Entity))
+				GameRegistry.EntityManager.SetComponentData(Entity, new UnitState { Value = state });
 			else
-				Map.EM.AddComponentData(Entity, new UnitState { Value = state });
+				GameRegistry.EntityManager.AddComponentData(Entity, new UnitState { Value = state });
 		}
 
 		public void Attack(Entity target)
 		{
-			if (!Map.EM.HasComponent<MoveToTarget>(Entity))
-				Map.EM.AddComponent<MoveToTarget>(Entity);
-			if (Map.EM.HasComponent<AttackTarget>(Entity))
-				Map.EM.SetComponentData(Entity, new AttackTarget { Value = target });
+			if (!GameRegistry.EntityManager.HasComponent<MoveToTarget>(Entity))
+				GameRegistry.EntityManager.AddComponent<MoveToTarget>(Entity);
+			if (GameRegistry.EntityManager.HasComponent<AttackTarget>(Entity))
+				GameRegistry.EntityManager.SetComponentData(Entity, new AttackTarget { Value = target });
 			else
-				Map.EM.AddComponentData(Entity, new AttackTarget { Value = target });
+				GameRegistry.EntityManager.AddComponentData(Entity, new AttackTarget { Value = target });
 		}
 
 		public void GoundFire(HexCoords pos)
@@ -208,7 +208,7 @@ namespace Amatsugu.Phos.Units
 		{
 			var cost = GetRepairCost();
 			ResourceSystem.ConsumeResourses(cost);
-			Map.EM.SetComponentData(Entity, new Health
+			GameRegistry.EntityManager.SetComponentData(Entity, new Health
 			{
 				Value = info.maxHealth
 			});
@@ -239,7 +239,7 @@ namespace Amatsugu.Phos.Units
 
 		public float3 GetPosition()
 		{
-			return Map.EM.GetComponentData<CenterOfMass>(Entity).Value;
+			return GameRegistry.EntityManager.GetComponentData<CenterOfMass>(Entity).Value;
 		}
 
 		public UnitDomain.Domain GetDomain()

@@ -71,43 +71,43 @@ namespace Amatsugu.Phos.Units
 		public override void PrepareDefaultComponentData(Entity entity)
 		{
 			base.PrepareDefaultComponentData(entity);
-			Map.EM.SetComponentData(entity, new MoveSpeed { Value = moveSpeed });
-			Map.EM.SetComponentData(entity, new Heading { Value = Vector3.forward });
-			Map.EM.SetComponentData(entity, new Projectile { Value = projectile.GetEntity() });
-			Map.EM.SetComponentData(entity, new AttackSpeed { Value = 1f / attackSpeed });
-			Map.EM.SetComponentData(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
-			//Map.EM.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
-			Map.EM.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
-			Map.EM.SetComponentData(entity, new AttackRange(attackRange));
+			GameRegistry.EntityManager.SetComponentData(entity, new MoveSpeed { Value = moveSpeed });
+			GameRegistry.EntityManager.SetComponentData(entity, new Heading { Value = Vector3.forward });
+			GameRegistry.EntityManager.SetComponentData(entity, new Projectile { Value = projectile.GetEntity() });
+			GameRegistry.EntityManager.SetComponentData(entity, new AttackSpeed { Value = 1f / attackSpeed });
+			GameRegistry.EntityManager.SetComponentData(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
+			//GameRegistry.EntityManager.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
+			GameRegistry.EntityManager.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
+			GameRegistry.EntityManager.SetComponentData(entity, new AttackRange(attackRange));
 
 			switch (unitClass)
 			{
 				case UnitClass.Class.Turret:
-					Map.EM.AddComponentData(entity, new UnitClass.Turret());
+					GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.Turret());
 					break;
 				case UnitClass.Class.Artillery:
-					Map.EM.AddComponentData(entity, new UnitClass.Artillery());
+					GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.Artillery());
 					break;
 				case UnitClass.Class.Support:
-					Map.EM.AddComponentData(entity, new UnitClass.Support());
+					GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.Support());
 					break;
 				case UnitClass.Class.FixedGun:
-					Map.EM.AddComponentData(entity, new UnitClass.FixedGun());
+					GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.FixedGun());
 					break;
 			}
 			switch (unitDomain)
 			{
 				case UnitDomain.Domain.Air:
-					Map.EM.AddComponentData(entity, new UnitDomain.Air());
+					GameRegistry.EntityManager.AddComponentData(entity, new UnitDomain.Air());
 					break;
 				case UnitDomain.Domain.Land:
-					Map.EM.AddComponentData(entity, new UnitDomain.Land());
+					GameRegistry.EntityManager.AddComponentData(entity, new UnitDomain.Land());
 					break;
 				case UnitDomain.Domain.Naval:
-					Map.EM.AddComponentData(entity, new UnitDomain.Naval());
+					GameRegistry.EntityManager.AddComponentData(entity, new UnitDomain.Naval());
 					break;
 			}
-			Map.EM.SetComponentData(entity, new TargetingDomain
+			GameRegistry.EntityManager.SetComponentData(entity, new TargetingDomain
 			{
 				Value = unitTargetingDomain
 			});
@@ -116,9 +116,9 @@ namespace Amatsugu.Phos.Units
 		public Entity Instantiate(float3 pos, Quaternion rotation, int id, Faction faction = Faction.None)
 		{
 			var e = Instantiate(pos, Vector3.one, rotation);
-			Map.EM.SetComponentData(e, new UnitId { Value = id });
-			Map.EM.SetComponentData(e, new FactionId { Value = faction });
-			Map.EM.SetComponentData(e, new CenterOfMass { Value = pos + centerOfMassOffset });
+			GameRegistry.EntityManager.SetComponentData(e, new UnitId { Value = id });
+			GameRegistry.EntityManager.SetComponentData(e, new FactionId { Value = faction });
+			GameRegistry.EntityManager.SetComponentData(e, new CenterOfMass { Value = pos + centerOfMassOffset });
 			var collisionFilter = new CollisionFilter
 			{
 				CollidesWith = ~((uint)faction.Invert().AsCollisionLayer()),
@@ -129,7 +129,7 @@ namespace Amatsugu.Phos.Units
 			var physMat = Unity.Physics.Material.Default;
 			physMat.CollisionResponse = CollisionResponsePolicy.CollideRaiseCollisionEvents;
 
-			Map.EM.SetComponentData(e, new PhysicsCollider
+			GameRegistry.EntityManager.SetComponentData(e, new PhysicsCollider
 			{
 				Value = Unity.Physics.BoxCollider.Create(new BoxGeometry
 				{
@@ -150,7 +150,7 @@ namespace Amatsugu.Phos.Units
 			{
 				var pos = subMeshes[i].offset; //math.rotate(rotation, subMeshes[i].offset);
 				e[i] = subMeshes[i].mesh.Instantiate(pos, 1, rotation);
-				Map.EM.AddComponent<LocalToParent>(e[i]);
+				GameRegistry.EntityManager.AddComponent<LocalToParent>(e[i]);
 			}
 			for (int i = 0; i < subMeshes.Length; i++)
 			{
@@ -159,9 +159,9 @@ namespace Amatsugu.Phos.Units
 					Debug.LogWarning($"{name} has a submesh [{subMeshes[i].mesh.name}] whose parent is assigned to itself");
 #endif
 				if (subMeshes[i].parent.id == -1 || subMeshes[i].parent.id == i)
-					Map.EM.AddComponentData(e[i], new Parent { Value = parent });
+					GameRegistry.EntityManager.AddComponentData(e[i], new Parent { Value = parent });
 				else
-					Map.EM.AddComponentData(e[i], new Parent { Value = e[subMeshes[i].parent.id] });
+					GameRegistry.EntityManager.AddComponentData(e[i], new Parent { Value = e[subMeshes[i].parent.id] });
 			}
 			return e;
 		}
