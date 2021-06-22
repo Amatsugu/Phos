@@ -176,15 +176,15 @@ public class UIDevConsole : MonoBehaviour
 
 		AddCommand(new Command("toggleClouds", () =>
 		{
-			var e = Map.EM.GetAllEntities(Unity.Collections.Allocator.Temp);
+			var e = GameRegistry.EntityManager.GetAllEntities(Unity.Collections.Allocator.Temp);
 			for (int i = 0; i < e.Length; i++)
 			{
-				if(Map.EM.HasComponent<CloudData>(e[i]))
+				if(GameRegistry.EntityManager.HasComponent<CloudData>(e[i]))
 				{
-					if (Map.EM.HasComponent<Disabled>(e[i]))
-						Map.EM.RemoveComponent<Disabled>(e[i]);
+					if (GameRegistry.EntityManager.HasComponent<Disabled>(e[i]))
+						GameRegistry.EntityManager.RemoveComponent<Disabled>(e[i]);
 					else
-						Map.EM.AddComponent<Disabled>(e[i]);
+						GameRegistry.EntityManager.AddComponent<Disabled>(e[i]);
 				}
 			}
 		}, "Toggle cloud visivility"));

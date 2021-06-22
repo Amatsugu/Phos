@@ -73,14 +73,14 @@ public class BuildQueueSystem : ComponentSystem
 	/// </summary>
 	/// <param name="building">The tile info of the building to build</param>
 	/// <param name="dst">The tile on which the building will be placed</param>
-	public static void QueueBuilding(BuildingTileEntity building, Tile dst, Entity existingTileInstance, int rotation = 0) => _INST.QueueBuilding(dst, building, existingTileInstance, rotation);
+	public static void QueueBuilding(BuildingTileEntity building, Tile dst, int rotation = 0) => _INST.QueueBuilding(dst, building, rotation);
 
 	/// <summary>
 	/// Add a building to the build queue
 	/// </summary>
 	/// <param name="tile">The tile on which the building will be placed</param>
 	/// <param name="building">The tile info of the building to build</param>
-	private void QueueBuilding(Tile tile, BuildingTileEntity building, Entity existingTileInstance, int rotation)
+	private void QueueBuilding(Tile tile, BuildingTileEntity building, int rotation)
 	{
 		var orderId = _curOrderID++;
 		_pendingBuildOrders.Add(orderId, new BuildOrder
@@ -89,7 +89,6 @@ public class BuildQueueSystem : ComponentSystem
 			building = building,
 			dstTile = tile,
 			rotation = rotation,
-			existingTileInstance = existingTileInstance
 		});
 		_readyToBuildOrders.Add(orderId);
 	}
@@ -163,7 +162,7 @@ public class BuildQueueSystem : ComponentSystem
 					try
 					{
 #endif
-					if (PlaceBuilding(order, prefabs))
+					if (PlaceBuilding(order, prefabs, tiles))
 						count++;
 #if !UNITY_EDITOR
 					}
@@ -213,12 +212,14 @@ public class BuildQueueSystem : ComponentSystem
 	/// Places a building on the map
 	/// </summary>
 	/// <param name="order">The build order cotaining the detials on how to place the building</param>
-	private bool PlaceBuilding(BuildOrder order, DynamicBuffer<GenericPrefab> prefabs)
+	private bool PlaceBuilding(BuildOrder order, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tileInstances)
 	{
 		var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords, order.rotation);
 		if (!order.dstTile.IsUnderwater)
 			GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center | Map.FlattenMode.IgnoreUnderWater);
-		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation, prefabs, order.existingTileInstance, PostUpdateCommands);
+		var existingTileInstance = tileInstances[order.dstTile.Coords.ToIndex(GameRegistry.GameMap.totalWidth)];
+		var building = GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation, prefabs, existingTileInstance, PostUpdateCommands);
+		building.CreateMetaTiles(tileInstances, prefabs, PostUpdateCommands);
 		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : order.building.constructionTime;
 
 		_constructionOrders.Add(new ConstructionOrder(order, buildTime, Time.ElapsedTime + buildTime));
@@ -262,7 +263,6 @@ public struct BuildOrder
 	public Tile dstTile;
 	public BuildingTileEntity building;
 	public FactoryBuildingTile factory;
-	public Entity existingTileInstance;
 	public UnitIdentifier unit;
 	public OrderType orderType;
 	internal int rotation;

@@ -23,9 +23,6 @@ namespace Amatsugu.Phos.TileEntities
 	public class BuildingTileEntity : TileEntity
 	{
 		[Header("Rendering")]
-		[Obsolete]
-		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/Buildings", typeof(BuildingMeshEntity))]
-		public BuildingMeshEntity buildingMesh;
 		public GameObject buildingPrefab;
 		public float3 centerOfMassOffset;
 		public ConstructionMeshEntity constructionMesh;

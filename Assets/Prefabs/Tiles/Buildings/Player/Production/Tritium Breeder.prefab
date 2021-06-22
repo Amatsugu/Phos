@@ -174,14 +174,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1423497925839605406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94e1c45292785b34996a1410ddd29a7d, type: 3}
+  m_Script: {fileID: 11500000, guid: 498090c868448af4f9d6b9e10da68f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationType: 0
   axis:
     x: 0
     y: 1
     z: 0
-  speed: 1
+  speed: 3
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  duration: 0
+  animationPhase: 0
+  timeRelativePhase: 0
 --- !u!1 &4566230370632513495
 GameObject:
   m_ObjectHideFlags: 0

@@ -214,7 +214,7 @@ public class UIActionsPanel : UIPanel
 			var pos = _selectedEntities[i].GetPosition();
 			center += pos;
 			var ln = LineFactory.CreateStaticLine(moveLine, pos, pos + math.up(), 0.05f);
-			Map.EM.AddComponentData(ln, new DeathTime { Value = deathTime });
+			GameRegistry.EntityManager.AddComponentData(ln, new DeathTime { Value = deathTime });
 		}
 		center /= _selectedEntities.Count;
 		center += math.up();
@@ -222,10 +222,10 @@ public class UIActionsPanel : UIPanel
 		{
 			var pos = _selectedEntities[i].GetPosition();
 			var ln = LineFactory.CreateStaticLine(moveLine, pos + math.up(), center, 0.05f);
-			Map.EM.AddComponentData(ln, new DeathTime { Value = deathTime });
+			GameRegistry.EntityManager.AddComponentData(ln, new DeathTime { Value = deathTime });
 		}
 		var ln2 = LineFactory.CreateStaticLine(moveLine, center, _lastOrderTarget + math.up(), 0.05f);
-		Map.EM.AddComponentData(ln2, new DeathTime { Value = deathTime });
+		GameRegistry.EntityManager.AddComponentData(ln2, new DeathTime { Value = deathTime });
 	}
 
 	private void IssueMoveOrder(Tile tile)

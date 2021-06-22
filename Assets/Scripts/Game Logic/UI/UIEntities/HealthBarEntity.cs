@@ -30,7 +30,7 @@ public class HealthBarEntity : MeshEntityRotatable
 	public Entity Instantiate(Entity target, HealthBar.BarType type, float3 offset)
 	{
 		var e = Instantiate(float3.zero, new float3(size,1), quaternion.identity);
-		Map.EM.SetComponentData(e, new HealthBar
+		GameRegistry.EntityManager.SetComponentData(e, new HealthBar
 		{
 			target = target,
 			type = type,
@@ -38,7 +38,7 @@ public class HealthBarEntity : MeshEntityRotatable
 			size = size
 		});
 		if (type != HealthBar.BarType.BG)
-			Map.EM.AddComponent<HealthBarFillTag>(e);
+			GameRegistry.EntityManager.AddComponent<HealthBarFillTag>(e);
 		return e;
 	}
 }

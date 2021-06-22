@@ -35,12 +35,8 @@ namespace Amatsugu.Phos.Tiles
 		public override Entity InstantiateTile(DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
 			var tilesToReplace = map.GetNeighbors(Coords);
-			var tiles = GameRegistry.GetTileInstanceBuffer();
 			for (int i = 0; i < tilesToReplace.Length; i++)
-			{
-				var subInx = tilesToReplace[i].Coords.ToIndex(map.totalWidth);
-				BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i], tiles[subInx]);
-			}
+				BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i]);
 			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}
 

@@ -29,19 +29,19 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 	public override void PrepareDefaultComponentData(Entity entity)
 	{
 		base.PrepareDefaultComponentData(entity);
-		Map.EM.SetComponentData(entity, new Damage
+		GameRegistry.EntityManager.SetComponentData(entity, new Damage
 		{
 			Value = damage,
 			friendlyFire = friendlyFire
 		});
-		Map.EM.SetComponentData(entity, new FactionId
+		GameRegistry.EntityManager.SetComponentData(entity, new FactionId
 		{
 			Value = faction
 		});
 		if (nonUniformScale)
-			Map.EM.SetComponentData(entity, new NonUniformScale { Value = scale });
+			GameRegistry.EntityManager.SetComponentData(entity, new NonUniformScale { Value = scale });
 		else
-			Map.EM.SetComponentData(entity, new Scale { Value = scale.x });
+			GameRegistry.EntityManager.SetComponentData(entity, new Scale { Value = scale.x });
 	}
 
 	public Entity Instantiate(float3 position, float scale, float3 velocity = default, float3 angularVelocity = default)

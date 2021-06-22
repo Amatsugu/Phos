@@ -81,6 +81,10 @@ namespace Amatsugu.Phos.Tiles
 			BroadcastTileUpdate(TileUpdateType.Placed);
 		}
 
+		/// <summary>
+		/// Gets the tile info that controls the rendering of the tile mesh
+		/// </summary>
+		/// <returns></returns>
 		public TileEntity GetGroundTileInfo()
 		{
 			return originalTile != null ? originalTile : info;

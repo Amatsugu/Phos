@@ -408,7 +408,7 @@ public class UIBuildPanel : UITabPanel
 		}
 		indicatorManager.UnSetAllIndicators();
 		indicatorManager.HideAllIndicators();
-		var (selectedTile, inst) = GetTileUnderCursor();
+		var (selectedTile, _) = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
 		if (Input.GetKeyUp(KeyCode.Q))
@@ -438,7 +438,7 @@ public class UIBuildPanel : UITabPanel
 		if (Input.GetKeyUp(KeyCode.Mouse0))
 		{
 			if (isValid)
-				PlaceBuilding(selectedTile, inst);
+				PlaceBuilding(selectedTile);
 			else
 				ShowErrors();
 		}
@@ -470,11 +470,11 @@ public class UIBuildPanel : UITabPanel
 			indicatorManager.HideIndicator(unpoweredTileIndicatorEntity);
 	}
 
-	private void PlaceBuilding(Tile selectedTile, Entity existingTileInstance)
+	private void PlaceBuilding(Tile selectedTile)
 	{
 		if (state == BuildState.Placement)
 			ResourceSystem.ConsumeResourses(_selectedBuilding.cost);
-		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, existingTileInstance, _rotation);
+		BuildQueueSystem.QueueBuilding(_selectedBuilding, selectedTile, _rotation);
 		if (state == BuildState.HQPlacement)
 		{
 			_selectedBuilding = null;

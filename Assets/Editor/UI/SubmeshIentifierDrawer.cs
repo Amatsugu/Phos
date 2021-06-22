@@ -29,7 +29,8 @@ public class SubmeshIdentifierDrawer : PropertyDrawer
 		switch (property.serializedObject.targetObject)
 		{
 			case BuildingTileEntity b:
-				items = b.buildingMesh.subMeshes.Select(sb => sb.mesh != null ? $"[{i++}] {sb.mesh.name}" : "[Empty]").Prepend("[None]").ToArray(); 
+				//items = b.buildingMesh.subMeshes.Select(sb => sb.mesh != null ? $"[{i++}] {sb.mesh.name}" : "[Empty]").Prepend("[None]").ToArray(); 
+				items = Array.Empty<string>();
 				break;
 			case MobileUnitEntity u:
 				items = u.subMeshes.Select(sb => sb.mesh != null ? $"[{i++}] {sb.mesh.name}" : "[Empty]").Prepend("[None]").ToArray();

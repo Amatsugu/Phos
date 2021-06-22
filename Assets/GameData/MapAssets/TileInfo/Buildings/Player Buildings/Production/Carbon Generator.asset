@@ -42,7 +42,7 @@ MonoBehaviour:
       y: 0
     - x: -1
       y: 1
-  useMetaTiles: 0
+  useMetaTiles: 1
   flattenOuterRange: 0
   isOffshore: 0
   offshoreOnly: 0

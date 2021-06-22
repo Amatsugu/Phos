@@ -19,7 +19,6 @@ namespace Amatsugu.Phos.Tiles
 
 		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo, 0)
 		{
-			originalTile = tInfo;
 			ParentTile = parentTile;
 		}
 

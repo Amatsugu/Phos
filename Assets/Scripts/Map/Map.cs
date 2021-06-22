@@ -412,9 +412,7 @@ namespace Amatsugu.Phos
 
 			if (tile.originalTile != null)
 			{
-				
 				ReplaceTile(tile, tile.originalTile, prefabs, existingTileInstance, postUpdateCommandBuffer);
-				//ReplaceTile(tile, tile.originalTile);
 			}
 			else
 				UnityEngine.Debug.LogWarning("No Original Tile to revert to");
@@ -457,10 +455,10 @@ namespace Amatsugu.Phos
 			return ReplaceTile(tile, nT, prefabs, existingTileInstance, postUpdateCommands);
 		}
 
-		public Tile ReplaceTile(Tile tile, BuildingTileEntity newTileInfo, int rotation, DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
+		public BuildingTile ReplaceTile(Tile tile, BuildingTileEntity newTileInfo, int rotation, DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
 		{
 			var nT = newTileInfo.CreateTile(this, tile.Coords, tile.Height, rotation);
-			return ReplaceTile(tile, nT, prefabs, existingTileInstance, postUpdateCommands);
+			return (BuildingTile)ReplaceTile(tile, nT, prefabs, existingTileInstance, postUpdateCommands);
 		}
 
 		public int GetDistance(HexCoords a, HexCoords b)

@@ -104,7 +104,8 @@ namespace Amatsugu.Phos.Tiles
 			{
 				var c = footprint[i];
 				var tile = map[c];
-				var metaTile = new MetaTile(c, Height, map, originalTile, this);
+				var metaTile = new MetaTile(c, Height, map, GetGroundTileInfo(), this);
+				Debug.Log(GetGroundTileInfo().GetNameString());
 				map.ReplaceTile(tile, metaTile, prefabs, tileEntities[c.ToIndex(map.totalWidth)], postUpdateCommands);
 			}
 		}
@@ -150,17 +151,7 @@ namespace Amatsugu.Phos.Tiles
 		[Obsolete]
 		protected virtual void StartConstruction()
 		{
-			return;
-			if (buildingInfo.constructionMesh != null)
-			{
-				var pos = SurfacePoint;
-				var height = buildingInfo.buildingMesh.height;
-				if (buildingInfo.isOffshore && IsUnderwater && buildingInfo.offshorePlatformMesh != null)
-				{
-					buildingInfo.constructionMesh.Instantiate(pos, GetBuildingRotation(), height, buildingInfo.constructionTime, buildingInfo.offshorePlatformMesh);
-				}
-				buildingInfo.constructionMesh.Instantiate(SurfacePoint, GetBuildingRotation(), buildingInfo.buildingMesh.height, buildingInfo.buildingMesh, buildingInfo.constructionTime);
-			}
+			
 		}
 
 
