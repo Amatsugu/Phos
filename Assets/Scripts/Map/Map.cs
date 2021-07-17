@@ -432,7 +432,7 @@ namespace Amatsugu.Phos
 			newTile.PrepareTileInstance(nTInst, postUpdateCommands);
 			var buildingTile = newTile as BuildingTile;
 			Entity buildingInst = default;
-			if (buildingTile != null)
+			if (buildingTile != null && !(newTile is MetaTile))
 			{
 				buildingInst = buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
 				buildingTile.PrepareBuildingEntity(buildingInst, postUpdateCommands);
@@ -538,7 +538,7 @@ namespace Amatsugu.Phos
 			map.units = units.Select(u =>
 			{
 				var id = GameRegistry.UnitDatabase.entityIds[u.Value.info];
-				var coords = HexCoords.FromPosition(EM.GetComponentData<Translation>(u.Value.Entity).Value, map.tileEdgeLength);
+				var coords = HexCoords.FromPosition(GameRegistry.EntityManager.GetComponentData<Translation>(u.Value.Entity).Value, map.tileEdgeLength);
 				return new SerializedUnit
 				{
 					unitId = id,

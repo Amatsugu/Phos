@@ -1620,6 +1620,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -1633,7 +1634,7 @@ TextureImporter:
     mipBias: -0.75
     wrapU: 1
     wrapV: 1
-    wrapW: -1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -1651,6 +1652,8 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
@@ -2114,6 +2117,27 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Fuel: -4264389267444819633
+      IconSpriteSheet_Full_1: -9008599273806687405
+      Metal: 2647467648574043659
+      Silver: -910342561807809153
+      Water: -7748967718012387419
+      Tritium: -3950912798310049422
+      IconSpriteSheet_Full_2: 3162348356212938088
+      Power: -1554024534391354863
+      Deuterium: -8010261840859185662
+      IconSpriteSheet_Full_3: -3710901097185441969
+      Gold: -7947723104890870202
+      IconSpriteSheet_Full_5: -1390593734612671771
+      Composite Metal: -2202851767225367483
+      IconSpriteSheet_Full_7: 2096733960527401264
+      IconSpriteSheet_Full_0: -3909768467517448909
+      IconSpriteSheet_Full_6: -5301764723600375225
+      Carbon: 756898814474196213
+      Electrum: -550988092767783048
+      IconSpriteSheet_Full_4: 5017199144071176368
+      Carbon Nanotube: -4024748925766376699
   spritePackingTag: 
   pSDRemoveMatte: 1
   pSDShowRemoveMatteOption: 1

@@ -98,7 +98,7 @@ public class UIDevConsole : MonoBehaviour
 	private void DevMode()
 	{
 		ParseCommand("unlockAll");
-		ParseCommand("noResourceCost");
+		//ParseCommand("noResourceCost");
 		GameEvents.OnGameReady -= DevMode;
 	}
 

@@ -26,6 +26,11 @@ namespace Amatsugu.Phos.Tiles
 			
 		}
 
+		public PoweredBuildingTile(HexCoords coords, float height, Map map, TileEntity tInfo) : base(coords, height, map, tInfo)
+		{
+
+		}
+
 		public override void OnPlaced()
 		{
 			base.OnPlaced();

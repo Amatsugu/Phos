@@ -3,12 +3,12 @@ using Amatsugu.Phos.TileEntities;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
@@ -37,18 +37,22 @@ namespace Amatsugu.Phos.Tiles
 		private NativeArray<Entity> _healthBars;
 		private NativeArray<Entity> _adjacencyConnectors;
 		private int _connectorCount;
-		protected ProductionData _productionData;
-		protected ConsumptionData _consumptionData;
+		protected ResourceProduction[] _productionData;
+		protected ResourceConsumption[] _consumptionData;
 
-		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo, int rotation) : base(coords, height, map, tInfo)
+		public BuildingTile(HexCoords coords, float height, Map map, BuildingTileEntity tInfo, int rotation) : this(coords, height, map, tInfo)
 		{
 			buildingInfo = tInfo;
-			totalBuffs = StatsBuffs.Default;
-			buffSources = new Dictionary<HexCoords, StatsBuffs>();
 			rotationAngle = rotation;
 			this.rotation = quaternion.RotateY(math.radians(60 * rotation));
 			if (tInfo.useMetaTiles)
 				metaTiles = new MetaTile[tInfo.footprint.footprint.Length - 1];
+		}
+
+		public BuildingTile(HexCoords coords, float height, Map map, TileEntity tInfo) : base(coords, height, map, tInfo)
+		{
+			totalBuffs = StatsBuffs.Default;
+			buffSources = new Dictionary<HexCoords, StatsBuffs>();
 		}
 
 		/// <summary>
@@ -57,25 +61,25 @@ namespace Amatsugu.Phos.Tiles
 		/// <returns>String Builder</returns>
 		public StringBuilder GetProductionString()
 		{
-			if (_productionData.resourceIds == null)
+			if (_productionData == null || _productionData.Length == 0)
 				return new StringBuilder();
 			//return buildingInfo.GetProductionString(totalBuffs);
 			var sb = new StringBuilder().AppendLine("Production"); ;
-			for (int i = 0; i < _productionData.resourceIds.Length; i++)
+			for (int i = 0; i < _productionData.Length; i++)
 			{
-				var res = _productionData.resourceIds[i];
-				var rate = _productionData.rates[i] * totalBuffs.productionMulti;
+				var res = _productionData[i].resourceId;
+				var rate = _productionData[i].rate * totalBuffs.productionMulti;
 				if (rate == 0)
 					continue;
 				sb.Append(ResourceDatabase.GetResourceString(res)).Append(" +").Append(math.floor(rate).ToString()).Append(" (").Append(Math.Round(totalBuffs.productionMulti * 100, 2)).AppendLine("%)");
 			}
-			if (_consumptionData.resourceIds == null)
+			if (_consumptionData == null || _consumptionData.Length == 0)
 				return sb;
 			sb.AppendLine("Consumption");
-			for (int i = 0; i < _consumptionData.resourceIds.Length; i++)
+			for (int i = 0; i < _consumptionData.Length; i++)
 			{
-				var res = _consumptionData.resourceIds[i];
-				var rate = _consumptionData.rates[i] * totalBuffs.productionMulti;
+				var res = _consumptionData[i].resourceId;
+				var rate = _consumptionData[i].rate * totalBuffs.productionMulti;
 				if (rate == 0)
 					continue;
 				sb.Append(ResourceDatabase.GetResourceString(res)).Append(" -").Append(math.floor(rate).ToString()).Append(" (").Append(Math.Round(totalBuffs.consumptionMulti * 100, 2)).AppendLine("%)");
@@ -138,7 +142,6 @@ namespace Amatsugu.Phos.Tiles
 			return res;
 		}
 
-
 		public override void OnPlaced()
 		{
 			base.OnPlaced();
@@ -151,9 +154,7 @@ namespace Amatsugu.Phos.Tiles
 		[Obsolete]
 		protected virtual void StartConstruction()
 		{
-			
 		}
-
 
 		/// <summary>
 		/// Completes the build phase of this building
@@ -186,7 +187,6 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void BuildingStart(Entity buildingInst, EntityCommandBuffer postUpdateCommands)
 		{
-
 		}
 
 		public Entity Build(Entity tileInst, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
@@ -211,35 +211,17 @@ namespace Amatsugu.Phos.Tiles
 			var consumption = buildingInfo.consumption;
 			if (production.Length > 0)
 			{
-				_productionData = new ProductionData
-				{
-					resourceIds = new int[production.Length],
-					rates = new int[production.Length]
-				};
-				for (int i = 0; i < production.Length; i++)
-				{
-					var rId = production[i].id;
-					_productionData.resourceIds[i] = rId;
-					_productionData.rates[i] = (int)production[i].ammount;
-				}
-
-				postUpdateCommands.AddSharedComponent(building, _productionData);
+				var productionBuffer = postUpdateCommands.AddBuffer<ResourceProduction>(building);
+				var pData = _productionData = PrepareResourceProduction().Values.ToArray();
+				for (int i = 0; i < pData.Length; i++)
+					productionBuffer.Add(pData[i]);
 			}
 			if (consumption.Length > 0)
 			{
-				_consumptionData = new ConsumptionData
-				{
-					resourceIds = new int[consumption.Length],
-					rates = new int[consumption.Length]
-				};
-				for (int i = 0; i < consumption.Length; i++)
-				{
-					var rId = consumption[i].id;
-					_consumptionData.resourceIds[i] = rId;
-					_consumptionData.rates[i] = (int)consumption[i].ammount;
-				}
-
-				postUpdateCommands.AddSharedComponent(building, _consumptionData);
+				var productionBuffer = postUpdateCommands.AddBuffer<ResourceConsumption>(building);
+				var cData = _consumptionData= PrepareResourceConsumtion().Values.ToArray();
+				for (int i = 0; i < cData.Length; i++)
+					productionBuffer.Add(cData[i]);
 			}
 			postUpdateCommands.AddComponent(building, new Health
 			{
@@ -251,13 +233,27 @@ namespace Amatsugu.Phos.Tiles
 			postUpdateCommands.AddComponent(building, typeof(FirstTickTag));
 			postUpdateCommands.AddComponent(building, new BuildingId { Value = GameRegistry.BuildingDatabase[buildingInfo] });
 
-			
 			//if (buildingInfo.healthBar != null)
 			//	_healthBars = buildingInfo.healthBar.Instantiate(building, buildingInfo.centerOfMassOffset + buildingInfo.healthBarOffset);
 		}
 
+		public virtual Dictionary<int, ResourceConsumption> PrepareResourceConsumtion()
+		{
+			var consumptions = new Dictionary<int, ResourceConsumption>();
+			var consumption = buildingInfo.consumption;
+			for (int i = 0; i < consumption.Length; i++)
+				consumptions.AppendResource(consumption[i]);
+			return consumptions;
+		}
 
-
+		public virtual Dictionary<int, ResourceProduction> PrepareResourceProduction()
+		{
+			var consumptions = new Dictionary<int, ResourceProduction>();
+			var production = buildingInfo.production;
+			for (int i = 0; i < production.Length; i++)
+				consumptions.AppendResource(production[i]);
+			return consumptions;
+		}
 
 		/// <summary>
 		/// Add and apply a buff to this tile
@@ -306,7 +302,7 @@ namespace Amatsugu.Phos.Tiles
 
 			postUpdateCommands.SetComponent(buildingEntity, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
 			postUpdateCommands.SetComponent(buildingEntity, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
-			
+
 			//TODO: Figure out health buffs
 			//var curHealth = postUpdateCommands.GetComponentData<Health>(tileEntity);
 			//curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;

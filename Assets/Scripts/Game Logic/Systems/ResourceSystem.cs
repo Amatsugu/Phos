@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Amatsugu.Phos;
+
+using System.Collections.Generic;
 
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
+
 using UnityEngine;
 
 [BurstCompile]
@@ -136,7 +139,7 @@ public class ResourceSystem : ComponentSystem
 		for (int i = 0; i < resourceRecords.Length; i++)
 			resourceRecords[i] = new ResourceTransactionRecord(i);
 		resCount = new int[ResourceDatabase.ResourceCount];
-		maxStorage = (int)math.pow(10,9);
+		maxStorage = (int)math.pow(10, 9);
 	}
 
 	protected override void OnUpdate()
@@ -151,43 +154,45 @@ public class ResourceSystem : ComponentSystem
 			resourceRecords[i].Clear();
 
 		//Consumption
-		/*Entities.WithNone<BuildingOffTag, ConsumptionMulti>().ForEach((Entity e, ConsumptionData c, ref BuildingId id) =>
+		Entities.WithNone<BuildingOffTag, ConsumptionMulti>().ForEach((Entity e, DynamicBuffer<ResourceConsumption> c, ref BuildingId id) =>
 		{
-			if (HasAllResources(c.resourceIds, c.rates, demandSrc: id.Value))
+			var identifiers = c.ToIdentifiers();
+			if (HasAllResources(identifiers, demandSrc: id.Value))
 			{
-				ConsumeResourses(c.resourceIds, c.rates, demandSrc: id.Value);
+				ConsumeResourses(identifiers, demandSrc: id.Value);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
 			}
 			else
 			{
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
-					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
+					PostUpdateCommands.AddComponent<InactiveBuildingTag>(e);
 			}
-		});*/
+		});
 
 		//Consumption
-		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ConsumptionData c, ref ConsumptionMulti multi, ref BuildingId id) =>
+		Entities.WithNone<BuildingOffTag>().ForEach((Entity e, DynamicBuffer<ResourceConsumption> c, ref ConsumptionMulti multi, ref BuildingId id) =>
 		{
-			if (HasAllResources(c.resourceIds, c.rates, multi.Value, id.Value))
+			var identifiers = c.ToIdentifiers();
+			if (HasAllResources(identifiers, multi.Value, id.Value))
 			{
-				ConsumeResourses(c.resourceIds, c.rates, multi.Value, id.Value);
+				ConsumeResourses(identifiers, multi.Value, id.Value);
 				if (EntityManager.HasComponent<InactiveBuildingTag>(e))
 					PostUpdateCommands.RemoveComponent<InactiveBuildingTag>(e);
 			}
 			else
 			{
 				if (!EntityManager.HasComponent<InactiveBuildingTag>(e))
-					PostUpdateCommands.AddComponent(e, new InactiveBuildingTag());
+					PostUpdateCommands.AddComponent<InactiveBuildingTag>(e);
 			}
 		});
 		//Production
-		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag, BuildingDisabledTag>().ForEach((Entity e, ProductionData p, ref ProductionMulti multi, ref BuildingId id) =>
+		Entities.WithNone<InactiveBuildingTag, BuildingOffTag, FirstTickTag, BuildingDisabledTag>().ForEach((Entity e, DynamicBuffer<ResourceProduction> p, ref ProductionMulti multi, ref BuildingId id) =>
 		{
-			for (int i = 0; i < p.resourceIds.Length; i++)
+			for (int i = 0; i < p.Length; i++)
 			{
-				int res = p.resourceIds[i];
-				int rate = (int)(p.rates[i] * multi.Value);
+				int res = p[i].resourceId;
+				int rate = (int)(p[i].rate * multi.Value);
 				if (resCount[res] == maxStorage)
 				{
 					LogExcess(res, rate, id.Value);
@@ -208,7 +213,6 @@ public class ResourceSystem : ComponentSystem
 		});
 
 		GameEvents.InvokeOnGameTick();
-
 	}
 
 	public void LogDemand(int rId, int rate, int srcBuilding) => resourceRecords[rId].LogDemand(rate, srcBuilding);

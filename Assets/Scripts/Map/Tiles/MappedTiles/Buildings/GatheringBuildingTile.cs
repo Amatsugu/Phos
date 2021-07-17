@@ -48,16 +48,9 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		
 	}
 
-	public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
+	public override Dictionary<int, ResourceProduction> PrepareResourceProduction()
 	{
-		base.PrepareBuildingEntity(building, postUpdateCommands);
-		
-		postUpdateCommands.AddSharedComponent(building, PrepareProductionData());
-
-	}
-
-	public virtual ProductionData PrepareProductionData()
-	{
+		var data = base.PrepareResourceProduction();
 		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
 		var resInRange = new Dictionary<int, int>();
 		//var resTiles = new Dictionary<int, List<ResourceTile>>();
@@ -77,23 +70,13 @@ public class GatheringBuildingTile : PoweredBuildingTile
 			}
 		}, true);
 
-		_productionData = new ProductionData
-		{
-			resourceIds = new int[gatherInfo.resourcesToGather.Length],
-			rates = new int[gatherInfo.resourcesToGather.Length]
-		};
-
-		var approxRates = new int[gatherInfo.resourcesToGather.Length];
 		for (int i = 0; i < gatherInfo.resourcesToGather.Length; i++)
 		{
 			var res = gatherInfo.resourcesToGather[i];
-			if (resInRange.ContainsKey(res.id))
-			{
-				_productionData.resourceIds[i] = res.id;
-				_productionData.rates[i] = Mathf.CeilToInt(gatherInfo.resourcesToGather[i].ammount * resInRange[res.id]);
-			}
+			data.AppendResource(res);
 		}
-		return _productionData;
+
+		return data;
 	}
 
 	public override void OnRemoved()

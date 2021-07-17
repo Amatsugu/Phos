@@ -17,9 +17,10 @@ namespace Amatsugu.Phos.Tiles
 	{
 		public BuildingTile ParentTile { get; private set; }
 
-		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, parentTile.buildingInfo, 0)
+		public MetaTile(HexCoords coords, float height, Map map, TileEntity tInfo, BuildingTile parentTile) : base(coords, height, map, tInfo)
 		{
 			ParentTile = parentTile;
+			
 		}
 
 		protected override void OnBuilt()

@@ -310,3 +310,77 @@ The following packages were updated:
   com.unity.ide.visualstudio from version 2.0.7 to 2.0.8
   com.unity.textmeshpro from version 3.0.4 to 3.0.6
   com.unity.timeline from version 1.5.4 to 1.5.5
+
+=== Sun Jun 27 12:15:56 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.visualstudio from version 2.0.8 to 2.0.9
+
+=== Sat Jul  3 22:39:45 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.modules.nvidia@1.0.0
+The following packages were updated:
+  com.unity.burst from version 1.5.4 to 1.6.0-pre.2
+  com.unity.render-pipelines.high-definition from version 11.0.0 to 12.0.0
+  com.unity.scriptablebuildpipeline from version 1.16.1 to 1.18.0
+  com.unity.timeline from version 1.5.5 to 1.6.0-pre.5
+  nuget.mono-cecil from version 0.1.6-preview to 1.0.0
+
+=== Sat Jul  3 22:49:45 2021
+
+Packages were changed.
+Update Mode: resetToDefaultDependencies
+
+The following packages were added:
+  com.unity.collab-proxy@1.5.7
+  com.unity.ide.rider@3.0.7
+  com.unity.ide.vscode@1.2.3
+  com.unity.visualscripting@1.7.2
+The following packages were updated:
+  com.unity.test-framework from version 1.1.27 to 1.1.26
+The following packages were removed:
+  com.unity.2d.sprite@1.0.0
+  com.unity.audio.dspgraph@0.1.0-preview.18
+  com.unity.build-report-inspector@0.2.2-preview
+  com.unity.burst@1.6.0-pre.2
+  com.unity.collections@0.17.0-preview.18
+  com.unity.entities@0.16.0-preview.21
+  com.unity.jobs@0.2.9-preview.15
+  com.unity.mathematics@1.2.1
+  com.unity.performance.profile-analyzer@1.0.3
+  com.unity.physics@0.6.0-preview.3
+  com.unity.platforms@0.5.0-preview.6
+  com.unity.platforms.windows@0.10.0-preview.10
+  com.unity.progrids@3.0.3-preview.6
+  com.unity.render-pipelines.high-definition@12.0.0
+  com.unity.rendering.hybrid@0.11.0-preview.44
+  com.unity.scriptablebuildpipeline@1.18.0
+  com.unity.test-framework.performance@2.8.0-preview
+  com.unity.toolchain.win-x86_64-linux-x86_64@0.1.20-preview
+  nuget.mono-cecil@1.0.0
+  com.unity.modules.nvidia@1.0.0
+
+=== Sat Jul  3 23:19:29 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.modules.nvidia@1.0.0
+The following packages were updated:
+  com.unity.render-pipelines.high-definition from version 11.0.0 to 12.0.0
+
+=== Fri Jul 16 08:31:10 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.timeline from version 1.6.0-pre.5 to 1.6.1
