@@ -28,6 +28,7 @@ namespace AnimationSystem.Animations
 		public float duration;
 		public float animationPhase;
 		public bool timeRelativePhase;
+		public float slideDistance = .5f;
 
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
@@ -41,7 +42,8 @@ namespace AnimationSystem.Animations
 				case AnimationType.Slider:
 					dstManager.AddSharedComponentData(entity, new Slider { duration = duration, animationCurve = animationCurve });
 					dstManager.AddComponentData(entity, new AnimStartPos { Value = float3.zero });
-					dstManager.AddComponentData(entity, new AnimEndPos { Value = new float3(0, .5f, 0) });
+					dstManager.AddComponentData(entity, new AnimEndPos { Value = new float3(0, slideDistance, 0) });
+					dstManager.AddComponent<AnimationInitTag>(entity);
 					if (timeRelativePhase)
 						dstManager.AddComponentData(entity, new AnimationPhase { Value = Time.time + animationPhase });
 					else

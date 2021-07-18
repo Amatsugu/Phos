@@ -99,10 +99,11 @@ namespace Amatsugu.Phos.Tiles
 			return buildingInst;
 		}
 
-		public virtual void CreateMetaTiles(DynamicBuffer<TileInstance> tileEntities, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		public virtual void CreateMetaTiles(DynamicBuffer<TileInstance> tileEntities, Entity tileInstance, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
 			if (!buildingInfo.useMetaTiles)
 				return;
+			postUpdateCommands.AddComponent<MetaInitTag>(tileInstance);
 			var footprint = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
 			for (int i = 0; i < footprint.Length; i++)
 			{
@@ -207,19 +208,17 @@ namespace Amatsugu.Phos.Tiles
 		public virtual void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{
 			postUpdateCommands.AddComponent(building, new HexPosition { Value = Coords });
-			var production = buildingInfo.production;
-			var consumption = buildingInfo.consumption;
-			if (production.Length > 0)
+			var pData = _productionData = PrepareResourceProduction().Values.ToArray();
+			if (pData.Length > 0)
 			{
 				var productionBuffer = postUpdateCommands.AddBuffer<ResourceProduction>(building);
-				var pData = _productionData = PrepareResourceProduction().Values.ToArray();
 				for (int i = 0; i < pData.Length; i++)
 					productionBuffer.Add(pData[i]);
 			}
-			if (consumption.Length > 0)
+			var cData = _consumptionData= PrepareResourceConsumtion().Values.ToArray();
+			if (cData.Length > 0)
 			{
 				var productionBuffer = postUpdateCommands.AddBuffer<ResourceConsumption>(building);
-				var cData = _consumptionData= PrepareResourceConsumtion().Values.ToArray();
 				for (int i = 0; i < cData.Length; i++)
 					productionBuffer.Add(cData[i]);
 			}

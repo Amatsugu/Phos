@@ -74,6 +74,7 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		{
 			var res = gatherInfo.resourcesToGather[i];
 			data.AppendResource(res);
+			Debug.Log(ResourceDatabase.GetResourceName(res.id));
 		}
 
 		return data;

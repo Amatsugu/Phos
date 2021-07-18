@@ -14,8 +14,6 @@ namespace Amatsugu.Phos
 	{
 		protected override void OnUpdate()
 		{
-			
-
 			Entities.ForEach((MapAuthoring m) =>
 			{
 				var mapEntity = GetPrimaryEntity(m);
@@ -47,7 +45,7 @@ namespace Amatsugu.Phos
 					for (int d = 0; d < tileDef.tile.decorators.Length; d++)
 					{
 #if DEBUG
-						if(tileDef.tile.decorators[d] == null)
+						if (tileDef.tile.decorators[d] == null)
 						{
 							Debug.LogWarning($"Decorator is null for tile {tileDef.tile.GetNameString()}");
 							continue;
@@ -87,7 +85,6 @@ namespace Amatsugu.Phos
 				//Add Event Buffers
 				DstEntityManager.AddBuffer<TileEvent>(mapEntity);
 				DstEntityManager.AddBuffer<BuffEvent>(mapEntity);
-
 			});
 		}
 	}
@@ -135,7 +132,6 @@ namespace Amatsugu.Phos
 						//tile.Start();
 					}
 				}
-
 
 				EntityManager.AddComponent<MapGeneratedTag>(e);
 
@@ -214,6 +210,9 @@ namespace Amatsugu.Phos
 	public struct NewInstanceTag : IComponentData
 	{
 	}
+	public struct MetaInitTag : IComponentData
+	{
+	}
 
 	public struct MapTag : IComponentData
 	{
@@ -235,9 +234,18 @@ namespace Amatsugu.Phos
 	{
 		public Entity Value;
 
-		public static implicit operator TileInstance(Entity entity) => new TileInstance { Value = entity };
+		public static implicit operator TileInstance(Entity entity) => new() { Value = entity };
 
 		public static implicit operator Entity(TileInstance inst) => inst.Value;
+	}
+
+	public struct MetaTileInstance : IBufferElementData
+	{
+		public Entity Value;
+
+		public static implicit operator MetaTileInstance(Entity entity) => new() { Value = entity };
+
+		public static implicit operator Entity(MetaTileInstance inst) => inst.Value;
 	}
 
 	public struct TileVersion : IComponentData

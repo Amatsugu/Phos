@@ -82,7 +82,7 @@ namespace Amatsugu.Phos
 		{
 			var result = new ResourceIndentifier[resources.Length];
 			for (int i = 0; i < resources.Length; i++)
-				resources[i] = new(resources[i].resourceId, resources[i].rate);
+				result[i] = new(resources[i].resourceId, resources[i].rate);
 			return result;
 		}
 
@@ -90,7 +90,7 @@ namespace Amatsugu.Phos
 		{
 			var result = new ResourceIndentifier[resources.Length];
 			for (int i = 0; i < resources.Length; i++)
-				resources[i] = new(resources[i].resourceId, resources[i].rate);
+				result[i] = new(resources[i].resourceId, resources[i].rate);
 			return result;
 		}
 	}

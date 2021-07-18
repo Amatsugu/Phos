@@ -29,7 +29,7 @@ namespace AnimationSystem
 
 			var curTime = UnityEngine.Time.time;
 			//Thumper
-			Entities.WithNone<BuildingOffTag>().ForEach((Slider th, ref AnimationPhase phase, ref AnimStartPos start, ref AnimEndPos end,  ref Translation t) =>
+			Entities.WithNone<BuildingOffTag, AnimationInitTag>().ForEach((Slider th, ref AnimationPhase phase, ref AnimStartPos start, ref AnimEndPos end,  ref Translation t) =>
 			{
 				var time = ((curTime + phase.Value) % th.duration) / th.duration;
 				var p = th.animationCurve.Evaluate(time);
@@ -43,13 +43,20 @@ namespace AnimationSystem
 			});
 
 			//callbacks
-			Entities.WithNone<BuildingOffTag>().ForEach((Entity e, ref Floor f, ref HitFloorCallback floorCallback, ref Translation t) =>
+			Entities.WithNone<BuildingOffTag, AnimationInitTag>().ForEach((Entity e, ref Floor f, ref HitFloorCallback floorCallback, ref Translation t) =>
 			{
 				if (t.Value.y <= f.Value)
 				{
 					GameEvents.InvokeOnAnimationEvent(floorCallback.eventId);
 					PostUpdateCommands.DestroyEntity(e);
 				}
+			});
+
+			Entities.WithAllReadOnly<AnimationInitTag, Translation>().ForEach((Entity e, ref Translation t, ref AnimStartPos start, ref AnimEndPos end) =>
+			{
+				start.Value = t.Value;
+				end.Value += t.Value;
+				PostUpdateCommands.RemoveComponent<AnimationInitTag>(e);
 			});
 		}
 	}
@@ -321,6 +328,11 @@ namespace AnimationSystem
 
 namespace AnimationSystem.AnimationData
 {
+
+	public struct AnimationInitTag : IComponentData
+	{
+
+	}
 
 	public struct AnimationPhase : IComponentData
 	{

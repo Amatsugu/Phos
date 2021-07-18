@@ -250,8 +250,12 @@ public class ResourceSystem : ComponentSystem
 			if (demandSrc != -1)
 				LogDemand(resources[i].id, totalRate, demandSrc);
 			if (resCount[resources[i].id] < totalRate)
+			{
 				hasRes = false;
+				break;
+			}
 		}
+		Debug.Log($"Resource Check {hasRes} {resources.Length}");
 		return hasRes;
 	}
 
