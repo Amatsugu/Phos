@@ -344,9 +344,9 @@ public class UIBuildPanel : UITabPanel
 		if (Input.GetKeyUp(KeyCode.Mouse0) && deconstructable.CanDeconstruct(Faction.Player))
 		{
 			var postUpdateCommands = GameRegistry.EntityManager.World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
-			//var tiles = GameRegistry.EntityManager.GetBuffer<TileInstance>(GameRegistry.MapEntity);
+			var tiles = GameRegistry.GetTileInstanceBuffer();
 			var prefabs = GameRegistry.EntityManager.GetBuffer<GenericPrefab>(GameRegistry.MapEntity);
-			deconstructable.Deconstruct(prefabs, isnt, postUpdateCommands);
+			deconstructable.Deconstruct(prefabs, tiles, postUpdateCommands);
 		}
 	}
 

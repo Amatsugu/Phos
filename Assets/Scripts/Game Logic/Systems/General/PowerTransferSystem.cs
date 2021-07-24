@@ -4,8 +4,6 @@ using DataStore.ConduitGraph;
 
 using Unity.Entities;
 
-using UnityEngine;
-
 namespace Amatsugu.Phos
 {
 	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
@@ -35,13 +33,12 @@ namespace Amatsugu.Phos
 			if (_conduitGraph == null)
 				return;
 
-
-
 			Entities.WithAllReadOnly<MapTag, RecalculateConduitsTag>().ForEach(e =>
 			{
 				_conduitGraph.CalculateConnectivity();
 			});
 
+			//Conduits
 			//TODO: Figure out a better way to defer the deletion of the conduit node to when the entity is destroyed
 			Entities.WithAllReadOnly<ResourceConduitTag, HexPosition>().WithNone<HQConntectedTag, PoweredBuildingTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
@@ -55,7 +52,8 @@ namespace Amatsugu.Phos
 					PostUpdateCommands.RemoveComponent<HQConntectedTag>(e);
 			});
 
-			Entities.WithAllReadOnly<PoweredBuildingTag, HexPosition>().WithNone<BuildingOffTag, ResourceConduitTag>().ForEach((Entity e, ref HexPosition pos) =>
+			//Buildings
+			Entities.WithAllReadOnly<PoweredBuildingTag, HexPosition>().WithNone<BuildingOffTag, ResourceConduitTag, SubTile>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
 				if (node == null)
@@ -65,13 +63,43 @@ namespace Amatsugu.Phos
 				}
 			});
 
-			Entities.WithAllReadOnly<PoweredBuildingTag, BuildingOffTag, HexPosition>().WithNone<ResourceConduitTag>().ForEach((Entity e, ref HexPosition pos) =>
+			Entities.WithAllReadOnly<PoweredBuildingTag, BuildingOffTag, HexPosition>().WithNone<ResourceConduitTag, SubTile>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
 				if (node != null)
 				{
 					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnDisconnected();
 					PostUpdateCommands.RemoveComponent<BuildingOffTag>(e);
+				}
+			});
+
+			//Meta Buildings
+			Entities.WithAllReadOnly<PoweredBuildingTag, SubTile, HexPosition>().WithNone<BuildingOffTag, ResourceConduitTag>().ForEach((Entity e, DynamicBuffer<SubTile> tiles, ref HexPosition hPos) =>
+			{
+				for (int i = 0; i < tiles.Length; i++)
+				{
+					var pos = tiles[i];
+					var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
+					if (node != null) //At lest on powered tile found, abort search
+						return;
+				}
+				//Mark unpowered if no
+				(GameRegistry.GameMap[hPos.Value] as PoweredBuildingTile).OnConnected();
+				PostUpdateCommands.AddComponent<BuildingOffTag>(e);
+			});
+
+			Entities.WithAllReadOnly<PoweredBuildingTag, BuildingOffTag, SubTile, HexPosition>().WithNone<ResourceConduitTag>().ForEach((Entity e, DynamicBuffer<SubTile> tiles, ref HexPosition hPos) =>
+			{
+				for (int i = 0; i < tiles.Length; i++)
+				{
+					var pos = tiles[i];
+					var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
+					if (node != null)//At least one powered tile found, marking as powered
+					{
+						(GameRegistry.GameMap[hPos.Value] as PoweredBuildingTile).OnDisconnected();
+						PostUpdateCommands.RemoveComponent<BuildingOffTag>(e);
+						return;
+					}
 				}
 			});
 		}
@@ -93,6 +121,7 @@ namespace Amatsugu.Phos
 	public struct RecalculateConduitsTag : IComponentData
 	{
 	}
+
 	public struct RenderConduitLinesTag : IComponentData
 	{
 	}

@@ -35,7 +35,7 @@ public interface ICommandable
 
 public interface IDeconstructable
 {
-	void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, Entity existingInstance, EntityCommandBuffer postUpdateCommands);
+	void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tileInstances, EntityCommandBuffer postUpdateCommands);
 
 	bool CanDeconstruct(Faction faction);
 

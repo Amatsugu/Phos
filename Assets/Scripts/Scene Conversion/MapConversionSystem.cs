@@ -210,9 +210,6 @@ namespace Amatsugu.Phos
 	public struct NewInstanceTag : IComponentData
 	{
 	}
-	public struct MetaInitTag : IComponentData
-	{
-	}
 
 	public struct MapTag : IComponentData
 	{
@@ -239,13 +236,19 @@ namespace Amatsugu.Phos
 		public static implicit operator Entity(TileInstance inst) => inst.Value;
 	}
 
-	public struct MetaTileInstance : IBufferElementData
+
+
+	public struct MultiTileTag : IComponentData
 	{
-		public Entity Value;
 
-		public static implicit operator MetaTileInstance(Entity entity) => new() { Value = entity };
+	}
 
-		public static implicit operator Entity(MetaTileInstance inst) => inst.Value;
+	public struct SubTile : IBufferElementData
+	{
+		public HexCoords Value;
+
+		public static implicit operator SubTile(HexCoords coords) => new() { Value = coords };
+		public static implicit operator HexCoords(SubTile multiTile) => multiTile.Value;
 	}
 
 	public struct TileVersion : IComponentData

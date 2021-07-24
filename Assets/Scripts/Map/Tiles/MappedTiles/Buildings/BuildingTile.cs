@@ -99,20 +99,22 @@ namespace Amatsugu.Phos.Tiles
 			return buildingInst;
 		}
 
-		public virtual void CreateMetaTiles(DynamicBuffer<TileInstance> tileEntities, Entity tileInstance, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		public virtual void CreateMetaTiles(DynamicBuffer<TileInstance> tileEntities, Entity buildingInstance, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
 		{
 			if (!buildingInfo.useMetaTiles)
 				return;
-			postUpdateCommands.AddComponent<MetaInitTag>(tileInstance);
 			var footprint = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
+			postUpdateCommands.AddComponent<MultiTileTag>(buildingInstance);
+			var buffer = postUpdateCommands.AddBuffer<SubTile>(buildingInstance);
 			for (int i = 0; i < footprint.Length; i++)
 			{
 				var c = footprint[i];
 				var tile = map[c];
 				var metaTile = new MetaTile(c, Height, map, GetGroundTileInfo(), this);
-				Debug.Log(GetGroundTileInfo().GetNameString());
-				map.ReplaceTile(tile, metaTile, prefabs, tileEntities[c.ToIndex(map.totalWidth)], postUpdateCommands);
+				map.ReplaceTile(tile, metaTile, prefabs, tileEntities, postUpdateCommands);
+				buffer.Add(c);
 			}
+			buffer.Add(Coords);
 		}
 
 		/// <summary>
@@ -312,9 +314,15 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Deconstruct this building, reverting it to it's original tile
 		/// </summary>
-		public virtual void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, Entity existingTileInstance, EntityCommandBuffer postUpdateCommands)
+		public virtual void Deconstruct(DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tileInstances, EntityCommandBuffer postUpdateCommands)
 		{
-			map.RevertTile(this, prefabs, existingTileInstance, postUpdateCommands);
+			map.RevertTile(this, prefabs, tileInstances, postUpdateCommands);
+			if(buildingInfo.useMetaTiles)
+			{
+				var tiles = buildingInfo.footprint.GetOccupiedTiles(Coords, rotationAngle);
+				for (int i = 0; i < tiles.Length; i++)
+					map.RevertTile(map[tiles[i]], prefabs, tileInstances, postUpdateCommands);
+			}
 		}
 
 		/// <summary>

@@ -217,9 +217,7 @@ public class BuildQueueSystem : ComponentSystem
 		var footprint = order.building.footprint.GetOccupiedTiles(order.dstTile.Coords, order.rotation);
 		if (!order.dstTile.IsUnderwater)
 			GameRegistry.GameMap.FootprintFlatten(footprint, order.building.flattenOuterRange, Map.FlattenMode.Center | Map.FlattenMode.IgnoreUnderWater);
-		var existingTileInstance = tileInstances[order.dstTile.Coords.ToIndex(GameRegistry.GameMap.totalWidth)];
-		var buildingTile = GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation, prefabs, existingTileInstance, PostUpdateCommands);
-		buildingTile.CreateMetaTiles(tileInstances, existingTileInstance, prefabs, PostUpdateCommands);
+		GameRegistry.GameMap.ReplaceTile(order.dstTile, order.building, order.rotation, prefabs, tileInstances, PostUpdateCommands);
 		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : order.building.constructionTime;
 
 		_constructionOrders.Add(new ConstructionOrder(order, buildTime, Time.ElapsedTime + buildTime));

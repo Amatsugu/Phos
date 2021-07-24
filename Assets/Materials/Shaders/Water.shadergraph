@@ -235,9 +235,6 @@
             "m_Id": "b673ec4da12a4e85b610cc4e55ec54a9"
         },
         {
-            "m_Id": "5b3292017e2242b0be668db625b0609e"
-        },
-        {
             "m_Id": "bd8b1a0a551a42f883829311ed4f4314"
         },
         {
@@ -1203,9 +1200,6 @@
             },
             {
                 "m_Id": "b673ec4da12a4e85b610cc4e55ec54a9"
-            },
-            {
-                "m_Id": "5b3292017e2242b0be668db625b0609e"
             },
             {
                 "m_Id": "bd8b1a0a551a42f883829311ed4f4314"
@@ -3294,39 +3288,6 @@
         "z": 0.0,
         "w": 0.0
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "5b3292017e2242b0be668db625b0609e",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "SurfaceDescription.CoatMask",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "e90ecaebbed74eeb9bfff683dee6f85d"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "SurfaceDescription.CoatMask"
 }
 
 {
@@ -7482,21 +7443,6 @@
         "z": 0.0,
         "w": 0.0
     },
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "e90ecaebbed74eeb9bfff683dee6f85d",
-    "m_Id": 0,
-    "m_DisplayName": "Coat Mask",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "CoatMask",
-    "m_StageCapability": 2,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
     "m_Labels": []
 }
 
