@@ -28,4 +28,25 @@ public struct StructureFootprint
 			fp[i] = new HexCoords(center.X + footprint[i].x, center.Y + footprint[i].y, center.edgeLength).RotateAround(center, rotation);
 		return fp;
 	}
+
+	public List<HexCoords> GetNeighbors(HexCoords center, int rotation = 0)
+	{
+		var footprint = GetOccupiedTiles(center, rotation);
+		var occupiedSet = new HashSet<HexCoords>(footprint);
+
+		var result = new List<HexCoords>(footprint.Length * 2);
+
+		for (int i = 0; i < footprint.Length; i++)
+		{
+			var curTile = footprint[i];
+			for (int d = 0; d < 6; d++)
+			{
+				var n = curTile.GetNeighbor(d);
+				if (occupiedSet.Contains(n))
+					continue;
+				result.Add(n);
+			}
+		}
+		return result;
+	}
 }

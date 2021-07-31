@@ -5,6 +5,7 @@ using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Transforms;
 
 using UnityEngine;
 
@@ -203,6 +204,21 @@ namespace Amatsugu.Phos
 			{
 				buffer[pos.Value.ToIndex(mapWidth)] = e;
 				PostUpdateCommands.RemoveComponent<NewInstanceTag>(e);
+			});
+		}
+	}
+
+
+	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
+	[UpdateAfter(typeof(TileInstanceBufferSystem))]
+	public class BuildingInstanceBufferSystem : ComponentSystem
+	{
+		protected override void OnUpdate()
+		{
+			Entities.WithAllReadOnly<BuildingInitTag, Parent>().ForEach((Entity e, ref Parent p) =>
+			{
+				PostUpdateCommands.SetComponent<Building>(p.Value, e);
+				PostUpdateCommands.RemoveComponent<BuildingInitTag>(e);
 			});
 		}
 	}

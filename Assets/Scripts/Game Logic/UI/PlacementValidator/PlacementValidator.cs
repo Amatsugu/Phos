@@ -79,6 +79,12 @@ public class PlacementValidator : ScriptableObject
 					return false;
 				}
 			}
+
+			var neighbors = buildingTile.footprint.GetNeighbors(pos, rotation);
+			for (int i = 0; i < neighbors.Count; i++)
+			{
+				indicatorManager.SetIndicator(map[neighbors[i]], errorIndicator);
+			}
 			if (!isValid)
 				indicatorManager.LogError("Cannot place on these tiles");
 			return isValid;
