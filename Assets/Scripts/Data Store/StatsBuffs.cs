@@ -25,13 +25,15 @@ namespace Amatsugu.Phos.DataStore
 		public float consumptionMulti;
 		public float productionMulti;
 
-		public static StatsBuffs Default => new StatsBuffs
+		public static StatsBuffs Default => new()
 		{
 			consumptionMulti = 1,
 			productionMulti = 1,
 			buildCostMulti = 1,
 			buildSpeedMulti = 1
 		};
+
+		public static StatsBuffs Empty => new();
 
 		public static StatsBuffs operator +(StatsBuffs left, StatsBuffs right)
 		{
