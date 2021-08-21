@@ -45,7 +45,7 @@ public class GameRegistry : MonoBehaviour
 	public static EntityManager EntityManager => INST.entityManager;
 	public static BuildQueueSystem BuildQueueSystem => INST.buildQueueSystem;
 	public static Entity MapEntity => INST.mapEntity;
-
+	public static AdjacenecyDatabase AdjacenecyDatabase => INST.adjacenecyDatabase;
 	internal static void SetState(GameState gameState)
 	{
 		INST.gameState = gameState;
@@ -69,6 +69,7 @@ public class GameRegistry : MonoBehaviour
 	public EntityManager entityManager;
 	public BuildQueueSystem buildQueueSystem;
 	public Entity mapEntity;
+	public AdjacenecyDatabase adjacenecyDatabase;
 
 	public static void InitGame(GameState gameState)
 	{

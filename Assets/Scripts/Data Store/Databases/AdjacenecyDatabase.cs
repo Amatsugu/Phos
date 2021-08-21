@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos
 {
-	[CreateAssetMenu(menuName = "Game Data/Adjacency Effects")]
+	[CreateAssetMenu(menuName = "Game Data/Adjacency Database")]
 	public class AdjacenecyDatabase : ScriptableObject
 	{
 		public AdjacencyDefination[] definedBonuses;
@@ -44,24 +44,30 @@ namespace Amatsugu.Phos
 				_adjancencyEffects = default;
 			}
 
-			public StatsBuffs GetAdjancencyEffect(BuildingIdentifier a, BuildingIdentifier b)
+
+			public bool HasAdjacencyEffect(Key key)
 			{
-				if (_adjancencyEffects.ContainsKey((a, b)))
-					return _adjancencyEffects[(a, b)];
+				return _adjancencyEffects.ContainsKey(key);
+			}
+
+			public StatsBuffs GetAdjancencyEffect(BuildingIdentifier receiver, BuildingIdentifier provider)
+			{
+				if (_adjancencyEffects.ContainsKey((receiver, provider)))
+					return _adjancencyEffects[(receiver, provider)];
 				return StatsBuffs.Empty;
 			}
 
-			public StatsBuffs GetAdjancencyEffect(BuildingId a, BuildingId b)
+			public StatsBuffs GetAdjancencyEffect(BuildingId reciever, BuildingId provider)
 			{
-				if (_adjancencyEffects.ContainsKey((a, b)))
-					return _adjancencyEffects[(a, b)];
+				if (_adjancencyEffects.ContainsKey((reciever, provider)))
+					return _adjancencyEffects[(reciever, provider)];
 				return StatsBuffs.Empty;
 			}
 
-			public StatsBuffs GetAdjancencyEffect(int a, int b)
+			public StatsBuffs GetAdjancencyEffect(int reciever, int provider)
 			{
-				if (_adjancencyEffects.ContainsKey((a, b)))
-					return _adjancencyEffects[(a, b)];
+				if (_adjancencyEffects.ContainsKey((reciever, provider)))
+					return _adjancencyEffects[(reciever, provider)];
 				return StatsBuffs.Empty;
 			}
 
@@ -95,6 +101,7 @@ namespace Amatsugu.Phos
 	[Serializable]
 	public struct AdjacencyDefination
 	{
+		public string name;
 		public BuildingIdentifier[] receivers;
 		public BuildingIdentifier[] providers;
 		public StatsBuffs buff;

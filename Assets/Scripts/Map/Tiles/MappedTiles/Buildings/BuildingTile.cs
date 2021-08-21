@@ -97,6 +97,7 @@ namespace Amatsugu.Phos.Tiles
 			postUpdateCommands.SetComponent(buildingInst, new Rotation { Value = rotation });
 			postUpdateCommands.AddComponent<Building>(tileInst, buildingInst);
 			postUpdateCommands.AddComponent<BuildingInitTag>(buildingInst);
+			postUpdateCommands.AddComponent<BuildingBonusInitTag>(buildingInst);
 
 			return buildingInst;
 		}
