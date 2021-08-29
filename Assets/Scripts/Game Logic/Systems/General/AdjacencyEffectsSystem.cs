@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos
 {
+	[UpdateAfter(typeof(BuildingInstanceBufferSystem))]
 	public class AdjacencyEffectsSystem : ComponentSystem
 	{
 		private AdjacenecyDatabase.Runtime _adjDb;
@@ -24,9 +25,10 @@ namespace Amatsugu.Phos
 
 		protected override void OnUpdate()
 		{
-			Entities.WithAllReadOnly<BuildingId>().WithAll<BuildingBonusInitTag>().ForEach((Entity e, ref BuildingId building, ref HexPosition pos) =>
+			Entities.WithNone<BuildingInitTag>().WithAllReadOnly<BuildingId>().WithAll<BuildingBonusInitTag>().ForEach((Entity e, ref BuildingId building, ref HexPosition pos) =>
 			{
 				var neighbors = GameRegistry.GameMap.GetNeighbors(pos);
+				var buffer = GameRegistry.GetTileInstanceBuffer();
 
 				for (int i = 0; i < neighbors.Length; i++)
 				{
@@ -37,11 +39,18 @@ namespace Amatsugu.Phos
 						//Recevive Buff
 						if (_adjDb.HasAdjacencyEffect((building.Value, nBid)))
 						{
-							Debug.Log($"Has Buff from {nb.GetNameString()}");
+							var b = ((BuildingTile)GameRegistry.GameMap[pos]);
+							b.AddBuff(nb.Coords, _adjDb.GetAdjancencyEffect(building.Value, nBid));
+							var t = buffer[b.Coords.ToIndex(GameRegistry.GameMap.totalWidth)];
+							b.ApplyBuffs(t, e, PostUpdateCommands);
 						}
 						//Give Buff
 						else if (_adjDb.HasAdjacencyEffect((nBid, building.Value)))
 						{
+							nb.AddBuff(pos, _adjDb.GetAdjancencyEffect(building.Value, nBid));
+							var nt = buffer[nb.Coords.ToIndex(GameRegistry.GameMap.totalWidth)];
+							var ntb = EntityManager.GetComponentData<Building>(nt).Value;
+							nb.ApplyBuffs(nt, ntb, PostUpdateCommands);
 							Debug.Log($"Give buff to {nb.GetNameString()}");
 						}
 					}
@@ -49,6 +58,13 @@ namespace Amatsugu.Phos
 				PostUpdateCommands.RemoveComponent<BuildingBonusInitTag>(e);
 			});
 		}
+
+		protected override void OnStopRunning()
+		{
+			base.OnStopRunning();
+			_adjDb.Dispose();
+		}
+
 
 		protected override void OnDestroy()
 		{

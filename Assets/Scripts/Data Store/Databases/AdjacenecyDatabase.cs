@@ -93,7 +93,7 @@ namespace Amatsugu.Phos
 					return false;
 				}
 
-				public override int GetHashCode() => HashCode.Combine(a, b);
+				public override int GetHashCode() => $"{a}:{b}".GetHashCode();
 			}
 		}
 	}

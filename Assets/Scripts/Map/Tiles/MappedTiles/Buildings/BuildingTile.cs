@@ -266,7 +266,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <param name="buff">The buff to apply</param>
 		public virtual void AddBuff(HexCoords src, StatsBuffs buff)
 		{
-			Debug.Log("Add Buff Called");
+			Debug.Log($"Add Buff Called\n{buff.ToString(0)}");
 			if (buffSources.ContainsKey(src))
 			{
 				totalBuffs -= buffSources[src];
@@ -275,7 +275,7 @@ namespace Amatsugu.Phos.Tiles
 			else
 				buffSources.Add(src, buff);
 			totalBuffs += buff;
-			AddBuffEvent();
+			//AddBuffEvent();
 		}
 
 		/// <summary>
@@ -288,7 +288,7 @@ namespace Amatsugu.Phos.Tiles
 			{
 				totalBuffs -= buffSources[src];
 				buffSources.Remove(src);
-				AddBuffEvent();
+				//AddBuffEvent();
 			}
 		}
 
@@ -304,9 +304,10 @@ namespace Amatsugu.Phos.Tiles
 			if (!isBuilt || !_isRendered)
 				return;
 
-			postUpdateCommands.SetComponent(buildingEntity, new ProductionMulti { Value = totalBuffs.productionMulti + 1 });
-			postUpdateCommands.SetComponent(buildingEntity, new ConsumptionMulti { Value = totalBuffs.consumptionMulti + 1 });
+			postUpdateCommands.SetComponent(buildingEntity, new ProductionMulti { Value = totalBuffs.productionMulti});
+			postUpdateCommands.SetComponent(buildingEntity, new ConsumptionMulti { Value = totalBuffs.consumptionMulti});
 
+			Debug.Log($"Buffs applied\n{totalBuffs}"); 
 			//TODO: Figure out health buffs
 			//var curHealth = postUpdateCommands.GetComponentData<Health>(tileEntity);
 			//curHealth.maxHealth = buildingInfo.maxHealth + totalBuffs.structureHealth;

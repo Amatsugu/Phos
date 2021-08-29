@@ -66,10 +66,6 @@ namespace Amatsugu.Phos.TileEntities
 		public ResourceIndentifier[] production;
 		public ResourceIndentifier[] consumption;
 
-		[Header("Adjacency Bonuses")]
-		public AdjacencyEffect[] adjacencyEffects;
-
-
 		public override Tile CreateTile(Map map, HexCoords pos, float height)
 		{
 			return CreateTile(map, pos, height, 0);

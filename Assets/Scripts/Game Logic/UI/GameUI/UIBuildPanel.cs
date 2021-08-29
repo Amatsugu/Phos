@@ -430,8 +430,8 @@ public class UIBuildPanel : UITabPanel
 		{
 			var t = footprint[i];
 			var neighbors = GameRegistry.GameMap.GetNeighbors(t);
-			for (int j = 0; j < _selectedBuilding.adjacencyEffects.Length; j++)
-				_selectedBuilding.adjacencyEffects[j].GetAdjacencyEffectsString(GameRegistry.GameMap[t], neighbors, ref effects);
+			//for (int j = 0; j < _selectedBuilding.adjacencyEffects.Length; j++)
+			//	_selectedBuilding.adjacencyEffects[j].GetAdjacencyEffectsString(GameRegistry.GameMap[t], neighbors, ref effects);
 		}
 
 		ShowPoweredTiles(selectedTile);

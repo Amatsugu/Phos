@@ -10,10 +10,10 @@ namespace Amatsugu.Phos
 {
 	public static class Extentions
 	{
-		public static StringBuilder ToNumberString(this float value, string positiveColor = "#00dd00", string negativeColor = "#dd0000")
+		public static StringBuilder ToNumberString(this float value, string positiveColor = "#00dd00", string negativeColor = "#dd0000", float pivot = 0)
 		{
 			var sb = new StringBuilder();
-			if(value > 0)
+			if(value > pivot)
 			{
 				sb.Append("<color=");
 				sb.Append(positiveColor);
@@ -24,17 +24,17 @@ namespace Amatsugu.Phos
 			}else
 			{
 				sb.Append("<color=");
-				sb.Append(positiveColor);
+				sb.Append(negativeColor);
 				sb.Append(">");
 				sb.Append(value);
 				sb.Append("</color>");
 			}
 			return sb;
 		}
-		public static StringBuilder ToNumberString(this int value, string positiveColor = "#00dd00", string negativeColor = "#dd0000")
+		public static StringBuilder ToNumberString(this int value, string positiveColor = "#00dd00", string negativeColor = "#dd0000", int pivot = 0)
 		{
 			var sb = new StringBuilder();
-			if (value > 0)
+			if (value > pivot)
 			{
 				sb.Append("<color=");
 				sb.Append(positiveColor);
@@ -46,7 +46,7 @@ namespace Amatsugu.Phos
 			else
 			{
 				sb.Append("<color=");
-				sb.Append(positiveColor);
+				sb.Append(negativeColor);
 				sb.Append(">");
 				sb.Append(value);
 				sb.Append("</color>");

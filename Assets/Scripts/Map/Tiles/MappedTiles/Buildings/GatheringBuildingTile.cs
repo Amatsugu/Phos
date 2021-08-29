@@ -73,7 +73,10 @@ public class GatheringBuildingTile : PoweredBuildingTile
 		for (int i = 0; i < gatherInfo.resourcesToGather.Length; i++)
 		{
 			var res = gatherInfo.resourcesToGather[i];
-			data.AppendResource(res);
+			var c = 0;
+			if (resInRange.ContainsKey(res.id))
+				c = resInRange[res.id];
+			data.AppendResource(res * c);
 			Debug.Log(ResourceDatabase.GetResourceName(res.id));
 		}
 

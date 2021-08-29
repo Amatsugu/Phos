@@ -76,6 +76,11 @@ namespace Amatsugu.Phos.DataStore
 
 		public override string ToString()
 		{
+			return ToString(1);
+		}
+
+		public string ToString(float multiPivot = 1)
+		{
 			var sb = new StringBuilder();
 
 			if (structureHealth != default)
@@ -92,14 +97,14 @@ namespace Amatsugu.Phos.DataStore
 			if (unitAttack != default)
 				sb.AppendLine($"Unit Attack: {unitAttack.ToNumberString()}");
 
-			if (buildCostMulti != 0)
-				sb.AppendLine($"Build Cost: {buildCostMulti.ToNumberString()}");
-			if (buildSpeedMulti != 0)
-				sb.AppendLine($"Build Speed: {buildSpeedMulti.ToNumberString()}");
-			if (consumptionMulti != 0)
-				sb.AppendLine($"Resource Consumtion: {consumptionMulti.ToNumberString()}");
-			if (productionMulti != 0)
-				sb.AppendLine($"Resource Production: {productionMulti.ToNumberString()}");
+			if (buildCostMulti != multiPivot)
+				sb.AppendLine($"Build Cost: {buildCostMulti.ToNumberString(pivot: 1)}x");
+			if (buildSpeedMulti != multiPivot)
+				sb.AppendLine($"Build Speed: {buildSpeedMulti.ToNumberString(pivot: 1)}x");
+			if (consumptionMulti != multiPivot)
+				sb.AppendLine($"Resource Consumtion: {consumptionMulti.ToNumberString(pivot: 1)}x");
+			if (productionMulti != multiPivot)
+				sb.AppendLine($"Resource Production: {productionMulti.ToNumberString(pivot: 1)}x");
 
 			return sb.ToString();
 		}
