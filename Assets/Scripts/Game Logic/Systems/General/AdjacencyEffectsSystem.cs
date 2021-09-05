@@ -1,12 +1,12 @@
 using Amatsugu.Phos.DataStore;
 using Amatsugu.Phos.Tiles;
 
-using System.Collections;
-using System.Collections.Generic;
-
+using Unity.Collections;
 using Unity.Entities;
 
 using UnityEngine;
+
+using static Amatsugu.Phos.AdjacenecyDatabase.Runtime;
 
 namespace Amatsugu.Phos
 {
@@ -19,6 +19,7 @@ namespace Amatsugu.Phos
 		protected override void OnStartRunning()
 		{
 			base.OnStartRunning();
+
 			_adjDb = GameRegistry.AdjacenecyDatabase.ToRuntime();
 			_buildingDatabase = GameRegistry.BuildingDatabase;
 		}
@@ -47,7 +48,7 @@ namespace Amatsugu.Phos
 						//Give Buff
 						else if (_adjDb.HasAdjacencyEffect((nBid, building.Value)))
 						{
-							nb.AddBuff(pos, _adjDb.GetAdjancencyEffect(building.Value, nBid));
+							nb.AddBuff(pos, _adjDb.GetAdjancencyEffect(nBid, building.Value));
 							var nt = buffer[nb.Coords.ToIndex(GameRegistry.GameMap.totalWidth)];
 							var ntb = EntityManager.GetComponentData<Building>(nt).Value;
 							nb.ApplyBuffs(nt, ntb, PostUpdateCommands);
@@ -64,7 +65,6 @@ namespace Amatsugu.Phos
 			base.OnStopRunning();
 			_adjDb.Dispose();
 		}
-
 
 		protected override void OnDestroy()
 		{

@@ -204,7 +204,6 @@ public class UIDevConsole : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
 		{
-			Debug.Log(consolePanel.IsOpen);
 			if (consolePanel.IsOpen)
 				consolePanel.Hide();
 			else

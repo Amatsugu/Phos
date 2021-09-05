@@ -266,7 +266,7 @@ namespace Amatsugu.Phos.Tiles
 		/// <param name="buff">The buff to apply</param>
 		public virtual void AddBuff(HexCoords src, StatsBuffs buff)
 		{
-			Debug.Log($"Add Buff Called\n{buff.ToString(0)}");
+			Debug.Log($"Add Buff Called\n{buff.ToString(0, additive: true)}");
 			if (buffSources.ContainsKey(src))
 			{
 				totalBuffs -= buffSources[src];

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 using Unity.Entities;
 
@@ -10,10 +7,10 @@ namespace Amatsugu.Phos
 {
 	public static class Extentions
 	{
-		public static StringBuilder ToNumberString(this float value, string positiveColor = "#00dd00", string negativeColor = "#dd0000", float pivot = 0)
+		public static StringBuilder ToNumberString(this float value, string positiveColor = "#00dd00", string negativeColor = "#dd0000", float pivot = 0, bool invert = false)
 		{
 			var sb = new StringBuilder();
-			if(value > pivot)
+			if (invert ? value < pivot : value > pivot)
 			{
 				sb.Append("<color=");
 				sb.Append(positiveColor);
@@ -21,7 +18,8 @@ namespace Amatsugu.Phos
 				sb.Append("+");
 				sb.Append(value);
 				sb.Append("</color>");
-			}else
+			}
+			else
 			{
 				sb.Append("<color=");
 				sb.Append(negativeColor);
@@ -31,10 +29,11 @@ namespace Amatsugu.Phos
 			}
 			return sb;
 		}
-		public static StringBuilder ToNumberString(this int value, string positiveColor = "#00dd00", string negativeColor = "#dd0000", int pivot = 0)
+
+		public static StringBuilder ToNumberString(this int value, string positiveColor = "#00dd00", string negativeColor = "#dd0000", int pivot = 0, bool invert = false)
 		{
 			var sb = new StringBuilder();
-			if (value > pivot)
+			if (invert ? value < pivot : value > pivot)
 			{
 				sb.Append("<color=");
 				sb.Append(positiveColor);
@@ -63,7 +62,7 @@ namespace Amatsugu.Phos
 				dict[resource.id] = rate;
 			}
 			else
-				dict.Add(resource.id, new (resource.id, resource.ammount));
+				dict.Add(resource.id, new(resource.id, resource.ammount));
 		}
 
 		public static void AppendResource(this Dictionary<int, ResourceConsumption> dict, ResourceIndentifier resource)
@@ -75,7 +74,7 @@ namespace Amatsugu.Phos
 				dict[resource.id] = rate;
 			}
 			else
-				dict.Add(resource.id, new (resource.id, resource.ammount));
+				dict.Add(resource.id, new(resource.id, resource.ammount));
 		}
 
 		public static ResourceIndentifier[] ToIdentifiers(this DynamicBuffer<ResourceConsumption> resources)
