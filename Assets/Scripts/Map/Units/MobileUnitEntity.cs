@@ -54,6 +54,57 @@ namespace Amatsugu.Phos.Units
 			return unitInst;
 		}
 
+		private virtual void PrepareUnitDomain(Entity entity, EntityCommandBuffer postUpdateCommands)
+		{
+			switch (unitClass)
+			{
+				case UnitClass.Class.Turret:
+					postUpdateCommands.SetComponent(entity, new UnitClass.Turret());
+					break;
+				case UnitClass.Class.Artillery:
+					postUpdateCommands.SetComponent(entity, new UnitClass.Artillery());
+					break;
+				case UnitClass.Class.Support:
+					postUpdateCommands.SetComponent(entity, new UnitClass.Support());
+					break;
+				case UnitClass.Class.FixedGun:
+					postUpdateCommands.SetComponent(entity, new UnitClass.FixedGun());
+					break;
+			}
+			switch (unitDomain)
+			{
+				case UnitDomain.Domain.Air:
+					postUpdateCommands.SetComponent(entity, new UnitDomain.Air());
+					break;
+				case UnitDomain.Domain.Land:
+					postUpdateCommands.SetComponent(entity, new UnitDomain.Land());
+					break;
+				case UnitDomain.Domain.Naval:
+					postUpdateCommands.SetComponent(entity, new UnitDomain.Naval());
+					break;
+			}
+			postUpdateCommands.SetComponent(entity, new TargetingDomain
+			{
+				Value = unitTargetingDomain
+			});
+		}
+
+		private virtual void PrepareComponentData(Entity entity, EntityCommandBuffer postUpdateCommands)
+		{
+			PrepareUnitDomain(entity, postUpdateCommands);
+
+			postUpdateCommands.SetComponent(entity, new MoveSpeed { Value = moveSpeed });
+			postUpdateCommands.SetComponent(entity, new Heading { Value = Vector3.forward });
+			postUpdateCommands.SetComponent(entity, new Projectile { Value = projectile.GetEntity() });
+			postUpdateCommands.SetComponent(entity, new AttackSpeed { Value = 1f / attackSpeed });
+			postUpdateCommands.SetComponent(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
+			postUpdateCommands.SetComponent(entity, new AttackRange(attackRange));
+			//GameRegistry.EntityManager.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
+			//GameRegistry.EntityManager.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
+
+			
+		}
+
 		public virtual void Start(Entity entity, EntityCommandBuffer postUpdateCommands)
 		{
 
@@ -62,46 +113,7 @@ namespace Amatsugu.Phos.Units
 		//public override void PrepareDefaultComponentData(Entity entity)
 		//{
 		//	base.PrepareDefaultComponentData(entity);
-		//	GameRegistry.EntityManager.SetComponentData(entity, new MoveSpeed { Value = moveSpeed });
-		//	GameRegistry.EntityManager.SetComponentData(entity, new Heading { Value = Vector3.forward });
-		//	GameRegistry.EntityManager.SetComponentData(entity, new Projectile { Value = projectile.GetEntity() });
-		//	GameRegistry.EntityManager.SetComponentData(entity, new AttackSpeed { Value = 1f / attackSpeed });
-		//	GameRegistry.EntityManager.SetComponentData(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
-		//	//GameRegistry.EntityManager.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
-		//	GameRegistry.EntityManager.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
-		//	GameRegistry.EntityManager.SetComponentData(entity, new AttackRange(attackRange));
-
-		//	switch (unitClass)
-		//	{
-		//		case UnitClass.Class.Turret:
-		//			GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.Turret());
-		//			break;
-		//		case UnitClass.Class.Artillery:
-		//			GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.Artillery());
-		//			break;
-		//		case UnitClass.Class.Support:
-		//			GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.Support());
-		//			break;
-		//		case UnitClass.Class.FixedGun:
-		//			GameRegistry.EntityManager.AddComponentData(entity, new UnitClass.FixedGun());
-		//			break;
-		//	}
-		//	switch (unitDomain)
-		//	{
-		//		case UnitDomain.Domain.Air:
-		//			GameRegistry.EntityManager.AddComponentData(entity, new UnitDomain.Air());
-		//			break;
-		//		case UnitDomain.Domain.Land:
-		//			GameRegistry.EntityManager.AddComponentData(entity, new UnitDomain.Land());
-		//			break;
-		//		case UnitDomain.Domain.Naval:
-		//			GameRegistry.EntityManager.AddComponentData(entity, new UnitDomain.Naval());
-		//			break;
-		//	}
-		//	GameRegistry.EntityManager.SetComponentData(entity, new TargetingDomain
-		//	{
-		//		Value = unitTargetingDomain
-		//	});
+		
 		//}
 
 		//		public Entity Instantiate(float3 pos, Quaternion rotation, int id, Faction faction = Faction.None)
