@@ -72,7 +72,7 @@ namespace Amatsugu.Phos.ECS
 		public override Entity Instantiate(float3 position, float3 scale)
 		{
 			var entity = base.Instantiate(position, scale);
-			var em = Map.EM;
+			var em = GameRegistry.EntityManager;
 			switch (animationType)
 			{
 				case AnimationType.Slider:

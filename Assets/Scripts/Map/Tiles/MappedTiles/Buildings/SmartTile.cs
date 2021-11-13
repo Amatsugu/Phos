@@ -35,31 +35,26 @@ namespace Amatsugu.Phos.Tiles
 		}
 
 
-		public override void TileUpdated(Tile src, TileUpdateType updateType)
+		/*public override void TileUpdated(Tile src, TileUpdateType updateType)
 		{
 			base.TileUpdated(src, updateType);
 			if (isBuilt)
-				RenderConnections();
-		}
+				*//*RenderConnections();*//*
+		}*/
 
-		[Obsolete]
-		protected virtual void RenderConnections()
+
+		protected virtual void RenderConnections(DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postupadteCommands)
 		{
-			return;
 			var nT = map.GetNeighbors(Coords);
 			for (int i = 0; i < 6; i++)
 			{
 				if (_connectables.Contains(nT[i].info))
 				{
-					if (!Map.EM.Exists(_connectionMeshes[i]))
-						_connectionMeshes[i] = smartTile.connectionMesh.Instantiate(SurfacePoint, 1, quaternion.RotateY(math.radians(90 + (60 * i))));
-					else
-						Map.EM.SetComponentData(_connectionMeshes[i], new Translation { Value = SurfacePoint });
+					//Add Connection
 				}
 				else
 				{
-					if (Map.EM.Exists(_connectionMeshes[i]))
-						Map.EM.DestroyEntity(_connectionMeshes[i]);
+					//Remove Connection
 				}
 			}
 		}
