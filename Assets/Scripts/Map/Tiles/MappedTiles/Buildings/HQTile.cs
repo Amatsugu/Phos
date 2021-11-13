@@ -37,6 +37,13 @@ namespace Amatsugu.Phos.Tiles
 			var tilesToReplace = map.GetNeighbors(Coords);
 			for (int i = 0; i < tilesToReplace.Length; i++)
 				BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i]);
+			var spawn = HexCoords.SelectRing(Coords, 2);
+            for (int i = 0; i < spawn.Length; i++)
+            {
+				var pos = map[spawn[i]].SurfacePoint;
+				var unit = map.AddUnit(hqInfo.unitInfo, pos, Faction.Player);
+				unit.info.InstantiateUnit(pos, prefabs, postUpdateCommands);
+            }
 			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}
 
@@ -59,7 +66,11 @@ namespace Amatsugu.Phos.Tiles
 
 		public override bool CanDeconstruct(Faction faction) => false;
 
-	}
+        protected override void SendBuildNotification()
+        {
+        }
+
+    }
 
 	public class SubHQTile : PoweredBuildingTile
 	{
@@ -77,6 +88,9 @@ namespace Amatsugu.Phos.Tiles
 		{
 		}
 
+		protected override void SendBuildNotification()
+		{
+		}
 
 		public override bool CanDeconstruct(Faction faction) => false;
 	}

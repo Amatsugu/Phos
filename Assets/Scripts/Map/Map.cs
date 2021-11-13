@@ -132,13 +132,11 @@ namespace Amatsugu.Phos
 			}
 		}
 
-		public MobileUnit AddUnit(MobileUnitEntity unitInfo, Tile tile, Faction faction)
+		public MobileUnit AddUnit(MobileUnitEntity unitInfo, float3 position, Faction faction)
 		{
 			var id = _nextUnitId++;
-			var unit = new MobileUnit(id, this, unitInfo, tile, faction);
+			var unit = new MobileUnit(id, this, unitInfo, faction);
 			units.Add(id, unit);
-			if (IsRendered)
-				unit.Render();
 			return unit;
 		}
 
@@ -409,11 +407,8 @@ namespace Amatsugu.Phos
 
 		public void RevertTile(Tile tile, DynamicBuffer<GenericPrefab> prefabs, DynamicBuffer<TileInstance> tileInstances, EntityCommandBuffer postUpdateCommandBuffer)
 		{
-
 			if (tile.originalTile != null)
-			{
 				ReplaceTile(tile, tile.originalTile, prefabs, tileInstances, postUpdateCommandBuffer);
-			}
 			else
 				UnityEngine.Debug.LogWarning("No Original Tile to revert to");
 		}
@@ -541,7 +536,7 @@ namespace Amatsugu.Phos
 			map.units = units.Select(u =>
 			{
 				var id = GameRegistry.UnitDatabase.entityIds[u.Value.info];
-				var coords = HexCoords.FromPosition(GameRegistry.EntityManager.GetComponentData<Translation>(u.Value.Entity).Value, map.tileEdgeLength);
+				var coords = HexCoords.FromPosition(GameRegistry.EntityManager.GetComponentData<Translation>(default).Value, map.tileEdgeLength);
 				return new SerializedUnit
 				{
 					unitId = id,

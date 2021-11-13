@@ -54,7 +54,7 @@ namespace Amatsugu.Phos.Units
 			return unitInst;
 		}
 
-		private virtual void PrepareUnitDomain(Entity entity, EntityCommandBuffer postUpdateCommands)
+		protected virtual void PrepareUnitDomain(Entity entity, EntityCommandBuffer postUpdateCommands)
 		{
 			switch (unitClass)
 			{
@@ -89,7 +89,7 @@ namespace Amatsugu.Phos.Units
 			});
 		}
 
-		private virtual void PrepareComponentData(Entity entity, EntityCommandBuffer postUpdateCommands)
+		protected virtual void PrepareComponentData(Entity entity, EntityCommandBuffer postUpdateCommands)
 		{
 			PrepareUnitDomain(entity, postUpdateCommands);
 
@@ -100,74 +100,14 @@ namespace Amatsugu.Phos.Units
 			postUpdateCommands.SetComponent(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
 			postUpdateCommands.SetComponent(entity, new AttackRange(attackRange));
 			//GameRegistry.EntityManager.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
-			//GameRegistry.EntityManager.SetComponentData(entity, new CenterOfMassOffset { Value = centerOfMassOffset });
 
-			
+
 		}
 
-		public virtual void Start(Entity entity, EntityCommandBuffer postUpdateCommands)
+		public virtual void Init(Entity entity, EntityCommandBuffer postUpdateCommands)
 		{
 
 		}
-
-		//public override void PrepareDefaultComponentData(Entity entity)
-		//{
-		//	base.PrepareDefaultComponentData(entity);
-		
-		//}
-
-		//		public Entity Instantiate(float3 pos, Quaternion rotation, int id, Faction faction = Faction.None)
-		//		{
-		//			var e = Instantiate(pos, Vector3.one, rotation);
-		//			GameRegistry.EntityManager.SetComponentData(e, new UnitId { Value = id });
-		//			GameRegistry.EntityManager.SetComponentData(e, new FactionId { Value = faction });
-		//			GameRegistry.EntityManager.SetComponentData(e, new CenterOfMass { Value = pos + centerOfMassOffset });
-		//			var collisionFilter = new CollisionFilter
-		//			{
-		//				CollidesWith = ~((uint)faction.Invert().AsCollisionLayer()),
-		//				BelongsTo = (uint)(CollisionLayer.Unit | faction.AsCollisionLayer()),
-		//				GroupIndex = 0
-		//			};
-
-		//			var physMat = Unity.Physics.Material.Default;
-		//			physMat.CollisionResponse = CollisionResponsePolicy.CollideRaiseCollisionEvents;
-
-		//			GameRegistry.EntityManager.SetComponentData(e, new PhysicsCollider
-		//			{
-		//				Value = Unity.Physics.BoxCollider.Create(new BoxGeometry
-		//				{
-		//					Center = new float3(),
-		//					Size = new float3(1, 1, 1),
-		//					Orientation = quaternion.identity,
-		//					BevelRadius = 0
-		//				}, collisionFilter, physMat)
-		//			});
-
-		//			return e;
-		//		}
-
-		//		public NativeArray<Entity> InstantiateSubMeshes(quaternion rotation, Entity parent)
-		//		{
-		//			var e = new NativeArray<Entity>(subMeshes.Length, Allocator.Persistent);
-		//			for (int i = 0; i < subMeshes.Length; i++)
-		//			{
-		//				var pos = subMeshes[i].offset; //math.rotate(rotation, subMeshes[i].offset);
-		//				e[i] = subMeshes[i].mesh.Instantiate(pos, 1, rotation);
-		//				GameRegistry.EntityManager.AddComponent<LocalToParent>(e[i]);
-		//			}
-		//			for (int i = 0; i < subMeshes.Length; i++)
-		//			{
-		//#if UNITY_EDITOR
-		//				if (subMeshes[i].parent.id == i)
-		//					Debug.LogWarning($"{name} has a submesh [{subMeshes[i].mesh.name}] whose parent is assigned to itself");
-		//#endif
-		//				if (subMeshes[i].parent.id == -1 || subMeshes[i].parent.id == i)
-		//					GameRegistry.EntityManager.AddComponentData(e[i], new Parent { Value = parent });
-		//				else
-		//					GameRegistry.EntityManager.AddComponentData(e[i], new Parent { Value = e[subMeshes[i].parent.id] });
-		//			}
-		//			return e;
-		//		}
 
 		internal StringBuilder GetNameString() => GameRegistry.RarityColors.Colorize(name, tier);
 

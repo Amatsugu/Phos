@@ -207,8 +207,13 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		protected virtual void OnBuilt()
 		{
-			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
+			SendBuildNotification();
 		}
+
+		protected virtual void SendBuildNotification()
+        {
+			NotificationsUI.NotifyWithTarget(NotifType.Info, $"Construction Complete: {buildingInfo.GetNameString()}", Coords);
+        }
 
 		public virtual void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
 		{

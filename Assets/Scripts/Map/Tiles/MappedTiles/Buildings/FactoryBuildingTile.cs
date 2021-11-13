@@ -1,6 +1,8 @@
 ﻿using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Units;
 
+using System;
+
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -24,9 +26,10 @@ namespace Amatsugu.Phos.Tiles
 			_physicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
 		}
 
+		[Obsolete]
 		public virtual void StartConstruction(MobileUnitEntity unitEntity)
 		{
-			unitEntity.constructionMesh.Instantiate(SurfacePoint + new float3(0, .3f, 0), Quaternion.identity, unitEntity, 0.8f, unitEntity.buildTime);
+			//unitEntity.constructionMesh.Instantiate(SurfacePoint + new float3(0, .3f, 0), Quaternion.identity, unitEntity, 0.8f, unitEntity.buildTime);
 			_curUnit = unitEntity;
 		}
 
@@ -37,7 +40,7 @@ namespace Amatsugu.Phos.Tiles
 
 		public virtual void FinishConstruction()
 		{
-			var unit = GameRegistry.GameMap.AddUnit(_curUnit, this, factoryInfo.faction);
+			var unit = GameRegistry.GameMap.AddUnit(_curUnit, SurfacePoint, factoryInfo.faction);
 			unit.MoveTo(FindEmptyTile().WorldPos);
 			_curUnit = null;
 			GameEvents.InvokeOnUnitBuilt(Coords);

@@ -16,6 +16,8 @@ public class SubmeshIdentifierDrawer : PropertyDrawer
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 	{
+		base.OnGUI(position, property, label);
+		return;
 		var idProp = property.FindPropertyRelative("id");
 		var s = idProp.intValue;
 		EditorGUI.BeginProperty(position, label, property);
@@ -33,10 +35,10 @@ public class SubmeshIdentifierDrawer : PropertyDrawer
 				items = Array.Empty<string>();
 				break;
 			case MobileUnitEntity u:
-				items = u.subMeshes.Select(sb => sb.mesh != null ? $"[{i++}] {sb.mesh.name}" : "[Empty]").Prepend("[None]").ToArray();
+				//items = u.subMeshes.Select(sb => sb.mesh != null ? $"[{i++}] {sb.mesh.name}" : "[Empty]").Prepend("[None]").ToArray();
 				break;
 			case BuildingMeshEntity bm:
-				items = bm.subMeshes.Select(sb => sb.mesh != null ? $"[{i++}] {sb.mesh.name}" : "[Empty]").Prepend("[Default]").ToArray();
+				//items = bm.subMeshes.Select(sb => sb.mesh != null ? $"[{i++}] {sb.mesh.name}" : "[Empty]").Prepend("[Default]").ToArray();
 				break;
 
 		}

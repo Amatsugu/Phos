@@ -57,7 +57,7 @@ namespace Amatsugu.Phos
 				}
 				DstEntityManager.AddComponent<MapTag>(mapEntity);
 
-				//Convert Building Database
+				//Add buildings to prefab
 				var buildings = GameRegistry.BuildingDatabase.buildings.Values.ToArray();
 				for (int i = 0; i < buildings.Length; i++)
 				{
@@ -65,6 +65,15 @@ namespace Amatsugu.Phos
 					if (building.info.buildingPrefab != null)
 						prefabs.Add(building.info.buildingPrefab);
 				}
+
+				//Add units to prefab 
+				var units = GameRegistry.UnitDatabase.unitEntites.Values.ToArray();
+                for (int i = 0; i < units.Length; i++)
+                {
+					var unit = units[i];
+					if (unit.info.unitPrefab != null)
+						prefabs.Add(unit.info.unitPrefab);
+                }
 
 				var genericPrefabBuffer = DstEntityManager.AddBuffer<GenericPrefab>(mapEntity);
 				Debug.Log($"Prefabs to register {prefabs.Count}");

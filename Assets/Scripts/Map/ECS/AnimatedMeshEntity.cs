@@ -46,7 +46,7 @@ namespace Amatsugu.Phos.ECS
 		public override void PrepareDefaultComponentData(Entity entity)
 		{
 			base.PrepareDefaultComponentData(entity);
-			var em = Map.EM;
+			var em = GameRegistry.EntityManager;
 			switch (animationType)
 			{
 				case AnimationType.Slider:

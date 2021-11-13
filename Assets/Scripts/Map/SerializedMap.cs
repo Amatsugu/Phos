@@ -49,7 +49,7 @@ public class SerializedMap
 		for (int i = 0; i < units.Length; i++)
 		{
 			var sUnit = units[i];
-			map.AddUnit(unitDb.unitEntites[sUnit.unitId].info, map[new HexCoords(sUnit.x, sUnit.y, tileEdgeLength)], sUnit.faction);
+			map.AddUnit(unitDb.unitEntites[sUnit.unitId].info, map[new HexCoords(sUnit.x, sUnit.y, tileEdgeLength)].SurfacePoint, sUnit.faction);
 		}
 		return map;
 	}

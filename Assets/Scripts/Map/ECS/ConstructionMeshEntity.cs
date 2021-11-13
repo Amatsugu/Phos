@@ -55,36 +55,7 @@ public class ConstructionMeshEntity : ScriptableObject
 		Map.EM.CreateEntity(arch, arr);
 
 		for (int i = 0; i < meshes.Length; i++)
-		{
 			Render(pos, rotation, meshes[i], arr[i], height, constructionTime, pos.y);
-		}
-		arr.Dispose();
-	}
-
-	public void Instantiate(float3 pos, quaternion rotation, MobileUnitEntity unitEntity, float height, float constructTime)
-	{
-		var arr = new NativeArray<Entity>(1 + unitEntity.subMeshes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-
-		var arch = GetArchetype();
-
-		Map.EM.CreateEntity(arch, arr);
-
-		Render(pos, rotation, unitEntity, arr[0], height, constructTime, pos.y);
-
-		for (int i = 1; i < unitEntity.subMeshes.Length + 1; i++)
-		{
-			//var p = pos + math.rotate(rotation, unitEntity.subMeshes[i - 1].offset);
-
-			Render(unitEntity.subMeshes[i - 1].offset, quaternion.identity, unitEntity.subMeshes[i - 1].mesh, arr[i], height, constructTime, pos.y);
-		}
-		for (int i = 0; i < unitEntity.subMeshes.Length; i++)
-		{
-			Map.EM.AddComponent<LocalToParent>(arr[i + 1]); ;
-			if(unitEntity.subMeshes[i].parent.id == -1 || unitEntity.subMeshes[i].parent.id == i)
-				Map.EM.AddComponentData(arr[i + 1], new Parent { Value = arr[0] });
-			else
-				Map.EM.AddComponentData(arr[i + 1], new Parent { Value = arr[unitEntity.subMeshes[i].parent.id + 1] });
-		}
 		arr.Dispose();
 	}
 
