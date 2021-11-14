@@ -26,6 +26,13 @@ namespace Amatsugu.Phos.Tiles
 			_physicsWorld = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildPhysicsWorld>();
 		}
 
+		public override void PrepareBuildingEntity(Entity building, EntityCommandBuffer postUpdateCommands)
+		{
+			base.PrepareBuildingEntity(building, postUpdateCommands);
+			postUpdateCommands.AddComponent<UnitFactoryTag>(building);
+			postUpdateCommands.AddComponent<FactoryReadyTag>(building);
+		}
+
 		[Obsolete]
 		public virtual void StartConstruction(MobileUnitEntity unitEntity)
 		{

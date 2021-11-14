@@ -43,7 +43,7 @@ namespace Amatsugu.Phos.Units
 		public HealthBarDefination healthBar;
 		public float3 healthBarOffset;
 
-		public virtual Entity InstantiateUnit(float3 position, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+		public virtual Entity InstantiateUnit(float3 position, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands, Faction faction)
 		{
 			var prefabId = GameRegistry.PrefabDatabase[unitPrefab];
 			var prefab = prefabs[prefabId];
