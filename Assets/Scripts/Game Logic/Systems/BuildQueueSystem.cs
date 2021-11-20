@@ -93,24 +93,6 @@ public class BuildQueueSystem : ComponentSystem
 		_readyToBuildOrders.Add(orderId);
 	}
 
-	public void QueueUnit(FactoryBuildingTile factory, UnitIdentifier unit)
-	{
-		var orderId = _curOrderID++;
-		var newOrder = new BuildOrder
-		{
-			id = orderId,
-			factory = factory,
-			unit = unit,
-			orderType = OrderType.Unit,
-		};
-		_pendingBuildOrders.Add(orderId, newOrder);
-		GameEvents.InvokeOnUnitQueued(newOrder);
-
-		_readyToBuildOrders.Add(orderId);
-		if (!_factoryReady.ContainsKey(factory.Coords))
-			_factoryReady.Add(factory.Coords, true);
-	}
-
 	public void CancelOrder(int orderId)
 	{
 		if (_pendingBuildOrders.ContainsKey(orderId))
@@ -155,57 +137,23 @@ public class BuildQueueSystem : ComponentSystem
 			var orderId = _readyToBuildOrders[i - offset];
 			var order = _pendingBuildOrders[orderId];
 
-			switch (order.orderType)
+			try
 			{
-				case OrderType.Building:
-#if !UNITY_EDITOR //TODO: Remove for final release
-					try
-					{
-#endif
-					if (PlaceBuilding(order, prefabs, tiles))
-						count++;
-#if !UNITY_EDITOR
-					}
-					catch (Exception e)
-					{
-						Debug.LogError($"Failed to build building: {order.building.GetNameString()}, skipping");
-						Debug.LogError(e);
-					}
-#endif
-					_pendingBuildOrders.Remove(orderId);
-					_readyToBuildOrders.RemoveAt(i - offset++);
-					break;
-
-				case OrderType.Unit:
-					if (_factoryReady.ContainsKey(order.factory.Coords) && _factoryReady[order.factory.Coords]) //Check if can build
-					{
-						try
-						{
-							StartUnitConstruction(order);
-						}
-						catch (Exception e)
-						{
-							Debug.LogError($"Failed to build unit: {GameRegistry.UnitDatabase[order.unit].info.GetNameString()}, skipping");
-							Debug.LogError(e);
-						}
-						_pendingBuildOrders.Remove(orderId);
-						_readyToBuildOrders.RemoveAt(i - offset++);
-					}
-					break;
+				if (PlaceBuilding(order, prefabs, tiles))
+					count++;
 			}
+			catch (Exception e)
+			{
+				Debug.LogError($"Failed to build building: {order.building.GetNameString()}, skipping");
+				Debug.LogError(e);
+#if UNITY_EDITOR
+				throw;
+#endif
+			}
+			_pendingBuildOrders.Remove(orderId);
+			_readyToBuildOrders.RemoveAt(i - offset++);
 		}
 		return count > 0;
-	}
-
-	private void StartUnitConstruction(BuildOrder order)
-	{
-		var unit = GameRegistry.UnitDatabase[order.unit];
-		_factoryReady[order.factory.Coords] = false;
-		order.factory.StartConstruction(unit.info);
-		var buildTime = GameRegistry.Cheats.INSTANT_BUILD ? 0 : unit.info.buildTime;
-		var constructOrder = new ConstructionOrder(order, buildTime, Time.ElapsedTime + buildTime);
-		_constructionOrders.Add(constructOrder);
-		GameEvents.InvokeOnUnitConstructionStart(constructOrder);
 	}
 
 	/// <summary>
@@ -234,17 +182,7 @@ public class BuildQueueSystem : ComponentSystem
 			var curOrder = _constructionOrders[i];
 			if (Time.ElapsedTime > curOrder.buildCompleteTime)
 			{
-				switch (curOrder.orderType)
-				{
-					case OrderType.Building:
-						(GameRegistry.GameMap[curOrder.targetBuilding] as BuildingTile).Build();
-						break;
-
-					case OrderType.Unit:
-						(GameRegistry.GameMap[curOrder.targetBuilding] as FactoryBuildingTile).FinishConstruction();
-						GameEvents.InvokeOnUnitConstructionEnd(curOrder.id);
-						break;
-				}
+				(GameRegistry.GameMap[curOrder.targetBuilding] as BuildingTile).Build();
 				_removal.Add(i);
 			}
 		}
@@ -260,16 +198,7 @@ public struct BuildOrder
 	public int id;
 	public Tile dstTile;
 	public BuildingTileEntity building;
-	public FactoryBuildingTile factory;
-	public UnitIdentifier unit;
-	public OrderType orderType;
 	internal int rotation;
-}
-
-public enum OrderType
-{
-	Building,
-	Unit
 }
 
 public struct ConstructionOrder
@@ -277,7 +206,6 @@ public struct ConstructionOrder
 	public int id;
 	public double buildCompleteTime;
 	public HexCoords targetBuilding;
-	public OrderType orderType;
 	public float buildTime;
 
 	public bool isCreaated;
@@ -285,11 +213,7 @@ public struct ConstructionOrder
 	public ConstructionOrder(BuildOrder order, float buildTime, double completeTime)
 	{
 		this.id = order.id;
-		orderType = order.orderType;
-		if (order.orderType == OrderType.Building)
-			targetBuilding = order.dstTile.Coords;
-		else
-			targetBuilding = order.factory.Coords;
+		targetBuilding = order.dstTile.Coords;
 		this.buildTime = buildTime;
 		buildCompleteTime = completeTime;
 		isCreaated = true;

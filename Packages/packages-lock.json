@@ -10,10 +10,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "1.9.0",
+      "version": "1.13.5",
       "depth": 0,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0",
+        "com.unity.services.core": "1.0.1"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
@@ -88,7 +91,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "1.2.1",
+      "version": "1.2.4",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -103,7 +106,7 @@
     },
     "com.unity.nuget.newtonsoft-json": {
       "version": "2.0.0",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -159,16 +162,17 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.0.0",
+      "version": "12.1.1",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
         "com.unity.ugui": "1.0.0",
-        "com.unity.modules.physics": "1.0.0"
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
       }
     },
     "com.unity.render-pipelines.high-definition": {
-      "version": "12.0.0",
+      "version": "12.1.1",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
@@ -178,18 +182,18 @@
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.terrain": "1.0.0",
-        "com.unity.render-pipelines.core": "12.0.0",
-        "com.unity.shadergraph": "12.0.0",
-        "com.unity.visualeffectgraph": "12.0.0",
-        "com.unity.render-pipelines.high-definition-config": "12.0.0"
+        "com.unity.render-pipelines.core": "12.1.1",
+        "com.unity.shadergraph": "12.1.1",
+        "com.unity.visualeffectgraph": "12.1.1",
+        "com.unity.render-pipelines.high-definition-config": "12.1.1"
       }
     },
     "com.unity.render-pipelines.high-definition-config": {
-      "version": "12.0.0",
+      "version": "12.1.1",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.0.0"
+        "com.unity.render-pipelines.core": "12.1.1"
       }
     },
     "com.unity.rendering.hybrid": {
@@ -202,14 +206,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.19.1",
+      "version": "1.19.2",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
-      "version": "4.8.0",
+      "version": "4.9.1",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
@@ -228,13 +232,22 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.services.core": {
+      "version": "1.0.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.shadergraph": {
-      "version": "12.0.0",
+      "version": "12.1.1",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.0.0",
-        "com.unity.searcher": "4.8.0"
+        "com.unity.render-pipelines.core": "12.1.1",
+        "com.unity.searcher": "4.9.1"
       }
     },
     "com.unity.sysroot": {
@@ -315,12 +328,12 @@
       }
     },
     "com.unity.visualeffectgraph": {
-      "version": "12.0.0",
+      "version": "12.1.1",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.shadergraph": "12.0.0",
-        "com.unity.render-pipelines.core": "12.0.0"
+        "com.unity.shadergraph": "12.1.1",
+        "com.unity.render-pipelines.core": "12.1.1"
       }
     },
     "com.unity.modules.ai": {

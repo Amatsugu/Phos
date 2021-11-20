@@ -47,6 +47,13 @@ namespace Amatsugu.Phos
 					continue;
 				DeclareReferencedPrefab(building.info.buildingPrefab);
 			}
+
+			var units = GameRegistry.UnitDatabase.unitEntites.Values.ToArray();
+			for (int i = 0; i < units.Length; i++)
+			{
+				var unit = units[i];
+				DeclareReferencedPrefab(unit.info.unitPrefab);
+			}
 		}
 
 		private void DeclareDecorators(TileDecorator[] tileDecorators)

@@ -13,7 +13,7 @@ namespace Amatsugu.Phos.TileEntities
 		public ResourceIndentifier[] startingResources;
 
 		public SubHQTileEntity[] subHQTiles;
-		public MobileUnitEntity unitInfo;
+		public UnitIdentifier unitInfo;
 		public int unitCount = 16;
 
 		public override Tile CreateTile(Map map, HexCoords pos, float height)

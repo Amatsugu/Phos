@@ -53,6 +53,7 @@ public class UIBuildPanel : UITabPanel
 	private FactoryBuildingTile _selectedFactory;
 	private UnitDatabase _unitDatabase;
 	private BuildQueueSystem _buildQueue;
+	private UnitFactorySystem _unitFactory;
 	private int _rotation;
 
 	public enum BuildState
@@ -82,6 +83,7 @@ public class UIBuildPanel : UITabPanel
 		_unitDatabase = GameRegistry.UnitDatabase;
 		indicatorManager = new IndicatorManager(World.DefaultGameObjectInjectionWorld.EntityManager, inidcatorOffset, floatingText);
 		_buildQueue = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildQueueSystem>();
+		_unitFactory = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<UnitFactorySystem>();
 		base.Awake();
 	}
 
@@ -189,7 +191,7 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].OnHover += () => tooltipUI.Show(unit);
 					_icons[i].OnClick += () =>
 					{
-						_buildQueue.QueueUnit(factoryTile, unitId);
+						_unitFactory.QueueUnit(unitId, factoryTile.Coords, Faction.Player);
 					};
 					_icons[i].SetActive(true);
 					hasIcons = true;

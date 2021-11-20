@@ -227,6 +227,7 @@ public class GameEvents
 		remove => INST._onUnitBuilt -= value;
 	}
 
+	[Obsolete("Update to use factory system")]
 	public static void InvokeOnUnitQueued(BuildOrder order) => INST._onUnitQueued?.Invoke(order);
 
 	public static event Action<BuildOrder> OnUnitQueued
@@ -237,6 +238,7 @@ public class GameEvents
 
 	public static void InvokeOnUnitConstructionStart(ConstructionOrder order) => INST._onUnitConstructionStart?.Invoke(order);
 
+	[Obsolete("Update to use factory system")]
 	public static event Action<ConstructionOrder> OnUnitConstructionStart
 	{
 		add => INST._onUnitConstructionStart += value;
@@ -245,6 +247,7 @@ public class GameEvents
 
 	public static void InvokeOnUnitConstructionEnd(int orderId) => INST._onUnitConstructionEnd?.Invoke(orderId);
 
+	[Obsolete("Update to use factory system")]
 	public static event Action<int> OnUnitConstructionEnd
 	{
 		add => INST._onUnitConstructionEnd += value;
@@ -253,6 +256,7 @@ public class GameEvents
 
 	public static void InvokeOnUnitDequeued(int orderId) => INST._onUnitDequeued?.Invoke(orderId);
 
+	[Obsolete("Update to use factory system")]
 	public static event Action<int> OnUnitDequeued
 	{
 		add => INST._onUnitDequeued += value;

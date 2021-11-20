@@ -60,6 +60,7 @@ namespace Amatsugu.Phos
 
 		private void OnUnitQueued(BuildOrder order)
 		{
+			return;
 			var curItem = GetQueueItem();
 			_activeItems.Add(order.id, curItem);
 			curItem.Init(order);
@@ -68,8 +69,8 @@ namespace Amatsugu.Phos
 				if (c.button == UnityEngine.EventSystems.PointerEventData.InputButton.Right)
 					_buildQueueSystem.CancelOrder(order.id);
 			};
-			if (order.factory.Coords != _curFactory)
-				curItem.SetActive(false);
+			/*if (order.factory.Coords != _curFactory)
+				curItem.SetActive(false);*/
 		}
 
 		private void OnUnitRemoved(int id)

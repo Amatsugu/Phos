@@ -19,23 +19,30 @@ namespace Amatsugu.Phos
 		private NativeList<PendingBuildOrder> _pendingBuildOrders;
 		private UnitDatabase _unitDatabase;
 
-		protected override void OnStartRunning()
+		protected override void OnCreate()
 		{
-			base.OnStartRunning();
 			_curId = 0;
-
 			_queue = new NativeList<QueuedUnit>(50, Allocator.Persistent);
 			_pendingBuildOrders = new NativeList<PendingBuildOrder>(20, Allocator.Persistent);
+			base.OnCreate();
+		}
+
+		protected override void OnStartRunning()
+		{
+
 			_unitDatabase = GameRegistry.UnitDatabase;
+			base.OnStartRunning();
 		}
 
 		protected override void OnUpdate()
 		{
-			Entities.WithAllReadOnly<DynamicBuffer<GenericPrefab>>().ForEach((DynamicBuffer<GenericPrefab> prefabs) =>
+			Entities.ForEach((DynamicBuffer<GenericPrefab> prefabs) =>
 			{
 				for (int i = 0; i < _pendingBuildOrders.Length; i++)
 				{
 					var order = _pendingBuildOrders[i];
+					if (!order.isCreated)
+						continue;
 					var unit = _unitDatabase[order.unit];
 					if(order.hasFactory)
 					{
@@ -73,6 +80,13 @@ namespace Amatsugu.Phos
 			});
 		}
 
+
+		protected override void OnDestroy()
+		{
+			_pendingBuildOrders.Dispose();
+			_queue.Dispose();
+			base.OnDestroy();
+		}
 		/// <summary>
 		/// Queue a new unit to be built from a specified factory
 		/// </summary>
@@ -132,7 +146,7 @@ namespace Amatsugu.Phos
 		{
 			public Faction faction;
 			public float3 pos;
-			public UnitIdentifier unit;
+			public int unit;
 			public bool isCreated;
 			public bool hasFactory;
 			public Entity factory;
@@ -141,7 +155,7 @@ namespace Amatsugu.Phos
 		private struct QueuedUnit
 		{
 			public int id;
-			public UnitIdentifier unit;
+			public int unit;
 			public Faction faction;
 			public HexCoords factory;
 			public bool isCreated;

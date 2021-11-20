@@ -30,9 +30,10 @@ namespace Amatsugu.Phos.UI
 		private float _buildTime;
 
 
+		[Obsolete("Update to use factory system")]
 		public void Init(BuildOrder buildOrder)
 		{
-			var unit = GameRegistry.UnitDatabase[buildOrder.unit].info;
+			/*var unit = GameRegistry.UnitDatabase[buildOrder.unit].info;
 			if(nameText != null)
 				nameText.SetText(unit.name);
 			icon.sprite = unit.icon;
@@ -41,7 +42,7 @@ namespace Amatsugu.Phos.UI
 			mask.fillAmount = 1;
 			Building = buildOrder.factory.Coords;
 			IsDone = false;
-			_isBuilding = false;
+			_isBuilding = false;*/
 		}
 
 		public void Finish()

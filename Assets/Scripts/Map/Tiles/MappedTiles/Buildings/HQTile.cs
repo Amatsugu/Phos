@@ -38,12 +38,9 @@ namespace Amatsugu.Phos.Tiles
 			for (int i = 0; i < tilesToReplace.Length; i++)
 				BuildQueueSystem.QueueBuilding(hqInfo.subHQTiles[i], tilesToReplace[i]);
 			var spawn = HexCoords.SelectRing(Coords, 2);
+			var fac = GameRegistry.EntityManager.World.GetOrCreateSystem<UnitFactorySystem>();
             for (int i = 0; i < spawn.Length; i++)
-            {
-				var pos = map[spawn[i]].SurfacePoint;
-				var unit = map.AddUnit(hqInfo.unitInfo, pos, Faction.Player);
-				unit.info.InstantiateUnit(pos, prefabs, postUpdateCommands);
-            }
+				fac.BuildUnit(hqInfo.unitInfo, map[spawn[i]].SurfacePoint, Faction.Player);
 			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}
 

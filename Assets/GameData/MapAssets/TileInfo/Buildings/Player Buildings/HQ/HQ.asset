@@ -17,7 +17,6 @@ MonoBehaviour:
   decorators: []
   isTraverseable: 0
   assetGuid: 1c0ee8cb1827bb24abbb94b009332008
-  buildingMesh: {fileID: 11400000, guid: 08df32c5fb76d624cab4d82ba537c212, type: 2}
   buildingPrefab: {fileID: 5764519939037835352, guid: 4c8dac89c60928a4f80c2e458c9d57c7,
     type: 3}
   centerOfMassOffset:
@@ -71,7 +70,6 @@ MonoBehaviour:
   - id: 1
     ammount: 2
   consumption: []
-  adjacencyEffects: []
   startingResources:
   - id: 0
     ammount: 64
@@ -84,5 +82,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d966e12209bf2fa4c9378e52af7fd189, type: 2}
   - {fileID: 11400000, guid: e06933dfdc394b44a8d7dd66a08bd22c, type: 2}
   - {fileID: 11400000, guid: 6e4e32dbf880de14d96237eda527fc63, type: 2}
-  unitInfo: {fileID: 11400000, guid: a20b3d4581d9b1f41a2bf5c59c4acc40, type: 2}
+  unitInfo:
+    id: 2
   unitCount: 2
