@@ -50,10 +50,22 @@ namespace Amatsugu.Phos
 							continue;
 						PostUpdateCommands.AddComponent<FactoryReadyTag>(order.factory);
 					}
-					unit.info.InstantiateUnit(order.pos, prefabs, PostUpdateCommands, order.faction);
+					if(!order.isBuilding)
+					{
+						order.isBuilding = true;
+						order.buildCompleteTime += Time.ElapsedTime;
+						_pendingBuildOrders[i] = order;
+						//TODO: Create construction animation
+						continue;
+					}
+					if(order.buildCompleteTime <= Time.ElapsedTime)
+					{
+						_pendingBuildOrders.RemoveAtSwapBack(i);
+						i--;
+						unit.info.InstantiateUnit(order.pos, prefabs, PostUpdateCommands, order.faction);
+					}
 				}
 
-				_pendingBuildOrders.Clear();
 			});
 
 			Entities.WithAllReadOnly<Translation, HexPosition, UnitFactoryTag, FactoryReadyTag>().ForEach((Entity e, ref Translation pos, ref HexPosition coords) =>
@@ -72,6 +84,7 @@ namespace Amatsugu.Phos
 						isCreated = true,
 						pos = pos.Value,
 						unit = item.unit,
+						buildCompleteTime = item.buildTime
 					});
 					_queue.RemoveAt(i + offset);
 					offset++;
@@ -93,8 +106,9 @@ namespace Amatsugu.Phos
 		/// <param name="unit"></param>
 		/// <param name="factory"></param>
 		/// <param name="faction"></param>
+		/// <param name="buildTime"></param>
 		/// <returns></returns>
-		public int QueueUnit(UnitIdentifier unit, HexCoords factory, Faction faction)
+		public int QueueUnit(UnitIdentifier unit, HexCoords factory, Faction faction, double buildTime)
 		{
 			var id = _curId++;
 
@@ -104,7 +118,8 @@ namespace Amatsugu.Phos
 				factory = factory,
 				id = id,
 				unit = unit,
-				isCreated = true
+				isCreated = true,
+				buildTime = buildTime,
 			});
 
 			return id;
@@ -131,14 +146,16 @@ namespace Amatsugu.Phos
 		/// <param name="pos"></param>
 		/// <param name="faction"></param>
 		/// <returns></returns>
-		public void BuildUnit(UnitIdentifier unit, float3 pos, Faction faction)
+		public void BuildUnit(UnitIdentifier unit, float3 pos, Faction faction, double buildTime = 0)
 		{
 			_pendingBuildOrders.Add(new PendingBuildOrder
 			{
 				isCreated = true,
 				faction = faction,
 				pos = pos,
-				unit = unit
+				unit = unit,
+				isBuilding = buildTime == 0,
+				buildCompleteTime = Time.ElapsedTime + buildTime
 			});
 		}
 
@@ -150,6 +167,8 @@ namespace Amatsugu.Phos
 			public bool isCreated;
 			public bool hasFactory;
 			public Entity factory;
+			public bool isBuilding;
+			public double buildCompleteTime;
 		}
 
 		private struct QueuedUnit
@@ -159,6 +178,7 @@ namespace Amatsugu.Phos
 			public Faction faction;
 			public HexCoords factory;
 			public bool isCreated;
+			public double buildTime;
 		}
 	}
 }

@@ -40,7 +40,7 @@ namespace Amatsugu.Phos.Tiles
 			var spawn = HexCoords.SelectRing(Coords, 2);
 			var fac = GameRegistry.EntityManager.World.GetOrCreateSystem<UnitFactorySystem>();
             for (int i = 0; i < spawn.Length; i++)
-				fac.BuildUnit(hqInfo.unitInfo, map[spawn[i]].SurfacePoint, Faction.Player);
+				fac.BuildUnit(hqInfo.unitInfo, map[spawn[i]].SurfacePoint, Faction.Player, 0.100 * i);
 			return base.InstantiateTile(prefabs, postUpdateCommands);
 		}
 

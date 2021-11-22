@@ -191,7 +191,7 @@ public class UIBuildPanel : UITabPanel
 					_icons[i].OnHover += () => tooltipUI.Show(unit);
 					_icons[i].OnClick += () =>
 					{
-						_unitFactory.QueueUnit(unitId, factoryTile.Coords, Faction.Player);
+						_unitFactory.QueueUnit(unitId, factoryTile.Coords, Faction.Player, unit.buildTime);
 					};
 					_icons[i].SetActive(true);
 					hasIcons = true;
