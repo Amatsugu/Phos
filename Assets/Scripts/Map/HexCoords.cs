@@ -329,4 +329,6 @@ public struct HexCoords : IEquatable<HexCoords>
 	}
 
 	public bool Equals(HexCoords other) => X == other.X && Y == other.Y;
+
+	
 }

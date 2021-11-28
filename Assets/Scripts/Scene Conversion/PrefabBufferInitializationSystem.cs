@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos
 {
-	public class MapConversionSystem : GameObjectConversionSystem
+	public class PrefabBufferInitializationSystem : GameObjectConversionSystem
 	{
 		protected override void OnUpdate()
 		{

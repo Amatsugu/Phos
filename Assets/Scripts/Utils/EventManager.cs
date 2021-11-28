@@ -1,4 +1,5 @@
-﻿using Amatsugu.Phos.TileEntities;
+﻿using Amatsugu.Phos;
+using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 using Amatsugu.Phos.Units;
 
@@ -227,19 +228,17 @@ public class GameEvents
 		remove => INST._onUnitBuilt -= value;
 	}
 
-	[Obsolete("Update to use factory system")]
-	public static void InvokeOnUnitQueued(BuildOrder order) => INST._onUnitQueued?.Invoke(order);
+	public static void InvokeOnUnitQueued(QueuedUnit order) => INST._onUnitQueued?.Invoke(order);
 
-	public static event Action<BuildOrder> OnUnitQueued
+	public static event Action<QueuedUnit> OnUnitQueued
 	{
 		add => INST._onUnitQueued += value;
 		remove => INST._onUnitQueued -= value;
 	}
 
-	public static void InvokeOnUnitConstructionStart(ConstructionOrder order) => INST._onUnitConstructionStart?.Invoke(order);
+	public static void InvokeOnUnitConstructionStart(PendingUnitBuildOrder order) => INST._onUnitConstructionStart?.Invoke(order);
 
-	[Obsolete("Update to use factory system")]
-	public static event Action<ConstructionOrder> OnUnitConstructionStart
+	public static event Action<PendingUnitBuildOrder> OnUnitConstructionStart
 	{
 		add => INST._onUnitConstructionStart += value;
 		remove => INST._onUnitConstructionStart -= value;
@@ -247,7 +246,6 @@ public class GameEvents
 
 	public static void InvokeOnUnitConstructionEnd(int orderId) => INST._onUnitConstructionEnd?.Invoke(orderId);
 
-	[Obsolete("Update to use factory system")]
 	public static event Action<int> OnUnitConstructionEnd
 	{
 		add => INST._onUnitConstructionEnd += value;
@@ -256,7 +254,6 @@ public class GameEvents
 
 	public static void InvokeOnUnitDequeued(int orderId) => INST._onUnitDequeued?.Invoke(orderId);
 
-	[Obsolete("Update to use factory system")]
 	public static event Action<int> OnUnitDequeued
 	{
 		add => INST._onUnitDequeued += value;
@@ -303,9 +300,9 @@ public class GameEvents
 
 	private event Action<HexCoords> _onUnitBuilt;
 
-	private event Action<BuildOrder> _onUnitQueued;
+	private event Action<QueuedUnit> _onUnitQueued;
 
-	private event Action<ConstructionOrder> _onUnitConstructionStart;
+	private event Action<PendingUnitBuildOrder> _onUnitConstructionStart;
 	private event Action<int> _onUnitConstructionEnd;
 	private event Action<int> _onUnitDequeued;
 }

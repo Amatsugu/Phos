@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace Amatsugu.Phos
 {
-	[UpdateAfter(typeof(MapConversionSystem))]
+	[UpdateAfter(typeof(PrefabBufferInitializationSystem))]
 	public class ConduitLineRendererConversionSystem : GameObjectConversionSystem
 	{
 		protected override void OnUpdate()

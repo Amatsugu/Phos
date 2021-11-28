@@ -48,6 +48,7 @@ namespace Amatsugu.Phos.Units
 			var prefabId = GameRegistry.PrefabDatabase[unitPrefab];
 			var prefab = prefabs[prefabId];
 			var unitInst = postUpdateCommands.Instantiate(prefab.value);
+			PrepareComponentData(unitInst, postUpdateCommands); //TODO: Move this to prefab initialization
 			postUpdateCommands.SetComponent(unitInst, new Translation { Value = position });
 			postUpdateCommands.SetComponent(unitInst, new Rotation { Value = quaternion.identity });
 
@@ -59,31 +60,31 @@ namespace Amatsugu.Phos.Units
 			switch (unitClass)
 			{
 				case UnitClass.Class.Turret:
-					postUpdateCommands.SetComponent(entity, new UnitClass.Turret());
+					postUpdateCommands.AddComponent(entity, new UnitClass.Turret());
 					break;
 				case UnitClass.Class.Artillery:
-					postUpdateCommands.SetComponent(entity, new UnitClass.Artillery());
+					postUpdateCommands.AddComponent(entity, new UnitClass.Artillery());
 					break;
 				case UnitClass.Class.Support:
-					postUpdateCommands.SetComponent(entity, new UnitClass.Support());
+					postUpdateCommands.AddComponent(entity, new UnitClass.Support());
 					break;
 				case UnitClass.Class.FixedGun:
-					postUpdateCommands.SetComponent(entity, new UnitClass.FixedGun());
+					postUpdateCommands.AddComponent(entity, new UnitClass.FixedGun());
 					break;
 			}
 			switch (unitDomain)
 			{
 				case UnitDomain.Domain.Air:
-					postUpdateCommands.SetComponent(entity, new UnitDomain.Air());
+					postUpdateCommands.AddComponent(entity, new UnitDomain.Air());
 					break;
 				case UnitDomain.Domain.Land:
-					postUpdateCommands.SetComponent(entity, new UnitDomain.Land());
+					postUpdateCommands.AddComponent(entity, new UnitDomain.Land());
 					break;
 				case UnitDomain.Domain.Naval:
-					postUpdateCommands.SetComponent(entity, new UnitDomain.Naval());
+					postUpdateCommands.AddComponent(entity, new UnitDomain.Naval());
 					break;
 			}
-			postUpdateCommands.SetComponent(entity, new TargetingDomain
+			postUpdateCommands.AddComponent(entity, new TargetingDomain
 			{
 				Value = unitTargetingDomain
 			});
@@ -93,12 +94,13 @@ namespace Amatsugu.Phos.Units
 		{
 			PrepareUnitDomain(entity, postUpdateCommands);
 
-			postUpdateCommands.SetComponent(entity, new MoveSpeed { Value = moveSpeed });
-			postUpdateCommands.SetComponent(entity, new Heading { Value = Vector3.forward });
-			postUpdateCommands.SetComponent(entity, new Projectile { Value = projectile.GetEntity() });
-			postUpdateCommands.SetComponent(entity, new AttackSpeed { Value = 1f / attackSpeed });
-			postUpdateCommands.SetComponent(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
-			postUpdateCommands.SetComponent(entity, new AttackRange(attackRange));
+			postUpdateCommands.AddComponent(entity, new UnitId { Value = GameRegistry.UnitDatabase.entityIds[this] });
+			postUpdateCommands.AddComponent(entity, new MoveSpeed { Value = moveSpeed });
+			postUpdateCommands.AddComponent(entity, new Heading { Value = Vector3.forward });
+			postUpdateCommands.AddComponent(entity, new Projectile { Value = projectile.GetEntity() });
+			postUpdateCommands.AddComponent(entity, new AttackSpeed { Value = 1f / attackSpeed });
+			postUpdateCommands.AddComponent(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
+			postUpdateCommands.AddComponent(entity, new AttackRange(attackRange));
 			//GameRegistry.EntityManager.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
 
 

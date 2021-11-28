@@ -17,7 +17,7 @@ namespace Amatsugu.Phos
 
 		private List<UIQueueItem> _items;
 		private Dictionary<int, UIQueueItem> _activeItems;
-		private BuildQueueSystem _buildQueueSystem;
+		private UnitFactorySystem _unitFactorySystem;
 		private HexCoords _curFactory;
 
 		protected override void Awake()
@@ -30,7 +30,7 @@ namespace Amatsugu.Phos
 		protected override void Start()
 		{
 			base.Start();
-			_buildQueueSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildQueueSystem>();
+			_unitFactorySystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<UnitFactorySystem>();
 			GameEvents.OnUnitQueued += OnUnitQueued;
 			GameEvents.OnUnitConstructionStart += OnConstructionStart;
 			GameEvents.OnUnitConstructionEnd += OnUnitRemoved;
@@ -53,24 +53,23 @@ namespace Amatsugu.Phos
 			Show();
 		}
 
-		private void OnConstructionStart(ConstructionOrder order)
+		private void OnConstructionStart(PendingUnitBuildOrder order)
 		{
+			if (!order.hasFactory || order.factoryCoords != _curFactory)
+				return;
 			_activeItems[order.id].SetAsBuilding(order.buildCompleteTime, order.buildTime);
 		}
 
-		private void OnUnitQueued(BuildOrder order)
+		private void OnUnitQueued(QueuedUnit order)
 		{
-			return;
 			var curItem = GetQueueItem();
 			_activeItems.Add(order.id, curItem);
 			curItem.Init(order);
 			curItem.OnClick += c =>
 			{
 				if (c.button == UnityEngine.EventSystems.PointerEventData.InputButton.Right)
-					_buildQueueSystem.CancelOrder(order.id);
+					_unitFactorySystem.CancelOrder(order.id);
 			};
-			/*if (order.factory.Coords != _curFactory)
-				curItem.SetActive(false);*/
 		}
 
 		private void OnUnitRemoved(int id)

@@ -30,19 +30,18 @@ namespace Amatsugu.Phos.UI
 		private float _buildTime;
 
 
-		[Obsolete("Update to use factory system")]
-		public void Init(BuildOrder buildOrder)
+		public void Init(QueuedUnit buildOrder)
 		{
-			/*var unit = GameRegistry.UnitDatabase[buildOrder.unit].info;
-			if(nameText != null)
+			var unit = GameRegistry.UnitDatabase[buildOrder.unit].info;
+			if (nameText != null)
 				nameText.SetText(unit.name);
 			icon.sprite = unit.icon;
 			rTransform.SetAsLastSibling();
 			gameObject.SetActive(true);
 			mask.fillAmount = 1;
-			Building = buildOrder.factory.Coords;
+			Building = buildOrder.factory;
 			IsDone = false;
-			_isBuilding = false;*/
+			_isBuilding = false;
 		}
 
 		public void Finish()
@@ -68,11 +67,11 @@ namespace Amatsugu.Phos.UI
 			ClearClickEvents();
 		}
 
-		public void SetAsBuilding(double completionTime, float buildTime)
+		public void SetAsBuilding(double completionTime, double buildTime)
 		{
 			_isBuilding = true;
 			_completionTime = (float)completionTime;
-			_buildTime = buildTime;
+			_buildTime = (float)buildTime;
 			mask.fillAmount = 1;
 		}
 

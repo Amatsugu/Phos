@@ -1,16 +1,13 @@
-using Amatsugu.Phos.DataStore;
 using Amatsugu.Phos.Tiles;
 
-using Unity.Collections;
 using Unity.Entities;
 
 using UnityEngine;
 
-using static Amatsugu.Phos.AdjacenecyDatabase.Runtime;
-
 namespace Amatsugu.Phos
 {
 	[UpdateAfter(typeof(BuildingInstanceBufferSystem))]
+	[UpdateInGroup(typeof(LateSimulationSystemGroup))]
 	public class AdjacencyEffectsSystem : ComponentSystem
 	{
 		private AdjacenecyDatabase.Runtime _adjDb;
@@ -34,6 +31,12 @@ namespace Amatsugu.Phos
 				for (int i = 0; i < neighbors.Length; i++)
 				{
 					var n = neighbors[i];
+					if (n is MetaTile mt && mt.ParentTile.Coords == pos)
+					{
+						n = mt.ParentTile;
+						continue;
+					}
+
 					if (n is BuildingTile nb)
 					{
 						var nBid = _buildingDatabase[nb.buildingInfo];
@@ -56,6 +59,7 @@ namespace Amatsugu.Phos
 						}
 					}
 				}
+
 				PostUpdateCommands.RemoveComponent<BuildingBonusInitTag>(e);
 			});
 		}
