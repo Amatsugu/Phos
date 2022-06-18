@@ -8,7 +8,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
-public class WeatherSystem : JobComponentSystem
+public partial class WeatherSystem : SystemBase
 {
 	public MeshEntity cloudMesh;
 	public float cloudSize = 4;
@@ -154,10 +154,11 @@ public class WeatherSystem : JobComponentSystem
 		}
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		if (_init == null)
-			return inputDeps;
+			return;
 		SimulateWeather();
 		var pos = _cam.position; //HexCoords.SnapToGrid(_cam.position, _innerRadius, gridSize);
 		var cloudType = GetComponentTypeHandle<CloudData>(true);
@@ -182,7 +183,7 @@ public class WeatherSystem : JobComponentSystem
 			innerRadius = _innerRadius,
 			gridSize = gridSize
 		};
-		var dep = cloudJob.Schedule(_cloudQuery, inputDeps);
+		Dependency = cloudJob.Schedule(_cloudQuery, Dependency);
 
 		var cloudShadowJob = new CloudShadowsJob
 		{
@@ -200,7 +201,7 @@ public class WeatherSystem : JobComponentSystem
 
 		_rainTransform.position = new Vector3(_cam.position.x, _init.clouldHeight, _cam.position.z);
 
-		return cloudShadowJob.Schedule(_cloudShadowQuery, dep);
+		Dependency = cloudShadowJob.Schedule(_cloudShadowQuery, Dependency);
 	}
 
 	public void SimulateWeather()

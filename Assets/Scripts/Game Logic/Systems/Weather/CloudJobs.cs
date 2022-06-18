@@ -5,7 +5,6 @@ using Unity.Transforms;
 
 using UnityEngine;
 
-[ExcludeComponent(typeof(ShadowOnlyTag))]
 public struct CloudsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUniformScale>
 {
 	public float size;
@@ -78,7 +77,6 @@ public struct CloudsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUni
 	}
 }
 
-[RequireComponentTag(typeof(ShadowOnlyTag))]
 public struct CloudShadowsJob : IJobChunk //IJobForEach<CloudData, Translation, NonUniformScale>
 {
 	public float size;

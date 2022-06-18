@@ -18,13 +18,13 @@ public class UnitMovementSystem : ComponentSystem
 	private int _mapWidth;
 	private EntityQuery EntityQuery;
 
-	private NativeHashMap<HexCoords, float> _navData;
+	private NativeParallelHashMap<HexCoords, float> _navData;
 
 	//private Dictionary<int, NativeList<HexCoords>> _paths;
 	private NativeList<PathNode> _open;
 
-	private NativeHashMap<PathNode, float> _closed;
-	private NativeHashMap<PathNode, PathNode> _nodePairs;
+	private NativeParallelHashMap<PathNode, float> _closed;
+	private NativeParallelHashMap<PathNode, PathNode> _nodePairs;
 	private bool _ready;
 	private Map _map;
 
@@ -49,8 +49,8 @@ public class UnitMovementSystem : ComponentSystem
 		_innerRadius = _map.innerRadius;
 		//_paths = new Dictionary<int, NativeList<HexCoords>>();
 		_open = new NativeList<PathNode>(Allocator.Persistent);
-		_closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
-		_nodePairs = new NativeHashMap<PathNode, PathNode>(_navData.Count(), Allocator.Persistent);
+		_closed = new NativeParallelHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
+		_nodePairs = new NativeParallelHashMap<PathNode, PathNode>(_navData.Count(), Allocator.Persistent);
 		GameEvents.OnMapChanged += OnMapChanged;
 		_ready = true;
 	}

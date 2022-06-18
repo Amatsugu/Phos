@@ -63,7 +63,7 @@ namespace AnimationSystem
 
 	[UpdateBefore(typeof(SimpleAnimationSystem))]
 	[BurstCompile]
-	public class SimpleAnimationJobSystem : JobComponentSystem
+	public partial class SimpleAnimationJobSystem : SystemBase
 	{
 		[BurstCompile]
 		public struct GravityJob : IJobChunk
@@ -277,7 +277,8 @@ namespace AnimationSystem
 			_floorQuery = GetEntityQuery(floorDesc);
 		}
 
-		protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+		protected override void OnUpdate()
 		{
 			var v = GetComponentTypeHandle<Velocity>(false);
 			var gravityJob = new GravityJob 
@@ -286,7 +287,7 @@ namespace AnimationSystem
 				gravityType = GetComponentTypeHandle<Gravity>(true),
 				velocityType = v
 			};
-			var dep = gravityJob.Schedule(_gravityQuery, inputDeps);
+			Dependency = gravityJob.Schedule(_gravityQuery, Dependency);
 
 			var accelJob = new AccelerationJob 
 			{ 
@@ -294,7 +295,7 @@ namespace AnimationSystem
 				accelerationType = GetComponentTypeHandle<Acceleration>(true),
 				velocityType = v
 			};
-			dep = accelJob.Schedule(_accelQuery, dep);
+			Dependency = accelJob.Schedule(_accelQuery, Dependency);
 
 			var t = GetComponentTypeHandle<Translation>(false);
 			var velocityJob = new VelocityJob 
@@ -303,14 +304,14 @@ namespace AnimationSystem
 				velocityType = GetComponentTypeHandle<Velocity>(true),
 				translationType = t
 			};
-			dep = velocityJob.Schedule(_velQuery, dep);
+			Dependency = velocityJob.Schedule(_velQuery, Dependency);
 
 			var floorJob = new FloorJob
 			{
 				floorType = GetComponentTypeHandle<Floor>(true),
 				transType = t
 			};
-			dep = floorJob.Schedule(_floorQuery, dep);
+			Dependency = floorJob.Schedule(_floorQuery, Dependency);
 
 			var rotJob = new RotateJob 
 			{ 
@@ -319,9 +320,8 @@ namespace AnimationSystem
 				speedType = GetComponentTypeHandle<RotateSpeed>(true),
 				rotationType = GetComponentTypeHandle<Rotation>(false),
 			};
-			dep = rotJob.Schedule(_rotateQuery, dep);
+			Dependency = rotJob.Schedule(_rotateQuery, Dependency);
 
-			return dep;
 		}
 	}
 }

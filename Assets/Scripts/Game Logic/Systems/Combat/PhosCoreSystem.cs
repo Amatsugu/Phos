@@ -128,7 +128,7 @@ public class PhosCoreSystem : ComponentSystem
 
 [BurstCompile]
 [UpdateAfter(typeof(PhosCoreSystem))]
-public class PhosProjectileSystem : JobComponentSystem
+public partial class PhosProjectileSystem : SystemBase
 {
 	[BurstCompile]
 	private struct PhosProjectileJob : IJobChunk //IJobForEachWithEntity<PhosProjectile, PhysicsVelocity, Translation>
@@ -182,7 +182,8 @@ public class PhosProjectileSystem : JobComponentSystem
 		endSimulation = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		var job = new PhosProjectileJob
 		{
@@ -193,8 +194,7 @@ public class PhosProjectileSystem : JobComponentSystem
 			CMB = endSimulation.CreateCommandBuffer().AsParallelWriter(),
 			entityType = GetEntityTypeHandle()
 		};
-		inputDeps = job.ScheduleParallel(entityQuery, inputDeps);
-		return inputDeps;
+		Dependency = job.ScheduleParallel(entityQuery, Dependency);
 	}
 }
 

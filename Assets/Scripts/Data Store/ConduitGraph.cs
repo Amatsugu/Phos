@@ -1,6 +1,6 @@
 ﻿using Amatsugu.Phos.DataStore;
 
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
@@ -413,9 +413,9 @@ namespace DataStore.ConduitGraph
 		internal int[] _connections;
 
 		public int ConnectionCount { get; private set; }
-		[JsonIgnore]
+		//[JsonIgnore]
 		public bool IsEmpty => ConnectionCount == 0;
-		[JsonIgnore]
+		//[JsonIgnore]
 		public bool IsFull => ConnectionCount == maxConnections;
 
 		public bool IsConnected { get; private set; }

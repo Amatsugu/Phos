@@ -492,3 +492,19 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.timeline from version 1.7.0-pre.2 to 1.7.1
+
+=== Tue May  3 18:53:36 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.high-definition from version 13.1.7 to 14.0.2
+
+=== Fri Jun 10 22:56:26 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.high-definition from version 14.0.2 to 14.0.3

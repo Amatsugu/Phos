@@ -47,7 +47,7 @@ namespace Amatsugu.Phos
 
 			Entities.WithAllReadOnly<RecalculateConduitsTag, MapTag, ConduitLinePrefabs>().ForEach((Entity e, ref ConduitLinePrefabs lines) =>
 			{
-				PostUpdateCommands.DestroyEntity(_query);
+				PostUpdateCommands.DestroyEntitiesForEntityQuery(_query);
 				var existingConnections = new HashSet<ConduitConnection>();
 				var nodesDict = GameRegistry.GameMap.conduitGraph.nodes;
 				var nodes = GameRegistry.GameMap.conduitGraph.nodes.Values.ToArray();

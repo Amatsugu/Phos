@@ -11,7 +11,7 @@ using UnityEngine;
 
 [BurstCompile]
 [UpdateAfter(typeof(UnitMovementSystem))]
-public class HealthBarSystem : JobComponentSystem
+public partial class HealthBarSystem : SystemBase
 {
 	[BurstCompile]
 	private struct UpdateBarFillJob : IJobChunk
@@ -115,7 +115,8 @@ public class HealthBarSystem : JobComponentSystem
 		_cam = Camera.main.transform;
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		var hBarType = GetComponentTypeHandle<HealthBar>(true);
 		var rotJob = new UpdateBarRotation
@@ -127,7 +128,7 @@ public class HealthBarSystem : JobComponentSystem
 			translationType = GetComponentTypeHandle<Translation>(false),
 			barType = hBarType,
 		};
-		inputDeps = rotJob.Schedule(_barQuery, inputDeps);
+		Dependency = rotJob.Schedule(_barQuery, Dependency);
 
 		var fillJob = new UpdateBarFillJob
 		{
@@ -135,8 +136,7 @@ public class HealthBarSystem : JobComponentSystem
 			barType = hBarType,
 			scaleType = GetComponentTypeHandle<NonUniformScale>(false)
 		};
-		inputDeps = fillJob.Schedule(_fillQuery, inputDeps);
-		return inputDeps;
+		Dependency = fillJob.Schedule(_fillQuery, Dependency);
 	}
 }
 

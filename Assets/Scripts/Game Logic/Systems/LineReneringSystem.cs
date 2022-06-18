@@ -7,7 +7,7 @@ using Unity.Transforms;
 
 using UnityEngine;
 
-public class LineReneringSystem : JobComponentSystem
+public partial class LineReneringSystem : SystemBase
 {
 	private EntityQuery _entityQuery;
 
@@ -64,7 +64,8 @@ public class LineReneringSystem : JobComponentSystem
 		}
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		var segmentJob = new LineSegmentJob
 		{
@@ -74,13 +75,12 @@ public class LineReneringSystem : JobComponentSystem
 			translationType = GetComponentTypeHandle<Translation>(false),
 			scaleType = GetComponentTypeHandle<NonUniformScale>(false),
 		};
-		var handle = segmentJob.Schedule(_entityQuery, inputDeps);
+		Dependency = segmentJob.Schedule(_entityQuery, Dependency);
 
-		return handle;
 	}
 }
 
-public class LineWidthSystem : JobComponentSystem
+public partial class LineWidthSystem : SystemBase
 {
 	private EntityQuery _entityQuery;
 
@@ -129,7 +129,8 @@ public class LineWidthSystem : JobComponentSystem
 		}
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		var widthJob = new LineWidthJob
 		{
@@ -137,8 +138,7 @@ public class LineWidthSystem : JobComponentSystem
 			widthType = GetComponentTypeHandle<LineWidth>(true),
 			scaleType = GetComponentTypeHandle<NonUniformScale>(false),
 		};
-		var handle = widthJob.Schedule(_entityQuery, inputDeps);
+		Dependency = widthJob.Schedule(_entityQuery, Dependency);
 
-		return handle;
 	}
 }

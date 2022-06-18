@@ -466,14 +466,14 @@ namespace Amatsugu.Phos
 			return tileDist;
 		}
 
-		public NativeHashMap<HexCoords, float> GenerateNavData(bool underwaterData = true)
+		public NativeParallelHashMap<HexCoords, float> GenerateNavData(bool underwaterData = true)
 		{
-			var nav = new NativeHashMap<HexCoords, float>(totalHeight * totalWidth, Allocator.Persistent);
+			var nav = new NativeParallelHashMap<HexCoords, float>(totalHeight * totalWidth, Allocator.Persistent);
 			GenerateNavData(ref nav, underwaterData);
 			return nav;
 		}
 
-		public void GenerateNavData(ref NativeHashMap<HexCoords, float> navData, bool underwaterData = false)
+		public void GenerateNavData(ref NativeParallelHashMap<HexCoords, float> navData, bool underwaterData = false)
 		{
 			for (int z = 0; z < totalHeight; z++)
 			{

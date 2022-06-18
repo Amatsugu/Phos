@@ -83,7 +83,7 @@ namespace Amatsugu.Phos.Tiles
 				}
 			};
 			var query = GameRegistry.EntityManager.CreateEntityQuery(desc);
-			postUpdateCommands.AddComponent<RecalculateConduitsTag>(query);
+			postUpdateCommands.AddComponentForEntityQuery<RecalculateConduitsTag>(query);
 		}
 
 		public override StringBuilder GetDescriptionString()

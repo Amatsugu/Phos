@@ -6,8 +6,8 @@ using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Rendering;
 
-[RequireComponentTag(TagComponents = new[] { typeof(FactionId) })]
 [BurstCompile]
+//[RequireComponent(TagComponents = new[] { typeof(FactionId) })]
 public struct ProjectileCollisionJob : ICollisionEventsJob
 {
 	public ComponentDataFromEntity<Health> health;
@@ -60,20 +60,19 @@ public struct ProjectileCollisionJob : ICollisionEventsJob
 
 [BurstCompile]
 [UpdateBefore(typeof(TimedDeathSystem))]
-public class ProjectileCollisionSystem : JobComponentSystem
+public partial class ProjectileCollisionSystem : SystemBase
 {
-	private BuildPhysicsWorld _physicsWorld;
 	private StepPhysicsWorld _sim;
 	private EndSimulationEntityCommandBufferSystem _endSimSystem;
 
 	protected override void OnStartRunning()
 	{
-		_physicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
 		_sim = World.GetOrCreateSystem<StepPhysicsWorld>();
 		_endSimSystem = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>();
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		var job = new ProjectileCollisionJob
 		{
@@ -84,8 +83,7 @@ public class ProjectileCollisionSystem : JobComponentSystem
 			cmb = _endSimSystem.CreateCommandBuffer().AsParallelWriter(),
 			time = Time.ElapsedTime
 		};
-		inputDeps = job.Schedule(_sim.Simulation, ref _physicsWorld.PhysicsWorld, inputDeps);
-		inputDeps.Complete();
-		return inputDeps;
+		Dependency = job.Schedule(_sim.Simulation, Dependency);
+		Dependency.Complete();
 	}
 }

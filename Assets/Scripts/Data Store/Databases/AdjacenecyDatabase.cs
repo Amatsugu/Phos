@@ -22,11 +22,11 @@ namespace Amatsugu.Phos
 
 		public class Runtime : IDisposable
 		{
-			private NativeHashMap<Key, StatsBuffs> _adjancencyEffects;
+			private NativeParallelHashMap<Key, StatsBuffs> _adjancencyEffects;
 
 			public Runtime(AdjacencyDefination[] definedBonuses)
 			{
-				_adjancencyEffects = new NativeHashMap<Key, StatsBuffs>(definedBonuses.Length, Allocator.Persistent);
+				_adjancencyEffects = new NativeParallelHashMap<Key, StatsBuffs>(definedBonuses.Length, Allocator.Persistent);
 				for (int i = 0; i < definedBonuses.Length; i++)
 				{
 					var curBonus = definedBonuses[i];

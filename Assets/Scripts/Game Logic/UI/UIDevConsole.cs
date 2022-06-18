@@ -202,7 +202,8 @@ public class UIDevConsole : MonoBehaviour
 	// Update is called once per frame
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.BackQuote) && !inputBox.isFocused)
+		var openPressed = Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Backslash) || Input.GetKeyDown(KeyCode.Slash);
+		if (openPressed && !inputBox.isFocused)
 		{
 			if (consolePanel.IsOpen)
 				consolePanel.Hide();

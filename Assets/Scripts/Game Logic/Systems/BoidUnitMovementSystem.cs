@@ -10,8 +10,8 @@ using Unity.Transforms;
 
 namespace Amatsugu.Phos
 {
-	//[BurstCompile]
-	public class BoidUnitMovementSystem : JobComponentSystem
+	[BurstCompatible]
+	public partial class BoidUnitMovementSystem : SystemBase
 	{
 		private struct BoidJob : IJobChunk
 		{
@@ -20,7 +20,7 @@ namespace Amatsugu.Phos
 			public ComponentTypeHandle<Translation> translationType;
 			public ComponentTypeHandle<Velocity> velocityType;
 			public ComponentTypeHandle<Rotation> rotationType;
-			[ReadOnly] public NativeHashMap<HexCoords, float> navData;
+			[ReadOnly] public NativeParallelHashMap<HexCoords, float> navData;
 			public float dt;
 
 			public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
@@ -163,7 +163,7 @@ namespace Amatsugu.Phos
 		}
 
 		private EntityQuery _entityQuery;
-		private NativeHashMap<HexCoords, float> _navData;
+		private NativeParallelHashMap<HexCoords, float> _navData;
 
 		protected override void OnCreate()
 		{
@@ -202,7 +202,8 @@ namespace Amatsugu.Phos
 			GameEvents.OnMapChanged -= OnMapChanged;
 		}
 
-		protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+		protected override void OnUpdate()
 		{
 			var boidsJob = new BoidJob
 			{
@@ -214,9 +215,7 @@ namespace Amatsugu.Phos
 				navData = _navData,
 				dt = Time.DeltaTime
 			};
-			inputDeps = boidsJob.Schedule(_entityQuery, inputDeps);
-
-			return inputDeps;
+			Dependency = boidsJob.Schedule(_entityQuery, Dependency);
 		}
 	}
 }

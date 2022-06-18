@@ -12,22 +12,22 @@ using Debug = UnityEngine.Debug;
 namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 {
 
-	[ExcludeComponent(typeof(PathProgress), typeof(Path))]
+	//[ExcludeComponent(typeof(PathProgress), typeof(Path))]
 	public struct PathFinder 
 	{
 		public const int MAX_PATH_LENGTH = 1024;
 
-		public static (NativeList<PathNode> open, NativeHashMap<PathNode, float> closed, NativeHashMap<PathNode, PathNode> nodePairs) PrepareCollections(int navDataLen)
+		public static (NativeList<PathNode> open, NativeParallelHashMap<PathNode, float> closed, NativeParallelHashMap<PathNode, PathNode> nodePairs) PrepareCollections(int navDataLen)
 		{
 			NativeList<PathNode> open = new NativeList<PathNode>(Allocator.Persistent);
-			NativeHashMap<PathNode, float> closed = new NativeHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
-			NativeHashMap<PathNode, PathNode> nodePairs = new NativeHashMap<PathNode, PathNode>(navDataLen, Allocator.Persistent);
+			NativeParallelHashMap<PathNode, float> closed = new NativeParallelHashMap<PathNode, float>(MAX_PATH_LENGTH, Allocator.Persistent);
+			NativeParallelHashMap<PathNode, PathNode> nodePairs = new NativeParallelHashMap<PathNode, PathNode>(navDataLen, Allocator.Persistent);
 			return (open, closed, nodePairs);
 		}
 
 		[BurstCompile]
-		public static List<HexCoords> GetPath(float3 src, float3 dst, ref NativeHashMap<HexCoords, float> navData, float innerRadius,
-			ref NativeList<PathNode> open, ref NativeHashMap<PathNode, float> closed, ref NativeHashMap<PathNode, PathNode> nodePairs, float muliplier = 1f)
+		public static List<HexCoords> GetPath(float3 src, float3 dst, ref NativeParallelHashMap<HexCoords, float> navData, float innerRadius,
+			ref NativeList<PathNode> open, ref NativeParallelHashMap<PathNode, float> closed, ref NativeParallelHashMap<PathNode, PathNode> nodePairs, float muliplier = 1f)
 		{
 			var srcCoord = HexCoords.FromPosition(src);
 			var dstCoord = HexCoords.FromPosition(dst);
@@ -100,7 +100,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			return default;
 		}
 
-		private static bool UpdateOrAddOpen(PathNode newNode, ref NativeList<PathNode> open, ref NativeHashMap<PathNode, float> closed)
+		private static bool UpdateOrAddOpen(PathNode newNode, ref NativeList<PathNode> open, ref NativeParallelHashMap<PathNode, float> closed)
 		{
 			for (int i = 0; i < open.Length; i++)
 			{
@@ -160,7 +160,7 @@ namespace Amatsugu.Phos.ECS.Jobs.Pathfinder
 			{
 			}
 
-			public void GetNeighbors(ref NativeArray<HexCoords> neighbors, float innerRadius, NativeHashMap<HexCoords, float> navData)
+			public void GetNeighbors(ref NativeArray<HexCoords> neighbors, float innerRadius, NativeParallelHashMap<HexCoords, float> navData)
 			{
 				for (int i = 0; i < 6; i++)
 				{

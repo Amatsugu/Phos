@@ -9,7 +9,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
-public class CenterOfMassSystem : JobComponentSystem
+public partial class CenterOfMassSystem : SystemBase
 {
 	public struct CenterOfMassJob : IJobChunk
 	{
@@ -54,7 +54,8 @@ public class CenterOfMassSystem : JobComponentSystem
 		_query.SetChangedVersionFilter(new ComponentType[] { typeof(Translation)});
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		var job = new CenterOfMassJob
 		{
@@ -63,7 +64,7 @@ public class CenterOfMassSystem : JobComponentSystem
 			centerOfMassType = GetComponentTypeHandle<CenterOfMass>(false),
 			lastVersion = LastSystemVersion
 		};
-		return job.Schedule(_query, inputDeps);
+		Dependency = job.Schedule(_query, Dependency);
 	}
 }
 

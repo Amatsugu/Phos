@@ -3,7 +3,8 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-public class HealthRegenSystem : JobComponentSystem
+[BurstCompatible]
+public partial class HealthRegenSystem : SystemBase
 {
 	private struct RegenJob : IJobChunk
 	{
@@ -30,13 +31,15 @@ public class HealthRegenSystem : JobComponentSystem
 		_entityQuery = GetEntityQuery(typeof(Health), ComponentType.ReadOnly<HealthRegen>());
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+
+	protected override void OnUpdate()
 	{
 		var job = new RegenJob
 		{
 			healthType = GetComponentTypeHandle<Health>(false),
 			regenType = GetComponentTypeHandle<HealthRegen>(true)
 		};
-		return job.Schedule(_entityQuery, inputDeps);
+		
+		Dependency = job.Schedule(_entityQuery, Dependency);
 	}
 }

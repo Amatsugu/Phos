@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Captures.unity
     guid: 5d8f8208d241f5142bd1afac36e52e89
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu.unity
     guid: ba32173ee800e0f4e9224baa1c025769
   - enabled: 1
