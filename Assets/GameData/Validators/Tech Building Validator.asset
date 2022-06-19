@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd91f3a40d60cc4eaac9019b58e8dde, type: 3}
   m_Name: Tech Building Validator
   m_EditorClassIdentifier: 
-  selectionIndicator: {fileID: 11400000, guid: 33177b445fb1df34f9e26941d4a375cb, type: 2}
-  errorIndicator: {fileID: 11400000, guid: 786c4d272c5b71b46ba6741ea64fcce6, type: 2}
+  selectionIndicator: {fileID: 5916141973549582262, guid: 2daffe442773e9d41a6e9830b2c9eff6,
+    type: 3}
+  errorIndicator: {fileID: 4036181524500567323, guid: 589c37a45d935db4e9f64569f2129c5b,
+    type: 3}
   borderMesh: {fileID: 11400000, guid: 7323c4401a134b14686c9c1c2da0bc7d, type: 2}

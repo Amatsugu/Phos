@@ -12,8 +12,13 @@ using UnityEngine;
 [Serializable]
 public class PlacementValidator : ScriptableObject
 {
-	public MeshEntity selectionIndicator;
-	public MeshEntity errorIndicator;
+	public GameObject selectionIndicator;
+	public GameObject errorIndicator;
+
+	public virtual List<GameObject> GetIndicatorPrefabs()
+	{
+		return new List<GameObject> { selectionIndicator, errorIndicator };
+	}
 
 	public virtual bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{

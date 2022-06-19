@@ -1,3 +1,4 @@
+using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
 using System.Collections.Generic;
@@ -11,10 +12,14 @@ using UnityEngine;
 
 namespace Amatsugu.Phos
 {
+	/// <summary>
+	/// Instantiate object prefabs and add to databases
+	/// </summary>
 	public class PrefabBufferInitializationSystem : GameObjectConversionSystem
 	{
 		protected override void OnUpdate()
 		{
+			Debug.Log("Initializing Entity Prefabs...");
 			Entities.ForEach((MapAuthoring m) =>
 			{
 				var mapEntity = GetPrimaryEntity(m);
@@ -42,6 +47,8 @@ namespace Amatsugu.Phos
 					tileDef.tile.PrepareEntityPrefab(e, DstEntityManager);
 					if (DstEntityManager.Exists(e))
 						DstEntityManager.AddComponent<NewInstanceTag>(e);
+					if (tileDef.tile is BuildingTileEntity b && b.validator != null)
+						prefabs.AddRange(b.validator.GetIndicatorPrefabs());
 					//Collect Prefabs from decorators
 					for (int d = 0; d < tileDef.tile.decorators.Length; d++)
 					{
@@ -75,6 +82,8 @@ namespace Amatsugu.Phos
 						prefabs.Add(unit.info.unitPrefab);
                 }
 
+				prefabs.AddRange(GameRegistry.PrefabsToInit);
+
 				var genericPrefabBuffer = DstEntityManager.AddBuffer<GenericPrefab>(mapEntity);
 				Debug.Log($"Prefabs to register {prefabs.Count}");
 				//Collect prefabs and register to db
@@ -96,9 +105,14 @@ namespace Amatsugu.Phos
 				DstEntityManager.AddBuffer<TileEvent>(mapEntity);
 				DstEntityManager.AddBuffer<BuffEvent>(mapEntity);
 			});
+			Debug.Log("Entity Prefabs Initialized");
+
 		}
 	}
 
+	/// <summary>
+	/// Instantiates all tile entities and prepares the map for use in the scene
+	/// </summary>
 	public class MapSystem : ComponentSystem
 	{
 		protected override void OnStartRunning()

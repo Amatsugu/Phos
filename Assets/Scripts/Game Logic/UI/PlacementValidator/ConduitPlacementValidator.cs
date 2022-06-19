@@ -12,9 +12,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Validators/Conduit Placement Validator")]
 public class ConduitPlacementValidator : PlacementValidator
 {
-	public MeshEntity poweredIndicator;
+	public GameObject poweredIndicator;
 	public MeshEntityRotatable powerLineIndicator;
 	public int maxOverlap = 2;
+
+	public override List<GameObject> GetIndicatorPrefabs()
+	{
+		var prefabs = base.GetIndicatorPrefabs();
+		prefabs.Add(poweredIndicator);
+		return prefabs;
+	}
 
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{

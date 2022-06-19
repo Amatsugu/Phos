@@ -10,6 +10,7 @@ public class TurretValidator : PlacementValidator
 {
 	public MeshEntity rangeSphere;
 	public MeshEntity minRangeSphere;
+
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
 		var turret = buildingTile as TurretTileEntity;

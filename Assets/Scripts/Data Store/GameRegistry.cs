@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -28,10 +29,6 @@ public class GameRegistry : MonoBehaviour
 	public static BaseNameWindowUI BaseNameUI => INST.baseNameUI;
 	public static Camera Camera => INST.mainCamera;
 
-	internal static void SetBaseName(string name)
-	{
-		INST.gameState.baseName = name;
-	}
 
 	public static CameraController CameraController => INST.cameraController;
 	public static BuildingDatabase BuildingDatabase => INST.buildingDatabase;
@@ -46,11 +43,8 @@ public class GameRegistry : MonoBehaviour
 	public static BuildQueueSystem BuildQueueSystem => INST.buildQueueSystem;
 	public static Entity MapEntity => INST.mapEntity;
 	public static AdjacenecyDatabase AdjacenecyDatabase => INST.adjacenecyDatabase;
-	internal static void SetState(GameState gameState)
-	{
-		INST.gameState = gameState;
-		ResourceSystem.resCount = gameState.resCount;
-	}
+
+	public static ReadOnlyCollection<GameObject> PrefabsToInit => INST._prefabsToInit.AsReadOnly();
 
 
 	public StatusUI statusUI;
@@ -71,8 +65,40 @@ public class GameRegistry : MonoBehaviour
 	public Entity mapEntity;
 	public AdjacenecyDatabase adjacenecyDatabase;
 
+
+
+	private List<GameObject> _prefabsToInit;
+	private bool _canRegisterPrefabs;
+
+	public GameRegistry()
+	{
+		_canRegisterPrefabs = true;
+		_prefabsToInit = new List<GameObject>();
+	}
+
+	public static void RegisterPrefabForInit(GameObject gameObject)
+	{
+#if DEBUG
+		if (!INST._canRegisterPrefabs)
+			throw new Exception("Prefabs can no longer be registered. Initializtion has already started.");
+#endif
+		INST._prefabsToInit.Add(gameObject);
+	}
+
+
+	internal static void SetBaseName(string name)
+	{
+		INST.gameState.baseName = name;
+	}
+	internal static void SetState(GameState gameState)
+	{
+		INST.gameState = gameState;
+		ResourceSystem.resCount = gameState.resCount;
+	}
+
 	public static void InitGame(GameState gameState)
 	{
+		INST._canRegisterPrefabs = false;
 		INST.gameState = gameState;
 		ResourceSystem.resCount = gameState.resCount;
 	}
@@ -106,6 +132,7 @@ public class GameRegistry : MonoBehaviour
 	}
 
 	public static DynamicBuffer<TileInstance> GetTileInstanceBuffer() => EntityManager.GetBuffer<TileInstance>(MapEntity);
+	public static DynamicBuffer<GenericPrefab> GetGenericPrefabBuffer() => EntityManager.GetBuffer<GenericPrefab>(MapEntity);
 
 	public static class Cheats
 	{

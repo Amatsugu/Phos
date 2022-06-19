@@ -105,6 +105,31 @@ public class IndicatorManager : IDisposable
 		_entities[_nextEntityIndex++] = indicator.Instantiate(tile.SurfacePoint + _offset, 0.9f);
 	}
 
+	public void SetIndicator(Tile tile, GameObject indicator)
+	{
+		var entityId = GameRegistry.PrefabDatabase[indicator];
+		var buffer = GameRegistry.GetGenericPrefabBuffer();
+		var prefabEntity = buffer[entityId];
+		var curInstance = GameRegistry.EntityManager.Instantiate(prefabEntity.value);
+		GameRegistry.EntityManager.SetComponentData(curInstance, new Translation
+		{
+			Value = tile.SurfacePoint + _offset
+		});
+		GameRegistry.EntityManager.AddComponentData(curInstance, new Scale
+		{
+			Value = 0.9f
+		});
+
+		if (_renderedIndicators.ContainsKey(tile.Coords))
+		{
+			var i = _renderedIndicators[tile.Coords];
+			_EM.DestroyEntity(_entities[i]);
+			_entities[i] = curInstance;
+		}
+		_renderedIndicators[tile.Coords] = _nextEntityIndex;
+		_entities[_nextEntityIndex++] = curInstance;
+	}
+
 	/*public void UnSetIndicator(HexCoords tilePos)
 	{
 		if (_renderedIndicators.ContainsKey(tilePos))
@@ -183,6 +208,7 @@ public class IndicatorManager : IDisposable
 		}
 		_renderedEntities[line] = c;
 	}
+
 
 	public void HideIndicator(MeshEntity indicator)
 	{

@@ -34,9 +34,12 @@ public class UIBuildPanel : UITabPanel
 
 	[Header("Indicators")]
 	public MeshEntity poweredTileIndicatorEntity;
-
 	public MeshEntity unpoweredTileIndicatorEntity;
 	public MeshEntity destructionIndicatorEntity;
+
+	public GameObject poweredTileIndicatorPrefab;
+	public GameObject unpoweredTileIndicatorPrefab;
+	public GameObject destructionIndicatorPrefab;
 
 	public BuildState state;
 
@@ -81,9 +84,18 @@ public class UIBuildPanel : UITabPanel
 		_poweredTileRangeSq = showPowerRange * showPowerRange;
 		_buildingDatabase = GameRegistry.BuildingDatabase;
 		_unitDatabase = GameRegistry.UnitDatabase;
+
+		GameRegistry.RegisterPrefabForInit(poweredTileIndicatorPrefab);
+		GameRegistry.RegisterPrefabForInit(unpoweredTileIndicatorPrefab);
+		GameRegistry.RegisterPrefabForInit(destructionIndicatorPrefab);
+
 		indicatorManager = new IndicatorManager(World.DefaultGameObjectInjectionWorld.EntityManager, inidcatorOffset, floatingText);
 		_buildQueue = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BuildQueueSystem>();
 		_unitFactory = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<UnitFactorySystem>();
+
+
+
+		Debug.Log("Init Build Panel");
 		base.Awake();
 	}
 
@@ -336,12 +348,12 @@ public class UIBuildPanel : UITabPanel
 			var footprint = b.buildingInfo.footprint.GetOccupiedTiles(selectedTile.Coords, b.Rotation);
 			foreach (var t in footprint)
 			{
-				indicatorManager.SetIndicator(GameRegistry.GameMap[t], destructionIndicatorEntity);
+				indicatorManager.SetIndicator(GameRegistry.GameMap[t], destructionIndicatorPrefab);
 			}
 		}
 		else
 		{
-			indicatorManager.SetIndicator(selectedTile, destructionIndicatorEntity);
+			indicatorManager.SetIndicator(selectedTile, destructionIndicatorPrefab);
 		}
 		if (Input.GetKeyUp(KeyCode.Mouse0) && deconstructable.CanDeconstruct(Faction.Player))
 		{
@@ -424,7 +436,7 @@ public class UIBuildPanel : UITabPanel
 		_rotation = _rotation.Mod(6);
 
 		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, indicatorManager, _rotation);
-		var effects = new float2();
+		//var effects = new float2();
 
 		var footprint = _selectedBuilding.footprint.GetOccupiedTiles(selectedTile.Coords, _rotation);
 

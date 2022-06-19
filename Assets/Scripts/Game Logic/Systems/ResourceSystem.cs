@@ -255,7 +255,6 @@ public class ResourceSystem : ComponentSystem
 				break;
 			}
 		}
-		Debug.Log($"Resource Check {hasRes} {resources.Length}");
 		return hasRes;
 	}
 

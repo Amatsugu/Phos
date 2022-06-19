@@ -10,10 +10,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Validators/Resource Gathering Placement Validator")]
 public class ResourceGatheringPlacementValidator : PlacementValidator
 {
-	public MeshEntity gatheringIndicator;
-	public MeshEntity cannotGatherIndicator;
-	private Dictionary<int, int> _resInRange = new Dictionary<int, int>();
-	private Dictionary<int, List<Tile>> _resTiles = new Dictionary<int, List<Tile>>();
+	public GameObject gatheringIndicator;
+	public GameObject cannotGatherIndicator;
+	private Dictionary<int, int> _resInRange = new();
+	private Dictionary<int, List<Tile>> _resTiles = new();
+
+	public override List<GameObject> GetIndicatorPrefabs()
+	{
+		var prefabs = base.GetIndicatorPrefabs();
+		prefabs.Add(gatheringIndicator);
+		prefabs.Add(cannotGatherIndicator);
+		return prefabs;
+	}
 
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{

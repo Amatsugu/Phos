@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c743ce77221c7984b8cbaeb6e681f009, type: 3}
   m_Name: Gathering Placement Validator
   m_EditorClassIdentifier: 
-  selectionIndicator: {fileID: 11400000, guid: 33177b445fb1df34f9e26941d4a375cb, type: 2}
-  errorIndicator: {fileID: 11400000, guid: 786c4d272c5b71b46ba6741ea64fcce6, type: 2}
-  gatheringIndicator: {fileID: 11400000, guid: 873aab514502bcb4191e94cdeffec7ab, type: 2}
-  cannotGatherIndicator: {fileID: 11400000, guid: 995ce738220e8454db75b7f2f70002de,
-    type: 2}
+  selectionIndicator: {fileID: 5916141973549582262, guid: 2daffe442773e9d41a6e9830b2c9eff6,
+    type: 3}
+  errorIndicator: {fileID: 4036181524500567323, guid: 589c37a45d935db4e9f64569f2129c5b,
+    type: 3}
+  gatheringIndicator: {fileID: 4107057197530904519, guid: 38cc11cd5e99ec14ba21b2d531ac2064,
+    type: 3}
+  cannotGatherIndicator: {fileID: 3849745651072099994, guid: 89a8bf324f2092941ae553319b44cf25,
+    type: 3}
