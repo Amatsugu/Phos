@@ -1,5 +1,4 @@
-﻿using Steamworks;
-using TMPro;
+﻿using TMPro;
 
 using UnityEngine;
 
@@ -20,11 +19,6 @@ public class BaseNameWindowUI : MonoBehaviour
 		panel.OnShow += () =>
 		{
 			Debug.Log("Show");
-			if(SteamManager.Initialized && _firstSet)
-			{
-				_firstSet = false;
-				text.text = $"{SteamFriends.GetPersonaName()}'s Base";
-			}
 			GameEvents.InvokeOnCameraFreeze();
 		};
 		panel.OnHide += () =>

@@ -1,7 +1,6 @@
 ﻿using Amatsugu.Phos;
 using Amatsugu.Phos.TileEntities;
 
-using Steamworks;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +9,15 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Validators/Tech Building Validator")]
 public class TechBuildingValidator : PlacementValidator
 {
-	public MeshEntityRotatable borderMesh;
+	public GameObject borderMesh;
+
+	public override List<GameObject> GetIndicatorPrefabs()
+	{
+		var prefabs = base.GetIndicatorPrefabs();
+		prefabs.Add(borderMesh);
+		return prefabs;
+	}
+
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
 		var techBuilding = buildingTile as TechBuildingTileEntity;

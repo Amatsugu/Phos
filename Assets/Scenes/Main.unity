@@ -6340,7 +6340,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2102994817}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.999996
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13237,15 +13237,12 @@ MonoBehaviour:
   contentArea: {fileID: 212590880}
   nothingUnlockedText: {fileID: 180323678}
   showPowerRange: 30
-  poweredTileIndicatorEntity: {fileID: 11400000, guid: 7f2dfea71370ca941a2276f223ecb355,
-    type: 2}
-  unpoweredTileIndicatorEntity: {fileID: 11400000, guid: 773b37c36a3042843a6af5d6a2ae20b1,
-    type: 2}
-  destructionIndicatorEntity: {fileID: 11400000, guid: 24e3f0ae8d61b514f9a015073155b38e,
-    type: 2}
-  poweredTileIndicatorPrefab: {fileID: 0}
-  unpoweredTileIndicatorPrefab: {fileID: 0}
-  destructionIndicatorPrefab: {fileID: 0}
+  poweredTileIndicatorPrefab: {fileID: 8978630924136579352, guid: 67307c92103e9254297ad2c84053c923,
+    type: 3}
+  unpoweredTileIndicatorPrefab: {fileID: 7591162804409545039, guid: 12437774c865aff45985c796bdd80f30,
+    type: 3}
+  destructionIndicatorPrefab: {fileID: 2778977993679615103, guid: 02b23af0de6941b4ea439a216c221fcf,
+    type: 3}
   state: 0
 --- !u!1 &1361566510
 GameObject:
@@ -13816,7 +13813,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -443.00003}
+  m_AnchoredPosition: {x: 0, y: -442.99988}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1427279150

@@ -22,8 +22,8 @@ public class IndicatorManager : IDisposable
 {
 	public TMP_Text floatingText;
 
-	private Dictionary<MeshEntity, List<Entity>> _indicatorEntities;
-	private Dictionary<MeshEntity, int> _renderedEntities;
+	private Dictionary<GameObject, List<Entity>> _indicatorEntities;
+	private Dictionary<GameObject, int> _renderedEntities;
 	private Dictionary<HexCoords, int> _renderedIndicators;
 	private NativeArray<Entity> _entities;
 	private EntityManager _EM;
@@ -35,8 +35,8 @@ public class IndicatorManager : IDisposable
 	public IndicatorManager(EntityManager entityManager, float offset, TMP_Text floatingText, int maxIndicator = 1024)
 	{
 		_EM = entityManager;
-		_indicatorEntities = new Dictionary<MeshEntity, List<Entity>>();
-		_renderedEntities = new Dictionary<MeshEntity, int>();
+		_indicatorEntities = new Dictionary<GameObject, List<Entity>>();
+		_renderedEntities = new Dictionary<GameObject, int>();
 		_renderedIndicators = new Dictionary<HexCoords, int>();
 		_errors = new List<string>();
 		_offset = new float3(0, offset, 0);
@@ -45,7 +45,7 @@ public class IndicatorManager : IDisposable
 	}
 
 
-	private void GrowIndicators(MeshEntity indicatorMesh, int count)
+	private void GrowIndicators(GameObject indicatorMesh, int count)
 	{
 		List<Entity> entities;
 		if (!_indicatorEntities.ContainsKey(indicatorMesh))
@@ -60,18 +60,25 @@ public class IndicatorManager : IDisposable
 				return;
 		}
 		var curSize = entities.Count;
+		var entityId = GameRegistry.PrefabDatabase[indicatorMesh];
+		var buffer = GameRegistry.GetGenericPrefabBuffer();
+		var prefabEntity = buffer[entityId];
 		for (int i = curSize; i < count; i++)
 		{
-			Entity curEntity;
-			entities.Add(curEntity = indicatorMesh.Instantiate(Vector3.zero, Vector3.one * .9f));
+			Entity curEntity = GameRegistry.EntityManager.Instantiate(prefabEntity.value);
+			GameRegistry.EntityManager.AddComponent(curEntity, typeof(NonUniformScale));
 			GameRegistry.EntityManager.AddComponent(curEntity, typeof(DisableRendering));
+			entities.Add(curEntity);
 		}
 	}
 
-	public static void ShowHexRange(Tile center, int range, MeshEntityRotatable border)
+	public static void ShowHexRange(Tile center, int range, GameObject border)
 	{
 		var ring = HexCoords.SelectRing(center.Coords, range);
 		var neighbors = new Tile[6];
+		var entityId = GameRegistry.PrefabDatabase[border];
+		var buffer = GameRegistry.GetGenericPrefabBuffer();
+		var prefabEntity = buffer[entityId];
 		for (int i = 0; i < ring.Length; i++)
 		{
 			var p = ring[i];
@@ -81,8 +88,13 @@ public class IndicatorManager : IDisposable
 			{
 				if (neighbors[n].Coords.Distance(center.Coords) <= range)
 					continue;
-				var e = border.Instantiate(s, 1, quaternion.RotateY(math.radians((60 * n) + 180)));
+
+				var e = GameRegistry.EntityManager.Instantiate(prefabEntity.value);
+				GameRegistry.EntityManager.AddComponent<Scale>(e);
+				GameRegistry.EntityManager.AddComponentData(e, new Rotation { Value = quaternion.RotateY(math.radians((60 * n) + 180)) });
 				GameRegistry.EntityManager.AddComponentData(e, new DeathTime { Value = Time.time + .01f });
+
+				//border.Instantiate(s, 1, );
 			}
 		}
 	}
@@ -160,7 +172,7 @@ public class IndicatorManager : IDisposable
 		_errors.Clear();
 	}
 
-	public void ShowIndicators(MeshEntity indicatorMesh, List<Tile> tiles)
+	public void ShowIndicators(GameObject indicatorMesh, List<Tile> tiles)
 	{
 		GrowIndicators(indicatorMesh, tiles.Count);
 		for (int i = 0; i < _indicatorEntities[indicatorMesh].Count; i++)
@@ -183,7 +195,7 @@ public class IndicatorManager : IDisposable
 		_renderedEntities[indicatorMesh] = tiles.Count;
 	}
 
-	public void ShowLines(MeshEntityRotatable line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f)
+	public void ShowLines(GameObject line, Vector3 src, List<ConduitNode> nodes, float thiccness = 0.1f)
 	{
 		GrowIndicators(line, nodes.Count);
 		int c = 0;
@@ -210,7 +222,7 @@ public class IndicatorManager : IDisposable
 	}
 
 
-	public void HideIndicator(MeshEntity indicator)
+	public void HideIndicator(GameObject indicator)
 	{
 		if (!_indicatorEntities.ContainsKey(indicator))
 			return;

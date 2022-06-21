@@ -315,7 +315,7 @@ public class UIDevConsole : MonoBehaviour
 	}
 	private void Save()
 	{
-#if !UNITY_ENGINE
+#if !UNITY_EDITOR
 		File.WriteAllLines($"output - {_curLogTimeStamp}.log", _logs);
 #endif
 	}

@@ -33,10 +33,6 @@ public class UIBuildPanel : UITabPanel
 	public float showPowerRange = 20;
 
 	[Header("Indicators")]
-	public MeshEntity poweredTileIndicatorEntity;
-	public MeshEntity unpoweredTileIndicatorEntity;
-	public MeshEntity destructionIndicatorEntity;
-
 	public GameObject poweredTileIndicatorPrefab;
 	public GameObject unpoweredTileIndicatorPrefab;
 	public GameObject destructionIndicatorPrefab;
@@ -475,13 +471,13 @@ public class UIBuildPanel : UITabPanel
 				unPoweredTiles.AddRange(GameRegistry.GameMap.HexSelect(conduit.conduitPos, conduit.poweredRange));
 		}
 		if (poweredTiles.Count > 0)
-			indicatorManager.ShowIndicators(poweredTileIndicatorEntity, poweredTiles.Distinct().ToList());
+			indicatorManager.ShowIndicators(poweredTileIndicatorPrefab, poweredTiles.Distinct().ToList());
 		else
-			indicatorManager.HideIndicator(poweredTileIndicatorEntity);
+			indicatorManager.HideIndicator(poweredTileIndicatorPrefab);
 		if (unPoweredTiles.Count > 0)
-			indicatorManager.ShowIndicators(unpoweredTileIndicatorEntity, unPoweredTiles.Distinct().ToList());
+			indicatorManager.ShowIndicators(unpoweredTileIndicatorPrefab, unPoweredTiles.Distinct().ToList());
 		else
-			indicatorManager.HideIndicator(unpoweredTileIndicatorEntity);
+			indicatorManager.HideIndicator(unpoweredTileIndicatorPrefab);
 	}
 
 	private void PlaceBuilding(Tile selectedTile)

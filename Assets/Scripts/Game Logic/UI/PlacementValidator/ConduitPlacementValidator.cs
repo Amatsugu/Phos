@@ -13,13 +13,14 @@ using UnityEngine;
 public class ConduitPlacementValidator : PlacementValidator
 {
 	public GameObject poweredIndicator;
-	public MeshEntityRotatable powerLineIndicator;
+	public GameObject powerLineIndicator;
 	public int maxOverlap = 2;
 
 	public override List<GameObject> GetIndicatorPrefabs()
 	{
 		var prefabs = base.GetIndicatorPrefabs();
 		prefabs.Add(poweredIndicator);
+		prefabs.Add(powerLineIndicator);
 		return prefabs;
 	}
 

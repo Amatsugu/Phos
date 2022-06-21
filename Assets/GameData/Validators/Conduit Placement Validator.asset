@@ -18,5 +18,6 @@ MonoBehaviour:
     type: 3}
   poweredIndicator: {fileID: 8978630924136579352, guid: 67307c92103e9254297ad2c84053c923,
     type: 3}
-  powerLineIndicator: {fileID: 11400000, guid: 4ce90156b358f784b8af1159cbeb6b85, type: 2}
+  powerLineIndicator: {fileID: 409091313091790473, guid: 64656518aa25969499692d7002a32ede,
+    type: 3}
   maxOverlap: 2

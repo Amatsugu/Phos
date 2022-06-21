@@ -16,4 +16,5 @@ MonoBehaviour:
     type: 3}
   errorIndicator: {fileID: 4036181524500567323, guid: 589c37a45d935db4e9f64569f2129c5b,
     type: 3}
-  borderMesh: {fileID: 11400000, guid: 7323c4401a134b14686c9c1c2da0bc7d, type: 2}
+  borderMesh: {fileID: 2659868983319239417, guid: 00a4e62b35056ad4294595a36d87fa35,
+    type: 3}
