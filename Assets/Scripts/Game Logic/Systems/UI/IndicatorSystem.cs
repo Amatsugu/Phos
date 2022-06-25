@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace Amatsugu.Phos
 {
+	[BurstCompatible]
 	public class IndicatorSystem : ComponentSystem
 	{
 		private NativeArray<int> _indicatorArray;
@@ -19,6 +20,7 @@ namespace Amatsugu.Phos
 		private int _mapWidth;
 		private int _nextId;
 		private bool _clearAll;
+		private EntityQuery _indicatorQuery;
 
 		protected override void OnCreate()
 		{
@@ -26,6 +28,16 @@ namespace Amatsugu.Phos
 			base.OnCreate();
 			GameEvents.OnMapLoaded += Init;
 			GameEvents.OnMapDestroyed += DeInit;
+
+			var indicatorDesc = new EntityQueryDesc
+			{
+				All = new ComponentType[]
+				{
+					ComponentType.ReadOnly<IndicatorIdentifier>(),
+				}
+			};
+
+			_indicatorQuery = GetEntityQuery(indicatorDesc);
 		}
 
 		private void Init()
@@ -53,6 +65,8 @@ namespace Amatsugu.Phos
 
 		protected override void OnUpdate()
 		{
+			if (_clearAll)
+				PostUpdateCommands.DestroyEntitiesForEntityQuery(_indicatorQuery);
 			Entities.WithAllReadOnly<MapTag>().ForEach((DynamicBuffer<GenericPrefab> prefabBuffer) =>
 			{
 				for (int i = 0; i < _indicatorsToAdd.Length; i++)
@@ -85,11 +99,7 @@ namespace Amatsugu.Phos
 				}
 			});
 
-			Entities.WithAllReadOnly<IndicatorIdentifier>().ForEach((Entity e, ref IndicatorIdentifier id) =>
-			{
-				if (_clearAll || _indicatorsToRemove.Contains(id.Value))
-					PostUpdateCommands.DestroyEntity(e);
-			});
+
 
 			_clearAll = false;
 
@@ -114,15 +124,6 @@ namespace Amatsugu.Phos
 				rotation = quaternion.identity,
 				scale = 0.9f
 			});
-		}
-
-		public void UnsetIndicator(HexCoords coords)
-		{
-			var index = coords.ToIndex(_mapWidth);
-			if (_indicatorArray[index] == -1)
-				return;
-			_indicatorsToRemove.Add(_indicatorArray[index]);
-			_indicatorArray[index] = -1;
 		}
 
 		public void UnsetAllIndicators()

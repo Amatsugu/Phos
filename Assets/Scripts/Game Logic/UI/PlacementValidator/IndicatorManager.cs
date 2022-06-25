@@ -111,8 +111,8 @@ public class IndicatorManager : IDisposable
 		if (tile == null)
 			return;
 		var entityId = GameRegistry.PrefabDatabase[indicator];
-		//GameRegistry.IndicatorSystem.SetIndicator(tile.Coords, tile.Height + _offset.y, entityId);
-		//return;
+		GameRegistry.IndicatorSystem.SetIndicator(tile.Coords, tile.Height + _offset.y, entityId);
+		return;
 
 		var buffer = GameRegistry.GetGenericPrefabBuffer();
 		var prefabEntity = buffer[entityId];
@@ -144,8 +144,8 @@ public class IndicatorManager : IDisposable
 
 	public void UnSetAllIndicators()
 	{
-		//GameRegistry.IndicatorSystem.UnsetAllIndicators();
-		//return;
+		GameRegistry.IndicatorSystem.UnsetAllIndicators();
+		return;
 		if(_nextEntityIndex != 0)
 		{
 			for (int i = 0; i < _nextEntityIndex; i++)
