@@ -42,6 +42,7 @@ public class IndicatorManager : IDisposable
 		_offset = new float3(0, offset, 0);
 		_entities = new NativeArray<Entity>(maxIndicator, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 		this.floatingText = floatingText;
+
 	}
 
 
@@ -105,21 +106,14 @@ public class IndicatorManager : IDisposable
 		GameRegistry.EntityManager.AddComponentData(e, new DeathTime { Value = Time.time + 0.01f });
 	}
 
-	public void SetIndicator(Tile tile, MeshEntity indicator)
-	{
-		if (_renderedIndicators.ContainsKey(tile.Coords))
-		{
-			var i = _renderedIndicators[tile.Coords];
-			_EM.DestroyEntity(_entities[i]);
-			_entities[i] = indicator.Instantiate(tile.SurfacePoint + _offset, 0.9f);
-		}
-		_renderedIndicators[tile.Coords] = _nextEntityIndex;
-		_entities[_nextEntityIndex++] = indicator.Instantiate(tile.SurfacePoint + _offset, 0.9f);
-	}
-
 	public void SetIndicator(Tile tile, GameObject indicator)
 	{
+		if (tile == null)
+			return;
 		var entityId = GameRegistry.PrefabDatabase[indicator];
+		//GameRegistry.IndicatorSystem.SetIndicator(tile.Coords, tile.Height + _offset.y, entityId);
+		//return;
+
 		var buffer = GameRegistry.GetGenericPrefabBuffer();
 		var prefabEntity = buffer[entityId];
 		var curInstance = GameRegistry.EntityManager.Instantiate(prefabEntity.value);
@@ -150,6 +144,8 @@ public class IndicatorManager : IDisposable
 
 	public void UnSetAllIndicators()
 	{
+		//GameRegistry.IndicatorSystem.UnsetAllIndicators();
+		//return;
 		if(_nextEntityIndex != 0)
 		{
 			for (int i = 0; i < _nextEntityIndex; i++)

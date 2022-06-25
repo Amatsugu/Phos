@@ -14,7 +14,7 @@ public class UIButtonHover : UIHover
 	private Vector3 _basePos;
 	private Vector3 _lastPos;
 
-#if DEBUG
+#if UNITY_EDITOR
 	protected override void OnValidate()
 	{
 		base.OnValidate();

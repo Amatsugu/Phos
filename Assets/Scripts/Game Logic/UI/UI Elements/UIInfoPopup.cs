@@ -39,6 +39,7 @@ public class UIInfoPopup : UIExpandable
 	private int[] _ids;
 	private int _nextId = 0;
 
+#if UNITY_EDITOR
 	protected override void OnValidate()
 	{
 		base.OnValidate();
@@ -52,6 +53,7 @@ public class UIInfoPopup : UIExpandable
 		else if (iconImages.Length != MAX_NOTIFS)
 			Array.Resize(ref iconImages, MAX_NOTIFS);
 	}
+#endif
 
 	protected override void Awake()
 	{

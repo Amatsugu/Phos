@@ -11,7 +11,7 @@ public class UITabPanel : UIPanel
 	private ColorBlock[] _baseColors;
 	private ColorBlock[] _selectedColors;
 
-#if DEBUG
+#if UNITY_EDITOR
 	protected override void OnValidate()
 	{
 		base.OnValidate();

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 1363.1299, g: 7797.922, b: 24088.328, a: 1}
+  m_IndirectSpecularColor: {r: 1412.7114, g: 7998.371, b: 24706.453, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6340,7 +6340,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2102994817}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.999996
+  m_Size: 0.9998807
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11866,7 +11866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e888f5de70b2014cb0ecaf049c06ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generator: {fileID: 11400000, guid: 7a387bb9de968824eb1de5d47d9cdd59, type: 2}
+  generator: {fileID: 11400000, guid: bd1bcd504984922448570bfc5bf515eb, type: 2}
   tileDatabase: {fileID: 11400000, guid: f973b4e22fe4f24429859b2a7732f9b3, type: 2}
 --- !u!4 &1195272783
 Transform:
@@ -13813,7 +13813,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -442.99988}
+  m_AnchoredPosition: {x: 0, y: -442.99924}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1427279150

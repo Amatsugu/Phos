@@ -74,7 +74,7 @@ public class EventManager : MonoBehaviour
 
 public class GameEvents
 {
-	private static GameEvents INST => _inst ?? (_inst = new GameEvents());
+	private static GameEvents INST => _inst ??= new GameEvents();
 
 	private static GameEvents _inst;
 

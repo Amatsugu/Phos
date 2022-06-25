@@ -41,7 +41,7 @@ namespace Amatsugu.Phos.TileEntities
 		}
 		public void OnBeforeSerialize()
 		{
-#if DEBUG
+#if UNITY_EDITOR
 			assetGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(this));
 #endif
 		}

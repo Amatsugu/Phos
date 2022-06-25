@@ -33,6 +33,7 @@ public class GameRegistry : MonoBehaviour
 	public static CameraController CameraController => INST.cameraController;
 	public static BuildingDatabase BuildingDatabase => INST.buildingDatabase;
 	public static ResourceSystem ResourceSystem => INST.resourceSystem;
+	public static IndicatorSystem IndicatorSystem => INST.indicatorSystem;
 	public static TileDatabase TileDatabase => INST.tileDatabase;
 	public static UnitDatabase UnitDatabase => INST.unitDatabase;
 	public static ProjectileDatabase ProjectileDatabase => INST.projectileDatabase;
@@ -52,6 +53,7 @@ public class GameRegistry : MonoBehaviour
 	public Camera mainCamera;
 	public CameraController cameraController;
 	public ResourceSystem resourceSystem;
+	public IndicatorSystem indicatorSystem;
 	public GameState gameState;
 	//Databases
 	public RarityColors rarityColors;

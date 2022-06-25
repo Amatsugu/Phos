@@ -84,7 +84,7 @@ public class UIHover : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	}
 
-#if !DEBUG
+#if !UNITY_EDITOR
 	protected virtual void OnValidate()
 	{
 

@@ -103,7 +103,7 @@ public class NotificationsUI : UIHover
 			_notifsMin[i] = Instantiate(notifMin, rTransform);
 		}
 	}
-#if DEBUG
+#if UNITY_EDITOR
 	protected override void OnValidate()
 	{
 		base.OnValidate();

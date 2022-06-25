@@ -15,11 +15,13 @@ public class UIObjectButton : MonoBehaviour
 	public Color normalColor;
 	public Color hoverColor;
 
+#if UNITY_EDITOR
 	private void OnValidate()
 	{
 		if(text != null)
 			text.color = normalColor;
 	}
+#endif
 
 	private void OnMouseUp()
 	{

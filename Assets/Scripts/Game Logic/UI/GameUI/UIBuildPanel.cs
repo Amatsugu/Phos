@@ -12,6 +12,7 @@ using Unity.Mathematics;
 using Unity.Physics.Systems;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class UIBuildPanel : UITabPanel
 {
@@ -431,7 +432,9 @@ public class UIBuildPanel : UITabPanel
 		}
 		_rotation = _rotation.Mod(6);
 
+		Profiler.BeginSample("Validator");
 		bool isValid = _selectedBuilding.validator.ValidatePlacement(GameRegistry.GameMap, selectedTile.Coords, _selectedBuilding, indicatorManager, _rotation);
+		Profiler.EndSample();
 		//var effects = new float2();
 
 		var footprint = _selectedBuilding.footprint.GetOccupiedTiles(selectedTile.Coords, _rotation);
