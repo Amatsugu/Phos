@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-
-using UnityEngine;
 
 namespace Amatsugu.Phos
 {
@@ -20,7 +14,6 @@ namespace Amatsugu.Phos
 		private int _mapWidth;
 		private int _nextId;
 		private bool _clearAll;
-		private EntityQuery _indicatorQuery;
 
 		protected override void OnCreate()
 		{
@@ -28,16 +21,6 @@ namespace Amatsugu.Phos
 			base.OnCreate();
 			GameEvents.OnMapLoaded += Init;
 			GameEvents.OnMapDestroyed += DeInit;
-
-			var indicatorDesc = new EntityQueryDesc
-			{
-				All = new ComponentType[]
-				{
-					ComponentType.ReadOnly<IndicatorIdentifier>(),
-				}
-			};
-
-			_indicatorQuery = GetEntityQuery(indicatorDesc);
 		}
 
 		private void Init()
@@ -55,7 +38,7 @@ namespace Amatsugu.Phos
 
 		private void DeInit()
 		{
-			if(_indicatorArray.IsCreated)
+			if (_indicatorArray.IsCreated)
 				_indicatorArray.Dispose();
 			if (_indicatorsToAdd.IsCreated)
 				_indicatorsToAdd.Dispose();
@@ -66,8 +49,14 @@ namespace Amatsugu.Phos
 		protected override void OnUpdate()
 		{
 			if (_clearAll)
-				PostUpdateCommands.DestroyEntitiesForEntityQuery(_indicatorQuery);
-			Entities.WithAllReadOnly<MapTag>().ForEach((DynamicBuffer<GenericPrefab> prefabBuffer) =>
+			{
+				Entities.WithAll<IndicatorIdentifier>().ForEach(e =>
+				{
+					PostUpdateCommands.DestroyEntity(e);
+				});
+			}
+
+			Entities.WithAllReadOnly<GenericPrefab>().ForEach((DynamicBuffer<GenericPrefab> prefabBuffer) =>
 			{
 				for (int i = 0; i < _indicatorsToAdd.Length; i++)
 				{
@@ -94,15 +83,12 @@ namespace Amatsugu.Phos
 						Value = curId
 					});
 
-					if(indicator.index < _indicatorArray.Length)	
+					if (indicator.index < _indicatorArray.Length)
 						_indicatorArray[indicator.index] = curId;
 				}
 			});
 
-
-
 			_clearAll = false;
-
 
 			_indicatorsToAdd.Clear();
 			_indicatorsToRemove.Clear();
@@ -129,7 +115,7 @@ namespace Amatsugu.Phos
 		public void UnsetAllIndicators()
 		{
 			_clearAll = true;
-			_nextId = 0;
+			//_nextId = 0;
 		}
 
 		protected override void OnDestroy()
@@ -146,8 +132,8 @@ namespace Amatsugu.Phos
 			public float3 scale;
 			public int prefabId;
 		}
-
 	}
+
 	public struct IndicatorIdentifier : IComponentData
 	{
 		public int Value;
