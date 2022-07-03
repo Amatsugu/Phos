@@ -48,13 +48,13 @@ namespace Amatsugu.Phos
 
 		protected override void OnUpdate()
 		{
-			if (_clearAll)
-			{
-				Entities.WithAll<IndicatorIdentifier>().ForEach(e =>
-				{
-					PostUpdateCommands.DestroyEntity(e);
-				});
-			}
+			//if (_clearAll)
+			//{
+			//	Entities.WithAll<IndicatorIdentifier>().ForEach(e =>
+			//	{
+			//		PostUpdateCommands.DestroyEntity(e);
+			//	});
+			//}
 
 			Entities.WithAllReadOnly<GenericPrefab>().ForEach((DynamicBuffer<GenericPrefab> prefabBuffer) =>
 			{
@@ -82,7 +82,10 @@ namespace Amatsugu.Phos
 					{
 						Value = curId
 					});
-
+					PostUpdateCommands.AddComponent(entity, new DeathTime
+					{
+						Value = 0
+					});
 					if (indicator.index < _indicatorArray.Length)
 						_indicatorArray[indicator.index] = curId;
 				}

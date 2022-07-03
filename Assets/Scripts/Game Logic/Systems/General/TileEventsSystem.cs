@@ -14,7 +14,7 @@ namespace Amatsugu.Phos
 		{
 			var map = GameRegistry.GameMap;
 			var width = map.totalWidth;
-			Entities.ForEach((Entity e, DynamicBuffer<TileEvent> events, DynamicBuffer<TileInstance> tiles) =>
+			Entities.WithAllReadOnly<TileInstance>().ForEach((Entity e, DynamicBuffer<TileEvent> events, DynamicBuffer<TileInstance> tiles) =>
 			{
 				for (int i = 0; i < events.Length; i++)
 				{
@@ -44,7 +44,7 @@ namespace Amatsugu.Phos
 		{
 			var map = GameRegistry.GameMap;
 			var width = map.totalWidth;
-			Entities.ForEach((Entity e, DynamicBuffer<BuffEvent> buffEvents, DynamicBuffer<TileInstance> tiles) =>
+			Entities.WithAllReadOnly<TileInstance>().ForEach((Entity e, DynamicBuffer<BuffEvent> buffEvents, DynamicBuffer<TileInstance> tiles) =>
 			{
 				for (int i = 0; i < buffEvents.Length; i++)
 				{

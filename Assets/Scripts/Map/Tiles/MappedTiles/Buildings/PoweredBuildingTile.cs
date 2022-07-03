@@ -85,6 +85,7 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void OnConnected()
 		{
+			Debug.Log($"[{GetNameString()}] Connected");
 			HasHQConnection = true;
 			if (IsBuilt)
 				OnBuiltAndPowered();
@@ -100,6 +101,7 @@ namespace Amatsugu.Phos.Tiles
 		/// </summary>
 		public virtual void OnDisconnected()
 		{
+			Debug.Log($"[{GetNameString()}] Disconnected");
 			HasHQConnection = false;
 
 			if (_connectionNotif == -1)
@@ -120,6 +122,14 @@ namespace Amatsugu.Phos.Tiles
 		{
 			base.OnRemoved();
 			InfoPopupUI.HidePopup(Coords);
+		}
+
+		public override StringBuilder GetDescriptionString()
+		{
+			var str = base.GetDescriptionString();
+
+			str.AppendLine($"HQ Connected: {HasHQConnection}");
+			return str;
 		}
 	}
 }

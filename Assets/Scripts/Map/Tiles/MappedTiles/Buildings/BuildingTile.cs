@@ -165,25 +165,10 @@ namespace Amatsugu.Phos.Tiles
 		/// <summary>
 		/// Completes the build phase of this building
 		/// </summary>
-		[Obsolete]
 		public void Build()
 		{
 			isBuilt = true;
 			OnBuilt();
-			//if (isBuilt)
-			//	return;
-			//isBuilt = true;
-			//OnBuilt();
-			//RenderBuilding();
-			//Start();
-			//if(buildingInfo.useMetaTiles)
-			//{
-			//	for (int i = 0; i < metaTiles.Length; i++)
-			//	{
-			//		metaTiles[i].Start();
-			//	}
-			//}
-			//map.InvokeOnBuilt(Coords);
 		}
 
 		public override void Start(Entity tileInst, EntityCommandBuffer postUpdateCommands)

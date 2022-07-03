@@ -42,23 +42,24 @@ namespace Amatsugu.Phos
 			//TODO: Figure out a better way to defer the deletion of the conduit node to when the entity is destroyed
 			Entities.WithAllReadOnly<ResourceConduitTag, HexPosition>().WithNone<HQConntectedTag, PoweredBuildingTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
-				if (_conduitGraph.GetNode(pos)?.IsConnected == true)
+				if (_conduitGraph.GetNode(pos) is { IsConnected : true })
 					PostUpdateCommands.AddComponent<HQConntectedTag>(e);
 			});
 
 			Entities.WithAllReadOnly<ResourceConduitTag, HQConntectedTag, HexPosition>().WithNone<PoweredBuildingTag>().ForEach((Entity e, ref HexPosition pos) =>
 			{
-				if (_conduitGraph.GetNode(pos)?.IsConnected == false)
+				if (_conduitGraph.GetNode(pos) is { IsConnected: false })
 					PostUpdateCommands.RemoveComponent<HQConntectedTag>(e);
 			});
 
 			//Buildings
+			//Powered Buildings
 			Entities.WithAllReadOnly<PoweredBuildingTag, HexPosition>().WithNone<BuildingOffTag, ResourceConduitTag, SubTile>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
 				if (node == null)
 				{
-					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnConnected();
+					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnDisconnected();
 					PostUpdateCommands.AddComponent<BuildingOffTag>(e);
 				}
 			});
@@ -68,7 +69,7 @@ namespace Amatsugu.Phos
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
 				if (node != null)
 				{
-					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnDisconnected();
+					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnConnected();
 					PostUpdateCommands.RemoveComponent<BuildingOffTag>(e);
 				}
 			});
@@ -94,7 +95,8 @@ namespace Amatsugu.Phos
 				{
 					var pos = tiles[i];
 					var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
-					if (node != null)//At least one powered tile found, marking as powered
+					//At least one powered tile found, marking as powered
+					if (node != null)
 					{
 						(GameRegistry.GameMap[hPos.Value] as PoweredBuildingTile).OnDisconnected();
 						PostUpdateCommands.RemoveComponent<BuildingOffTag>(e);

@@ -86,22 +86,15 @@ public class GatheringBuildingTile : PoweredBuildingTile
 	public override void OnRemoved()
 	{
 		base.OnRemoved();
-		//var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
-		//map.HexSelectForEach(Coords, fullRange, t =>
-		//{
-		//	if (t is ResourceTile rt)
-		//	{
-		//		if (rt.gatherer == Coords)
-		//			rt.gatherer = default;
-		//	}
-		//},true);
-		//var tiles = map.HexSelect(Coords, fullRange * 2, true);
-		//foreach (var tile in tiles)
-		//{
-		//	if (tile is GatheringBuildingTile gb)
-		//	{
-		//		gb.UpdateGather();
-		//	}
-		//}
+		var fullRange = gatherInfo.gatherRange + gatherInfo.footprint.size;
+		map.HexSelectForEach(Coords, fullRange, t =>
+		{
+			if (t is ResourceTile rt)
+			{
+				if (rt.gatherer == Coords)
+					rt.gatherer = default;
+			}
+		}, true);
+		
 	}
 }

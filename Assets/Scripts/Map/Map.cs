@@ -417,18 +417,28 @@ namespace Amatsugu.Phos
 		{
 			if (tile.Coords != newTile.Coords)
 				throw new Exception("New tile must be a the same position of the tile it replaces");
+
+			//Remove old tile
 			tile.OnRemoved();
 			var existingTileInstance = tileInstances[tile.Coords.ToIndex(totalWidth)];
 			tile.OnDestroy(existingTileInstance, postUpdateCommands);
+			if (tile is BuildingTile)
+			{
+				var oldBuildingEntity = GameRegistry.EntityManager.GetComponentData<Building>(existingTileInstance);
+				postUpdateCommands.DestroyEntity(oldBuildingEntity);
+			}
+			postUpdateCommands.DestroyEntity(existingTileInstance);
+			//Copy tile info
+			var tileIndex = tile.Coords.ToIndex(totalWidth);
 			newTile.originalTile = tile.GetGroundTileInfo();
 			newTile.SetBiome(tile.biomeId, tile.moisture, tile.temperature);
-			var tileIndex = tile.Coords.ToIndex(totalWidth);
-			postUpdateCommands.DestroyEntity(existingTileInstance);
+			//Create new tile
 			var nTInst = newTile.InstantiateTile(prefabs, postUpdateCommands);
+			tileInstances[tileIndex] = nTInst;
 			newTile.PrepareTileInstance(nTInst, postUpdateCommands);
 			var buildingTile = newTile as BuildingTile;
 			Entity buildingInst = default;
-			if (buildingTile != null && !(newTile is MetaTile))
+			if (buildingTile != null && newTile is not MetaTile)
 			{
 				buildingInst = buildingTile.InstantiateBuilding(nTInst, prefabs, postUpdateCommands);
 				buildingTile.PrepareBuildingEntity(buildingInst, postUpdateCommands);

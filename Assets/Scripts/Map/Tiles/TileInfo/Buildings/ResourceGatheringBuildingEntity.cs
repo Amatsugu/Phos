@@ -43,5 +43,6 @@ namespace Amatsugu.Phos.TileEntities
 			else
 				return gatherString;
 		}
+
 	}
 }
