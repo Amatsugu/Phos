@@ -160,6 +160,8 @@ namespace DataStore.ConduitGraph
 				var n = nodes[_coordMap[pos[i]]];
 				if (n.Equals(_baseNode))
 					continue;
+				if (!n.IsConnected)
+					continue;
 				if (coord.Distance(n.conduitPos) > n.poweredRange)
 					continue;
 				if (IsInPoweredRange(n, coord))
@@ -207,7 +209,8 @@ namespace DataStore.ConduitGraph
 
 		public void CalculateConnectivity()
 		{
-			var visited = new HashSet<ConduitNode>();
+			Debug.Log("Recalcuating Node Graph...");
+			var visited = new HashSet<ConduitNode>(nodes.Count);
 			TraverseGraph(_baseNode, visited);
 
 			var nodesArr = nodes.Values.ToArray();
@@ -219,6 +222,7 @@ namespace DataStore.ConduitGraph
 					nodesArr[i].MarkAsDisconnected();
 
 			}
+			Debug.Log($"Node Graph... {visited.Count} Connected, {nodesArr.Length - visited.Count} Disconnected");
 		}
 
 		public HashSet<ConduitNode> GetDisconectedNodesSet()
