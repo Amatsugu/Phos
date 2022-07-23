@@ -145,6 +145,7 @@ public class IndicatorManager : IDisposable
 	public void UnSetAllIndicators()
 	{
 		GameRegistry.IndicatorSystem.UnsetAllIndicators();
+		_errors.Clear();
 		return;
 		if(_nextEntityIndex != 0)
 		{
@@ -155,7 +156,6 @@ public class IndicatorManager : IDisposable
 			}
 		}
 		_renderedIndicators.Clear();
-		_errors.Clear();
 		_nextEntityIndex = 0;
 	}
 

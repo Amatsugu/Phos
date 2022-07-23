@@ -60,10 +60,8 @@ namespace Amatsugu.Phos
 			Entities.WithAllReadOnly<PoweredBuildingTag, HexPosition>().WithNone<BuildingOffTag, ResourceConduitTag, SubTile>().ForEach((Entity e, ref HexPosition pos) =>
 			{
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
-				Debug.Log($"Conduit {node?.conduitPos} {node?.IsConnected}");
 				if (node == null)
 				{
-					Debug.Log($"Disconnecting... {pos.Value}");
 					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnDisconnected();
 					PostUpdateCommands.AddComponent<BuildingOffTag>(e);
 				}
@@ -75,7 +73,6 @@ namespace Amatsugu.Phos
 				var node = _conduitGraph.GetClosestPoweredNodeInRange(pos);
 				if (node != null)
 				{
-					Debug.Log($"Connecting... {pos.Value}");
 					(GameRegistry.GameMap[pos.Value] as PoweredBuildingTile).OnConnected();
 					PostUpdateCommands.RemoveComponent<BuildingOffTag>(e);
 				}
