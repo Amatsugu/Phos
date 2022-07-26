@@ -25,7 +25,6 @@ public class IndicatorManager : IDisposable
 	private Dictionary<GameObject, List<Entity>> _indicatorEntities;
 	private Dictionary<GameObject, int> _renderedEntities;
 	private Dictionary<HexCoords, int> _renderedIndicators;
-	private NativeArray<Entity> _entities;
 	private EntityManager _EM;
 	private float3 _offset;
 	private int _nextEntityIndex = 0;
@@ -40,7 +39,7 @@ public class IndicatorManager : IDisposable
 		_renderedIndicators = new Dictionary<HexCoords, int>();
 		_errors = new List<string>();
 		_offset = new float3(0, offset, 0);
-		_entities = new NativeArray<Entity>(maxIndicator, Allocator.Persistent, NativeArrayOptions.ClearMemory);
+		//_entities = new NativeArray<Entity>(maxIndicator, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 		this.floatingText = floatingText;
 
 	}
@@ -112,51 +111,13 @@ public class IndicatorManager : IDisposable
 			return;
 		var entityId = GameRegistry.PrefabDatabase[indicator];
 		GameRegistry.IndicatorSystem.SetIndicator(tile.Coords, tile.Height + _offset.y, entityId);
-		return;
-
-		var buffer = GameRegistry.GetGenericPrefabBuffer();
-		var prefabEntity = buffer[entityId];
-		var curInstance = GameRegistry.EntityManager.Instantiate(prefabEntity.value);
-		GameRegistry.EntityManager.SetComponentData(curInstance, new Translation
-		{
-			Value = tile.SurfacePoint + _offset
-		});
-		GameRegistry.EntityManager.AddComponentData(curInstance, new Scale
-		{
-			Value = 0.9f
-		});
-
-		if (_renderedIndicators.ContainsKey(tile.Coords))
-		{
-			var i = _renderedIndicators[tile.Coords];
-			_EM.DestroyEntity(_entities[i]);
-			_entities[i] = curInstance;
-		}
-		_renderedIndicators[tile.Coords] = _nextEntityIndex;
-		_entities[_nextEntityIndex++] = curInstance;
 	}
 
-	/*public void UnSetIndicator(HexCoords tilePos)
-	{
-		if (_renderedIndicators.ContainsKey(tilePos))
-			_EM.DestroyEntity(_renderedIndicators[tilePos]);
-	}*/
 
 	public void UnSetAllIndicators()
 	{
 		GameRegistry.IndicatorSystem.UnsetAllIndicators();
 		_errors.Clear();
-		return;
-		if(_nextEntityIndex != 0)
-		{
-			for (int i = 0; i < _nextEntityIndex; i++)
-			{
-				if(_EM.Exists(_entities[i]))
-					_EM.DestroyEntity(_entities[i]);
-			}
-		}
-		_renderedIndicators.Clear();
-		_nextEntityIndex = 0;
 	}
 
 	public void LogError(string errorMessage) => _errors.Add(errorMessage);
@@ -244,23 +205,11 @@ public class IndicatorManager : IDisposable
 		{
 			if (disposing)
 			{
-				// TODO: dispose managed state (managed objects)
 
 			}
-			if(_entities.IsCreated)
-				_entities.Dispose();
-			// TODO: free unmanaged resources (unmanaged objects) and override finalizer
-			// TODO: set large fields to null
 			disposedValue = true;
 		}
 	}
-
-	// // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-	// ~IndicatorManager()
-	// {
-	//     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-	//     Dispose(disposing: false);
-	// }
 
 	public void Dispose()
 	{
