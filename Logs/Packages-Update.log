@@ -508,3 +508,11 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.render-pipelines.high-definition from version 14.0.2 to 14.0.3
+
+=== Sun Jul 31 08:37:42 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.visualstudio from version 2.0.15 to 2.0.16

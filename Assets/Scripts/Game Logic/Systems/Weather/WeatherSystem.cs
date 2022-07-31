@@ -226,14 +226,14 @@ public partial class WeatherSystem : SystemBase
 			_transitionTime += Time.DeltaTime;
 			var t = _transitionTime / _nextWeather.transitionTime;
 			t = math.clamp(t, 0, 1);
-			ApplyWeather(WeatherState.Lerp(_prevWeatherState, _nextWeather.state, t)); ;
 
 			if (_transitionTime >= _nextWeather.transitionTime)
 			{
 				_curWeather = _nextWeather;
-				ApplyWeather(_curWeatherState);
+				//ApplyWeather(_curWeatherState);
 				_nextWeather = null;
 			}
+			ApplyWeather(WeatherState.Lerp(_prevWeatherState, _nextWeather.state, t)); ;
 		}
 	}
 
