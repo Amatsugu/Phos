@@ -16,5 +16,7 @@ MonoBehaviour:
     type: 3}
   errorIndicator: {fileID: 4036181524500567323, guid: 589c37a45d935db4e9f64569f2129c5b,
     type: 3}
-  rangeSphere: {fileID: 11400000, guid: 0ce5216eafde46b4abd5e72abcf4ae89, type: 2}
-  minRangeSphere: {fileID: 11400000, guid: 85346e26d2ff3454e8063c107b1417ff, type: 2}
+  rangeSphere: {fileID: 608144638329582791, guid: a7bd47b7e9eaa6c45adae631633894e2,
+    type: 3}
+  minRangeSphere: {fileID: 1116575692068587135, guid: 7a8ed0317a1b5c64dbca2e2562783a76,
+    type: 3}

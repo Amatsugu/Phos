@@ -8,12 +8,8 @@ namespace Amatsugu.Phos
 	[BurstCompatible]
 	public class IndicatorSystem : ComponentSystem
 	{
-		private NativeArray<int> _indicatorArray;
 		private NativeList<Indicator> _indicatorsToAdd;
-		private NativeParallelHashSet<int> _indicatorsToRemove;
 		private int _mapWidth;
-		private int _nextId;
-		private bool _clearAll;
 
 		protected override void OnCreate()
 		{
@@ -26,45 +22,25 @@ namespace Amatsugu.Phos
 		private void Init()
 		{
 			_mapWidth = GameRegistry.GameMap.totalWidth;
-			_indicatorArray = new NativeArray<int>(GameRegistry.GameMap.tileCount, Allocator.Persistent);
-			_indicatorsToAdd = new NativeList<Indicator>(_indicatorArray.Length / 6, Allocator.Persistent);
-			_indicatorsToRemove = new NativeParallelHashSet<int>(_indicatorArray.Length / 6, Allocator.Persistent);
-			_nextId = 0;
-			for (int i = 0; i < _indicatorArray.Length; i++)
-			{
-				_indicatorArray[i] = -1;
-			}
+			_indicatorsToAdd = new NativeList<Indicator>(GameRegistry.GameMap.tileCount / 6, Allocator.Persistent);
+			
 		}
 
 		private void DeInit()
 		{
-			if (_indicatorArray.IsCreated)
-				_indicatorArray.Dispose();
 			if (_indicatorsToAdd.IsCreated)
 				_indicatorsToAdd.Dispose();
-			if (_indicatorsToRemove.IsCreated)
-				_indicatorsToRemove.Dispose();
 		}
 
 		protected override void OnUpdate()
 		{
-			//if (_clearAll)
-			//{
-			//	Entities.WithAll<IndicatorIdentifier>().ForEach(e =>
-			//	{
-			//		PostUpdateCommands.DestroyEntity(e);
-			//	});
-			//}
-
 			Entities.WithAllReadOnly<GenericPrefab>().ForEach((DynamicBuffer<GenericPrefab> prefabBuffer) =>
 			{
 				for (int i = 0; i < _indicatorsToAdd.Length; i++)
 				{
-					_nextId++;
 					var indicator = _indicatorsToAdd[i];
 					var prefab = prefabBuffer[indicator.prefabId];
 					var entity = PostUpdateCommands.Instantiate(prefab.value);
-					var curId = _nextId;
 					PostUpdateCommands.SetComponent(entity, new Translation()
 					{
 						Value = indicator.pos
@@ -78,36 +54,23 @@ namespace Amatsugu.Phos
 					{
 						Value = indicator.scale
 					});
-					PostUpdateCommands.AddComponent(entity, new IndicatorIdentifier
-					{
-						Value = curId
-					});
 					PostUpdateCommands.AddComponent(entity, new DeathTime
 					{
 						Value = 0
 					});
-					if (indicator.index < _indicatorArray.Length)
-						_indicatorArray[indicator.index] = curId;
 				}
 			});
 
-			_clearAll = false;
-
 			_indicatorsToAdd.Clear();
-			_indicatorsToRemove.Clear();
 		}
 
 		public void SetIndicator(HexCoords coords, float height, int prefabId)
 		{
-			var index = coords.ToIndex(_mapWidth);
-			if (_indicatorArray[index] != -1)
-				_indicatorsToRemove.Add(_indicatorArray[index]);
 
 			var pos = coords.WorldPos;
 			pos.y = height;
 			_indicatorsToAdd.Add(new Indicator
 			{
-				index = index,
 				pos = pos,
 				prefabId = prefabId,
 				rotation = quaternion.identity,
@@ -115,10 +78,15 @@ namespace Amatsugu.Phos
 			});
 		}
 
-		public void UnsetAllIndicators()
+		public void SetIndicator(float3 pos, quaternion rot, float3 scale, int prefab)
 		{
-			_clearAll = true;
-			//_nextId = 0;
+			_indicatorsToAdd.Add(new Indicator
+			{
+				pos = pos,
+				scale = scale,
+				rotation = rot,
+				prefabId = prefab
+			});
 		}
 
 		protected override void OnDestroy()
@@ -129,7 +97,6 @@ namespace Amatsugu.Phos
 
 		private struct Indicator
 		{
-			public int index;
 			public float3 pos;
 			public quaternion rotation;
 			public float3 scale;

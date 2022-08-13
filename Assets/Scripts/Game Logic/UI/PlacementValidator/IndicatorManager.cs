@@ -77,8 +77,6 @@ public class IndicatorManager : IDisposable
 		var ring = HexCoords.SelectRing(center.Coords, range);
 		var neighbors = new Tile[6];
 		var entityId = GameRegistry.PrefabDatabase[border];
-		var buffer = GameRegistry.GetGenericPrefabBuffer();
-		var prefabEntity = buffer[entityId];
 		for (int i = 0; i < ring.Length; i++)
 		{
 			var p = ring[i];
@@ -89,18 +87,20 @@ public class IndicatorManager : IDisposable
 				if (neighbors[n].Coords.Distance(center.Coords) <= range)
 					continue;
 
-				var e = GameRegistry.EntityManager.Instantiate(prefabEntity.value);
-				GameRegistry.EntityManager.AddComponent<Scale>(e);
-				GameRegistry.EntityManager.AddComponentData(e, new Rotation { Value = quaternion.RotateY(math.radians((60 * n) + 180)) });
-				GameRegistry.EntityManager.AddComponentData(e, new DeathTime { Value = Time.time + .01f });
-
-				//border.Instantiate(s, 1, );
+				GameRegistry.IndicatorSystem.SetIndicator(s, quaternion.RotateY(math.radians((60 * n) + 180)), 1, entityId);
 			}
 		}
 	}
 
+	public static void ShowRangeSphere(Tile tile, float attackRange, GameObject rangeSphere)
+	{
+		var entityId = GameRegistry.PrefabDatabase[rangeSphere];
+		GameRegistry.IndicatorSystem.SetIndicator(tile.SurfacePoint, quaternion.identity, attackRange, entityId);
+	}
+
 	public static void ShowRangeSphere(Tile tile, float attackRange, MeshEntity rangeSphere)
 	{
+
 		var e = rangeSphere.Instantiate(tile.SurfacePoint, attackRange);
 		GameRegistry.EntityManager.AddComponentData(e, new DeathTime { Value = Time.time + 0.01f });
 	}
@@ -116,7 +116,6 @@ public class IndicatorManager : IDisposable
 
 	public void UnSetAllIndicators()
 	{
-		GameRegistry.IndicatorSystem.UnsetAllIndicators();
 		_errors.Clear();
 	}
 

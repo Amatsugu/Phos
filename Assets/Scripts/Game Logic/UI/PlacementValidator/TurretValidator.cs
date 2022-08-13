@@ -8,8 +8,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Validators/Turret Placement Validator")]
 public class TurretValidator : PlacementValidator
 {
-	public MeshEntity rangeSphere;
-	public MeshEntity minRangeSphere;
+	public GameObject rangeSphere;
+	public GameObject minRangeSphere;
+
+	public override List<GameObject> GetIndicatorPrefabs()
+	{
+		var data = base.GetIndicatorPrefabs();
+		data.Add(rangeSphere);
+		data.Add(minRangeSphere);
+		return data;
+	}
 
 	public override bool ValidatePlacement(Map map, HexCoords pos, BuildingTileEntity buildingTile, IndicatorManager indicatorManager, int rotation)
 	{
