@@ -10,7 +10,12 @@ PrefabInstance:
     - target: {fileID: 608144638329582791, guid: a7bd47b7e9eaa6c45adae631633894e2,
         type: 3}
       propertyPath: m_Name
-      value: RangeSphere
+      value: MinRangeSphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 608144638329582791, guid: a7bd47b7e9eaa6c45adae631633894e2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9191145267382762448, guid: a7bd47b7e9eaa6c45adae631633894e2,
         type: 3}
