@@ -334,7 +334,8 @@ public class UIBuildPanel : UITabPanel
 	private void DeconstructLogic()
 	{
 		indicatorManager.UnSetAllIndicators();
-		
+		tooltipUI.Hide();
+
 		var (selectedTile, _) = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
@@ -398,7 +399,7 @@ public class UIBuildPanel : UITabPanel
 
 	public void ExitDeconstructionMode()
 	{
-		state = BuildState.Idle;
+		state = BuildState.Disabled;
 		HideIndicators();
 		GameEvents.InvokeOnExitDeconstructionMode();
 	}
