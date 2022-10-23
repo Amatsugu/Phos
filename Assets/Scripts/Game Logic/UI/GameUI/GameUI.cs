@@ -12,6 +12,7 @@ using UnityEngine;
 
 public class GameUI : UIHover
 {
+	private UIDeconstructionOverlay _deconstructionOverlay;
 	private UIInfoPanel _infoPanel;
 	private UIBuildPanel _buildPanel;
 	private UIActionsPanel _actionsPanel;
@@ -53,6 +54,8 @@ public class GameUI : UIHover
 		_buildQueuePanel.gameObject.SetActive(true);
 		_tooltip = GetComponentInChildren<UITooltip>(true);
 		_tooltip.gameObject.SetActive(true);
+
+		_deconstructionOverlay = transform.parent.GetComponentInChildren<UIDeconstructionOverlay>(true);
 
 		_selectionPanel.actionsPanel = _actionsPanel;
 		_buildPanel.infoPanel = _infoPanel;
@@ -105,6 +108,7 @@ public class GameUI : UIHover
 		_selectionPanel.OnHide += OnSelectionClosed;
 		_buildPanel.OnHide += OnBuildPanelClosed;
 		GameEvents.OnMapLoaded += OnMapLoad;
+		_deconstructionOverlay.Hide();
 	}
 
 	private void CategorySelected(BuildingCategory category)
@@ -116,10 +120,19 @@ public class GameUI : UIHover
 
 	private void EnterDeconstructMode()
 	{
-		_buildPanel.Hide();
-		_categoryPanel.DeselectAll();
-		_prevState = _state = UIState.Deconstruct;
-		_buildPanel.state = UIBuildPanel.BuildState.Deconstruct;
+		if(_state == UIState.Deconstruct)
+		{
+			_buildPanel.ExitDeconstructionMode();
+			_state = UIState.Idle;
+		}
+		else
+		{
+			_buildPanel.Hide();
+			_categoryPanel.DeselectAll();
+			_prevState = _state = UIState.Deconstruct;
+			_buildPanel.EnterDeconstructionMode();
+			GameEvents.InvokeOnEnterDeconstructionMode();
+		}
 	}
 
 	private void OnBuildPanelClosed()

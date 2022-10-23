@@ -2,6 +2,7 @@
 using Amatsugu.Phos.TileEntities;
 using Amatsugu.Phos.Tiles;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -334,15 +335,16 @@ public class UIBuildPanel : UITabPanel
 	{
 		indicatorManager.UnSetAllIndicators();
 		
-		var (selectedTile, isnt) = GetTileUnderCursor();
+		var (selectedTile, _) = GetTileUnderCursor();
 		if (selectedTile == null)
 			return;
-		var deconstructable = selectedTile as IDeconstructable;
-		if (deconstructable == null)
+		if (selectedTile is not IDeconstructable deconstructable)
 			return;
+		Debug.Log(deconstructable.GetType().Name);
 		if (selectedTile is BuildingTile b)
 		{
 			var footprint = b.buildingInfo.footprint.GetOccupiedTiles(selectedTile.Coords, b.Rotation);
+			tooltipUI.Show(b.GetDescriptionString().AppendLine(b.GetProductionString().ToString()), b.GetNameString());
 			foreach (var t in footprint)
 			{
 				indicatorManager.SetIndicator(GameRegistry.GameMap[t], destructionIndicatorPrefab);
@@ -354,6 +356,7 @@ public class UIBuildPanel : UITabPanel
 		}
 		if (Input.GetKeyUp(KeyCode.Mouse0) && deconstructable.CanDeconstruct(Faction.Player))
 		{
+			Debug.Log($"Can Deconstruct: {deconstructable.CanDeconstruct(Faction.Player)}");
 			var postUpdateCommands = GameRegistry.EntityManager.World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
 			var tiles = GameRegistry.GetTileInstanceBuffer();
 			var prefabs = GameRegistry.EntityManager.GetBuffer<GenericPrefab>(GameRegistry.MapEntity);
@@ -365,16 +368,39 @@ public class UIBuildPanel : UITabPanel
 	{
 		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
 		{
-			if (state == BuildState.Placement || state == BuildState.Deconstruct)
+			switch (state)
 			{
-				state = BuildState.Idle;
-				HideIndicators();
-			}
-			else
-			{
-				Hide();
+				case BuildState.Placement:
+					ExitPlacementMode();
+					break;
+
+				case BuildState.Deconstruct:
+					ExitDeconstructionMode();
+					break;
+				default:
+					Hide();
+					break;
 			}
 		}
+	}
+
+	public void EnterDeconstructionMode()
+	{
+		state = BuildState.Deconstruct;
+		HideIndicators();
+	}
+
+	public void ExitPlacementMode()
+	{
+		state = BuildState.Idle;
+		HideIndicators();
+	}
+
+	public void ExitDeconstructionMode()
+	{
+		state = BuildState.Idle;
+		HideIndicators();
+		GameEvents.InvokeOnExitDeconstructionMode();
 	}
 
 	private (Tile tile, Entity tileInstance) GetTileUnderCursor()
