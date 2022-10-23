@@ -25,7 +25,7 @@ namespace Amatsugu.Phos.Tiles
 		{
 #if DEBUG
 			if (map.conduitGraph != null)
-				throw new Exception("Second HQ added");
+				throw new Exception("A conduit graph already exists, did the previous one not get cleaned up? Are there multiple HQs?");
 #endif
 			map.conduitGraph = new ConduitGraph(Coords, Height + 3);
 			GameRegistry.BaseNameUI.panel.Show();
@@ -68,27 +68,4 @@ namespace Amatsugu.Phos.Tiles
         }
 
     }
-
-	public class SubHQTile : PoweredBuildingTile
-	{
-		public SubHQTile(HexCoords coords, float height, Map map, SubHQTileEntity tInfo) : base(coords, height, map, tInfo, 0)
-		{
-			HasHQConnection = true;
-		}
-
-		public override void OnPlaced()
-		{
-			base.OnPlaced();
-		}
-
-		protected override void OnBuilt()
-		{
-		}
-
-		protected override void SendBuildNotification()
-		{
-		}
-
-		public override bool CanDeconstruct(Faction faction) => false;
-	}
 }
