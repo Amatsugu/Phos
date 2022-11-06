@@ -1,5 +1,6 @@
 ﻿using Amatsugu.Phos;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,6 +11,7 @@ using Unity.Transforms;
 
 using UnityEngine;
 
+[Obsolete]
 public class ProjectileMeshEntity : PhysicsMeshEntity
 {
 	[Header("Projectile Settings")]
@@ -26,6 +28,7 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 			});
 	}
 
+	[Obsolete]
 	public override void PrepareDefaultComponentData(Entity entity)
 	{
 		base.PrepareDefaultComponentData(entity);
@@ -44,18 +47,22 @@ public class ProjectileMeshEntity : PhysicsMeshEntity
 			GameRegistry.EntityManager.SetComponentData(entity, new Scale { Value = scale.x });
 	}
 
-	public Entity Instantiate(float3 position, float scale, float3 velocity = default, float3 angularVelocity = default)
+	protected override void PrepareComponentData(Entity entity, EntityCommandBuffer postUpdateCommands)
 	{
-		var rot = (velocity.Equals(default) ? quaternion.identity : quaternion.LookRotation(velocity, new float3(0, 1, 0)));
-		var e = Instantiate(position, rot, scale, velocity, angularVelocity);
-		return e;
-	}
-
-	public Entity BufferedInstantiate(EntityCommandBuffer cmb, float3 position, float scale, float3 velocity = default, float3 angularVelocity = default)
-	{
-		var rot = (velocity.Equals(default) ? quaternion.identity : quaternion.LookRotation(velocity, new float3(0, 1, 0)));
-		var e = BufferedInstantiate(cmb, position, rot, scale, velocity, angularVelocity);
-		return e;
+		base.PrepareComponentData(entity, postUpdateCommands);
+		GameRegistry.EntityManager.SetComponentData(entity, new Damage
+		{
+			Value = damage,
+			friendlyFire = friendlyFire
+		});
+		GameRegistry.EntityManager.SetComponentData(entity, new FactionId
+		{
+			Value = faction
+		});
+		if (nonUniformScale)
+			GameRegistry.EntityManager.SetComponentData(entity, new NonUniformScale { Value = scale });
+		else
+			GameRegistry.EntityManager.SetComponentData(entity, new Scale { Value = scale.x });
 	}
 
 	public static Entity ShootProjectile(EntityCommandBuffer cmb, Entity projectileEntity, float3 pos, float3 velocity, double deathTime)

@@ -14,6 +14,8 @@ using Unity.Transforms;
 
 using UnityEngine;
 
+using static UnityEngine.EventSystems.EventTrigger;
+
 namespace Amatsugu.Phos.Units
 {
 
@@ -37,8 +39,7 @@ namespace Amatsugu.Phos.Units
 		public UnitDomain.Domain unitTargetingDomain;
 		public UnitClass.Class unitClass;
 		public Sprite icon;
-		[CreateNewAsset("Assets/GameData/MapAssets/Projectiles", typeof(ProjectileMeshEntity))]
-		public ProjectileMeshEntity projectile;
+		public GameObject projectilePrefab;
 		[CreateNewAsset("Assets/GameData/MapAssets/Meshes/UI/HealthBar", typeof(HealthBarDefination))]
 		public HealthBarDefination healthBar;
 		public float3 healthBarOffset;
@@ -48,9 +49,10 @@ namespace Amatsugu.Phos.Units
 			var prefabId = GameRegistry.PrefabDatabase[unitPrefab];
 			var prefab = prefabs[prefabId];
 			var unitInst = postUpdateCommands.Instantiate(prefab.value);
-			PrepareComponentData(unitInst, postUpdateCommands); //TODO: Move this to prefab initialization
 			postUpdateCommands.SetComponent(unitInst, new Translation { Value = position });
 			postUpdateCommands.SetComponent(unitInst, new Rotation { Value = quaternion.identity });
+			if(projectilePrefab != null)
+				postUpdateCommands.AddComponent(unitInst, new Projectile { Value = prefabs[GameRegistry.PrefabDatabase[projectilePrefab]] });
 
 			return unitInst;
 		}
@@ -90,20 +92,28 @@ namespace Amatsugu.Phos.Units
 			});
 		}
 
-		protected virtual void PrepareComponentData(Entity entity, EntityCommandBuffer postUpdateCommands)
+		public virtual void PrepareComponentData(Entity entity, EntityCommandBuffer postUpdateCommands)
 		{
 			PrepareUnitDomain(entity, postUpdateCommands);
 
 			postUpdateCommands.AddComponent(entity, new UnitId { Value = GameRegistry.UnitDatabase.entityIds[this] });
 			postUpdateCommands.AddComponent(entity, new MoveSpeed { Value = moveSpeed });
 			postUpdateCommands.AddComponent(entity, new Heading { Value = Vector3.forward });
-			postUpdateCommands.AddComponent(entity, new Projectile { Value = projectile.GetEntity() });
 			postUpdateCommands.AddComponent(entity, new AttackSpeed { Value = 1f / attackSpeed });
 			postUpdateCommands.AddComponent(entity, new Health { maxHealth = maxHealth, Value = maxHealth });
 			postUpdateCommands.AddComponent(entity, new AttackRange(attackRange));
+
 			//GameRegistry.EntityManager.SetComponentData(entity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
+		}
 
-
+		public virtual List<GameObject> GetPrefabs()
+		{
+			var prefabs = new List<GameObject>();
+			if (unitPrefab != null)
+				prefabs.Add(unitPrefab);
+			if (projectilePrefab != null)
+				prefabs.Add(projectilePrefab);
+			return prefabs;
 		}
 
 		public virtual void Init(Entity entity, EntityCommandBuffer postUpdateCommands)

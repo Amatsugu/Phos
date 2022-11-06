@@ -11,6 +11,7 @@ public class InitializeWeather : MonoBehaviour
 	public MeshEntity cloudMesh;
 	public MeshEntity cloudShadowMesh;
 	public GameObject cloudPrefab;
+	public GameObject cloudShadowPrefab;
 	public Light sun;
 	public VolumeProfile volumeProfile;
 	public VisualEffect rainVfx;

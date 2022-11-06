@@ -65,7 +65,9 @@ namespace Amatsugu.Phos
 			for (int i = 0; i < units.Length; i++)
 			{
 				var unit = units[i];
-				DeclareReferencedPrefab(unit.info.unitPrefab);
+				var unitPrefabs = unit.info.GetPrefabs();
+				for (int j = 0; j < unitPrefabs.Count; j++)
+					DeclareReferencedPrefab(unitPrefabs[j]);
 			}
 
 			var prefabs = GameRegistry.PrefabsToInit;

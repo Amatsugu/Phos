@@ -1,5 +1,6 @@
 ﻿using Amatsugu.Phos;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,12 +11,14 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [CreateAssetMenu(menuName = "ECS/Mesh Entity")]
 [System.Serializable]
 public class MeshEntity : ScriptableObject
 {
 	public Mesh mesh;
+	public GameObject meshPrefab;
 	public Material material;
 	public UnityEngine.Rendering.ShadowCastingMode castShadows = UnityEngine.Rendering.ShadowCastingMode.On;
 	public bool receiveShadows = true;
@@ -24,6 +27,7 @@ public class MeshEntity : ScriptableObject
 
 	protected Entity _entity;
 
+	[Obsolete]
 	public virtual Entity GetEntity()
 	{
 		var em = GameRegistry.EntityManager;
@@ -42,6 +46,7 @@ public class MeshEntity : ScriptableObject
 		return _entity;
 	}
 
+	[Obsolete]
 	public virtual void PrepareDefaultComponentData(Entity entity)
 	{
 		var em = GameRegistry.EntityManager;
@@ -86,8 +91,31 @@ public class MeshEntity : ScriptableObject
 		};
 	}
 
+	public virtual Entity Instantiate(float3 position, DynamicBuffer<GenericPrefab> prefabs, EntityCommandBuffer postUpdateCommands)
+	{
+		var prefabId = GameRegistry.PrefabDatabase[meshPrefab];
+		var prefab = prefabs[prefabId];
+		var e = postUpdateCommands.Instantiate(prefab.value);
+		postUpdateCommands.SetComponent(e, new Translation { Value = position });
+		postUpdateCommands.SetComponent(e, new Rotation { Value = quaternion.identity });
+
+		if (nonUniformScale)
+			postUpdateCommands.SetComponent(e, new NonUniformScale { Value = 1 });
+		else
+			postUpdateCommands.SetComponent(e, new Scale { Value = 1 });
+
+		return e;
+	}
+
+	protected virtual void PrepareComponentData(Entity entity, EntityCommandBuffer postUpdateCommands)
+	{
+
+	}
+
+	[Obsolete]
 	public Entity Instantiate(float3 position) => Instantiate(position, Vector3.one);
 
+	[Obsolete]
 	public virtual Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float3 scale)
 	{
 		var e = commandBuffer.Instantiate(GetEntity());
@@ -101,6 +129,7 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
+	[Obsolete]
 	public virtual Entity BufferedInstantiate(EntityCommandBuffer commandBuffer, float3 position, float scale)
 	{
 		var e = commandBuffer.Instantiate(GetEntity());
@@ -113,6 +142,7 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
+	[Obsolete]
 	public virtual Entity Instantiate(float3 position, float3 scale)
 	{
 		var em = GameRegistry.EntityManager;
@@ -126,6 +156,7 @@ public class MeshEntity : ScriptableObject
 		return e;
 	}
 
+	[Obsolete]
 	public virtual void Instantiate(NativeArray<Entity> output)
 	{
 		var em = GameRegistry.EntityManager;
